@@ -1,0 +1,329 @@
+# 📊 PROMETHEUS PRODUCTION CONFIG - PHASE 4 IA-2
+# Configuration monitoring pour orchestrateur multi-agent
+# Support tests charge IA-1 + métriques production
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'orchestrator-production'
+    replica: 'prometheus-01'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+# Load rules once and periodically evaluate them
+rule_files:
+  - "alerts.yml"
+  - "orchestrator_rules.yml"
+
+# Scrape configurations
+scrape_configs:
+  # =============================================
+  # ORCHESTRATEUR MULTI-AGENT METRICS
+  # =============================================
+  
+  - job_name: 'orchestrator-main'
+    scrape_interval: 10s
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: 
+          - 'orchestrator-api:8002'
+          - 'orchestrator-worker-1:8003'
+          - 'orchestrator-worker-2:8004'
+          - 'orchestrator-worker-3:8005'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        regex: '(.+):(.+)'
+        replacement: '${1}'
+      - source_labels: [__address__]
+        target_label: service_port
+        regex: '(.+):(.+)'
+        replacement: '${2}'
+
+  # Memory API metrics
+  - job_name: 'memory-api'
+    scrape_interval: 15s
+    static_configs:
+      - targets: ['memory-api:8001']
+    metrics_path: '/metrics'
+
+  # =============================================
+  # INFRASTRUCTURE METRICS
+  # =============================================
+
+  # Redis Cache Cluster
+  - job_name: 'redis-cluster'
+    scrape_interval: 30s
+    static_configs:
+      - targets:
+          - 'redis-node1:9121'
+          - 'redis-node2:9121'
+          - 'redis-node3:9121'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: redis_instance
+        regex: 'redis-(.+):.*'
+        replacement: '${1}'
+
+  # PostgreSQL Database
+  - job_name: 'postgresql'
+    scrape_interval: 30s
+    static_configs:
+      - targets: 
+          - 'postgres-primary:9187'
+          - 'postgres-replica1:9187'
+          - 'postgres-replica2:9187'
+
+  # Load Balancer HAProxy
+  - job_name: 'haproxy'
+    scrape_interval: 15s
+    static_configs:
+      - targets: ['haproxy:8404']
+    metrics_path: '/stats/prometheus'
+
+  # =============================================
+  # KUBERNETES METRICS
+  # =============================================
+
+  # Kubernetes API Server
+  - job_name: 'kubernetes-apiservers'
+    kubernetes_sd_configs:
+    - role: endpoints
+    scheme: https
+    tls_config:
+      ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+    relabel_configs:
+    - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+      action: keep
+      regex: default;kubernetes;https
+
+  # Kubernetes Nodes
+  - job_name: 'kubernetes-nodes'
+    kubernetes_sd_configs:
+    - role: node
+    scheme: https
+    tls_config:
+      ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+    relabel_configs:
+    - action: labelmap
+      regex: __meta_kubernetes_node_label_(.+)
+    - target_label: __address__
+      replacement: kubernetes.default.svc:443
+    - source_labels: [__meta_kubernetes_node_name]
+      regex: (.+)
+      target_label: __metrics_path__
+      replacement: /api/v1/nodes/${1}/proxy/metrics
+
+  # Kubernetes Pods
+  - job_name: 'kubernetes-pods'
+    kubernetes_sd_configs:
+    - role: pod
+    relabel_configs:
+    - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+      action: keep
+      regex: true
+    - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+      action: replace
+      target_label: __metrics_path__
+      regex: (.+)
+    - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+      action: replace
+      regex: ([^:]+)(?::\d+)?;(\d+)
+      replacement: $1:$2
+      target_label: __address__
+    - action: labelmap
+      regex: __meta_kubernetes_pod_label_(.+)
+    - source_labels: [__meta_kubernetes_namespace]
+      action: replace
+      target_label: kubernetes_namespace
+    - source_labels: [__meta_kubernetes_pod_name]
+      action: replace
+      target_label: kubernetes_pod_name
+
+  # =============================================
+  # SYSTEM METRICS
+  # =============================================
+
+  # Node Exporter (System metrics)
+  - job_name: 'node-exporter'
+    scrape_interval: 30s
+    static_configs:
+      - targets:
+          - 'node-exporter-1:9100'
+          - 'node-exporter-2:9100'
+          - 'node-exporter-3:9100'
+
+  # cAdvisor (Container metrics)
+  - job_name: 'cadvisor'
+    scrape_interval: 30s
+    static_configs:
+      - targets:
+          - 'cadvisor-1:8080'
+          - 'cadvisor-2:8080'
+          - 'cadvisor-3:8080'
+
+  # =============================================
+  # TESTS & QUALITÉ METRICS (Support IA-1)
+  # =============================================
+
+  # Tests Results Exporter
+  - job_name: 'tests-exporter'
+    scrape_interval: 60s
+    static_configs:
+      - targets: ['tests-exporter:9090']
+    metrics_path: '/metrics'
+    scrape_timeout: 30s
+
+  # Load Testing Metrics
+  - job_name: 'load-testing'
+    scrape_interval: 10s  # Haute fréquence pour tests
+    static_configs:
+      - targets: ['k6-exporter:9091']
+    metrics_path: '/metrics'
+
+  # Security Testing Metrics
+  - job_name: 'security-testing'
+    scrape_interval: 30s
+    static_configs:
+      - targets: ['security-scanner:9092']
+    metrics_path: '/metrics'
+
+  # =============================================
+  # EXTERNAL SERVICES
+  # =============================================
+
+  # Ollama LLM Services
+  - job_name: 'ollama-services'
+    scrape_interval: 30s
+    static_configs:
+      - targets:
+          - 'ollama-gpu1:11434'
+          - 'ollama-gpu2:11434'
+    metrics_path: '/api/metrics'
+    scrape_timeout: 15s
+
+  # Gemini/OpenAI Proxy
+  - job_name: 'llm-proxy'
+    scrape_interval: 60s
+    static_configs:
+      - targets: ['llm-proxy:8080']
+    metrics_path: '/metrics'
+
+  # =============================================
+  # BLACKBOX MONITORING
+  # =============================================
+
+  # Health Checks
+  - job_name: 'blackbox-http'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+          - http://orchestrator-api:8002/health
+          - http://memory-api:8001/health
+          - http://haproxy:8404/stats
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
+
+  # TCP Checks
+  - job_name: 'blackbox-tcp'
+    metrics_path: /probe
+    params:
+      module: [tcp_connect]
+    static_configs:
+      - targets:
+          - redis-node1:6379
+          - postgres-primary:5432
+          - orchestrator-api:8002
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
+
+# =============================================
+# RECORDING RULES (Pre-computed metrics)
+# =============================================
+
+# Fichier: orchestrator_rules.yml
+# 
+# groups:
+#   - name: orchestrator.rules
+#     rules:
+#       # Request rate per service
+#       - record: orchestrator:request_rate
+#         expr: rate(http_requests_total[5m])
+#       
+#       # Success rate
+#       - record: orchestrator:success_rate
+#         expr: rate(http_requests_total{status!~"5.."}[5m]) / rate(http_requests_total[5m])
+#       
+#       # Average response time
+#       - record: orchestrator:response_time_avg
+#         expr: rate(http_request_duration_seconds_sum[5m]) / rate(http_request_duration_seconds_count[5m])
+#       
+#       # Memory usage per pod
+#       - record: orchestrator:memory_usage_percent
+#         expr: (container_memory_usage_bytes / container_spec_memory_limit_bytes) * 100
+#       
+#       # CPU usage per pod
+#       - record: orchestrator:cpu_usage_percent
+#         expr: rate(container_cpu_usage_seconds_total[5m]) * 100
+#
+#       # Redis hit rate
+#       - record: redis:hit_rate
+#         expr: rate(redis_keyspace_hits_total[5m]) / (rate(redis_keyspace_hits_total[5m]) + rate(redis_keyspace_misses_total[5m]))
+#
+#       # Active sessions
+#       - record: orchestrator:active_sessions
+#         expr: sum(orchestrator_active_sessions)
+#
+#       # Load testing metrics (Support IA-1)
+#       - record: loadtest:requests_per_second
+#         expr: rate(k6_http_reqs[1m])
+#       
+#       - record: loadtest:error_rate
+#         expr: rate(k6_http_req_failed[1m]) / rate(k6_http_reqs[1m])
+#
+#       - record: loadtest:response_time_p95
+#         expr: histogram_quantile(0.95, k6_http_req_duration_bucket)
+
+# =============================================
+# STORAGE & RETENTION
+# =============================================
+
+# Configuration globale stockage
+# --storage.tsdb.path=/prometheus/data
+# --storage.tsdb.retention.time=30d
+# --storage.tsdb.retention.size=50GB
+# --storage.tsdb.wal-compression
+
+# Remote write pour long-term storage (optionnel)
+# remote_write:
+#   - url: "https://prometheus-remote-storage.company.com/write"
+#     basic_auth:
+#       username: "orchestrator-prod"
+#       password_file: "/etc/prometheus/remote-write-password"
+
+# Remote read pour queries historiques
+# remote_read:
+#   - url: "https://prometheus-remote-storage.company.com/read"
+#     basic_auth:
+#       username: "orchestrator-prod"
+#       password_file: "/etc/prometheus/remote-read-password" 

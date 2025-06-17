@@ -1,0 +1,306 @@
+# Prometheus Alert Rules Production
+# Alertes pour infrastructure, business et sécurité
+
+groups:
+  # Alertes Infrastructure - Critique
+  - name: infrastructure-critical
+    rules:
+      - alert: ServiceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+          team: platform
+        annotations:
+          summary: "Service {{ $labels.job }} on {{ $labels.instance }} is down"
+          description: "Service {{ $labels.job }} on instance {{ $labels.instance }} has been down for more than 1 minute"
+          runbook_url: "https://docs.company.com/runbooks/service-down"
+
+      - alert: HighErrorRate
+        expr: rate(orchestrator_requests_total{status_code=~"5.."}[5m]) > 0.05
+        for: 2m
+        labels:
+          severity: critical
+          team: platform
+          service: orchestrator
+        annotations:
+          summary: "High error rate on {{ $labels.instance }}"
+          description: "Error rate is {{ $value | humanizePercentage }} for {{ $labels.instance }}"
+          dashboard: "https://grafana.company.com/d/orchestrator"
+
+      - alert: DatabaseConnectionFailure
+        expr: rate(orchestrator_errors_total{error_type="database"}[5m]) > 0.1
+        for: 1m
+        labels:
+          severity: critical
+          team: platform
+        annotations:
+          summary: "Database connection failures detected"
+          description: "Database connection failure rate is {{ $value }} per second"
+
+  # Alertes Infrastructure - High
+  - name: infrastructure-high
+    rules:
+      - alert: HighLatency
+        expr: histogram_quantile(0.95, rate(orchestrator_request_duration_seconds_bucket[5m])) > 2.0
+        for: 5m
+        labels:
+          severity: high
+          team: platform
+        annotations:
+          summary: "High request latency"
+          description: "95th percentile latency is {{ $value }}s on {{ $labels.instance }}"
+
+      - alert: MemoryUsageHigh
+        expr: orchestrator_memory_usage_bytes{type="rss"} > 1073741824  # 1GB
+        for: 10m
+        labels:
+          severity: high
+          team: platform
+        annotations:
+          summary: "High memory usage"
+          description: "Memory usage is {{ $value | humanizeBytes }} on {{ $labels.instance }}"
+
+      - alert: CPUUsageHigh
+        expr: rate(process_cpu_seconds_total[5m]) * 100 > 80
+        for: 10m
+        labels:
+          severity: high
+          team: platform
+        annotations:
+          summary: "High CPU usage"
+          description: "CPU usage is {{ $value }}% on {{ $labels.instance }}"
+
+      - alert: DiskSpaceRunningOut
+        expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) * 100 < 10
+        for: 5m
+        labels:
+          severity: high
+          team: infrastructure
+        annotations:
+          summary: "Disk space running out"
+          description: "Only {{ $value }}% disk space left on {{ $labels.instance }}"
+
+  # Alertes LLM et API externes
+  - name: llm-providers
+    rules:
+      - alert: LLMProviderDown
+        expr: rate(orchestrator_llm_requests_total{status="error"}[5m]) > 0.5
+        for: 1m
+        labels:
+          severity: critical
+          team: platform
+          component: llm
+        annotations:
+          summary: "LLM provider {{ $labels.provider }} experiencing issues"
+          description: "{{ $labels.provider }} error rate is {{ $value | humanizePercentage }}"
+
+      - alert: LLMHighLatency
+        expr: histogram_quantile(0.95, rate(orchestrator_llm_latency_seconds_bucket[10m])) > 30
+        for: 5m
+        labels:
+          severity: high
+          team: platform
+          component: llm
+        annotations:
+          summary: "High LLM latency for {{ $labels.provider }}"
+          description: "95th percentile LLM latency is {{ $value }}s for {{ $labels.provider }}/{{ $labels.model }}"
+
+      - alert: APIQuotaExceeded
+        expr: orchestrator_api_quota_usage > 0.9
+        for: 2m
+        labels:
+          severity: high
+          team: platform
+        annotations:
+          summary: "API quota nearly exceeded"
+          description: "{{ $labels.provider }} quota usage is {{ $value | humanizePercentage }} for {{ $labels.user_tier }}"
+
+  # Alertes Cache et Performance
+  - name: performance
+    rules:
+      - alert: CacheHitRateLow
+        expr: orchestrator_cache_hit_ratio < 0.5
+        for: 15m
+        labels:
+          severity: medium
+          team: platform
+        annotations:
+          summary: "Low cache hit ratio"
+          description: "Cache hit ratio is {{ $value | humanizePercentage }} for {{ $labels.cache_type }}"
+
+      - alert: RedisConnectionFailure
+        expr: rate(orchestrator_cache_operations_total{status="error"}[5m]) > 0.1
+        for: 2m
+        labels:
+          severity: high
+          team: platform
+        annotations:
+          summary: "Redis connection issues"
+          description: "Redis error rate is {{ $value }} per second"
+
+      - alert: SessionsGrowthAbnormal
+        expr: increase(orchestrator_active_sessions[1h]) > 1000
+        for: 5m
+        labels:
+          severity: medium
+          team: platform
+        annotations:
+          summary: "Abnormal session growth"
+          description: "Active sessions increased by {{ $value }} in the last hour"
+
+  # Alertes Business et Métier
+  - name: business-metrics
+    rules:
+      - alert: UserSatisfactionLow
+        expr: rate(orchestrator_user_satisfaction_score_bucket{le="5"}[1h]) / rate(orchestrator_user_satisfaction_score_count[1h]) > 0.3
+        for: 30m
+        labels:
+          severity: high
+          team: product
+        annotations:
+          summary: "Low user satisfaction detected"
+          description: "{{ $value | humanizePercentage }} of users rating below 5/10 for {{ $labels.feature }}"
+
+      - alert: CodeGenerationFailureHigh
+        expr: rate(orchestrator_code_generations_total{success="false"}[10m]) / rate(orchestrator_code_generations_total[10m]) > 0.2
+        for: 5m
+        labels:
+          severity: medium
+          team: product
+        annotations:
+          summary: "High code generation failure rate"
+          description: "Code generation failure rate is {{ $value | humanizePercentage }} for {{ $labels.language }}"
+
+      - alert: RevenueImpact
+        expr: rate(orchestrator_revenue_tracking[1h]) < 100
+        for: 1h
+        labels:
+          severity: high
+          team: business
+        annotations:
+          summary: "Revenue tracking below threshold"
+          description: "Hourly revenue tracking is {{ $value }} (below threshold of 100)"
+
+  # Alertes Sécurité
+  - name: security
+    rules:
+      - alert: SecurityEventSpike
+        expr: rate(orchestrator_security_events_total{severity="high"}[5m]) > 10
+        for: 1m
+        labels:
+          severity: critical
+          team: security
+        annotations:
+          summary: "High security event rate"
+          description: "{{ $value }} high-severity security events per minute"
+          runbook_url: "https://docs.company.com/runbooks/security-incidents"
+
+      - alert: AuthenticationFailureSpike
+        expr: rate(orchestrator_security_events_total{event_type="auth_failure"}[5m]) > 5
+        for: 2m
+        labels:
+          severity: high
+          team: security
+        annotations:
+          summary: "High authentication failure rate"
+          description: "{{ $value }} authentication failures per minute"
+
+      - alert: SuspiciousUserBehavior
+        expr: rate(orchestrator_security_events_total{event_type="suspicious_activity"}[10m]) > 1
+        for: 5m
+        labels:
+          severity: medium
+          team: security
+        annotations:
+          summary: "Suspicious user behavior detected"
+          description: "{{ $value }} suspicious activities detected in the last 10 minutes"
+
+  # Alertes Infrastructure Database
+  - name: database
+    rules:
+      - alert: PostgreSQLDown
+        expr: up{job="postgres"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          team: platform
+        annotations:
+          summary: "PostgreSQL is down"
+          description: "PostgreSQL database is not responding"
+
+      - alert: PostgreSQLConnectionsHigh
+        expr: pg_stat_database_numbackends / pg_settings_max_connections > 0.8
+        for: 5m
+        labels:
+          severity: high
+          team: platform
+        annotations:
+          summary: "PostgreSQL connections high"
+          description: "{{ $value | humanizePercentage }} of PostgreSQL connections in use"
+
+      - alert: PostgreSQLSlowQueries
+        expr: rate(pg_stat_database_tup_fetched[5m]) / rate(pg_stat_database_tup_returned[5m]) < 0.1
+        for: 10m
+        labels:
+          severity: medium
+          team: platform
+        annotations:
+          summary: "PostgreSQL slow queries detected"
+          description: "Query efficiency is {{ $value | humanizePercentage }}"
+
+  # Alertes Load Balancer
+  - name: load-balancer
+    rules:
+      - alert: HAProxyBackendDown
+        expr: haproxy_backend_up == 0
+        for: 1m
+        labels:
+          severity: critical
+          team: platform
+        annotations:
+          summary: "HAProxy backend {{ $labels.backend }} is down"
+          description: "Backend {{ $labels.backend }} is not responding"
+
+      - alert: HAProxyHighResponseTime
+        expr: haproxy_backend_response_time_average_seconds > 2
+        for: 5m
+        labels:
+          severity: high
+          team: platform
+        annotations:
+          summary: "HAProxy high response time"
+          description: "Average response time is {{ $value }}s for backend {{ $labels.backend }}"
+
+  # Alertes Elasticsearch/Logging
+  - name: logging
+    rules:
+      - alert: ElasticsearchClusterRed
+        expr: elasticsearch_cluster_health_status{color="red"} == 1
+        for: 2m
+        labels:
+          severity: critical
+          team: platform
+        annotations:
+          summary: "Elasticsearch cluster status is red"
+          description: "Elasticsearch cluster health is red - some primary shards are unassigned"
+
+      - alert: ElasticsearchDiskSpaceLow
+        expr: elasticsearch_filesystem_data_available_bytes / elasticsearch_filesystem_data_size_bytes < 0.1
+        for: 5m
+        labels:
+          severity: high
+          team: platform
+        annotations:
+          summary: "Elasticsearch disk space low"
+          description: "Only {{ $value | humanizePercentage }} disk space available on {{ $labels.node }}"
+
+      - alert: LogIngestionStopped
+        expr: rate(elasticsearch_indices_indexing_index_total[5m]) == 0
+        for: 10m
+        labels:
+          severity: high
+          team: platform
+        annotations:
+          summary: "Log ingestion has stopped"
+          description: "No new logs have been indexed in the last 10 minutes"

@@ -1,0 +1,168 @@
+# Prometheus Configuration Production
+# Collecte de métriques multi-services avec alertes
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'production'
+    region: 'us-east-1'
+
+# Règles d'alerte
+rule_files:
+  - "/etc/prometheus/alerts.yml"
+
+# Configuration AlertManager
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+# Jobs de collecte
+scrape_configs:
+  # Prometheus lui-même
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+    metrics_path: /metrics
+    scrape_interval: 30s
+
+  # Orchestrator instances
+  - job_name: 'orchestrator'
+    static_configs:
+      - targets: 
+        - 'orchestrator-1:8000'
+        - 'orchestrator-2:8000'
+        - 'orchestrator-3:8000'
+    metrics_path: /metrics
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    honor_labels: true
+    params:
+      format: ['prometheus']
+    relabel_configs:
+      # Ajouter le nom de l'instance
+      - source_labels: [__address__]
+        target_label: instance
+        regex: '(.+):.*'
+        replacement: '${1}'
+      # Ajouter le service
+      - target_label: service
+        replacement: 'orchestrator'
+
+  # Memory API
+  - job_name: 'memory-api'
+    static_configs:
+      - targets: ['memory-api:8001']
+    metrics_path: /metrics
+    scrape_interval: 30s
+    relabel_configs:
+      - target_label: service
+        replacement: 'memory-api'
+
+  # PostgreSQL Exporter
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+    scrape_interval: 30s
+    relabel_configs:
+      - target_label: service
+        replacement: 'postgresql'
+
+  # Redis Exporter
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+    scrape_interval: 30s
+    relabel_configs:
+      - target_label: service
+        replacement: 'redis'
+
+  # HAProxy Stats
+  - job_name: 'haproxy'
+    static_configs:
+      - targets: ['load-balancer:8404']
+    metrics_path: /stats/prometheus
+    scrape_interval: 30s
+    relabel_configs:
+      - target_label: service
+        replacement: 'haproxy'
+
+  # Node Exporter (system metrics)
+  - job_name: 'node'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    scrape_interval: 30s
+    relabel_configs:
+      - target_label: service
+        replacement: 'system'
+
+  # cAdvisor (container metrics)
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+    scrape_interval: 30s
+    relabel_configs:
+      - target_label: service
+        replacement: 'containers'
+
+  # Elasticsearch
+  - job_name: 'elasticsearch'
+    static_configs:
+      - targets: ['elasticsearch-exporter:9114']
+    scrape_interval: 60s
+    relabel_configs:
+      - target_label: service
+        replacement: 'elasticsearch'
+
+  # Grafana
+  - job_name: 'grafana'
+    static_configs:
+      - targets: ['grafana:3000']
+    metrics_path: /metrics
+    scrape_interval: 60s
+    relabel_configs:
+      - target_label: service
+        replacement: 'grafana'
+
+# Configuration de découverte de services (pour Kubernetes si utilisé)
+# - job_name: 'kubernetes-pods'
+#   kubernetes_sd_configs:
+#     - role: pod
+#   relabel_configs:
+#     - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+#       action: keep
+#       regex: true
+#     - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+#       action: replace
+#       target_label: __metrics_path__
+#       regex: (.+)
+
+# Configuration pour métriques custom business
+- job_name: 'business-metrics'
+  static_configs:
+    - targets:
+      - 'orchestrator-1:8000'
+      - 'orchestrator-2:8000'
+      - 'orchestrator-3:8000'
+  metrics_path: /business-metrics
+  scrape_interval: 60s
+  honor_labels: true
+  relabel_configs:
+    - target_label: metrics_type
+      replacement: 'business'
+
+# Configuration pour métriques de sécurité
+- job_name: 'security-metrics'
+  static_configs:
+    - targets:
+      - 'orchestrator-1:8000'
+      - 'orchestrator-2:8000'
+      - 'orchestrator-3:8000'
+  metrics_path: /security-metrics
+  scrape_interval: 30s
+  honor_labels: true
+  relabel_configs:
+    - target_label: metrics_type
+      replacement: 'security'

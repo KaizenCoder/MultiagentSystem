@@ -1,0 +1,100 @@
+{
+  "name": "multi-agent-orchestrator",
+  "displayName": "Multi-Agent Orchestrator",
+  "description": "Extension professionnelle pour orchestrer des tâches multi-agents depuis Cursor/VS Code",
+  "version": "1.0.1",
+  "publisher": "votre-nom-editeur",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other",
+    "Programming Languages"
+  ],
+  "keywords": ["AI", "multi-agent", "langgraph", "code generation", "automation"],
+  "icon": "images/icon.png",
+  "activationEvents": [
+    "onCommand:multiAgent.orchestrateTask",
+    "onCommand:multiAgent.acceptChanges",
+    "onCommand:multiAgent.rejectChanges"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "multiAgent.orchestrateTask",
+        "title": "Orchestrate with Multi-Agent",
+        "category": "Multi-Agent",
+        "icon": "$(rocket)"
+      },
+      {
+        "command": "multiAgent.acceptChanges",
+        "title": "Accept Agent Changes",
+        "category": "Multi-Agent",
+        "icon": "$(check)"
+      },
+      {
+        "command": "multiAgent.rejectChanges",
+        "title": "Reject Agent Changes",
+        "category": "Multi-Agent",
+        "icon": "$(close)"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "multiAgent.orchestrateTask",
+        "key": "ctrl+shift+m",
+        "mac": "cmd+shift+m",
+        "when": "editorTextFocus && editorHasSelection"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "multiAgent.orchestrateTask",
+          "when": "editorHasSelection",
+          "group": "1_modification"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Multi-Agent Orchestrator",
+      "properties": {
+        "multiAgent.orchestratorUrl": {
+          "type": "string",
+          "default": "http://localhost:8002/invoke",
+          "description": "URL de l'endpoint /invoke du service d'orchestration."
+        },
+        "multiAgent.showDiff": {
+          "type": "boolean",
+          "default": true,
+          "description": "Afficher une vue de comparaison (diff) au lieu de remplacer directement le code."
+        },
+        "multiAgent.timeout": {
+          "type": "number",
+          "default": 90000,
+          "description": "Timeout en millisecondes pour les requêtes API vers le service d'orchestration."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "20.x",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3",
+    "vsce": "^2.15.0"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+} 

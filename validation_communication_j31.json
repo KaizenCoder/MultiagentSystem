@@ -1,0 +1,70 @@
+{
+  "validation_date": "2025-06-17T16:47:56.285043",
+  "days_validated": [
+    "J31"
+  ],
+  "overall_score": 70.0,
+  "journal_validation": {},
+  "cross_reference_validation": {},
+  "communication_validation": {},
+  "compliance_summary": {
+    "total_journals": 2,
+    "valid_journals": 2,
+    "compliance_rate": 100.0,
+    "critical_issues": [],
+    "warnings": []
+  },
+  "recommendations": [
+    "✅ Communication excellente - Maintenir le niveau"
+  ],
+  "day_J31": {
+    "day": "J31",
+    "journal_ia1": {
+      "valid": true,
+      "missing_sections": [],
+      "invalid_references": [],
+      "cross_references_found": 8,
+      "messages_count": 3
+    },
+    "journal_ia2": {
+      "valid": true,
+      "missing_sections": [],
+      "invalid_references": [],
+      "cross_references_found": 6,
+      "messages_count": 3
+    },
+    "cross_references": {
+      "valid": true,
+      "ia1_references_to_ia2": [
+        "PHASE4-IA2-S41-INFRA-CAPACITY",
+        "PHASE4-IA2-S41-INFRA-CAPACITY",
+        "PHASE4-IA2-S41-INFRA-CAPACITY",
+        "PHASE4-IA2-S41-INFRA-CAPACITY",
+        "PHASE4-IA2-S41-INFRA-CAPACITY",
+        "PHASE4-MSG-IA1-TO-IA2-001-CRITICAL",
+        "PHASE4-MSG-IA1-TO-IA2-002-NORMAL",
+        "PHASE4-MSG-IA1-TO-IA2-003-NORMAL"
+      ],
+      "ia2_references_to_ia1": [
+        "PHASE4-IA1-S41-LOAD-BASE",
+        "PHASE4-IA1-S41-LOAD-",
+        "PHASE4-IA1-S41-LOAD-",
+        "PHASE4-MSG-IA2-TO-IA1-001-CRITICAL",
+        "PHASE4-MSG-IA2-TO-IA1-002-NORMAL",
+        "PHASE4-MSG-IA2-TO-IA1-003-NORMAL"
+      ],
+      "missing_cross_refs": [],
+      "orphan_references": []
+    },
+    "communication": {
+      "valid": false,
+      "messages_ia1_to_ia2": [],
+      "messages_ia2_to_ia1": [],
+      "response_times": {},
+      "unresponded_critical": [],
+      "communication_score": 0.0,
+      "error": "DAY_SECTION_NOT_FOUND_J31"
+    },
+    "day_score": 70.0
+  }
+}

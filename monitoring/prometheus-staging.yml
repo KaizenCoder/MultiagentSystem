@@ -1,0 +1,87 @@
+# Configuration Prometheus pour environnement staging
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    environment: 'staging'
+    project: 'orchestrator-multi-agent'
+
+rule_files:
+  - "alert_rules.yml"
+
+scrape_configs:
+  # Orchestrateur principal
+  - job_name: 'orchestrator'
+    static_configs:
+      - targets: ['orchestrator:8002']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+    scrape_timeout: 5s
+    scheme: http
+    
+  # Memory API
+  - job_name: 'memory_api'
+    static_configs:
+      - targets: ['memory_api:8001']
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+    scrape_timeout: 5s
+    scheme: http
+    
+  # PostgreSQL (avec postgres_exporter si disponible)
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres:5432']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+    scheme: http
+    
+  # ChromaDB
+  - job_name: 'chromadb'
+    static_configs:
+      - targets: ['chromadb:8000']
+    metrics_path: '/api/v1/metrics'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+    scheme: http
+    
+  # Auto-monitoring Prometheus
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+# Configuration d'alerting (optionnel pour staging)
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+# Métriques personnalisées importantes pour la sécurité
+recording_rules:
+  - name: security_metrics
+    rules:
+      - record: orchestrator:security_events_rate
+        expr: rate(security_events_total[5m])
+      
+      - record: orchestrator:rce_attempts_rate
+        expr: rate(rce_attempts_blocked_total[1m])
+      
+      - record: orchestrator:error_rate
+        expr: rate(orchestrator_requests_total{status=~"4..|5.."}[5m]) / rate(orchestrator_requests_total[5m])
+      
+      - record: orchestrator:response_time_p95
+        expr: histogram_quantile(0.95, rate(orchestrator_request_duration_seconds_bucket[5m]))
+
+  - name: health_metrics
+    rules:
+      - record: orchestrator:service_availability
+        expr: up{job=~"orchestrator|memory_api"}
+      
+      - record: orchestrator:database_connectivity
+        expr: up{job="postgres"}
+      
+      - record: orchestrator:active_tasks_avg
+        expr: avg_over_time(orchestrator_active_tasks[5m])
