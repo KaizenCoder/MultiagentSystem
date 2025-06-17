@@ -1,0 +1,264 @@
+# NextGeneration Orchestrator - Production Values
+# IA-2 Architecture & Production Configuration
+
+# Global settings
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+  storageClass: "gp3"
+
+# Application configuration
+app:
+  name: orchestrator
+  version: "1.3.0"
+  
+image:
+  registry: docker.io
+  repository: nextgeneration/orchestrator
+  tag: "1.3.0"
+  pullPolicy: Always
+  pullSecrets: []
+
+# Deployment configuration
+deployment:
+  replicaCount: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  
+  # Resource management
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+  
+  # Health checks
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 8002
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: 8002
+    initialDelaySeconds: 15
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+# Auto-scaling configuration
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 20
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+  # Custom metrics
+  customMetrics:
+    - type: Pods
+      pods:
+        metric:
+          name: orchestrator_active_sessions
+        target:
+          type: AverageValue
+          averageValue: 100
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 8002
+  targetPort: 8002
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8002"
+    prometheus.io/path: "/metrics"
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rate-limit: "1000"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: orchestrator.nextgeneration.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: orchestrator-tls
+      hosts:
+        - orchestrator.nextgeneration.com
+
+# ConfigMap and Secrets
+config:
+  # Environment configuration
+  environment: production
+  logLevel: INFO
+  
+  # Application settings
+  settings:
+    max_concurrent_sessions: 1000
+    session_timeout: 3600
+    request_timeout: 300
+    llm_timeout: 120
+
+secrets:
+  # External secrets operator
+  externalSecrets:
+    enabled: true
+    secretStore:
+      name: azure-keyvault
+      kind: SecretStore
+    refreshInterval: 15m
+    
+  # Secret mappings
+  secrets:
+    - name: orchestrator-secrets
+      data:
+        - secretKey: database_url
+          remoteRef:
+            key: database-url
+        - secretKey: redis_url
+          remoteRef:
+            key: redis-url
+        - secretKey: openai_api_key
+          remoteRef:
+            key: openai-api-key
+        - secretKey: azure_openai_key
+          remoteRef:
+            key: azure-openai-key
+
+# PostgreSQL configuration
+postgresql:
+  enabled: true
+  auth:
+    postgresPassword: ""
+    username: orchestrator
+    password: ""
+    database: orchestrator_prod
+  
+  primary:
+    resources:
+      limits:
+        cpu: 2000m
+        memory: 4Gi
+      requests:
+        cpu: 1000m
+        memory: 2Gi
+    
+    persistence:
+      enabled: true
+      size: 100Gi
+      storageClass: "gp3"
+    
+  readReplicas:
+    replicaCount: 2
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+      requests:
+        cpu: 500m
+        memory: 1Gi
+
+# Redis configuration
+redis:
+  enabled: true
+  architecture: cluster
+  cluster:
+    nodes: 6
+    replicas: 1
+  
+  master:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 1Gi
+      requests:
+        cpu: 250m
+        memory: 512Mi
+    
+    persistence:
+      enabled: true
+      size: 20Gi
+      storageClass: "gp3"
+
+# Monitoring configuration
+monitoring:
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      interval: 30s
+      scrapeTimeout: 10s
+      
+  grafana:
+    enabled: true
+    adminPassword: ""
+    dashboards:
+      enabled: true
+      
+  jaeger:
+    enabled: true
+    agent:
+      strategy: DaemonSet
+    collector:
+      replicaCount: 2
+
+# Security configuration
+security:
+  podSecurityPolicy:
+    enabled: true
+  
+  networkPolicy:
+    enabled: true
+    
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 10001
+    fsGroup: 10001
+    
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+
+# Persistence
+persistence:
+  enabled: true
+  size: 10Gi
+  storageClass: "gp3"
+  accessModes:
+    - ReadWriteOnce
+
+# Node affinity and tolerations
+nodeSelector: {}
+tolerations: []
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                  - orchestrator
+          topologyKey: kubernetes.io/hostname

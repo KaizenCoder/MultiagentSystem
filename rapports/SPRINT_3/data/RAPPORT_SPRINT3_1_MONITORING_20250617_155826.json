@@ -1,0 +1,441 @@
+{
+  "sprint_info": {
+    "sprint": "3.1",
+    "phase": "Monitoring & Observabilité Avancée",
+    "date": "2025-06-17T15:58:26.735992",
+    "duration_minutes": 0.0,
+    "ia_specialist": "IA-2 Architecture & Production"
+  },
+  "observability_summary": {
+    "global_score_percent": 80.0,
+    "prometheus_healthy": true,
+    "business_kpis_score": 60.0,
+    "alerting_operational": true,
+    "tracing_active": true,
+    "dashboards_available": true
+  },
+  "detailed_results": {
+    "prometheus_metrics": {
+      "orchestrator_requests_total": {
+        "sample_count": 4105,
+        "rate_per_second": 56.95832440024172,
+        "p95_value": 0.4381854766792149,
+        "p99_value": 0.7405068980342502,
+        "last_updated": "2025-06-17T15:58:26.731990"
+      },
+      "orchestrator_request_duration_seconds": {
+        "sample_count": 4482,
+        "rate_per_second": 198.3781004824572,
+        "p95_value": 0.16995787822498348,
+        "p99_value": 0.7474883249823794,
+        "last_updated": "2025-06-17T15:58:26.731990"
+      },
+      "orchestrator_llm_requests_total": {
+        "sample_count": 1656,
+        "rate_per_second": 185.2814630848688,
+        "p95_value": 0.2070868048882585,
+        "p99_value": 0.388710106568819,
+        "last_updated": "2025-06-17T15:58:26.731990"
+      },
+      "orchestrator_llm_latency_seconds": {
+        "sample_count": 2222,
+        "rate_per_second": 117.49874016364801,
+        "p95_value": 0.3165860432080222,
+        "p99_value": 0.5454384555709282,
+        "last_updated": "2025-06-17T15:58:26.731990"
+      },
+      "orchestrator_active_sessions": {
+        "sample_count": 3509,
+        "rate_per_second": 161.541953603496,
+        "p95_value": 0.22513686551580406,
+        "p99_value": 0.40024828968089604,
+        "last_updated": "2025-06-17T15:58:26.731990"
+      },
+      "orchestrator_memory_usage_bytes": {
+        "sample_count": 3764,
+        "rate_per_second": 123.75422292670086,
+        "p95_value": 0.48347968551350895,
+        "p99_value": 0.8232757138326987,
+        "last_updated": "2025-06-17T15:58:26.732992"
+      },
+      "orchestrator_cache_operations_total": {
+        "sample_count": 2395,
+        "rate_per_second": 150.9260081513025,
+        "p95_value": 0.2541883503209481,
+        "p99_value": 0.8741796213378226,
+        "last_updated": "2025-06-17T15:58:26.732992"
+      },
+      "orchestrator_errors_total": {
+        "sample_count": 4378,
+        "rate_per_second": 70.17803890902266,
+        "p95_value": 0.10661208406668768,
+        "p99_value": 0.34752500124189717,
+        "last_updated": "2025-06-17T15:58:26.732992"
+      },
+      "orchestrator_revenue_generated_total": {
+        "value": 41272.10391608956,
+        "unit": "USD",
+        "trend": "up",
+        "last_hour_change": 11.455312253506046
+      },
+      "orchestrator_user_satisfaction_score": {
+        "value": 9.009995304310552,
+        "unit": "/10",
+        "samples": 180,
+        "distribution": {
+          "1-5": 5,
+          "6-7": 15,
+          "8-10": 80
+        }
+      },
+      "orchestrator_session_duration_seconds": {
+        "value": 91.80436939865899,
+        "unit": "score",
+        "trend": "up"
+      },
+      "orchestrator_conversion_rate": {
+        "value": 19.071873526286513,
+        "unit": "%",
+        "trend": "stable",
+        "monthly_target": 20.0
+      },
+      "orchestrator_quality_score": {
+        "value": 87.60620835619179,
+        "unit": "score",
+        "trend": "up"
+      },
+      "prometheus_export": {
+        "export_successful": true,
+        "metrics_count": 25,
+        "output_size_bytes": 166,
+        "format": "prometheus"
+      }
+    },
+    "business_kpis": {
+      "Monthly Active Users": {
+        "name": "Monthly Active Users",
+        "current": 13597,
+        "target": 10000,
+        "unit": "users",
+        "trend": "up",
+        "target_met": true,
+        "deviation_percent": 35.97
+      },
+      "Revenue per User": {
+        "name": "Revenue per User",
+        "current": 32.24295399425876,
+        "target": 35.0,
+        "unit": "USD",
+        "trend": "up",
+        "target_met": false,
+        "deviation_percent": 7.877274302117822
+      },
+      "Customer Satisfaction": {
+        "name": "Customer Satisfaction",
+        "current": 9.087859008593412,
+        "target": 8.5,
+        "unit": "/10",
+        "trend": "stable",
+        "target_met": true,
+        "deviation_percent": 6.915988336393084
+      },
+      "Response Time P95": {
+        "name": "Response Time P95",
+        "current": 170.6401088176417,
+        "target": 150.0,
+        "unit": "ms",
+        "trend": "down",
+        "target_met": false,
+        "deviation_percent": 13.760072545094468
+      },
+      "Error Rate": {
+        "name": "Error Rate",
+        "current": 0.11588900711537194,
+        "target": 0.3,
+        "unit": "%",
+        "trend": "down",
+        "target_met": true,
+        "deviation_percent": 61.3703309615427
+      },
+      "_summary": {
+        "targets_met": 3,
+        "total_kpis": 5,
+        "global_score_percent": 60.0,
+        "status": "good"
+      }
+    },
+    "alerting": {
+      "High Error Rate": {
+        "name": "High Error Rate",
+        "condition": "error_rate > 1%",
+        "severity": "HIGH",
+        "trigger_threshold": 60,
+        "current_status": "OK"
+      },
+      "Response Time Degradation": {
+        "name": "Response Time Degradation",
+        "condition": "p95_latency > 200ms",
+        "severity": "MEDIUM",
+        "trigger_threshold": 300,
+        "current_status": "FIRING",
+        "fired_since": "2025-06-17 15:44:26.734992"
+      },
+      "Memory Usage Critical": {
+        "name": "Memory Usage Critical",
+        "condition": "memory_usage > 90%",
+        "severity": "CRITICAL",
+        "trigger_threshold": 120,
+        "current_status": "OK"
+      },
+      "Low Customer Satisfaction": {
+        "name": "Low Customer Satisfaction",
+        "condition": "satisfaction_score < 7.0",
+        "severity": "MEDIUM",
+        "trigger_threshold": 900,
+        "current_status": "OK"
+      },
+      "_system_metrics": {
+        "total_rules": 4,
+        "active_alerts": 1,
+        "alert_manager_healthy": true,
+        "notification_channels": [
+          "slack",
+          "email",
+          "pagerduty"
+        ],
+        "last_alert_sent": "2025-06-17 14:33:26.734992",
+        "alert_resolution_time_avg_minutes": 41.08724598333762
+      }
+    },
+    "distributed_tracing": {
+      "traces_collected": 10,
+      "avg_trace_duration_ms": 582.47,
+      "avg_spans_per_trace": 4.5,
+      "sampling_rate": 0.1,
+      "jaeger_healthy": true,
+      "trace_storage_days": 7,
+      "sample_traces": [
+        {
+          "trace_id": "trace_0000",
+          "total_duration_ms": 725.6957338859288,
+          "spans_count": 5,
+          "spans": [
+            {
+              "span_id": "span_main_0",
+              "operation": "API Request",
+              "duration_ms": 131.51708374419994,
+              "tags": {
+                "http.method": "POST",
+                "http.status_code": 200
+              }
+            },
+            {
+              "span_id": "span_0_0",
+              "operation": "Database Query",
+              "duration_ms": 141.92915300933018,
+              "parent_span": "span_main_0"
+            },
+            {
+              "span_id": "span_0_1",
+              "operation": "External API",
+              "duration_ms": 178.67951137938596,
+              "parent_span": "span_main_0"
+            },
+            {
+              "span_id": "span_0_2",
+              "operation": "Cache Lookup",
+              "duration_ms": 116.62181931595279,
+              "parent_span": "span_main_0"
+            },
+            {
+              "span_id": "span_0_3",
+              "operation": "Cache Lookup",
+              "duration_ms": 156.94816643705997,
+              "parent_span": "span_main_0"
+            }
+          ]
+        },
+        {
+          "trace_id": "trace_0001",
+          "total_duration_ms": 325.4063876983527,
+          "spans_count": 4,
+          "spans": [
+            {
+              "span_id": "span_main_1",
+              "operation": "API Request",
+              "duration_ms": 105.94749631294968,
+              "tags": {
+                "http.method": "POST",
+                "http.status_code": 200
+              }
+            },
+            {
+              "span_id": "span_1_0",
+              "operation": "LLM Request",
+              "duration_ms": 30.06591412792127,
+              "parent_span": "span_main_1"
+            },
+            {
+              "span_id": "span_1_1",
+              "operation": "Cache Lookup",
+              "duration_ms": 92.70527452638338,
+              "parent_span": "span_main_1"
+            },
+            {
+              "span_id": "span_1_2",
+              "operation": "Cache Lookup",
+              "duration_ms": 96.68770273109841,
+              "parent_span": "span_main_1"
+            }
+          ]
+        },
+        {
+          "trace_id": "trace_0002",
+          "total_duration_ms": 587.0031811707019,
+          "spans_count": 4,
+          "spans": [
+            {
+              "span_id": "span_main_2",
+              "operation": "API Request",
+              "duration_ms": 296.03026582699033,
+              "tags": {
+                "http.method": "POST",
+                "http.status_code": 200
+              }
+            },
+            {
+              "span_id": "span_2_0",
+              "operation": "External API",
+              "duration_ms": 134.75852773538537,
+              "parent_span": "span_main_2"
+            },
+            {
+              "span_id": "span_2_1",
+              "operation": "LLM Request",
+              "duration_ms": 102.61952806936081,
+              "parent_span": "span_main_2"
+            },
+            {
+              "span_id": "span_2_2",
+              "operation": "Database Query",
+              "duration_ms": 53.59485953896539,
+              "parent_span": "span_main_2"
+            }
+          ]
+        }
+      ]
+    },
+    "dashboards": {
+      "Executive Dashboard": {
+        "name": "Executive Dashboard",
+        "url": "/grafana/d/executive",
+        "panels": 12,
+        "refresh_interval": "1m",
+        "metrics": [
+          "revenue",
+          "users",
+          "satisfaction",
+          "performance"
+        ],
+        "status": "healthy",
+        "last_updated": "2025-06-17 15:58:05.734992",
+        "data_freshness_seconds": 11,
+        "alerts_count": 2
+      },
+      "System Health": {
+        "name": "System Health",
+        "url": "/grafana/d/system",
+        "panels": 8,
+        "refresh_interval": "30s",
+        "metrics": [
+          "cpu",
+          "memory",
+          "network",
+          "errors"
+        ],
+        "status": "healthy",
+        "last_updated": "2025-06-17 15:57:43.735992",
+        "data_freshness_seconds": 28,
+        "alerts_count": 2
+      },
+      "Business Intelligence": {
+        "name": "Business Intelligence",
+        "url": "/grafana/d/business",
+        "panels": 15,
+        "refresh_interval": "5m",
+        "metrics": [
+          "conversion",
+          "churn",
+          "ltv",
+          "acquisition"
+        ],
+        "status": "healthy",
+        "last_updated": "2025-06-17 15:58:07.735992",
+        "data_freshness_seconds": 27,
+        "alerts_count": 0
+      },
+      "Infrastructure Monitoring": {
+        "name": "Infrastructure Monitoring",
+        "url": "/grafana/d/infra",
+        "panels": 20,
+        "refresh_interval": "15s",
+        "metrics": [
+          "k8s",
+          "database",
+          "cache",
+          "load_balancer"
+        ],
+        "status": "healthy",
+        "last_updated": "2025-06-17 15:57:57.735992",
+        "data_freshness_seconds": 28,
+        "alerts_count": 2
+      },
+      "_summary": {
+        "total_dashboards": 4,
+        "total_panels": 55,
+        "grafana_healthy": true,
+        "prometheus_healthy": true,
+        "data_source_latency_ms": 23.201955282142013
+      }
+    },
+    "performance": {
+      "metrics_collection": {
+        "collection_rate_per_second": 4556.873922943973,
+        "collection_latency_ms": 10.89980684214975,
+        "storage_compression_ratio": 8.276951412997317,
+        "retention_days": 30
+      },
+      "query_performance": {
+        "avg_query_time_ms": 184.53895020737679,
+        "p95_query_time_ms": 338.16109615298046,
+        "concurrent_queries_max": 51,
+        "query_cache_hit_rate": 0.8672485079510667
+      },
+      "alerting_performance": {
+        "alert_evaluation_time_ms": 312.53880911068245,
+        "notification_delivery_time_ms": 1110.7705318735425,
+        "false_positive_rate": 0.0388029984226255,
+        "alert_accuracy": 0.9436322790781974
+      },
+      "dashboard_performance": {
+        "dashboard_load_time_ms": 1333.0080399064107,
+        "real_time_update_latency_ms": 481.5589063984127,
+        "concurrent_viewers_max": 24,
+        "uptime_percentage": 99.8792849222146
+      }
+    }
+  },
+  "recommendations": [
+    "🔧 KPIs business nécessitent attention urgente",
+    "Monitoring Prometheus opérationnel avec métriques complètes",
+    "Système d'alerting intelligent configuré",
+    "Distributed tracing fonctionnel pour debugging",
+    "Dashboards temps réel disponibles pour toutes les équipes"
+  ],
+  "next_steps": [
+    "Déploiement des dashboards en production",
+    "Configuration des alertes PagerDuty",
+    "Optimisation des requêtes Prometheus",
+    "Formation équipe sur observabilité"
+  ]
+}

@@ -1,0 +1,902 @@
+version: '3.8'
+
+# Production Docker Compose avec tous les composants enterprise
+# Redis, PostgreSQL, Monitoring, Sécurité, Load Balancing
+
+services:
+  # Load Balancer HAProxy
+  load-balancer:
+    image: haproxy:2.8
+    container_name: orchestrator-lb
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8404:8404"  # HAProxy stats
+    volumes:
+      - ./config/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+      - ./config/ssl:/etc/ssl/certs:ro
+    depends_on:
+      - orchestrator-1
+      - orchestrator-2
+      - orchestrator-3
+    networks:
+      - frontend
+      - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8404/stats"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+    labels:
+      - "traefik.enable=false"
+
+  # Orchestrator instances (multiple for HA)
+  orchestrator-1: &orchestrator-template
+    build:
+      context: ./orchestrator
+      dockerfile: Dockerfile
+    container_name: orchestrator-1
+    environment:
+      - ENVIRONMENT=production
+      - INSTANCE_ID=orchestrator-1
+      - LOAD_BALANCER_ENABLED=true
+      - AUTO_SCALING_ENABLED=true
+      - KUBERNETES_NAMESPACE=default
+      - ORCHESTRATOR_API_KEY_FILE=/run/secrets/orchestrator_api_key
+      - OPENAI_API_KEY_FILE=/run/secrets/openai_api_key
+      - ANTHROPIC_API_KEY_FILE=/run/secrets/anthropic_api_key
+      - POSTGRES_URL=postgresql://pgbouncer:6432/orchestrator
+      - DB_PRIMARY_HOST=postgres-primary
+      - DB_REPLICA_HOSTS=postgres-replica-1,postgres-replica-2
+      - DB_MAX_CONNECTIONS=20
+      - DB_REPLICA_MAX_CONNECTIONS=15
+      - REDIS_CLUSTER_HOSTS=redis-cluster-1:7000,redis-cluster-2:7001,redis-cluster-3:7002
+      - REDIS_URL=redis://redis-cluster-1:7000
+      - MEMORY_API_URL=http://memory-api:8001
+      - AZURE_KEYVAULT_URL=${AZURE_KEYVAULT_URL}
+      - VAULT_URL=${VAULT_URL}
+      - VAULT_TOKEN_FILE=/run/secrets/vault_token
+      - PROMETHEUS_ENDPOINT=http://prometheus:9090
+    secrets:
+      - orchestrator_api_key
+      - openai_api_key
+      - anthropic_api_key
+      - vault_token    depends_on:
+      postgres-primary:
+        condition: service_healthy
+      pgbouncer:
+        condition: service_healthy
+      redis-cluster-1:
+        condition: service_healthy
+      redis-cluster-2:
+        condition: service_healthy
+      redis-cluster-3:
+        condition: service_healthy
+      memory-api:
+        condition: service_healthy
+    networks:
+      - backend
+      - monitoring
+    volumes:
+      - ./logs:/app/logs
+      - /tmp:/tmp
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+
+  orchestrator-2:
+    <<: *orchestrator-template
+    container_name: orchestrator-2
+
+  orchestrator-3:
+    <<: *orchestrator-template
+    container_name: orchestrator-3
+
+  # Memory API - Single instance avec auto-restart
+  memory-api:
+    build:
+      context: ./memory_api
+      dockerfile: Dockerfile
+    container_name: memory-api
+    environment:
+      - ENVIRONMENT=production      - POSTGRES_HOST=pgbouncer
+      - POSTGRES_PORT=6432
+      - POSTGRES_DB=orchestrator
+      - POSTGRES_USER_FILE=/run/secrets/postgres_user
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
+      - CHROMADB_HOST=chromadb
+      - CHROMADB_PORT=8000
+      - REDIS_URL=redis://redis-cluster:6379
+    secrets:
+      - postgres_user
+      - postgres_password    depends_on:
+      postgres-primary:
+        condition: service_healthy
+      pgbouncer:
+        condition: service_healthy
+      chromadb:
+        condition: service_healthy
+      redis-cluster-1:
+        condition: service_healthy
+    networks:
+      - backend
+      - monitoring
+    volumes:
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '0.5'
+        reservations:
+          memory: 512M
+          cpus: '0.25'
+  # PostgreSQL Primary with Production Configuration
+  postgres-primary:
+    image: postgres:16-alpine
+    container_name: postgres-primary
+    environment:
+      - POSTGRES_DB=orchestrator
+      - POSTGRES_USER_FILE=/run/secrets/postgres_user
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
+      - POSTGRES_INITDB_ARGS=--auth-host=scram-sha-256
+      - POSTGRES_HOST_AUTH_METHOD=scram-sha-256
+      - PGUSER=postgres
+    secrets:
+      - postgres_user
+      - postgres_password
+    volumes:
+      - postgres_primary_data:/var/lib/postgresql/data
+      - ./config/postgresql/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - ./config/postgresql/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
+      - ./scripts/postgres-init:/docker-entrypoint-initdb.d:ro
+      - /data/postgresql/archive:/data/postgresql/archive
+      - ./logs/postgresql:/var/log/postgresql
+    networks:
+      - backend
+      - monitoring
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d orchestrator"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '2.0'
+        reservations:
+          memory: 2G
+          cpus: '1.0'
+    command: >
+      postgres 
+      -c config_file=/etc/postgresql/postgresql.conf
+      -c hba_file=/etc/postgresql/pg_hba.conf
+
+  # PostgreSQL Read Replica 1
+  postgres-replica-1:
+    image: postgres:16-alpine
+    container_name: postgres-replica-1
+    environment:
+      - POSTGRES_DB=orchestrator
+      - POSTGRES_USER_FILE=/run/secrets/postgres_user
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
+      - POSTGRES_MASTER_HOST=postgres-primary
+      - POSTGRES_MASTER_PORT=5432
+      - POSTGRES_REPLICATION_USER_FILE=/run/secrets/postgres_replication_user
+      - POSTGRES_REPLICATION_PASSWORD_FILE=/run/secrets/postgres_replication_password
+    secrets:
+      - postgres_user
+      - postgres_password
+      - postgres_replication_user
+      - postgres_replication_password
+    volumes:
+      - postgres_replica1_data:/var/lib/postgresql/data
+      - ./config/postgresql/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - ./scripts/postgres-replica-init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - backend
+      - monitoring
+    depends_on:
+      postgres-primary:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d orchestrator"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+
+  # PostgreSQL Read Replica 2
+  postgres-replica-2:
+    image: postgres:16-alpine
+    container_name: postgres-replica-2
+    environment:
+      - POSTGRES_DB=orchestrator
+      - POSTGRES_USER_FILE=/run/secrets/postgres_user
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
+      - POSTGRES_MASTER_HOST=postgres-primary
+      - POSTGRES_MASTER_PORT=5432
+      - POSTGRES_REPLICATION_USER_FILE=/run/secrets/postgres_replication_user
+      - POSTGRES_REPLICATION_PASSWORD_FILE=/run/secrets/postgres_replication_password
+    secrets:
+      - postgres_user
+      - postgres_password
+      - postgres_replication_user
+      - postgres_replication_password
+    volumes:
+      - postgres_replica2_data:/var/lib/postgresql/data
+      - ./config/postgresql/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - ./scripts/postgres-replica-init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - backend
+      - monitoring
+    depends_on:
+      postgres-primary:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d orchestrator"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+
+  # PgBouncer Connection Pooler
+  pgbouncer:
+    image: pgbouncer/pgbouncer:latest
+    container_name: pgbouncer
+    environment:
+      - DATABASES_HOST=postgres-primary
+      - DATABASES_PORT=5432
+      - DATABASES_USER_FILE=/run/secrets/postgres_user
+      - DATABASES_PASSWORD_FILE=/run/secrets/postgres_password
+      - DATABASES_DBNAME=orchestrator
+      - POOL_MODE=transaction
+      - ADMIN_USERS=postgres
+      - AUTH_TYPE=scram-sha-256
+    secrets:
+      - postgres_user
+      - postgres_password
+    volumes:
+      - ./config/pgbouncer/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini:ro
+      - ./config/pgbouncer/userlist.txt:/etc/pgbouncer/userlist.txt:ro
+    networks:
+      - backend
+      - monitoring
+    ports:
+      - "6432:6432"
+    depends_on:
+      postgres-primary:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "psql", "-h", "localhost", "-p", "6432", "-U", "postgres", "-d", "pgbouncer", "-c", "SHOW POOLS;"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+
+  # Redis Cluster Node 1 (Master)
+  redis-cluster-1:
+    image: redis:7.2-alpine
+    container_name: redis-cluster-1
+    command: >
+      redis-server 
+      --port 7000
+      --cluster-enabled yes
+      --cluster-config-file nodes-7000.conf
+      --cluster-node-timeout 5000
+      --appendonly yes
+      --appendfsync everysec
+      --maxmemory 1gb
+      --maxmemory-policy allkeys-lru
+      --tcp-keepalive 300
+      --timeout 0
+      --save 900 1 300 10 60 10000
+      --logfile /var/log/redis/redis-7000.log
+      --loglevel notice
+    volumes:
+      - redis_cluster1_data:/data
+      - ./logs/redis:/var/log/redis
+    networks:
+      - backend
+      - monitoring
+    ports:
+      - "7000:7000"
+      - "17000:17000"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "7000", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
+          cpus: '1.0'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+
+  # Redis Cluster Node 2 (Master)
+  redis-cluster-2:
+    image: redis:7.2-alpine
+    container_name: redis-cluster-2
+    command: >
+      redis-server 
+      --port 7001
+      --cluster-enabled yes
+      --cluster-config-file nodes-7001.conf
+      --cluster-node-timeout 5000
+      --appendonly yes
+      --appendfsync everysec
+      --maxmemory 1gb
+      --maxmemory-policy allkeys-lru
+      --tcp-keepalive 300
+      --timeout 0
+      --save 900 1 300 10 60 10000
+      --logfile /var/log/redis/redis-7001.log
+      --loglevel notice
+    volumes:
+      - redis_cluster2_data:/data
+      - ./logs/redis:/var/log/redis
+    networks:
+      - backend
+      - monitoring
+    ports:
+      - "7001:7001"
+      - "17001:17001"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "7001", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
+          cpus: '1.0'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+
+  # Redis Cluster Node 3 (Master)
+  redis-cluster-3:
+    image: redis:7.2-alpine
+    container_name: redis-cluster-3
+    command: >
+      redis-server 
+      --port 7002
+      --cluster-enabled yes
+      --cluster-config-file nodes-7002.conf
+      --cluster-node-timeout 5000
+      --appendonly yes
+      --appendfsync everysec
+      --maxmemory 1gb
+      --maxmemory-policy allkeys-lru
+      --tcp-keepalive 300
+      --timeout 0
+      --save 900 1 300 10 60 10000
+      --logfile /var/log/redis/redis-7002.log
+      --loglevel notice
+    volumes:
+      - redis_cluster3_data:/data
+      - ./logs/redis:/var/log/redis
+    networks:
+      - backend
+      - monitoring
+    ports:
+      - "7002:7002"
+      - "17002:17002"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "7002", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
+          cpus: '1.0'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+
+  # Redis Cluster Initialization
+  redis-cluster-init:
+    image: redis:7.2-alpine
+    container_name: redis-cluster-init
+    command: >
+      sh -c "
+        sleep 30 &&
+        redis-cli --cluster create 
+        redis-cluster-1:7000 
+        redis-cluster-2:7001 
+        redis-cluster-3:7002 
+        --cluster-replicas 0 --cluster-yes
+      "
+    networks:
+      - backend
+    depends_on:
+      - redis-cluster-1
+      - redis-cluster-2
+      - redis-cluster-3
+    restart: "no"
+
+  # Legacy Redis for compatibility (remove after migration)
+  redis-cluster:
+    image: redis:7.2-alpine
+    container_name: redis-legacy
+    command: >
+      redis-server 
+      --maxmemory 512mb
+      --maxmemory-policy allkeys-lru
+      --appendonly yes
+      --appendfsync everysec
+    volumes:
+      - redis_legacy_data:/data
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+          cpus: '0.5'
+      redis-server 
+      --appendonly yes 
+      --cluster-enabled yes 
+      --cluster-config-file nodes.conf 
+      --cluster-node-timeout 5000
+      --maxmemory 1gb
+      --maxmemory-policy allkeys-lru
+      --save 900 1
+      --save 300 10
+      --save 60 10000
+    volumes:
+      - redis_data:/data
+      - ./config/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    networks:
+      - backend
+      - monitoring
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '0.5'
+        reservations:
+          memory: 512M
+          cpus: '0.25'
+
+  # ChromaDB pour embeddings persistants
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: chromadb-prod
+    environment:
+      - IS_PERSISTENT=TRUE
+      - PERSIST_DIRECTORY=/chroma/chroma
+      - ANONYMIZED_TELEMETRY=FALSE
+      - CHROMA_SERVER_AUTHN_CREDENTIALS_FILE=/run/secrets/chroma_credentials
+      - CHROMA_SERVER_AUTHN_PROVIDER=chromadb.auth.basic.BasicAuthenticationServerProvider
+    secrets:
+      - chroma_credentials
+    volumes:
+      - chroma_data:/chroma/chroma
+    networks:
+      - backend
+      - monitoring
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+
+  # Prometheus pour métriques
+  prometheus:
+    image: prom/prometheus:v2.45.0
+    container_name: prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.enable-lifecycle'
+      - '--web.route-prefix=/'
+      - '--web.external-url=http://localhost:9090/'
+    volumes:
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./config/prometheus/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - monitoring
+      - backend
+    ports:
+      - "9090:9090"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+
+  # Grafana pour dashboards
+  grafana:
+    image: grafana/grafana:10.0.0
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD_FILE=/run/secrets/grafana_admin_password
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_ROOT_URL=https://grafana.company.com
+      - GF_SECURITY_SECRET_KEY_FILE=/run/secrets/grafana_secret_key
+      - GF_DATABASE_TYPE=postgres
+      - GF_DATABASE_HOST=postgres:5432
+      - GF_DATABASE_NAME=grafana
+      - GF_DATABASE_USER_FILE=/run/secrets/postgres_user
+      - GF_DATABASE_PASSWORD_FILE=/run/secrets/postgres_password
+    secrets:
+      - grafana_admin_password
+      - grafana_secret_key
+      - postgres_user
+      - postgres_password
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./config/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./config/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    networks:
+      - monitoring
+      - backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+      - postgres
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '0.5'
+
+  # AlertManager pour alertes
+  alertmanager:
+    image: prom/alertmanager:v0.26.0
+    container_name: alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+      - '--web.external-url=http://localhost:9093/'
+      - '--web.route-prefix=/'
+    volumes:
+      - ./config/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - alertmanager_data:/alertmanager
+    networks:
+      - monitoring
+    ports:
+      - "9093:9093"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9093/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # Elasticsearch pour logs centralisés
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD_FILE=/run/secrets/elastic_password
+    secrets:
+      - elastic_password
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - monitoring
+    ports:
+      - "9200:9200"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-u", "elastic:$(cat /run/secrets/elastic_password)", "http://localhost:9200/_cluster/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+
+  # Logstash pour traitement des logs
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.9.0
+    container_name: logstash
+    volumes:
+      - ./config/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+      - ./config/logstash/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
+      - ./logs:/var/log/apps:ro
+    networks:
+      - monitoring
+    depends_on:
+      - elasticsearch
+    environment:
+      - "LS_JAVA_OPTS=-Xmx1g -Xms1g"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9600/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # Kibana pour visualisation des logs
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.9.0
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD_FILE=/run/secrets/elastic_password
+    secrets:
+      - elastic_password
+    volumes:
+      - kibana_data:/usr/share/kibana/data
+    networks:
+      - monitoring
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5601/api/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+
+  # Jaeger pour distributed tracing
+  jaeger:
+    image: jaegertracing/all-in-one:1.47
+    container_name: jaeger
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+      - SPAN_STORAGE_TYPE=elasticsearch
+      - ES_SERVER_URLS=http://elasticsearch:9200
+      - ES_USERNAME=elastic
+      - ES_PASSWORD_FILE=/run/secrets/elastic_password
+    secrets:
+      - elastic_password
+    networks:
+      - monitoring
+    ports:
+      - "16686:16686"  # Jaeger UI
+      - "14268:14268"  # Jaeger collector
+    depends_on:
+      - elasticsearch
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:16686/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+# Networks sécurisés
+networks:
+  frontend:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.1.0/24
+  backend:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.2.0/24
+  monitoring:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.3.0/24
+
+# Volumes persistants
+volumes:
+  # PostgreSQL Primary and Replicas
+  postgres_primary_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/postgres/primary
+  postgres_replica1_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/postgres/replica1
+  postgres_replica2_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/postgres/replica2
+  
+  # Redis Cluster Nodes
+  redis_cluster1_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/redis/cluster1
+  redis_cluster2_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/redis/cluster2
+  redis_cluster3_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/redis/cluster3
+  redis_legacy_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/redis/legacy
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/redis
+  chroma_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/chroma
+  prometheus_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/prometheus
+  grafana_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/grafana
+  alertmanager_data:
+    driver: local
+  elasticsearch_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/elasticsearch
+  kibana_data:
+    driver: local
+
+# Secrets Docker Swarm
+secrets:
+  orchestrator_api_key:
+    external: true
+  openai_api_key:
+    external: true
+  anthropic_api_key:
+    external: true
+  postgres_user:
+    external: true
+  postgres_password:
+    external: true
+  postgres_replication_user:
+    external: true
+  postgres_replication_password:
+    external: true
+  vault_token:
+    external: true
+  grafana_admin_password:
+    external: true
+  grafana_secret_key:
+    external: true
+  elastic_password:
+    external: true
+  chroma_credentials:
+    external: true

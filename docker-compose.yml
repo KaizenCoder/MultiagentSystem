@@ -1,0 +1,125 @@
+version: '3.8'
+
+services:  # Service PostgreSQL pour la mémoire NextGeneration
+  postgres:
+    image: postgres:16-alpine
+    container_name: agent_postgres_nextgen
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-SecurePostgresPassword2024!}
+      POSTGRES_DB: ${POSTGRES_DB:-agent_memory_nextgen}
+      # Configuration PostgreSQL optimisée
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./memory_api/init_postgres.py:/docker-entrypoint-initdb.d/init_postgres.py:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-agent_memory_nextgen}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - agent_network
+    command: >
+      postgres 
+      -c max_connections=200
+      -c shared_buffers=256MB
+      -c effective_cache_size=1GB
+      -c maintenance_work_mem=64MB
+      -c checkpoint_completion_target=0.9
+      -c wal_buffers=16MB
+      -c default_statistics_target=100
+      -c random_page_cost=1.1
+      -c effective_io_concurrency=200
+      -c work_mem=4MB
+      -c huge_pages=off
+      -c min_wal_size=1GB
+      -c max_wal_size=4GB
+      -c max_worker_processes=8
+      -c max_parallel_workers_per_gather=2
+      -c max_parallel_workers=8
+      -c log_destination='stderr'
+      -c logging_collector=off
+      -c log_statement='mod'
+      -c log_duration=on
+      -c log_min_duration_statement=1000
+
+  # Service ChromaDB pour la mémoire à long terme
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: agent_chromadb
+    volumes:
+      - chroma_data:/chroma/chroma
+    environment:
+      IS_PERSISTENT: TRUE
+      PERSIST_DIRECTORY: /chroma/chroma
+      ANONYMIZED_TELEMETRY: FALSE
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - agent_network
+
+  # API de mémoire hybride
+  memory_api:
+    build:
+      context: ./memory_api
+      dockerfile: Dockerfile
+    container_name: agent_memory_api
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-SecurePostgresPassword2024!}@postgres:5432/${POSTGRES_DB:-agent_memory_nextgen}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-SecurePostgresPassword2024!}
+      - POSTGRES_DB=${POSTGRES_DB:-agent_memory_nextgen}
+      - POSTGRES_PORT=5432
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+      - ENVIRONMENT=production
+    volumes:
+      - ./codebase_docs:/app/codebase_docs:ro
+      - ./memory_api/app:/app/app:ro
+    ports:
+      - "8001:8001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      chromadb:
+        condition: service_healthy
+    networks:
+      - agent_network
+
+  # Service d'orchestration LangGraph
+  orchestrator:
+    build:
+      context: ./orchestrator
+      dockerfile: Dockerfile
+    container_name: agent_orchestrator
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - MEMORY_API_URL=http://memory_api:8001
+    volumes:
+      - ./orchestrator/app:/app/app:ro
+    ports:
+      - "8002:8002"
+    depends_on:
+      - memory_api
+    networks:
+      - agent_network
+
+networks:
+  agent_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  chroma_data: 

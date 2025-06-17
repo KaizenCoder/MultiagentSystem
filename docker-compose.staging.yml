@@ -1,0 +1,219 @@
+# Docker Compose pour environnement staging sécurisé
+# Utilise avec: docker-compose -f docker-compose.yml -f docker-compose.staging.yml up
+
+version: '3.8'
+
+services:
+  orchestrator:
+    image: orchestrator:${ORCHESTRATOR_IMAGE_TAG:-staging}
+    environment:
+      - ENVIRONMENT=staging
+      - LOG_LEVEL=INFO
+      - ENABLE_DEBUG=false
+      - SECURITY_MODE=strict
+      - RATE_LIMIT_ENABLED=true
+      - HEALTH_CHECK_INTERVAL=30
+      # Secrets en variables d'environnement pour staging (TEMPORAIRE)
+      - OPENAI_API_KEY=${STAGING_OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${STAGING_ANTHROPIC_API_KEY}
+      - SECRET_KEY=${STAGING_SECRET_KEY}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:noexec,nosuid,size=100m
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '0.5'
+        reservations:
+          memory: 512M
+          cpus: '0.25'
+    networks:
+      - orchestrator-staging-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.orchestrator-staging.rule=Host(`orchestrator-staging.local`)"
+      - "traefik.http.services.orchestrator-staging.loadbalancer.server.port=8002"
+
+  memory_api:
+    image: memory_api:${MEMORY_API_IMAGE_TAG:-staging}
+    environment:
+      - ENVIRONMENT=staging
+      - LOG_LEVEL=INFO
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/orchestrator_memory
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:noexec,nosuid,size=50m
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.3'
+        reservations:
+          memory: 256M
+          cpus: '0.1'
+    networks:
+      - orchestrator-staging-network
+
+  postgres:
+    environment:
+      - POSTGRES_DB=orchestrator_memory
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-staging_secure_pass_2024}
+      - POSTGRES_INITDB_ARGS=--auth-host=scram-sha-256
+    command: >
+      postgres
+      -c ssl=on
+      -c ssl_cert_file=/var/lib/postgresql/server.crt
+      -c ssl_key_file=/var/lib/postgresql/server.key
+      -c ssl_ca_file=/var/lib/postgresql/ca.crt
+      -c shared_preload_libraries=pg_stat_statements
+      -c pg_stat_statements.track=all
+      -c log_statement=mod
+      -c log_min_duration_statement=1000
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d orchestrator_memory"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.3'
+    volumes:
+      - orchestrator-staging-db:/var/lib/postgresql/data:Z
+    networks:
+      - orchestrator-staging-network
+
+  chromadb:
+    environment:
+      - CHROMA_SERVER_AUTH_PROVIDER=chromadb.auth.basic.BasicAuthServerProvider
+      - CHROMA_SERVER_AUTH_CREDENTIALS_FILE=/chroma/auth/credentials
+      - CHROMA_SERVER_AUTH_CREDENTIALS_PROVIDER=chromadb.auth.providers.HtpasswdFileServerAuthCredentialsProvider
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '0.5'
+        reservations:
+          memory: 512M
+          cpus: '0.25'
+    volumes:
+      - orchestrator-staging-chromadb:/chroma/chroma:Z
+    networks:
+      - orchestrator-staging-network
+
+  # Service de monitoring pour staging
+  monitoring:
+    image: prom/prometheus:latest
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=7d'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./monitoring/prometheus-staging.yml:/etc/prometheus/prometheus.yml:ro
+      - orchestrator-staging-prometheus:/prometheus:Z
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.2'
+    networks:
+      - orchestrator-staging-network
+    profiles:
+      - monitoring
+
+  # Collecteur de logs pour staging
+  fluentd:
+    image: fluent/fluentd:v1.16.2-1.0
+    volumes:
+      - ./monitoring/fluentd-staging.conf:/fluentd/etc/fluent.conf:ro
+      - orchestrator-staging-logs:/var/log/fluentd:Z
+    environment:
+      - FLUENTD_CONF=fluent.conf
+      - FLUENTD_OPT=-v
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.1'
+    networks:
+      - orchestrator-staging-network
+    profiles:
+      - monitoring
+
+networks:
+  orchestrator-staging-network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.enable_icc: "true"
+      com.docker.network.bridge.enable_ip_masquerade: "true"
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  orchestrator-staging-db:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/lib/docker/volumes/orchestrator-staging-db
+  
+  orchestrator-staging-chromadb:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/lib/docker/volumes/orchestrator-staging-chromadb
+  
+  orchestrator-staging-prometheus:
+    driver: local
+  
+  orchestrator-staging-logs:
+    driver: local

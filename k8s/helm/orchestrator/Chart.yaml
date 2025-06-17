@@ -1,0 +1,34 @@
+apiVersion: v2
+name: orchestrator
+description: NextGeneration Multi-Agent Orchestrator - Production Helm Chart
+type: application
+version: 1.3.0
+appVersion: "1.3.0"
+
+keywords:
+  - langgraph
+  - multi-agent
+  - orchestrator
+  - production
+
+maintainers:
+  - name: IA-2 Architecture Team
+    email: ia2@nextgeneration.com
+
+dependencies:
+  - name: postgresql
+    version: 12.1.9
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+  - name: redis
+    version: 17.3.7
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
+  - name: prometheus
+    version: 23.1.0
+    repository: https://prometheus-community.github.io/helm-charts
+    condition: monitoring.prometheus.enabled
+  - name: grafana
+    version: 6.50.7
+    repository: https://grafana.github.io/helm-charts
+    condition: monitoring.grafana.enabled

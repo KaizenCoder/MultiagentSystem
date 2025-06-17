@@ -1,0 +1,79 @@
+{
+  "Environment": "production",
+  "Summary": {
+    "Total": 7,
+    "Failed": 3,
+    "Low": 1,
+    "Critical": 0,
+    "High": 0,
+    "Medium": 2,
+    "Passed": 4,
+    "SecurityScore": 85
+  },
+  "Timestamp": "2025-06-17T11:53:05Z",
+  "Tests": [
+    {
+      "Details": "Aucune connexion n’a pu être établie car l’ordinateur cible l’a expressément refusée. (localhost:8002)",
+      "Severity": "Low",
+      "Passed": false,
+      "Timestamp": "2025-06-17T11:53:09Z",
+      "Category": "Authentication",
+      "Name": "Health Endpoint Accessibility",
+      "Description": "Health endpoint failed"
+    },
+    {
+      "Details": "Access denied",
+      "Severity": "High",
+      "Passed": true,
+      "Timestamp": "2025-06-17T11:53:13Z",
+      "Category": "Authorization",
+      "Name": "Admin Endpoint Protection",
+      "Description": "Admin endpoint properly protected"
+    },
+    {
+      "Details": "Request blocked",
+      "Severity": "Critical",
+      "Passed": true,
+      "Timestamp": "2025-06-17T11:53:17Z",
+      "Category": "Input Validation",
+      "Name": "SQL Injection Protection",
+      "Description": "SQL injection properly blocked"
+    },
+    {
+      "Details": "Aucune connexion n’a pu être établie car l’ordinateur cible l’a expressément refusée. (localhost:8002)",
+      "Severity": "Medium",
+      "Passed": false,
+      "Timestamp": "2025-06-17T11:53:21Z",
+      "Category": "Transport Security",
+      "Name": "Security Headers",
+      "Description": "Failed to check security headers"
+    },
+    {
+      "Details": "Rate limit active: False",
+      "Severity": "Medium",
+      "Passed": false,
+      "Timestamp": "2025-06-17T11:53:42Z",
+      "Category": "DoS Protection",
+      "Name": "Rate Limiting",
+      "Description": "Rate limiting should prevent excessive requests"
+    },
+    {
+      "Details": "Generic error response",
+      "Severity": "Medium",
+      "Passed": true,
+      "Timestamp": "2025-06-17T11:53:46Z",
+      "Category": "Information Disclosure",
+      "Name": "Error Information Disclosure",
+      "Description": "Error handling works correctly"
+    },
+    {
+      "Details": "Access denied",
+      "Severity": "Critical",
+      "Passed": true,
+      "Timestamp": "2025-06-17T11:53:50Z",
+      "Category": "Secrets Management",
+      "Name": "Secret Exposure",
+      "Description": "Config endpoint properly protected"
+    }
+  ]
+}
