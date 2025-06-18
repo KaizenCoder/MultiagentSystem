@@ -288,3 +288,15 @@ class InputSanitizer:
             return ""
         
         return sanitized.strip()
+
+    @staticmethod
+    def sanitize_shell_command(command: str) -> str:
+        """
+        Sanitizes a shell command by removing potentially dangerous characters.
+        This is a basic sanitization and should be used with command whitelisting.
+        """
+        if not command:
+            return ""
+        # Remove characters other than alphanum, spaces, hyphens, underscores, slashes, dots, pipes, and quotes for arguments.
+        sanitized = re.sub(r'[^a-zA-Z0-9\s\-_/|\. \'"]', '', command)
+        return sanitized.strip()

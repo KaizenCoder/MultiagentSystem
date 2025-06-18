@@ -1,0 +1,57 @@
+2025-06-18 12:42:07,667 - agent_testing_specialist - INFO - 🚀 Agent Testing Specialist - Démarrage mission testing
+2025-06-18 12:42:07,667 - agent_testing_specialist - INFO - 🧪 Exécution suite tests complète
+2025-06-18 12:42:07,667 - agent_testing_specialist - INFO - 🗜️ Tests moteur backup
+2025-06-18 12:42:07,677 - agent_testing_specialist - INFO - 📊 Création données test
+2025-06-18 12:42:07,684 - agent_testing_specialist - INFO - ✅ Données test créées: 10 fichiers + 4 exclusions
+2025-06-18 12:42:07,684 - agent_backup_engine - INFO - 🗜️ Début backup optimisé: C:\Dev\nextgeneration\tools\zip_backup\tests\data\test_project -> C:\Dev\nextgeneration\tools\zip_backup\tests\results\test_backup_1750243327.zip
+2025-06-18 12:42:07,685 - agent_backup_engine - INFO - 📊 Collecte fichiers depuis: C:\Dev\nextgeneration\tools\zip_backup\tests\data\test_project
+2025-06-18 12:42:07,686 - agent_backup_engine - INFO - 📋 10 fichiers collectés
+2025-06-18 12:42:07,687 - agent_backup_engine - INFO - 🗜️ Compression vers: C:\Dev\nextgeneration\tools\zip_backup\tests\results\test_backup_1750243327.zip
+2025-06-18 12:42:07,735 - agent_backup_engine - INFO - 🔍 Vérification intégrité: C:\Dev\nextgeneration\tools\zip_backup\tests\results\test_backup_1750243327.zip
+2025-06-18 12:42:07,743 - agent_backup_engine - INFO - ✅ Intégrité archive validée
+2025-06-18 12:42:07,744 - agent_backup_engine - INFO - ✅ Backup terminé: 10 fichiers, compression 54.4%, durée 0.06s
+2025-06-18 12:42:07,744 - agent_backup_engine - INFO - 🗜️ Début backup optimisé: C:\Dev\nextgeneration\tools\zip_backup\tests\data\test_project -> C:\Dev\nextgeneration\tools\zip_backup\tests\results\integrity_test_1750243327.zip
+2025-06-18 12:42:07,744 - agent_backup_engine - INFO - 📊 Collecte fichiers depuis: C:\Dev\nextgeneration\tools\zip_backup\tests\data\test_project
+2025-06-18 12:42:07,746 - agent_backup_engine - INFO - 📋 10 fichiers collectés
+2025-06-18 12:42:07,746 - agent_backup_engine - INFO - 🗜️ Compression vers: C:\Dev\nextgeneration\tools\zip_backup\tests\results\integrity_test_1750243327.zip
+2025-06-18 12:42:07,748 - agent_backup_engine - INFO - 🔍 Vérification intégrité: C:\Dev\nextgeneration\tools\zip_backup\tests\results\integrity_test_1750243327.zip
+2025-06-18 12:42:07,758 - agent_backup_engine - INFO - ✅ Intégrité archive validée
+2025-06-18 12:42:07,758 - agent_backup_engine - INFO - ✅ Backup terminé: 10 fichiers, compression 54.5%, durée 0.01s
+2025-06-18 12:42:07,759 - agent_backup_engine - INFO - 🗜️ Début backup optimisé: C:\Dev\nextgeneration\tools\zip_backup\tests\data\test_project -> C:\Dev\nextgeneration\tools\zip_backup\tests\results\exclusions_test_1750243327.zip
+2025-06-18 12:42:07,759 - agent_backup_engine - INFO - 📊 Collecte fichiers depuis: C:\Dev\nextgeneration\tools\zip_backup\tests\data\test_project
+2025-06-18 12:42:07,761 - agent_backup_engine - INFO - 📋 10 fichiers collectés
+2025-06-18 12:42:07,761 - agent_backup_engine - INFO - 🗜️ Compression vers: C:\Dev\nextgeneration\tools\zip_backup\tests\results\exclusions_test_1750243327.zip
+2025-06-18 12:42:07,769 - agent_backup_engine - INFO - 🔍 Vérification intégrité: C:\Dev\nextgeneration\tools\zip_backup\tests\results\exclusions_test_1750243327.zip
+2025-06-18 12:42:07,779 - agent_backup_engine - INFO - ✅ Intégrité archive validée
+2025-06-18 12:42:07,780 - agent_backup_engine - INFO - ✅ Backup terminé: 10 fichiers, compression 54.8%, durée 0.02s
+2025-06-18 12:42:07,780 - agent_testing_specialist - INFO - ⚙️ Tests gestionnaire configuration
+2025-06-18 12:42:07,786 - agent_configuration_manager - INFO - 🎯 Création configuration projet: test_project_config
+2025-06-18 12:42:07,788 - agent_configuration_manager - INFO - ✅ Configuration projet créée: test_project_config
+2025-06-18 12:42:07,795 - agent_configuration_manager - INFO - 🔍 Validation configuration: test_project_config
+2025-06-18 12:42:07,796 - agent_testing_specialist - INFO - 📁 Tests gestion fichiers
+2025-06-18 12:42:07,802 - agent_file_management - INFO - 📊 Analyse structure: C:\Dev\nextgeneration\tools\zip_backup\tests\data\test_project
+2025-06-18 12:42:07,805 - agent_file_management - INFO - ✅ Analyse terminée: 9 fichiers, 5 exclus
+2025-06-18 12:42:07,805 - agent_file_management - INFO - 🔍 Filtrage fichiers: C:\Dev\nextgeneration\tools\zip_backup\tests\data\test_project
+2025-06-18 12:42:07,807 - agent_file_management - INFO - ✅ 9 fichiers sélectionnés pour backup
+2025-06-18 12:42:07,808 - agent_testing_specialist - INFO - 🔗 Tests intégration système
+2025-06-18 12:42:07,808 - agent_configuration_manager - INFO - 🎯 Création configuration projet: integration_test
+2025-06-18 12:42:07,816 - agent_configuration_manager - INFO - ✅ Configuration projet créée: integration_test
+2025-06-18 12:42:07,816 - agent_file_management - INFO - 🔍 Filtrage fichiers: C:\Dev\nextgeneration\tools\zip_backup\tests\data\test_project
+2025-06-18 12:42:07,819 - agent_file_management - INFO - ✅ 9 fichiers sélectionnés pour backup
+2025-06-18 12:42:07,819 - agent_backup_engine - INFO - 🗜️ Début backup optimisé: C:\Dev\nextgeneration\tools\zip_backup\tests\data\test_project -> C:\Dev\nextgeneration\tools\zip_backup\tests\results\integration_test_1750243327.zip
+2025-06-18 12:42:07,819 - agent_backup_engine - INFO - 📊 Collecte fichiers depuis: C:\Dev\nextgeneration\tools\zip_backup\tests\data\test_project
+2025-06-18 12:42:07,821 - agent_backup_engine - INFO - 📋 9 fichiers collectés
+2025-06-18 12:42:07,821 - agent_backup_engine - INFO - 🗜️ Compression vers: C:\Dev\nextgeneration\tools\zip_backup\tests\results\integration_test_1750243327.zip
+2025-06-18 12:42:07,824 - agent_backup_engine - INFO - 🔍 Vérification intégrité: C:\Dev\nextgeneration\tools\zip_backup\tests\results\integration_test_1750243327.zip
+2025-06-18 12:42:07,832 - agent_backup_engine - INFO - ✅ Intégrité archive validée
+2025-06-18 12:42:07,833 - agent_backup_engine - INFO - ✅ Backup terminé: 9 fichiers, compression 57.5%, durée 0.01s
+2025-06-18 12:42:07,847 - agent_backup_engine - INFO - 🗜️ Début backup optimisé: C:\Dev\nextgeneration\tools\zip_backup\tests\data\large_test -> C:\Dev\nextgeneration\tools\zip_backup\tests\results\performance_test_1750243327.zip
+2025-06-18 12:42:07,848 - agent_backup_engine - INFO - 📊 Collecte fichiers depuis: C:\Dev\nextgeneration\tools\zip_backup\tests\data\large_test
+2025-06-18 12:42:07,851 - agent_backup_engine - INFO - 📋 50 fichiers collectés
+2025-06-18 12:42:07,851 - agent_backup_engine - INFO - 🗜️ Compression vers: C:\Dev\nextgeneration\tools\zip_backup\tests\results\performance_test_1750243327.zip
+2025-06-18 12:42:08,170 - agent_backup_engine - INFO - 🔍 Vérification intégrité: C:\Dev\nextgeneration\tools\zip_backup\tests\results\performance_test_1750243327.zip
+2025-06-18 12:42:08,177 - agent_backup_engine - INFO - ✅ Intégrité archive validée
+2025-06-18 12:42:08,177 - agent_backup_engine - INFO - ✅ Backup terminé: 50 fichiers, compression 98.4%, durée 0.33s
+2025-06-18 12:42:08,182 - agent_testing_specialist - INFO - ✅ Tests terminés: 9/9 réussis (100.0%)
+2025-06-18 12:42:08,183 - agent_testing_specialist - INFO - 📋 Rapport testing sauvegardé: C:\Dev\nextgeneration\tools\zip_backup\reports\agent_testing_specialist_rapport.json
+2025-06-18 12:42:08,183 - agent_testing_specialist - INFO - ✅ Mission testing SUCCESS - Validation système prête

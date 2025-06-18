@@ -1,0 +1,28 @@
+{
+  "name": "integration_test",
+  "source_path": "C:\\Dev\\nextgeneration\\tools\\zip_backup\\tests\\data\\test_project",
+  "backup_destination": "E:/DEV_BACKUP/integration_test",
+  "filename_pattern": "backup_integration_test_{timestamp}.zip",
+  "exclusions": [
+    ".git",
+    "__pycache__",
+    "*.pyc",
+    "*.log",
+    "node_modules",
+    ".env",
+    "*.tmp",
+    "__pycache__",
+    "*.pyc",
+    ".venv",
+    "venv",
+    ".pytest_cache"
+  ],
+  "retention_days": 30,
+  "schedule_enabled": true,
+  "schedule_time": "02:00",
+  "notifications_enabled": true,
+  "compression_level": 6,
+  "custom_settings": {
+    "project_type": "python"
+  }
+}

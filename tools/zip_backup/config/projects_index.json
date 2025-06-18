@@ -1,0 +1,25 @@
+{
+  "version": "1.0.0",
+  "created_at": "2025-06-18T12:34:29.904088",
+  "projects": {
+    "nextgeneration": {
+      "config_file": "nextgeneration_backup.json",
+      "created_at": "2025-06-18T12:52:33.712030",
+      "last_modified": "2025-06-18T12:52:33.712030"
+    },
+    "test_project_config": {
+      "config_file": "test_project_config_backup.json",
+      "created_at": "2025-06-18T12:42:07.788589",
+      "last_modified": "2025-06-18T12:42:07.788589"
+    },
+    "integration_test": {
+      "config_file": "integration_test_backup.json",
+      "created_at": "2025-06-18T12:42:07.815109",
+      "last_modified": "2025-06-18T12:42:07.815109"
+    }
+  },
+  "templates": [
+    "backup_config_template.json",
+    "multi_projects_template.json"
+  ]
+}

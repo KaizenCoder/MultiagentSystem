@@ -1,0 +1,21 @@
+{
+  "projects": {
+    "nextgeneration": {
+      "source_path": "C:/Dev/nextgeneration",
+      "backup_name": "backup_nextgeneration",
+      "custom_exclusions": [
+        "chroma_db/",
+        "logs/"
+      ]
+    },
+    "autre_projet": {
+      "source_path": "C:/Dev/autre_projet",
+      "backup_name": "backup_autre_projet",
+      "custom_exclusions": []
+    }
+  },
+  "global_settings": {
+    "backup_destination": "E:/DEV_BACKUP",
+    "retention_days": 30
+  }
+}

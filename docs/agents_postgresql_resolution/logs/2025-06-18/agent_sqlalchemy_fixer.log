@@ -1,0 +1,3 @@
+2025-06-18 01:34:02,511 - agent_sqlalchemy_fixer - INFO - Analyse des fichiers SQLAlchemy
+2025-06-18 01:34:02,553 - agent_sqlalchemy_fixer - INFO - Creation des corrections automatiques
+2025-06-18 01:34:02,558 - agent_sqlalchemy_fixer - INFO - Execution des corrections en mode test

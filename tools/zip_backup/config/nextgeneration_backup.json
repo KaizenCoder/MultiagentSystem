@@ -1,0 +1,25 @@
+{
+  "name": "nextgeneration",
+  "source_path": "C:/Dev/nextgeneration",
+  "backup_destination": "E:/DEV_BACKUP/nextgeneration",
+  "filename_pattern": "backup_nextgeneration_{timestamp}.zip",
+  "exclusions": [
+    ".git",
+    "__pycache__",
+    "*.pyc",
+    "*.log",
+    "node_modules",
+    ".env",
+    "*.tmp",
+    ".git"
+  ],
+  "retention_days": 30,
+  "schedule_enabled": true,
+  "schedule_time": "02:00",
+  "notifications_enabled": true,
+  "compression_level": 6,
+  "custom_settings": {
+    "description": "Projet NextGeneration Backup System",
+    "project_type": "git_repository"
+  }
+}

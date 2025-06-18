@@ -1,0 +1,48 @@
+{
+  "timestamp": "2025-06-18T12:42:15.770151",
+  "security_score": 75.0,
+  "total_checks": 4,
+  "passed_checks": 3,
+  "failed_checks": 1,
+  "issues_by_severity": {
+    "critical": 0,
+    "high": 0,
+    "medium": 1,
+    "low": 0
+  },
+  "security_status": "AT_RISK",
+  "checks_details": [
+    {
+      "name": "workspace_permissions",
+      "passed": true,
+      "severity": "LOW",
+      "description": "Permissions workspace correctes",
+      "recommendation": "Maintenir permissions actuelles",
+      "details": null
+    },
+    {
+      "name": "secret_key_security",
+      "passed": true,
+      "severity": "CRITICAL",
+      "description": "Clé secrète présente et sécurisée",
+      "recommendation": "Sauvegarder clé en lieu sûr",
+      "details": null
+    },
+    {
+      "name": "disk_space",
+      "passed": false,
+      "severity": "MEDIUM",
+      "description": "Erreur vérification espace: name 'shutil' is not defined",
+      "recommendation": "Vérifier destination backup",
+      "details": null
+    },
+    {
+      "name": "sensitive_files_exclusion",
+      "passed": true,
+      "severity": "HIGH",
+      "description": "Fichiers sensibles exclus par défaut",
+      "recommendation": "Maintenir exclusions fichiers sensibles",
+      "details": null
+    }
+  ]
+}

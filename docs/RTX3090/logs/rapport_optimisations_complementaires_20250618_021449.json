@@ -1,0 +1,158 @@
+{
+  "execution_info": {
+    "timestamp": "2025-06-18T02:14:49.896045",
+    "total_execution_time": 34.3282310962677,
+    "optimizations_count": 3
+  },
+  "optimizations_results": {
+    "Nettoyeur Disque": {
+      "models_before": [
+        {
+          "name": "mixtral:8x7b-instruct-v0.1-q3_k_m",
+          "size_gb": 0,
+          "size_str": "22"
+        },
+        {
+          "name": "nous-hermes-2-mistral-7b-dpo:latest",
+          "size_gb": 0,
+          "size_str": "4.1"
+        },
+        {
+          "name": "llama3:8b-instruct-q6_k",
+          "size_gb": 0,
+          "size_str": "6.6"
+        },
+        {
+          "name": "qwen2.5-coder:1.5b",
+          "size_gb": 0,
+          "size_str": "986"
+        },
+        {
+          "name": "starcoder2:3b",
+          "size_gb": 0,
+          "size_str": "1.7"
+        },
+        {
+          "name": "mixtral-8x7b:latest",
+          "size_gb": 0,
+          "size_str": "26"
+        },
+        {
+          "name": "qwen-coder-32b:latest",
+          "size_gb": 0,
+          "size_str": "19"
+        },
+        {
+          "name": "code-stral:latest",
+          "size_gb": 0,
+          "size_str": "8.6"
+        },
+        {
+          "name": "deepseek-coder:33b",
+          "size_gb": 0,
+          "size_str": "18"
+        },
+        {
+          "name": "deepseek-coder:6.7b",
+          "size_gb": 0,
+          "size_str": "3.8"
+        },
+        {
+          "name": "deepseek-coder:1.3b",
+          "size_gb": 0,
+          "size_str": "776"
+        },
+        {
+          "name": "lux_model:latest",
+          "size_gb": 0,
+          "size_str": "2.0"
+        },
+        {
+          "name": "llama3.2:latest",
+          "size_gb": 0,
+          "size_str": "2.0"
+        },
+        {
+          "name": "nomic-embed-text:latest",
+          "size_gb": 0,
+          "size_str": "274"
+        },
+        {
+          "name": "llama3.2:1b",
+          "size_gb": 0,
+          "size_str": "1.3"
+        }
+      ],
+      "total_size_before_gb": 0,
+      "models_to_remove": [
+        "deepseek-coder:6.7b",
+        "deepseek-coder:1.3b",
+        "llama3.2:latest",
+        "llama3.2:1b"
+      ],
+      "space_to_liberate_gb": 0,
+      "models_removed": [
+        "deepseek-coder:6.7b",
+        "deepseek-coder:1.3b",
+        "llama3.2:latest",
+        "llama3.2:1b"
+      ],
+      "cleanup_success": true,
+      "execution_time": 0.4042365550994873,
+      "status": "completed",
+      "errors": [],
+      "recommendations": [
+        "Supprimer deepseek-coder:6.7b (3.8) - Modèle redondant",
+        "Supprimer deepseek-coder:1.3b (776) - Modèle redondant",
+        "Supprimer llama3.2:latest (2.0) - Modèle redondant",
+        "Supprimer llama3.2:1b (1.3) - Modèle redondant"
+      ]
+    },
+    "Surveillance RTX3090": {
+      "monitor_script_exists": true,
+      "service_script_created": "surveillance_continue_rtx3090.bat",
+      "dashboard_created": "dashboard_rtx3090.py",
+      "monitor_test": true,
+      "execution_time": 0.06983757019042969,
+      "status": "completed",
+      "errors": [],
+      "recommendations": [
+        "Lancer surveillance: surveillance_continue_rtx3090.bat",
+        "Dashboard temps réel: python dashboard_rtx3090.py",
+        "Monitoring automatique configuré pour sessions 5 min"
+      ]
+    },
+    "Benchmarks Performance": {
+      "ollama_available": false,
+      "models_count": 11,
+      "error": "",
+      "benchmark_script_created": "benchmark_rtx3090_complet.py",
+      "execution_time": 30.83125948905945,
+      "status": "completed",
+      "errors": [],
+      "recommendations": [
+        "Benchmark complet: python benchmark_rtx3090_complet.py",
+        "Performance RTX3090 validée avec modèles optimisés",
+        "Monitoring automatique de performance recommandé"
+      ]
+    }
+  },
+  "global_status": "success",
+  "summary": {
+    "completed": 3,
+    "failed": 0,
+    "total_optimizations": 3
+  },
+  "recommendations": [
+    "Supprimer deepseek-coder:6.7b (3.8) - Modèle redondant",
+    "Supprimer deepseek-coder:1.3b (776) - Modèle redondant",
+    "Supprimer llama3.2:latest (2.0) - Modèle redondant",
+    "Supprimer llama3.2:1b (1.3) - Modèle redondant",
+    "Lancer surveillance: surveillance_continue_rtx3090.bat",
+    "Dashboard temps réel: python dashboard_rtx3090.py",
+    "Monitoring automatique configuré pour sessions 5 min",
+    "Benchmark complet: python benchmark_rtx3090_complet.py",
+    "Performance RTX3090 validée avec modèles optimisés",
+    "Monitoring automatique de performance recommandé"
+  ]
+}

@@ -1,0 +1,2 @@
+2025-06-18 01:45:46,568 - agent_windows_postgres - WARNING - Erreur vérification PostgreSQL natif: [WinError 2] Le fichier spécifié est introuvable
+2025-06-18 01:45:49,307 - agent_windows_postgres - WARNING - Erreur vérification services Windows: 'NoneType' object has no attribute 'split'

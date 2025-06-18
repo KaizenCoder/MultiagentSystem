@@ -1,0 +1,431 @@
+{
+  "structure": {
+    "timestamp": "2025-06-18T01:54:59.069125",
+    "repertoires": {
+      "backups": {
+        "nombre_fichiers": 0,
+        "sous_repertoires": 1,
+        "taille": 33052
+      },
+      "documentation": {
+        "nombre_fichiers": 0,
+        "sous_repertoires": 0,
+        "taille": 0
+      },
+      "logs": {
+        "nombre_fichiers": 3,
+        "sous_repertoires": 1,
+        "taille": 4955
+      },
+      "rapports": {
+        "nombre_fichiers": 15,
+        "sous_repertoires": 0,
+        "taille": 140774
+      },
+      "solutions": {
+        "nombre_fichiers": 6,
+        "sous_repertoires": 1,
+        "taille": 48966
+      },
+      "tests": {
+        "nombre_fichiers": 7,
+        "sous_repertoires": 0,
+        "taille": 29031
+      },
+      "backups\\original_files": {
+        "nombre_fichiers": 3,
+        "sous_repertoires": 0,
+        "taille": 33052
+      },
+      "logs\\2025-06-18": {
+        "nombre_fichiers": 6,
+        "sous_repertoires": 0,
+        "taille": 3008
+      },
+      "solutions\\sqlalchemy_fixes": {
+        "nombre_fichiers": 8,
+        "sous_repertoires": 0,
+        "taille": 31072
+      }
+    },
+    "fichiers_crees": [
+      {
+        "chemin": "agent_docker_specialist.py",
+        "taille": 28491,
+        "modifie": "2025-06-18T01:27:00.264709",
+        "categorie": "agent_executable"
+      },
+      {
+        "chemin": "agent_sqlalchemy_fixer.py",
+        "taille": 22599,
+        "modifie": "2025-06-18T01:38:42.047439",
+        "categorie": "agent_executable"
+      },
+      {
+        "chemin": "agent_testing_specialist.py",
+        "taille": 27802,
+        "modifie": "2025-06-18T01:27:00.264709",
+        "categorie": "agent_executable"
+      },
+      {
+        "chemin": "agent_web_researcher.py",
+        "taille": 25117,
+        "modifie": "2025-06-18T01:38:42.047439",
+        "categorie": "agent_executable"
+      },
+      {
+        "chemin": "agent_windows_postgres.py",
+        "taille": 18069,
+        "modifie": "2025-06-18T01:27:00.264709",
+        "categorie": "agent_executable"
+      },
+      {
+        "chemin": "agent_workspace_organizer.py",
+        "taille": 20150,
+        "modifie": "2025-06-18T01:38:42.048226",
+        "categorie": "agent_executable"
+      },
+      {
+        "chemin": "RAPPORT_FINAL_COORDINATION.md",
+        "taille": 7963,
+        "modifie": "2025-06-18T01:38:42.048226",
+        "categorie": "rapport_agent"
+      },
+      {
+        "chemin": "README.md",
+        "taille": 7139,
+        "modifie": "2025-06-18T01:27:00.263711",
+        "categorie": "documentation"
+      },
+      {
+        "chemin": "logs\\agent_docker_specialist.log",
+        "taille": 766,
+        "modifie": "2025-06-18T01:47:20.791981",
+        "categorie": "fichier_log"
+      },
+      {
+        "chemin": "logs\\agent_windows_postgres.log",
+        "taille": 292,
+        "modifie": "2025-06-18T01:45:49.307698",
+        "categorie": "fichier_log"
+      },
+      {
+        "chemin": "logs\\agent_workspace_organizer.log",
+        "taille": 889,
+        "modifie": "2025-06-18T01:54:59.069125",
+        "categorie": "fichier_log"
+      },
+      {
+        "chemin": "rapports\\agent_docker_specialist_rapport.json",
+        "taille": 13875,
+        "modifie": "2025-06-18T01:47:20.792502",
+        "categorie": "donnees_json"
+      },
+      {
+        "chemin": "rapports\\agent_docker_specialist_rapport.md",
+        "taille": 16974,
+        "modifie": "2025-06-18T01:47:20.791456",
+        "categorie": "rapport_agent"
+      },
+      {
+        "chemin": "rapports\\agent_sqlalchemy_fixer_rapport.json",
+        "taille": 20634,
+        "modifie": "2025-06-18T01:34:02.618580",
+        "categorie": "donnees_json"
+      },
+      {
+        "chemin": "rapports\\agent_sqlalchemy_fixer_rapport.md",
+        "taille": 22718,
+        "modifie": "2025-06-18T01:34:02.616583",
+        "categorie": "rapport_agent"
+      },
+      {
+        "chemin": "rapports\\agent_testing_specialist_rapport.json",
+        "taille": 5063,
+        "modifie": "2025-06-18T01:27:43.111371",
+        "categorie": "donnees_json"
+      },
+      {
+        "chemin": "rapports\\agent_testing_specialist_rapport.md",
+        "taille": 9121,
+        "modifie": "2025-06-18T01:27:43.110372",
+        "categorie": "rapport_agent"
+      },
+      {
+        "chemin": "rapports\\agent_web_researcher_rapport.json",
+        "taille": 10075,
+        "modifie": "2025-06-18T01:29:25.131650",
+        "categorie": "donnees_json"
+      },
+      {
+        "chemin": "rapports\\agent_web_researcher_rapport.md",
+        "taille": 11759,
+        "modifie": "2025-06-18T01:29:25.129650",
+        "categorie": "rapport_agent"
+      },
+      {
+        "chemin": "rapports\\agent_windows_postgres_rapport.json",
+        "taille": 2621,
+        "modifie": "2025-06-18T01:45:49.309715",
+        "categorie": "donnees_json"
+      },
+      {
+        "chemin": "rapports\\agent_windows_postgres_rapport.md",
+        "taille": 4520,
+        "modifie": "2025-06-18T01:45:49.308698",
+        "categorie": "rapport_agent"
+      },
+      {
+        "chemin": "rapports\\agent_workspace_organizer_rapport.json",
+        "taille": 8616,
+        "modifie": "2025-06-18T01:35:31.686804",
+        "categorie": "donnees_json"
+      },
+      {
+        "chemin": "rapports\\agent_workspace_organizer_rapport.md",
+        "taille": 6770,
+        "modifie": "2025-06-18T01:35:31.684674",
+        "categorie": "rapport_agent"
+      },
+      {
+        "chemin": "rapports\\index.md",
+        "taille": 2125,
+        "modifie": "2025-06-18T01:50:48.400381",
+        "categorie": "documentation"
+      },
+      {
+        "chemin": "rapports\\RAPPORT_SYNTHESE_CORRECTIONS_SQLALCHEMY.md",
+        "taille": 4172,
+        "modifie": "2025-06-18T01:50:48.380862",
+        "categorie": "rapport_agent"
+      },
+      {
+        "chemin": "rapports\\VALIDATION_FINALE_CORRECTIONS_20250618_015013.json",
+        "taille": 1731,
+        "modifie": "2025-06-18T01:50:13.298285",
+        "categorie": "donnees_json"
+      },
+      {
+        "chemin": "solutions\\docker_utf8_fix_20250618_014847.json",
+        "taille": 882,
+        "modifie": "2025-06-18T01:48:47.728796",
+        "categorie": "donnees_json"
+      },
+      {
+        "chemin": "solutions\\encoding_fix_report_20250618_014703.json",
+        "taille": 910,
+        "modifie": "2025-06-18T01:47:03.298770",
+        "categorie": "donnees_json"
+      },
+      {
+        "chemin": "solutions\\encoding_fix_report_20250618_014709.json",
+        "taille": 910,
+        "modifie": "2025-06-18T01:47:09.388808",
+        "categorie": "donnees_json"
+      },
+      {
+        "chemin": "solutions\\fix_encoding_postgresql.py",
+        "taille": 6696,
+        "modifie": "2025-06-18T01:50:48.401385",
+        "categorie": "script_correction"
+      },
+      {
+        "chemin": "solutions\\fix_encoding_windows.ps1",
+        "taille": 626,
+        "modifie": "2025-06-18T01:47:09.387702",
+        "categorie": "autre"
+      },
+      {
+        "chemin": "solutions\\fix_postgres_encoding_docker.py",
+        "taille": 7870,
+        "modifie": "2025-06-18T01:50:48.401385",
+        "categorie": "script_correction"
+      },
+      {
+        "chemin": "tests\\test_postgresql_ameliore.py",
+        "taille": 10722,
+        "modifie": "2025-06-18T01:27:38.427901",
+        "categorie": "script_test"
+      },
+      {
+        "chemin": "tests\\test_results_20250618_012743.json",
+        "taille": 718,
+        "modifie": "2025-06-18T01:27:43.055247",
+        "categorie": "donnees_json"
+      },
+      {
+        "chemin": "tests\\test_results_20250618_014347.json",
+        "taille": 718,
+        "modifie": "2025-06-18T01:43:47.846333",
+        "categorie": "donnees_json"
+      },
+      {
+        "chemin": "tests\\test_results_20250618_014418.json",
+        "taille": 718,
+        "modifie": "2025-06-18T01:44:18.987093",
+        "categorie": "donnees_json"
+      },
+      {
+        "chemin": "tests\\test_validation_corrections.py",
+        "taille": 6274,
+        "modifie": "2025-06-18T01:50:48.380862",
+        "categorie": "script_test"
+      },
+      {
+        "chemin": "tests\\validation_corrections_20250618_014459.json",
+        "taille": 805,
+        "modifie": "2025-06-18T01:44:59.906781",
+        "categorie": "donnees_json"
+      },
+      {
+        "chemin": "tests\\validation_finale_sqlalchemy.py",
+        "taille": 9076,
+        "modifie": "2025-06-18T01:50:48.409759",
+        "categorie": "script_python"
+      },
+      {
+        "chemin": "backups\\original_files\\models.py",
+        "taille": 11002,
+        "modifie": "2025-06-17T22:49:49.414982",
+        "categorie": "script_python"
+      },
+      {
+        "chemin": "backups\\original_files\\models_backup_20250618.py",
+        "taille": 11002,
+        "modifie": "2025-06-17T22:49:49.414982",
+        "categorie": "script_python"
+      },
+      {
+        "chemin": "backups\\original_files\\models_backup_20250618_014333.py",
+        "taille": 11048,
+        "modifie": "2025-06-18T01:43:33.897502",
+        "categorie": "script_python"
+      },
+      {
+        "chemin": "logs\\2025-06-18\\agent_docker_specialist.log",
+        "taille": 359,
+        "modifie": "2025-06-18T01:25:05.502999",
+        "categorie": "fichier_log"
+      },
+      {
+        "chemin": "logs\\2025-06-18\\agent_sqlalchemy_fixer.log",
+        "taille": 286,
+        "modifie": "2025-06-18T01:34:02.558925",
+        "categorie": "fichier_log"
+      },
+      {
+        "chemin": "logs\\2025-06-18\\agent_testing_specialist.log",
+        "taille": 466,
+        "modifie": "2025-06-18T01:27:38.427901",
+        "categorie": "fichier_log"
+      },
+      {
+        "chemin": "logs\\2025-06-18\\agent_web_researcher.log",
+        "taille": 1418,
+        "modifie": "2025-06-18T01:29:25.128645",
+        "categorie": "fichier_log"
+      },
+      {
+        "chemin": "logs\\2025-06-18\\agent_windows_postgres.log",
+        "taille": 292,
+        "modifie": "2025-06-18T01:24:59.073305",
+        "categorie": "fichier_log"
+      },
+      {
+        "chemin": "logs\\2025-06-18\\agent_workspace_organizer.log",
+        "taille": 187,
+        "modifie": "2025-06-18T01:35:31.673595",
+        "categorie": "fichier_log"
+      },
+      {
+        "chemin": "solutions\\sqlalchemy_fixes\\fix_agent_sqlalchemy_fixer.py",
+        "taille": 3972,
+        "modifie": "2025-06-18T01:34:02.554999",
+        "categorie": "agent_executable"
+      },
+      {
+        "chemin": "solutions\\sqlalchemy_fixes\\fix_agent_testing_specialist.py",
+        "taille": 3716,
+        "modifie": "2025-06-18T01:34:02.556000",
+        "categorie": "agent_executable"
+      },
+      {
+        "chemin": "solutions\\sqlalchemy_fixes\\fix_agent_web_researcher.py",
+        "taille": 5115,
+        "modifie": "2025-06-18T01:34:02.557002",
+        "categorie": "agent_executable"
+      },
+      {
+        "chemin": "solutions\\sqlalchemy_fixes\\fix_database_optimizer.py",
+        "taille": 3272,
+        "modifie": "2025-06-18T01:34:02.558925",
+        "categorie": "script_correction"
+      },
+      {
+        "chemin": "solutions\\sqlalchemy_fixes\\fix_models.py",
+        "taille": 4007,
+        "modifie": "2025-06-18T01:34:02.557999",
+        "categorie": "script_correction"
+      },
+      {
+        "chemin": "solutions\\sqlalchemy_fixes\\fix_models_precise.py",
+        "taille": 3242,
+        "modifie": "2025-06-18T01:50:48.380862",
+        "categorie": "script_correction"
+      },
+      {
+        "chemin": "solutions\\sqlalchemy_fixes\\fix_session.py",
+        "taille": 4014,
+        "modifie": "2025-06-18T01:34:02.558422",
+        "categorie": "script_correction"
+      },
+      {
+        "chemin": "solutions\\sqlalchemy_fixes\\fix_test_postgresql_ameliore.py",
+        "taille": 3734,
+        "modifie": "2025-06-18T01:34:02.557002",
+        "categorie": "script_test"
+      }
+    ],
+    "taille_totale": 414108,
+    "organisation_score": 0
+  },
+  "organisation": {
+    "timestamp": "2025-06-18T01:54:59.080061",
+    "actions_effectuees": [
+      "Index rapports créé/mis à jour",
+      "Nettoyage 0 fichiers temporaires",
+      "Organisation 2 fichiers logs",
+      "Compression 3 backups"
+    ],
+    "fichiers_organises": 0,
+    "erreurs": []
+  },
+  "coordination": {
+    "timestamp": "2025-06-18T01:54:59.088067",
+    "agents_actifs": [
+      "agent_docker_specialist",
+      "agent_sqlalchemy_fixer",
+      "agent_testing_specialist",
+      "agent_web_researcher",
+      "agent_windows_postgres",
+      "agent_workspace_organizer"
+    ],
+    "statuts_missions": {
+      "agent_docker_specialist": "SUCCESS",
+      "agent_sqlalchemy_fixer": "SUCCESS",
+      "agent_testing_specialist": "SUCCESS",
+      "agent_web_researcher": "SUCCESS",
+      "agent_windows_postgres": "SUCCESS",
+      "agent_workspace_organizer": "SUCCESS"
+    },
+    "donnees_partagees": {},
+    "recommandations_finales": [
+      "Exécuter corrections SQLAlchemy en priorité (Agent SQLAlchemy Fixer)",
+      "Valider environnement Docker (Agent Docker Specialist)",
+      "Tester solutions sur environnement Windows (Agent Windows PostgreSQL)",
+      "Implémenter tests de régression (Agent Testing Specialist)",
+      "Appliquer solutions web validées (Agent Web Research)",
+      "Maintenir documentation à jour (Agent Workspace Organizer)"
+    ]
+  }
+}

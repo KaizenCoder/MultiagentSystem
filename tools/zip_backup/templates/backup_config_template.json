@@ -1,0 +1,27 @@
+{
+  "project_name": "nextgeneration",
+  "backup_destination": "E:/DEV_BACKUP",
+  "filename_pattern": "backup_{project_name}_{timestamp}.zip",
+  "retention_days": 30,
+  "exclusions": [
+    ".git",
+    "__pycache__",
+    "node_modules",
+    "*.pyc",
+    "*.log",
+    ".env"
+  ],
+  "schedule": {
+    "enabled": true,
+    "frequency": "daily",
+    "time": "02:00"
+  },
+  "notifications": {
+    "email": false,
+    "windows_toast": true
+  },
+  "compression": {
+    "level": 6,
+    "method": "ZIP_DEFLATED"
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "timestamp": "2025-06-18T12:42:08.182346",
+  "total_suites": 4,
+  "total_tests": 9,
+  "passed_tests": 9,
+  "failed_tests": 0,
+  "success_rate": 100.0,
+  "total_duration": 0.5152873992919922,
+  "suites": [
+    {
+      "name": "Backup Engine Tests",
+      "description": "Tests complets moteur backup",
+      "total_tests": 3,
+      "passed_tests": 3,
+      "failed_tests": 0,
+      "duration": 0.11352705955505371,
+      "success_rate": 100.0,
+      "tests": [
+        {
+          "name": "backup_creation",
+          "success": true,
+          "duration": 0.06752991676330566,
+          "details": "Fichiers: 10, Compression: 54.4%",
+          "error": null
+        },
+        {
+          "name": "integrity_validation",
+          "success": true,
+          "duration": 0.014994382858276367,
+          "details": "Intégrité: True, Métadonnées: True",
+          "error": null
+        },
+        {
+          "name": "exclusions_handling",
+          "success": true,
+          "duration": 0.021001577377319336,
+          "details": "Exclusions respectées: True, Fichiers: 10",
+          "error": null
+        }
+      ]
+    },
+    {
+      "name": "Configuration Manager Tests",
+      "description": "Tests gestionnaire configuration",
+      "total_tests": 2,
+      "passed_tests": 2,
+      "failed_tests": 0,
+      "duration": 0.015005111694335938,
+      "success_rate": 100.0,
+      "tests": [
+        {
+          "name": "config_creation",
+          "success": true,
+          "duration": 0.0029969215393066406,
+          "details": "Config créée: test_project_config",
+          "error": null
+        },
+        {
+          "name": "config_validation",
+          "success": true,
+          "duration": 0.007002115249633789,
+          "details": "Validation: True, Erreurs: 0",
+          "error": null
+        }
+      ]
+    },
+    {
+      "name": "File Management Tests",
+      "description": "Tests gestion fichiers et exclusions",
+      "total_tests": 2,
+      "passed_tests": 2,
+      "failed_tests": 0,
+      "duration": 0.011524438858032227,
+      "success_rate": 100.0,
+      "tests": [
+        {
+          "name": "directory_analysis",
+          "success": true,
+          "duration": 0.003000020980834961,
+          "details": "Fichiers analysés: 9, Exclus: 5",
+          "error": null
+        },
+        {
+          "name": "file_filtering",
+          "success": true,
+          "duration": 0.00299835205078125,
+          "details": "Fichiers filtrés: 9",
+          "error": null
+        }
+      ]
+    },
+    {
+      "name": "Integration System Tests",
+      "description": "Tests intégration système complète",
+      "total_tests": 2,
+      "passed_tests": 2,
+      "failed_tests": 0,
+      "duration": 0.37423133850097656,
+      "success_rate": 100.0,
+      "tests": [
+        {
+          "name": "complete_workflow",
+          "success": true,
+          "duration": 0.02500009536743164,
+          "details": "Config: ✅, Filtrage: 9, Backup: ✅",
+          "error": null
+        },
+        {
+          "name": "performance_test",
+          "success": true,
+          "duration": 0.3442366123199463,
+          "details": "Durée: 0.33s, Fichiers: 50",
+          "error": null
+        }
+      ]
+    }
+  ]
+}

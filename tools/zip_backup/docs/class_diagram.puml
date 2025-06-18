@@ -1,0 +1,84 @@
+
+@startuml BackupSystemClassDiagram
+!theme plain
+
+package "Presentation Layer" {
+    class BackupCLI {
+        +main(args: str[])
+        +show_progress(progress: Progress)
+        +display_result(result: BackupResult)
+    }
+    
+    class ConfigWizard {
+        +create_project_config(project_name: str)
+        +validate_configuration(config: BackupConfig)
+        +save_configuration(config: BackupConfig)
+    }
+}
+
+package "Application Layer" {
+    class BackupOrchestrator {
+        -project_manager: IProjectManager
+        -backup_engine: IBackupEngine
+        -notification_service: INotificationService
+        +execute_backup(project_name: str): BackupResult
+        +schedule_backup(project_name: str, schedule: ScheduleConfig): bool
+    }
+    
+    class ProjectManager {
+        -config_provider: IConfigurationProvider
+        +load_project(name: str): Project
+        +save_project(project: Project): bool
+        +list_projects(): List[Project]
+    }
+}
+
+package "Domain Layer" {
+    class Project {
+        +name: str
+        +source_path: Path
+        +backup_config: BackupConfig
+        +validate(): bool
+    }
+    
+    class BackupJob {
+        +id: str
+        +project: Project
+        +start_time: datetime
+        +status: BackupStatus
+        +result: BackupResult
+    }
+    
+    class BackupConfig {
+        +destination: Path
+        +exclusions: List[str]
+        +compression_level: int
+        +retention_days: int
+    }
+}
+
+package "Infrastructure Layer" {
+    class BackupEngine {
+        -file_processor: IFileProcessor
+        -compression_engine: ICompressionEngine
+        +create_backup(source: Path, destination: Path): BackupResult
+    }
+    
+    class FileProcessor {
+        +collect_files(source: Path, exclusions: List[str]): List[FileInfo]
+        +filter_files(files: List[FileInfo]): List[FileInfo]
+    }
+    
+    class CompressionEngine {
+        +compress(files: List[Path], destination: Path): CompressionResult
+        +validate_archive(archive: Path): bool
+    }
+}
+
+BackupOrchestrator --> ProjectManager
+BackupOrchestrator --> BackupEngine
+ProjectManager --> Project
+BackupEngine --> FileProcessor
+BackupEngine --> CompressionEngine
+
+@enduml

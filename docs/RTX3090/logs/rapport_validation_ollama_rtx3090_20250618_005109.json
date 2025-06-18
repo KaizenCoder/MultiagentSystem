@@ -1,0 +1,107 @@
+{
+  "execution_info": {
+    "timestamp": "2025-06-18T00:51:09.822101",
+    "total_execution_time": 0.1832139492034912,
+    "agents_count": 5,
+    "gpu_config": "1"
+  },
+  "agents_results": {
+    "Testeur Sélecteur": {
+      "file_exists": true,
+      "import_success": true,
+      "models_configured": 5,
+      "task_analyses": [
+        {
+          "task": "Écris du code Python pour trier une liste",
+          "recommended_model": "speed",
+          "confidence": 1.0
+        },
+        {
+          "task": "Analyse complexe de données financières",
+          "recommended_model": "speed",
+          "confidence": 0.8999999999999999
+        },
+        {
+          "task": "Réponse rapide: Quelle heure est-il?",
+          "recommended_model": "speed",
+          "confidence": 0.7
+        },
+        {
+          "task": "Test simple",
+          "recommended_model": "mini",
+          "confidence": 0.8999999999999999
+        }
+      ],
+      "analysis_test": "success",
+      "execution_time": 0.17420458793640137,
+      "status": "completed",
+      "errors": []
+    },
+    "Config Environnement": {
+      "current_config": {
+        "CUDA_VISIBLE_DEVICES": "1",
+        "CUDA_DEVICE_ORDER": "PCI_BUS_ID",
+        "OLLAMA_MODELS": "D:\\modeles_llm",
+        "OLLAMA_GPU_DEVICE": "1",
+        "OLLAMA_BASE_URL": "NOT_SET"
+      },
+      "required_config": {
+        "CUDA_VISIBLE_DEVICES": "1",
+        "CUDA_DEVICE_ORDER": "PCI_BUS_ID",
+        "OLLAMA_MODELS": "D:/modeles_llm",
+        "OLLAMA_GPU_DEVICE": "1",
+        "OLLAMA_BASE_URL": "http://localhost:11434"
+      },
+      "missing_vars": [
+        "OLLAMA_MODELS=D:/modeles_llm",
+        "OLLAMA_BASE_URL=http://localhost:11434"
+      ],
+      "script_created": "config_env_rtx3090.bat",
+      "config_status": "script_ready",
+      "execution_time": 0.0010004043579101562,
+      "status": "completed",
+      "errors": []
+    },
+    "Développeur Worker": {
+      "orchestrator_found": true,
+      "worker_created": "orchestrator\\app\\agents\\ollama_worker.py",
+      "integration_status": "file_created",
+      "execution_time": 0.001001119613647461,
+      "status": "completed",
+      "errors": []
+    },
+    "Monitoring RTX3090": {
+      "monitor_exists": true,
+      "monitor_importable": true,
+      "launcher_created": "start_monitor_rtx3090.bat",
+      "monitor_status": "ready",
+      "execution_time": 0.0059986114501953125,
+      "status": "completed",
+      "errors": []
+    },
+    "Optimiseur Mixtral": {
+      "current_mixtral": {
+        "model": "mixtral-8x7b:latest",
+        "estimated_vram": "26GB",
+        "rtx3090_capacity": "24GB",
+        "status": "oversized"
+      },
+      "optimization_recommendations": [
+        "ollama pull mixtral:8x7b-instruct-v0.1-q3_k_m",
+        "ollama pull llama3.1:70b-instruct-q4_k_m",
+        "Test alternatif: qwen2.5:32b-instruct-q4_k_m"
+      ],
+      "test_script_created": "test_mixtral_optimization.py",
+      "optimization_status": "script_ready",
+      "execution_time": 0.001009225845336914,
+      "status": "completed",
+      "errors": []
+    }
+  },
+  "global_status": "success",
+  "summary": {
+    "completed": 5,
+    "failed": 0,
+    "total_tasks": 5
+  }
+}

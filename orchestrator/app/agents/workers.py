@@ -6,9 +6,16 @@ from langchain.prompts import PromptTemplate
 from langchain_anthropic import ChatAnthropic
 from langchain_openai import ChatOpenAI
 
-from orchestrator.app.agents.tools import real_code_tools, real_doc_tools, real_test_tools
-from orchestrator.app.config import settings
-from orchestrator.app.graph.state import AgentState
+# Import pour Gemini
+try:
+    from langchain_google_genai import ChatGoogleGenerativeAI
+    GEMINI_AVAILABLE = True
+except ImportError:
+    GEMINI_AVAILABLE = False
+
+from .tools import real_code_tools, real_doc_tools, real_test_tools, real_diag_tools
+from ..config import settings
+from ..graph.state import AgentState
 
 WORKER_PROMPT = PromptTemplate.from_template("""
 You are a specialized {role} agent in a multi-agent system.
@@ -26,7 +33,7 @@ Action:
 """)
 
 # CORRECTIF CRITIQUE: Implémentation fonctionnelle de la factory.
-@lru_cache(maxsize=3)  # CORRECTION IA-1: Augmenté pour 3 agents
+@lru_cache(maxsize=5)  # CORRECTION IA-1: Augmenté pour 5 agents (avec Gemini)
 def get_agent_executor(agent_type: str) -> AgentExecutor:
     """Crée et configure un AgentExecutor à la demande, puis le met en cache."""
     if agent_type == "code_generation":
@@ -38,6 +45,17 @@ def get_agent_executor(agent_type: str) -> AgentExecutor:
     elif agent_type == "testing":  # CORRECTION IA-1: Ajout agent testing
         llm = ChatOpenAI(model="gpt-4o", temperature=0.2, api_key=settings.OPENAI_API_KEY)  # GPT-4 pour tests
         tools = real_test_tools
+    elif agent_type == "diag_postgresql":
+        llm = ChatOpenAI(model="gpt-4o", temperature=0.1, api_key=settings.OPENAI_API_KEY)
+        tools = real_diag_tools
+    elif agent_type == "gemini_rapid" and GEMINI_AVAILABLE:
+        # Agent Gemini pour prototypage rapide et économique
+        llm = ChatGoogleGenerativeAI(
+            model="gemini-1.5-flash",
+            temperature=0.3,
+            google_api_key=settings.GOOGLE_API_KEY or settings.GEMINI_API_KEY
+        )
+        tools = real_code_tools  # Utilise les mêmes outils que code_generation
     else:
         raise ValueError(f"Unknown agent type: {agent_type}")
     

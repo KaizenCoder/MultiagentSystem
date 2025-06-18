@@ -1,0 +1,14 @@
+2025-06-18 12:34:29,903 - agent_configuration_manager - INFO - 🔧 Création configuration globale par défaut
+2025-06-18 12:34:29,903 - agent_configuration_manager - INFO - ✅ Configuration globale créée: C:\Dev\nextgeneration\tools\zip_backup\config\global_settings.json
+2025-06-18 12:34:29,904 - agent_configuration_manager - INFO - 🚀 Agent Configuration Manager - Démarrage mission configuration
+2025-06-18 12:34:29,904 - agent_configuration_manager - INFO - 🎯 Création configuration projet: nextgeneration
+2025-06-18 12:34:29,913 - agent_configuration_manager - INFO - ✅ Configuration projet créée: nextgeneration
+2025-06-18 12:34:29,914 - agent_configuration_manager - INFO - 🔍 Validation configuration: nextgeneration
+2025-06-18 12:34:29,920 - agent_configuration_manager - INFO - 📋 Rapport configuration sauvegardé: C:\Dev\nextgeneration\tools\zip_backup\reports\agent_configuration_manager_rapport.json
+2025-06-18 12:34:29,920 - agent_configuration_manager - INFO - ✅ Mission configuration SUCCESS - Interface prête
+2025-06-18 12:52:33,711 - agent_configuration_manager - INFO - 🚀 Agent Configuration Manager - Démarrage mission configuration
+2025-06-18 12:52:33,711 - agent_configuration_manager - INFO - 🎯 Création configuration projet: nextgeneration
+2025-06-18 12:52:33,713 - agent_configuration_manager - INFO - ✅ Configuration projet créée: nextgeneration
+2025-06-18 12:52:33,713 - agent_configuration_manager - INFO - 🔍 Validation configuration: nextgeneration
+2025-06-18 12:52:33,718 - agent_configuration_manager - INFO - 📋 Rapport configuration sauvegardé: C:\Dev\nextgeneration\tools\zip_backup\reports\agent_configuration_manager_rapport.json
+2025-06-18 12:52:33,719 - agent_configuration_manager - INFO - ✅ Mission configuration SUCCESS - Interface prête

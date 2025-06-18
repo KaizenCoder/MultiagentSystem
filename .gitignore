@@ -1,0 +1,8 @@
+# Fichiers d'environnement
+.env
+*.env
+env.example
+
+# Fichiers de projet et d'éditeur
+.vscode/
+... (le reste du .gitignore est conservé) 

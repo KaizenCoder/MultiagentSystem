@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: str
     ANTHROPIC_API_KEY: str
     GOOGLE_API_KEY: str = ""  # Optionnel pour Gemini
+    GEMINI_API_KEY: str = ""  # Alternative pour Gemini
     MEMORY_API_URL: str = "http://memory_api:8001"
     ORCHESTRATOR_API_KEY: str
     

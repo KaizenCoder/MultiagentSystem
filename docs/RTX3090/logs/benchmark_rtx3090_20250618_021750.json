@@ -1,0 +1,72 @@
+{
+  "timestamp": "2025-06-18T02:15:27.232552",
+  "gpu": "RTX 3090",
+  "models": {
+    "nous-hermes-2-mistral-7b-dpo:latest": {
+      "avg_time": 14.040067752202352,
+      "avg_tokens_per_sec": 6.411385595895492,
+      "tests": [
+        {
+          "prompt": "Explique l'IA en 2 phrases...",
+          "time": 10.753867626190186,
+          "tokens": 47,
+          "tokens_per_sec": 4.370520600935728
+        },
+        {
+          "prompt": "Écris une fonction Python...",
+          "time": 7.803524732589722,
+          "tokens": 63,
+          "tokens_per_sec": 8.073274854489052
+        },
+        {
+          "prompt": "Analyse les avantages du cloud...",
+          "time": 23.56281089782715,
+          "tokens": 160,
+          "tokens_per_sec": 6.790361332261697
+        }
+      ]
+    },
+    "mixtral:8x7b-instruct-v0.1-q3_k_m": {
+      "avg_time": 14.352583646774292,
+      "avg_tokens_per_sec": 5.350477831231466,
+      "tests": [
+        {
+          "prompt": "Explique l'IA en 2 phrases...",
+          "time": 9.775902032852173,
+          "tokens": 54,
+          "tokens_per_sec": 5.523786942476673
+        },
+        {
+          "prompt": "Écris une fonction Python...",
+          "time": 18.92926526069641,
+          "tokens": 98,
+          "tokens_per_sec": 5.177168719986259
+        }
+      ]
+    },
+    "llama3:8b-instruct-q6_k": {
+      "avg_time": 3.9639999866485596,
+      "avg_tokens_per_sec": 4.94689512447392,
+      "tests": [
+        {
+          "prompt": "Explique l'IA en 2 phrases...",
+          "time": 8.20152735710144,
+          "tokens": 15,
+          "tokens_per_sec": 1.8289276310237481
+        },
+        {
+          "prompt": "Écris une fonction Python...",
+          "time": 1.6829915046691895,
+          "tokens": 11,
+          "tokens_per_sec": 6.535980704288921
+        },
+        {
+          "prompt": "Analyse les avantages du cloud...",
+          "time": 2.007481098175049,
+          "tokens": 13,
+          "tokens_per_sec": 6.475777038109089
+        }
+      ]
+    }
+  }
+}

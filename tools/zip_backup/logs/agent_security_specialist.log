@@ -1,0 +1,17 @@
+2025-06-18 12:42:15,761 - agent_security_specialist - INFO - 🔑 Nouvelle clé secrète générée
+2025-06-18 12:42:15,761 - agent_security_specialist - INFO - 🚀 Agent Security Specialist - Démarrage mission security
+2025-06-18 12:42:15,763 - agent_security_specialist - INFO - 📋 Création manifeste: C:\Dev\nextgeneration\tools\zip_backup\config\global_settings.json
+2025-06-18 12:42:15,765 - agent_security_specialist - INFO - ✅ Manifeste créé: C:\Dev\nextgeneration\tools\zip_backup\security\checksums\global_settings_manifest.json
+2025-06-18 12:42:15,765 - agent_security_specialist - INFO - 🧪 Test manifeste: global_settings.json
+2025-06-18 12:42:15,766 - agent_security_specialist - INFO - 🔒 Audit sécurité système
+2025-06-18 12:42:15,769 - agent_security_specialist - INFO - 🔒 Audit sécurité système
+2025-06-18 12:42:15,771 - agent_security_specialist - INFO - 📋 Rapport security sauvegardé: C:\Dev\nextgeneration\tools\zip_backup\reports\agent_security_specialist_rapport.json
+2025-06-18 12:42:15,771 - agent_security_specialist - INFO - ✅ Mission security SUCCESS - Sécurité système prête
+2025-06-18 12:53:28,105 - agent_security_specialist - INFO - 🚀 Agent Security Specialist - Démarrage mission security
+2025-06-18 12:53:28,106 - agent_security_specialist - INFO - 📋 Création manifeste: C:\Dev\nextgeneration\tools\zip_backup\config\global_settings.json
+2025-06-18 12:53:28,107 - agent_security_specialist - INFO - ✅ Manifeste créé: C:\Dev\nextgeneration\tools\zip_backup\security\checksums\global_settings_manifest.json
+2025-06-18 12:53:28,107 - agent_security_specialist - INFO - 🧪 Test manifeste: global_settings.json
+2025-06-18 12:53:28,108 - agent_security_specialist - INFO - 🔒 Audit sécurité système
+2025-06-18 12:53:28,111 - agent_security_specialist - INFO - 🔒 Audit sécurité système
+2025-06-18 12:53:28,112 - agent_security_specialist - INFO - 📋 Rapport security sauvegardé: C:\Dev\nextgeneration\tools\zip_backup\reports\agent_security_specialist_rapport.json
+2025-06-18 12:53:28,112 - agent_security_specialist - INFO - ✅ Mission security SUCCESS - Sécurité système prête

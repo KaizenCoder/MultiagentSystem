@@ -1,0 +1,45 @@
+2025-06-18 12:34:28,162 - agent_backup_engine - INFO - 🚀 Agent Backup Engine Specialist - Démarrage mission backup engine
+2025-06-18 12:34:28,163 - agent_backup_engine - INFO - 🧪 Test fonctionnel moteur backup
+2025-06-18 12:34:28,163 - agent_backup_engine - INFO - 🗜️ Début backup optimisé: C:\Dev\nextgeneration\tools\zip_backup\templates -> C:\Dev\nextgeneration\tools\zip_backup\tests\test_backup_1750242868.zip
+2025-06-18 12:34:28,163 - agent_backup_engine - INFO - 📊 Collecte fichiers depuis: C:\Dev\nextgeneration\tools\zip_backup\templates
+2025-06-18 12:34:28,164 - agent_backup_engine - INFO - 📋 3 fichiers collectés
+2025-06-18 12:34:28,164 - agent_backup_engine - INFO - 🗜️ Compression vers: C:\Dev\nextgeneration\tools\zip_backup\tests\test_backup_1750242868.zip
+2025-06-18 12:34:28,168 - agent_backup_engine - INFO - 🔍 Vérification intégrité: C:\Dev\nextgeneration\tools\zip_backup\tests\test_backup_1750242868.zip
+2025-06-18 12:34:28,176 - agent_backup_engine - INFO - ✅ Intégrité archive validée
+2025-06-18 12:34:28,177 - agent_backup_engine - INFO - ✅ Backup terminé: 3 fichiers, compression -13.3%, durée 0.01s
+2025-06-18 12:34:28,177 - agent_backup_engine - INFO - ✅ Test réussi: 3 fichiers, ratio -13.3%
+2025-06-18 12:34:28,178 - agent_backup_engine - INFO - 📋 Rapport backup engine sauvegardé: C:\Dev\nextgeneration\tools\zip_backup\reports\agent_backup_engine_rapport.json
+2025-06-18 12:34:28,178 - agent_backup_engine - INFO - ✅ Mission backup engine SUCCESS - Moteur optimisé prêt
+2025-06-18 12:52:44,745 - agent_backup_engine - INFO - 🚀 Agent Backup Engine Specialist - Démarrage mission backup engine
+2025-06-18 12:52:44,745 - agent_backup_engine - INFO - 🧪 Test fonctionnel moteur backup
+2025-06-18 12:52:44,745 - agent_backup_engine - INFO - 🗜️ Début backup optimisé: C:\Dev\nextgeneration\tools\zip_backup\templates -> C:\Dev\nextgeneration\tools\zip_backup\tests\test_backup_1750243964.zip
+2025-06-18 12:52:44,746 - agent_backup_engine - INFO - 📊 Collecte fichiers depuis: C:\Dev\nextgeneration\tools\zip_backup\templates
+2025-06-18 12:52:44,746 - agent_backup_engine - INFO - 📋 3 fichiers collectés
+2025-06-18 12:52:44,746 - agent_backup_engine - INFO - 🗜️ Compression vers: C:\Dev\nextgeneration\tools\zip_backup\tests\test_backup_1750243964.zip
+2025-06-18 12:52:44,750 - agent_backup_engine - INFO - 🔍 Vérification intégrité: C:\Dev\nextgeneration\tools\zip_backup\tests\test_backup_1750243964.zip
+2025-06-18 12:52:44,758 - agent_backup_engine - INFO - ✅ Intégrité archive validée
+2025-06-18 12:52:44,758 - agent_backup_engine - INFO - ✅ Backup terminé: 3 fichiers, compression -13.3%, durée 0.01s
+2025-06-18 12:52:44,758 - agent_backup_engine - INFO - ✅ Test réussi: 3 fichiers, ratio -13.3%
+2025-06-18 12:52:44,759 - agent_backup_engine - INFO - 📋 Rapport backup engine sauvegardé: C:\Dev\nextgeneration\tools\zip_backup\reports\agent_backup_engine_rapport.json
+2025-06-18 12:52:44,759 - agent_backup_engine - INFO - ✅ Mission backup engine SUCCESS - Moteur optimisé prêt
+2025-06-18 12:53:20,962 - agent_backup_engine - INFO - 🗜️ Début backup optimisé: C:\Dev\nextgeneration -> E:\DEV_BACKUP\backup_nextgeneration_20250618_1253.zip
+2025-06-18 12:53:20,962 - agent_backup_engine - INFO - 📊 Collecte fichiers depuis: C:\Dev\nextgeneration
+2025-06-18 12:53:21,064 - agent_backup_engine - INFO - 📋 435 fichiers collectés
+2025-06-18 12:53:21,065 - agent_backup_engine - INFO - 🗜️ Compression vers: E:\DEV_BACKUP\backup_nextgeneration_20250618_1253.zip
+2025-06-18 12:53:21,278 - agent_backup_engine - INFO - 🔍 Vérification intégrité: E:\DEV_BACKUP\backup_nextgeneration_20250618_1253.zip
+2025-06-18 12:53:21,305 - agent_backup_engine - INFO - ✅ Intégrité archive validée
+2025-06-18 12:53:21,305 - agent_backup_engine - INFO - ✅ Backup terminé: 435 fichiers, compression 71.3%, durée 0.34s
+2025-06-18 12:57:20,560 - agent_backup_engine - INFO - 🗜️ Début backup optimisé: C:\Dev\nextgeneration -> E:\DEV_BACKUP\nextgeneration\backup_nextgeneration_20250618_1257.zip
+2025-06-18 12:57:20,561 - agent_backup_engine - INFO - 📊 Collecte fichiers depuis: C:\Dev\nextgeneration
+2025-06-18 12:57:20,638 - agent_backup_engine - INFO - 📋 436 fichiers collectés
+2025-06-18 12:57:20,638 - agent_backup_engine - INFO - 🗜️ Compression vers: E:\DEV_BACKUP\nextgeneration\backup_nextgeneration_20250618_1257.zip
+2025-06-18 12:57:20,781 - agent_backup_engine - INFO - 🔍 Vérification intégrité: E:\DEV_BACKUP\nextgeneration\backup_nextgeneration_20250618_1257.zip
+2025-06-18 12:57:20,808 - agent_backup_engine - INFO - ✅ Intégrité archive validée
+2025-06-18 12:57:20,809 - agent_backup_engine - INFO - ✅ Backup terminé: 436 fichiers, compression 71.3%, durée 0.25s
+2025-06-18 12:58:39,712 - agent_backup_engine - INFO - 🗜️ Début backup optimisé: C:\Dev\nextgeneration -> E:\DEV_BACKUP\nextgeneration\backup_nextgeneration_20250618_1258.zip
+2025-06-18 12:58:39,712 - agent_backup_engine - INFO - 📊 Collecte fichiers depuis: C:\Dev\nextgeneration
+2025-06-18 12:58:39,789 - agent_backup_engine - INFO - 📋 437 fichiers collectés
+2025-06-18 12:58:39,790 - agent_backup_engine - INFO - 🗜️ Compression vers: E:\DEV_BACKUP\nextgeneration\backup_nextgeneration_20250618_1258.zip
+2025-06-18 12:58:39,944 - agent_backup_engine - INFO - 🔍 Vérification intégrité: E:\DEV_BACKUP\nextgeneration\backup_nextgeneration_20250618_1258.zip
+2025-06-18 12:58:39,971 - agent_backup_engine - INFO - ✅ Intégrité archive validée
+2025-06-18 12:58:39,972 - agent_backup_engine - INFO - ✅ Backup terminé: 437 fichiers, compression 71.3%, durée 0.26s

@@ -1,0 +1,7 @@
+2025-06-18 01:35:31,667 - agent_workspace_organizer - INFO - Analyse de la structure du workspace
+2025-06-18 01:35:31,673 - agent_workspace_organizer - INFO - Organisation des fichiers
+2025-06-18 01:35:31,682 - agent_workspace_organizer - WARNING - Erreur organisation log C:\Dev\nextgeneration\docs\agents_postgresql_resolution\logs\agent_workspace_organizer.log: [WinError 32] Le processus ne peut pas accéder au fichier car ce fichier est utilisé par un autre processus: 'C:\\Dev\\nextgeneration\\docs\\agents_postgresql_resolution\\logs\\agent_workspace_organizer.log'
+2025-06-18 01:35:31,683 - agent_workspace_organizer - INFO - Generation du rapport de coordination
+2025-06-18 01:54:59,069 - agent_workspace_organizer - INFO - ðŸš€ Agent Workspace Organizer - DÃ©marrage mission
+2025-06-18 01:54:59,069 - agent_workspace_organizer - INFO - Analyse de la structure du workspace
+2025-06-18 01:54:59,080 - agent_workspace_organizer - INFO - Organisation des fichiers

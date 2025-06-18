@@ -4,9 +4,9 @@ import time
 from tempfile import NamedTemporaryFile
 from subprocess import run, TimeoutExpired, PIPE
 from langchain.tools import Tool
-from orchestrator.app.config import settings
-from orchestrator.app.security.validators import CodeValidator, NetworkValidator, InputSanitizer
-from orchestrator.app.security.logging import security_logger, AuditLogger, AuditEventType
+from ..config import settings
+from ..security.validators import CodeValidator, NetworkValidator, InputSanitizer
+from ..security.logging import security_logger, AuditLogger, AuditEventType
 
 # CORRECTIF 4: Client HTTP global qui sera fermé proprement
 _http_client = None
@@ -72,6 +72,61 @@ async def rag_code_search_tool(query: str) -> str:
         security_logger.log_error("RAG search unexpected error", e)
         return "Error: Service temporarily unavailable"
 
+async def execute_shell_command(command: str) -> str:
+    """
+    Executes a shell command in a secure manner and returns the output.
+    Allowed commands: psql, pg_isready, echo, docker.
+    """
+    # Security: Sanitize and validate the command
+    # Note: L'agent est censé construire des commandes sûres. La validation est une défense en profondeur.
+    sanitized_command = InputSanitizer.sanitize_shell_command(command)
+
+    # Whitelist of allowed commands to prevent abuse
+    allowed_commands = ["psql", "pg_isready", "echo", "docker"]
+    
+    if not sanitized_command.strip():
+        return "Error: Empty command provided."
+
+    command_to_run = sanitized_command.strip().split()[0]
+    if command_to_run not in allowed_commands:
+        security_logger.log_security_event("SHELL_COMMAND_REJECTED", {
+            "command": sanitized_command,
+            "reason": "Command not in whitelist"
+        })
+        return f"Error: Command not allowed for security reasons. Allowed: {', '.join(allowed_commands)}"
+
+    try:
+        AuditLogger.log_event(AuditEventType.SHELL_COMMAND_EXECUTION, None, {
+            "tool": "execute_shell_command",
+            "command": sanitized_command
+        })
+        
+        process = await asyncio.create_subprocess_shell(
+            sanitized_command,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+        
+        stdout, stderr = await asyncio.wait_for(process.communicate(), timeout=settings.MAX_REQUEST_TIMEOUT)
+        
+        result = ""
+        if stdout:
+            result += f"STDOUT:\n{stdout.decode(errors='ignore')}"
+        if stderr:
+            result += f"STDERR:\n{stderr.decode(errors='ignore')}"
+
+        if process.returncode != 0:
+            return f"Command failed with exit code {process.returncode}:\n{result}"
+        
+        return f"Command executed successfully:\n{result}"
+
+    except asyncio.TimeoutError:
+        security_logger.log_error("Shell command timeout", Exception(f"Timeout for command: {sanitized_command}"))
+        return "Error: Command execution timed out."
+    except Exception as e:
+        security_logger.log_error("Shell command execution failed", e)
+        return f"Error executing command: {str(e)}"
+
 async def python_linter_tool(code: str) -> str:
     """
     Outil de linting Python sécurisé avec protection RCE complète.
@@ -80,7 +135,7 @@ async def python_linter_tool(code: str) -> str:
     
     # CORRECTIF SÉCURITÉ CRITIQUE: Utilisation de l'analyseur sécurisé
     try:
-        from orchestrator.app.security.secure_analyzer import secure_python_linter_tool
+        from ..security.secure_analyzer import secure_python_linter_tool
         
         # Log de sécurité pour audit
         AuditLogger.log_event(AuditEventType.CODE_ANALYSIS_REQUEST, None, {
@@ -108,6 +163,22 @@ real_code_tools = [
     Tool.from_function(func=rag_code_search_tool, name="CodeKnowledgeSearch", description="Searches for similar code examples or documentation.", is_async=True)
 ]
 real_doc_tools = [Tool.from_function(func=rag_code_search_tool, name="CodeKnowledgeSearch", description="Searches for existing documentation or code comments.", is_async=True)]
+
+# Outils de diagnostic
+real_diag_tools = [
+    Tool.from_function(
+        func=execute_shell_command, 
+        name="ShellExecutor", 
+        description="Executes whitelisted shell commands like psql, pg_isready, docker to diagnose system issues.", 
+        is_async=True
+    ),
+    Tool.from_function(
+        func=rag_code_search_tool, 
+        name="KnowledgeBaseSearch", 
+        description="Searches knowledge base for similar problems and their resolutions.", 
+        is_async=True
+    )
+]
 
 # CORRECTION IA-1: Ajout des outils de testing
 async def pytest_generator_tool(code: str) -> str:

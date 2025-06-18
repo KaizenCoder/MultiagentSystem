@@ -1,0 +1,26 @@
+
+@startuml BackupSequenceDiagram
+!theme plain
+
+actor User
+participant "BackupCLI" as CLI
+participant "BackupOrchestrator" as Orchestrator
+participant "ProjectManager" as PM
+participant "BackupEngine" as Engine
+participant "FileProcessor" as FP
+participant "CompressionEngine" as CE
+
+User -> CLI: backup --project nextgeneration
+CLI -> Orchestrator: execute_backup("nextgeneration")
+Orchestrator -> PM: load_project("nextgeneration")
+PM -> Orchestrator: project_config
+Orchestrator -> Engine: create_backup(source, destination, config)
+Engine -> FP: collect_files(source, exclusions)
+FP -> Engine: filtered_files[]
+Engine -> CE: compress(files, destination)
+CE -> Engine: compression_result
+Engine -> Orchestrator: backup_result
+Orchestrator -> CLI: backup_result
+CLI -> User: Success + statistics
+
+@enduml

@@ -1,0 +1,79 @@
+{
+  "timestamp": "2025-06-18T01:45:46.557449",
+  "systeme": {
+    "os": "nt",
+    "platform": "win32",
+    "version": "Microsoft Windows [version 10.0.26100.4349]",
+    "architecture": "AMD64",
+    "user": "Utilisateur",
+    "path": [
+      "C:\\Program Files\\PowerShell\\7",
+      "C:\\WINDOWS\\system32",
+      "C:\\WINDOWS",
+      "C:\\WINDOWS\\System32\\Wbem",
+      "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\",
+      "C:\\WINDOWS\\System32\\OpenSSH\\",
+      "C:\\Program Files\\dotnet\\",
+      "C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common",
+      "C:\\Program Files\\Void\\bin",
+      "C:\\Program Files\\PowerShell\\7\\"
+    ]
+  },
+  "postgresql": {
+    "installe": false,
+    "version": null,
+    "chemin_binaires": null,
+    "service_actif": false,
+    "port_ecoute": null,
+    "pg_isready": false
+  },
+  "python": {
+    "version": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "executable": "C:\\Users\\Utilisateur\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "packages_postgresql": {
+      "psycopg2": "NON_INSTALLE",
+      "psycopg2-binary": "2.9.9",
+      "sqlalchemy": "2.0.23",
+      "alembic": "1.16.1"
+    },
+    "sqlalchemy_version": "2.0.23",
+    "psycopg2_version": "2.9.9"
+  },
+  "docker": {
+    "installe": true,
+    "version": "Docker version 28.1.1, build 4eba377",
+    "service_actif": true,
+    "containers_postgresql": [
+      ""
+    ],
+    "docker_compose": true
+  },
+  "variables_env": {
+    "PATH": "C:\\Program Files\\PowerShell\\7;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\Sys...",
+    "PYTHONPATH": "NON_DEFINIE",
+    "POSTGRES_USER": "NON_DEFINIE",
+    "POSTGRES_PASSWORD": "NON_DEFINIE",
+    "POSTGRES_DB": "NON_DEFINIE",
+    "DATABASE_URL": "NON_DEFINIE",
+    "PGUSER": "NON_DEFINIE",
+    "PGPASSWORD": "NON_DEFINIE",
+    "PGHOST": "NON_DEFINIE",
+    "PGPORT": "NON_DEFINIE"
+  },
+  "services": {
+    "postgresql_services": [],
+    "service_manager_accessible": true
+  },
+  "problemes_detectes": [
+    "🔴 PostgreSQL non installé nativement sur Windows",
+    "🔴 pg_isready non fonctionnel",
+    "⚠️ SQLAlchemy 2.x peut causer des incompatibilités",
+    "⚠️ Variable DATABASE_URL non définie"
+  ],
+  "recommandations": [
+    "Installer PostgreSQL Windows ou utiliser exclusivement Docker",
+    "Vérifier installation PostgreSQL ou ajouter au PATH",
+    "Considérer downgrade vers SQLAlchemy 1.4.x ou adapter le code",
+    "Définir DATABASE_URL dans l'environnement"
+  ]
+}

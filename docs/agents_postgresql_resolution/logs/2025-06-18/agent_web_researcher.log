@@ -1,0 +1,14 @@
+2025-06-18 01:29:24,625 - agent_web_researcher - INFO - Recherche solutions GitHub
+2025-06-18 01:29:24,625 - agent_web_researcher - INFO - Recherche GitHub: sqlalchemy metadata reserved
+2025-06-18 01:29:24,726 - agent_web_researcher - INFO - Recherche GitHub: postgresql textual sql expression
+2025-06-18 01:29:24,826 - agent_web_researcher - INFO - Recherche GitHub: docker postgres windows
+2025-06-18 01:29:24,927 - agent_web_researcher - INFO - Recherche GitHub: sqlalchemy 2.0 migration
+2025-06-18 01:29:25,027 - agent_web_researcher - INFO - Recherche GitHub: psycopg2 windows installation
+2025-06-18 01:29:25,128 - agent_web_researcher - INFO - Recherche solutions Stack Overflow
+2025-06-18 01:29:25,128 - agent_web_researcher - INFO - Analyse SO: Attribute name metadata is reserved SQLAlchemy
+2025-06-18 01:29:25,128 - agent_web_researcher - INFO - Analyse SO: Textual SQL expression should be explicitly declared
+2025-06-18 01:29:25,128 - agent_web_researcher - INFO - Analyse SO: PostgreSQL Docker Windows connection
+2025-06-18 01:29:25,128 - agent_web_researcher - INFO - Analyse SO: SQLAlchemy 2.x compatibility issues
+2025-06-18 01:29:25,128 - agent_web_researcher - INFO - Analyse SO: psycopg2 vs psycopg2-binary
+2025-06-18 01:29:25,128 - agent_web_researcher - INFO - Analyse documentation officielle
+2025-06-18 01:29:25,128 - agent_web_researcher - INFO - Synthese des solutions trouvees

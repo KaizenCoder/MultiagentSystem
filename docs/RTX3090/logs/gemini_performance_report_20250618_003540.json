@@ -1,0 +1,64 @@
+{
+  "timestamp": "2025-06-18T00:35:40.422569",
+  "total_duration": 18.66031050682068,
+  "analysis": {
+    "average_speed": 6.219769716262817,
+    "fastest_test": {
+      "model": "gemini-1.5-flash",
+      "prompt": "Bonjour, comment allez-vous?",
+      "success": true,
+      "duration": 0.40372753143310547,
+      "response_length": 32,
+      "response_preview": "Je vais bien, merci ! Et vous ?\n",
+      "error": null
+    },
+    "slowest_test": {
+      "model": "gemini-1.5-pro",
+      "prompt": "Analysez les avantages des microservices",
+      "success": true,
+      "duration": 13.593287944793701,
+      "response_length": 3792,
+      "response_preview": "Les microservices offrent de nombreux avantages par rapport à l'architecture monolithique traditionn",
+      "error": null
+    },
+    "success_rate": 100.0,
+    "total_tests": 3,
+    "successful_tests": 3
+  },
+  "results": {
+    "Test Simple": {
+      "model": "gemini-1.5-flash",
+      "prompt": "Bonjour, comment allez-vous?",
+      "success": true,
+      "duration": 0.40372753143310547,
+      "response_length": 32,
+      "response_preview": "Je vais bien, merci ! Et vous ?\n",
+      "error": null
+    },
+    "Test Code": {
+      "model": "gemini-1.5-flash",
+      "prompt": "Ecrivez une fonction Python pour calculer la factorielle",
+      "success": true,
+      "duration": 4.6622936725616455,
+      "response_length": 2406,
+      "response_preview": "Voici plusieurs façons d'écrire une fonction Python pour calculer la factorielle :\n\n**Méthode itérat",
+      "error": null
+    },
+    "Test Analyse": {
+      "model": "gemini-1.5-pro",
+      "prompt": "Analysez les avantages des microservices",
+      "success": true,
+      "duration": 13.593287944793701,
+      "response_length": 3792,
+      "response_preview": "Les microservices offrent de nombreux avantages par rapport à l'architecture monolithique traditionn",
+      "error": null
+    }
+  },
+  "recommendations": [
+    "Excellent! Tous les tests ont reussi",
+    "Vitesse lente (> 3s en moyenne)",
+    "Optimisation recommandee",
+    "gemini-1.5-flash recommande pour la rapidite",
+    "gemini-1.5-pro recommande pour la qualite"
+  ]
+}

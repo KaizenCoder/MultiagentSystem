@@ -1,0 +1,7 @@
+2025-06-18 01:47:20,056 - agent_docker_specialist - INFO - 🚀 Agent Docker Specialist - Démarrage mission
+2025-06-18 01:47:20,056 - agent_docker_specialist - INFO - 🔍 Démarrage diagnostic Docker PostgreSQL
+2025-06-18 01:47:20,726 - agent_docker_specialist - WARNING - Erreur lecture C:\Dev\nextgeneration\docker-compose.production.yml: while parsing a block collection
+  in "C:\Dev\nextgeneration\docker-compose.production.yml", line 67, column 7
+expected <block end>, but found '?'
+  in "C:\Dev\nextgeneration\docker-compose.production.yml", line 71, column 7
+2025-06-18 01:47:20,791 - agent_docker_specialist - INFO - ✅ Rapport Docker sauvegardé: C:\Dev\nextgeneration\docs\agents_postgresql_resolution\rapports\agent_docker_specialist_rapport.md

@@ -1,0 +1,8 @@
+{
+  "default_destination": "E:/DEV_BACKUP",
+  "default_retention": 30,
+  "default_compression": 6,
+  "logging_level": "INFO",
+  "max_concurrent_backups": 2,
+  "temp_directory": "C:\\Dev\\nextgeneration\\tools\\zip_backup\\temp"
+}

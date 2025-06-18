@@ -1,0 +1,257 @@
+{
+  "timestamp": "2025-06-18T00:27:16.775210",
+  "statut_global": "FAILURE",
+  "temps_execution_total": 0.5887937545776367,
+  "statistiques": {
+    "agents_total": 4,
+    "succes": 2,
+    "avertissements": 0,
+    "echecs": 2,
+    "taux_reussite": 50.0
+  },
+  "resultats_par_tache": {
+    "Agent Testeur": {
+      "statut": "FAILURE",
+      "temps": 0.28570103645324707,
+      "resultats_cles": {
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "Traceback (most recent call last):\n  File \"C:\\Dev\\nextgeneration\\test_gemini_key_validation.py\", line 197, in <module>\n    exit(main()) \n         ^^^^^^\n  File \"C:\\Dev\\nextgeneration\\test_gemini_key_validation.py\", line 106, in main\n    print(\"\\U0001f680 VALIDATION DES CLÉS API GEMINI\")\n  File \"C:\\Users\\Utilisateur\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\encodings\\cp1252.py\", line 19, in encode\n    return codecs.charmap_encode(input,self.errors,encoding_table)[0]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nUnicodeEncodeError: 'charmap' codec can't encode character '\\U0001f680' in position 0: character maps to <undefined>\n",
+        "script_present": true
+      },
+      "problemes": [
+        "Test échoué avec code 1",
+        "Erreur: Traceback (most recent call last):\n  File \"C:\\Dev\\nextgeneration\\test_gemini_key_validation.py\", line 197, in <module>\n    exit(main()) \n         ^^^^^^\n  File \"C:\\Dev\\nextgeneration\\test_gemini_key_validation.py\", line 106, in main\n    print(\"\\U0001f680 VALIDATION DES CLÉS API GEMINI\")\n  File \"C:\\Users\\Utilisateur\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\encodings\\cp1252.py\", line 19, in encode\n    return codecs.charmap_encode(input,self.errors,encoding_table)[0]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nUnicodeEncodeError: 'charmap' codec can't encode character '\\U0001f680' in position 0: character maps to <undefined>\n"
+      ],
+      "recommandations": []
+    },
+    "Agent Documentaliste": {
+      "statut": "SUCCESS",
+      "temps": 0.001001119613647461,
+      "resultats_cles": {
+        "taille_fichier": 10649,
+        "nombre_lignes": 336,
+        "sections_trouvees": [
+          "OpenAI",
+          "Anthropic",
+          "Google Gemini",
+          "Ollama",
+          "Configuration",
+          "Variables d'environnement",
+          "Scripts de test"
+        ],
+        "sections_manquantes": [],
+        "completude": 100.0,
+        "fournisseurs_documentes": [
+          "OPENAI_API_KEY",
+          "ANTHROPIC_API_KEY",
+          "GOOGLE_API_KEY",
+          "GEMINI_API_KEY",
+          "OLLAMA"
+        ],
+        "nombre_fournisseurs": 5
+      },
+      "problemes": [],
+      "recommandations": [
+        "Documentation excellente et complète",
+        "Support Gemini correctement documenté"
+      ]
+    },
+    "Agent Expérimentateur": {
+      "statut": "FAILURE",
+      "temps": 0.2990856170654297,
+      "resultats_cles": {
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "Traceback (most recent call last):\n  File \"C:\\Dev\\nextgeneration\\test_gemini_rapide.py\", line 220, in <module>\n    main()\n  File \"C:\\Dev\\nextgeneration\\test_gemini_rapide.py\", line 177, in main\n    print(\"\\U0001f3af TEST GEMINI - VERSION RAPIDE\")\n  File \"C:\\Users\\Utilisateur\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\encodings\\cp1252.py\", line 19, in encode\n    return codecs.charmap_encode(input,self.errors,encoding_table)[0]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nUnicodeEncodeError: 'charmap' codec can't encode character '\\U0001f3af' in position 0: character maps to <undefined>\n"
+      },
+      "problemes": [
+        "Tests échoués avec code 1"
+      ],
+      "recommandations": []
+    },
+    "Agent Intégrateur": {
+      "statut": "SUCCESS",
+      "temps": 0.0009999275207519531,
+      "resultats_cles": {
+        "fichiers_presents": [
+          "orchestrator/app/agents/workers.py",
+          "orchestrator/app/config.py",
+          "orchestrator/app/agents/supervisor.py"
+        ],
+        "fichiers_manquants": [],
+        "agents_existants": [
+          "code_generation",
+          "documentation",
+          "testing",
+          "diag_postgresql"
+        ],
+        "nombre_agents": 4,
+        "gemini_deja_integre": false,
+        "plan_integration": {
+          "nouveau_agent": "gemini_rapid",
+          "modele_recommande": "gemini-1.5-flash",
+          "cas_usage": [
+            "prototypage",
+            "analyse_rapide",
+            "economie_couts"
+          ],
+          "modification_requise": "workers.py",
+          "dependance": "langchain-google-genai"
+        },
+        "config_gemini_presente": true
+      },
+      "problemes": [],
+      "recommandations": [
+        "Plan d'intégration Gemini conçu",
+        "Configuration Gemini déjà présente"
+      ]
+    }
+  },
+  "synthese": {
+    "problemes_identifies": [
+      "Tests échoués avec code 1",
+      "Erreur: Traceback (most recent call last):\n  File \"C:\\Dev\\nextgeneration\\test_gemini_key_validation.py\", line 197, in <module>\n    exit(main()) \n         ^^^^^^\n  File \"C:\\Dev\\nextgeneration\\test_gemini_key_validation.py\", line 106, in main\n    print(\"\\U0001f680 VALIDATION DES CLÉS API GEMINI\")\n  File \"C:\\Users\\Utilisateur\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\encodings\\cp1252.py\", line 19, in encode\n    return codecs.charmap_encode(input,self.errors,encoding_table)[0]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nUnicodeEncodeError: 'charmap' codec can't encode character '\\U0001f680' in position 0: character maps to <undefined>\n",
+      "Test échoué avec code 1"
+    ],
+    "recommandations_globales": [
+      "Documentation excellente et complète",
+      "Configuration Gemini déjà présente",
+      "Support Gemini correctement documenté",
+      "Plan d'intégration Gemini conçu"
+    ],
+    "prochaines_actions_prioritaires": [
+      "Documentation prête pour utilisation",
+      "Déboguer les erreurs de test",
+      "Tester l'intégration",
+      "Corriger les erreurs de configuration",
+      "Installer langchain-google-genai",
+      "Implémenter l'agent gemini_rapid"
+    ]
+  },
+  "rapports_detailles": [
+    {
+      "agent_nom": "Agent Testeur",
+      "mission": "Exécuter test_gemini_key_validation.py et analyser les résultats",
+      "statut": "FAILURE",
+      "temps_execution": 0.28570103645324707,
+      "resultats": {
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "Traceback (most recent call last):\n  File \"C:\\Dev\\nextgeneration\\test_gemini_key_validation.py\", line 197, in <module>\n    exit(main()) \n         ^^^^^^\n  File \"C:\\Dev\\nextgeneration\\test_gemini_key_validation.py\", line 106, in main\n    print(\"\\U0001f680 VALIDATION DES CLÉS API GEMINI\")\n  File \"C:\\Users\\Utilisateur\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\encodings\\cp1252.py\", line 19, in encode\n    return codecs.charmap_encode(input,self.errors,encoding_table)[0]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nUnicodeEncodeError: 'charmap' codec can't encode character '\\U0001f680' in position 0: character maps to <undefined>\n",
+        "script_present": true
+      },
+      "problemes": [
+        "Test échoué avec code 1",
+        "Erreur: Traceback (most recent call last):\n  File \"C:\\Dev\\nextgeneration\\test_gemini_key_validation.py\", line 197, in <module>\n    exit(main()) \n         ^^^^^^\n  File \"C:\\Dev\\nextgeneration\\test_gemini_key_validation.py\", line 106, in main\n    print(\"\\U0001f680 VALIDATION DES CLÉS API GEMINI\")\n  File \"C:\\Users\\Utilisateur\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\encodings\\cp1252.py\", line 19, in encode\n    return codecs.charmap_encode(input,self.errors,encoding_table)[0]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nUnicodeEncodeError: 'charmap' codec can't encode character '\\U0001f680' in position 0: character maps to <undefined>\n"
+      ],
+      "recommandations": [],
+      "prochaines_actions": [
+        "Corriger les erreurs de configuration"
+      ],
+      "timestamp": "2025-06-18T00:27:16.473117"
+    },
+    {
+      "agent_nom": "Agent Documentaliste",
+      "mission": "Analyser GUIDE_FOURNISSEURS_MODELES_ORCHESTRATEUR.md et vérifier sa complétude",
+      "statut": "SUCCESS",
+      "temps_execution": 0.001001119613647461,
+      "resultats": {
+        "taille_fichier": 10649,
+        "nombre_lignes": 336,
+        "sections_trouvees": [
+          "OpenAI",
+          "Anthropic",
+          "Google Gemini",
+          "Ollama",
+          "Configuration",
+          "Variables d'environnement",
+          "Scripts de test"
+        ],
+        "sections_manquantes": [],
+        "completude": 100.0,
+        "fournisseurs_documentes": [
+          "OPENAI_API_KEY",
+          "ANTHROPIC_API_KEY",
+          "GOOGLE_API_KEY",
+          "GEMINI_API_KEY",
+          "OLLAMA"
+        ],
+        "nombre_fournisseurs": 5
+      },
+      "problemes": [],
+      "recommandations": [
+        "Documentation excellente et complète",
+        "Support Gemini correctement documenté"
+      ],
+      "prochaines_actions": [
+        "Documentation prête pour utilisation"
+      ],
+      "timestamp": "2025-06-18T00:27:16.475124"
+    },
+    {
+      "agent_nom": "Agent Expérimentateur",
+      "mission": "Lancer test_gemini_rapide.py et évaluer les performances",
+      "statut": "FAILURE",
+      "temps_execution": 0.2990856170654297,
+      "resultats": {
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "Traceback (most recent call last):\n  File \"C:\\Dev\\nextgeneration\\test_gemini_rapide.py\", line 220, in <module>\n    main()\n  File \"C:\\Dev\\nextgeneration\\test_gemini_rapide.py\", line 177, in main\n    print(\"\\U0001f3af TEST GEMINI - VERSION RAPIDE\")\n  File \"C:\\Users\\Utilisateur\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\encodings\\cp1252.py\", line 19, in encode\n    return codecs.charmap_encode(input,self.errors,encoding_table)[0]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nUnicodeEncodeError: 'charmap' codec can't encode character '\\U0001f3af' in position 0: character maps to <undefined>\n"
+      },
+      "problemes": [
+        "Tests échoués avec code 1"
+      ],
+      "recommandations": [],
+      "prochaines_actions": [
+        "Déboguer les erreurs de test"
+      ],
+      "timestamp": "2025-06-18T00:27:16.774210"
+    },
+    {
+      "agent_nom": "Agent Intégrateur",
+      "mission": "Concevoir et implémenter l'agent Gemini dans l'orchestrateur",
+      "statut": "SUCCESS",
+      "temps_execution": 0.0009999275207519531,
+      "resultats": {
+        "fichiers_presents": [
+          "orchestrator/app/agents/workers.py",
+          "orchestrator/app/config.py",
+          "orchestrator/app/agents/supervisor.py"
+        ],
+        "fichiers_manquants": [],
+        "agents_existants": [
+          "code_generation",
+          "documentation",
+          "testing",
+          "diag_postgresql"
+        ],
+        "nombre_agents": 4,
+        "gemini_deja_integre": false,
+        "plan_integration": {
+          "nouveau_agent": "gemini_rapid",
+          "modele_recommande": "gemini-1.5-flash",
+          "cas_usage": [
+            "prototypage",
+            "analyse_rapide",
+            "economie_couts"
+          ],
+          "modification_requise": "workers.py",
+          "dependance": "langchain-google-genai"
+        },
+        "config_gemini_presente": true
+      },
+      "problemes": [],
+      "recommandations": [
+        "Plan d'intégration Gemini conçu",
+        "Configuration Gemini déjà présente"
+      ],
+      "prochaines_actions": [
+        "Implémenter l'agent gemini_rapid",
+        "Installer langchain-google-genai",
+        "Tester l'intégration"
+      ],
+      "timestamp": "2025-06-18T00:27:16.775210"
+    }
+  ]
+}
