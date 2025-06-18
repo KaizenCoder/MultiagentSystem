@@ -1,0 +1,6 @@
+# NextGeneration Imported Tools Dependencies
+# Generated automatically by Agent 3 - Adaptateur Code
+
+asyncio
+collections
+threading

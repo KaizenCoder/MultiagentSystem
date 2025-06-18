@@ -1,0 +1,22 @@
+{
+  "nextgeneration_tools": {
+    "version": "1.0.0",
+    "adapted_from": "SuperWhisper_V6",
+    "tools": [
+      {
+        "name": "install_phase3_dependencies",
+        "category": "file",
+        "path": "tools\\imported_tools\\file\\install_phase3_dependencies.py",
+        "priority": "HIGH",
+        "utility_score": 93.0
+      },
+      {
+        "name": "monitor_phase3",
+        "category": "monitoring",
+        "path": "tools\\imported_tools\\monitoring\\monitor_phase3.py",
+        "priority": "HIGH",
+        "utility_score": 91.6
+      }
+    ]
+  }
+}

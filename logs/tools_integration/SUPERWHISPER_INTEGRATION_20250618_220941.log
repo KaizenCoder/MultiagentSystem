@@ -1,0 +1,40 @@
+2025-06-18 22:09:41,835 - CoordinateurEquipeTools - INFO - 🔍 Vérification des prérequis...
+2025-06-18 22:09:41,868 - CoordinateurEquipeTools - INFO - ✅ Git repository valide
+2025-06-18 22:09:41,868 - CoordinateurEquipeTools - INFO - ✅ Prérequis validés
+2025-06-18 22:09:41,868 - CoordinateurEquipeTools - INFO - 🚀 Démarrage mission SUPERWHISPER_INTEGRATION_20250618_220941
+2025-06-18 22:09:41,868 - CoordinateurEquipeTools - INFO - 📊 Phase 1: Analyse de structure (Claude Sonnet 4)
+2025-06-18 22:09:41,871 - Agent1_AnalyseurStructure - INFO - 🔍 Démarrage analyse structure: C:\Dev\SuperWhisper_V6\tools
+2025-06-18 22:09:41,873 - Agent1_AnalyseurStructure - INFO - 📁 29 fichiers Python trouvés
+2025-06-18 22:09:41,959 - Agent1_AnalyseurStructure - INFO - 📊 file: 27 outils
+2025-06-18 22:09:41,959 - Agent1_AnalyseurStructure - INFO - 📊 monitoring: 2 outils
+2025-06-18 22:09:41,959 - Agent1_AnalyseurStructure - INFO - ✅ Analyse terminée: 29 outils analysés
+2025-06-18 22:09:41,960 - CoordinateurEquipeTools - INFO - ✅ Phase 1 terminée - 29 outils analysés
+2025-06-18 22:09:41,960 - CoordinateurEquipeTools - INFO - 🎯 Phase 2: Évaluation d'utilité (GPT-4 Turbo)
+2025-06-18 22:09:41,961 - Agent2_EvaluateurUtilite - INFO - 🎯 Démarrage évaluation utilité des outils
+2025-06-18 22:09:41,963 - Agent2_EvaluateurUtilite - INFO - ✅ Évaluation terminée: 2 outils sélectionnés
+2025-06-18 22:09:41,963 - CoordinateurEquipeTools - INFO - ✅ Phase 2 terminée - 2 outils sélectionnés
+2025-06-18 22:09:41,963 - CoordinateurEquipeTools - INFO - 🔧 Phase 3: Adaptation de code (Claude Sonnet 4)
+2025-06-18 22:09:41,968 - Agent3_AdaptateurCode - INFO - 🔧 Démarrage adaptation des outils sélectionnés
+2025-06-18 22:09:41,968 - Agent3_AdaptateurCode - INFO - 📁 Structure créée pour 2 catégories
+2025-06-18 22:09:41,970 - Agent3_AdaptateurCode - INFO - ✅ Outil adapté: install_phase3_dependencies
+2025-06-18 22:09:41,971 - Agent3_AdaptateurCode - INFO - ✅ Outil adapté: monitor_phase3
+2025-06-18 22:09:41,972 - Agent3_AdaptateurCode - INFO - ⚙️ Configuration générée: tools\imported_tools\tools_config.json
+2025-06-18 22:09:41,972 - Agent3_AdaptateurCode - INFO - 🚀 Lanceur créé: tools\imported_tools\run_tool.py
+2025-06-18 22:09:41,996 - Agent3_AdaptateurCode - INFO - 📋 Requirements générés: 3 dépendances
+2025-06-18 22:09:41,997 - Agent3_AdaptateurCode - INFO - ✅ Adaptation terminée: 2 outils adaptés
+2025-06-18 22:09:41,997 - CoordinateurEquipeTools - INFO - ✅ Phase 3 terminée - 2 outils adaptés
+2025-06-18 22:09:41,997 - CoordinateurEquipeTools - INFO - 🧪 Phase 4: Tests d'intégration (GPT-4 Turbo)
+2025-06-18 22:09:41,998 - Agent4_TesteurIntegration - INFO - 🧪 Démarrage tests d'intégration
+2025-06-18 22:09:42,117 - Agent4_TesteurIntegration - WARNING - ⚠️ Tests partiels: install_phase3_dependencies
+2025-06-18 22:09:42,232 - Agent4_TesteurIntegration - WARNING - ⚠️ Tests partiels: monitor_phase3
+2025-06-18 22:09:42,234 - Agent4_TesteurIntegration - INFO - ✅ Tests terminés: 2 outils testés
+2025-06-18 22:09:42,234 - CoordinateurEquipeTools - INFO - ✅ Phase 4 terminée - 2 outils testés
+2025-06-18 22:09:42,234 - CoordinateurEquipeTools - INFO - 📚 Phase 5: Documentation (Gemini 2.0 Flash)
+2025-06-18 22:09:42,235 - Agent5_Documenteur - INFO - 📚 Démarrage génération documentation
+2025-06-18 22:09:42,236 - Agent5_Documenteur - WARNING - ⚠️ Erreur analyse outil tools\imported_tools\file\install_phase3_dependencies.py: invalid character '🚀' (U+1F680) (<unknown>, line 49)
+2025-06-18 22:09:42,237 - Agent5_Documenteur - WARNING - ⚠️ Erreur analyse outil tools\imported_tools\monitoring\monitor_phase3.py: invalid character '🚀' (U+1F680) (<unknown>, line 49)
+2025-06-18 22:09:42,239 - Agent5_Documenteur - INFO - ✅ Documentation générée: 8 fichiers créés
+2025-06-18 22:09:42,239 - CoordinateurEquipeTools - INFO - ✅ Phase 5 terminée - 8 docs créées
+2025-06-18 22:09:42,239 - CoordinateurEquipeTools - INFO - ✅ Phase 6: Validation finale (Claude Sonnet 4)
+2025-06-18 22:09:42,242 - CoordinateurEquipeTools - ERROR - ❌ Erreur mission: cannot import name 'AgentValidateurFinal' from 'agent_6_validateur_final' (C:\Dev\nextgeneration\agent_6_validateur_final.py)
+2025-06-18 22:09:42,248 - CoordinateurEquipeTools - ERROR - 📋 Rapport d'erreur généré: C:\Dev\nextgeneration\reports\tools_integration\SUPERWHISPER_INTEGRATION_20250618_220941_ERROR_REPORT.json
