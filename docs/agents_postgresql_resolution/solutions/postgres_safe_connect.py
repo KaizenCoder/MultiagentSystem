@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Contournement problème encodage psycopg2 Windows
-Solution: Utiliser SQLAlchemy avec options spécifiques
+Contournement problme encodage psycopg2 Windows
+Solution: Utiliser SQLAlchemy avec options spcifiques
 """
 
 import os
@@ -10,9 +10,9 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.pool import NullPool
 
 def connect_postgres_safe():
-    """Connexion PostgreSQL sécurisée avec gestion encodage"""
+    """Connexion PostgreSQL scurise avec gestion encodage"""
     
-    # Configuration forcée
+    # Configuration force
     os.environ['PYTHONIOENCODING'] = 'utf-8'
     os.environ['PYTHONUTF8'] = '1'
     
@@ -23,7 +23,7 @@ def connect_postgres_safe():
             "?client_encoding=utf8&application_name=nextgen"
         )
         
-        # Moteur SQLAlchemy avec options spécifiques
+        # Moteur SQLAlchemy avec options spcifiques
         engine = create_engine(
             DATABASE_URL,
             poolclass=NullPool,
@@ -42,9 +42,9 @@ def connect_postgres_safe():
 if __name__ == "__main__":
     engine = connect_postgres_safe()
     if engine:
-        print("✅ Connexion PostgreSQL réussie")
+        print("[CHECK] Connexion PostgreSQL russie")
         with engine.connect() as conn:
             result = conn.execute(text("SELECT current_database()"))
             print(f"Base: {result.fetchone()[0]}")
     else:
-        print("❌ Échec connexion")
+        print("[CROSS] chec connexion")

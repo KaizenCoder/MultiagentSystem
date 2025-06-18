@@ -19,9 +19,9 @@ os.chdir(project_root / "orchestrator")
 
 try:
     from orchestrator.app.config import settings
-    print("✅ Configuration chargée")
+    print("[CHECK] Configuration charge")
 except ImportError:
-    print("❌ Erreur de configuration")
+    print("[CROSS] Erreur de configuration")
     sys.exit(1)
 
 class SmartAgent:
@@ -47,7 +47,7 @@ class SmartAgent:
             await self.session.aclose()
     
     async def call_anthropic(self, prompt: str, max_tokens: int = 200) -> Dict[str, Any]:
-        """Appel à l'API Anthropic (recommandé)"""
+        """Appel  l'API Anthropic (recommand)"""
         try:
             headers = {
                 "x-api-key": settings.ANTHROPIC_API_KEY,
@@ -90,63 +90,63 @@ class SmartAgent:
     
     async def smart_process(self, prompt: str, max_tokens: int = 200) -> Dict[str, Any]:
         """Traitement intelligent avec Anthropic comme provider principal"""
-        print(f"🧠 {self.agent_id} traite: '{prompt[:60]}...'")
+        print(f" {self.agent_id} traite: '{prompt[:60]}...'")
         
         # Essayer Anthropic en premier (plus fiable actuellement)
         result = await self.call_anthropic(prompt, max_tokens)
         
         if result.get("success"):
             self.stats["successful_tasks"] += 1
-            print(f"   ✅ Succès avec Anthropic ({result.get('tokens_used', 0)} tokens)")
+            print(f"   [CHECK] Succs avec Anthropic ({result.get('tokens_used', 0)} tokens)")
             return result
         else:
             self.stats["errors"] += 1
-            print(f"   ❌ Échec: {result.get('error')}")
+            print(f"   [CROSS] chec: {result.get('error')}")
             return result
 
-# Agents spécialisés utilisant l'API
+# Agents spcialiss utilisant l'API
 class WriterBot(SmartAgent):
-    """Bot spécialisé en rédaction"""
+    """Bot spcialis en rdaction"""
     
     async def write_document(self, topic: str, style: str = "professionnel") -> str:
         prompt = f"""
-Rédige un document {style} sur le sujet suivant: {topic}
+Rdige un document {style} sur le sujet suivant: {topic}
 
 Structure attendue:
 - Introduction claire
-- Développement structuré 
+- Dveloppement structur 
 - Conclusion pertinente
 - Style {style} et fluide
 
 Sujet: {topic}
 """
         result = await self.smart_process(prompt, max_tokens=400)
-        return result.get("content", f"Erreur lors de la rédaction: {result.get('error')}")
+        return result.get("content", f"Erreur lors de la rdaction: {result.get('error')}")
     
     async def create_summary(self, text: str) -> str:
         prompt = f"""
-Crée un résumé concis et structuré du texte suivant:
+Cre un rsum concis et structur du texte suivant:
 
 {text[:1000]}...
 
-Le résumé doit:
-- Capturer les points clés
-- Être clair et concis
+Le rsum doit:
+- Capturer les points cls
+- tre clair et concis
 - Garder la structure logique
 """
         result = await self.smart_process(prompt, max_tokens=200)
-        return result.get("content", f"Erreur lors du résumé: {result.get('error')}")
+        return result.get("content", f"Erreur lors du rsum: {result.get('error')}")
 
 class CodeBot(SmartAgent):
-    """Bot spécialisé en développement"""
+    """Bot spcialis en dveloppement"""
     
     async def create_function(self, description: str, language: str = "python") -> str:
         prompt = f"""
-Crée une fonction {language} selon cette description: {description}
+Cre une fonction {language} selon cette description: {description}
 
 Exigences:
-- Code propre et commenté
-- Gestion d'erreurs appropriée
+- Code propre et comment
+- Gestion d'erreurs approprie
 - Exemples d'utilisation
 - Documentation docstring
 
@@ -154,11 +154,11 @@ Description: {description}
 Langage: {language}
 """
         result = await self.smart_process(prompt, max_tokens=300)
-        return result.get("content", f"Erreur lors de la génération: {result.get('error')}")
+        return result.get("content", f"Erreur lors de la gnration: {result.get('error')}")
     
     async def explain_code(self, code: str) -> str:
         prompt = f"""
-Explique ce code de manière claire et pédagogique:
+Explique ce code de manire claire et pdagogique:
 
 ```
 {code[:500]}
@@ -166,70 +166,70 @@ Explique ce code de manière claire et pédagogique:
 
 L'explication doit inclure:
 - Objectif du code
-- Fonctionnement étape par étape
-- Points importants à retenir
+- Fonctionnement tape par tape
+- Points importants  retenir
 """
         result = await self.smart_process(prompt, max_tokens=250)
         return result.get("content", f"Erreur lors de l'explication: {result.get('error')}")
 
 class AnalystBot(SmartAgent):
-    """Bot spécialisé en analyse"""
+    """Bot spcialis en analyse"""
     
     async def analyze_data(self, data_description: str) -> str:
         prompt = f"""
-Effectue une analyse structurée des données suivantes: {data_description}
+Effectue une analyse structure des donnes suivantes: {data_description}
 
 Structure d'analyse:
-- Vue d'ensemble des données
-- Tendances identifiées
+- Vue d'ensemble des donnes
+- Tendances identifies
 - Points d'attention
 - Recommandations
-- Prochaines étapes
+- Prochaines tapes
 
-Données: {data_description}
+Donnes: {data_description}
 """
         result = await self.smart_process(prompt, max_tokens=350)
         return result.get("content", f"Erreur lors de l'analyse: {result.get('error')}")
 
 async def demonstration_complete():
-    """Démonstration complète des agents spécialisés"""
-    print("🤖 DÉMONSTRATION AGENTS SPÉCIALISÉS")
+    """Dmonstration complte des agents spcialiss"""
+    print("[ROBOT] DMONSTRATION AGENTS SPCIALISS")
     print("=" * 50)
     
     # Test Writer Bot
-    print("\n📝 TEST WRITER BOT")
+    print("\n TEST WRITER BOT")
     print("-" * 20)
     async with WriterBot("writer_bot_001") as writer:
         
-        # Test rédaction
-        doc = await writer.write_document("L'importance de la cybersécurité", "informatif")
-        print("📄 Document généré:")
+        # Test rdaction
+        doc = await writer.write_document("L'importance de la cyberscurit", "informatif")
+        print("[DOCUMENT] Document gnr:")
         print(doc[:300] + "..." if len(doc) > 300 else doc)
         
-        # Test résumé
+        # Test rsum
         long_text = """
-        L'intelligence artificielle représente une révolution technologique majeure. 
-        Elle transforme tous les secteurs: santé, finance, transport, éducation.
+        L'intelligence artificielle reprsente une rvolution technologique majeure. 
+        Elle transforme tous les secteurs: sant, finance, transport, ducation.
         Les algorithmes d'apprentissage automatique permettent aux machines d'apprendre
-        et de s'améliorer sans programmation explicite. Cependant, cette technologie
-        soulève aussi des questions éthiques importantes concernant l'emploi,
-        la vie privée et la prise de décision automatisée.
+        et de s'amliorer sans programmation explicite. Cependant, cette technologie
+        soulve aussi des questions thiques importantes concernant l'emploi,
+        la vie prive et la prise de dcision automatise.
         """
         
         summary = await writer.create_summary(long_text)
-        print(f"\n📋 Résumé généré:")
+        print(f"\n[CLIPBOARD] Rsum gnr:")
         print(summary)
     
     # Test Code Bot
-    print(f"\n💻 TEST CODE BOT")
+    print(f"\n TEST CODE BOT")
     print("-" * 20)
     async with CodeBot("code_bot_001") as coder:
         
-        # Test génération de fonction
+        # Test gnration de fonction
         function = await coder.create_function(
             "Une fonction qui calcule la moyenne d'une liste de nombres avec gestion d'erreurs"
         )
-        print("⚙️ Fonction générée:")
+        print(" Fonction gnre:")
         print(function[:400] + "..." if len(function) > 400 else function)
         
         # Test explication de code
@@ -241,62 +241,62 @@ def fibonacci(n):
         """
         
         explanation = await coder.explain_code(sample_code)
-        print(f"\n🔍 Explication:")
+        print(f"\n[SEARCH] Explication:")
         print(explanation)
     
     # Test Analyst Bot
-    print(f"\n📊 TEST ANALYST BOT")
+    print(f"\n[CHART] TEST ANALYST BOT")
     print("-" * 20)
     async with AnalystBot("analyst_bot_001") as analyst:
         
         analysis = await analyst.analyze_data(
-            "Données de ventes e-commerce: 1000 commandes/jour, panier moyen 45€, "
-            "taux de conversion 2.5%, pics le weekend, baisse en été"
+            "Donnes de ventes e-commerce: 1000 commandes/jour, panier moyen 45, "
+            "taux de conversion 2.5%, pics le weekend, baisse en t"
         )
-        print("📈 Analyse générée:")
+        print(" Analyse gnre:")
         print(analysis)
     
     # Statistiques globales
-    print(f"\n📊 STATISTIQUES GLOBALES")
+    print(f"\n[CHART] STATISTIQUES GLOBALES")
     print("-" * 25)
     for bot_name, bot in [("Writer", writer), ("Coder", coder), ("Analyst", analyst)]:
         stats = bot.stats
-        print(f"🤖 {bot_name}:")
-        print(f"   ✅ Tâches réussies: {stats['successful_tasks']}")
-        print(f"   🧠 Appels Anthropic: {stats['anthropic_calls']}")
-        print(f"   📊 Tokens totaux: {stats['total_tokens']}")
-        print(f"   ❌ Erreurs: {stats['errors']}")
+        print(f"[ROBOT] {bot_name}:")
+        print(f"   [CHECK] Tches russies: {stats['successful_tasks']}")
+        print(f"    Appels Anthropic: {stats['anthropic_calls']}")
+        print(f"   [CHART] Tokens totaux: {stats['total_tokens']}")
+        print(f"   [CROSS] Erreurs: {stats['errors']}")
 
 async def test_multi_agent_workflow():
     """Test d'un workflow multi-agents"""
-    print(f"\n🔄 TEST WORKFLOW MULTI-AGENTS")
+    print(f"\n TEST WORKFLOW MULTI-AGENTS")
     print("=" * 40)
     
-    # Scénario: Analyser un problème, proposer une solution code, documenter
-    topic = "Système de cache pour améliorer les performances d'une API"
+    # Scnario: Analyser un problme, proposer une solution code, documenter
+    topic = "Systme de cache pour amliorer les performances d'une API"
     
     async with AnalystBot("analyst") as analyst, \
                CodeBot("coder") as coder, \
                WriterBot("writer") as writer:
         
-        print("1️⃣ Analyse du problème...")
-        analysis = await analyst.analyze_data(f"Problème de performance: {topic}")
-        print(f"   📋 Analyse: {analysis[:100]}...")
+        print("1 Analyse du problme...")
+        analysis = await analyst.analyze_data(f"Problme de performance: {topic}")
+        print(f"   [CLIPBOARD] Analyse: {analysis[:100]}...")
         
-        print("\n2️⃣ Génération de solution code...")
+        print("\n2 Gnration de solution code...")
         code_solution = await coder.create_function(
-            "Système de cache Redis avec TTL et invalidation automatique"
+            "Systme de cache Redis avec TTL et invalidation automatique"
         )
-        print(f"   💻 Code: {code_solution[:100]}...")
+        print(f"    Code: {code_solution[:100]}...")
         
-        print("\n3️⃣ Documentation finale...")
+        print("\n3 Documentation finale...")
         final_doc = await writer.write_document(
-            f"Solution de cache basée sur l'analyse: {analysis[:200]}",
+            f"Solution de cache base sur l'analyse: {analysis[:200]}",
             "technique"
         )
-        print(f"   📝 Documentation: {final_doc[:100]}...")
+        print(f"    Documentation: {final_doc[:100]}...")
         
-        print(f"\n✅ Workflow terminé! 3 agents ont collaboré avec succès.")
+        print(f"\n[CHECK] Workflow termin! 3 agents ont collabor avec succs.")
 
 async def main():
     """Fonction principale"""
@@ -304,14 +304,14 @@ async def main():
         await demonstration_complete()
         await test_multi_agent_workflow()
         
-        print(f"\n🎉 DÉMONSTRATION TERMINÉE")
-        print("💡 Vos agents sont prêts pour des tâches réelles!")
-        print("🔧 Vous pouvez maintenant les intégrer dans vos projets")
+        print(f"\n DMONSTRATION TERMINE")
+        print("[BULB] Vos agents sont prts pour des tches relles!")
+        print("[TOOL] Vous pouvez maintenant les intgrer dans vos projets")
         
     except KeyboardInterrupt:
-        print("\n⏹️  Démonstration interrompue")
+        print("\n  Dmonstration interrompue")
     except Exception as e:
-        print(f"\n❌ Erreur: {e}")
+        print(f"\n[CROSS] Erreur: {e}")
 
 if __name__ == "__main__":
     asyncio.run(main())

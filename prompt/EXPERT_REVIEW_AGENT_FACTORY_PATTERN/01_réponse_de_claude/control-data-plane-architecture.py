@@ -13,10 +13,10 @@ from pydantic import BaseModel
 
 Base = declarative_base()
 
-# === Modèles ORM ===
+# === Modles ORM ===
 
 class TemplateORM(Base):
-    """Template versionné avec migration"""
+    """Template versionn avec migration"""
     __tablename__ = "templates"
     
     id = Column(String, primary_key=True)
@@ -30,7 +30,7 @@ class TemplateORM(Base):
     is_active = Column(Boolean, default=True)
 
 class AgentRegistryORM(Base):
-    """Registre des agents avec métadonnées"""
+    """Registre des agents avec mtadonnes"""
     __tablename__ = "agent_registry"
     
     agent_id = Column(String, primary_key=True)
@@ -45,7 +45,7 @@ class AgentRegistryORM(Base):
 # === Control Plane API ===
 
 class ControlPlaneAPI:
-    """API de gouvernance - séparée de l'exécution"""
+    """API de gouvernance - spare de l'excution"""
     
     def __init__(self, db_url: str, s3_bucket: str):
         self.engine = create_async_engine(db_url, pool_pre_ping=True)
@@ -70,7 +70,7 @@ class ControlPlaneAPI:
             if not await self._validate_with_opa(template):
                 raise HTTPException(400, "Template rejected by OPA policy")
             
-            # Génération version et checksum
+            # Gnration version et checksum
             version = self._generate_version(name, template)
             checksum = hashlib.sha256(str(template).encode()).hexdigest()
             
@@ -104,15 +104,15 @@ class ControlPlaneAPI:
             config: Dict[str, Any] = None,
             db: AsyncSession = Depends(self.get_db)
         ):
-            """Crée un agent - délègue l'exécution au data plane"""
-            # Résolution de version
+            """Cre un agent - dlgue l'excution au data plane"""
+            # Rsolution de version
             if not template_version:
                 template_version = await self._get_latest_version(template_name, db)
             
             # Chargement du template
             template = await self._load_template(template_name, template_version, db)
             
-            # Application des migrations si nécessaire
+            # Application des migrations si ncessaire
             current_version = await self._get_current_version(template_name)
             if current_version and current_version != template_version:
                 template = await self._migrate_template(
@@ -136,7 +136,7 @@ class ControlPlaneAPI:
             db.add(agent_orm)
             await db.commit()
             
-            # Déploiement asynchrone sur data plane
+            # Dploiement asynchrone sur data plane
             asyncio.create_task(
                 self._deploy_to_data_plane(agent_orm, template, config)
             )
@@ -145,14 +145,14 @@ class ControlPlaneAPI:
     
     async def _validate_with_opa(self, template: Dict[str, Any]) -> bool:
         """Validation OPA du template"""
-        # Appel à OPA Gatekeeper
+        # Appel  OPA Gatekeeper
         policy_input = {
             "template": template,
             "user": "current_user",  # From auth context
             "timestamp": datetime.utcnow().isoformat()
         }
         
-        # En production : vraie intégration OPA
+        # En production : vraie intgration OPA
         # response = await opa_client.evaluate("agent_factory.template.allow", policy_input)
         # return response.result
         
@@ -172,7 +172,7 @@ class ControlPlaneAPI:
         template: Dict[str, Any],
         config: Dict[str, Any]
     ):
-        """Déploie l'agent sur le data plane sélectionné"""
+        """Dploie l'agent sur le data plane slectionn"""
         # Appel gRPC ou HTTP vers le data plane node
         data_plane_client = DataPlaneClient(agent_orm.node_assignment)
         
@@ -184,7 +184,7 @@ class ControlPlaneAPI:
                 resources=agent_orm.resource_allocation
             )
             
-            # Mise à jour du statut
+            # Mise  jour du statut
             async with self.async_session() as db:
                 agent_orm.deployment_status = "running"
                 db.add(agent_orm)
@@ -202,7 +202,7 @@ class ControlPlaneAPI:
         async with self.async_session() as session:
             yield session
 
-# === Data Plane (Exécution) ===
+# === Data Plane (Excution) ===
 
 from ray import serve
 import ray
@@ -217,11 +217,11 @@ from typing import Any, Dict
     },
     ray_actor_options={
         "num_cpus": 2,
-        "num_gpus": 0  # Overridé selon le template
+        "num_gpus": 0  # Overrid selon le template
     }
 )
 class DataPlaneAgent:
-    """Agent exécuté sur le data plane avec Ray Serve"""
+    """Agent excut sur le data plane avec Ray Serve"""
     
     def __init__(self, agent_id: str, template: Dict[str, Any], config: Dict[str, Any]):
         self.agent_id = agent_id
@@ -230,8 +230,8 @@ class DataPlaneAgent:
         self.processor = self._create_processor()
         
     def _create_processor(self):
-        """Crée le processeur selon le template"""
-        # Injection des capacités selon le template
+        """Cre le processeur selon le template"""
+        # Injection des capacits selon le template
         capabilities = self.template.get("capabilities", [])
         
         if "gpu_inference" in capabilities:
@@ -242,8 +242,8 @@ class DataPlaneAgent:
             return DefaultProcessor(self.template)
     
     async def __call__(self, request: Dict[str, Any]) -> Dict[str, Any]:
-        """Point d'entrée Ray Serve"""
-        # Métriques
+        """Point d'entre Ray Serve"""
+        # Mtriques
         start_time = time.time()
         
         try:
@@ -252,7 +252,7 @@ class DataPlaneAgent:
                 request.get("context", {})
             )
             
-            # Métriques de succès
+            # Mtriques de succs
             await self._record_metrics({
                 "agent_id": self.agent_id,
                 "duration": time.time() - start_time,
@@ -262,7 +262,7 @@ class DataPlaneAgent:
             return result
             
         except Exception as e:
-            # Métriques d'échec
+            # Mtriques d'chec
             await self._record_metrics({
                 "agent_id": self.agent_id,
                 "duration": time.time() - start_time,
@@ -272,7 +272,7 @@ class DataPlaneAgent:
             raise
     
     async def _record_metrics(self, metrics: Dict[str, Any]):
-        """Enregistre les métriques dans Prometheus"""
+        """Enregistre les mtriques dans Prometheus"""
         # ray.util.metrics.Counter, Gauge, etc.
         pass
 
@@ -300,7 +300,7 @@ class DataPlaneOrchestrator:
         config: Dict[str, Any],
         resources: Dict[str, Any]
     ):
-        """Déploie un agent avec les ressources allouées"""
+        """Dploie un agent avec les ressources alloues"""
         
         # Configuration Ray selon les ressources
         ray_options = {
@@ -309,13 +309,13 @@ class DataPlaneOrchestrator:
             "memory": resources.get("memory_mb", 2048) * 1024 * 1024
         }
         
-        # Création du deployment Ray Serve
+        # Cration du deployment Ray Serve
         deployment = DataPlaneAgent.options(
             name=f"agent-{agent_id}",
             ray_actor_options=ray_options
         ).bind(agent_id, template, config)
         
-        # Déploiement
+        # Dploiement
         handle = serve.run(deployment, route_prefix=f"/agents/{agent_id}")
         self.deployed_agents[agent_id] = handle
         
@@ -359,7 +359,7 @@ class ResourceTieringManager:
         self,
         template: Dict[str, Any]
     ) -> str:
-        """Sélectionne le meilleur node selon le template"""
+        """Slectionne le meilleur node selon le template"""
         requires_gpu = template.get("requires_gpu", False)
         
         if requires_gpu:
@@ -369,16 +369,16 @@ class ResourceTieringManager:
                 if utilization < 70:  # Seuil configurable
                     return node
             
-            # Fallback sur CPU avec modèle distillé
-            print(f"GPU saturé, fallback sur CPU pour {template['name']}")
+            # Fallback sur CPU avec modle distill
+            print(f"GPU satur, fallback sur CPU pour {template['name']}")
             template["model_override"] = "distilled-cpu-model"
             return self._select_cpu_node()
         
         return self._select_cpu_node()
     
     def _select_cpu_node(self) -> str:
-        """Sélectionne un node CPU avec le moins de charge"""
-        # Round-robin simple, ou intégration avec Kubernetes metrics
+        """Slectionne un node CPU avec le moins de charge"""
+        # Round-robin simple, ou intgration avec Kubernetes metrics
         return self.cpu_nodes[0] if self.cpu_nodes else "default-node"
 
 # === Migration de Templates ===
@@ -433,9 +433,9 @@ class TemplateMigrationEngine:
 # === Exemple d'utilisation ===
 
 async def main():
-    """Exemple de déploiement control/data plane"""
+    """Exemple de dploiement control/data plane"""
     
-    # Control Plane (sur node dédié)
+    # Control Plane (sur node ddi)
     control_plane = ControlPlaneAPI(
         db_url="postgresql+asyncpg://user:pass@localhost/control_plane",
         s3_bucket="agent-factory-templates"
@@ -447,10 +447,10 @@ async def main():
         control_plane_url="http://control-plane:8000"
     )
     
-    # Démarrage des services
+    # Dmarrage des services
     asyncio.create_task(data_plane.health_check_loop())
     
-    # Création d'un agent via control plane
+    # Cration d'un agent via control plane
     response = await control_plane.app.post(
         "/agents/create",
         json={

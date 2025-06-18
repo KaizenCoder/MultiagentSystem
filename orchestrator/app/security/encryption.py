@@ -1,10 +1,10 @@
 """
-Service de chiffrement pour protéger les données sensibles.
+Service de chiffrement pour protger les donnes sensibles.
 
 Ce module fournit des utilitaires pour :
-- Chiffrement/déchiffrement des données sensibles
-- Génération de clés sécurisées
-- Hachage sécurisé des mots de passe
+- Chiffrement/dchiffrement des donnes sensibles
+- Gnration de cls scurises
+- Hachage scuris des mots de passe
 """
 
 import base64
@@ -17,42 +17,42 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 
 class EncryptionService:
-    """Service de chiffrement pour les données sensibles."""
+    """Service de chiffrement pour les donnes sensibles."""
     
     def __init__(self, key: Optional[bytes] = None):
         """
         Initialise le service de chiffrement.
         
         Args:
-            key: Clé de chiffrement (générée automatiquement si None)
+            key: Cl de chiffrement (gnre automatiquement si None)
         """
         if key:
             self.cipher = Fernet(key)
         else:
-            # Générer une nouvelle clé
+            # Gnrer une nouvelle cl
             self.cipher = Fernet(Fernet.generate_key())
     
     @staticmethod
     def generate_key() -> bytes:
         """
-        Génère une nouvelle clé de chiffrement.
+        Gnre une nouvelle cl de chiffrement.
         
         Returns:
-            bytes: Clé de chiffrement
+            bytes: Cl de chiffrement
         """
         return Fernet.generate_key()
     
     @staticmethod
     def derive_key_from_password(password: str, salt: Optional[bytes] = None) -> tuple[bytes, bytes]:
         """
-        Dérive une clé de chiffrement à partir d'un mot de passe.
+        Drive une cl de chiffrement  partir d'un mot de passe.
         
         Args:
             password: Mot de passe
-            salt: Salt (généré automatiquement si None)
+            salt: Salt (gnr automatiquement si None)
             
         Returns:
-            tuple: (clé, salt)
+            tuple: (cl, salt)
         """
         if salt is None:
             salt = secrets.token_bytes(32)
@@ -68,26 +68,26 @@ class EncryptionService:
     
     def encrypt_data(self, data: str) -> str:
         """
-        Chiffre des données.
+        Chiffre des donnes.
         
         Args:
-            data: Données à chiffrer
+            data: Donnes  chiffrer
             
         Returns:
-            str: Données chiffrées (base64)
+            str: Donnes chiffres (base64)
         """
         encrypted_data = self.cipher.encrypt(data.encode())
         return base64.urlsafe_b64encode(encrypted_data).decode()
     
     def decrypt_data(self, encrypted_data: str) -> str:
         """
-        Déchiffre des données.
+        Dchiffre des donnes.
         
         Args:
-            encrypted_data: Données chiffrées (base64)
+            encrypted_data: Donnes chiffres (base64)
             
         Returns:
-            str: Données déchiffrées
+            str: Donnes dchiffres
         """
         encrypted_bytes = base64.urlsafe_b64decode(encrypted_data.encode())
         decrypted_data = self.cipher.decrypt(encrypted_bytes)
@@ -95,40 +95,40 @@ class EncryptionService:
     
     def encrypt_sensitive_data(self, data: str) -> str:
         """
-        Chiffre des données sensibles (alias pour encrypt_data).
+        Chiffre des donnes sensibles (alias pour encrypt_data).
         
         Args:
-            data: Données sensibles à chiffrer
+            data: Donnes sensibles  chiffrer
             
         Returns:
-            str: Données chiffrées
+            str: Donnes chiffres
         """
         return self.encrypt_data(data)
     
     def decrypt_sensitive_data(self, encrypted_data: str) -> str:
         """
-        Déchiffre des données sensibles (alias pour decrypt_data).
+        Dchiffre des donnes sensibles (alias pour decrypt_data).
         
         Args:
-            encrypted_data: Données chiffrées
+            encrypted_data: Donnes chiffres
             
         Returns:
-            str: Données déchiffrées
+            str: Donnes dchiffres
         """
         return self.decrypt_data(encrypted_data)
 
 
 class SecureHasher:
-    """Utilitaires pour le hachage sécurisé."""
+    """Utilitaires pour le hachage scuris."""
     
     @staticmethod
     def hash_password(password: str, salt: Optional[bytes] = None) -> tuple[str, str]:
         """
-        Hache un mot de passe de manière sécurisée.
+        Hache un mot de passe de manire scurise.
         
         Args:
-            password: Mot de passe à hacher
-            salt: Salt (généré automatiquement si None)
+            password: Mot de passe  hacher
+            salt: Salt (gnr automatiquement si None)
             
         Returns:
             tuple: (hash, salt) en format base64
@@ -152,10 +152,10 @@ class SecureHasher:
     @staticmethod
     def verify_password(password: str, hash_b64: str, salt_b64: str) -> bool:
         """
-        Vérifie un mot de passe contre son hash.
+        Vrifie un mot de passe contre son hash.
         
         Args:
-            password: Mot de passe à vérifier
+            password: Mot de passe  vrifier
             hash_b64: Hash en base64
             salt_b64: Salt en base64
             
@@ -180,20 +180,20 @@ class SecureHasher:
     @staticmethod
     def hash_data(data: str) -> str:
         """
-        Hache des données avec SHA-256.
+        Hache des donnes avec SHA-256.
         
         Args:
-            data: Données à hacher
+            data: Donnes  hacher
             
         Returns:
-            str: Hash en hexadécimal
+            str: Hash en hexadcimal
         """
         return hashlib.sha256(data.encode()).hexdigest()
     
     @staticmethod
     def generate_secure_token(length: int = 32) -> str:
         """
-        Génère un token sécurisé.
+        Gnre un token scuris.
         
         Args:
             length: Longueur du token en bytes
@@ -205,7 +205,7 @@ class SecureHasher:
         return base64.urlsafe_b64encode(token_bytes).decode()
 
 
-# Service global par défaut (utilise une clé générée)
+# Service global par dfaut (utilise une cl gnre)
 default_encryption_service = EncryptionService()
 
 
@@ -214,7 +214,7 @@ def get_encryption_service(key: Optional[bytes] = None) -> EncryptionService:
     Obtient une instance du service de chiffrement.
     
     Args:
-        key: Clé de chiffrement (utilise le service par défaut si None)
+        key: Cl de chiffrement (utilise le service par dfaut si None)
         
     Returns:
         EncryptionService: Instance du service

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
 Agent 6 - Validateur Final
-Partie du système NextGeneration - Équipe d'agents pour importation d'outils
+Partie du systme NextGeneration - quipe d'agents pour importation d'outils
 
-Mission: Validation finale de l'intégration des outils et opérations Git
-Modèle: Claude Sonnet 4 (validation et opérations critiques)
+Mission: Validation finale de l'intgration des outils et oprations Git
+Modle: Claude Sonnet 4 (validation et oprations critiques)
 """
 
 import os
@@ -38,15 +38,15 @@ class AgentValidateurFinal:
     
     def valider_integration_complete(self, rapport_phases: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Validation finale de l'intégration complète
+        Validation finale de l'intgration complte
         
         Args:
-            rapport_phases: Rapports de toutes les phases précédentes
+            rapport_phases: Rapports de toutes les phases prcdentes
             
         Returns:
-            Dict contenant le résultat de validation et actions Git
+            Dict contenant le rsultat de validation et actions Git
         """
-        self.logger.info("🔍 Démarrage validation finale de l'intégration")
+        self.logger.info("[SEARCH] Dmarrage validation finale de l'intgration")
         
         validation_result = {
             "timestamp": datetime.now().isoformat(),
@@ -63,7 +63,7 @@ class AgentValidateurFinal:
             structure_valid = self._valider_structure_outils()
             validation_result["validation_checks"]["structure"] = structure_valid
             
-            # 2. Validation cohérence des rapports
+            # 2. Validation cohrence des rapports
             coherence_valid = self._valider_coherence_rapports(rapport_phases)
             validation_result["validation_checks"]["coherence"] = coherence_valid
             
@@ -75,7 +75,7 @@ class AgentValidateurFinal:
             docs_valid = self._valider_documentation()
             validation_result["validation_checks"]["documentation"] = docs_valid
             
-            # 5. Déterminer si intégration est réussie
+            # 5. Dterminer si intgration est russie
             integration_success = all([
                 structure_valid["status"] == "success",
                 coherence_valid["status"] == "success", 
@@ -85,35 +85,35 @@ class AgentValidateurFinal:
             
             validation_result["final_status"] = "success" if integration_success else "partial"
             
-            # 6. Opérations Git si succès
+            # 6. Oprations Git si succs
             if integration_success:
                 git_result = self._executer_operations_git()
                 validation_result["git_operations"] = git_result
                 
                 if git_result["status"] == "success":
                     validation_result["final_status"] = "complete_success"
-                    self.logger.info("✅ Intégration complète avec succès Git")
+                    self.logger.info("[CHECK] Intgration complte avec succs Git")
                 else:
                     validation_result["final_status"] = "success_no_git"
-                    self.logger.warning("⚠️ Intégration réussie mais échec Git")
+                    self.logger.warning(" Intgration russie mais chec Git")
             else:
-                self.logger.warning("⚠️ Intégration partielle - pas d'opérations Git")
+                self.logger.warning(" Intgration partielle - pas d'oprations Git")
             
-            # 7. Générer recommandations
+            # 7. Gnrer recommandations
             validation_result["recommendations"] = self._generer_recommandations(validation_result)
             
-            self.logger.info(f"✅ Validation terminée - Status: {validation_result['final_status']}")
+            self.logger.info(f"[CHECK] Validation termine - Status: {validation_result['final_status']}")
             
         except Exception as e:
-            self.logger.error(f"❌ Erreur validation finale: {str(e)}")
+            self.logger.error(f"[CROSS] Erreur validation finale: {str(e)}")
             validation_result["final_status"] = "error"
             validation_result["error"] = str(e)
         
         return validation_result
     
     def _valider_structure_outils(self) -> Dict[str, Any]:
-        """Valide la structure des outils importés"""
-        self.logger.info("🔍 Validation structure des outils")
+        """Valide la structure des outils imports"""
+        self.logger.info("[SEARCH] Validation structure des outils")
         
         result = {
             "status": "unknown",
@@ -126,10 +126,10 @@ class AgentValidateurFinal:
         try:
             if not self.tools_dir.exists():
                 result["status"] = "error"
-                result["issues"].append("Répertoire tools/imported_tools n'existe pas")
+                result["issues"].append("Rpertoire tools/imported_tools n'existe pas")
                 return result
             
-            # Compter les outils par catégorie
+            # Compter les outils par catgorie
             categories = [d for d in self.tools_dir.iterdir() if d.is_dir() and d.name != "__pycache__"]
             result["categories"] = [cat.name for cat in categories]
             
@@ -140,7 +140,7 @@ class AgentValidateurFinal:
             
             result["tools_found"] = total_tools
             
-            # Vérifier fichiers essentiels
+            # Vrifier fichiers essentiels
             essential_files = [
                 self.tools_dir / "tools_config.json",
                 self.tools_dir / "run_tool.py",
@@ -158,7 +158,7 @@ class AgentValidateurFinal:
             else:
                 result["status"] = "success"
             
-            self.logger.info(f"📊 Structure: {total_tools} outils, {len(categories)} catégories")
+            self.logger.info(f"[CHART] Structure: {total_tools} outils, {len(categories)} catgories")
             
         except Exception as e:
             result["status"] = "error"
@@ -167,8 +167,8 @@ class AgentValidateurFinal:
         return result
     
     def _valider_coherence_rapports(self, rapport_phases: Dict[str, Any]) -> Dict[str, Any]:
-        """Valide la cohérence entre les rapports des phases"""
-        self.logger.info("🔍 Validation cohérence des rapports")
+        """Valide la cohrence entre les rapports des phases"""
+        self.logger.info("[SEARCH] Validation cohrence des rapports")
         
         result = {
             "status": "unknown",
@@ -182,16 +182,16 @@ class AgentValidateurFinal:
             phases_trouvees = [p for p in phases_attendues if p in rapport_phases]
             result["phases_completed"] = len(phases_trouvees)
             
-            # Vérifier cohérence nombre d'outils
+            # Vrifier cohrence nombre d'outils
             if "phase1" in rapport_phases and "phase3" in rapport_phases:
                 tools_analysed = rapport_phases["phase1"].get("tools_analysed", 0)
                 tools_adapted = rapport_phases["phase3"].get("tools_adapted", 0)
                 
                 if tools_adapted > tools_analysed:
                     result["tools_consistency"] = False
-                    result["issues"].append("Plus d'outils adaptés que analysés")
+                    result["issues"].append("Plus d'outils adapts que analyss")
             
-            # Vérifier statuts des phases
+            # Vrifier statuts des phases
             phases_success = all(
                 rapport_phases.get(phase, {}).get("status") == "success" 
                 for phase in phases_trouvees
@@ -201,22 +201,22 @@ class AgentValidateurFinal:
                 result["status"] = "success"
             elif len(phases_trouvees) >= 3:
                 result["status"] = "warning"
-                result["issues"].append("Phases incomplètes mais minimum atteint")
+                result["issues"].append("Phases incompltes mais minimum atteint")
             else:
                 result["status"] = "error"
-                result["issues"].append("Trop peu de phases complétées")
+                result["issues"].append("Trop peu de phases compltes")
             
-            self.logger.info(f"📊 Cohérence: {len(phases_trouvees)}/5 phases, cohérent: {result['tools_consistency']}")
+            self.logger.info(f"[CHART] Cohrence: {len(phases_trouvees)}/5 phases, cohrent: {result['tools_consistency']}")
             
         except Exception as e:
             result["status"] = "error"
-            result["issues"].append(f"Erreur validation cohérence: {str(e)}")
+            result["issues"].append(f"Erreur validation cohrence: {str(e)}")
         
         return result
     
     def _valider_configuration(self) -> Dict[str, Any]:
         """Valide la configuration des outils"""
-        self.logger.info("🔍 Validation configuration")
+        self.logger.info("[SEARCH] Validation configuration")
         
         result = {
             "status": "unknown",
@@ -227,7 +227,7 @@ class AgentValidateurFinal:
         }
         
         try:
-            # Vérifier tools_config.json
+            # Vrifier tools_config.json
             config_file = self.tools_dir / "tools_config.json"
             if config_file.exists():
                 try:
@@ -237,20 +237,20 @@ class AgentValidateurFinal:
                     if "tools" in config_data and "metadata" in config_data:
                         result["config_valid"] = True
                     else:
-                        result["issues"].append("Configuration JSON incomplète")
+                        result["issues"].append("Configuration JSON incomplte")
                 except json.JSONDecodeError:
                     result["issues"].append("Configuration JSON invalide")
             else:
                 result["issues"].append("Fichier configuration manquant")
             
-            # Vérifier run_tool.py
+            # Vrifier run_tool.py
             launcher_file = self.tools_dir / "run_tool.py"
             if launcher_file.exists() and launcher_file.stat().st_size > 100:
                 result["launcher_valid"] = True
             else:
                 result["issues"].append("Lanceur invalide ou manquant")
             
-            # Vérifier requirements.txt
+            # Vrifier requirements.txt
             req_file = self.tools_dir / "requirements.txt"
             if req_file.exists():
                 try:
@@ -274,7 +274,7 @@ class AgentValidateurFinal:
             else:
                 result["status"] = "error"
             
-            self.logger.info(f"⚙️ Config: {result['config_valid']}, Launcher: {result['launcher_valid']}, Req: {result['requirements_valid']}")
+            self.logger.info(f" Config: {result['config_valid']}, Launcher: {result['launcher_valid']}, Req: {result['requirements_valid']}")
             
         except Exception as e:
             result["status"] = "error"
@@ -283,8 +283,8 @@ class AgentValidateurFinal:
         return result
     
     def _valider_documentation(self) -> Dict[str, Any]:
-        """Valide la documentation générée"""
-        self.logger.info("🔍 Validation documentation")
+        """Valide la documentation gnre"""
+        self.logger.info("[SEARCH] Validation documentation")
         
         result = {
             "status": "unknown",
@@ -298,7 +298,7 @@ class AgentValidateurFinal:
             doc_files = list(self.tools_dir.glob("**/*.md"))
             result["docs_found"] = len(doc_files)
             
-            # Vérifier README principal
+            # Vrifier README principal
             readme_file = self.tools_dir / "README.md"
             if readme_file.exists():
                 try:
@@ -314,7 +314,7 @@ class AgentValidateurFinal:
             else:
                 result["issues"].append("README principal manquant")
             
-            # Statut basé sur la documentation
+            # Statut bas sur la documentation
             if result["readme_valid"] and result["docs_found"] >= 3:
                 result["status"] = "success"
             elif result["readme_valid"] or result["docs_found"] >= 1:
@@ -322,7 +322,7 @@ class AgentValidateurFinal:
             else:
                 result["status"] = "error"
             
-            self.logger.info(f"📚 Documentation: {result['docs_found']} fichiers, README: {result['readme_valid']}")
+            self.logger.info(f" Documentation: {result['docs_found']} fichiers, README: {result['readme_valid']}")
             
         except Exception as e:
             result["status"] = "error"
@@ -331,8 +331,8 @@ class AgentValidateurFinal:
         return result
     
     def _executer_operations_git(self) -> Dict[str, Any]:
-        """Exécute les opérations Git (add, commit, push)"""
-        self.logger.info("🔄 Exécution opérations Git")
+        """Excute les oprations Git (add, commit, push)"""
+        self.logger.info(" Excution oprations Git")
         
         result = {
             "status": "unknown",
@@ -355,17 +355,17 @@ class AgentValidateurFinal:
             })
             
             if add_result.returncode != 0:
-                result["issues"].append(f"Échec git add: {add_result.stderr}")
+                result["issues"].append(f"chec git add: {add_result.stderr}")
                 result["status"] = "error"
                 return result
             
-            # 2. Vérifier s'il y a des changements à commiter
+            # 2. Vrifier s'il y a des changements  commiter
             status_cmd = ["git", "status", "--porcelain", "tools/imported_tools/"]
             status_result = subprocess.run(status_cmd, capture_output=True, text=True)
             
             if not status_result.stdout.strip():
                 result["status"] = "no_changes"
-                result["issues"].append("Aucun changement à commiter")
+                result["issues"].append("Aucun changement  commiter")
                 return result
             
             # 3. Git commit
@@ -380,7 +380,7 @@ class AgentValidateurFinal:
             })
             
             if commit_result.returncode != 0:
-                result["issues"].append(f"Échec git commit: {commit_result.stderr}")
+                result["issues"].append(f"chec git commit: {commit_result.stderr}")
                 result["status"] = "error"
                 return result
             
@@ -406,70 +406,70 @@ class AgentValidateurFinal:
             })
             
             if push_result.returncode != 0:
-                result["issues"].append(f"Échec git push: {push_result.stderr}")
+                result["issues"].append(f"chec git push: {push_result.stderr}")
                 result["status"] = "partial"  # Commit OK mais push KO
             else:
                 result["status"] = "success"
             
-            self.logger.info(f"✅ Git: Add ✓, Commit ✓ ({result['commit_hash']}), Push: {push_result.returncode == 0}")
+            self.logger.info(f"[CHECK] Git: Add , Commit  ({result['commit_hash']}), Push: {push_result.returncode == 0}")
             
         except Exception as e:
             result["status"] = "error"
-            result["issues"].append(f"Erreur opérations Git: {str(e)}")
-            self.logger.error(f"❌ Erreur Git: {str(e)}")
+            result["issues"].append(f"Erreur oprations Git: {str(e)}")
+            self.logger.error(f"[CROSS] Erreur Git: {str(e)}")
         
         return result
     
     def _generer_recommandations(self, validation_result: Dict[str, Any]) -> List[str]:
-        """Génère des recommandations basées sur les résultats de validation"""
+        """Gnre des recommandations bases sur les rsultats de validation"""
         recommendations = []
         
-        # Recommandations basées sur le statut final
+        # Recommandations bases sur le statut final
         if validation_result["final_status"] == "complete_success":
-            recommendations.append("✅ Intégration complète réussie - Outils prêts à l'utilisation")
-            recommendations.append("🔧 Exécuter 'pip install -r tools/imported_tools/requirements.txt' pour installer les dépendances")
-            recommendations.append("📖 Consulter tools/imported_tools/README.md pour guide d'utilisation")
+            recommendations.append("[CHECK] Intgration complte russie - Outils prts  l'utilisation")
+            recommendations.append("[TOOL] Excuter 'pip install -r tools/imported_tools/requirements.txt' pour installer les dpendances")
+            recommendations.append(" Consulter tools/imported_tools/README.md pour guide d'utilisation")
         
         elif validation_result["final_status"] == "success_no_git":
-            recommendations.append("⚠️ Intégration réussie mais opérations Git échouées")
-            recommendations.append("🔄 Effectuer manuellement: git add tools/imported_tools/ && git commit -m 'Import outils' && git push")
+            recommendations.append(" Intgration russie mais oprations Git choues")
+            recommendations.append(" Effectuer manuellement: git add tools/imported_tools/ && git commit -m 'Import outils' && git push")
         
         elif validation_result["final_status"] == "partial":
-            recommendations.append("⚠️ Intégration partielle - Vérifier les problèmes signalés")
+            recommendations.append(" Intgration partielle - Vrifier les problmes signals")
             
-            # Recommandations spécifiques par type de problème
+            # Recommandations spcifiques par type de problme
             checks = validation_result.get("validation_checks", {})
             
             if checks.get("structure", {}).get("status") != "success":
-                recommendations.append("🔧 Corriger la structure des outils importés")
+                recommendations.append("[TOOL] Corriger la structure des outils imports")
             
             if checks.get("configuration", {}).get("status") != "success":
-                recommendations.append("⚙️ Vérifier et corriger la configuration (tools_config.json, run_tool.py)")
+                recommendations.append(" Vrifier et corriger la configuration (tools_config.json, run_tool.py)")
             
             if checks.get("documentation", {}).get("status") != "success":
-                recommendations.append("📚 Compléter la documentation manquante")
+                recommendations.append(" Complter la documentation manquante")
         
         else:
-            recommendations.append("❌ Intégration échouée - Relancer le processus après correction des erreurs")
+            recommendations.append("[CROSS] Intgration choue - Relancer le processus aprs correction des erreurs")
         
-        # Recommandations générales
-        recommendations.append("🧪 Tester les outils importés avant utilisation en production")
-        recommendations.append("📊 Consulter le rapport détaillé pour plus d'informations")
+        # Recommandations gnrales
+        recommendations.append(" Tester les outils imports avant utilisation en production")
+        recommendations.append("[CHART] Consulter le rapport dtaill pour plus d'informations")
         
         return recommendations
     
     def validate_and_commit(self, phase5_data: Dict[str, Any], mission_metrics: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Interface de compatibilité avec le coordinateur
+        Interface de compatibilit avec le coordinateur
         
         Args:
-            phase5_data: Données de la phase 5 (documentation)
-            mission_metrics: Métriques de la mission complète
+            phase5_data: Donnes de la phase 5 (documentation)
+            mission_metrics: Mtriques de la mission complte
             
         Returns:
-            Dict contenant les résultats de validation et opérations Git
+            Dict contenant les rsultats de validation et oprations Git
         """
-        # Construire le rapport des phases à partir des métriques
+        # Construire le rapport des phases  partir des mtriques
         rapport_phases = {
             "phase1": {
                 "status": "success",
@@ -496,10 +496,10 @@ class AgentValidateurFinal:
         return self.valider_integration_complete(rapport_phases)
 
 def main():
-    """Point d'entrée principal pour tests"""
+    """Point d'entre principal pour tests"""
     import tempfile
     
-    # Test avec répertoire temporaire
+    # Test avec rpertoire temporaire
     with tempfile.TemporaryDirectory() as temp_dir:
         agent = AgentValidateurFinal(temp_dir)
         

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Script de validation des correctifs sécurité - Quick Wins Sprint 1
-Valide que toutes les vulnérabilités critiques ont été corrigées.
+Script de validation des correctifs scurit - Quick Wins Sprint 1
+Valide que toutes les vulnrabilits critiques ont t corriges.
 """
 
 import sys
@@ -18,7 +18,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 
 class SecurityValidationResult:
-    """Résultat d'une validation de sécurité."""
+    """Rsultat d'une validation de scurit."""
     
     def __init__(self, test_name: str, passed: bool, message: str, details: Dict[str, Any] = None):
         self.test_name = test_name
@@ -29,18 +29,18 @@ class SecurityValidationResult:
 
 
 class SecurityValidator:
-    """Validateur des correctifs de sécurité."""
+    """Validateur des correctifs de scurit."""
     
     def __init__(self):
         self.results: List[SecurityValidationResult] = []
         self.project_root = Path(__file__).parent.parent
     
     def log_result(self, test_name: str, passed: bool, message: str, details: Dict[str, Any] = None):
-        """Enregistre un résultat de test."""
+        """Enregistre un rsultat de test."""
         result = SecurityValidationResult(test_name, passed, message, details)
         self.results.append(result)
         
-        status = "✅ PASS" if passed else "❌ FAIL"
+        status = "[CHECK] PASS" if passed else "[CROSS] FAIL"
         print(f"{status} {test_name}: {message}")
         
         if details and not passed:
@@ -48,11 +48,11 @@ class SecurityValidator:
                 print(f"    {key}: {value}")
     
     async def validate_rce_prevention(self) -> bool:
-        """Valide que la vulnérabilité RCE a été corrigée."""
-        print("\n🔒 Validation RCE Prevention...")
+        """Valide que la vulnrabilit RCE a t corrige."""
+        print("\n Validation RCE Prevention...")
         
         try:
-            # Test 1: Import du nouvel analyseur sécurisé
+            # Test 1: Import du nouvel analyseur scuris
             try:
                 from orchestrator.app.security.secure_analyzer import SecureCodeAnalyzer, SecurityError
                 self.log_result("RCE-001", True, "Secure analyzer imported successfully")
@@ -98,7 +98,7 @@ class SecurityValidator:
             else:
                 self.log_result("RCE-003", False, f"Only {blocked_imports}/{len(forbidden_imports)} imports blocked")
             
-            # Test 4: Code sûr autorisé
+            # Test 4: Code sr autoris
             safe_code = '''
 import json
 import datetime
@@ -116,7 +116,7 @@ print(result)
             except Exception as e:
                 self.log_result("RCE-004", False, "Safe code rejected", {"error": str(e)})
             
-            # Test 5: Analyse sécurisée complète
+            # Test 5: Analyse scurise complte
             try:
                 result = await analyzer.analyze_code_secure(safe_code)
                 if isinstance(result, str) and "security validation failed" not in result.lower():
@@ -133,11 +133,11 @@ print(result)
             return False
     
     def validate_ssrf_prevention(self) -> bool:
-        """Valide que la vulnérabilité SSRF a été corrigée."""
-        print("\n🌐 Validation SSRF Prevention...")
+        """Valide que la vulnrabilit SSRF a t corrige."""
+        print("\n Validation SSRF Prevention...")
         
         try:
-            # Test 1: Import du validateur réseau
+            # Test 1: Import du validateur rseau
             try:
                 from orchestrator.app.security.validators import NetworkValidator
                 self.log_result("SSRF-001", True, "Network validator imported successfully")
@@ -167,7 +167,7 @@ print(result)
             else:
                 self.log_result("SSRF-002", False, f"Only {blocked_urls}/{len(malicious_urls)} URLs blocked")
             
-            # Test 3: URLs légitimes autorisées
+            # Test 3: URLs lgitimes autorises
             legitimate_urls = [
                 "https://api.openai.com/v1/models",
                 "https://api.anthropic.com/v1/messages",
@@ -194,8 +194,8 @@ print(result)
             return False
     
     def validate_secrets_management(self) -> bool:
-        """Valide la gestion sécurisée des secrets."""
-        print("\n🔑 Validation Secrets Management...")
+        """Valide la gestion scurise des secrets."""
+        print("\n Validation Secrets Management...")
         
         try:
             # Test 1: Import du gestionnaire de secrets
@@ -206,7 +206,7 @@ print(result)
                 self.log_result("SECRETS-001", False, "Secrets manager import failed", {"error": str(e)})
                 return False
             
-            # Test 2: Création du gestionnaire
+            # Test 2: Cration du gestionnaire
             try:
                 manager = get_secrets_manager()
                 self.log_result("SECRETS-002", True, "Secrets manager created successfully")
@@ -214,7 +214,7 @@ print(result)
                 self.log_result("SECRETS-002", False, "Secrets manager creation failed", {"error": str(e)})
                 return False
             
-            # Test 3: Vérification de la configuration par environnement
+            # Test 3: Vrification de la configuration par environnement
             cache_stats = manager.get_cache_stats()
             if isinstance(cache_stats, dict) and 'cached_secrets_count' in cache_stats:
                 self.log_result("SECRETS-003", True, "Cache statistics available")
@@ -228,11 +228,11 @@ print(result)
             return False
     
     def validate_structured_logging(self) -> bool:
-        """Valide le système de logs structurés."""
-        print("\n📝 Validation Structured Logging...")
+        """Valide le systme de logs structurs."""
+        print("\n Validation Structured Logging...")
         
         try:
-            # Test 1: Import du système de logs
+            # Test 1: Import du systme de logs
             try:
                 from orchestrator.app.observability.structured_logging import (
                     SecurityAuditLogger, StructuredLogger, get_logger
@@ -242,7 +242,7 @@ print(result)
                 self.log_result("LOGS-001", False, "Structured logging import failed", {"error": str(e)})
                 return False
             
-            # Test 2: Création du logger de sécurité
+            # Test 2: Cration du logger de scurit
             try:
                 security_logger = SecurityAuditLogger()
                 logger = get_logger("test_logger")
@@ -251,9 +251,9 @@ print(result)
                 self.log_result("LOGS-002", False, "Logger creation failed", {"error": str(e)})
                 return False
             
-            # Test 3: Test de logging (sans output réel)
+            # Test 3: Test de logging (sans output rel)
             try:
-                # Test des méthodes principales sans side effects
+                # Test des mthodes principales sans side effects
                 if hasattr(security_logger, 'log_security_event') and hasattr(logger, 'info'):
                     self.log_result("LOGS-003", True, "Logger methods available")
                 else:
@@ -268,11 +268,11 @@ print(result)
             return False
     
     def validate_health_checks(self) -> bool:
-        """Valide le système de health checks."""
-        print("\n💓 Validation Health Checks...")
+        """Valide le systme de health checks."""
+        print("\n Validation Health Checks...")
         
         try:
-            # Test 1: Import du système de health checks
+            # Test 1: Import du systme de health checks
             try:
                 from orchestrator.app.health.comprehensive_health import (
                     HealthCheckOrchestrator, get_health_orchestrator, check_system_health
@@ -282,7 +282,7 @@ print(result)
                 self.log_result("HEALTH-001", False, "Health check import failed", {"error": str(e)})
                 return False
             
-            # Test 2: Création de l'orchestrateur
+            # Test 2: Cration de l'orchestrateur
             try:
                 orchestrator = get_health_orchestrator()
                 if len(orchestrator.checks) > 0:
@@ -299,8 +299,8 @@ print(result)
             return False
     
     def run_static_security_scans(self) -> bool:
-        """Exécute les scans de sécurité statiques."""
-        print("\n🔍 Static Security Scans...")
+        """Excute les scans de scurit statiques."""
+        print("\n[SEARCH] Static Security Scans...")
         
         # Test 1: Bandit scan
         try:
@@ -357,15 +357,15 @@ print(result)
         return True
     
     def run_tests(self) -> bool:
-        """Exécute les tests de sécurité."""
-        print("\n🧪 Security Tests...")
+        """Excute les tests de scurit."""
+        print("\n Security Tests...")
         
         tests_dir = self.project_root / 'tests'
         if not tests_dir.exists():
             self.log_result("TESTS-001", False, "Tests directory not found")
             return False
         
-        # Test des tests de sécurité
+        # Test des tests de scurit
         security_tests = tests_dir / 'security'
         if security_tests.exists():
             try:
@@ -388,8 +388,8 @@ print(result)
         return True
     
     async def run_all_validations(self) -> Dict[str, Any]:
-        """Exécute toutes les validations."""
-        print("🔒 SECURITY VALIDATION - QUICK WINS SPRINT 1")
+        """Excute toutes les validations."""
+        print(" SECURITY VALIDATION - QUICK WINS SPRINT 1")
         print("=" * 50)
         
         start_time = time.time()
@@ -420,34 +420,34 @@ print(result)
         failed_tests = total_tests - passed_tests
         
         print("\n" + "=" * 50)
-        print("📊 VALIDATION SUMMARY")
+        print("[CHART] VALIDATION SUMMARY")
         print("=" * 50)
         print(f"Total Tests: {total_tests}")
-        print(f"✅ Passed: {passed_tests}")
-        print(f"❌ Failed: {failed_tests}")
-        print(f"⏱️ Duration: {duration:.2f}s")
+        print(f"[CHECK] Passed: {passed_tests}")
+        print(f"[CROSS] Failed: {failed_tests}")
+        print(f" Duration: {duration:.2f}s")
         
-        # Score de sécurité
+        # Score de scurit
         security_score = (passed_tests / total_tests) * 10 if total_tests > 0 else 0
-        print(f"🔒 Security Score: {security_score:.1f}/10")
+        print(f" Security Score: {security_score:.1f}/10")
         
         # Recommandations
         if failed_tests == 0:
-            print("\n🎉 ALL SECURITY VALIDATIONS PASSED!")
-            print("✅ Ready for next sprint (Architecture refactoring)")
+            print("\n ALL SECURITY VALIDATIONS PASSED!")
+            print("[CHECK] Ready for next sprint (Architecture refactoring)")
         elif security_score >= 7.0:
-            print("\n⚠️ GOOD SECURITY POSTURE - Minor issues to fix")
-            print("✅ Can proceed with caution")
+            print("\n GOOD SECURITY POSTURE - Minor issues to fix")
+            print("[CHECK] Can proceed with caution")
         else:
-            print("\n🚨 SECURITY ISSUES DETECTED - Address before proceeding")
-            print("❌ Stop sprint, focus on debugging")
+            print("\n SECURITY ISSUES DETECTED - Address before proceeding")
+            print("[CROSS] Stop sprint, focus on debugging")
         
-        # Échecs détaillés
+        # checs dtaills
         if failed_tests > 0:
-            print("\n🔍 FAILED TESTS:")
+            print("\n[SEARCH] FAILED TESTS:")
             for result in self.results:
                 if not result.passed:
-                    print(f"  ❌ {result.test_name}: {result.message}")
+                    print(f"  [CROSS] {result.test_name}: {result.message}")
                     if result.details:
                         for key, value in result.details.items():
                             print(f"      {key}: {value}")
@@ -469,19 +469,19 @@ async def main():
     try:
         summary = await validator.run_all_validations()
         
-        # Code de sortie basé sur les résultats
+        # Code de sortie bas sur les rsultats
         if summary['failed_tests'] == 0:
-            sys.exit(0)  # Succès
+            sys.exit(0)  # Succs
         elif summary['security_score'] >= 7.0:
             sys.exit(1)  # Avertissement
         else:
-            sys.exit(2)  # Échec critique
+            sys.exit(2)  # chec critique
     
     except KeyboardInterrupt:
-        print("\n⚠️ Validation interrupted by user")
+        print("\n Validation interrupted by user")
         sys.exit(130)
     except Exception as e:
-        print(f"\n💥 Validation failed with exception: {e}")
+        print(f"\n Validation failed with exception: {e}")
         sys.exit(3)
 
 

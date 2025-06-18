@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Agent Route Extractor - NextGeneration Phase 3
-Spécialisé dans l'extraction des routes FastAPI depuis main.py
+Spcialis dans l'extraction des routes FastAPI depuis main.py
 Patterns: Hexagonal Architecture + CQRS
 """
 
@@ -39,12 +39,12 @@ class ExtractionPlan:
 
 class AgentRouteExtractor:
     """
-    Agent spécialisé dans l'extraction des routes FastAPI
+    Agent spcialis dans l'extraction des routes FastAPI
     Mission: Identifier et extraire toutes les routes depuis main.py
     """
     
     def __init__(self):
-        # Mode fallback si pas de clé API
+        # Mode fallback si pas de cl API
         import os
         if os.getenv("ANTHROPIC_API_KEY"):
             self.client = anthropic.Anthropic()
@@ -52,15 +52,15 @@ class AgentRouteExtractor:
         else:
             self.client = None
             self.fallback_mode = True
-            print("🔄 Agent Route Extractor: Mode Fallback activé")
+            print(" Agent Route Extractor: Mode Fallback activ")
         
         self.results_dir = Path("refactoring_workspace/results/phase3_routes")
         self.results_dir.mkdir(parents=True, exist_ok=True)
         self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         
     async def extract_routes_from_file(self, file_path: str) -> ExtractionPlan:
-        """Extraire toutes les routes d'un fichier avec analyse détaillée"""
-        print(f"🔍 Extraction routes depuis {file_path}...")
+        """Extraire toutes les routes d'un fichier avec analyse dtaille"""
+        print(f"[SEARCH] Extraction routes depuis {file_path}...")
         
         try:
             # Lire le fichier source
@@ -74,11 +74,11 @@ class AgentRouteExtractor:
             with open(plan_file, 'w', encoding='utf-8') as f:
                 json.dump(asdict(extraction_plan), f, indent=2, ensure_ascii=False)
             
-            print(f"✅ Plan d'extraction sauvegardé: {plan_file}")
+            print(f"[CHECK] Plan d'extraction sauvegard: {plan_file}")
             return extraction_plan
             
         except Exception as e:
-            print(f"❌ Erreur extraction routes {file_path}: {e}")
+            print(f"[CROSS] Erreur extraction routes {file_path}: {e}")
             # Plan fallback
             return self._create_fallback_plan(file_path)
     
@@ -86,7 +86,7 @@ class AgentRouteExtractor:
         """Analyse intelligente des routes avec Claude Sonnet 4"""
         
         prompt = f"""
-Tu es un expert en refactoring FastAPI avec spécialisation Architecture Hexagonale + CQRS.
+Tu es un expert en refactoring FastAPI avec spcialisation Architecture Hexagonale + CQRS.
 Ta mission: analyser ce fichier god mode et extraire TOUTES les routes FastAPI.
 
 FICHIER: {file_path}
@@ -100,21 +100,21 @@ CONTENU:
 ANALYSE REQUISE:
 1. Identifier TOUTES les routes (@app.get, @app.post, etc.)
 2. Pour chaque route:
-   - Méthode HTTP et chemin
+   - Mthode HTTP et chemin
    - Nom fonction
-   - Lignes début/fin
-   - Dépendances (DB, services, etc.)
-   - Logique métier complexité 1-10
-   - Priorité extraction (HIGH/MEDIUM/LOW)
+   - Lignes dbut/fin
+   - Dpendances (DB, services, etc.)
+   - Logique mtier complexit 1-10
+   - Priorit extraction (HIGH/MEDIUM/LOW)
 
 3. Proposer modules router:
    - Groupement logique des routes
    - Noms modules (auth_router, users_router, etc.)
-   - Services à créer
+   - Services  crer
 
-4. Estimation réduction lignes après extraction
+4. Estimation rduction lignes aprs extraction
 
-RÉPONSE FORMAT JSON:
+RPONSE FORMAT JSON:
 {{
   "file_path": "{file_path}",
   "total_routes": number,
@@ -138,7 +138,7 @@ RÉPONSE FORMAT JSON:
 """
         
         if self.fallback_mode or self.client is None:
-            print("🔄 Mode fallback: extraction routes sans API")
+            print(" Mode fallback: extraction routes sans API")
             return self._create_fallback_plan(file_path)
         
         try:
@@ -151,7 +151,7 @@ RÉPONSE FORMAT JSON:
             
             response_text = response.content[0].text
             
-            # Extraire JSON depuis la réponse
+            # Extraire JSON depuis la rponse
             json_match = re.search(r'\{.*\}', response_text, re.DOTALL)
             if json_match:
                 analysis_data = json.loads(json_match.group())
@@ -169,13 +169,13 @@ RÉPONSE FORMAT JSON:
                 )
             
         except Exception as e:
-            print(f"❌ Erreur appel Claude: {e}")
+            print(f"[CROSS] Erreur appel Claude: {e}")
         
         return self._create_fallback_plan(file_path)
     
     def _create_fallback_plan(self, file_path: str) -> ExtractionPlan:
         """Plan d'extraction fallback avec simulation intelligente"""
-        # Routes simulées basées sur main.py typique
+        # Routes simules bases sur main.py typique
         simulated_routes = [
             RouteInfo(
                 method="GET",
@@ -244,7 +244,7 @@ RÉPONSE FORMAT JSON:
         )
     
     async def generate_router_files(self, extraction_plan: ExtractionPlan) -> List[str]:
-        """Générer les fichiers router modulaires"""
+        """Gnrer les fichiers router modulaires"""
         generated_files = []
         
         for router_name in extraction_plan.router_modules:
@@ -263,17 +263,17 @@ RÉPONSE FORMAT JSON:
                 router_file.write_text(router_content, encoding='utf-8')
                 
                 generated_files.append(str(router_file))
-                print(f"✅ Router généré: {router_file}")
+                print(f"[CHECK] Router gnr: {router_file}")
         
         return generated_files
     
     def _should_route_go_to_router(self, route: RouteInfo, router_name: str) -> bool:
-        """Déterminer si une route appartient à un router spécifique"""
+        """Dterminer si une route appartient  un router spcifique"""
         route_keywords = {
             "auth_router": ["login", "auth", "token", "logout"],
             "users_router": ["user", "profile", "account"],
             "health_router": ["health", "status", "ping"],
-            "api_router": []  # Routes génériques
+            "api_router": []  # Routes gnriques
         }
         
         keywords = route_keywords.get(router_name, [])
@@ -285,10 +285,10 @@ RÉPONSE FORMAT JSON:
                   for keyword in keywords)
     
     async def _generate_router_content(self, router_name: str, routes: List[RouteInfo]) -> str:
-        """Générer le contenu d'un fichier router"""
+        """Gnrer le contenu d'un fichier router"""
         return f'''"""
 {router_name.replace('_', ' ').title()} - NextGeneration Architecture Modulaire
-Généré automatiquement par Agent Route Extractor
+Gnr automatiquement par Agent Route Extractor
 Date: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 """
 
@@ -304,7 +304,7 @@ router = APIRouter(
 )
 
 # TODO: Migrer les routes depuis main.py
-# Routes identifiées: {len(routes)}
+# Routes identifies: {len(routes)}
 {chr(10).join([f"# - {route.method} {route.path} ({route.function_name})" for route in routes])}
 
 @router.get("/status")
@@ -314,67 +314,67 @@ async def get_status() -> Dict[str, Any]:
 '''
 
     async def create_extraction_report(self, extraction_plans: List[ExtractionPlan]) -> str:
-        """Créer rapport global d'extraction"""
+        """Crer rapport global d'extraction"""
         total_routes = sum(plan.total_routes for plan in extraction_plans)
         avg_reduction = sum(plan.estimated_reduction for plan in extraction_plans) / len(extraction_plans)
         
-        report_content = f"""# 🔄 Rapport Extraction Routes - Phase 3
+        report_content = f"""#  Rapport Extraction Routes - Phase 3
 
-## ✅ Vue d'Ensemble
+## [CHECK] Vue d'Ensemble
 
 **Date:** {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}  
 **Agent:** Route Extractor (Claude Sonnet 4)  
-**Fichiers analysés:** {len(extraction_plans)}  
+**Fichiers analyss:** {len(extraction_plans)}  
 **Routes totales:** {total_routes}  
-**Réduction moyenne:** {avg_reduction:.1%}
+**Rduction moyenne:** {avg_reduction:.1%}
 
-## 📊 Détails par Fichier
+## [CHART] Dtails par Fichier
 
 """
         
         for plan in extraction_plans:
-            report_content += f"""### 📁 {plan.file_path}
+            report_content += f"""### [FOLDER] {plan.file_path}
 - **Routes:** {plan.total_routes}
 - **Modules router:** {', '.join(plan.router_modules)}
 - **Services:** {', '.join(plan.service_dependencies)}
-- **Réduction estimée:** {plan.estimated_reduction:.1%}
+- **Rduction estime:** {plan.estimated_reduction:.1%}
 
 """
         
         report_content += f"""
-## 🎯 Prochaines Étapes
+## [TARGET] Prochaines tapes
 
-1. ✅ Routes extraites et analysées
-2. 🔄 Créer agents Services Creator
-3. 🔄 Générer fichiers services modulaires
-4. 🔄 Migrer logique métier
+1. [CHECK] Routes extraites et analyses
+2.  Crer agents Services Creator
+3.  Gnrer fichiers services modulaires
+4.  Migrer logique mtier
 
 ---
-*Généré par Agent Route Extractor NextGeneration*
+*Gnr par Agent Route Extractor NextGeneration*
 """
         
         # Sauvegarder rapport
         report_file = self.results_dir / f"route_extraction_report_{self.timestamp}.md"
         report_file.write_text(report_content, encoding='utf-8')
         
-        print(f"📋 Rapport sauvegardé: {report_file}")
+        print(f"[CLIPBOARD] Rapport sauvegard: {report_file}")
         return str(report_file)
 
 async def main():
-    """Point d'entrée pour tests standalone"""
+    """Point d'entre pour tests standalone"""
     agent = AgentRouteExtractor()
     
     # Test avec main.py
     plan = await agent.extract_routes_from_file("orchestrator/app/main.py")
-    print(f"🎯 Plan d'extraction créé: {plan.total_routes} routes")
+    print(f"[TARGET] Plan d'extraction cr: {plan.total_routes} routes")
     
-    # Générer routers
+    # Gnrer routers
     router_files = await agent.generate_router_files(plan)
-    print(f"🏗️ {len(router_files)} fichiers router générés")
+    print(f"[CONSTRUCTION] {len(router_files)} fichiers router gnrs")
     
     # Rapport
     report = await agent.create_extraction_report([plan])
-    print(f"📋 Rapport créé: {report}")
+    print(f"[CLIPBOARD] Rapport cr: {report}")
 
 if __name__ == "__main__":
     asyncio.run(main()) 

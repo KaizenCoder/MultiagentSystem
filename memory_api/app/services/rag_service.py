@@ -4,26 +4,26 @@ from typing import List, Optional, Dict, Any
 from ..models.schemas import MemoryItem, SearchQuery, SearchResult
 
 class RAGService:
-    """Service pour la récupération et génération augmentée utilisant ChromaDB"""
+    """Service pour la rcupration et gnration augmente utilisant ChromaDB"""
     
     def __init__(self):
         """Initialise le service RAG avec ChromaDB"""
         # Configure un client ChromaDB persistant
         self.client = chromadb.PersistentClient(path="chroma_db")
-        # Crée ou charge une collection
+        # Cre ou charge une collection
         self.collection = self.client.get_or_create_collection(name="memory_collection")
     
     async def store_memory(self, content: str, metadata: Optional[Dict[str, Any]] = None, 
                           session_id: Optional[str] = None) -> MemoryItem:
-        """Stocke un élément en mémoire (ChromaDB)"""
+        """Stocke un lment en mmoire (ChromaDB)"""
         if metadata is None:
             metadata = {}
         
-        # Ajoute le session_id aux métadonnées pour le filtrage
+        # Ajoute le session_id aux mtadonnes pour le filtrage
         if session_id:
             metadata["session_id"] = session_id
 
-        # Génère un ID unique pour le document
+        # Gnre un ID unique pour le document
         doc_id = str(self.collection.count() + 1)
 
         self.collection.add(
@@ -35,7 +35,7 @@ class RAGService:
         return MemoryItem(id=doc_id, content=content, metadata=metadata, session_id=session_id)
     
     async def search_memory(self, query: SearchQuery) -> SearchResult:
-        """Recherche dans la mémoire (ChromaDB) en utilisant une recherche sémantique."""
+        """Recherche dans la mmoire (ChromaDB) en utilisant une recherche smantique."""
         where_clause = {}
         if query.session_id:
             where_clause = {"session_id": query.session_id}
@@ -46,7 +46,7 @@ class RAGService:
             where=where_clause
         )
         
-        # Formatte les résultats pour correspondre au schéma SearchResult
+        # Formatte les rsultats pour correspondre au schma SearchResult
         items = []
         if results and results["ids"][0]:
             for i, doc_id in enumerate(results["ids"][0]):
@@ -58,7 +58,7 @@ class RAGService:
         return SearchResult(items=items, total_count=len(items))
     
     async def get_all_memories(self, session_id: Optional[str] = None) -> List[MemoryItem]:
-        """Récupère toutes les mémoires depuis ChromaDB"""
+        """Rcupre toutes les mmoires depuis ChromaDB"""
         where_clause = {}
         if session_id:
             where_clause = {"session_id": session_id}
@@ -74,11 +74,11 @@ class RAGService:
         return items
     
     async def clear_memory(self, session_id: Optional[str] = None) -> bool:
-        """Efface la mémoire dans ChromaDB"""
+        """Efface la mmoire dans ChromaDB"""
         if session_id:
             self.collection.delete(where={"session_id": session_id})
         else:
-            # Efface et recrée la collection pour tout supprimer
+            # Efface et recre la collection pour tout supprimer
             self.client.delete_collection(name="memory_collection")
             self.collection = self.client.get_or_create_collection(name="memory_collection")
         return True 

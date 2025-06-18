@@ -1,6 +1,6 @@
 """
 Tests unitaires pour le Supervisor - CRITIQUE pour Phase 2.
-Tests des fonctionnalités de planification et routage du supervisor.
+Tests des fonctionnalits de planification et routage du supervisor.
 """
 
 import pytest
@@ -19,7 +19,7 @@ class TestSupervisor:
         self.supervisor = Supervisor()
     
     def test_create_plan_code_generation_task(self, sample_agent_state):
-        """Test planification tâche génération code."""
+        """Test planification tche gnration code."""
         # ARRANGE
         sample_agent_state["task_description"] = "Generate Python sorting function"
         
@@ -33,7 +33,7 @@ class TestSupervisor:
         assert result["task_status"] == "in_progress"
     
     def test_create_plan_documentation_task(self, sample_agent_state):
-        """Test planification tâche documentation."""
+        """Test planification tche documentation."""
         # ARRANGE
         sample_agent_state["task_description"] = "Create API documentation"
         
@@ -46,7 +46,7 @@ class TestSupervisor:
         assert result["next"] == "documentation"
     
     def test_create_plan_testing_task(self, sample_agent_state):
-        """Test planification tâche de test."""
+        """Test planification tche de test."""
         # ARRANGE
         sample_agent_state["task_description"] = "Write unit tests for the code"
         
@@ -58,7 +58,7 @@ class TestSupervisor:
         assert "test" in result["plan"].lower() or "testing" in result["plan"].lower()
     
     def test_route_with_code_results(self, sample_agent_state):
-        """Test routage avec résultats code."""
+        """Test routage avec rsultats code."""
         # ARRANGE
         sample_agent_state["results"] = {"code_generation": "def sort_list(): pass"}
         sample_agent_state["plan"] = "1. Generate code\n2. Document it"
@@ -70,7 +70,7 @@ class TestSupervisor:
         assert result["next"] in ["documentation", "finish"]
     
     def test_route_completion_all_results(self, sample_agent_state):
-        """Test routage vers fin avec tous résultats."""
+        """Test routage vers fin avec tous rsultats."""
         # ARRANGE
         sample_agent_state["results"] = {
             "code_generation": "def sort_list(): pass",
@@ -85,7 +85,7 @@ class TestSupervisor:
         assert result["next"] == "finish"
     
     def test_route_empty_results(self, sample_agent_state):
-        """Test routage avec résultats vides."""
+        """Test routage avec rsultats vides."""
         # ARRANGE
         sample_agent_state["results"] = {}
         sample_agent_state["plan"] = "Start with code generation"
@@ -97,18 +97,18 @@ class TestSupervisor:
         assert result["next"] != "finish"
     
     def test_error_handling_invalid_state(self):
-        """Test gestion erreur état invalide."""
+        """Test gestion erreur tat invalide."""
         # ARRANGE
-        invalid_state = AgentState()  # État vide
+        invalid_state = AgentState()  # tat vide
 
-        # ACT - Le supervisor gère gracieusement les états vides
+        # ACT - Le supervisor gre gracieusement les tats vides
         try:
             result = self.supervisor.create_plan(invalid_state)
-            # ASSERT - Doit avoir un plan par défaut même avec état vide
+            # ASSERT - Doit avoir un plan par dfaut mme avec tat vide
             assert result is not None
             assert "plan" in result
         except (ValueError, AttributeError) as e:
-            # Si une exception est levée, c'est aussi valide
+            # Si une exception est leve, c'est aussi valide
             assert isinstance(e, (ValueError, AttributeError))
     
     def test_error_handling_none_task_description(self, sample_agent_state):
@@ -134,21 +134,21 @@ class TestSupervisor:
     
     @pytest.mark.asyncio
     async def test_supervisor_with_llm_timeout(self, sample_agent_state):
-        """Test gestion timeout LLM - VERSION CORRIGÉE."""
+        """Test gestion timeout LLM - VERSION CORRIGE."""
         # ARRANGE - Pas de llm_service dans supervisor.py, on teste la logique directe
         # Le supervisor n'utilise pas de LLM, seulement de la logique conditionnelle
         
         # ACT - Tester que le supervisor fonctionne sans timeout
         result = self.supervisor.create_plan(sample_agent_state)
         
-        # ASSERT - Le supervisor doit répondre rapidement (pas de LLM)
+        # ASSERT - Le supervisor doit rpondre rapidement (pas de LLM)
         assert result is not None
         assert "plan" in result
         assert "task_status" in result
         assert result["task_status"] == "in_progress"
     
     def test_supervisor_multiple_tasks(self, sample_task_descriptions):
-        """Test supervisor avec différents types de tâches."""
+        """Test supervisor avec diffrents types de tches."""
         for task_type, description in sample_task_descriptions.items():
             # ARRANGE
             state = AgentState(
@@ -168,7 +168,7 @@ class TestSupervisor:
     
     def test_supervisor_routing_logic(self, sample_agent_state):
         """Test logique de routage complexe."""
-        # Test différents scénarios de routage
+        # Test diffrents scnarios de routage
         scenarios = [
             # (results, expected_next_options)
             ({}, ["code_generation", "documentation", "testing"]),
@@ -189,7 +189,7 @@ class TestSupervisor:
             assert result["next"] in expected_options, f"Unexpected next: {result['next']} for results: {results}"
     
     def test_supervisor_state_consistency(self, sample_agent_state):
-        """Test cohérence de l'état après opérations."""
+        """Test cohrence de l'tat aprs oprations."""
         # ARRANGE
         original_session_id = sample_agent_state["session_id"]
         
@@ -213,7 +213,7 @@ class TestSupervisor:
             self.supervisor.create_plan(sample_agent_state)
         
         # ASSERT
-        performance_monitor.assert_max_duration(1000)  # Max 1 seconde pour 10 opérations
+        performance_monitor.assert_max_duration(1000)  # Max 1 seconde pour 10 oprations
     
     @pytest.mark.parametrize("task_desc,expected_agent", [
         ("Generate Python code", "code_generation"),
@@ -223,7 +223,7 @@ class TestSupervisor:
         ("Refactor function", "code_generation")
     ])
     def test_supervisor_agent_selection(self, sample_agent_state, task_desc, expected_agent):
-        """Test sélection d'agent selon le type de tâche."""
+        """Test slection d'agent selon le type de tche."""
         # ARRANGE
         sample_agent_state["task_description"] = task_desc
         

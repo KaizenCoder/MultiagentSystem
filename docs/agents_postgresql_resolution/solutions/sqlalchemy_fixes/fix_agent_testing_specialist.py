@@ -2,7 +2,7 @@
 """
 Script de correction automatique SQLAlchemy
 Fichier cible: C:\Dev\nextgeneration\docs\agents_postgresql_resolution\agent_testing_specialist.py
-Généré par: Agent SQLAlchemy Fixer
+Gnr par: Agent SQLAlchemy Fixer
 Date: 2025-06-18T01:34:02.554998
 """
 
@@ -18,7 +18,7 @@ def appliquer_corrections():
     # 1. Backup du fichier original
     fichier_backup.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(fichier_original, fichier_backup)
-    print(f"✅ Backup créé: {fichier_backup}")
+    print(f"[CHECK] Backup cr: {fichier_backup}")
     
     # 2. Lecture du contenu
     with open(fichier_original, 'r', encoding='utf-8') as f:
@@ -31,18 +31,18 @@ def appliquer_corrections():
 
     # Ajout import text si manquant
     if "from sqlalchemy import text" not in contenu_corrige:
-        # Recherche d'un import SQLAlchemy existant pour insérer après
+        # Recherche d'un import SQLAlchemy existant pour insrer aprs
         lignes = contenu_corrige.split('\n')
         for i, ligne in enumerate(lignes):
             if "from sqlalchemy import" in ligne and "text" not in ligne:
-                # Ajout text à l'import existant
+                # Ajout text  l'import existant
                 if ligne.endswith(')'):
                     lignes[i] = ligne[:-1] + ", text)"
                 else:
                     lignes[i] = ligne + ", text"
                 break
         else:
-            # Ajout nouvel import si aucun trouvé
+            # Ajout nouvel import si aucun trouv
             for i, ligne in enumerate(lignes):
                 if ligne.startswith("import ") or ligne.startswith("from "):
                     lignes.insert(i, "from sqlalchemy import text")
@@ -51,14 +51,14 @@ def appliquer_corrections():
         corrections_appliquees += 1
 
     
-    # 4. Vérification des corrections
+    # 4. Vrification des corrections
     if corrections_appliquees > 0:
-        # Sauvegarde du fichier corrigé
+        # Sauvegarde du fichier corrig
         with open(fichier_original, 'w', encoding='utf-8') as f:
             f.write(contenu_corrige)
-        print(f"✅ {corrections_appliquees} corrections appliquées à {fichier_original}")
+        print(f"[CHECK] {corrections_appliquees} corrections appliques  {fichier_original}")
         
-        # Création d'un rapport de correction
+        # Cration d'un rapport de correction
         rapport_correction = {
             "timestamp": "2025-06-18T01:34:02.554998",
             "fichier": str(fichier_original),
@@ -68,7 +68,7 @@ def appliquer_corrections():
         
         return rapport_correction
     else:
-        print("ℹ️ Aucune correction nécessaire")
+        print(" Aucune correction ncessaire")
         return None
 
 def restaurer_backup():
@@ -78,10 +78,10 @@ def restaurer_backup():
     
     if fichier_backup.exists():
         shutil.copy2(fichier_backup, fichier_original)
-        print(f"✅ Fichier restauré depuis backup: {fichier_backup}")
+        print(f"[CHECK] Fichier restaur depuis backup: {fichier_backup}")
         return True
     else:
-        print(f"❌ Backup non trouvé: {fichier_backup}")
+        print(f"[CROSS] Backup non trouv: {fichier_backup}")
         return False
 
 if __name__ == "__main__":
@@ -92,6 +92,6 @@ if __name__ == "__main__":
     else:
         rapport = appliquer_corrections()
         if rapport:
-            print(f"\n📊 Rapport: {rapport}")
+            print(f"\n[CHART] Rapport: {rapport}")
         else:
-            print("\n🎯 Aucune action requise")
+            print("\n[TARGET] Aucune action requise")

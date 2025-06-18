@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-⚡ Expert Performance - Spécialiste Optimisation Performance
-Mission: Optimisation performance Factory Pattern + scalabilité enterprise
-Modèle: Claude-3.5-Sonnet (performance, scalabilité, optimisation)
+[LIGHTNING] Expert Performance - Spcialiste Optimisation Performance
+Mission: Optimisation performance Factory Pattern + scalabilit enterprise
+Modle: Claude-3.5-Sonnet (performance, scalabilit, optimisation)
 """
 
 import json
@@ -21,7 +21,7 @@ class PerformanceLevel(Enum):
 
 @dataclass
 class PerformanceMetric:
-    """Métrique performance"""
+    """Mtrique performance"""
     name: str
     baseline_value: str
     optimized_value: str
@@ -30,7 +30,7 @@ class PerformanceMetric:
 
 @dataclass
 class ScalabilityPattern:
-    """Pattern scalabilité"""
+    """Pattern scalabilit"""
     pattern_name: str
     use_case: str
     throughput_improvement: str
@@ -73,8 +73,8 @@ class ExpertPerformanceOptimizer:
         self.logger = logging.getLogger("expert_performance_optimizer")
     
     def analyser_metriques_performance_cles(self) -> List[PerformanceMetric]:
-        """⚡ Analyse métriques performance clés"""
-        self.logger.info("📊 Analyse métriques performance")
+        """[LIGHTNING] Analyse mtriques performance cls"""
+        self.logger.info("[CHART] Analyse mtriques performance")
         
         metrics = [
             PerformanceMetric(
@@ -124,21 +124,21 @@ class ExpertPerformanceOptimizer:
         return metrics
     
     def concevoir_patterns_scalabilite(self) -> List[ScalabilityPattern]:
-        """📈 Conception patterns scalabilité"""
-        self.logger.info("🚀 Conception patterns scalabilité")
+        """ Conception patterns scalabilit"""
+        self.logger.info("[ROCKET] Conception patterns scalabilit")
         
         patterns = [
             ScalabilityPattern(
                 pattern_name="Agent Pool Management",
-                use_case="Réutilisation instances agents pré-initialisées",
-                throughput_improvement="300% amélioration throughput",
-                resource_efficiency="60% réduction overhead création",
+                use_case="Rutilisation instances agents pr-initialises",
+                throughput_improvement="300% amlioration throughput",
+                resource_efficiency="60% rduction overhead cration",
                 complexity_level="MEDIUM"
             ),
             ScalabilityPattern(
                 pattern_name="Horizontal Auto-scaling",
                 use_case="Scale automatique based on demand",
-                throughput_improvement="Illimité (scaling elastique)",
+                throughput_improvement="Illimit (scaling elastique)",
                 resource_efficiency="Pay-per-use model",
                 complexity_level="HIGH"
             ),
@@ -146,20 +146,20 @@ class ExpertPerformanceOptimizer:
                 pattern_name="Registry Sharding",
                 use_case="Distribution templates across shards",
                 throughput_improvement="Linear scaling avec shards",
-                resource_efficiency="80% réduction contention",
+                resource_efficiency="80% rduction contention",
                 complexity_level="HIGH"
             ),
             ScalabilityPattern(
                 pattern_name="Edge Computing Deployment",
-                use_case="Agents déployés proche des utilisateurs",
-                throughput_improvement="200% réduction latency",
-                resource_efficiency="50% réduction bandwidth",
+                use_case="Agents dploys proche des utilisateurs",
+                throughput_improvement="200% rduction latency",
+                resource_efficiency="50% rduction bandwidth",
                 complexity_level="EXTREME"
             ),
             ScalabilityPattern(
                 pattern_name="Streaming Processing",
                 use_case="Pipeline traitement continu agents",
-                throughput_improvement="500% amélioration throughput",
+                throughput_improvement="500% amlioration throughput",
                 resource_efficiency="Real-time processing",
                 complexity_level="HIGH"
             )
@@ -168,8 +168,8 @@ class ExpertPerformanceOptimizer:
         return patterns
     
     def optimiser_architecture_performance(self) -> Dict[str, Any]:
-        """🏗️ Optimisation architecture performance"""
-        self.logger.info("⚡ Optimisation architecture")
+        """[CONSTRUCTION] Optimisation architecture performance"""
+        self.logger.info("[LIGHTNING] Optimisation architecture")
         
         architecture = {
             "compute_layer": {
@@ -177,13 +177,13 @@ class ExpertPerformanceOptimizer:
                     "technology": "Ray Serve + Modal",
                     "optimizations": [
                         "GPU/CPU pools dynamiques",
-                        "Model serving optimisé",
+                        "Model serving optimis",
                         "Batch processing intelligent",
                         "Resource affinity scheduling"
                     ],
                     "performance_gains": [
-                        "50% réduction cold start",
-                        "300% amélioration throughput",
+                        "50% rduction cold start",
+                        "300% amlioration throughput",
                         "70% optimisation ressources"
                     ]
                 },
@@ -191,8 +191,8 @@ class ExpertPerformanceOptimizer:
                     "strategy": "Predictive + Reactive scaling",
                     "metrics": ["CPU", "Memory", "Queue Length", "Response Time"],
                     "scaling_policies": {
-                        "scale_up": "80% utilisation → +2 instances",
-                        "scale_down": "30% utilisation → -1 instance",
+                        "scale_up": "80% utilisation  +2 instances",
+                        "scale_down": "30% utilisation  -1 instance",
                         "max_instances": "1000 per zone"
                     }
                 }
@@ -202,7 +202,7 @@ class ExpertPerformanceOptimizer:
                     "technology": "PostgreSQL avec partitioning",
                     "optimizations": [
                         "Table partitioning par date",
-                        "Indexing stratégique",
+                        "Indexing stratgique",
                         "Connection pooling",
                         "Read replicas multi-zone"
                     ]
@@ -239,8 +239,8 @@ class ExpertPerformanceOptimizer:
         return architecture
     
     def concevoir_monitoring_performance(self) -> Dict[str, Any]:
-        """📊 Conception monitoring performance"""
-        self.logger.info("📈 Conception monitoring")
+        """[CHART] Conception monitoring performance"""
+        self.logger.info(" Conception monitoring")
         
         monitoring = {
             "observability_stack": {
@@ -306,10 +306,10 @@ class ExpertPerformanceOptimizer:
         return monitoring
     
     def generer_rapport_expert_performance(self) -> Dict[str, Any]:
-        """📋 Génération rapport Expert Performance"""
-        self.logger.info("📋 Génération rapport Expert Performance")
+        """[CLIPBOARD] Gnration rapport Expert Performance"""
+        self.logger.info("[CLIPBOARD] Gnration rapport Expert Performance")
         
-        # Analyses complètes
+        # Analyses compltes
         metrics = self.analyser_metriques_performance_cles()
         patterns = self.concevoir_patterns_scalabilite()
         architecture = self.optimiser_architecture_performance()
@@ -377,7 +377,7 @@ class ExpertPerformanceOptimizer:
                 }
             ],
             "executive_summary": {
-                "recommendation": "TRANSFORMATION PERFORMANCE révolutionnaire",
+                "recommendation": "TRANSFORMATION PERFORMANCE rvolutionnaire",
                 "strategic_value": "Performance = Competitive advantage Factory Pattern",
                 "business_impact": {
                     "speed_improvement": "18x faster agent creation",
@@ -397,8 +397,8 @@ class ExpertPerformanceOptimizer:
         return rapport
     
     def executer_mission_performance(self) -> Dict[str, Any]:
-        """🎯 Mission Expert Performance: Optimisation performance Factory"""
-        self.logger.info(f"🚀 {self.name} - Optimisation performance")
+        """[TARGET] Mission Expert Performance: Optimisation performance Factory"""
+        self.logger.info(f"[ROCKET] {self.name} - Optimisation performance")
         
         try:
             rapport = self.generer_rapport_expert_performance()
@@ -410,7 +410,7 @@ class ExpertPerformanceOptimizer:
             with open(rapport_path, 'w', encoding='utf-8') as f:
                 json.dump(rapport, f, indent=2, ensure_ascii=False, default=str)
             
-            self.logger.info(f"✅ Rapport Expert Performance sauvegardé: {rapport_path}")
+            self.logger.info(f"[CHECK] Rapport Expert Performance sauvegard: {rapport_path}")
             
             return {
                 "status": "SUCCESS",
@@ -423,7 +423,7 @@ class ExpertPerformanceOptimizer:
             }
             
         except Exception as e:
-            self.logger.error(f"❌ Erreur mission Expert Performance: {e}")
+            self.logger.error(f"[CROSS] Erreur mission Expert Performance: {e}")
             return {
                 "status": "ERROR",
                 "expert": self.name,
@@ -434,12 +434,12 @@ if __name__ == "__main__":
     expert = ExpertPerformanceOptimizer()
     resultat = expert.executer_mission_performance()
     
-    print(f"\n⚡ Expert Performance Optimizer: {resultat['status']}")
+    print(f"\n[LIGHTNING] Expert Performance Optimizer: {resultat['status']}")
     if resultat['status'] == 'SUCCESS':
-        print(f"📊 Métriques Performance: {resultat['performance_metrics']}")
-        print(f"📈 Patterns Scalabilité: {resultat['scalability_patterns']}")
-        print(f"💡 Recommandation: {resultat['recommendation']}")
-        print(f"🎯 Impact Business: {resultat['business_impact']}")
-        print(f"📋 Rapport: {resultat['report_path']}")
+        print(f"[CHART] Mtriques Performance: {resultat['performance_metrics']}")
+        print(f" Patterns Scalabilit: {resultat['scalability_patterns']}")
+        print(f"[BULB] Recommandation: {resultat['recommendation']}")
+        print(f"[TARGET] Impact Business: {resultat['business_impact']}")
+        print(f"[CLIPBOARD] Rapport: {resultat['report_path']}")
     else:
-        print(f"❌ Erreur: {resultat['error']}") 
+        print(f"[CROSS] Erreur: {resultat['error']}") 

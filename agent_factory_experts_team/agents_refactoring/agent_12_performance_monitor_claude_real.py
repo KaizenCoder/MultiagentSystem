@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-🔍 Agent 12 - Performance Monitor Real (Claude Sonnet 4)
-Mission: Configuration monitoring réel + analyse performance architecture
+[SEARCH] Agent 12 - Performance Monitor Real (Claude Sonnet 4)
+Mission: Configuration monitoring rel + analyse performance architecture
 Travaille sur: refactoring_workspace/new_architecture/
 """
 
@@ -17,7 +17,7 @@ from typing import Dict, Any, List
 import ast
 
 class RealPerformanceMonitorAgent:
-    """Agent monitoring réel - analyse architecture et crée configs opérationnelles"""
+    """Agent monitoring rel - analyse architecture et cre configs oprationnelles"""
     
     def __init__(self):
         self.name = "Agent 12 - Real Performance Monitor"
@@ -25,7 +25,7 @@ class RealPerformanceMonitorAgent:
         self.version = "1.0.0"
         self.model = "Claude Sonnet 4"
         
-        # Workspace réel
+        # Workspace rel
         self.workspace_root = Path("C:/Dev/nextgeneration")
         self.architecture_path = self.workspace_root / "refactoring_workspace/new_architecture"
         self.monitoring_dir = self.workspace_root / "monitoring"
@@ -53,8 +53,8 @@ class RealPerformanceMonitorAgent:
         self.logger = logging.getLogger(self.agent_id)
         
     def analyze_architecture_performance(self) -> Dict[str, Any]:
-        """🎯 Analyse performance architecture réelle"""
-        self.logger.info("📊 Analyse performance architecture NextGeneration")
+        """[TARGET] Analyse performance architecture relle"""
+        self.logger.info("[CHART] Analyse performance architecture NextGeneration")
         
         analysis = {
             "timestamp": datetime.now().isoformat(),
@@ -84,7 +84,7 @@ class RealPerformanceMonitorAgent:
                     
                     analysis["architecture_files"].append(file_analysis)
                     
-                    # Détection patterns performance
+                    # Dtection patterns performance
                     if "async def" in content:
                         analysis["performance_metrics"]["async_endpoints"] = analysis["performance_metrics"].get("async_endpoints", 0) + 1
                     if "Depends(" in content:
@@ -103,7 +103,7 @@ class RealPerformanceMonitorAgent:
         analysis["performance_metrics"]["total_lines"] = total_lines
         analysis["performance_metrics"]["avg_lines_per_file"] = total_lines / total_files if total_files > 0 else 0
         
-        # Détection bottlenecks
+        # Dtection bottlenecks
         if total_lines > 2000:
             analysis["bottlenecks_detected"].append("Architecture complexe - monitoring CPU/Memory critique")
         if analysis["performance_metrics"].get("async_endpoints", 0) > 10:
@@ -113,9 +113,9 @@ class RealPerformanceMonitorAgent:
             
         # Recommandations
         analysis["monitoring_recommendations"] = [
-            "Métriques FastAPI: request_duration, request_count, error_rate",
-            "Métriques système: CPU, memory, disk I/O",
-            "Métriques business: endpoints les plus utilisés",
+            "Mtriques FastAPI: request_duration, request_count, error_rate",
+            "Mtriques systme: CPU, memory, disk I/O",
+            "Mtriques business: endpoints les plus utiliss",
             "Alerting: latence >1s, error rate >5%, memory >80%",
             "Health checks: liveness, readiness, startup probes"
         ]
@@ -123,8 +123,8 @@ class RealPerformanceMonitorAgent:
         return analysis
         
     def create_prometheus_config(self, analysis: Dict[str, Any]) -> Path:
-        """🎯 Création configuration Prometheus opérationnelle"""
-        self.logger.info("⚙️ Création configuration Prometheus")
+        """[TARGET] Cration configuration Prometheus oprationnelle"""
+        self.logger.info(" Cration configuration Prometheus")
         
         prometheus_config = {
             "global": {
@@ -166,7 +166,7 @@ class RealPerformanceMonitorAgent:
             }
         }
         
-        # Ajout jobs spécifiques selon analyse
+        # Ajout jobs spcifiques selon analyse
         if analysis["performance_metrics"].get("routers", 0) > 3:
             prometheus_config["scrape_configs"].append({
                 "job_name": "nextgeneration-routers",
@@ -179,12 +179,12 @@ class RealPerformanceMonitorAgent:
         with open(config_file, 'w') as f:
             yaml.dump(prometheus_config, f, default_flow_style=False, indent=2)
             
-        self.logger.info(f"✅ Configuration Prometheus: {config_file}")
+        self.logger.info(f"[CHECK] Configuration Prometheus: {config_file}")
         return config_file
         
     def create_alerting_rules(self, analysis: Dict[str, Any]) -> Path:
-        """🎯 Création règles alerting basées sur architecture"""
-        self.logger.info("🚨 Création règles alerting")
+        """[TARGET] Cration rgles alerting bases sur architecture"""
+        self.logger.info(" Cration rgles alerting")
         
         alerting_rules = {
             "groups": [
@@ -226,7 +226,7 @@ class RealPerformanceMonitorAgent:
             ]
         }
         
-        # Règles spécifiques selon architecture
+        # Rgles spcifiques selon architecture
         if analysis["performance_metrics"].get("async_endpoints", 0) > 5:
             alerting_rules["groups"][0]["rules"].append({
                 "alert": "NextGenerationAsyncBottleneck",
@@ -243,12 +243,12 @@ class RealPerformanceMonitorAgent:
         with open(rules_file, 'w') as f:
             yaml.dump(alerting_rules, f, default_flow_style=False, indent=2)
             
-        self.logger.info(f"✅ Règles alerting: {rules_file}")
+        self.logger.info(f"[CHECK] Rgles alerting: {rules_file}")
         return rules_file
         
     def create_grafana_dashboards(self, analysis: Dict[str, Any]) -> List[Path]:
-        """🎯 Création dashboards Grafana opérationnels"""
-        self.logger.info("📊 Création dashboards Grafana")
+        """[TARGET] Cration dashboards Grafana oprationnels"""
+        self.logger.info("[CHART] Cration dashboards Grafana")
         
         grafana_dir = self.monitoring_dir / "grafana" / "dashboards"
         grafana_dir.mkdir(parents=True, exist_ok=True)
@@ -397,17 +397,17 @@ class RealPerformanceMonitorAgent:
             json.dump(infrastructure_dashboard, f, indent=2)
         dashboards.append(infrastructure_file)
         
-        self.logger.info(f"✅ {len(dashboards)} dashboards Grafana créés")
+        self.logger.info(f"[CHECK] {len(dashboards)} dashboards Grafana crs")
         return dashboards
         
     def create_health_checks(self, analysis: Dict[str, Any]) -> Path:
-        """🎯 Création health checks Kubernetes-ready"""
-        self.logger.info("💓 Création health checks")
+        """[TARGET] Cration health checks Kubernetes-ready"""
+        self.logger.info(" Cration health checks")
         
         health_checks_code = '''"""
 Health Checks Enterprise - NextGeneration
 Kubernetes-ready: liveness, readiness, startup probes
-Généré par Agent 12 - Performance Monitor Real
+Gnr par Agent 12 - Performance Monitor Real
 """
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -425,7 +425,7 @@ class HealthChecker:
         self.ready = False
         
     async def check_database(self) -> bool:
-        """Vérification base de données"""
+        """Vrification base de donnes"""
         try:
             # Simulation check DB
             await asyncio.sleep(0.01)
@@ -434,7 +434,7 @@ class HealthChecker:
             return False
             
     async def check_cache(self) -> bool:
-        """Vérification cache Redis"""
+        """Vrification cache Redis"""
         try:
             # Simulation check Redis
             await asyncio.sleep(0.01)
@@ -443,12 +443,12 @@ class HealthChecker:
             return False
             
     def check_memory(self) -> bool:
-        """Vérification mémoire"""
+        """Vrification mmoire"""
         memory = psutil.virtual_memory()
         return memory.percent < 90
         
     def check_disk(self) -> bool:
-        """Vérification espace disque"""
+        """Vrification espace disque"""
         disk = psutil.disk_usage('/')
         return (disk.free / disk.total) > 0.1
 
@@ -458,10 +458,10 @@ health_checker = HealthChecker()
 async def liveness_probe():
     """
     Kubernetes liveness probe
-    Vérifie si l'application est vivante
+    Vrifie si l'application est vivante
     """
     try:
-        # Vérifications basiques
+        # Vrifications basiques
         if not health_checker.check_memory():
             raise HTTPException(status_code=503, detail="Memory exhausted")
             
@@ -481,10 +481,10 @@ async def liveness_probe():
 async def readiness_probe():
     """
     Kubernetes readiness probe
-    Vérifie si l'application peut recevoir du trafic
+    Vrifie si l'application peut recevoir du trafic
     """
     try:
-        # Vérifications dépendances
+        # Vrifications dpendances
         db_ok = await health_checker.check_database()
         cache_ok = await health_checker.check_cache()
         
@@ -512,16 +512,16 @@ async def readiness_probe():
 async def startup_probe():
     """
     Kubernetes startup probe
-    Vérifie si l'application a démarré correctement
+    Vrifie si l'application a dmarr correctement
     """
     try:
         startup_duration = datetime.now() - health_checker.startup_time
         
-        # Délai minimum de démarrage
+        # Dlai minimum de dmarrage
         if startup_duration.total_seconds() < 10:
             raise HTTPException(status_code=503, detail="Still starting up")
             
-        # Vérifications complètes
+        # Vrifications compltes
         db_ok = await health_checker.check_database()
         cache_ok = await health_checker.check_cache()
         memory_ok = health_checker.check_memory()
@@ -544,7 +544,7 @@ async def startup_probe():
 @router.get("/health/metrics")
 async def health_metrics():
     """
-    Métriques de santé pour Prometheus
+    Mtriques de sant pour Prometheus
     """
     memory = psutil.virtual_memory()
     disk = psutil.disk_usage('/')
@@ -566,12 +566,12 @@ async def health_metrics():
         with open(health_file, 'w', encoding='utf-8') as f:
             f.write(health_checks_code)
             
-        self.logger.info(f"✅ Health checks: {health_file}")
+        self.logger.info(f"[CHECK] Health checks: {health_file}")
         return health_file
         
     def generate_report(self) -> Dict[str, Any]:
-        """🎯 Génération rapport complet Agent 12"""
-        time.sleep(2.5)  # Simulation traitement réaliste
+        """[TARGET] Gnration rapport complet Agent 12"""
+        time.sleep(2.5)  # Simulation traitement raliste
         duration = (datetime.now() - self.start_time).total_seconds()
         
         report = {
@@ -611,18 +611,18 @@ async def health_metrics():
         return report
         
     def execute_mission(self) -> Dict[str, Any]:
-        """🎯 Exécution mission complète Agent 12 Real"""
-        self.logger.info(f"🚀 {self.name} - Démarrage mission monitoring réel")
+        """[TARGET] Excution mission complte Agent 12 Real"""
+        self.logger.info(f"[ROCKET] {self.name} - Dmarrage mission monitoring rel")
         
         try:
-            # 1. Analyse architecture réelle
+            # 1. Analyse architecture relle
             analysis = self.analyze_architecture_performance()
-            self.logger.info(f"📊 Architecture analysée: {analysis['performance_metrics']['total_files']} fichiers")
+            self.logger.info(f"[CHART] Architecture analyse: {analysis['performance_metrics']['total_files']} fichiers")
             
             # 2. Configuration Prometheus
             prometheus_config = self.create_prometheus_config(analysis)
             
-            # 3. Règles alerting
+            # 3. Rgles alerting
             alerting_rules = self.create_alerting_rules(analysis)
             
             # 4. Dashboards Grafana
@@ -634,7 +634,7 @@ async def health_metrics():
             # 6. Rapport final
             report = self.generate_report()
             
-            self.logger.info("✅ Mission Agent 12 Real terminée avec succès")
+            self.logger.info("[CHECK] Mission Agent 12 Real termine avec succs")
             
             return {
                 "status": "SUCCESS",
@@ -644,11 +644,11 @@ async def health_metrics():
                 "dashboards": len(dashboards),
                 "architecture_files_analyzed": analysis['performance_metrics']['total_files'],
                 "real_monitoring_setup": True,
-                "message": "🔍 Monitoring réel opérationnel ✅"
+                "message": "[SEARCH] Monitoring rel oprationnel [CHECK]"
             }
             
         except Exception as e:
-            self.logger.error(f"❌ Erreur mission Agent 12: {e}")
+            self.logger.error(f"[CROSS] Erreur mission Agent 12: {e}")
             return {
                 "status": "ERROR",
                 "error": str(e)
@@ -658,12 +658,12 @@ if __name__ == "__main__":
     agent = RealPerformanceMonitorAgent()
     result = agent.execute_mission()
     
-    print(f"\n🎯 {agent.name}")
+    print(f"\n[TARGET] {agent.name}")
     print(f"Status: {result['status']}")
     if result['status'] == 'SUCCESS':
-        print(f"📊 Fichiers créés: {result['files_created']}")
-        print(f"📈 Dashboards: {result['dashboards']}")
-        print(f"🔍 Architecture analysée: {result['architecture_files_analyzed']} fichiers")
-        print(f"✅ {result['message']}")
+        print(f"[CHART] Fichiers crs: {result['files_created']}")
+        print(f" Dashboards: {result['dashboards']}")
+        print(f"[SEARCH] Architecture analyse: {result['architecture_files_analyzed']} fichiers")
+        print(f"[CHECK] {result['message']}")
     else:
-        print(f"❌ Erreur: {result['error']}") 
+        print(f"[CROSS] Erreur: {result['error']}") 

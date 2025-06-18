@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-🎯 Agent Analyzer Alpha - Claude Sonnet 4
-🔍 Analyse approfondie des fichiers god mode avec Claude Sonnet 4
-⚡ Phase 1 Refactoring NextGeneration - Cloud API
+[TARGET] Agent Analyzer Alpha - Claude Sonnet 4
+[SEARCH] Analyse approfondie des fichiers god mode avec Claude Sonnet 4
+[LIGHTNING] Phase 1 Refactoring NextGeneration - Cloud API
 """
 
 import os
@@ -20,11 +20,11 @@ try:
     from dotenv import load_dotenv
     load_dotenv()
 except ImportError:
-    print("⚠️ python-dotenv non installé, utilisation variables système")
+    print(" python-dotenv non install, utilisation variables systme")
 
 @dataclass
 class CodeMetrics:
-    """Métriques de complexité du code"""
+    """Mtriques de complexit du code"""
     lines_of_code: int
     cyclomatic_complexity: int
     cognitive_complexity: int
@@ -35,7 +35,7 @@ class CodeMetrics:
 
 @dataclass
 class DependencyGraph:
-    """Graphe des dépendances"""
+    """Graphe des dpendances"""
     imports: List[str]
     internal_dependencies: List[str]
     external_dependencies: List[str]
@@ -54,12 +54,12 @@ class RefactoringRecommendation:
 
 class AgentAnalyzerAlphaClaudeSonnet4:
     """
-    🎯 Agent Analyzer Alpha - Claude Sonnet 4
+    [TARGET] Agent Analyzer Alpha - Claude Sonnet 4
     
     Mission:
     - Analyse approfondie avec AST
-    - Métriques de complexité avancées
-    - Détection des hotspots critiques
+    - Mtriques de complexit avances
+    - Dtection des hotspots critiques
     - Recommandations architecturales
     """
     
@@ -68,10 +68,10 @@ class AgentAnalyzerAlphaClaudeSonnet4:
         self.model = "claude-3-5-sonnet-20241022"
         self.capabilities = [
             "Analyse AST Python",
-            "Métriques complexité",
-            "Détection god classes",
+            "Mtriques complexit",
+            "Dtection god classes",
             "Recommandations architecturales",
-            "Analyse dépendances"
+            "Analyse dpendances"
         ]
         
         # Configuration Claude Sonnet 4 avec .env
@@ -81,42 +81,42 @@ class AgentAnalyzerAlphaClaudeSonnet4:
             
         self.client = anthropic.Anthropic(api_key=api_key)
         
-        # Paramètres optimisés
+        # Paramtres optimiss
         self.max_tokens = 4000
-        self.temperature = 0.1  # Précision maximale
+        self.temperature = 0.1  # Prcision maximale
         
         self.workspace = Path("refactoring_workspace")
         self.results_dir = self.workspace / "results" / "alpha_claude"
         self.results_dir.mkdir(parents=True, exist_ok=True)
         
-        print(f"🤖 {self.name} initialisé avec Claude Sonnet 4")
-        print(f"⚙️ Modèle: {self.model}")
-        print(f"🔑 Clé API: {'✅' if api_key else '❌'}")
-        print(f"📁 Workspace: {self.workspace}")
+        print(f"[ROBOT] {self.name} initialis avec Claude Sonnet 4")
+        print(f" Modle: {self.model}")
+        print(f" Cl API: {'[CHECK]' if api_key else '[CROSS]'}")
+        print(f"[FOLDER] Workspace: {self.workspace}")
 
     async def analyze_file_deep(self, file_path: str) -> Dict[str, Any]:
         """
-        🔍 Analyse approfondie d'un fichier avec Claude Sonnet 4
+        [SEARCH] Analyse approfondie d'un fichier avec Claude Sonnet 4
         """
-        print(f"\n🔍 Agent Alpha - Analyse approfondie: {file_path}")
+        print(f"\n[SEARCH] Agent Alpha - Analyse approfondie: {file_path}")
         
         try:
             # Lecture du fichier
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
             
-            print(f"📊 Taille fichier: {len(content)} caractères")
+            print(f"[CHART] Taille fichier: {len(content)} caractres")
             
             # Analyse AST
             ast_analysis = self._analyze_ast(content)
             
-            # Métriques avec Claude Sonnet 4
+            # Mtriques avec Claude Sonnet 4
             metrics = await self._calculate_metrics_claude(content, file_path)
             
-            # Analyse des dépendances
+            # Analyse des dpendances
             dependencies = self._analyze_dependencies(content)
             
-            # Détection des hotspots
+            # Dtection des hotspots
             hotspots = await self._detect_hotspots_claude(content, file_path)
             
             # Recommandations Claude Sonnet 4
@@ -147,15 +147,15 @@ class AgentAnalyzerAlphaClaudeSonnet4:
             with open(output_file, 'w', encoding='utf-8') as f:
                 json.dump(result, f, indent=2, ensure_ascii=False)
             
-            print(f"✅ Analyse Alpha terminée - Résultats: {output_file}")
+            print(f"[CHECK] Analyse Alpha termine - Rsultats: {output_file}")
             return result
             
         except Exception as e:
-            print(f"❌ Erreur analyse Alpha: {str(e)}")
+            print(f"[CROSS] Erreur analyse Alpha: {str(e)}")
             return {"error": str(e), "file_path": file_path}
 
     def _analyze_ast(self, content: str) -> Dict[str, Any]:
-        """Analyse AST détaillée"""
+        """Analyse AST dtaille"""
         try:
             tree = ast.parse(content)
             
@@ -194,10 +194,10 @@ class AgentAnalyzerAlphaClaudeSonnet4:
             return {"error": f"AST analysis failed: {str(e)}"}
 
     async def _calculate_metrics_claude(self, content: str, file_path: str) -> CodeMetrics:
-        """Calcul des métriques avec Claude Sonnet 4"""
+        """Calcul des mtriques avec Claude Sonnet 4"""
         try:
             prompt = f"""
-Analysez ce code Python et calculez les métriques de complexité:
+Analysez ce code Python et calculez les mtriques de complexit:
 
 Fichier: {file_path}
 
@@ -207,8 +207,8 @@ Fichier: {file_path}
 
 Calculez et retournez en JSON:
 1. lines_of_code (lignes effectives)
-2. cyclomatic_complexity (complexité cyclomatique)
-3. cognitive_complexity (complexité cognitive)
+2. cyclomatic_complexity (complexit cyclomatique)
+3. cognitive_complexity (complexit cognitive)
 4. nesting_depth (profondeur max imbrication)
 5. number_of_functions
 6. number_of_classes
@@ -224,7 +224,7 @@ Format JSON strict requis.
                 messages=[{"role": "user", "content": prompt}]
             )
             
-            # Parse de la réponse JSON
+            # Parse de la rponse JSON
             response_text = response.content[0].text
             json_start = response_text.find('{')
             json_end = response_text.rfind('}') + 1
@@ -233,7 +233,7 @@ Format JSON strict requis.
             return CodeMetrics(**metrics_data)
             
         except Exception as e:
-            print(f"⚠️ Métriques par défaut (erreur Claude): {str(e)}")
+            print(f" Mtriques par dfaut (erreur Claude): {str(e)}")
             lines = len([l for l in content.split('\n') if l.strip()])
             return CodeMetrics(
                 lines_of_code=lines,
@@ -246,7 +246,7 @@ Format JSON strict requis.
             )
 
     def _analyze_dependencies(self, content: str) -> DependencyGraph:
-        """Analyse des dépendances"""
+        """Analyse des dpendances"""
         try:
             tree = ast.parse(content)
             
@@ -271,7 +271,7 @@ Format JSON strict requis.
                         else:
                             external_deps.append(node.module)
             
-            # Détection circulaire simple
+            # Dtection circulaire simple
             circular_deps = []
             for dep in internal_deps:
                 if dep.count('.') > 2:  # Heuristique simple
@@ -291,10 +291,10 @@ Format JSON strict requis.
             return DependencyGraph([], [], [], [], 0.0)
 
     async def _detect_hotspots_claude(self, content: str, file_path: str) -> List[Dict[str, Any]]:
-        """Détection des hotspots avec Claude Sonnet 4"""
+        """Dtection des hotspots avec Claude Sonnet 4"""
         try:
             prompt = f"""
-Analysez ce code Python et identifiez les hotspots problématiques:
+Analysez ce code Python et identifiez les hotspots problmatiques:
 
 Fichier: {file_path}
 
@@ -305,8 +305,8 @@ Fichier: {file_path}
 Identifiez en JSON les hotspots:
 - Fonctions trop longues (>50 lignes)
 - Classes god (>500 lignes)
-- Complexité cyclomatique élevée
-- Code dupliqué
+- Complexit cyclomatique leve
+- Code dupliqu
 - Violations SOLID
 
 Format: [{"type": "...", "location": "line X", "severity": "HIGH/MEDIUM/LOW", "description": "..."}]
@@ -329,23 +329,23 @@ Format: [{"type": "...", "location": "line X", "severity": "HIGH/MEDIUM/LOW", "d
                 return []
                 
         except Exception as e:
-            print(f"⚠️ Hotspots par défaut: {str(e)}")
+            print(f" Hotspots par dfaut: {str(e)}")
             return [{"type": "analysis_error", "severity": "LOW", "description": str(e)}]
 
     async def _generate_recommendations_claude(self, content: str, file_path: str, 
                                              ast_analysis: Dict, metrics: CodeMetrics, 
                                              dependencies: DependencyGraph) -> List[RefactoringRecommendation]:
-        """Génération des recommandations avec Claude Sonnet 4"""
+        """Gnration des recommandations avec Claude Sonnet 4"""
         try:
             context = f"""
 Fichier: {file_path}
-Métriques: LOC={metrics.lines_of_code}, CC={metrics.cyclomatic_complexity}, Classes={metrics.number_of_classes}
-Dépendances: {len(dependencies.internal_dependencies)} internes, couplage={dependencies.coupling_score:.2f}
+Mtriques: LOC={metrics.lines_of_code}, CC={metrics.cyclomatic_complexity}, Classes={metrics.number_of_classes}
+Dpendances: {len(dependencies.internal_dependencies)} internes, couplage={dependencies.coupling_score:.2f}
 AST: {len(ast_analysis.get('functions', []))} fonctions, {len(ast_analysis.get('classes', []))} classes
 """
 
             prompt = f"""
-Générez des recommandations de refactoring pour ce code:
+Gnrez des recommandations de refactoring pour ce code:
 
 {context}
 
@@ -361,11 +361,11 @@ Retournez en JSON une liste de recommandations:
     "description": "Description claire",
     "impact": "Impact business/technique",
     "effort": "Estimation effort (heures)",
-    "affected_lines": [numéros de lignes]
+    "affected_lines": [numros de lignes]
   }
 ]
 
-Focalisez sur les patterns god class, SRP violations, complexité excessive.
+Focalisez sur les patterns god class, SRP violations, complexit excessive.
 """
 
             response = self.client.messages.create(
@@ -386,37 +386,37 @@ Focalisez sur les patterns god class, SRP violations, complexité excessive.
                 return []
                 
         except Exception as e:
-            print(f"⚠️ Recommandations par défaut: {str(e)}")
+            print(f" Recommandations par dfaut: {str(e)}")
             return [
                 RefactoringRecommendation(
                     priority="HIGH",
                     type="SPLIT_FILE",
                     description=f"Fichier trop volumineux ({metrics.lines_of_code} lignes)",
-                    impact="Améliore la maintenabilité",
+                    impact="Amliore la maintenabilit",
                     effort="4-8 heures",
                     affected_lines=list(range(1, min(100, metrics.lines_of_code)))
                 )
             ]
 
     def _get_complexity_level(self, complexity: int) -> str:
-        """Niveau de complexité"""
+        """Niveau de complexit"""
         if complexity > 20:
-            return "TRÈS ÉLEVÉE"
+            return "TRS LEVE"
         elif complexity > 10:
-            return "ÉLEVÉE"
+            return "LEVE"
         elif complexity > 5:
-            return "MODÉRÉE"
+            return "MODRE"
         else:
             return "FAIBLE"
 
     def _get_refactoring_priority(self, metrics: CodeMetrics, rec_count: int) -> str:
-        """Priorité de refactoring"""
+        """Priorit de refactoring"""
         if metrics.god_class_score > 0.8 or metrics.cyclomatic_complexity > 25:
             return "CRITIQUE"
         elif metrics.god_class_score > 0.6 or metrics.cyclomatic_complexity > 15:
-            return "ÉLEVÉE"
+            return "LEVE"
         elif metrics.god_class_score > 0.4 or rec_count > 3:
-            return "MODÉRÉE"
+            return "MODRE"
         else:
             return "FAIBLE"
 
@@ -441,9 +441,9 @@ async def main():
     test_file = "orchestrator/app/main.py"
     if os.path.exists(test_file):
         result = await agent.analyze_file_deep(test_file)
-        print(f"\n✅ Test Alpha terminé: {len(result.get('recommendations', []))} recommandations")
+        print(f"\n[CHECK] Test Alpha termin: {len(result.get('recommendations', []))} recommandations")
     else:
-        print(f"❌ Fichier test non trouvé: {test_file}")
+        print(f"[CROSS] Fichier test non trouv: {test_file}")
 
 if __name__ == "__main__":
     asyncio.run(main()) 

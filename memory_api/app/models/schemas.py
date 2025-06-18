@@ -4,7 +4,7 @@ from typing import Optional, List, Dict, Any
 from datetime import datetime
 
 class MemoryItem(BaseModel):
-    """Modèle pour un élément de mémoire"""
+    """Modle pour un lment de mmoire"""
     id: Optional[int] = None
     content: str
     metadata: Optional[Dict[str, Any]] = None
@@ -12,7 +12,7 @@ class MemoryItem(BaseModel):
     session_id: Optional[str] = None
 
 class StateItem(BaseModel):
-    """Modèle pour un élément d'état"""
+    """Modle pour un lment d'tat"""
     id: Optional[int] = None
     key: str
     value: Any
@@ -20,12 +20,12 @@ class StateItem(BaseModel):
     timestamp: Optional[datetime] = None
 
 class SearchQuery(BaseModel):
-    """Modèle pour les requêtes de recherche"""
+    """Modle pour les requtes de recherche"""
     query: str
     limit: Optional[int] = 10
     session_id: Optional[str] = None
 
 class SearchResult(BaseModel):
-    """Modèle pour les résultats de recherche"""
+    """Modle pour les rsultats de recherche"""
     items: List[MemoryItem]
     total_count: int 

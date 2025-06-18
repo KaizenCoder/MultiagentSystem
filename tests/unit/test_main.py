@@ -1,6 +1,6 @@
 """
-Tests pour le module main.py - Sprint 3.1 (Version simplifiée)
-Tests pour la logique métier sans dépendances complexes.
+Tests pour le module main.py - Sprint 3.1 (Version simplifie)
+Tests pour la logique mtier sans dpendances complexes.
 """
 
 import pytest
@@ -54,11 +54,11 @@ class TestValidationLogic:
 
 
 class TestDataStructures:
-    """Tests pour les structures de données."""
+    """Tests pour les structures de donnes."""
     
     def test_agent_state_structure(self):
         """Test de structure AgentState."""
-        # Simulation d'un état d'agent
+        # Simulation d'un tat d'agent
         state_data = {
             "task_description": "Test task",
             "messages": [],
@@ -84,7 +84,7 @@ class TestDataStructures:
         assert "T" in feedback_data["timestamp"]
     
     def test_task_request_structure(self):
-        """Test de structure de requête de tâche."""
+        """Test de structure de requte de tche."""
         task_data = {
             "task_description": "Implement authentication",
             "session_id": str(uuid.uuid4()),
@@ -112,20 +112,20 @@ class TestUtilityFunctions:
         assert "timestamp" in result
     
     def test_session_id_generation(self):
-        """Test de génération d'ID de session."""
+        """Test de gnration d'ID de session."""
         session_id = str(uuid.uuid4())
         
-        # Vérifications de format
+        # Vrifications de format
         assert isinstance(session_id, str)
         assert len(session_id) == 36
         assert session_id.count('-') == 4
         
-        # Vérification unicité
+        # Vrification unicit
         session_id2 = str(uuid.uuid4())
         assert session_id != session_id2
     
     def test_timestamp_generation(self):
-        """Test de génération de timestamp."""
+        """Test de gnration de timestamp."""
         timestamp = datetime.now(timezone.utc).isoformat()
         
         assert isinstance(timestamp, str)
@@ -134,17 +134,17 @@ class TestUtilityFunctions:
 
 
 class TestSecurityValidation:
-    """Tests pour la validation de sécurité."""
+    """Tests pour la validation de scurit."""
     
     def test_api_key_validation_logic(self):
-        """Test de logique de validation de clé API."""
+        """Test de logique de validation de cl API."""
         def validate_api_key(provided_key, expected_key):
             return provided_key == expected_key
         
-        # Test avec clé valide
+        # Test avec cl valide
         assert validate_api_key("secret-key", "secret-key") is True
         
-        # Test avec clé invalide
+        # Test avec cl invalide
         assert validate_api_key("wrong-key", "secret-key") is False
         assert validate_api_key("", "secret-key") is False
         assert validate_api_key(None, "secret-key") is False
@@ -235,11 +235,11 @@ class TestErrorHandling:
 
 
 class TestBusinessLogic:
-    """Tests pour la logique métier."""
+    """Tests pour la logique mtier."""
     
     def test_workflow_state_management(self):
-        """Test de gestion d'état du workflow."""
-        # Simulation d'état de workflow
+        """Test de gestion d'tat du workflow."""
+        # Simulation d'tat de workflow
         workflow_state = {
             "status": "running",
             "current_step": "validation",
@@ -252,7 +252,7 @@ class TestBusinessLogic:
         assert isinstance(workflow_state["errors"], list)
     
     def test_task_processing_logic(self):
-        """Test de logique de traitement des tâches."""
+        """Test de logique de traitement des tches."""
         def process_task(task_description, code_context=None):
             if not task_description:
                 return {"status": "error", "message": "No task description"}
@@ -265,7 +265,7 @@ class TestBusinessLogic:
             }
             return result
         
-        # Test avec tâche valide
+        # Test avec tche valide
         result = process_task("Implement feature X")
         assert result["status"] == "success"
         assert "task_id" in result
@@ -275,12 +275,12 @@ class TestBusinessLogic:
         result = process_task("Fix bug Y", "def fix(): pass")
         assert result["has_code"] is True
         
-        # Test avec tâche vide
+        # Test avec tche vide
         result = process_task("")
         assert result["status"] == "error"
     
     def test_health_check_logic(self):
-        """Test de logique de vérification de santé."""
+        """Test de logique de vrification de sant."""
         def health_check():
             components = {
                 "database": True,
@@ -298,7 +298,7 @@ class TestBusinessLogic:
             }
         
         result = health_check()
-        assert result["status"] == "unhealthy"  # À cause de memory_api
+        assert result["status"] == "unhealthy"  #  cause de memory_api
         assert "components" in result
         assert "timestamp" in result
         assert result["components"]["memory_api"] is False
@@ -332,7 +332,7 @@ class TestConfigurationLogic:
         # Test sous la limite
         assert check_rate_limit(50, 100) is True
         
-        # Test à la limite
+        # Test  la limite
         assert check_rate_limit(100, 100) is True
         
         # Test au-dessus de la limite

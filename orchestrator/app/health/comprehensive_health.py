@@ -1,6 +1,6 @@
 """
-Système de health checks complets pour monitoring proactif.
-Surveille tous les composants critiques avec métriques détaillées.
+Systme de health checks complets pour monitoring proactif.
+Surveille tous les composants critiques avec mtriques dtailles.
 """
 
 import asyncio
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 class HealthStatus(Enum):
-    """États de santé possibles."""
+    """tats de sant possibles."""
     HEALTHY = "healthy"
     DEGRADED = "degraded"
     UNHEALTHY = "unhealthy"
@@ -28,7 +28,7 @@ class HealthStatus(Enum):
 
 
 class ComponentType(Enum):
-    """Types de composants surveillés."""
+    """Types de composants surveills."""
     DATABASE = "database"
     HTTP_SERVICE = "http_service"
     LLM_API = "llm_api"
@@ -40,7 +40,7 @@ class ComponentType(Enum):
 
 @dataclass
 class HealthCheckResult:
-    """Résultat d'un health check."""
+    """Rsultat d'un health check."""
     component_name: str
     component_type: ComponentType
     status: HealthStatus
@@ -60,7 +60,7 @@ class HealthCheckResult:
 
 @dataclass
 class HealthReport:
-    """Rapport de santé global."""
+    """Rapport de sant global."""
     overall_status: HealthStatus
     individual_checks: Dict[str, HealthCheckResult]
     timestamp: datetime
@@ -94,7 +94,7 @@ class HealthCheck(ABC):
     
     @abstractmethod
     async def check(self) -> HealthCheckResult:
-        """Exécute le health check."""
+        """Excute le health check."""
         pass
 
 
@@ -116,7 +116,7 @@ class ServiceHealthCheck(HealthCheck):
         self.expected_status = expected_status
     
     async def check(self) -> HealthCheckResult:
-        """Vérifie la santé du service HTTP."""
+        """Vrifie la sant du service HTTP."""
         start_time = time.time()
         
         try:
@@ -132,7 +132,7 @@ class ServiceHealthCheck(HealthCheck):
                 status = HealthStatus.DEGRADED
                 message = f"Unexpected status code: {response.status_code}"
             
-            # Tentative de parsing JSON pour métadonnées
+            # Tentative de parsing JSON pour mtadonnes
             try:
                 response_data = response.json()
                 metadata = {
@@ -180,7 +180,7 @@ class ServiceHealthCheck(HealthCheck):
 
 
 class LLMHealthCheck(HealthCheck):
-    """Health check spécialisé pour APIs LLM."""
+    """Health check spcialis pour APIs LLM."""
     
     def __init__(
         self, 
@@ -195,7 +195,7 @@ class LLMHealthCheck(HealthCheck):
         self.timeout = timeout
     
     async def check(self) -> HealthCheckResult:
-        """Vérifie la santé de l'API LLM."""
+        """Vrifie la sant de l'API LLM."""
         start_time = time.time()
         
         try:
@@ -226,7 +226,7 @@ class LLMHealthCheck(HealthCheck):
         )
     
     async def _check_openai(self) -> tuple[bool, str, Dict[str, Any]]:
-        """Vérifie l'API OpenAI."""
+        """Vrifie l'API OpenAI."""
         headers = {'Authorization': f'Bearer {self.api_key}'} if self.api_key else {}
         
         async with httpx.AsyncClient(timeout=self.timeout) as client:
@@ -257,7 +257,7 @@ class LLMHealthCheck(HealthCheck):
                 }
     
     async def _check_anthropic(self) -> tuple[bool, str, Dict[str, Any]]:
-        """Vérifie l'API Anthropic."""
+        """Vrifie l'API Anthropic."""
         headers = {
             'x-api-key': self.api_key,
             'content-type': 'application/json',
@@ -312,7 +312,7 @@ class DiskHealthCheck(HealthCheck):
         self.critical_threshold_gb = critical_threshold_gb
     
     async def check(self) -> HealthCheckResult:
-        """Vérifie l'espace disque disponible."""
+        """Vrifie l'espace disque disponible."""
         start_time = time.time()
         
         try:
@@ -361,7 +361,7 @@ class DiskHealthCheck(HealthCheck):
 
 
 class MemoryHealthCheck(HealthCheck):
-    """Health check pour l'utilisation mémoire."""
+    """Health check pour l'utilisation mmoire."""
     
     def __init__(
         self, 
@@ -374,7 +374,7 @@ class MemoryHealthCheck(HealthCheck):
         self.critical_threshold = critical_threshold_percent
     
     async def check(self) -> HealthCheckResult:
-        """Vérifie l'utilisation mémoire."""
+        """Vrifie l'utilisation mmoire."""
         start_time = time.time()
         
         try:
@@ -420,18 +420,18 @@ class MemoryHealthCheck(HealthCheck):
 
 
 class SecurityHealthCheck(HealthCheck):
-    """Health check pour les composants de sécurité."""
+    """Health check pour les composants de scurit."""
     
     def __init__(self, name: str, security_components: List[str]):
         super().__init__(name, ComponentType.SECURITY)
         self.security_components = security_components
     
     async def check(self) -> HealthCheckResult:
-        """Vérifie la santé des composants de sécurité."""
+        """Vrifie la sant des composants de scurit."""
         start_time = time.time()
         
         try:
-            # Import conditionnel pour éviter les dépendances circulaires
+            # Import conditionnel pour viter les dpendances circulaires
             from orchestrator.app.security.validators import CodeValidator, NetworkValidator
             from orchestrator.app.security.secure_analyzer import get_secure_analyzer
             
@@ -444,14 +444,14 @@ class SecurityHealthCheck(HealthCheck):
             except Exception as e:
                 security_status['code_validator'] = f'unhealthy: {str(e)}'
             
-            # Test validateur réseau
+            # Test validateur rseau
             try:
                 is_valid, _ = NetworkValidator.validate_url("https://api.openai.com")
                 security_status['network_validator'] = 'healthy' if is_valid else 'degraded'
             except Exception as e:
                 security_status['network_validator'] = f'unhealthy: {str(e)}'
             
-            # Test analyseur sécurisé
+            # Test analyseur scuris
             try:
                 analyzer = get_secure_analyzer()
                 metrics = analyzer.get_security_metrics()
@@ -460,7 +460,7 @@ class SecurityHealthCheck(HealthCheck):
             except Exception as e:
                 security_status['secure_analyzer'] = f'unhealthy: {str(e)}'
             
-            # Évaluation globale
+            # valuation globale
             unhealthy_count = sum(1 for status in security_status.values() 
                                 if isinstance(status, str) and 'unhealthy' in status)
             degraded_count = sum(1 for status in security_status.values() 
@@ -509,11 +509,11 @@ class HealthCheckOrchestrator:
         self.last_report: Optional[HealthReport] = None
         self.check_history: List[HealthReport] = []
         
-        # Configuration par défaut
+        # Configuration par dfaut
         self._setup_default_checks()
     
     def _setup_default_checks(self) -> None:
-        """Configure les health checks par défaut."""
+        """Configure les health checks par dfaut."""
         # Service memory API
         self.add_check(ServiceHealthCheck(
             name="memory_api",
@@ -521,7 +521,7 @@ class HealthCheckOrchestrator:
             health_endpoint="/health"
         ))
         
-        # APIs LLM (si clés disponibles)
+        # APIs LLM (si cls disponibles)
         try:
             from orchestrator.app.security.secrets_manager import get_openai_api_key
             api_key = get_openai_api_key()
@@ -544,7 +544,7 @@ class HealthCheckOrchestrator:
         except Exception:
             logger.warning("Anthropic API key not available - skipping health check")
         
-        # Ressources système
+        # Ressources systme
         self.add_check(DiskHealthCheck(
             name="disk_space",
             path="/",
@@ -558,7 +558,7 @@ class HealthCheckOrchestrator:
             critical_threshold_percent=90.0
         ))
         
-        # Sécurité
+        # Scurit
         self.add_check(SecurityHealthCheck(
             name="security_components",
             security_components=["code_validator", "network_validator", "secure_analyzer"]
@@ -576,7 +576,7 @@ class HealthCheckOrchestrator:
             logger.info(f"Removed health check: {name}")
     
     async def check_all_systems(self) -> HealthReport:
-        """Exécute tous les health checks en parallèle."""
+        """Excute tous les health checks en parallle."""
         start_time = time.time()
         
         if not self.checks:
@@ -591,11 +591,11 @@ class HealthCheckOrchestrator:
                 unhealthy_components=0
             )
         
-        # Exécution parallèle de tous les checks
+        # Excution parallle de tous les checks
         tasks = [check.check() for check in self.checks.values()]
         results = await asyncio.gather(*tasks, return_exceptions=True)
         
-        # Traitement des résultats
+        # Traitement des rsultats
         individual_checks = {}
         healthy_count = 0
         degraded_count = 0
@@ -605,7 +605,7 @@ class HealthCheckOrchestrator:
             check_name = list(self.checks.keys())[i]
             
             if isinstance(result, Exception):
-                # Erreur lors de l'exécution du check
+                # Erreur lors de l'excution du check
                 logger.error(f"Health check {check_name} failed with exception: {result}")
                 result = HealthCheckResult(
                     component_name=check_name,
@@ -627,7 +627,7 @@ class HealthCheckOrchestrator:
             else:
                 unhealthy_count += 1
         
-        # Détermination du statut global
+        # Dtermination du statut global
         if unhealthy_count > 0:
             overall_status = HealthStatus.UNHEALTHY
         elif degraded_count > 0:
@@ -661,7 +661,7 @@ class HealthCheckOrchestrator:
         return report
     
     def get_last_report(self) -> Optional[HealthReport]:
-        """Retourne le dernier rapport de santé."""
+        """Retourne le dernier rapport de sant."""
         return self.last_report
     
     def get_history(self, limit: int = 10) -> List[HealthReport]:
@@ -669,7 +669,7 @@ class HealthCheckOrchestrator:
         return self.check_history[-limit:]
     
     def get_component_status(self, component_name: str) -> Optional[HealthCheckResult]:
-        """Retourne le statut d'un composant spécifique."""
+        """Retourne le statut d'un composant spcifique."""
         if self.last_report and component_name in self.last_report.individual_checks:
             return self.last_report.individual_checks[component_name]
         return None
@@ -680,22 +680,22 @@ _health_orchestrator: Optional[HealthCheckOrchestrator] = None
 
 
 def get_health_orchestrator() -> HealthCheckOrchestrator:
-    """Retourne l'instance globale de l'orchestrateur de santé."""
+    """Retourne l'instance globale de l'orchestrateur de sant."""
     global _health_orchestrator
     if _health_orchestrator is None:
         _health_orchestrator = HealthCheckOrchestrator()
     return _health_orchestrator
 
 
-# Fonctions de convénience
+# Fonctions de convnience
 async def check_system_health() -> HealthReport:
-    """Fonction de convénience pour vérifier la santé du système."""
+    """Fonction de convnience pour vrifier la sant du systme."""
     orchestrator = get_health_orchestrator()
     return await orchestrator.check_all_systems()
 
 
 def is_system_healthy() -> bool:
-    """Vérifie rapidement si le système est en bonne santé."""
+    """Vrifie rapidement si le systme est en bonne sant."""
     orchestrator = get_health_orchestrator()
     last_report = orchestrator.get_last_report()
     

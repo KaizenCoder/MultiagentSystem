@@ -1,11 +1,11 @@
 """
-Tests unitaires pour le module de logging sécurisé.
+Tests unitaires pour le module de logging scuris.
 
-Ce fichier teste tous les composants du système de logging sécurisé :
-- SecurityLogger : masquage des données sensibles, logging d'erreurs et d'événements
-- AuditLogger : logging des événements d'audit et violations de sécurité
-- AuditEventType : énumération des types d'événements
-- Configuration du logging sécurisé
+Ce fichier teste tous les composants du systme de logging scuris :
+- SecurityLogger : masquage des donnes sensibles, logging d'erreurs et d'vnements
+- AuditLogger : logging des vnements d'audit et violations de scurit
+- AuditEventType : numration des types d'vnements
+- Configuration du logging scuris
 """
 
 import pytest
@@ -25,10 +25,10 @@ from orchestrator.app.security.logging import (
 
 
 class TestAuditEventType:
-    """Tests pour l'énumération AuditEventType."""
+    """Tests pour l'numration AuditEventType."""
     
     def test_enum_values(self):
-        """Test que tous les types d'événements sont définis."""
+        """Test que tous les types d'vnements sont dfinis."""
         expected_values = {
             "TASK_CREATED": "task_created",
             "TASK_COMPLETED": "task_completed", 
@@ -46,7 +46,7 @@ class TestAuditEventType:
             assert getattr(AuditEventType, attr_name).value == expected_value
     
     def test_enum_type(self):
-        """Test que AuditEventType est bien une énumération."""
+        """Test que AuditEventType est bien une numration."""
         assert isinstance(AuditEventType.TASK_CREATED, AuditEventType)
         assert str(AuditEventType.TASK_CREATED) == "AuditEventType.TASK_CREATED"
 
@@ -56,7 +56,7 @@ class TestSecurityLogger:
     
     @pytest.fixture
     def security_logger_instance(self):
-        """Fixture pour créer une instance de SecurityLogger."""
+        """Fixture pour crer une instance de SecurityLogger."""
         return SecurityLogger()
     
     def test_init(self, security_logger_instance):
@@ -65,7 +65,7 @@ class TestSecurityLogger:
         assert isinstance(security_logger_instance.logger, logging.Logger)
     
     @pytest.mark.parametrize("input_message,expected_mask", [
-        # Test masquage des clés API
+        # Test masquage des cls API
         ("API_KEY=sk-1234567890abcdef1234567890", "API_KEY=***MASKED***"),
         ("api-key: sk-1234567890abcdef1234567890", "api-key: ***MASKED***"),
         ("api_key=\"sk-1234567890abcdef1234567890\"", "api_key=\"***MASKED***"),
@@ -78,24 +78,24 @@ class TestSecurityLogger:
         ("password=motdepasse123", "password=***MASKED***"),
         ("PASSWORD: \"my_secret_password\"", "PASSWORD: \"***MASKED***"),
         
-        # Test masquage des IPs privées
+        # Test masquage des IPs prives
         ("Error connecting to 192.168.1.100", "Error connecting to ***PRIVATE_IP***"),
         ("Server at 10.0.0.1 is down", "Server at ***PRIVATE_IP*** is down"),
         ("Connection to 172.16.0.1 failed", "Connection to ***PRIVATE_IP*** failed"),
     ])
     def test_mask_sensitive_data(self, security_logger_instance, input_message, expected_mask):
-        """Test le masquage des données sensibles."""
+        """Test le masquage des donnes sensibles."""
         result = security_logger_instance._mask_sensitive_data(input_message)
         assert expected_mask in result
     
     def test_mask_sensitive_data_no_match(self, security_logger_instance):
-        """Test que les messages sans données sensibles restent inchangés."""
+        """Test que les messages sans donnes sensibles restent inchangs."""
         message = "This is a normal log message without sensitive data"
         result = security_logger_instance._mask_sensitive_data(message)
         assert result == message
     
     def test_mask_sensitive_data_multiple_patterns(self, security_logger_instance):
-        """Test le masquage de plusieurs patterns dans le même message."""
+        """Test le masquage de plusieurs patterns dans le mme message."""
         message = "API_KEY=sk-123456789012345678901234 password=secretpassword token=abcdefghijklmnopqrstuvwxyz123456789"
         result = security_logger_instance._mask_sensitive_data(message)
         
@@ -122,7 +122,7 @@ class TestSecurityLogger:
     @patch('orchestrator.app.security.logging.settings')
     @patch('orchestrator.app.security.logging.logging.getLogger')
     def test_log_error_with_details_debug_mode(self, mock_get_logger, mock_settings, security_logger_instance):
-        """Test le logging d'erreur avec détails en mode debug."""
+        """Test le logging d'erreur avec dtails en mode debug."""
         mock_logger = Mock()
         mock_get_logger.return_value = mock_logger
         security_logger_instance.logger = mock_logger
@@ -140,7 +140,7 @@ class TestSecurityLogger:
     @patch('orchestrator.app.security.logging.settings')
     @patch('orchestrator.app.security.logging.logging.getLogger')
     def test_log_error_with_details_no_debug(self, mock_get_logger, mock_settings, security_logger_instance):
-        """Test le logging d'erreur avec détails sans mode debug."""
+        """Test le logging d'erreur avec dtails sans mode debug."""
         mock_logger = Mock()
         mock_get_logger.return_value = mock_logger
         security_logger_instance.logger = mock_logger
@@ -157,7 +157,7 @@ class TestSecurityLogger:
     
     @patch('orchestrator.app.security.logging.logging.getLogger')
     def test_log_error_with_sensitive_data(self, mock_get_logger, security_logger_instance):
-        """Test le logging d'erreur avec masquage des données sensibles."""
+        """Test le logging d'erreur avec masquage des donnes sensibles."""
         mock_logger = Mock()
         mock_get_logger.return_value = mock_logger
         security_logger_instance.logger = mock_logger
@@ -173,7 +173,7 @@ class TestSecurityLogger:
     
     @patch('orchestrator.app.security.logging.logging.getLogger')
     def test_log_security_event(self, mock_get_logger, security_logger_instance):
-        """Test le logging d'événement de sécurité."""
+        """Test le logging d'vnement de scurit."""
         mock_logger = Mock()
         mock_get_logger.return_value = mock_logger
         security_logger_instance.logger = mock_logger
@@ -191,7 +191,7 @@ class TestSecurityLogger:
         call_args = mock_logger.warning.call_args
         assert "SECURITY_EVENT: AUTHENTICATION_FAILED" in call_args[0][0]
         
-        # Vérifier que les données sensibles sont masquées dans extra
+        # Vrifier que les donnes sensibles sont masques dans extra
         extra_data = call_args[1]['extra']
         assert extra_data['user_id'] == "user123"
         assert extra_data['action'] == "login_attempt"
@@ -200,7 +200,7 @@ class TestSecurityLogger:
     
     @patch('orchestrator.app.security.logging.logging.getLogger')
     def test_log_access_success(self, mock_get_logger, security_logger_instance):
-        """Test le logging d'accès réussi."""
+        """Test le logging d'accs russi."""
         mock_logger = Mock()
         mock_get_logger.return_value = mock_logger
         security_logger_instance.logger = mock_logger
@@ -222,7 +222,7 @@ class TestSecurityLogger:
     
     @patch('orchestrator.app.security.logging.logging.getLogger')
     def test_log_access_denied(self, mock_get_logger, security_logger_instance):
-        """Test le logging d'accès refusé."""
+        """Test le logging d'accs refus."""
         mock_logger = Mock()
         mock_get_logger.return_value = mock_logger
         security_logger_instance.logger = mock_logger
@@ -248,7 +248,7 @@ class TestAuditLogger:
     
     @pytest.fixture
     def audit_logger_instance(self):
-        """Fixture pour créer une instance d'AuditLogger."""
+        """Fixture pour crer une instance d'AuditLogger."""
         return AuditLogger()
     
     def test_init(self, audit_logger_instance):
@@ -259,7 +259,7 @@ class TestAuditLogger:
     @patch('orchestrator.app.security.logging.logging.getLogger')
     @patch('orchestrator.app.security.logging.datetime')
     def test_log_event_with_user(self, mock_datetime, mock_get_logger):
-        """Test le logging d'événement avec utilisateur."""
+        """Test le logging d'vnement avec utilisateur."""
         mock_logger = Mock()
         mock_get_logger.return_value = mock_logger
         
@@ -282,7 +282,7 @@ class TestAuditLogger:
     @patch('orchestrator.app.security.logging.logging.getLogger')
     @patch('orchestrator.app.security.logging.datetime')
     def test_log_event_system(self, mock_datetime, mock_get_logger):
-        """Test le logging d'événement système (sans utilisateur)."""
+        """Test le logging d'vnement systme (sans utilisateur)."""
         mock_logger = Mock()
         mock_get_logger.return_value = mock_logger
         
@@ -302,7 +302,7 @@ class TestAuditLogger:
     
     @patch('orchestrator.app.security.logging.AuditLogger.log_event')
     def test_log_task_event(self, mock_log_event):
-        """Test le logging d'événement de tâche."""
+        """Test le logging d'vnement de tche."""
         details = {"result": "success", "output": "Task completed"}
         AuditLogger.log_task_event(AuditEventType.TASK_COMPLETED, "session789", details)
         
@@ -314,7 +314,7 @@ class TestAuditLogger:
     
     @patch('orchestrator.app.security.logging.AuditLogger.log_event')
     def test_log_security_violation(self, mock_log_event):
-        """Test le logging de violation de sécurité."""
+        """Test le logging de violation de scurit."""
         details = {"attempted_endpoint": "/admin", "user_agent": "curl/7.68.0"}
         AuditLogger.log_security_violation("UNAUTHORIZED_ACCESS", "192.168.1.100", details)
         
@@ -346,7 +346,7 @@ class TestGlobalInstances:
     
     def test_global_instances_singleton_behavior(self):
         """Test que les instances globales se comportent comme des singletons."""
-        # Pour ce test, on vérifie que les instances globales restent cohérentes
+        # Pour ce test, on vrifie que les instances globales restent cohrentes
         assert security_logger is not None
         assert audit_logger is not None
         
@@ -356,11 +356,11 @@ class TestGlobalInstances:
 
 
 class TestSetupSecureLogging:
-    """Tests pour la configuration du logging sécurisé."""
+    """Tests pour la configuration du logging scuris."""
     
     @patch('orchestrator.app.security.logging.logging')
     def test_setup_secure_logging(self, mock_logging):
-        """Test la configuration du logging sécurisé."""
+        """Test la configuration du logging scuris."""
         mock_security_logger = Mock()
         mock_audit_logger = Mock()
         mock_security_handler = Mock()
@@ -376,20 +376,20 @@ class TestSetupSecureLogging:
         
         setup_secure_logging()
         
-        # Vérifier que les loggers ont été récupérés
+        # Vrifier que les loggers ont t rcuprs
         assert mock_logging.getLogger.call_count >= 2
         
-        # Vérifier que les handlers ont été créés
+        # Vrifier que les handlers ont t crs
         assert mock_logging.StreamHandler.call_count >= 2
         
-        # Vérifier que les formatters ont été créés
+        # Vrifier que les formatters ont t crs
         assert mock_logging.Formatter.call_count >= 2
         
-        # Vérifier que les handlers ont été configurés
+        # Vrifier que les handlers ont t configurs
         mock_security_handler.setFormatter.assert_called_once()
         mock_audit_handler.setFormatter.assert_called_once()
         
-        # Vérifier que les loggers ont été configurés
+        # Vrifier que les loggers ont t configurs
         mock_security_logger.addHandler.assert_called_once_with(mock_security_handler)
         mock_security_logger.setLevel.assert_called_once_with(mock_logging.INFO)
         
@@ -405,18 +405,18 @@ class TestEdgeCases:
         return SecurityLogger()
     
     def test_mask_sensitive_data_empty_string(self, security_logger_instance):
-        """Test le masquage avec une chaîne vide."""
+        """Test le masquage avec une chane vide."""
         result = security_logger_instance._mask_sensitive_data("")
         assert result == ""
     
     def test_mask_sensitive_data_none_handling(self, security_logger_instance):
         """Test le masquage avec des valeurs None (conversion en string)."""
-        # Le masquage attend une string, donc si None est passé, il y aura une erreur
+        # Le masquage attend une string, donc si None est pass, il y aura une erreur
         with pytest.raises(TypeError):
             security_logger_instance._mask_sensitive_data(None)
     
     def test_log_security_event_empty_details(self, security_logger_instance):
-        """Test le logging d'événement de sécurité avec détails vides."""
+        """Test le logging d'vnement de scurit avec dtails vides."""
         with patch.object(security_logger_instance.logger, 'warning') as mock_warning:
             security_logger_instance.log_security_event("TEST_EVENT", {})
             
@@ -426,7 +426,7 @@ class TestEdgeCases:
             assert call_args[1]['extra'] == {}
     
     def test_log_access_empty_user_info(self, security_logger_instance):
-        """Test le logging d'accès avec informations utilisateur vides."""
+        """Test le logging d'accs avec informations utilisateur vides."""
         with patch.object(security_logger_instance.logger, 'info') as mock_info:
             security_logger_instance.log_access("/test", {}, True)
             
@@ -447,7 +447,7 @@ class TestEdgeCases:
                 raise ValueError("Cannot convert to string")
         
         error = CustomException()
-        # Cela ne devrait pas planter, même si l'exception est étrange
+        # Cela ne devrait pas planter, mme si l'exception est trange
         security_logger_instance.log_error("Test message", error)
         
         mock_logger.error.assert_called_once()
@@ -455,7 +455,7 @@ class TestEdgeCases:
 
 @pytest.mark.unit
 class TestIntegrationScenarios:
-    """Tests d'intégration pour des scénarios réalistes."""
+    """Tests d'intgration pour des scnarios ralistes."""
     
     def test_complete_audit_workflow(self):
         """Test un workflow complet d'audit."""
@@ -468,23 +468,23 @@ class TestIntegrationScenarios:
             AuditLogger.log_task_event(AuditEventType.TASK_COMPLETED, "session456", {"duration": 120})
             AuditLogger.log_security_violation("RATE_LIMIT_EXCEEDED", "10.0.0.1", {"requests": 1000})
             
-            # Vérifier que tous les événements ont été loggés
+            # Vrifier que tous les vnements ont t loggs
             assert mock_logger.info.call_count == 3
     
     def test_security_logging_workflow(self):
-        """Test un workflow complet de logging sécurisé."""
+        """Test un workflow complet de logging scuris."""
         logger = SecurityLogger()
         
         with patch.object(logger.logger, 'error') as mock_error, \
              patch.object(logger.logger, 'warning') as mock_warning, \
              patch.object(logger.logger, 'info') as mock_info:
             
-            # Simulation d'erreurs et d'événements
+            # Simulation d'erreurs et d'vnements
             logger.log_error("Database connection failed", Exception("Connection timeout"))
             logger.log_security_event("BRUTE_FORCE_ATTEMPT", {"attempts": 10, "password": "secret123"})
             logger.log_access("/api/secure", {"user": "admin", "token": "bearer_xyz123456"}, True)
             
-            # Vérifier les appels
+            # Vrifier les appels
             mock_error.assert_called_once()
             mock_warning.assert_called_once()
             mock_info.assert_called_once() 

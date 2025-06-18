@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Template de base pour créer un agent personnalisé
+Template de base pour crer un agent personnalis
 Compatible avec l'orchestrateur NextGeneration
 """
 
@@ -19,7 +19,7 @@ class AgentType(Enum):
     VALIDATOR = "validator"
 
 class TaskPriority(Enum):
-    """Priorités des tâches"""
+    """Priorits des tches"""
     LOW = "low"
     NORMAL = "normal"
     HIGH = "high"
@@ -27,7 +27,7 @@ class TaskPriority(Enum):
 
 @dataclass
 class AgentTask:
-    """Structure d'une tâche pour agent"""
+    """Structure d'une tche pour agent"""
     id: str
     description: str
     agent_type: AgentType
@@ -42,7 +42,7 @@ class AgentTask:
 
 @dataclass
 class AgentResponse:
-    """Structure de réponse d'un agent"""
+    """Structure de rponse d'un agent"""
     task_id: str
     agent_id: str
     status: str  # "success", "error", "partial"
@@ -65,14 +65,14 @@ class BaseAgent:
         self.task_history: List[AgentTask] = []
     
     async def can_handle_task(self, task: AgentTask) -> bool:
-        """Vérifie si l'agent peut traiter cette tâche"""
+        """Vrifie si l'agent peut traiter cette tche"""
         return (
             not self.is_busy and
             task.agent_type == self.agent_type
         )
     
     async def process_task(self, task: AgentTask) -> AgentResponse:
-        """Traite une tâche (à override par les agents spécialisés)"""
+        """Traite une tche ( override par les agents spcialiss)"""
         import time
         start_time = time.time()
         
@@ -111,8 +111,8 @@ class BaseAgent:
             self.is_busy = False
     
     async def _execute_task(self, task: AgentTask) -> str:
-        """Exécution spécifique de la tâche (à override)"""
-        return f"Tâche '{task.description}' traitée par {self.agent_id}"
+        """Excution spcifique de la tche ( override)"""
+        return f"Tche '{task.description}' traite par {self.agent_id}"
     
     def get_stats(self) -> Dict[str, Any]:
         """Statistiques de l'agent"""
@@ -127,84 +127,84 @@ class BaseAgent:
             )
         }
 
-# Exemple d'agents spécialisés
+# Exemple d'agents spcialiss
 class AnalyzerAgent(BaseAgent):
-    """Agent spécialisé dans l'analyse"""
+    """Agent spcialis dans l'analyse"""
     
     def __init__(self, agent_id: str):
         super().__init__(agent_id, AgentType.ANALYZER)
     
     async def _execute_task(self, task: AgentTask) -> str:
-        """Analyse spécialisée"""
+        """Analyse spcialise"""
         await asyncio.sleep(0.2)  # Simulation traitement
         
         analysis_points = [
-            "📊 Analyse des données principales",
-            "🔍 Identification des tendances",
-            "⚠️  Points d'attention détectés",
-            "💡 Recommandations suggérées"
+            "[CHART] Analyse des donnes principales",
+            "[SEARCH] Identification des tendances",
+            "  Points d'attention dtects",
+            "[BULB] Recommandations suggres"
         ]
         
         return f"""
-ANALYSE COMPLÈTE - {task.description}
+ANALYSE COMPLTE - {task.description}
 
 {chr(10).join(analysis_points)}
 
-📈 Résumé: L'analyse révèle des éléments intéressants nécessitant une attention particulière.
-🎯 Prochaines étapes recommandées pour optimiser les résultats.
+ Rsum: L'analyse rvle des lments intressants ncessitant une attention particulire.
+[TARGET] Prochaines tapes recommandes pour optimiser les rsultats.
         """.strip()
 
 class WriterAgent(BaseAgent):
-    """Agent spécialisé dans la rédaction"""
+    """Agent spcialis dans la rdaction"""
     
     def __init__(self, agent_id: str):
         super().__init__(agent_id, AgentType.WRITER)
     
     async def _execute_task(self, task: AgentTask) -> str:
-        """Rédaction spécialisée"""
+        """Rdaction spcialise"""
         await asyncio.sleep(0.3)  # Simulation traitement
         
         return f"""
 # {task.description}
 
 ## Introduction
-Ce document présente une approche structurée pour traiter la demande formulée.
+Ce document prsente une approche structure pour traiter la demande formule.
 
-## Développement
-Les éléments clés à considérer incluent une analyse approfondie des besoins,
-une planification méthodique, et une exécution soignée.
+## Dveloppement
+Les lments cls  considrer incluent une analyse approfondie des besoins,
+une planification mthodique, et une excution soigne.
 
 ## Conclusion
-Cette approche garantit un résultat de qualité répondant aux attentes.
+Cette approche garantit un rsultat de qualit rpondant aux attentes.
 
 ---
-*Document généré par {self.agent_id} - Agent de rédaction spécialisé*
+*Document gnr par {self.agent_id} - Agent de rdaction spcialis*
         """.strip()
 
 class CoderAgent(BaseAgent):
-    """Agent spécialisé dans le développement"""
+    """Agent spcialis dans le dveloppement"""
     
     def __init__(self, agent_id: str):
         super().__init__(agent_id, AgentType.CODER)
     
     async def _execute_task(self, task: AgentTask) -> str:
-        """Développement spécialisé"""
+        """Dveloppement spcialis"""
         await asyncio.sleep(0.4)  # Simulation traitement
         
         code_example = '''
 def process_request(data):
     """
-    Traite une requête selon la demande: {description}
+    Traite une requte selon la demande: {description}
     """
     try:
-        # Validation des données
+        # Validation des donnes
         if not data:
-            raise ValueError("Données manquantes")
+            raise ValueError("Donnes manquantes")
         
         # Traitement principal
         result = analyze_and_process(data)
         
-        # Retour du résultat
+        # Retour du rsultat
         return {{
             "status": "success",
             "result": result,
@@ -228,45 +228,45 @@ def process_request(data):
 
 # Exemple d'utilisation
 async def demo_agents():
-    """Démonstration des agents personnalisés"""
-    print("🤖 DÉMONSTRATION DES AGENTS PERSONNALISÉS")
+    """Dmonstration des agents personnaliss"""
+    print("[ROBOT] DMONSTRATION DES AGENTS PERSONNALISS")
     print("=" * 50)
     
-    # Créer des agents
+    # Crer des agents
     analyzer = AnalyzerAgent("analyzer_001")
     writer = WriterAgent("writer_001")  
     coder = CoderAgent("coder_001")
     
     agents = [analyzer, writer, coder]
     
-    # Créer des tâches
+    # Crer des tches
     tasks = [
-        AgentTask("task_1", "Analyser les performances du système", AgentType.ANALYZER, TaskPriority.HIGH),
-        AgentTask("task_2", "Rédiger un rapport de synthèse", AgentType.WRITER, TaskPriority.NORMAL),
-        AgentTask("task_3", "Développer une fonction de traitement", AgentType.CODER, TaskPriority.HIGH)
+        AgentTask("task_1", "Analyser les performances du systme", AgentType.ANALYZER, TaskPriority.HIGH),
+        AgentTask("task_2", "Rdiger un rapport de synthse", AgentType.WRITER, TaskPriority.NORMAL),
+        AgentTask("task_3", "Dvelopper une fonction de traitement", AgentType.CODER, TaskPriority.HIGH)
     ]
     
-    # Traiter les tâches
+    # Traiter les tches
     for task in tasks:
-        print(f"\n📋 Traitement: {task.description}")
+        print(f"\n[CLIPBOARD] Traitement: {task.description}")
         
         for agent in agents:
             if await agent.can_handle_task(task):
-                print(f"   🤖 Assigné à: {agent.agent_id}")
+                print(f"   [ROBOT] Assign : {agent.agent_id}")
                 response = await agent.process_task(task)
-                print(f"   ✅ Status: {response.status}")
-                print(f"   ⏱️  Temps: {response.processing_time:.2f}s")
-                print(f"   📝 Résultat (aperçu): {response.result[:100]}...")
+                print(f"   [CHECK] Status: {response.status}")
+                print(f"     Temps: {response.processing_time:.2f}s")
+                print(f"    Rsultat (aperu): {response.result[:100]}...")
                 break
         else:
-            print(f"   ❌ Aucun agent disponible pour cette tâche")
+            print(f"   [CROSS] Aucun agent disponible pour cette tche")
     
     # Afficher les stats
-    print(f"\n📊 STATISTIQUES DES AGENTS")
+    print(f"\n[CHART] STATISTIQUES DES AGENTS")
     print("-" * 30)
     for agent in agents:
         stats = agent.get_stats()
-        print(f"🤖 {stats['agent_id']}: {stats['tasks_completed']} tâches")
+        print(f"[ROBOT] {stats['agent_id']}: {stats['tasks_completed']} tches")
 
 if __name__ == "__main__":
     asyncio.run(demo_agents())

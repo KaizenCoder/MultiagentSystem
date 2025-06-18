@@ -16,9 +16,9 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 def test_sqlalchemy_corrections():
-    """Test spécifique des corrections SQLAlchemy"""
+    """Test spcifique des corrections SQLAlchemy"""
     
-    logger.info("🧪 Test des corrections SQLAlchemy - Models PostgreSQL")
+    logger.info(" Test des corrections SQLAlchemy - Models PostgreSQL")
     
     results = {
         "timestamp": datetime.now().isoformat(),
@@ -32,39 +32,39 @@ def test_sqlalchemy_corrections():
         from sqlalchemy import Column, Integer, String, Text, DateTime, JSON, ForeignKey, Boolean, Index, Float, text
         from sqlalchemy.ext.declarative import declarative_base
         from sqlalchemy.orm import relationship
-        results["tests"]["sqlalchemy_imports"] = {"status": "SUCCESS", "message": "Tous les imports SQLAlchemy réussis"}
+        results["tests"]["sqlalchemy_imports"] = {"status": "SUCCESS", "message": "Tous les imports SQLAlchemy russis"}
         results["success_count"] += 1
-        logger.info("✅ Imports SQLAlchemy réussis")
+        logger.info("[CHECK] Imports SQLAlchemy russis")
     except Exception as e:
         results["tests"]["sqlalchemy_imports"] = {"status": "FAILED", "error": str(e)}
-        logger.error(f"❌ Échec imports SQLAlchemy: {e}")
+        logger.error(f"[CROSS] chec imports SQLAlchemy: {e}")
     results["total_tests"] += 1
     
-    # Test 2: Import du models.py corrigé
+    # Test 2: Import du models.py corrig
     try:
         sys.path.append("C:\\Dev\\nextgeneration")
         from memory_api.app.db.models import Base, AgentSession, MemoryItem
-        results["tests"]["models_import"] = {"status": "SUCCESS", "message": "Import des modèles réussi"}
+        results["tests"]["models_import"] = {"status": "SUCCESS", "message": "Import des modles russi"}
         results["success_count"] += 1
-        logger.info("✅ Import des modèles corrigés réussi")
+        logger.info("[CHECK] Import des modles corrigs russi")
     except Exception as e:
         results["tests"]["models_import"] = {"status": "FAILED", "error": str(e)}
-        logger.error(f"❌ Échec import modèles: {e}")
+        logger.error(f"[CROSS] chec import modles: {e}")
     results["total_tests"] += 1
     
-    # Test 3: Vérification de l'attribut session_metadata
+    # Test 3: Vrification de l'attribut session_metadata
     try:
         session = AgentSession()
         if hasattr(session, 'session_metadata'):
-            results["tests"]["metadata_attribute"] = {"status": "SUCCESS", "message": "Attribut session_metadata trouvé"}
+            results["tests"]["metadata_attribute"] = {"status": "SUCCESS", "message": "Attribut session_metadata trouv"}
             results["success_count"] += 1
-            logger.info("✅ Attribut session_metadata présent")
+            logger.info("[CHECK] Attribut session_metadata prsent")
         else:
             results["tests"]["metadata_attribute"] = {"status": "FAILED", "error": "Attribut session_metadata manquant"}
-            logger.error("❌ Attribut session_metadata manquant")
+            logger.error("[CROSS] Attribut session_metadata manquant")
     except Exception as e:
         results["tests"]["metadata_attribute"] = {"status": "FAILED", "error": str(e)}
-        logger.error(f"❌ Erreur vérification metadata: {e}")
+        logger.error(f"[CROSS] Erreur vrification metadata: {e}")
     results["total_tests"] += 1
     
     # Test 4: Connexion PostgreSQL Docker
@@ -80,66 +80,66 @@ def test_sqlalchemy_corrections():
         connection = engine.connect()
         connection.close()
         
-        results["tests"]["postgres_connection"] = {"status": "SUCCESS", "message": "Connexion PostgreSQL réussie"}
+        results["tests"]["postgres_connection"] = {"status": "SUCCESS", "message": "Connexion PostgreSQL russie"}
         results["success_count"] += 1
-        logger.info("✅ Connexion PostgreSQL Docker réussie")
+        logger.info("[CHECK] Connexion PostgreSQL Docker russie")
         
     except Exception as e:
         results["tests"]["postgres_connection"] = {"status": "FAILED", "error": str(e)}
-        logger.warning(f"⚠️ Connexion PostgreSQL: {e}")
+        logger.warning(f" Connexion PostgreSQL: {e}")
     results["total_tests"] += 1
     
-    # Test 5: Création des tables
+    # Test 5: Cration des tables
     try:
         if 'engine' in locals():
             Base.metadata.create_all(engine)
-            results["tests"]["table_creation"] = {"status": "SUCCESS", "message": "Tables créées sans erreur"}
+            results["tests"]["table_creation"] = {"status": "SUCCESS", "message": "Tables cres sans erreur"}
             results["success_count"] += 1
-            logger.info("✅ Création des tables réussie")
+            logger.info("[CHECK] Cration des tables russie")
         else:
             results["tests"]["table_creation"] = {"status": "SKIPPED", "message": "Pas de connexion DB"}
     except Exception as e:
         results["tests"]["table_creation"] = {"status": "FAILED", "error": str(e)}
-        logger.error(f"❌ Échec création tables: {e}")
+        logger.error(f"[CROSS] chec cration tables: {e}")
     results["total_tests"] += 1
     
     # Calcul du score
     success_rate = (results["success_count"] / results["total_tests"]) * 100
     results["success_rate"] = success_rate
     
-    logger.info(f"📊 Score final: {results['success_count']}/{results['total_tests']} ({success_rate:.1f}%)")
+    logger.info(f"[CHART] Score final: {results['success_count']}/{results['total_tests']} ({success_rate:.1f}%)")
     
     # Sauvegarde du rapport
     report_file = f"C:\\Dev\\nextgeneration\\docs\\agents_postgresql_resolution\\tests\\validation_corrections_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     with open(report_file, 'w', encoding='utf-8') as f:
         json.dump(results, f, indent=2, ensure_ascii=False)
     
-    logger.info(f"📋 Rapport sauvegardé: {report_file}")
+    logger.info(f"[CLIPBOARD] Rapport sauvegard: {report_file}")
     
     return results
 
 if __name__ == "__main__":
     results = test_sqlalchemy_corrections()
     
-    # Affichage résumé
+    # Affichage rsum
     print("\n" + "="*60)
-    print("🎯 RÉSUMÉ VALIDATION CORRECTIONS SQLALCHEMY")
+    print("[TARGET] RSUM VALIDATION CORRECTIONS SQLALCHEMY")
     print("="*60)
     
     for test_name, test_result in results["tests"].items():
         status = test_result["status"]
-        icon = "✅" if status == "SUCCESS" else "❌" if status == "FAILED" else "⏭️"
+        icon = "[CHECK]" if status == "SUCCESS" else "[CROSS]" if status == "FAILED" else ""
         print(f"{icon} {test_name}: {status}")
         if "message" in test_result:
-            print(f"   → {test_result['message']}")
+            print(f"    {test_result['message']}")
         if "error" in test_result:
-            print(f"   → ❌ {test_result['error']}")
+            print(f"    [CROSS] {test_result['error']}")
     
-    print(f"\n🏆 Score global: {results['success_count']}/{results['total_tests']} ({results['success_rate']:.1f}%)")
+    print(f"\n Score global: {results['success_count']}/{results['total_tests']} ({results['success_rate']:.1f}%)")
     
     if results['success_rate'] >= 80:
-        print("🎉 CORRECTIONS VALIDÉES - Les modifications SQLAlchemy sont fonctionnelles!")
+        print(" CORRECTIONS VALIDES - Les modifications SQLAlchemy sont fonctionnelles!")
     elif results['success_rate'] >= 60:
-        print("✅ CORRECTIONS PARTIELLES - Les problèmes SQLAlchemy principaux sont résolus")
+        print("[CHECK] CORRECTIONS PARTIELLES - Les problmes SQLAlchemy principaux sont rsolus")
     else:
-        print("⚠️ CORRECTIONS À COMPLÉTER - Des problèmes persistent")
+        print(" CORRECTIONS  COMPLTER - Des problmes persistent")

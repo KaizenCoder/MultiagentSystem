@@ -32,10 +32,10 @@ Thought: I need to analyze the task and use appropriate tools.
 Action: 
 """)
 
-# CORRECTIF CRITIQUE: Implémentation fonctionnelle de la factory.
-@lru_cache(maxsize=5)  # CORRECTION IA-1: Augmenté pour 5 agents (avec Gemini)
+# CORRECTIF CRITIQUE: Implmentation fonctionnelle de la factory.
+@lru_cache(maxsize=5)  # CORRECTION IA-1: Augment pour 5 agents (avec Gemini)
 def get_agent_executor(agent_type: str) -> AgentExecutor:
-    """Crée et configure un AgentExecutor à la demande, puis le met en cache."""
+    """Cre et configure un AgentExecutor  la demande, puis le met en cache."""
     if agent_type == "code_generation":
         llm = ChatOpenAI(model="gpt-4o", temperature=0.1, api_key=settings.OPENAI_API_KEY)
         tools = real_code_tools
@@ -49,13 +49,13 @@ def get_agent_executor(agent_type: str) -> AgentExecutor:
         llm = ChatOpenAI(model="gpt-4o", temperature=0.1, api_key=settings.OPENAI_API_KEY)
         tools = real_diag_tools
     elif agent_type == "gemini_rapid" and GEMINI_AVAILABLE:
-        # Agent Gemini pour prototypage rapide et économique
+        # Agent Gemini pour prototypage rapide et conomique
         llm = ChatGoogleGenerativeAI(
             model="gemini-1.5-flash",
             temperature=0.3,
             google_api_key=settings.GOOGLE_API_KEY or settings.GEMINI_API_KEY
         )
-        tools = real_code_tools  # Utilise les mêmes outils que code_generation
+        tools = real_code_tools  # Utilise les mmes outils que code_generation
     else:
         raise ValueError(f"Unknown agent type: {agent_type}")
     
@@ -63,7 +63,7 @@ def get_agent_executor(agent_type: str) -> AgentExecutor:
     return AgentExecutor(agent=create_react_agent(llm, tools, prompt), tools=tools, verbose=True, handle_parsing_errors=True)
 
 async def worker_node_wrapper(state: AgentState, agent_key: str) -> Dict[str, Any]:
-    """Wrapper asynchrone qui exécute la tâche pour un agent donné."""
+    """Wrapper asynchrone qui excute la tche pour un agent donn."""
     agent_executor = get_agent_executor(agent_key)
     input_payload = {"task_description": state["task_description"], "code_context": state.get("results", {}).get("code_generation", state.get("code_context", ""))}
     try:

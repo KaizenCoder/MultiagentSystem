@@ -1,0 +1,293 @@
+{
+  "mission_id": "REORG_OUTILS_20250618_230600",
+  "timestamp": "2025-06-18T23:06:00.736668",
+  "situation_initiale": {
+    "nombre_outils": 2,
+    "outils": [
+      {
+        "name": "install_phase3_dependencies",
+        "category": "file",
+        "path": "tools\\imported_tools\\file\\install_phase3_dependencies.py",
+        "priority": "HIGH",
+        "utility_score": 93.0
+      },
+      {
+        "name": "monitor_phase3",
+        "category": "monitoring",
+        "path": "tools\\imported_tools\\monitoring\\monitor_phase3.py",
+        "priority": "HIGH",
+        "utility_score": 91.6
+      }
+    ],
+    "structure_actuelle": "tous_dans_imported_tools",
+    "objectif": "un_repertoire_par_outil",
+    "categories": [
+      "monitoring",
+      "file"
+    ]
+  },
+  "plan_execution": {
+    "agents_requis": [
+      "agent_analyseur_outils",
+      "agent_organisateur_structure",
+      "agent_adaptateur_documentation",
+      "agent_testeur_integration",
+      "agent_optimisateur_code",
+      "agent_validateur_qualite"
+    ],
+    "phases": [
+      "analyse_approfondie",
+      "creation_structure",
+      "migration_fichiers",
+      "adaptation_code",
+      "tests_integration",
+      "documentation_finale"
+    ],
+    "outils_a_traiter": [
+      {
+        "name": "install_phase3_dependencies",
+        "category": "file",
+        "path": "tools\\imported_tools\\file\\install_phase3_dependencies.py",
+        "priority": "HIGH",
+        "utility_score": 93.0
+      },
+      {
+        "name": "monitor_phase3",
+        "category": "monitoring",
+        "path": "tools\\imported_tools\\monitoring\\monitor_phase3.py",
+        "priority": "HIGH",
+        "utility_score": 91.6
+      }
+    ]
+  },
+  "resultats_agents": {
+    "agent_analyseur_outils": {
+      "statut": "prepare",
+      "mission": {
+        "agents_requis": [
+          "agent_analyseur_outils",
+          "agent_organisateur_structure",
+          "agent_adaptateur_documentation",
+          "agent_testeur_integration",
+          "agent_optimisateur_code",
+          "agent_validateur_qualite"
+        ],
+        "phases": [
+          "analyse_approfondie",
+          "creation_structure",
+          "migration_fichiers",
+          "adaptation_code",
+          "tests_integration",
+          "documentation_finale"
+        ],
+        "outils_a_traiter": [
+          {
+            "name": "install_phase3_dependencies",
+            "category": "file",
+            "path": "tools\\imported_tools\\file\\install_phase3_dependencies.py",
+            "priority": "HIGH",
+            "utility_score": 93.0
+          },
+          {
+            "name": "monitor_phase3",
+            "category": "monitoring",
+            "path": "tools\\imported_tools\\monitoring\\monitor_phase3.py",
+            "priority": "HIGH",
+            "utility_score": 91.6
+          }
+        ]
+      }
+    },
+    "agent_organisateur_structure": {
+      "statut": "prepare",
+      "mission": {
+        "agents_requis": [
+          "agent_analyseur_outils",
+          "agent_organisateur_structure",
+          "agent_adaptateur_documentation",
+          "agent_testeur_integration",
+          "agent_optimisateur_code",
+          "agent_validateur_qualite"
+        ],
+        "phases": [
+          "analyse_approfondie",
+          "creation_structure",
+          "migration_fichiers",
+          "adaptation_code",
+          "tests_integration",
+          "documentation_finale"
+        ],
+        "outils_a_traiter": [
+          {
+            "name": "install_phase3_dependencies",
+            "category": "file",
+            "path": "tools\\imported_tools\\file\\install_phase3_dependencies.py",
+            "priority": "HIGH",
+            "utility_score": 93.0
+          },
+          {
+            "name": "monitor_phase3",
+            "category": "monitoring",
+            "path": "tools\\imported_tools\\monitoring\\monitor_phase3.py",
+            "priority": "HIGH",
+            "utility_score": 91.6
+          }
+        ]
+      }
+    },
+    "agent_adaptateur_documentation": {
+      "statut": "prepare",
+      "mission": {
+        "agents_requis": [
+          "agent_analyseur_outils",
+          "agent_organisateur_structure",
+          "agent_adaptateur_documentation",
+          "agent_testeur_integration",
+          "agent_optimisateur_code",
+          "agent_validateur_qualite"
+        ],
+        "phases": [
+          "analyse_approfondie",
+          "creation_structure",
+          "migration_fichiers",
+          "adaptation_code",
+          "tests_integration",
+          "documentation_finale"
+        ],
+        "outils_a_traiter": [
+          {
+            "name": "install_phase3_dependencies",
+            "category": "file",
+            "path": "tools\\imported_tools\\file\\install_phase3_dependencies.py",
+            "priority": "HIGH",
+            "utility_score": 93.0
+          },
+          {
+            "name": "monitor_phase3",
+            "category": "monitoring",
+            "path": "tools\\imported_tools\\monitoring\\monitor_phase3.py",
+            "priority": "HIGH",
+            "utility_score": 91.6
+          }
+        ]
+      }
+    },
+    "agent_testeur_integration": {
+      "statut": "prepare",
+      "mission": {
+        "agents_requis": [
+          "agent_analyseur_outils",
+          "agent_organisateur_structure",
+          "agent_adaptateur_documentation",
+          "agent_testeur_integration",
+          "agent_optimisateur_code",
+          "agent_validateur_qualite"
+        ],
+        "phases": [
+          "analyse_approfondie",
+          "creation_structure",
+          "migration_fichiers",
+          "adaptation_code",
+          "tests_integration",
+          "documentation_finale"
+        ],
+        "outils_a_traiter": [
+          {
+            "name": "install_phase3_dependencies",
+            "category": "file",
+            "path": "tools\\imported_tools\\file\\install_phase3_dependencies.py",
+            "priority": "HIGH",
+            "utility_score": 93.0
+          },
+          {
+            "name": "monitor_phase3",
+            "category": "monitoring",
+            "path": "tools\\imported_tools\\monitoring\\monitor_phase3.py",
+            "priority": "HIGH",
+            "utility_score": 91.6
+          }
+        ]
+      }
+    },
+    "agent_optimisateur_code": {
+      "statut": "prepare",
+      "mission": {
+        "agents_requis": [
+          "agent_analyseur_outils",
+          "agent_organisateur_structure",
+          "agent_adaptateur_documentation",
+          "agent_testeur_integration",
+          "agent_optimisateur_code",
+          "agent_validateur_qualite"
+        ],
+        "phases": [
+          "analyse_approfondie",
+          "creation_structure",
+          "migration_fichiers",
+          "adaptation_code",
+          "tests_integration",
+          "documentation_finale"
+        ],
+        "outils_a_traiter": [
+          {
+            "name": "install_phase3_dependencies",
+            "category": "file",
+            "path": "tools\\imported_tools\\file\\install_phase3_dependencies.py",
+            "priority": "HIGH",
+            "utility_score": 93.0
+          },
+          {
+            "name": "monitor_phase3",
+            "category": "monitoring",
+            "path": "tools\\imported_tools\\monitoring\\monitor_phase3.py",
+            "priority": "HIGH",
+            "utility_score": 91.6
+          }
+        ]
+      }
+    },
+    "agent_validateur_qualite": {
+      "statut": "prepare",
+      "mission": {
+        "agents_requis": [
+          "agent_analyseur_outils",
+          "agent_organisateur_structure",
+          "agent_adaptateur_documentation",
+          "agent_testeur_integration",
+          "agent_optimisateur_code",
+          "agent_validateur_qualite"
+        ],
+        "phases": [
+          "analyse_approfondie",
+          "creation_structure",
+          "migration_fichiers",
+          "adaptation_code",
+          "tests_integration",
+          "documentation_finale"
+        ],
+        "outils_a_traiter": [
+          {
+            "name": "install_phase3_dependencies",
+            "category": "file",
+            "path": "tools\\imported_tools\\file\\install_phase3_dependencies.py",
+            "priority": "HIGH",
+            "utility_score": 93.0
+          },
+          {
+            "name": "monitor_phase3",
+            "category": "monitoring",
+            "path": "tools\\imported_tools\\monitoring\\monitor_phase3.py",
+            "priority": "HIGH",
+            "utility_score": 91.6
+          }
+        ]
+      }
+    }
+  },
+  "statut_global": "COORDONNEE",
+  "prochaines_etapes": [
+    "Exécution des agents spécialisés",
+    "Validation des transformations",
+    "Tests d'intégration complets"
+  ]
+}

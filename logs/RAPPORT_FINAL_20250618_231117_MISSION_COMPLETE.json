@@ -1,0 +1,225 @@
+{
+  "mission_info": {
+    "id": "RAPPORT_FINAL_20250618_231117",
+    "timestamp_debut": "2025-06-18T23:12:00.135879",
+    "timestamp_fin": "2025-06-18T23:12:00.135879",
+    "duree_mission": "0:00:00"
+  },
+  "summary_execution": {
+    "agents_executes": [],
+    "outils_traites": 5,
+    "structures_creees": 2,
+    "documentation_complete": 5,
+    "tests_disponibles": 3
+  },
+  "resultats_detailles": {
+    "rapports_agents": {},
+    "etat_final": {
+      "outils_restructures": [
+        "generate_pitch_document",
+        "imported_tools_apex",
+        "install_phase3_dependencies",
+        "monitor_phase3",
+        "zip_backup"
+      ],
+      "structure_validee": {
+        "generate_pitch_document": {
+          "fichier_principal": true,
+          "init_file": false,
+          "readme": true,
+          "repertoire_config": false,
+          "repertoire_docs": true,
+          "repertoire_tests": false,
+          "config_json": false,
+          "score": 42.857142857142854,
+          "statut": "PARTIEL"
+        },
+        "imported_tools_apex": {
+          "fichier_principal": false,
+          "init_file": false,
+          "readme": true,
+          "repertoire_config": true,
+          "repertoire_docs": true,
+          "repertoire_tests": false,
+          "config_json": false,
+          "score": 42.857142857142854,
+          "statut": "PARTIEL"
+        },
+        "install_phase3_dependencies": {
+          "fichier_principal": true,
+          "init_file": true,
+          "readme": true,
+          "repertoire_config": true,
+          "repertoire_docs": true,
+          "repertoire_tests": true,
+          "config_json": true,
+          "score": 100.0,
+          "statut": "VALIDE"
+        },
+        "monitor_phase3": {
+          "fichier_principal": true,
+          "init_file": true,
+          "readme": true,
+          "repertoire_config": true,
+          "repertoire_docs": true,
+          "repertoire_tests": true,
+          "config_json": true,
+          "score": 100.0,
+          "statut": "VALIDE"
+        },
+        "zip_backup": {
+          "fichier_principal": false,
+          "init_file": false,
+          "readme": true,
+          "repertoire_config": true,
+          "repertoire_docs": true,
+          "repertoire_tests": true,
+          "config_json": false,
+          "score": 57.14285714285714,
+          "statut": "PARTIEL"
+        }
+      },
+      "documentation_presente": {
+        "generate_pitch_document": {
+          "readme_principal": true,
+          "usage_guide": true,
+          "configuration_guide": true,
+          "api_doc": true,
+          "faq": true,
+          "readme_qualite": true,
+          "score": 100.0,
+          "statut": "COMPLETE"
+        },
+        "imported_tools_apex": {
+          "readme_principal": true,
+          "usage_guide": true,
+          "configuration_guide": true,
+          "api_doc": true,
+          "faq": true,
+          "readme_qualite": true,
+          "score": 100.0,
+          "statut": "COMPLETE"
+        },
+        "install_phase3_dependencies": {
+          "readme_principal": true,
+          "usage_guide": true,
+          "configuration_guide": true,
+          "api_doc": true,
+          "faq": true,
+          "readme_qualite": true,
+          "score": 100.0,
+          "statut": "COMPLETE"
+        },
+        "monitor_phase3": {
+          "readme_principal": true,
+          "usage_guide": true,
+          "configuration_guide": true,
+          "api_doc": true,
+          "faq": true,
+          "readme_qualite": true,
+          "score": 100.0,
+          "statut": "COMPLETE"
+        },
+        "zip_backup": {
+          "readme_principal": true,
+          "usage_guide": true,
+          "configuration_guide": true,
+          "api_doc": true,
+          "faq": true,
+          "readme_qualite": true,
+          "score": 100.0,
+          "statut": "COMPLETE"
+        }
+      },
+      "tests_disponibles": {
+        "generate_pitch_document": {
+          "test_unitaire": true,
+          "test_integration": true,
+          "score": 100.0,
+          "statut": "PRESENTE"
+        },
+        "imported_tools_apex": {
+          "test_unitaire": false,
+          "test_integration": false,
+          "score": 0.0,
+          "statut": "MANQUANTE"
+        },
+        "install_phase3_dependencies": {
+          "test_unitaire": true,
+          "test_integration": true,
+          "score": 100.0,
+          "statut": "PRESENTE"
+        },
+        "monitor_phase3": {
+          "test_unitaire": true,
+          "test_integration": true,
+          "score": 100.0,
+          "statut": "PRESENTE"
+        },
+        "zip_backup": {
+          "test_unitaire": false,
+          "test_integration": false,
+          "score": 0.0,
+          "statut": "MANQUANTE"
+        }
+      },
+      "problemes_detectes": []
+    },
+    "resultats_tests": {
+      "tests_unitaires": {
+        "executes": 15,
+        "reussis": 10,
+        "echecs": 5
+      },
+      "tests_integration": {
+        "executes": 3,
+        "reussis": 0,
+        "echecs": 3
+      },
+      "details": {
+        "test_api_checkpointer": "REUSSI",
+        "test_encryption": "REUSSI",
+        "test_generate_pitch_document": "ECHEC",
+        "test_install_phase3_dependencies": "ECHEC",
+        "test_logging_security": "REUSSI",
+        "test_main": "REUSSI",
+        "test_memory_api": "ECHEC",
+        "test_monitor_phase3": "ECHEC",
+        "test_network_security": "ECHEC",
+        "test_secrets_manager": "REUSSI",
+        "test_supervisor": "REUSSI",
+        "test_supervisor_simple": "REUSSI",
+        "test_tools": "REUSSI",
+        "test_validators": "REUSSI",
+        "test_workers": "REUSSI",
+        "test_generate_pitch_document_integration": "ECHEC",
+        "test_install_phase3_dependencies_integration": "ECHEC",
+        "test_monitor_phase3_integration": "ECHEC"
+      }
+    }
+  },
+  "evaluation_globale": {
+    "statut_mission": "ECHEC_PARTIEL",
+    "taux_reussite_structure": 68.57142857142857,
+    "taux_reussite_documentation": 100.0,
+    "taux_reussite_tests": 55.55555555555556
+  },
+  "recommandations": [
+    "Exécuter tests complets avant mise en production",
+    "Configurer monitoring continu des outils",
+    "Planifier révision périodique de la documentation",
+    "Compléter la structure de l'outil imported_tools_apex",
+    "Valider l'intégration avec l'écosystème NextGeneration",
+    "Compléter la structure de l'outil generate_pitch_document",
+    "Documenter les processus de maintenance",
+    "Compléter la structure de l'outil zip_backup"
+  ],
+  "prochaines_etapes": [
+    "Valider qualité code avec outils d'analyse statique",
+    "Exécuter tests de charge et performance",
+    "Intégrer dans pipeline CI/CD NextGeneration",
+    "Former équipe sur nouveaux outils",
+    "Déployer en environnement de test",
+    "Monitoring et observabilité en production"
+  ]
+}

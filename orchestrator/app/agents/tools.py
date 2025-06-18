@@ -8,11 +8,11 @@ from ..config import settings
 from ..security.validators import CodeValidator, NetworkValidator, InputSanitizer
 from ..security.logging import security_logger, AuditLogger, AuditEventType
 
-# CORRECTIF 4: Client HTTP global qui sera fermé proprement
+# CORRECTIF 4: Client HTTP global qui sera ferm proprement
 _http_client = None
 
 async def get_http_client():
-    """Retourne le client HTTP global ou en crée un nouveau."""
+    """Retourne le client HTTP global ou en cre un nouveau."""
     global _http_client
     if _http_client is None:
         _http_client = httpx.AsyncClient(
@@ -29,8 +29,8 @@ async def close_http_client():
         _http_client = None
 
 async def rag_code_search_tool(query: str) -> str:
-    """Interroge l'API de mémoire pour trouver des extraits de code similaires."""
-    # Validation de sécurité pour la requête
+    """Interroge l'API de mmoire pour trouver des extraits de code similaires."""
+    # Validation de scurit pour la requte
     if not query or len(query) > 1000:
         AuditLogger.log_event(AuditEventType.SECURITY_VIOLATION, None, {
             "tool": "rag_code_search",
@@ -39,12 +39,12 @@ async def rag_code_search_tool(query: str) -> str:
         })
         return "Error: Query invalid or too long"
     
-    # Sanitiser la requête
+    # Sanitiser la requte
     sanitized_query = InputSanitizer.sanitize_task_description(query)
     
     client = await get_http_client()
     try:
-        # Validation de l'URL avant la requête
+        # Validation de l'URL avant la requte
         url = f"{settings.MEMORY_API_URL}/rag_query"
         is_valid, error_msg = NetworkValidator.validate_memory_api_url(url)
         if not is_valid:
@@ -78,7 +78,7 @@ async def execute_shell_command(command: str) -> str:
     Allowed commands: psql, pg_isready, echo, docker.
     """
     # Security: Sanitize and validate the command
-    # Note: L'agent est censé construire des commandes sûres. La validation est une défense en profondeur.
+    # Note: L'agent est cens construire des commandes sres. La validation est une dfense en profondeur.
     sanitized_command = InputSanitizer.sanitize_shell_command(command)
 
     # Whitelist of allowed commands to prevent abuse
@@ -129,26 +129,26 @@ async def execute_shell_command(command: str) -> str:
 
 async def python_linter_tool(code: str) -> str:
     """
-    Outil de linting Python sécurisé avec protection RCE complète.
-    Remplace l'ancienne implémentation vulnérable par un système sécurisé.
+    Outil de linting Python scuris avec protection RCE complte.
+    Remplace l'ancienne implmentation vulnrable par un systme scuris.
     """
     
-    # CORRECTIF SÉCURITÉ CRITIQUE: Utilisation de l'analyseur sécurisé
+    # CORRECTIF SCURIT CRITIQUE: Utilisation de l'analyseur scuris
     try:
         from ..security.secure_analyzer import secure_python_linter_tool
         
-        # Log de sécurité pour audit
+        # Log de scurit pour audit
         AuditLogger.log_event(AuditEventType.CODE_ANALYSIS_REQUEST, None, {
             "tool": "python_linter_secure",
             "code_size": len(code),
             "timestamp": time.time()
         })
         
-        # Délégation vers l'outil sécurisé
+        # Dlgation vers l'outil scuris
         return await secure_python_linter_tool(code)
         
     except Exception as e:
-        # Fallback sécurisé en cas d'erreur
+        # Fallback scuris en cas d'erreur
         security_logger.log_error("Secure linter tool failed", e)
         AuditLogger.log_event(AuditEventType.SECURITY_VIOLATION, None, {
             "tool": "python_linter",
@@ -157,7 +157,7 @@ async def python_linter_tool(code: str) -> str:
         })
         return f"Code analysis service temporarily unavailable: {str(e)}"
 
-# CORRECTIF: Utilisation de Tool.from_function pour une compatibilité assurée.
+# CORRECTIF: Utilisation de Tool.from_function pour une compatibilit assure.
 real_code_tools = [
     Tool.from_function(func=python_linter_tool, name="PythonLinter", description="Analyzes Python code for errors and style issues.", is_async=True),
     Tool.from_function(func=rag_code_search_tool, name="CodeKnowledgeSearch", description="Searches for similar code examples or documentation.", is_async=True)
@@ -182,21 +182,21 @@ real_diag_tools = [
 
 # CORRECTION IA-1: Ajout des outils de testing
 async def pytest_generator_tool(code: str) -> str:
-    """Génère des tests pytest pour le code fourni."""
+    """Gnre des tests pytest pour le code fourni."""
     try:
-        # Validation et sanitisation du code d'entrée
+        # Validation et sanitisation du code d'entre
         sanitized_code = InputSanitizer.sanitize_code_input(code)
         if not sanitized_code:
             return "Error: Invalid code input for test generation"
         
-        # Log de sécurité
+        # Log de scurit
         AuditLogger.log_event(AuditEventType.CODE_ANALYSIS_REQUEST, None, {
             "tool": "pytest_generator",
             "code_size": len(code),
             "timestamp": time.time()
         })
         
-        # Génération de tests basiques en fonction du code
+        # Gnration de tests basiques en fonction du code
         test_template = f'''"""
 Generated tests for the provided code.
 """
@@ -229,14 +229,14 @@ def test_input_validation():
         return f"Error generating tests: {str(e)}"
 
 async def unittest_generator_tool(code: str) -> str:
-    """Génère des tests unittest pour le code fourni."""
+    """Gnre des tests unittest pour le code fourni."""
     try:
         # Validation et sanitisation
         sanitized_code = InputSanitizer.sanitize_code_input(code)
         if not sanitized_code:
             return "Error: Invalid code input for unittest generation"
         
-        # Log de sécurité
+        # Log de scurit
         AuditLogger.log_event(AuditEventType.CODE_ANALYSIS_REQUEST, None, {
             "tool": "unittest_generator",
             "code_size": len(code),
@@ -283,7 +283,7 @@ if __name__ == '__main__':
         security_logger.log_error("Unittest generator failed", e)
         return f"Error generating unittest: {str(e)}"
 
-# CORRECTION IA-1: Définition des outils de testing
+# CORRECTION IA-1: Dfinition des outils de testing
 real_test_tools = [
     Tool.from_function(func=pytest_generator_tool, name="PytestGenerator", description="Generates pytest test cases for the provided code.", is_async=True),
     Tool.from_function(func=unittest_generator_tool, name="UnittestGenerator", description="Generates unittest test cases for the provided code.", is_async=True),

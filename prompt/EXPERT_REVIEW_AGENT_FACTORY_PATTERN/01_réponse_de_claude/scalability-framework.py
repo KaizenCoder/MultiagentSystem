@@ -49,7 +49,7 @@ class AgentPool:
             self.agents.append(agent)
             await self.available_agents.put(agent)
         
-        # Démarrer l'auto-scaling
+        # Dmarrer l'auto-scaling
         self._scaling_task = asyncio.create_task(self._auto_scale_loop())
     
     async def acquire_agent(self, timeout: Optional[float] = None) -> BaseAgent:
@@ -72,7 +72,7 @@ class AgentPool:
             self.metrics["queued_requests"] -= 1
     
     async def release_agent(self, agent: BaseAgent):
-        """Libère un agent vers le pool"""
+        """Libre un agent vers le pool"""
         self.metrics["active_agents"] -= 1
         await self.available_agents.put(agent)
     
@@ -103,7 +103,7 @@ class AgentPool:
             logging.info(f"Scaled up pool to {len(self.agents)} agents")
     
     async def _scale_down(self):
-        """Réduit la taille du pool"""
+        """Rduit la taille du pool"""
         if len(self.agents) > self.config.min_size:
             # Retirer un agent disponible
             try:
@@ -115,12 +115,12 @@ class AgentPool:
                 # Cleanup de l'agent
                 logging.info(f"Scaled down pool to {len(self.agents)} agents")
             except asyncio.TimeoutError:
-                pass  # Tous les agents sont occupés
+                pass  # Tous les agents sont occups
 
 # === Distributed Cache ===
 
 class DistributedCache:
-    """Cache distribué pour templates et résultats"""
+    """Cache distribu pour templates et rsultats"""
     
     def __init__(self, redis_url: str = "redis://localhost"):
         self.redis_url = redis_url
@@ -133,11 +133,11 @@ class DistributedCache:
         }
     
     async def connect(self):
-        """Connexion à Redis"""
+        """Connexion  Redis"""
         self.redis = await aioredis.create_redis_pool(self.redis_url)
     
     async def get(self, key: str) -> Optional[Any]:
-        """Récupère une valeur du cache"""
+        """Rcupre une valeur du cache"""
         # Check L1 cache
         if key in self.local_cache:
             self.cache_stats["hits"] += 1
@@ -173,7 +173,7 @@ class DistributedCache:
                 await self.redis.set(key, value)
     
     async def invalidate(self, pattern: str):
-        """Invalide les entrées correspondant au pattern"""
+        """Invalide les entres correspondant au pattern"""
         # Invalider L1
         keys_to_remove = [k for k in self.local_cache if pattern in k]
         for key in keys_to_remove:
@@ -188,15 +188,15 @@ class DistributedCache:
 # === Load Balancer ===
 
 class LoadBalancingStrategy(ABC):
-    """Stratégie abstraite de load balancing"""
+    """Stratgie abstraite de load balancing"""
     
     @abstractmethod
     def select_agent(self, agents: List[BaseAgent]) -> Optional[BaseAgent]:
-        """Sélectionne un agent selon la stratégie"""
+        """Slectionne un agent selon la stratgie"""
         pass
 
 class RoundRobinStrategy(LoadBalancingStrategy):
-    """Stratégie Round Robin"""
+    """Stratgie Round Robin"""
     
     def __init__(self):
         self.index = 0
@@ -209,7 +209,7 @@ class RoundRobinStrategy(LoadBalancingStrategy):
         return agent
 
 class LeastConnectionsStrategy(LoadBalancingStrategy):
-    """Stratégie Least Connections"""
+    """Stratgie Least Connections"""
     
     def __init__(self):
         self.connections = defaultdict(int)
@@ -220,13 +220,13 @@ class LeastConnectionsStrategy(LoadBalancingStrategy):
         return min(agents, key=lambda a: self.connections[a.metadata.id])
 
 class WeightedRandomStrategy(LoadBalancingStrategy):
-    """Stratégie Random pondérée par performance"""
+    """Stratgie Random pondre par performance"""
     
     def select_agent(self, agents: List[BaseAgent]) -> Optional[BaseAgent]:
         if not agents:
             return None
         
-        # Pondération basée sur le taux de succès
+        # Pondration base sur le taux de succs
         weights = []
         for agent in agents:
             success_rate = agent.performance_metrics.get("success_rate", 0.5)
@@ -235,7 +235,7 @@ class WeightedRandomStrategy(LoadBalancingStrategy):
         return random.choices(agents, weights=weights)[0]
 
 class AgentLoadBalancer:
-    """Load balancer pour distribuer les requêtes"""
+    """Load balancer pour distribuer les requtes"""
     
     def __init__(
         self,
@@ -258,27 +258,27 @@ class AgentLoadBalancer:
         request: Dict[str, Any],
         timeout: Optional[float] = None
     ) -> Dict[str, Any]:
-        """Route une requête vers un agent approprié"""
+        """Route une requte vers un agent appropri"""
         pool = self.agent_pools.get(domain)
         if not pool:
             raise ValueError(f"No agent pool for domain: {domain}")
         
-        # Acquérir un agent du pool
+        # Acqurir un agent du pool
         agent = await pool.acquire_agent(timeout)
         
         try:
-            # Traiter la requête
+            # Traiter la requte
             result = await agent.process(
                 request.get("data"),
                 request.get("context", {})
             )
             return result
         finally:
-            # Toujours libérer l'agent
+            # Toujours librer l'agent
             await pool.release_agent(agent)
     
     async def start_health_checks(self):
-        """Démarre les health checks périodiques"""
+        """Dmarre les health checks priodiques"""
         self._health_check_task = asyncio.create_task(self._health_check_loop())
     
     async def _health_check_loop(self):
@@ -287,7 +287,7 @@ class AgentLoadBalancer:
             await asyncio.sleep(self.health_check_interval)
             
             for domain, pool in self.agent_pools.items():
-                # Vérifier la santé de chaque agent
+                # Vrifier la sant de chaque agent
                 unhealthy_agents = []
                 for agent in pool.agents:
                     if not await self._check_agent_health(agent):
@@ -302,7 +302,7 @@ class AgentLoadBalancer:
                     await pool.available_agents.put(new_agent)
     
     async def _check_agent_health(self, agent: BaseAgent) -> bool:
-        """Vérifie la santé d'un agent"""
+        """Vrifie la sant d'un agent"""
         try:
             # Health check simple
             result = await asyncio.wait_for(
@@ -316,7 +316,7 @@ class AgentLoadBalancer:
 # === Distributed Orchestrator ===
 
 class DistributedOrchestrator:
-    """Orchestrateur distribué pour coordination multi-nœuds"""
+    """Orchestrateur distribu pour coordination multi-nuds"""
     
     def __init__(
         self,
@@ -337,17 +337,17 @@ class DistributedOrchestrator:
         self.redis = await aioredis.create_redis_pool(self.coordinator_url)
         await self.cache.connect()
         
-        # Enregistrement du nœud
+        # Enregistrement du nud
         await self._register_node()
         
-        # Élection du leader
+        # lection du leader
         await self._leader_election()
         
-        # Démarrer la synchronisation
+        # Dmarrer la synchronisation
         asyncio.create_task(self._sync_loop())
     
     async def _register_node(self):
-        """Enregistre ce nœud dans le cluster"""
+        """Enregistre ce nud dans le cluster"""
         node_info = {
             "id": self.node_id,
             "timestamp": time.time(),
@@ -365,8 +365,8 @@ class DistributedOrchestrator:
         )
     
     async def _leader_election(self):
-        """Élection du leader via Redis"""
-        # Tentative d'acquérir le lock de leader
+        """lection du leader via Redis"""
+        # Tentative d'acqurir le lock de leader
         lock_acquired = await self.redis.set(
             "cluster:leader",
             self.node_id,
@@ -380,21 +380,21 @@ class DistributedOrchestrator:
             asyncio.create_task(self._leader_duties())
     
     async def _leader_duties(self):
-        """Tâches du leader"""
+        """Tches du leader"""
         while self.is_leader:
             # Renouveler le lease
             await self.redis.expire("cluster:leader", 30)
             
-            # Monitorer les nœuds
+            # Monitorer les nuds
             await self._monitor_nodes()
             
-            # Rééquilibrer la charge si nécessaire
+            # Rquilibrer la charge si ncessaire
             await self._rebalance_load()
             
             await asyncio.sleep(10)
     
     async def _monitor_nodes(self):
-        """Surveille l'état des nœuds"""
+        """Surveille l'tat des nuds"""
         pattern = "node:*"
         async for key in self.redis.iscan(match=pattern):
             node_data = await self.redis.get(key)
@@ -403,7 +403,7 @@ class DistributedOrchestrator:
                 self.nodes[node["id"]] = node
     
     async def _rebalance_load(self):
-        """Rééquilibre la charge entre les nœuds"""
+        """Rquilibre la charge entre les nuds"""
         if len(self.nodes) < 2:
             return
         
@@ -411,7 +411,7 @@ class DistributedOrchestrator:
         total_agents = sum(n["capacity"]["agents"] for n in self.nodes.values())
         avg_agents = total_agents / len(self.nodes)
         
-        # Identifier les nœuds surchargés/sous-chargés
+        # Identifier les nuds surchargs/sous-chargs
         overloaded = [n for n in self.nodes.values() 
                       if n["capacity"]["agents"] > avg_agents * 1.2]
         underloaded = [n for n in self.nodes.values() 
@@ -423,7 +423,7 @@ class DistributedOrchestrator:
                 await self._migrate_agents(over_node["id"], under_node["id"])
     
     async def _migrate_agents(self, from_node: str, to_node: str):
-        """Migre des agents d'un nœud à l'autre"""
+        """Migre des agents d'un nud  l'autre"""
         # Publier une commande de migration
         migration_cmd = {
             "type": "migrate_agents",
@@ -439,7 +439,7 @@ class DistributedOrchestrator:
             # Heartbeat
             await self._register_node()
             
-            # Vérifier si toujours leader
+            # Vrifier si toujours leader
             if self.is_leader:
                 current_leader = await self.redis.get("cluster:leader")
                 if current_leader != self.node_id:
@@ -454,7 +454,7 @@ class DistributedOrchestrator:
 # === Performance Optimization ===
 
 class PerformanceOptimizer:
-    """Optimiseur de performance pour le système"""
+    """Optimiseur de performance pour le systme"""
     
     def __init__(self):
         self.metrics_history = defaultdict(list)
@@ -468,8 +468,8 @@ class PerformanceOptimizer:
         self,
         orchestrator: DistributedOrchestrator
     ):
-        """Analyse les métriques et optimise le système"""
-        # Collecter les métriques
+        """Analyse les mtriques et optimise le systme"""
+        # Collecter les mtriques
         metrics = await self._collect_metrics(orchestrator)
         
         # Stocker l'historique
@@ -479,7 +479,7 @@ class PerformanceOptimizer:
                 "value": value
             })
         
-        # Appliquer les règles d'optimisation
+        # Appliquer les rgles d'optimisation
         for rule in self.optimization_rules:
             await rule(orchestrator, metrics)
     
@@ -487,7 +487,7 @@ class PerformanceOptimizer:
         self,
         orchestrator: DistributedOrchestrator
     ) -> Dict[str, float]:
-        """Collecte les métriques du système"""
+        """Collecte les mtriques du systme"""
         metrics = {
             "avg_response_time": 0.0,
             "error_rate": 0.0,
@@ -496,7 +496,7 @@ class PerformanceOptimizer:
             "cache_hit_rate": 0.0
         }
         
-        # Agrégation des métriques des pools
+        # Agrgation des mtriques des pools
         for pool in orchestrator.load_balancer.agent_pools.values():
             metrics["avg_response_time"] += pool.metrics.get("avg_wait_time", 0)
         
@@ -517,13 +517,13 @@ class PerformanceOptimizer:
         """Optimise la taille des pools d'agents"""
         avg_wait_time = metrics.get("avg_response_time", 0)
         
-        # Si temps d'attente élevé, augmenter les pools
+        # Si temps d'attente lev, augmenter les pools
         if avg_wait_time > 1.0:  # Plus d'1 seconde d'attente
             for pool in orchestrator.load_balancer.agent_pools.values():
                 pool.config.min_size = min(pool.config.min_size + 1, 20)
                 pool.config.max_size = min(pool.config.max_size + 2, 50)
         
-        # Si temps d'attente faible, réduire les pools
+        # Si temps d'attente faible, rduire les pools
         elif avg_wait_time < 0.1:  # Moins de 100ms
             for pool in orchestrator.load_balancer.agent_pools.values():
                 pool.config.min_size = max(pool.config.min_size - 1, 1)
@@ -542,7 +542,7 @@ class PerformanceOptimizer:
             # Augmenter les TTL pour garder plus longtemps en cache
             logging.info("Increasing cache TTL due to low hit rate")
         elif hit_rate > 0.95:  # Plus de 95% de hits
-            # Possibilité de réduire les TTL pour économiser la mémoire
+            # Possibilit de rduire les TTL pour conomiser la mmoire
             logging.info("Cache performing well, considering TTL optimization")
     
     async def _optimize_timeout_values(
@@ -553,14 +553,14 @@ class PerformanceOptimizer:
         """Optimise les valeurs de timeout"""
         error_rate = metrics.get("error_rate", 0)
         
-        # Si taux d'erreur élevé, augmenter les timeouts
+        # Si taux d'erreur lev, augmenter les timeouts
         if error_rate > 0.05:  # Plus de 5% d'erreurs
             logging.warning(f"High error rate: {error_rate:.2%}, increasing timeouts")
 
 # === Batch Processing ===
 
 class BatchProcessor:
-    """Processeur de requêtes par batch pour efficacité"""
+    """Processeur de requtes par batch pour efficacit"""
     
     def __init__(
         self,
@@ -574,7 +574,7 @@ class BatchProcessor:
         self._batch_task = None
     
     async def start(self):
-        """Démarre le processeur de batch"""
+        """Dmarre le processeur de batch"""
         self._batch_task = asyncio.create_task(self._batch_loop())
     
     async def submit_request(
@@ -582,7 +582,7 @@ class BatchProcessor:
         request_id: str,
         data: Any
     ) -> Any:
-        """Soumet une requête au batch"""
+        """Soumet une requte au batch"""
         future = asyncio.Future()
         self.results_futures[request_id] = future
         
@@ -592,7 +592,7 @@ class BatchProcessor:
             "timestamp": time.time()
         })
         
-        # Si batch plein, traiter immédiatement
+        # Si batch plein, traiter immdiatement
         if len(self.pending_requests) >= self.batch_size:
             await self._process_batch()
         
@@ -607,7 +607,7 @@ class BatchProcessor:
                 await self._process_batch()
     
     async def _process_batch(self):
-        """Traite un batch de requêtes"""
+        """Traite un batch de requtes"""
         if not self.pending_requests:
             return
         
@@ -616,11 +616,11 @@ class BatchProcessor:
         self.pending_requests = self.pending_requests[self.batch_size:]
         
         try:
-            # Traitement parallèle du batch
+            # Traitement parallle du batch
             tasks = [self._process_single(req) for req in batch]
             results = await asyncio.gather(*tasks, return_exceptions=True)
             
-            # Retourner les résultats
+            # Retourner les rsultats
             for req, result in zip(batch, results):
                 future = self.results_futures.pop(req["id"], None)
                 if future and not future.done():
@@ -637,8 +637,8 @@ class BatchProcessor:
                     future.set_exception(e)
     
     async def _process_single(self, request: Dict[str, Any]) -> Any:
-        """Traite une requête individuelle"""
-        # Implémentation spécifique au domaine
+        """Traite une requte individuelle"""
+        # Implmentation spcifique au domaine
         return {"processed": request["data"]}
 
 # === Horizontal Scaling Manager ===
@@ -664,12 +664,12 @@ class HorizontalScalingManager:
         self,
         metrics: Dict[str, float]
     ) -> int:
-        """Évalue le besoin de scaling"""
+        """value le besoin de scaling"""
         cpu_usage = metrics.get("cpu_usage", 0)
         memory_usage = metrics.get("memory_usage", 0)
         queue_length = metrics.get("queue_length", 0)
         
-        # Calcul du nombre de replicas souhaité
+        # Calcul du nombre de replicas souhait
         cpu_based = self._calculate_replicas_for_metric(
             cpu_usage, self.target_cpu_percent
         )
@@ -678,14 +678,14 @@ class HorizontalScalingManager:
         )
         queue_based = self._calculate_replicas_for_queue(queue_length)
         
-        # Prendre le maximum pour être sûr
+        # Prendre le maximum pour tre sr
         desired_replicas = max(cpu_based, memory_based, queue_based)
         
         # Respecter les limites
         desired_replicas = max(self.min_replicas, 
                               min(desired_replicas, self.max_replicas))
         
-        # Enregistrer la décision
+        # Enregistrer la dcision
         self.scaling_history.append({
             "timestamp": time.time(),
             "current": self.current_replicas,
@@ -700,7 +700,7 @@ class HorizontalScalingManager:
         current_usage: float,
         target_usage: float
     ) -> int:
-        """Calcule le nombre de replicas pour une métrique"""
+        """Calcule le nombre de replicas pour une mtrique"""
         if target_usage == 0:
             return self.min_replicas
         
@@ -711,14 +711,14 @@ class HorizontalScalingManager:
         queue_length: int,
         target_queue_per_replica: int = 10
     ) -> int:
-        """Calcule le nombre de replicas basé sur la queue"""
+        """Calcule le nombre de replicas bas sur la queue"""
         if target_queue_per_replica == 0:
             return self.min_replicas
         
         return max(1, queue_length // target_queue_per_replica)
     
     async def apply_scaling(self, desired_replicas: int):
-        """Applique la décision de scaling"""
+        """Applique la dcision de scaling"""
         if desired_replicas != self.current_replicas:
             logging.info(
                 f"Scaling from {self.current_replicas} to {desired_replicas} replicas"
@@ -732,7 +732,7 @@ class HorizontalScalingManager:
 # === Message Queue Integration ===
 
 class MessageQueueIntegration:
-    """Intégration avec système de message queue pour async processing"""
+    """Intgration avec systme de message queue pour async processing"""
     
     def __init__(
         self,
@@ -754,7 +754,7 @@ class MessageQueueIntegration:
         task: Dict[str, Any],
         priority: int = 0
     ):
-        """Publie une tâche dans la queue"""
+        """Publie une tche dans la queue"""
         message = {
             "id": str(uuid.uuid4()),
             "timestamp": time.time(),
@@ -762,7 +762,7 @@ class MessageQueueIntegration:
             "task": task
         }
         
-        # Publier avec priorité
+        # Publier avec priorit
         # await self.channel.basic_publish(...)
         
     async def consume_tasks(
@@ -771,7 +771,7 @@ class MessageQueueIntegration:
         handler: Callable,
         concurrency: int = 10
     ):
-        """Consomme les tâches de la queue"""
+        """Consomme les tches de la queue"""
         async def process_message(message):
             try:
                 result = await handler(message["task"])
@@ -780,7 +780,7 @@ class MessageQueueIntegration:
                 # Requeue or dead letter
                 logging.error(f"Task processing failed: {e}")
         
-        # Créer des workers concurrents
+        # Crer des workers concurrents
         workers = []
         for _ in range(concurrency):
             worker = asyncio.create_task(self._worker_loop(queue_name, process_message))
@@ -791,16 +791,16 @@ class MessageQueueIntegration:
     async def _worker_loop(self, queue_name: str, handler: Callable):
         """Boucle de travail pour consumer"""
         while True:
-            # Récupérer message de la queue
+            # Rcuprer message de la queue
             # message = await self.channel.basic_get(queue_name)
             # if message:
             #     await handler(message)
             await asyncio.sleep(0.1)
 
-# === Exemple d'utilisation complète ===
+# === Exemple d'utilisation complte ===
 
 async def scalability_example():
-    """Exemple d'utilisation du framework de scalabilité"""
+    """Exemple d'utilisation du framework de scalabilit"""
     
     # Configuration
     orchestrator = DistributedOrchestrator(
@@ -826,7 +826,7 @@ async def scalability_example():
     }
     registry.register_template("data_processor", processing_template)
     
-    # Créer un pool d'agents avec auto-scaling
+    # Crer un pool d'agents avec auto-scaling
     pool_config = PoolConfig(
         min_size=2,
         max_size=20,
@@ -837,7 +837,7 @@ async def scalability_example():
     processing_pool = AgentPool(factory, "data_processor", pool_config)
     await orchestrator.load_balancer.register_pool("data_processing", processing_pool)
     
-    # Démarrer les composants
+    # Dmarrer les composants
     await orchestrator.load_balancer.start_health_checks()
     
     # Optimiseur de performance
@@ -861,7 +861,7 @@ async def scalability_example():
             # Charge variable
             load = 10 if i < 30 else 50 if i < 70 else 20
             
-            # Générer des requêtes
+            # Gnrer des requtes
             tasks = []
             for j in range(load):
                 request = {
@@ -869,21 +869,21 @@ async def scalability_example():
                     "context": {"batch": i}
                 }
                 
-                # Via batch processor pour efficacité
+                # Via batch processor pour efficacit
                 task = batch_processor.submit_request(
                     f"req_{i}_{j}",
                     request
                 )
                 tasks.append(task)
             
-            # Attendre les résultats
+            # Attendre les rsultats
             results = await asyncio.gather(*tasks, return_exceptions=True)
             
-            # Optimisation périodique
+            # Optimisation priodique
             if i % 10 == 0:
                 await optimizer.analyze_and_optimize(orchestrator)
                 
-                # Évaluer le scaling
+                # valuer le scaling
                 metrics = await optimizer._collect_metrics(orchestrator)
                 desired_replicas = await scaling_manager.evaluate_scaling(metrics)
                 await scaling_manager.apply_scaling(desired_replicas)

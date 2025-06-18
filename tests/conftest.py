@@ -1,6 +1,6 @@
 """
-Configuration globale pour les tests avec fixtures partagées.
-Setup du framework de tests complet selon les spécifications.
+Configuration globale pour les tests avec fixtures partages.
+Setup du framework de tests complet selon les spcifications.
 """
 
 # CORRECTION IA-1 : Configuration environnement prioritaire
@@ -8,7 +8,7 @@ import os
 
 # Configuration des variables d'environnement AVANT tous les autres imports
 _test_env = {
-    # API Keys pour les LLM (valeurs de test sécurisées)
+    # API Keys pour les LLM (valeurs de test scurises)
     'OPENAI_API_KEY': 'sk-test-openai-key-12345678901234567890123456789012345678',
     'ANTHROPIC_API_KEY': 'sk-ant-test-anthropic-key-67890123456789012345678901234567890123456789012345678901234567890123456789012345',
     'ORCHESTRATOR_API_KEY': 'test-orchestrator-api-key-secure-123456789',
@@ -16,7 +16,7 @@ _test_env = {
     # Configuration API
     'MEMORY_API_URL': 'http://localhost:8001',
     
-    # Paramètres de sécurité (optimisés pour les tests)
+    # Paramtres de scurit (optimiss pour les tests)
     'DEBUG': 'true',
     'ENFORCE_HTTPS': 'false',
     'MAX_REQUEST_TIMEOUT': '30.0',
@@ -29,7 +29,7 @@ _test_env = {
     'SERVICE_VERSION': 'v9-test'
 }
 
-# Application immédiate des variables d'environnement
+# Application immdiate des variables d'environnement
 for key, value in _test_env.items():
     os.environ.setdefault(key, value)
 
@@ -50,7 +50,7 @@ pytest_plugins = ("pytest_asyncio",)
 
 @pytest.fixture(scope="session")
 def event_loop():
-    """Crée un event loop pour la session de tests."""
+    """Cre un event loop pour la session de tests."""
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
@@ -58,18 +58,18 @@ def event_loop():
 
 @pytest.fixture
 def temp_dir() -> Generator[Path, None, None]:
-    """Crée un répertoire temporaire pour les tests."""
+    """Cre un rpertoire temporaire pour les tests."""
     with tempfile.TemporaryDirectory() as temp_dir:
         yield Path(temp_dir)
 
 
 @pytest.fixture
 def mock_secrets_dir(temp_dir: Path) -> Path:
-    """Crée un répertoire de secrets temporaire pour les tests."""
+    """Cre un rpertoire de secrets temporaire pour les tests."""
     secrets_dir = temp_dir / ".secrets"
     secrets_dir.mkdir(mode=0o700)
     
-    # Créer quelques secrets de test
+    # Crer quelques secrets de test
     (secrets_dir / "openai_api_key.secret").write_text("sk-test-openai-key-12345")
     (secrets_dir / "anthropic_api_key.secret").write_text("sk-ant-test-anthropic-key-67890")
     (secrets_dir / "jwt_secret.secret").write_text("super-secret-jwt-key-for-testing-only")
@@ -101,7 +101,7 @@ def test_environment_variables():
         'MAX_TASK_DESCRIPTION_LENGTH': '5000'
     }
     
-    # Mise à jour de l'environnement
+    # Mise  jour de l'environnement
     os.environ.update(test_env)
     
     yield test_env
@@ -113,7 +113,7 @@ def test_environment_variables():
 
 @pytest.fixture
 def sample_agent_state():
-    """Fixture AgentState complète pour les tests - CORRECTION IA-1 dict → AgentState object."""
+    """Fixture AgentState complte pour les tests - CORRECTION IA-1 dict  AgentState object."""
     from datetime import datetime
     from orchestrator.app.graph.state import AgentState
     
@@ -137,7 +137,7 @@ def sample_agent_state():
 
 @pytest.fixture  
 def sample_agent_state_completed():
-    """AgentState avec résultats complets - CORRECTION IA-1."""
+    """AgentState avec rsultats complets - CORRECTION IA-1."""
     from datetime import datetime
     from orchestrator.app.graph.state import AgentState
     
@@ -192,7 +192,7 @@ def sample_agent_state_error():
 
 @pytest.fixture
 def sample_task_descriptions() -> Dict[str, str]:
-    """Descriptions de tâches variées pour tests supervisor - CORRECTION IA-1."""
+    """Descriptions de tches varies pour tests supervisor - CORRECTION IA-1."""
     return {
         'code_generation': 'Generate Python code for a calculator function',
         'documentation': 'Write comprehensive documentation for the API endpoints', 
@@ -217,7 +217,7 @@ import datetime
 from typing import List, Dict
 
 def process_data(data: Dict) -> List[str]:
-    """Fonction sûre de traitement de données."""
+    """Fonction sre de traitement de donnes."""
     result = []
     for key, value in data.items():
         if isinstance(value, str):
@@ -231,7 +231,7 @@ print(process_data(test_data))
         
         'malicious_eval': '''
 import os
-# Tentative d'exécution de code malveillant
+# Tentative d'excution de code malveillant
 eval("__import__('os').system('rm -rf /')")
 print("This should not execute")
 ''',
@@ -327,7 +327,7 @@ print(processor.export_users())
 
 @pytest.fixture
 def malicious_payloads() -> Dict[str, Any]:
-    """Payloads malveillants pour tests de sécurité."""
+    """Payloads malveillants pour tests de scurit."""
     return {
         'code_injection': [
             "eval('__import__(\"os\").system(\"id\")')",
@@ -370,7 +370,7 @@ def malicious_payloads() -> Dict[str, Any]:
 
 @pytest.fixture
 def mock_http_responses() -> Dict[str, Any]:
-    """Réponses HTTP mockées pour les tests."""
+    """Rponses HTTP mockes pour les tests."""
     return {
         'memory_api_health': {
             'status_code': 200,
@@ -422,7 +422,7 @@ def mock_http_responses() -> Dict[str, Any]:
 
 @pytest.fixture
 def mock_httpx_client():
-    """Client HTTP mocké pour les tests."""
+    """Client HTTP mock pour les tests."""
     
     class MockResponse:
         def __init__(self, status_code: int, json_data: Dict[str, Any] = None, text: str = ""):
@@ -455,7 +455,7 @@ def mock_httpx_client():
             self.closed = True
         
         async def get(self, url: str, **kwargs):
-            # Simulation basée sur l'URL
+            # Simulation base sur l'URL
             if 'health' in url:
                 return MockResponse(200, {'status': 'healthy'})
             elif 'openai.com/v1/models' in url:
@@ -479,12 +479,12 @@ def mock_httpx_client():
 @pytest.fixture
 async def test_app():
     """Application FastAPI de test."""
-    # Import conditionnel pour éviter les dépendances circulaires
+    # Import conditionnel pour viter les dpendances circulaires
     try:
         from orchestrator.app.main import app
         yield app
     except ImportError:
-        # Mock app si l'import échoue
+        # Mock app si l'import choue
         from fastapi import FastAPI
         mock_app = FastAPI()
         yield mock_app
@@ -498,7 +498,7 @@ def test_client(test_app):
 
 @pytest.fixture
 def security_test_headers() -> Dict[str, str]:
-    """Headers de test pour les endpoints sécurisés."""
+    """Headers de test pour les endpoints scuriss."""
     return {
         'X-API-KEY': 'test-api-key-12345',
         'Content-Type': 'application/json',
@@ -555,14 +555,14 @@ def log_capture():
     test_logger.removeHandler(ch)
 
 
-# Markers pour catégoriser les tests
+# Markers pour catgoriser les tests
 def pytest_configure(config):
     """Configuration des markers de test."""
     config.addinivalue_line(
-        "markers", "security: Tests de sécurité"
+        "markers", "security: Tests de scurit"
     )
     config.addinivalue_line(
-        "markers", "integration: Tests d'intégration"
+        "markers", "integration: Tests d'intgration"
     )
     config.addinivalue_line(
         "markers", "performance: Tests de performance"
@@ -579,14 +579,14 @@ def pytest_configure(config):
 def pytest_runtest_setup(item):
     """Setup avant chaque test."""
     if "security" in item.keywords:
-        print(f"\\n🔒 Running security test: {item.name}")
+        print(f"\\n Running security test: {item.name}")
 
 
 def pytest_runtest_teardown(item, nextitem):
-    """Cleanup après chaque test."""
+    """Cleanup aprs chaque test."""
     if hasattr(item, "duration"):
         if item.duration > 1.0:
-            print(f"⚠️ Slow test detected: {item.name} took {item.duration:.2f}s")
+            print(f" Slow test detected: {item.name} took {item.duration:.2f}s")
 
 
 # Configuration automatique de l'environnement - CORRECTION IA-1
@@ -594,31 +594,31 @@ def pytest_runtest_teardown(item, nextitem):
 def setup_test_environment(test_environment_variables):
     """
     Configuration automatique de l'environnement de test.
-    CORRECTION IA-1 : Auto-application des variables d'environnement pour résoudre les erreurs de collection.
+    CORRECTION IA-1 : Auto-application des variables d'environnement pour rsoudre les erreurs de collection.
     """
-    # Les variables sont automatiquement configurées par test_environment_variables
+    # Les variables sont automatiquement configures par test_environment_variables
     yield
-    # Cleanup automatique géré par test_environment_variables
+    # Cleanup automatique gr par test_environment_variables
 
 
-# Configuration spécifique pour les tests de sécurité
+# Configuration spcifique pour les tests de scurit
 @pytest.fixture(autouse=True)
 def security_test_isolation():
-    """Isolation pour les tests de sécurité."""
+    """Isolation pour les tests de scurit."""
     # Reset des variables globales avant chaque test
     yield
     
-    # Nettoyage après test
+    # Nettoyage aprs test
     import gc
     gc.collect()
 
 
 @pytest.fixture
 def assert_security_compliance():
-    """Helper pour vérifier la conformité sécurité."""
+    """Helper pour vrifier la conformit scurit."""
     
     def _assert_no_secrets_in_logs(log_content: str):
-        """Vérifie qu'aucun secret n'apparaît dans les logs."""
+        """Vrifie qu'aucun secret n'apparat dans les logs."""
         sensitive_patterns = [
             r'sk-[a-zA-Z0-9]{48}',  # OpenAI API key
             r'sk-ant-[a-zA-Z0-9-]{95}',  # Anthropic API key
@@ -632,7 +632,7 @@ def assert_security_compliance():
                 f"Sensitive data detected in logs: {pattern}"
     
     def _assert_no_code_execution(result: str):
-        """Vérifie qu'aucun code malveillant n'a été exécuté."""
+        """Vrifie qu'aucun code malveillant n'a t excut."""
         forbidden_outputs = [
             'root:x:0:0:root',  # /etc/passwd content
             'uid=',  # output of 'id' command
@@ -655,11 +655,11 @@ def configure_test_logging():
     """Configure le logging pour les tests."""
     import logging
     
-    # Réduire le niveau de logging pour les tests
+    # Rduire le niveau de logging pour les tests
     logging.getLogger('httpx').setLevel(logging.WARNING)
     logging.getLogger('urllib3').setLevel(logging.WARNING)
     
-    # Logger spécifique pour les tests
+    # Logger spcifique pour les tests
     test_logger = logging.getLogger('tests')
     test_logger.setLevel(logging.DEBUG)
     

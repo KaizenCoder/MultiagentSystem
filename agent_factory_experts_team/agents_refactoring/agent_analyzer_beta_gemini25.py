@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-🎯 Agent Analyzer Beta - Gemini 2.5
-⚡ Analyse rapide orientée code avec Gemini 2.5
-🚀 Phase 1 Refactoring NextGeneration - Cloud API
+[TARGET] Agent Analyzer Beta - Gemini 2.5
+[LIGHTNING] Analyse rapide oriente code avec Gemini 2.5
+[ROCKET] Phase 1 Refactoring NextGeneration - Cloud API
 """
 
 import os
@@ -21,11 +21,11 @@ try:
     from dotenv import load_dotenv
     load_dotenv()
 except ImportError:
-    print("⚠️ python-dotenv non installé, utilisation variables système")
+    print(" python-dotenv non install, utilisation variables systme")
 
 @dataclass
 class CodePattern:
-    """Pattern de code détecté"""
+    """Pattern de code dtect"""
     name: str
     location: str
     type: str  # ANTI_PATTERN, SMELL, VIOLATION
@@ -57,7 +57,7 @@ class ClassAnalysis:
 
 @dataclass
 class CodeSmells:
-    """Code smells détectés"""
+    """Code smells dtects"""
     long_methods: List[str]
     large_classes: List[str]
     parameter_lists: List[str]
@@ -66,7 +66,7 @@ class CodeSmells:
 
 @dataclass
 class RefactoringStrategy:
-    """Stratégie de refactoring"""
+    """Stratgie de refactoring"""
     target: str
     strategy: str  # EXTRACT, SPLIT, MERGE, MOVE, RENAME
     rationale: str
@@ -75,13 +75,13 @@ class RefactoringStrategy:
 
 class AgentAnalyzerBetaGemini25:
     """
-    🎯 Agent Analyzer Beta - Gemini 2.5
+    [TARGET] Agent Analyzer Beta - Gemini 2.5
     
     Mission:
-    - Analyse rapide orientée code
-    - Détection des patterns et smells
+    - Analyse rapide oriente code
+    - Dtection des patterns et smells
     - Extraction des fonctions/classes
-    - Stratégies de refactoring immédiat
+    - Stratgies de refactoring immdiat
     """
     
     def __init__(self):
@@ -89,10 +89,10 @@ class AgentAnalyzerBetaGemini25:
         self.model = "gemini-2.0-flash-exp"  # Gemini 2.5
         self.capabilities = [
             "Analyse rapide de code",
-            "Détection patterns",
+            "Dtection patterns",
             "Code smells detection",
             "Extraction suggestions",
-            "Stratégies refactoring"
+            "Stratgies refactoring"
         ]
         
         # Configuration Gemini 2.5 avec .env
@@ -103,9 +103,9 @@ class AgentAnalyzerBetaGemini25:
         genai.configure(api_key=api_key)
         self.model_instance = genai.GenerativeModel(self.model)
         
-        # Paramètres optimisés pour vitesse
+        # Paramtres optimiss pour vitesse
         self.generation_config = genai.types.GenerationConfig(
-            temperature=0.2,  # Cohérence vs créativité
+            temperature=0.2,  # Cohrence vs crativit
             top_p=0.8,
             top_k=40,
             max_output_tokens=3000
@@ -115,23 +115,23 @@ class AgentAnalyzerBetaGemini25:
         self.results_dir = self.workspace / "results" / "beta_gemini"
         self.results_dir.mkdir(parents=True, exist_ok=True)
         
-        print(f"🤖 {self.name} initialisé avec Gemini 2.5")
-        print(f"⚙️ Modèle: {self.model}")
-        print(f"🔑 Clé API: {'✅' if api_key else '❌'}")
-        print(f"📁 Workspace: {self.workspace}")
+        print(f"[ROBOT] {self.name} initialis avec Gemini 2.5")
+        print(f" Modle: {self.model}")
+        print(f" Cl API: {'[CHECK]' if api_key else '[CROSS]'}")
+        print(f"[FOLDER] Workspace: {self.workspace}")
 
     async def analyze_file_fast(self, file_path: str) -> Dict[str, Any]:
         """
-        ⚡ Analyse rapide d'un fichier avec Gemini 2.5
+        [LIGHTNING] Analyse rapide d'un fichier avec Gemini 2.5
         """
-        print(f"\n⚡ Agent Beta - Analyse rapide: {file_path}")
+        print(f"\n[LIGHTNING] Agent Beta - Analyse rapide: {file_path}")
         
         try:
             # Lecture du fichier
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
             
-            print(f"📊 Taille fichier: {len(content)} caractères")
+            print(f"[CHART] Taille fichier: {len(content)} caractres")
             
             # Analyse patterns rapide
             patterns = await self._detect_patterns_gemini(content, file_path)
@@ -140,10 +140,10 @@ class AgentAnalyzerBetaGemini25:
             functions = self._analyze_functions_fast(content)
             classes = self._analyze_classes_fast(content)
             
-            # Détection code smells
+            # Dtection code smells
             smells = await self._detect_code_smells_gemini(content, file_path)
             
-            # Stratégies de refactoring
+            # Stratgies de refactoring
             strategies = await self._generate_strategies_gemini(
                 content, file_path, functions, classes, smells
             )
@@ -172,18 +172,18 @@ class AgentAnalyzerBetaGemini25:
             with open(output_file, 'w', encoding='utf-8') as f:
                 json.dump(result, f, indent=2, ensure_ascii=False)
             
-            print(f"✅ Analyse Beta terminée - Résultats: {output_file}")
+            print(f"[CHECK] Analyse Beta termine - Rsultats: {output_file}")
             return result
             
         except Exception as e:
-            print(f"❌ Erreur analyse Beta: {str(e)}")
+            print(f"[CROSS] Erreur analyse Beta: {str(e)}")
             return {"error": str(e), "file_path": file_path}
 
     async def _detect_patterns_gemini(self, content: str, file_path: str) -> List[CodePattern]:
-        """Détection de patterns avec Gemini 2.5"""
+        """Dtection de patterns avec Gemini 2.5"""
         try:
             prompt = f"""
-Analysez ce code Python et détectez les patterns problématiques:
+Analysez ce code Python et dtectez les patterns problmatiques:
 
 Fichier: {file_path}
 
@@ -191,7 +191,7 @@ Fichier: {file_path}
 {content[:4000]}
 ```
 
-Détectez en JSON les patterns:
+Dtectez en JSON les patterns:
 - God Object/Class
 - Long Method
 - Large Class
@@ -207,7 +207,7 @@ Format JSON strict:
     "location": "line 45-150",
     "type": "ANTI_PATTERN",
     "severity": "HIGH",
-    "description": "Classe avec trop de responsabilités"
+    "description": "Classe avec trop de responsabilits"
   }}
 ]
 """
@@ -228,14 +228,14 @@ Format JSON strict:
                 return []
                 
         except Exception as e:
-            print(f"⚠️ Patterns par défaut: {str(e)}")
+            print(f" Patterns par dfaut: {str(e)}")
             return [
                 CodePattern(
                     name="Large File",
                     location=f"line 1-{len(content.split('\\n'))}",
                     type="SMELL",
                     severity="MEDIUM",
-                    description=f"Fichier volumineux ({len(content)} caractères)"
+                    description=f"Fichier volumineux ({len(content)} caractres)"
                 )
             ]
 
@@ -250,10 +250,10 @@ Format JSON strict:
                     lines = node.end_lineno - node.lineno if hasattr(node, 'end_lineno') else 10
                     params_count = len(node.args.args)
                     
-                    # Score de complexité basique
+                    # Score de complexit basique
                     complexity = min(1.0, (lines / 20) + (params_count / 5))
                     
-                    # Catégorie de taille
+                    # Catgorie de taille
                     if lines > 50:
                         size_cat = "HUGE"
                     elif lines > 25:
@@ -263,7 +263,7 @@ Format JSON strict:
                     else:
                         size_cat = "SMALL"
                     
-                    # Responsabilités estimées (keywords)
+                    # Responsabilits estimes (keywords)
                     func_content = ast.get_source_segment(content, node) or ""
                     responsibilities = []
                     if "request" in func_content.lower():
@@ -288,7 +288,7 @@ Format JSON strict:
             return functions
             
         except Exception as e:
-            print(f"⚠️ Analyse fonctions échouée: {str(e)}")
+            print(f" Analyse fonctions choue: {str(e)}")
             return []
 
     def _analyze_classes_fast(self, content: str) -> List[ClassAnalysis]:
@@ -307,7 +307,7 @@ Format JSON strict:
                     # Score god class
                     god_score = min(1.0, (lines / 200) + (len(methods) / 15))
                     
-                    # Responsabilités (analyse basique)
+                    # Responsabilits (analyse basique)
                     class_content = ast.get_source_segment(content, node) or ""
                     responsibilities = []
                     srp_violations = []
@@ -333,25 +333,25 @@ Format JSON strict:
             return classes
             
         except Exception as e:
-            print(f"⚠️ Analyse classes échouée: {str(e)}")
+            print(f" Analyse classes choue: {str(e)}")
             return []
 
     async def _detect_code_smells_gemini(self, content: str, file_path: str) -> CodeSmells:
-        """Détection code smells avec Gemini 2.5"""
+        """Dtection code smells avec Gemini 2.5"""
         try:
             prompt = f"""
-Analysez ce code Python et détectez les code smells:
+Analysez ce code Python et dtectez les code smells:
 
 ```python
 {content[:3000]}
 ```
 
 Identifiez en JSON:
-- long_methods: méthodes >30 lignes
+- long_methods: mthodes >30 lignes
 - large_classes: classes >200 lignes  
-- parameter_lists: fonctions >5 paramètres
-- duplicate_code: code dupliqué
-- dead_code: code mort/inutilisé
+- parameter_lists: fonctions >5 paramtres
+- duplicate_code: code dupliqu
+- dead_code: code mort/inutilis
 
 Format JSON:
 {{
@@ -379,8 +379,8 @@ Format JSON:
                 return CodeSmells([], [], [], [], [])
                 
         except Exception as e:
-            print(f"⚠️ Code smells par défaut: {str(e)}")
-            # Détection basique
+            print(f" Code smells par dfaut: {str(e)}")
+            # Dtection basique
             lines = content.split('\n')
             long_methods = []
             large_classes = []
@@ -416,17 +416,17 @@ Format JSON:
                                         functions: List[FunctionAnalysis],
                                         classes: List[ClassAnalysis],
                                         smells: CodeSmells) -> List[RefactoringStrategy]:
-        """Génération stratégies avec Gemini 2.5"""
+        """Gnration stratgies avec Gemini 2.5"""
         try:
             context = f"""
 Fichier: {file_path}
 Fonctions: {len(functions)} ({len([f for f in functions if f.size_category in ['LARGE', 'HUGE']])} grandes)
 Classes: {len(classes)} ({len([c for c in classes if c.god_class_score > 0.7])} god classes)
-Smells: {len(smells.long_methods)} méthodes longues, {len(smells.large_classes)} classes volumineuses
+Smells: {len(smells.long_methods)} mthodes longues, {len(smells.large_classes)} classes volumineuses
 """
 
             prompt = f"""
-Générez des stratégies de refactoring pour ce code:
+Gnrez des stratgies de refactoring pour ce code:
 
 {context}
 
@@ -434,13 +434,13 @@ Générez des stratégies de refactoring pour ce code:
 {content[:2000]}
 ```
 
-Retournez en JSON des stratégies prioritaires:
+Retournez en JSON des stratgies prioritaires:
 [
   {{
-    "target": "Nom classe/méthode",
+    "target": "Nom classe/mthode",
     "strategy": "EXTRACT_METHOD|EXTRACT_CLASS|SPLIT_FILE|MOVE_METHOD",
-    "rationale": "Pourquoi cette stratégie",
-    "steps": ["Étape 1", "Étape 2", "Étape 3"],
+    "rationale": "Pourquoi cette stratgie",
+    "steps": ["tape 1", "tape 2", "tape 3"],
     "estimated_effort": "2-4 heures"
   }}
 ]
@@ -464,10 +464,10 @@ Focalisez sur les quick wins et extractions simples.
                 return []
                 
         except Exception as e:
-            print(f"⚠️ Stratégies par défaut: {str(e)}")
+            print(f" Stratgies par dfaut: {str(e)}")
             strategies = []
             
-            # Stratégies basées sur l'analyse
+            # Stratgies bases sur l'analyse
             for func in functions:
                 if func.size_category in ['LARGE', 'HUGE']:
                     strategies.append(RefactoringStrategy(
@@ -476,8 +476,8 @@ Focalisez sur les quick wins et extractions simples.
                         rationale=f"Fonction {func.size_category.lower()} ({func.line_end - func.line_start} lignes)",
                         steps=[
                             "Identifier les blocs logiques",
-                            "Extraire en méthodes privées",
-                            "Tester après extraction"
+                            "Extraire en mthodes prives",
+                            "Tester aprs extraction"
                         ],
                         estimated_effort="2-4 heures"
                     ))
@@ -487,11 +487,11 @@ Focalisez sur les quick wins et extractions simples.
                     strategies.append(RefactoringStrategy(
                         target=cls.name,
                         strategy="EXTRACT_CLASS",
-                        rationale=f"God class ({cls.methods_count} méthodes)",
+                        rationale=f"God class ({cls.methods_count} mthodes)",
                         steps=[
-                            "Grouper méthodes par responsabilité",
-                            "Extraire classes spécialisées",
-                            "Refactorer les dépendances"
+                            "Grouper mthodes par responsabilit",
+                            "Extraire classes spcialises",
+                            "Refactorer les dpendances"
                         ],
                         estimated_effort="8-16 heures"
                     ))
@@ -509,9 +509,9 @@ Focalisez sur les quick wins et extractions simples.
         if high_patterns > 3 or god_classes > 1 or huge_functions > 2:
             return "CRITIQUE"
         elif high_patterns > 1 or god_classes > 0 or huge_functions > 1:
-            return "ÉLEVÉE"
+            return "LEVE"
         elif len(patterns) > 5:
-            return "MODÉRÉE"
+            return "MODRE"
         else:
             return "FAIBLE"
 
@@ -523,9 +523,9 @@ async def main():
     test_file = "orchestrator/app/main.py"
     if os.path.exists(test_file):
         result = await agent.analyze_file_fast(test_file)
-        print(f"\n✅ Test Beta terminé: {len(result.get('strategies', []))} stratégies")
+        print(f"\n[CHECK] Test Beta termin: {len(result.get('strategies', []))} stratgies")
     else:
-        print(f"❌ Fichier test non trouvé: {test_file}")
+        print(f"[CROSS] Fichier test non trouv: {test_file}")
 
 if __name__ == "__main__":
     asyncio.run(main()) 

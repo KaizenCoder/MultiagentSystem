@@ -36,7 +36,7 @@ class TestSecretMetadata:
     """Tests pour SecretMetadata."""
     
     def test_secret_metadata_creation(self):
-        """Test création métadonnées de secret."""
+        """Test cration mtadonnes de secret."""
         metadata = SecretMetadata(
             name="test_secret",
             secret_type=SecretType.API_KEY,
@@ -52,7 +52,7 @@ class TestSecretMetadata:
         assert metadata.access_count == 1
     
     def test_secret_metadata_not_expired(self):
-        """Test secret non expiré."""
+        """Test secret non expir."""
         metadata = SecretMetadata(
             name="test",
             secret_type=SecretType.API_KEY,
@@ -66,7 +66,7 @@ class TestSecretMetadata:
         assert not metadata.is_expired()
     
     def test_secret_metadata_expired(self):
-        """Test secret expiré."""
+        """Test secret expir."""
         metadata = SecretMetadata(
             name="test",
             secret_type=SecretType.API_KEY,
@@ -74,18 +74,18 @@ class TestSecretMetadata:
             created_at=time.time(),
             last_accessed=time.time(),
             access_count=1,
-            expires_at=time.time() - 1  # Expiré il y a 1s
+            expires_at=time.time() - 1  # Expir il y a 1s
         )
         
         assert metadata.is_expired()
     
     def test_secret_metadata_needs_rotation(self):
-        """Test rotation nécessaire."""
+        """Test rotation ncessaire."""
         metadata = SecretMetadata(
             name="test",
             secret_type=SecretType.API_KEY,
             source=SecretSource.ENVIRONMENT_VARIABLES,
-            created_at=time.time() - 7200,  # Créé il y a 2h
+            created_at=time.time() - 7200,  # Cr il y a 2h
             last_accessed=time.time(),
             access_count=1,
             rotation_interval=3600  # Rotation toutes les heures
@@ -105,7 +105,7 @@ class TestDockerSecretsProvider:
             assert provider.secrets_path == Path(temp_dir)
     
     def test_get_secret_success(self):
-        """Test récupération secret Docker réussie."""
+        """Test rcupration secret Docker russie."""
         with tempfile.TemporaryDirectory() as temp_dir:
             secrets_path = Path(temp_dir)
             secret_file = secrets_path / "api_key"
@@ -117,7 +117,7 @@ class TestDockerSecretsProvider:
             assert secret == "secret_value_123"
     
     def test_get_secret_not_found(self):
-        """Test secret Docker non trouvé."""
+        """Test secret Docker non trouv."""
         with tempfile.TemporaryDirectory() as temp_dir:
             provider = DockerSecretsProvider(Path(temp_dir))
             
@@ -151,7 +151,7 @@ class TestDockerSecretsProvider:
             assert len(secrets) == 2
     
     def test_secret_exists(self):
-        """Test vérification existence secret Docker."""
+        """Test vrification existence secret Docker."""
         with tempfile.TemporaryDirectory() as temp_dir:
             secrets_path = Path(temp_dir)
             (secrets_path / "existing_secret").write_text("value")
@@ -173,14 +173,14 @@ class TestEnvironmentVariablesProvider:
     
     @patch.dict(os.environ, {"SECRET_API_KEY": "test_value_123"})
     def test_get_secret_success(self):
-        """Test récupération secret env réussie."""
+        """Test rcupration secret env russie."""
         provider = EnvironmentVariablesProvider()
         secret = provider.get_secret("api_key")
         
         assert secret == "test_value_123"
     
     def test_get_secret_not_found(self):
-        """Test secret env non trouvé."""
+        """Test secret env non trouv."""
         provider = EnvironmentVariablesProvider()
         
         with pytest.raises(SecretNotFoundError):
@@ -206,7 +206,7 @@ class TestEnvironmentVariablesProvider:
     
     @patch.dict(os.environ, {"SECRET_EXISTING": "value"})
     def test_secret_exists(self):
-        """Test vérification existence secret env."""
+        """Test vrification existence secret env."""
         provider = EnvironmentVariablesProvider()
         
         assert provider.secret_exists("existing")
@@ -224,7 +224,7 @@ class TestLocalFileProvider:
             assert provider.secrets_dir == Path(temp_dir)
     
     def test_get_secret_success(self):
-        """Test récupération secret fichier réussie."""
+        """Test rcupration secret fichier russie."""
         with tempfile.TemporaryDirectory() as temp_dir:
             secrets_dir = Path(temp_dir)
             secret_file = secrets_dir / "api_key.secret"
@@ -236,7 +236,7 @@ class TestLocalFileProvider:
             assert secret == "local_secret_value"
     
     def test_get_secret_not_found(self):
-        """Test secret fichier non trouvé."""
+        """Test secret fichier non trouv."""
         with tempfile.TemporaryDirectory() as temp_dir:
             provider = LocalFileProvider(Path(temp_dir))
             
@@ -271,7 +271,7 @@ class TestLocalFileProvider:
             assert "not_secret" not in secrets
     
     def test_secret_exists(self):
-        """Test vérification existence secret fichier."""
+        """Test vrification existence secret fichier."""
         with tempfile.TemporaryDirectory() as temp_dir:
             secrets_dir = Path(temp_dir)
             (secrets_dir / "existing.secret").write_text("value")
@@ -309,7 +309,7 @@ class TestAzureKeyVaultProvider:
     @patch('orchestrator.app.security.secrets_manager.DefaultAzureCredential')
     @patch('orchestrator.app.security.secrets_manager.SecretClient')
     def test_get_secret_success(self, mock_secret_client, mock_credential):
-        """Test récupération secret Azure réussie."""
+        """Test rcupration secret Azure russie."""
         mock_client_instance = Mock()
         mock_secret_client.return_value = mock_client_instance
         
@@ -327,7 +327,7 @@ class TestAzureKeyVaultProvider:
     @patch('orchestrator.app.security.secrets_manager.DefaultAzureCredential')
     @patch('orchestrator.app.security.secrets_manager.SecretClient')
     def test_get_secret_not_found(self, mock_secret_client, mock_credential):
-        """Test secret Azure non trouvé."""
+        """Test secret Azure non trouv."""
         mock_client_instance = Mock()
         mock_secret_client.return_value = mock_client_instance
         mock_client_instance.get_secret.side_effect = Exception("Secret not found")
@@ -365,7 +365,7 @@ class TestHashiCorpVaultProvider:
     @patch('orchestrator.app.security.secrets_manager.VAULT_AVAILABLE', True)
     @patch('orchestrator.app.security.secrets_manager.hvac.Client')
     def test_vault_not_authenticated(self, mock_hvac_client):
-        """Test provider Vault non authentifié."""
+        """Test provider Vault non authentifi."""
         mock_client_instance = Mock()
         mock_client_instance.is_authenticated.return_value = False
         mock_hvac_client.return_value = mock_client_instance
@@ -394,7 +394,7 @@ class TestProductionSecretsManager:
         assert manager.cache_ttl == 1800
     
     def test_get_secret_from_primary(self):
-        """Test récupération secret depuis provider principal."""
+        """Test rcupration secret depuis provider principal."""
         primary = Mock(spec=SecretProvider)
         primary.get_secret.return_value = "primary_secret_value"
         
@@ -405,7 +405,7 @@ class TestProductionSecretsManager:
         primary.get_secret.assert_called_once_with("test_key")
     
     def test_get_secret_fallback(self):
-        """Test récupération secret depuis fallback."""
+        """Test rcupration secret depuis fallback."""
         primary = Mock(spec=SecretProvider)
         primary.get_secret.side_effect = SecretNotFoundError("Not found in primary")
         
@@ -422,7 +422,7 @@ class TestProductionSecretsManager:
         fallback.get_secret.assert_called_once_with("test_key")
     
     def test_get_secret_cache_hit(self):
-        """Test cache hit pour récupération secret."""
+        """Test cache hit pour rcupration secret."""
         primary = Mock(spec=SecretProvider)
         primary.get_secret.return_value = "cached_secret"
         
@@ -430,20 +430,20 @@ class TestProductionSecretsManager:
         
         # Premier appel - mise en cache
         secret1 = manager.get_secret("cached_key")
-        # Deuxième appel - cache hit
+        # Deuxime appel - cache hit
         secret2 = manager.get_secret("cached_key")
         
         assert secret1 == secret2 == "cached_secret"
-        # Provider appelé une seule fois
+        # Provider appel une seule fois
         primary.get_secret.assert_called_once()
     
     def test_get_secret_expired(self):
-        """Test secret expiré."""
+        """Test secret expir."""
         primary = Mock(spec=SecretProvider)
         
         manager = ProductionSecretsManager(primary_provider=primary)
         
-        # Simuler un secret expiré dans le cache
+        # Simuler un secret expir dans le cache
         metadata = SecretMetadata(
             name="expired_key",
             secret_type=SecretType.API_KEY,
@@ -451,7 +451,7 @@ class TestProductionSecretsManager:
             created_at=time.time(),
             last_accessed=time.time(),
             access_count=1,
-            expires_at=time.time() - 1  # Expiré
+            expires_at=time.time() - 1  # Expir
         )
         manager._cache["expired_key"] = "expired_value"
         manager._metadata["expired_key"] = metadata
@@ -460,7 +460,7 @@ class TestProductionSecretsManager:
             manager.get_secret("expired_key")
     
     def test_get_secret_not_found_anywhere(self):
-        """Test secret non trouvé nulle part."""
+        """Test secret non trouv nulle part."""
         primary = Mock(spec=SecretProvider)
         primary.get_secret.side_effect = SecretNotFoundError("Not in primary")
         
@@ -493,14 +493,14 @@ class TestProductionSecretsManager:
         assert "secret1" in secrets
         assert "secret2" in secrets
         assert "secret3" in secrets
-        assert len(secrets) == 3  # Dédoublonnage
+        assert len(secrets) == 3  # Ddoublonnage
     
     def test_clear_cache(self):
         """Test vidage cache."""
         primary = Mock(spec=SecretProvider)
         manager = ProductionSecretsManager(primary_provider=primary)
         
-        # Ajouter données dans le cache
+        # Ajouter donnes dans le cache
         manager._cache["test"] = "value"
         manager._metadata["test"] = Mock()
         
@@ -514,7 +514,7 @@ class TestProductionSecretsManager:
         primary = Mock(spec=SecretProvider)
         manager = ProductionSecretsManager(primary_provider=primary)
         
-        # Ajouter métadonnées
+        # Ajouter mtadonnes
         metadata = SecretMetadata(
             name="test",
             secret_type=SecretType.API_KEY,
@@ -539,7 +539,7 @@ class TestProductionSecretsManager:
         primary = Mock(spec=SecretProvider)
         manager = ProductionSecretsManager(primary_provider=primary)
         
-        # Ajouter entrées audit
+        # Ajouter entres audit
         for i in range(5):
             manager._access_log.append({
                 "timestamp": time.time(),
@@ -576,13 +576,13 @@ class TestProductionSecretsManager:
 
 @pytest.mark.unit 
 class TestSecretsManagerDefaults:
-    """Tests pour fonctions de configuration par défaut."""
+    """Tests pour fonctions de configuration par dfaut."""
     
     @patch.dict(os.environ, {"ENVIRONMENT": "development"})
     @patch('orchestrator.app.security.secrets_manager.LocalFileProvider')
     @patch('orchestrator.app.security.secrets_manager.EnvironmentVariablesProvider')
     def test_get_default_secrets_manager_development(self, mock_env_provider, mock_local_provider):
-        """Test configuration développement."""
+        """Test configuration dveloppement."""
         mock_local_instance = Mock()
         mock_local_provider.return_value = mock_local_instance
         mock_env_instance = Mock()
@@ -642,7 +642,7 @@ class TestSecretsManagerDefaults:
     
     @patch('orchestrator.app.security.secrets_manager.get_secrets_manager')
     def test_get_secret_convenience_function(self, mock_get_manager):
-        """Test fonction de convénience get_secret."""
+        """Test fonction de convnience get_secret."""
         mock_manager = Mock()
         mock_manager.get_secret.return_value = "convenience_secret"
         mock_get_manager.return_value = mock_manager
@@ -675,10 +675,10 @@ class TestSecretsManagerExceptions:
 
 @pytest.mark.unit
 class TestSecretsManagerEnums:
-    """Tests pour les énumérations."""
+    """Tests pour les numrations."""
     
     def test_secret_type_enum(self):
-        """Test énumération SecretType."""
+        """Test numration SecretType."""
         assert SecretType.API_KEY.value == "api_key"
         assert SecretType.DATABASE_PASSWORD.value == "database_password"
         assert SecretType.JWT_SECRET.value == "jwt_secret"
@@ -686,7 +686,7 @@ class TestSecretsManagerEnums:
         assert SecretType.OAUTH_CLIENT_SECRET.value == "oauth_client_secret"
     
     def test_secret_source_enum(self):
-        """Test énumération SecretSource."""
+        """Test numration SecretSource."""
         assert SecretSource.DOCKER_SECRETS.value == "docker_secrets"
         assert SecretSource.ENVIRONMENT_VARIABLES.value == "environment_variables"
         assert SecretSource.AZURE_KEY_VAULT.value == "azure_key_vault"

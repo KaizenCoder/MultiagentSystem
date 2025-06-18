@@ -1,5 +1,5 @@
 """
-Configuration réseau de sécurité production
+Configuration rseau de scurit production
 VPC, Security Groups, WAF, et DDoS protection
 """
 import os
@@ -13,14 +13,14 @@ from orchestrator.app.security.logging import security_logger
 
 
 class SecurityLevel(Enum):
-    """Niveaux de sécurité réseau"""
+    """Niveaux de scurit rseau"""
     DEVELOPMENT = "development"
     STAGING = "staging"
     PRODUCTION = "production"
 
 
 class ProtocolType(Enum):
-    """Types de protocole réseau"""
+    """Types de protocole rseau"""
     TCP = "tcp"
     UDP = "udp"
     ICMP = "icmp"
@@ -30,7 +30,7 @@ class ProtocolType(Enum):
 
 @dataclass
 class NetworkRule:
-    """Règle de sécurité réseau"""
+    """Rgle de scurit rseau"""
     name: str
     protocol: ProtocolType
     port_range: str  # "80" ou "80-90"
@@ -42,7 +42,7 @@ class NetworkRule:
 
 @dataclass
 class SecurityGroup:
-    """Groupe de sécurité avec règles"""
+    """Groupe de scurit avec rgles"""
     name: str
     description: str
     vpc_id: str
@@ -53,13 +53,13 @@ class SecurityGroup:
 
 class NetworkSecurityManager:
     """
-    Gestionnaire de sécurité réseau production-ready
+    Gestionnaire de scurit rseau production-ready
     
     Features:
-    - VPC et subnets privés
+    - VPC et subnets privs
     - Security groups restrictifs
     - WAF anti-OWASP Top 10
-    - Rate limiting avancé
+    - Rate limiting avanc
     - DDoS protection
     - Network monitoring
     """
@@ -81,7 +81,7 @@ class NetworkSecurityManager:
         })
     
     def _configure_for_environment(self):
-        """Configure la sécurité selon l'environnement"""
+        """Configure la scurit selon l'environnement"""
         if self.security_level == SecurityLevel.PRODUCTION:
             self._setup_production_security()
         elif self.security_level == SecurityLevel.STAGING:
@@ -90,7 +90,7 @@ class NetworkSecurityManager:
             self._setup_development_security()
     
     def _setup_production_security(self):
-        """Configuration sécurité production"""
+        """Configuration scurit production"""
         # Security Groups production
         self.security_groups = {
             "orchestrator": SecurityGroup(
@@ -217,7 +217,7 @@ class NetworkSecurityManager:
         }
     
     def _setup_staging_security(self):
-        """Configuration sécurité staging"""
+        """Configuration scurit staging"""
         # Security Groups moins restrictifs pour les tests
         self.security_groups = {
             "orchestrator": SecurityGroup(
@@ -263,8 +263,8 @@ class NetworkSecurityManager:
         }
     
     def _setup_development_security(self):
-        """Configuration sécurité développement"""
-        # Très permissif pour le développement
+        """Configuration scurit dveloppement"""
+        # Trs permissif pour le dveloppement
         self.security_groups = {
             "all": SecurityGroup(
                 name="development-sg",
@@ -301,7 +301,7 @@ class NetworkSecurityManager:
         }
     
     def _get_production_waf_rules(self) -> List[Dict[str, Any]]:
-        """Règles WAF anti-OWASP Top 10 pour production"""
+        """Rgles WAF anti-OWASP Top 10 pour production"""
         return [
             {
                 "name": "SQLInjectionRule",
@@ -381,7 +381,7 @@ class NetworkSecurityManager:
         ]
     
     def _get_basic_waf_rules(self) -> List[Dict[str, Any]]:
-        """Règles WAF basiques pour staging"""
+        """Rgles WAF basiques pour staging"""
         return [
             {
                 "name": "BasicRateLimit",
@@ -404,7 +404,7 @@ class NetworkSecurityManager:
         protocol: str = "tcp"
     ) -> Tuple[bool, str]:
         """
-        Valide l'accès réseau selon les security groups
+        Valide l'accs rseau selon les security groups
         
         Args:
             source_ip: IP source
@@ -412,9 +412,9 @@ class NetworkSecurityManager:
             protocol: Protocole (tcp, udp, etc.)
             
         Returns:
-            Tuple[bool, str]: (autorisé, raison)
+            Tuple[bool, str]: (autoris, raison)
         """
-        # Vérification IP bloquée
+        # Vrification IP bloque
         if source_ip in self.blocked_ips:
             security_logger.log_security_event("NETWORK_ACCESS_BLOCKED", {
                 "source_ip": source_ip,
@@ -423,7 +423,7 @@ class NetworkSecurityManager:
             })
             return False, "IP blocked"
         
-        # Vérification rate limiting
+        # Vrification rate limiting
         if not self._check_rate_limit(source_ip):
             security_logger.log_security_event("NETWORK_ACCESS_RATE_LIMITED", {
                 "source_ip": source_ip,
@@ -431,7 +431,7 @@ class NetworkSecurityManager:
             })
             return False, "Rate limit exceeded"
         
-        # Vérification security groups
+        # Vrification security groups
         for sg_name, sg in self.security_groups.items():
             for rule in sg.inbound_rules:
                 if self._rule_matches(rule, source_ip, destination_port, protocol):
@@ -452,7 +452,7 @@ class NetworkSecurityManager:
                         })
                         return False, f"Denied by {rule.name}"
         
-        # Pas de règle trouvée = refus par défaut
+        # Pas de rgle trouve = refus par dfaut
         security_logger.log_security_event("NETWORK_ACCESS_DEFAULT_DENY", {
             "source_ip": source_ip,
             "port": destination_port
@@ -466,12 +466,12 @@ class NetworkSecurityManager:
         port: int, 
         protocol: str
     ) -> bool:
-        """Vérifie si une règle correspond à la requête"""
-        # Vérification protocole
+        """Vrifie si une rgle correspond  la requte"""
+        # Vrification protocole
         if rule.protocol.value != protocol and rule.protocol.value not in ["tcp", "udp"]:
             return False
         
-        # Vérification port
+        # Vrification port
         if "-" in rule.port_range:
             start_port, end_port = map(int, rule.port_range.split("-"))
             if not (start_port <= port <= end_port):
@@ -480,7 +480,7 @@ class NetworkSecurityManager:
             if int(rule.port_range) != port:
                 return False
         
-        # Vérification CIDR
+        # Vrification CIDR
         try:
             network = ipaddress.ip_network(rule.source_cidr)
             source = ipaddress.ip_address(source_ip)
@@ -489,11 +489,11 @@ class NetworkSecurityManager:
             return False
     
     def _check_rate_limit(self, source_ip: str) -> bool:
-        """Vérifie les limites de taux pour une IP"""
+        """Vrifie les limites de taux pour une IP"""
         current_time = datetime.utcnow()
         
         # Simulation simple - en production, utiliser Redis
-        # pour un tracking distribué
+        # pour un tracking distribu
         if not hasattr(self, '_rate_tracking'):
             self._rate_tracking = {}
         
@@ -507,17 +507,17 @@ class NetworkSecurityManager:
         
         tracking = self._rate_tracking[ip_key]
         
-        # Vérification si encore bloqué
+        # Vrification si encore bloqu
         if tracking['blocked_until'] and current_time < tracking['blocked_until']:
             return False
         
-        # Reset de la fenêtre si nécessaire
+        # Reset de la fentre si ncessaire
         if current_time - tracking['window_start'] > timedelta(minutes=1):
             tracking['requests'] = 0
             tracking['window_start'] = current_time
             tracking['blocked_until'] = None
         
-        # Vérification limite
+        # Vrification limite
         per_ip_limit = self.rate_limits.get('per_ip', {}).get('requests_per_minute', 60)
         
         if tracking['requests'] >= per_ip_limit:
@@ -539,7 +539,7 @@ class NetworkSecurityManager:
         })
     
     def unblock_ip(self, ip_address: str):
-        """Débloque une adresse IP"""
+        """Dbloque une adresse IP"""
         self.blocked_ips.discard(ip_address)
         
         security_logger.log_security_event("IP_UNBLOCKED", {
@@ -548,7 +548,7 @@ class NetworkSecurityManager:
         })
     
     def get_security_metrics(self) -> Dict[str, Any]:
-        """Retourne les métriques de sécurité réseau"""
+        """Retourne les mtriques de scurit rseau"""
         return {
             "security_level": self.security_level.value,
             "security_groups_count": len(self.security_groups),
@@ -559,7 +559,7 @@ class NetworkSecurityManager:
         }
     
     def generate_security_group_config(self, format_type: str = "terraform") -> str:
-        """Génère la configuration Infrastructure as Code"""
+        """Gnre la configuration Infrastructure as Code"""
         if format_type == "terraform":
             return self._generate_terraform_config()
         elif format_type == "cloudformation":
@@ -568,7 +568,7 @@ class NetworkSecurityManager:
             raise ValueError(f"Unsupported format: {format_type}")
     
     def _generate_terraform_config(self) -> str:
-        """Génère la configuration Terraform pour les security groups"""
+        """Gnre la configuration Terraform pour les security groups"""
         config = []
         
         for sg_name, sg in self.security_groups.items():
@@ -618,8 +618,8 @@ resource "aws_security_group" "{sg_name}" {{
         return "".join(config)
     
     def _generate_cloudformation_config(self) -> str:
-        """Génère la configuration CloudFormation"""
-        # Implementation CloudFormation si nécessaire
+        """Gnre la configuration CloudFormation"""
+        # Implementation CloudFormation si ncessaire
         return "# CloudFormation template generation not implemented yet"
 
 
@@ -628,7 +628,7 @@ _network_security: Optional[NetworkSecurityManager] = None
 
 
 def get_network_security() -> NetworkSecurityManager:
-    """Retourne l'instance globale de sécurité réseau"""
+    """Retourne l'instance globale de scurit rseau"""
     global _network_security
     
     if _network_security is None:

@@ -1,5 +1,5 @@
 """
-Tests unitaires simplifiés pour le Supervisor - Version fonctionnelle.
+Tests unitaires simplifis pour le Supervisor - Version fonctionnelle.
 """
 
 import pytest
@@ -9,7 +9,7 @@ from orchestrator.app.agents.supervisor import Supervisor
 
 @pytest.mark.unit
 class TestSupervisorSimple:
-    """Tests unitaires simplifiés pour le Supervisor."""
+    """Tests unitaires simplifis pour le Supervisor."""
     
     def setup_method(self):
         """Setup pour chaque test."""
@@ -22,7 +22,7 @@ class TestSupervisorSimple:
         assert hasattr(self.supervisor, 'route')
     
     def test_create_plan_basic(self, sample_agent_state):
-        """Test création de plan basique."""
+        """Test cration de plan basique."""
         # ARRANGE
         sample_agent_state["task_description"] = "Generate Python code"
         
@@ -49,7 +49,7 @@ class TestSupervisorSimple:
         assert "next" in result
     
     def test_supervisor_with_different_tasks(self, sample_task_descriptions):
-        """Test supervisor avec différents types de tâches."""
+        """Test supervisor avec diffrents types de tches."""
         from datetime import datetime
         
         for task_type, description in sample_task_descriptions.items():
@@ -86,9 +86,9 @@ class TestSupervisorSimple:
         # ACT & ASSERT
         try:
             self.supervisor.create_plan(invalid_state)
-            # Si ça ne lève pas d'erreur, c'est ok aussi
+            # Si a ne lve pas d'erreur, c'est ok aussi
         except Exception as e:
-            # Toute exception est acceptable pour un état invalide
+            # Toute exception est acceptable pour un tat invalide
             assert isinstance(e, (ValueError, AttributeError, KeyError))
     
     def test_supervisor_performance_basic(self, sample_agent_state, performance_monitor):
@@ -104,4 +104,4 @@ class TestSupervisorSimple:
                 pass  # Ignorer les erreurs pour ce test de performance
         
         # ASSERT
-        performance_monitor.assert_max_duration(2000)  # Max 2 secondes pour 5 opérations 
+        performance_monitor.assert_max_duration(2000)  # Max 2 secondes pour 5 oprations 

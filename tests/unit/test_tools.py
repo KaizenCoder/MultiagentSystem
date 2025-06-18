@@ -1,6 +1,6 @@
 """
-Tests pour les outils agents - Sprint 3.1 (Version corrigée)
-Tests simplifiés avec les bonnes dépendances.
+Tests pour les outils agents - Sprint 3.1 (Version corrige)
+Tests simplifis avec les bonnes dpendances.
 """
 
 import pytest
@@ -12,49 +12,49 @@ class TestRagCodeSearchBasic:
     
     def test_rag_search_basic_validation(self):
         """Test basique de validation pour les outils RAG."""
-        # Test simple sans import problématique
+        # Test simple sans import problmatique
         assert True  # Placeholder pour maintenir la structure
 
 
 class TestPytestGeneratorBasic:
-    """Tests basiques pour le générateur de tests pytest."""
+    """Tests basiques pour le gnrateur de tests pytest."""
     
     def test_pytest_generator_basic(self):
-        """Test génération pytest basique."""
-        # Test simple de validation sans import problématique
+        """Test gnration pytest basique."""
+        # Test simple de validation sans import problmatique
         test_code = "def add(a, b): return a + b"
         assert "def" in test_code
         assert "add" in test_code
     
     def test_pytest_generator_invalid_input(self):
-        """Test avec entrée invalide."""
+        """Test avec entre invalide."""
         # Test simple de validation
         invalid_code = ""
         assert len(invalid_code) == 0
 
 
 class TestUnittestGeneratorBasic:
-    """Tests basiques pour le générateur de tests unittest."""
+    """Tests basiques pour le gnrateur de tests unittest."""
     
     def test_unittest_generator_basic(self):
-        """Test génération unittest basique."""
+        """Test gnration unittest basique."""
         # Test simple de validation
         test_code = "def multiply(a, b): return a * b"
         assert "multiply" in test_code
         assert "def" in test_code
     
     def test_unittest_generator_invalid_input(self):
-        """Test avec entrée invalide."""
+        """Test avec entre invalide."""
         # Test simple de validation
         invalid_code = ""
         assert len(invalid_code) == 0
 
 
 class TestToolDefinitions:
-    """Tests pour les définitions d'outils."""
+    """Tests pour les dfinitions d'outils."""
     
     def test_tools_import_successfully(self):
-        """Test que les outils peuvent être importés avec succès."""
+        """Test que les outils peuvent tre imports avec succs."""
         # Test simple de validation des types d'outils
         tools_types = ["code_tools", "doc_tools", "test_tools"]
         assert len(tools_types) == 3
@@ -67,12 +67,12 @@ class TestCodeValidationCoverage:
     """Tests additionnels pour augmenter la coverage."""
     
     def test_rag_search_null_input(self):
-        """Test avec entrée None."""
+        """Test avec entre None."""
         # Test simple de validation
-        assert None is None  # Test basique sans import problématique
+        assert None is None  # Test basique sans import problmatique
     
     def test_pytest_generator_error_handling(self):
-        """Test gestion d'erreur du générateur pytest."""
+        """Test gestion d'erreur du gnrateur pytest."""
         # Test simple de validation d'erreur
         try:
             raise Exception("Sanitization error")
@@ -80,7 +80,7 @@ class TestCodeValidationCoverage:
             assert "error" in str(e).lower()
     
     def test_unittest_generator_error_handling(self):
-        """Test gestion d'erreur du générateur unittest."""
+        """Test gestion d'erreur du gnrateur unittest."""
         # Test simple de validation d'erreur
         try:
             raise Exception("Unittest error")

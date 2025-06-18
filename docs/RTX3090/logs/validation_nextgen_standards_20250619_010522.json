@@ -1,0 +1,128 @@
+{
+  "summary": {
+    "total_tests": 5,
+    "successful_tests": 5,
+    "failed_tests": 0,
+    "success_rate": 100.0,
+    "total_duration": 0.15652251243591309,
+    "timestamp": "2025-06-19T01:05:22.676414"
+  },
+  "critical_failures": 0,
+  "overall_status": "PASS",
+  "detailed_results": [
+    {
+      "test_name": "Prérequis système",
+      "success": true,
+      "duration": 0.03200173377990723,
+      "result": null,
+      "timestamp": "2025-06-19T01:05:22.551894"
+    },
+    {
+      "test_name": "Détection GPU NextGen",
+      "success": true,
+      "duration": 0.0010061264038085938,
+      "result": {
+        "gpu_count": 1,
+        "gpus": {
+          "gpu_0": {
+            "name": "NVIDIA GeForce RTX 3090",
+            "memory_gb": 24.0,
+            "is_preferred": true,
+            "is_optimal": true,
+            "compatibility_score": 3023,
+            "recommended_for": "Optimized (modèles 7B-13B)"
+          }
+        },
+        "best_gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_gb": 24.0,
+          "is_preferred": true,
+          "is_optimal": true,
+          "compatibility_score": 3023,
+          "recommended_for": "Optimized (modèles 7B-13B)"
+        },
+        "optimal_gpus_found": true,
+        "nextgen_compatible": true,
+        "standards_version": "2.0 ADAPTÉE"
+      },
+      "timestamp": "2025-06-19T01:05:22.553893"
+    },
+    {
+      "test_name": "Configuration NextGen",
+      "success": true,
+      "duration": 0.0,
+      "result": {
+        "project": "NextGeneration AI Platform",
+        "standards_version": "2.0 ADAPTÉE",
+        "environment_variables": {
+          "CUDA_VISIBLE_DEVICES": "1",
+          "CUDA_DEVICE_ORDER": "PCI_BUS_ID",
+          "PYTORCH_CUDA_ALLOC_CONF": null
+        },
+        "torch_cuda_version": "12.6",
+        "current_device": 0,
+        "device_count": 1,
+        "primary_gpu": "NVIDIA GeForce RTX 3090",
+        "primary_gpu_memory_gb": 23.99951171875,
+        "compliance": {
+          "modern_pytorch_alloc": false,
+          "optimal_gpu_available": true,
+          "nextgen_compatible_setup": true,
+          "adaptive_config_ready": true,
+          "device_order_explicit": true
+        },
+        "overall_compliance": true,
+        "compliance_score": "4/5"
+      },
+      "timestamp": "2025-06-19T01:05:22.553893"
+    },
+    {
+      "test_name": "Allocation mémoire",
+      "success": true,
+      "duration": 0.12152814865112305,
+      "result": {
+        "simple_allocation": {
+          "success": true,
+          "memory_used_mb": 3.81494140625
+        },
+        "large_allocation": {
+          "success": true,
+          "memory_used_gb": 0.480562686920166,
+          "tensor_shape": [
+            40000,
+            3200
+          ]
+        },
+        "memory_management": {
+          "success": true,
+          "memory_cleanup_effective": false
+        }
+      },
+      "timestamp": "2025-06-19T01:05:22.676414"
+    },
+    {
+      "test_name": "Compatibilité Standards",
+      "success": true,
+      "duration": 0.0,
+      "result": {
+        "legacy_compatibility": {
+          "cuda_visible_devices_set": true,
+          "cuda_device_order_set": true,
+          "legacy_pattern_detected": true
+        },
+        "modern_features": {
+          "expandable_segments": true,
+          "modern_allocation": true,
+          "adaptive_configuration": true
+        },
+        "migration_readiness": {
+          "gpu_count": 1,
+          "primary_gpu_compatible": true,
+          "memory_sufficient": true,
+          "ready_for_nextgen": true
+        }
+      },
+      "timestamp": "2025-06-19T01:05:22.676414"
+    }
+  ]
+}

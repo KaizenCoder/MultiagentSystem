@@ -13,8 +13,8 @@ from datetime import datetime
 os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
 async def benchmark_model(model_name, test_prompts):
-    """Benchmark un modèle"""
-    print(f"🧪 Test: {model_name}")
+    """Benchmark un modle"""
+    print(f" Test: {model_name}")
     
     results = []
     
@@ -57,7 +57,7 @@ async def benchmark_model(model_name, test_prompts):
 
 async def main():
     """Benchmark principal"""
-    print("🎮 BENCHMARK RTX3090 COMPLET")
+    print(" BENCHMARK RTX3090 COMPLET")
     print("=" * 40)
     
     models_to_test = [
@@ -68,7 +68,7 @@ async def main():
     
     test_prompts = [
         "Explique l'IA en 2 phrases",
-        "Écris une fonction Python",
+        "cris une fonction Python",
         "Analyse les avantages du cloud"
     ]
     
@@ -90,7 +90,7 @@ async def main():
                 "tests": results
             }
             
-            print(f"📊 {model}: {avg_tokens_per_sec:.1f} tokens/s moyenne")
+            print(f"[CHART] {model}: {avg_tokens_per_sec:.1f} tokens/s moyenne")
     
     # Sauvegarde
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -99,7 +99,7 @@ async def main():
     with open(filename, 'w', encoding='utf-8') as f:
         json.dump(benchmark_results, f, indent=2, ensure_ascii=False)
     
-    print(f"\n📄 Résultats: {filename}")
+    print(f"\n[DOCUMENT] Rsultats: {filename}")
 
 if __name__ == "__main__":
     asyncio.run(main())

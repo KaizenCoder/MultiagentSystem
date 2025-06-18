@@ -9,10 +9,10 @@ import json
 from functools import lru_cache
 import inspect
 
-# === Modèle de Domaine Enrichi ===
+# === Modle de Domaine Enrichi ===
 
 class AgentCapability(Enum):
-    """Capacités standardisées des agents"""
+    """Capacits standardises des agents"""
     ANALYSIS = "analysis"
     GENERATION = "generation"
     VALIDATION = "validation"
@@ -22,7 +22,7 @@ class AgentCapability(Enum):
 
 @dataclass
 class AgentMetadata:
-    """Métadonnées enrichies pour chaque agent"""
+    """Mtadonnes enrichies pour chaque agent"""
     id: str
     name: str
     role: str
@@ -35,27 +35,27 @@ class AgentMetadata:
     created_at: datetime = field(default_factory=datetime.utcnow)
     last_updated: datetime = field(default_factory=datetime.utcnow)
 
-# === Système de Plugins pour Extensibilité ===
+# === Systme de Plugins pour Extensibilit ===
 
 class AgentPlugin(ABC):
     """Interface pour les plugins d'agents"""
     
     @abstractmethod
     async def on_init(self, agent: 'BaseAgent') -> None:
-        """Appelé lors de l'initialisation de l'agent"""
+        """Appel lors de l'initialisation de l'agent"""
         pass
     
     @abstractmethod
     async def on_process(self, input_data: Any, context: Dict[str, Any]) -> None:
-        """Appelé avant le traitement"""
+        """Appel avant le traitement"""
         pass
     
     @abstractmethod
     async def on_complete(self, result: Dict[str, Any]) -> None:
-        """Appelé après le traitement"""
+        """Appel aprs le traitement"""
         pass
 
-# === BaseAgent Amélioré avec Circuit Breaker ===
+# === BaseAgent Amlior avec Circuit Breaker ===
 
 class CircuitBreakerState(Enum):
     CLOSED = "closed"
@@ -64,7 +64,7 @@ class CircuitBreakerState(Enum):
 
 @dataclass
 class CircuitBreaker:
-    """Pattern Circuit Breaker pour la résilience"""
+    """Pattern Circuit Breaker pour la rsilience"""
     failure_threshold: int = 5
     recovery_timeout: float = 60.0
     failure_count: int = 0
@@ -72,7 +72,7 @@ class CircuitBreaker:
     state: CircuitBreakerState = CircuitBreakerState.CLOSED
 
 class BaseAgent(ABC):
-    """Classe de base enrichie avec patterns de résilience"""
+    """Classe de base enrichie avec patterns de rsilience"""
     
     def __init__(
         self, 
@@ -114,7 +114,7 @@ class BaseAgent(ABC):
             with self._performance_tracker.track():
                 result = await self._process_implementation(input_data, context)
             
-            # Reset circuit breaker sur succès
+            # Reset circuit breaker sur succs
             self._reset_circuit_breaker()
             
             # Plugins post-processing
@@ -129,33 +129,33 @@ class BaseAgent(ABC):
     
     @abstractmethod
     async def _process_implementation(self, input_data: Any, context: Dict[str, Any]) -> Dict[str, Any]:
-        """Implémentation spécifique du traitement"""
+        """Implmentation spcifique du traitement"""
         pass
     
     def _should_attempt_reset(self) -> bool:
-        """Vérifie si on peut tenter de réinitialiser le circuit breaker"""
+        """Vrifie si on peut tenter de rinitialiser le circuit breaker"""
         if self.circuit_breaker.last_failure_time:
             time_since_failure = asyncio.get_event_loop().time() - self.circuit_breaker.last_failure_time
             return time_since_failure >= self.circuit_breaker.recovery_timeout
         return False
     
     def _reset_circuit_breaker(self):
-        """Réinitialise le circuit breaker"""
+        """Rinitialise le circuit breaker"""
         self.circuit_breaker.failure_count = 0
         self.circuit_breaker.state = CircuitBreakerState.CLOSED
     
     def _handle_failure(self, error: Exception):
-        """Gère les échecs et met à jour le circuit breaker"""
+        """Gre les checs et met  jour le circuit breaker"""
         self.circuit_breaker.failure_count += 1
         self.circuit_breaker.last_failure_time = asyncio.get_event_loop().time()
         
         if self.circuit_breaker.failure_count >= self.circuit_breaker.failure_threshold:
             self.circuit_breaker.state = CircuitBreakerState.OPEN
 
-# === Factory Pattern Avancé ===
+# === Factory Pattern Avanc ===
 
 class AgentRegistry:
-    """Registre centralisé des agents et templates"""
+    """Registre centralis des agents et templates"""
     
     def __init__(self):
         self._templates: Dict[str, Dict[str, Any]] = {}
@@ -169,14 +169,14 @@ class AgentRegistry:
         self._templates[name] = template
     
     def register_agent_class(self, name: str, agent_class: Type[BaseAgent]):
-        """Enregistre une classe d'agent personnalisée"""
+        """Enregistre une classe d'agent personnalise"""
         if not issubclass(agent_class, BaseAgent):
             raise ValueError(f"{agent_class} must inherit from BaseAgent")
         self._agent_classes[name] = agent_class
     
     @lru_cache(maxsize=128)
     def get_template(self, name: str) -> Dict[str, Any]:
-        """Récupère un template avec cache"""
+        """Rcupre un template avec cache"""
         if name not in self._templates:
             raise ValueError(f"Template '{name}' not found")
         return self._templates[name].copy()
@@ -189,7 +189,7 @@ class AgentRegistry:
                 raise ValueError(f"Template missing required field: {field}")
 
 class DynamicAgent(BaseAgent):
-    """Agent créé dynamiquement à partir d'un template"""
+    """Agent cr dynamiquement  partir d'un template"""
     
     def __init__(self, template: Dict[str, Any], custom_processors: Dict[str, Any] = None):
         super().__init__(
@@ -203,7 +203,7 @@ class DynamicAgent(BaseAgent):
         self.custom_processors = custom_processors or {}
     
     async def _process_implementation(self, input_data: Any, context: Dict[str, Any]) -> Dict[str, Any]:
-        """Traitement basé sur le template et les processeurs personnalisés"""
+        """Traitement bas sur le template et les processeurs personnaliss"""
         processor_name = context.get("processor", "default")
         
         if processor_name in self.custom_processors:
@@ -211,27 +211,27 @@ class DynamicAgent(BaseAgent):
             if callable(processor):
                 return await processor(input_data, context)
         
-        # Comportement par défaut basé sur les capacités
+        # Comportement par dfaut bas sur les capacits
         results = {}
         for capability in self.metadata.capabilities:
             if capability == AgentCapability.ANALYSIS:
                 results["analysis"] = await self._analyze(input_data)
             elif capability == AgentCapability.GENERATION:
                 results["generation"] = await self._generate(input_data)
-            # ... autres capacités
+            # ... autres capacits
         
         return results
     
     async def _analyze(self, data: Any) -> Dict[str, Any]:
-        """Implémentation par défaut de l'analyse"""
+        """Implmentation par dfaut de l'analyse"""
         return {"status": "analyzed", "data": str(data)}
     
     async def _generate(self, data: Any) -> Dict[str, Any]:
-        """Implémentation par défaut de la génération"""
+        """Implmentation par dfaut de la gnration"""
         return {"status": "generated", "output": f"Generated from: {data}"}
 
 class AgentFactory:
-    """Factory avancé avec support de plugins et monitoring"""
+    """Factory avanc avec support de plugins et monitoring"""
     
     def __init__(self, registry: AgentRegistry):
         self.registry = registry
@@ -248,7 +248,7 @@ class AgentFactory:
         plugins: List[AgentPlugin] = None,
         custom_processors: Dict[str, Any] = None
     ) -> BaseAgent:
-        """Crée un agent avec monitoring et personnalisation"""
+        """Cre un agent avec monitoring et personnalisation"""
         start_time = asyncio.get_event_loop().time()
         
         try:
@@ -257,7 +257,7 @@ class AgentFactory:
             # Merge configuration
             final_config = {**template.get("default_config", {}), **(config or {})}
             
-            # Sélection de la classe d'agent
+            # Slection de la classe d'agent
             agent_class_name = template.get("agent_class", "dynamic")
             if agent_class_name in self.registry._agent_classes:
                 agent_class = self.registry._agent_classes[agent_class_name]
@@ -276,7 +276,7 @@ class AgentFactory:
             # Enregistrement
             self.registry._instances[agent.metadata.id] = agent
             
-            # Métriques
+            # Mtriques
             creation_time = asyncio.get_event_loop().time() - start_time
             self._creation_metrics["total_created"] += 1
             self._creation_metrics["creation_times"].append(creation_time)
@@ -293,7 +293,7 @@ class AgentFactory:
         pool_size: int,
         config: Dict[str, Any] = None
     ) -> List[BaseAgent]:
-        """Crée un pool d'agents identiques pour la charge"""
+        """Cre un pool d'agents identiques pour la charge"""
         tasks = [
             self.create_agent(template_name, config) 
             for _ in range(pool_size)
@@ -301,7 +301,7 @@ class AgentFactory:
         return await asyncio.gather(*tasks)
     
     def get_metrics(self) -> Dict[str, Any]:
-        """Retourne les métriques de création"""
+        """Retourne les mtriques de cration"""
         avg_time = sum(self._creation_metrics["creation_times"]) / len(self._creation_metrics["creation_times"]) if self._creation_metrics["creation_times"] else 0
         return {
             "total_agents_created": self._creation_metrics["total_created"],
@@ -309,10 +309,10 @@ class AgentFactory:
             "failure_rate": self._creation_metrics["failures"] / max(self._creation_metrics["total_created"], 1)
         }
 
-# === Intégration avec le Supervisor ===
+# === Intgration avec le Supervisor ===
 
 class AdaptiveSupervisor:
-    """Supervisor avec capacité de création d'agents à la demande"""
+    """Supervisor avec capacit de cration d'agents  la demande"""
     
     def __init__(self, factory: AgentFactory):
         self.factory = factory
@@ -328,17 +328,17 @@ class AdaptiveSupervisor:
         query: str, 
         context: Dict[str, Any]
     ) -> Dict[str, Any]:
-        """Route vers un agent existant ou en crée un nouveau"""
+        """Route vers un agent existant ou en cre un nouveau"""
         domain = self._detect_domain(query)
         
-        # Vérifier si un agent existe pour ce domaine
+        # Vrifier si un agent existe pour ce domaine
         if domain in self.routing_table:
             agent_id = self.routing_table[domain]
             agent = self.factory.registry._instances.get(agent_id)
             if agent:
                 return await agent.process(query, context)
         
-        # Créer un nouvel agent si nécessaire
+        # Crer un nouvel agent si ncessaire
         if domain in self.domain_templates:
             template_name = self.domain_templates[domain]
             agent = await self.factory.create_agent(template_name)
@@ -348,8 +348,8 @@ class AdaptiveSupervisor:
         raise ValueError(f"No agent available for domain: {domain}")
     
     def _detect_domain(self, query: str) -> str:
-        """Détecte le domaine basé sur la requête"""
-        # Implémentation simplifiée - utiliser NLP en production
+        """Dtecte le domaine bas sur la requte"""
+        # Implmentation simplifie - utiliser NLP en production
         query_lower = query.lower()
         if any(word in query_lower for word in ["security", "vulnerability", "threat"]):
             return "security"
@@ -359,7 +359,7 @@ class AdaptiveSupervisor:
             return "testing"
         return "general"
 
-# === Monitoring et Observabilité ===
+# === Monitoring et Observabilit ===
 
 class PerformanceTracker:
     """Tracker de performance pour les agents"""
@@ -405,7 +405,7 @@ class AgentState(Enum):
     TERMINATED = "terminated"
 
 class AgentStateMachine:
-    """Machine à états pour gérer le cycle de vie des agents"""
+    """Machine  tats pour grer le cycle de vie des agents"""
     
     def __init__(self):
         self.current_state = AgentState.IDLE
@@ -419,7 +419,7 @@ class AgentStateMachine:
         }
     
     def transition_to(self, new_state: AgentState):
-        """Effectue une transition d'état"""
+        """Effectue une transition d'tat"""
         if new_state not in self.transitions.get(self.current_state, []):
             raise ValueError(f"Invalid transition from {self.current_state} to {new_state}")
         
@@ -433,7 +433,7 @@ class AgentStateMachine:
 # === Exemple d'utilisation ===
 
 async def example_usage():
-    """Démonstration de l'utilisation du Factory Pattern"""
+    """Dmonstration de l'utilisation du Factory Pattern"""
     
     # Initialisation
     registry = AgentRegistry()
@@ -453,7 +453,7 @@ async def example_usage():
     }
     registry.register_template("security_analyst", security_template)
     
-    # Création d'un agent avec plugin
+    # Cration d'un agent avec plugin
     class LoggingPlugin(AgentPlugin):
         async def on_init(self, agent: BaseAgent):
             print(f"Agent {agent.metadata.name} initialized")
@@ -476,10 +476,10 @@ async def example_usage():
         {"priority": "high"}
     )
     
-    # Métriques
+    # Mtriques
     print(f"Factory metrics: {factory.get_metrics()}")
     
-    # Supervisor avec création automatique
+    # Supervisor avec cration automatique
     supervisor = AdaptiveSupervisor(factory)
     result = await supervisor.route_with_auto_creation(
         "Analyze security vulnerabilities in API",

@@ -1,6 +1,6 @@
 """
-Monitoring et observabilité production-ready
-Métriques custom, dashboards, et alerting intelligent
+Monitoring et observabilit production-ready
+Mtriques custom, dashboards, et alerting intelligent
 """
 import os
 import time
@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 
 class MetricType(Enum):
-    """Types de métriques"""
+    """Types de mtriques"""
     COUNTER = "counter"
     GAUGE = "gauge"
     HISTOGRAM = "histogram"
@@ -32,7 +32,7 @@ class MetricType(Enum):
 
 
 class AlertSeverity(Enum):
-    """Niveaux de sévérité des alertes"""
+    """Niveaux de svrit des alertes"""
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
@@ -41,7 +41,7 @@ class AlertSeverity(Enum):
 
 @dataclass
 class CustomMetric:
-    """Métrique personnalisée avec métadonnées"""
+    """Mtrique personnalise avec mtadonnes"""
     name: str
     help: str
     metric_type: MetricType
@@ -50,16 +50,16 @@ class CustomMetric:
     
     def __post_init__(self):
         if self.metric_type == MetricType.HISTOGRAM and self.buckets is None:
-            # Buckets par défaut pour histogrammes
+            # Buckets par dfaut pour histogrammes
             self.buckets = [0.005, 0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1.0, 2.5, 5.0, 7.5, 10.0]
 
 
 @dataclass
 class AlertRule:
-    """Règle d'alerte Prometheus"""
+    """Rgle d'alerte Prometheus"""
     name: str
     expr: str  # Expression PromQL
-    for_duration: str  # Durée (ex: "5m")
+    for_duration: str  # Dure (ex: "5m")
     severity: AlertSeverity
     summary: str
     description: str
@@ -70,11 +70,11 @@ class AlertRule:
 
 class ProductionMonitoring:
     """
-    Système de monitoring production-ready avec:
-    - Métriques custom Prometheus
+    Systme de monitoring production-ready avec:
+    - Mtriques custom Prometheus
     - Alertes intelligentes
     - Dashboards Grafana
-    - Health checks avancés
+    - Health checks avancs
     - SLA tracking
     """
     
@@ -84,7 +84,7 @@ class ProductionMonitoring:
         self.alert_rules: List[AlertRule] = []
         self.health_checks: Dict[str, Callable] = {}
         
-        # État du système
+        # tat du systme
         self.system_start_time = time.time()
         self.last_health_check = None
         self.health_status = "unknown"
@@ -100,7 +100,7 @@ class ProductionMonitoring:
             security_logger.log_error("Prometheus client not available, monitoring disabled")
     
     def _init_core_metrics(self):
-        """Initialise les métriques core système"""
+        """Initialise les mtriques core systme"""
         core_metrics = [
             CustomMetric(
                 name="orchestrator_requests_total",
@@ -169,7 +169,7 @@ class ProductionMonitoring:
             self._create_metric(metric_def)
     
     def _init_business_metrics(self):
-        """Initialise les métriques business spécifiques"""
+        """Initialise les mtriques business spcifiques"""
         business_metrics = [
             CustomMetric(
                 name="orchestrator_agents_created_total",
@@ -215,7 +215,7 @@ class ProductionMonitoring:
             self._create_metric(metric_def)
     
     def _create_metric(self, metric_def: CustomMetric):
-        """Crée une métrique Prometheus"""
+        """Cre une mtrique Prometheus"""
         if not PROMETHEUS_AVAILABLE:
             return
         
@@ -258,7 +258,7 @@ class ProductionMonitoring:
             security_logger.log_error(f"Failed to create metric {metric_def.name}", e)
     
     def _init_alert_rules(self):
-        """Initialise les règles d'alerte Prometheus"""
+        """Initialise les rgles d'alerte Prometheus"""
         self.alert_rules = [
             # Alertes Infrastructure
             AlertRule(
@@ -326,7 +326,7 @@ class ProductionMonitoring:
                 summary="API quota usage high",
                 description="API quota usage above 80%"
             ),
-            # Alertes Sécurité
+            # Alertes Scurit
             AlertRule(
                 name="SecurityEventSpike",
                 expr='rate(orchestrator_security_events_total{severity="high"}[5m]) > 10',
@@ -338,7 +338,7 @@ class ProductionMonitoring:
         ]
     
     def increment_counter(self, metric_name: str, labels: Optional[Dict[str, str]] = None, value: float = 1):
-        """Incrémente un compteur"""
+        """Incrmente un compteur"""
         if metric_name in self.metrics and PROMETHEUS_AVAILABLE:
             try:
                 if labels:
@@ -349,7 +349,7 @@ class ProductionMonitoring:
                 security_logger.log_error(f"Failed to increment counter {metric_name}", e)
     
     def set_gauge(self, metric_name: str, value: float, labels: Optional[Dict[str, str]] = None):
-        """Définit la valeur d'une gauge"""
+        """Dfinit la valeur d'une gauge"""
         if metric_name in self.metrics and PROMETHEUS_AVAILABLE:
             try:
                 if labels:
@@ -371,8 +371,8 @@ class ProductionMonitoring:
                 security_logger.log_error(f"Failed to observe histogram {metric_name}", e)
     
     def track_request(self, method: str, endpoint: str, status_code: int, duration: float, user_type: str = "standard"):
-        """Track une requête HTTP"""
-        # Compteur de requêtes
+        """Track une requte HTTP"""
+        # Compteur de requtes
         self.increment_counter("orchestrator_requests_total", {
             "method": method,
             "endpoint": endpoint,
@@ -380,7 +380,7 @@ class ProductionMonitoring:
             "user_type": user_type
         })
         
-        # Durée de la requête
+        # Dure de la requte
         self.observe_histogram("orchestrator_request_duration_seconds", duration, {
             "method": method,
             "endpoint": endpoint
@@ -396,7 +396,7 @@ class ProductionMonitoring:
             })
     
     def track_llm_request(self, provider: str, model: str, latency: float, success: bool):
-        """Track une requête LLM"""
+        """Track une requte LLM"""
         status = "success" if success else "error"
         
         self.increment_counter("orchestrator_llm_requests_total", {
@@ -412,7 +412,7 @@ class ProductionMonitoring:
             })
     
     def track_cache_operation(self, operation: str, cache_type: str, success: bool):
-        """Track une opération de cache"""
+        """Track une opration de cache"""
         status = "success" if success else "error"
         
         self.increment_counter("orchestrator_cache_operations_total", {
@@ -422,23 +422,23 @@ class ProductionMonitoring:
         })
     
     def update_cache_hit_ratio(self, cache_type: str, hit_ratio: float):
-        """Met à jour le ratio de hit du cache"""
+        """Met  jour le ratio de hit du cache"""
         self.set_gauge("orchestrator_cache_hit_ratio", hit_ratio, {
             "cache_type": cache_type
         })
     
     def track_user_session(self, user_tier: str, duration: float):
-        """Track la durée d'une session utilisateur"""
+        """Track la dure d'une session utilisateur"""
         self.observe_histogram("orchestrator_session_duration_seconds", duration, {
             "user_tier": user_tier
         })
     
     def update_active_sessions(self, count: int):
-        """Met à jour le nombre de sessions actives"""
+        """Met  jour le nombre de sessions actives"""
         self.set_gauge("orchestrator_active_sessions", count)
     
     def track_security_event(self, event_type: str, severity: str, source: str):
-        """Track un événement de sécurité"""
+        """Track un vnement de scurit"""
         self.increment_counter("orchestrator_security_events_total", {
             "event_type": event_type,
             "severity": severity,
@@ -453,13 +453,13 @@ class ProductionMonitoring:
         })
     
     def update_memory_usage(self, memory_type: str, bytes_used: int):
-        """Met à jour l'utilisation mémoire"""
+        """Met  jour l'utilisation mmoire"""
         self.set_gauge("orchestrator_memory_usage_bytes", bytes_used, {
             "type": memory_type
         })
     
     def update_api_quota_usage(self, provider: str, user_tier: str, usage_percent: float):
-        """Met à jour l'utilisation des quotas API"""
+        """Met  jour l'utilisation des quotas API"""
         self.set_gauge("orchestrator_api_quota_usage", usage_percent, {
             "provider": provider,
             "user_tier": user_tier
@@ -470,7 +470,7 @@ class ProductionMonitoring:
         self.health_checks[name] = check_func
     
     async def run_health_checks(self) -> Dict[str, Any]:
-        """Exécute tous les health checks"""
+        """Excute tous les health checks"""
         results = {}
         overall_healthy = True
         
@@ -505,7 +505,7 @@ class ProductionMonitoring:
         self.last_health_check = datetime.utcnow()
         self.health_status = "healthy" if overall_healthy else "unhealthy"
         
-        # Métriques de health check
+        # Mtriques de health check
         for name, result in results.items():
             self.set_gauge("orchestrator_health_check_status", 1 if result["healthy"] else 0, {
                 "check_name": name
@@ -519,7 +519,7 @@ class ProductionMonitoring:
         }
     
     def get_prometheus_metrics(self) -> str:
-        """Retourne les métriques au format Prometheus"""
+        """Retourne les mtriques au format Prometheus"""
         if not PROMETHEUS_AVAILABLE:
             return "# Prometheus not available\n"
         
@@ -530,7 +530,7 @@ class ProductionMonitoring:
             return f"# Error generating metrics: {str(e)}\n"
     
     def generate_alert_rules_yaml(self) -> str:
-        """Génère la configuration YAML des règles d'alerte"""
+        """Gnre la configuration YAML des rgles d'alerte"""
         config = {
             "groups": [{
                 "name": "orchestrator-alerts",
@@ -563,7 +563,7 @@ class ProductionMonitoring:
         return yaml.dump(config, default_flow_style=False)
     
     def generate_grafana_dashboard(self) -> Dict[str, Any]:
-        """Génère un dashboard Grafana basique"""
+        """Gnre un dashboard Grafana basique"""
         dashboard = {
             "dashboard": {
                 "id": None,
@@ -635,18 +635,18 @@ class ProductionMonitoring:
         return dashboard
 
     async def record_metric(self, metric_name: str, value: float, labels: Dict[str, str] = None):
-        """Enregistre une métrique générique de manière asynchrone"""
+        """Enregistre une mtrique gnrique de manire asynchrone"""
         try:
             if labels is None:
                 labels = {}
             
-            # Détermine le type de métrique basé sur le nom
+            # Dtermine le type de mtrique bas sur le nom
             if "_total" in metric_name or "_count" in metric_name:
                 self.increment_counter(metric_name, labels)
             elif "_seconds" in metric_name or "_latency" in metric_name or "_duration" in metric_name:
                 self.observe_histogram(metric_name, value, labels)
             else:
-                # Utiliser comme gauge par défaut
+                # Utiliser comme gauge par dfaut
                 self.set_gauge(metric_name, value, labels)
         except Exception as e:
             logger.warning(f"Failed to record metric {metric_name}: {e}")
@@ -666,9 +666,9 @@ def get_monitoring() -> ProductionMonitoring:
     return _monitoring_instance
 
 
-# Décorateur pour tracking automatique
+# Dcorateur pour tracking automatique
 def track_request_metrics(endpoint: str):
-    """Décorateur pour tracker automatiquement les métriques de requête"""
+    """Dcorateur pour tracker automatiquement les mtriques de requte"""
     def decorator(func):
         async def wrapper(*args, **kwargs):
             start_time = time.time()
@@ -678,11 +678,11 @@ def track_request_metrics(endpoint: str):
                 result = await func(*args, **kwargs)
                 duration = time.time() - start_time
                 
-                # Déterminer le status code
+                # Dterminer le status code
                 status_code = getattr(result, 'status_code', 200)
                 
                 monitoring.track_request(
-                    method="POST",  # Ajustable selon la méthode
+                    method="POST",  # Ajustable selon la mthode
                     endpoint=endpoint,
                     status_code=status_code,
                     duration=duration
@@ -704,5 +704,5 @@ def track_request_metrics(endpoint: str):
     return decorator
 
 
-# Export de l'instance globale pour compatibilité
+# Export de l'instance globale pour compatibilit
 monitoring_manager = get_monitoring()

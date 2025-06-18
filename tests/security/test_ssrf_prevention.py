@@ -1,6 +1,6 @@
 """
-Tests de prévention contre Server-Side Request Forgery (SSRF).
-Tests critiques pour vérifier la sécurisation des requêtes HTTP externes.
+Tests de prvention contre Server-Side Request Forgery (SSRF).
+Tests critiques pour vrifier la scurisation des requtes HTTP externes.
 """
 
 import pytest
@@ -9,7 +9,7 @@ import asyncio
 from unittest.mock import patch, AsyncMock, Mock
 from typing import Dict, List, Any
 
-# Import conditionnel pour éviter les erreurs
+# Import conditionnel pour viter les erreurs
 try:
     from orchestrator.app.security.validators import NetworkValidator
     NETWORK_VALIDATOR_AVAILABLE = True
@@ -28,7 +28,7 @@ except ImportError:
 @pytest.mark.security
 @pytest.mark.skipif(not NETWORK_VALIDATOR_AVAILABLE, reason="NetworkValidator not available")
 class TestSSRFPrevention:
-    """Tests de prévention contre Server-Side Request Forgery."""
+    """Tests de prvention contre Server-Side Request Forgery."""
     
     @pytest.mark.parametrize("malicious_url,should_block", [
         ("http://127.0.0.1:22", True),          # Localhost SSH
@@ -48,7 +48,7 @@ class TestSSRFPrevention:
         ("http://httpbin.org/get", False),     # Public test service
     ])
     def test_malicious_urls_blocked(self, malicious_url, should_block):
-        """Test que les URLs malveillantes sont bloquées."""
+        """Test que les URLs malveillantes sont bloques."""
         is_valid, error_message = NetworkValidator.validate_url(malicious_url)
         
         if should_block:
@@ -61,7 +61,7 @@ class TestSSRFPrevention:
             assert is_valid, f"URL {malicious_url} should be allowed but was blocked: {error_message}"
     
     def test_localhost_variations_blocked(self):
-        """Test que toutes les variations de localhost sont bloquées."""
+        """Test que toutes les variations de localhost sont bloques."""
         localhost_variations = [
             "http://127.0.0.1",
             "http://127.1",
@@ -78,7 +78,7 @@ class TestSSRFPrevention:
             assert "private" in error.lower() or "internal" in error.lower() or "loopback" in error.lower()
     
     def test_private_networks_blocked(self):
-        """Test que tous les réseaux privés sont bloqués."""
+        """Test que tous les rseaux privs sont bloqus."""
         private_networks = [
             "http://10.0.0.1",      # 10.0.0.0/8
             "http://10.255.255.255", # 10.0.0.0/8
@@ -94,7 +94,7 @@ class TestSSRFPrevention:
             assert "private" in error.lower()
     
     def test_cloud_metadata_endpoints_blocked(self):
-        """Test que les endpoints de métadonnées cloud sont bloqués."""
+        """Test que les endpoints de mtadonnes cloud sont bloqus."""
         metadata_endpoints = [
             "http://169.254.169.254/latest/meta-data/",  # AWS
             "http://169.254.169.254/computeMetadata/v1/", # GCP
@@ -106,18 +106,18 @@ class TestSSRFPrevention:
             assert not is_valid, f"Cloud metadata endpoint should be blocked: {url}"
     
     def test_dangerous_ports_blocked(self):
-        """Test que les ports dangereux sont bloqués."""
+        """Test que les ports dangereux sont bloqus."""
         dangerous_ports = [22, 23, 25, 53, 135, 139, 445, 1433, 3306, 5432]
         
         for port in dangerous_ports:
             url = f"http://example.com:{port}"
             is_valid, error = NetworkValidator.validate_url(url)
-            # Note: Selon l'implémentation, certains ports peuvent être autorisés pour des domaines externes
+            # Note: Selon l'implmentation, certains ports peuvent tre autoriss pour des domaines externes
             if not is_valid:
                 assert "port" in error.lower()
     
     def test_non_http_protocols_blocked(self):
-        """Test que les protocoles non-HTTP sont bloqués."""
+        """Test que les protocoles non-HTTP sont bloqus."""
         non_http_protocols = [
             "file:///etc/passwd",
             "ftp://example.com/file",
@@ -133,7 +133,7 @@ class TestSSRFPrevention:
                 f"Error should mention protocol restriction: {error}"
     
     def test_legitimate_urls_allowed(self):
-        """Test que les URLs légitimes sont autorisées."""
+        """Test que les URLs lgitimes sont autorises."""
         legitimate_urls = [
             "https://api.openai.com/v1/models",
             "https://api.anthropic.com/v1/messages",
@@ -148,15 +148,15 @@ class TestSSRFPrevention:
             assert is_valid, f"Legitimate URL should be allowed: {url}, error: {error}"
     
     def test_memory_api_url_validation(self):
-        """Test spécifique pour la validation de l'URL de l'API mémoire."""
-        # URLs valides pour l'API mémoire
+        """Test spcifique pour la validation de l'URL de l'API mmoire."""
+        # URLs valides pour l'API mmoire
         valid_memory_urls = [
             "http://memory_api:8001",
             "https://memory-api.company.com",
-            "http://localhost:8001",  # Peut être autorisé en développement
+            "http://localhost:8001",  # Peut tre autoris en dveloppement
         ]
         
-        # URLs invalides pour l'API mémoire
+        # URLs invalides pour l'API mmoire
         invalid_memory_urls = [
             "http://127.0.0.1:22",
             "file:///etc/passwd",
@@ -167,7 +167,7 @@ class TestSSRFPrevention:
         for url in valid_memory_urls:
             try:
                 is_valid, error = NetworkValidator.validate_memory_api_url(url)
-                # En fonction de la configuration, localhost peut être autorisé ou non
+                # En fonction de la configuration, localhost peut tre autoris ou non
                 if not is_valid and "localhost" not in url:
                     pytest.fail(f"Valid memory API URL was blocked: {url}, error: {error}")
             except AttributeError:
@@ -187,11 +187,11 @@ class TestSSRFPrevention:
 @pytest.mark.security
 @pytest.mark.skipif(not RAG_TOOL_AVAILABLE, reason="RAG tool not available")
 class TestRAGToolSSRFPrevention:
-    """Tests SSRF pour l'outil RAG qui utilise l'API mémoire."""
+    """Tests SSRF pour l'outil RAG qui utilise l'API mmoire."""
     
     @pytest.mark.asyncio
     async def test_rag_tool_with_safe_query(self, mock_httpx_client):
-        """Test de l'outil RAG avec une requête sûre."""
+        """Test de l'outil RAG avec une requte sre."""
         with patch('httpx.AsyncClient', return_value=mock_httpx_client({})):
             result = await rag_code_search_tool("search for Python functions")
             assert isinstance(result, str)
@@ -199,7 +199,7 @@ class TestRAGToolSSRFPrevention:
     
     @pytest.mark.asyncio 
     async def test_rag_tool_input_validation(self):
-        """Test de la validation des entrées de l'outil RAG."""
+        """Test de la validation des entres de l'outil RAG."""
         # Test avec query vide
         result = await rag_code_search_tool("")
         assert "error" in result.lower() or "invalid" in result.lower()
@@ -211,7 +211,7 @@ class TestRAGToolSSRFPrevention:
     
     @pytest.mark.asyncio
     async def test_rag_tool_url_validation(self):
-        """Test que l'outil RAG valide l'URL avant la requête."""
+        """Test que l'outil RAG valide l'URL avant la requte."""
         # Mock de la configuration avec URL malveillante
         with patch('orchestrator.app.config.settings') as mock_settings:
             mock_settings.MEMORY_API_URL = "http://127.0.0.1:22"
@@ -222,7 +222,7 @@ class TestRAGToolSSRFPrevention:
                 
                 result = await rag_code_search_tool("test query")
                 
-                # L'outil devrait détecter l'URL invalide et refuser la requête
+                # L'outil devrait dtecter l'URL invalide et refuser la requte
                 assert "error" in result.lower()
                 assert any(keyword in result.lower() for keyword in 
                           ['network', 'validation', 'failed', 'forbidden'])
@@ -269,14 +269,14 @@ class TestSSRFProtectionConfiguration:
     """Tests de configuration de la protection SSRF."""
     
     def test_network_validator_configuration(self):
-        """Test de la configuration du validateur réseau."""
+        """Test de la configuration du validateur rseau."""
         if not NETWORK_VALIDATOR_AVAILABLE:
             pytest.skip("NetworkValidator not available")
         
-        # Vérifier que les constantes de sécurité sont définies
+        # Vrifier que les constantes de scurit sont dfinies
         assert hasattr(NetworkValidator, 'BLOCKED_IPS') or hasattr(NetworkValidator, 'PRIVATE_NETWORKS')
         
-        # Vérifier que les schémas autorisés sont restrictifs
+        # Vrifier que les schmas autoriss sont restrictifs
         if hasattr(NetworkValidator, 'ALLOWED_SCHEMES'):
             allowed_schemes = NetworkValidator.ALLOWED_SCHEMES
             assert 'http' in allowed_schemes
@@ -285,7 +285,7 @@ class TestSSRFProtectionConfiguration:
             assert 'ftp' not in allowed_schemes
     
     def test_environment_variable_protection(self):
-        """Test que la protection fonctionne même avec des variables d'environnement malveillantes."""
+        """Test que la protection fonctionne mme avec des variables d'environnement malveillantes."""
         import os
         
         # Simulation d'une configuration malveillante via variables d'environnement
@@ -309,7 +309,7 @@ class TestSSRFProtectionConfiguration:
 @pytest.mark.integration
 @pytest.mark.security
 class TestSSRFIntegrationTests:
-    """Tests d'intégration pour la protection SSRF."""
+    """Tests d'intgration pour la protection SSRF."""
     
     @pytest.mark.asyncio
     async def test_end_to_end_ssrf_protection(self, security_test_headers):
@@ -318,27 +318,27 @@ class TestSSRFIntegrationTests:
             from fastapi.testclient import TestClient
             from orchestrator.app.main import app
             
-            # Créer un client de test synchrone
+            # Crer un client de test synchrone
             with TestClient(app) as test_client:
-                # Test avec une tâche qui pourrait déclencher une requête SSRF
+                # Test avec une tche qui pourrait dclencher une requte SSRF
                 malicious_task = {
                     "task_description": "Search for code examples using internal metadata service",
                     "code_context": "# This might trigger SSRF"
                 }
                 
-                # La requête devrait être traitée sans déclencher de SSRF
+                # La requte devrait tre traite sans dclencher de SSRF
                 response = test_client.post(
                     "/invoke",
                     json=malicious_task,
                     headers=security_test_headers
                 )
                 
-                # Vérifier que la réponse ne contient pas d'informations sensibles
+                # Vrifier que la rponse ne contient pas d'informations sensibles
                 if response.status_code == 200:
                     response_data = response.json()
                     response_text = str(response_data)
                     
-                    # Vérifier qu'aucune information sensible n'a été exfiltrée
+                    # Vrifier qu'aucune information sensible n'a t exfiltre
                     forbidden_patterns = [
                         'ami-',  # AWS AMI IDs
                         'i-0',   # AWS instance IDs
@@ -356,7 +356,7 @@ class TestSSRFIntegrationTests:
     
     @pytest.mark.asyncio
     async def test_ssrf_logging_and_monitoring(self, log_capture):
-        """Test que les tentatives SSRF sont correctement loggées."""
+        """Test que les tentatives SSRF sont correctement logges."""
         if not NETWORK_VALIDATOR_AVAILABLE:
             pytest.skip("NetworkValidator not available")
         
@@ -366,12 +366,12 @@ class TestSSRFIntegrationTests:
         
         assert not is_valid
         
-        # Vérifier que l'événement est loggé (selon l'implémentation du logging)
+        # Vrifier que l'vnement est logg (selon l'implmentation du logging)
         log_contents = log_capture.getvalue()
-        # Cette vérification dépend de l'implémentation spécifique du logging
+        # Cette vrification dpend de l'implmentation spcifique du logging
     
     def test_ssrf_protection_bypass_attempts(self):
-        """Test de résistance aux tentatives de bypass de la protection SSRF."""
+        """Test de rsistance aux tentatives de bypass de la protection SSRF."""
         if not NETWORK_VALIDATOR_AVAILABLE:
             pytest.skip("NetworkValidator not available")
         
@@ -388,7 +388,7 @@ class TestSSRFIntegrationTests:
         
         for url in bypass_attempts:
             is_valid, error = NetworkValidator.validate_url(url)
-            # La plupart de ces tentatives devraient être bloquées
+            # La plupart de ces tentatives devraient tre bloques
             # Certaines peuvent passer selon la sophistication de la validation
             if not is_valid:
                 assert any(keyword in error.lower() for keyword in 
@@ -440,5 +440,5 @@ class TestSSRFValidationPerformance:
             for _ in range(10):
                 await rag_code_search_tool("test query")
             
-            # 10 appels avec validation ne doivent pas dépasser 1 seconde
+            # 10 appels avec validation ne doivent pas dpasser 1 seconde
             performance_monitor.assert_max_duration(1000)

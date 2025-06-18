@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 Orchestrateur NextGeneration - Version SQLite Simple
-Contourne PostgreSQL, utilise SQLite pour démarrage immédiat
-Configuration terminée par IA-2, adaptée pour environnement Windows
+Contourne PostgreSQL, utilise SQLite pour dmarrage immdiat
+Configuration termine par IA-2, adapte pour environnement Windows
 """
 
 import sys
@@ -21,12 +21,12 @@ import asyncio
 
 # Configuration
 app = FastAPI(
-    title="🚀 Orchestrateur NextGeneration",
+    title="[ROCKET] Orchestrateur NextGeneration",
     description="Orchestrateur Multi-Agent avec SQLite",
     version="1.0.0"
 )
 
-# Modèles Pydantic
+# Modles Pydantic
 class TaskRequest(BaseModel):
     task: str
     priority: str = "normal"
@@ -52,7 +52,7 @@ class SystemStatus(BaseModel):
 DB_PATH = Path("orchestrator_data.db")
 
 class SimpleDatabase:
-    """Base de données SQLite simple pour l'orchestrateur"""
+    """Base de donnes SQLite simple pour l'orchestrateur"""
     
     def __init__(self):
         self.db_path = DB_PATH
@@ -64,7 +64,7 @@ class SimpleDatabase:
             conn = sqlite3.connect(self.db_path)
             cursor = conn.cursor()
             
-            # Table des tâches
+            # Table des tches
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS tasks (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -101,13 +101,13 @@ class SimpleDatabase:
             
             conn.commit()
             conn.close()
-            print("✅ Base de données SQLite initialisée")
+            print("[CHECK] Base de donnes SQLite initialise")
             
         except Exception as e:
-            print(f"❌ Erreur initialisation DB: {e}")
+            print(f"[CROSS] Erreur initialisation DB: {e}")
     
     def add_task(self, task_id: str, task_content: str, priority: str = "normal") -> bool:
-        """Ajoute une tâche"""
+        """Ajoute une tche"""
         try:
             conn = sqlite3.connect(self.db_path)
             cursor = conn.cursor()
@@ -119,11 +119,11 @@ class SimpleDatabase:
             conn.close()
             return True
         except Exception as e:
-            print(f"❌ Erreur ajout tâche: {e}")
+            print(f"[CROSS] Erreur ajout tche: {e}")
             return False
     
     def update_task(self, task_id: str, status: str, result: str = None, execution_time: float = None) -> bool:
-        """Met à jour une tâche"""
+        """Met  jour une tche"""
         try:
             conn = sqlite3.connect(self.db_path)
             cursor = conn.cursor()
@@ -143,16 +143,16 @@ class SimpleDatabase:
             conn.close()
             return True
         except Exception as e:
-            print(f"❌ Erreur mise à jour tâche: {e}")
+            print(f"[CROSS] Erreur mise  jour tche: {e}")
             return False
     
     def get_stats(self) -> Dict[str, Any]:
-        """Récupère les statistiques"""
+        """Rcupre les statistiques"""
         try:
             conn = sqlite3.connect(self.db_path)
             cursor = conn.cursor()
             
-            # Compte des tâches
+            # Compte des tches
             cursor.execute("SELECT COUNT(*) FROM tasks WHERE status = 'pending'")
             active_tasks = cursor.fetchone()[0]
             
@@ -167,49 +167,49 @@ class SimpleDatabase:
                 "database_status": "operational"
             }
         except Exception as e:
-            print(f"❌ Erreur stats: {e}")
+            print(f"[CROSS] Erreur stats: {e}")
             return {"error": str(e)}
 
-# Instance base de données
+# Instance base de donnes
 db = SimpleDatabase()
 start_time = datetime.now()
 
 # Simulateur d'agents simple
 class SimpleAgentOrchestrator:
-    """Orchestrateur d'agents simplifié"""
+    """Orchestrateur d'agents simplifi"""
     
     def __init__(self):
         self.agents = {
             "ia1": "Agent IA-1 (Communication, Coordination)", 
             "ia2": "Agent IA-2 (Architecture, Production)",
-            "auto": "Sélection automatique"
+            "auto": "Slection automatique"
         }
     
     async def process_task(self, task: str, priority: str = "normal", agent: str = "auto") -> Dict[str, Any]:
-        """Traite une tâche"""
+        """Traite une tche"""
         task_id = f"task_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
         
-        # Ajoute à la base
+        # Ajoute  la base
         db.add_task(task_id, task, priority)
         
         # Simulation de traitement
         await asyncio.sleep(0.5)  # Simule le travail
         
-        # Sélection d'agent
+        # Slection d'agent
         if agent == "auto":
             if any(keyword in task.lower() for keyword in ["database", "postgresql", "performance", "architecture"]):
                 selected_agent = "ia2"
             elif any(keyword in task.lower() for keyword in ["communication", "coordination", "test"]):
                 selected_agent = "ia1"
             else:
-                selected_agent = "ia1"  # Par défaut
+                selected_agent = "ia1"  # Par dfaut
         else:
             selected_agent = agent
         
-        # Résultat simulé
-        result = f"✅ Tâche traitée par {self.agents[selected_agent]}: {task[:100]}..."
+        # Rsultat simul
+        result = f"[CHECK] Tche traite par {self.agents[selected_agent]}: {task[:100]}..."
         
-        # Met à jour la base
+        # Met  jour la base
         db.update_task(task_id, "completed", result, 0.5)
         
         return {
@@ -229,7 +229,7 @@ orchestrator = SimpleAgentOrchestrator()
 
 @app.get("/health")
 async def health_check():
-    """Point de santé de l'API"""
+    """Point de sant de l'API"""
     return {
         "status": "ok",
         "service": "NextGeneration Orchestrator",
@@ -240,7 +240,7 @@ async def health_check():
 
 @app.get("/status")
 async def get_system_status():
-    """Statut détaillé du système"""
+    """Statut dtaill du systme"""
     stats = db.get_stats()
     uptime = datetime.now() - start_time
     
@@ -255,7 +255,7 @@ async def get_system_status():
 
 @app.post("/process", response_model=TaskResponse)
 async def process_task(request: TaskRequest):
-    """Traite une tâche via l'orchestrateur"""
+    """Traite une tche via l'orchestrateur"""
     try:
         result = await orchestrator.process_task(
             task=request.task,
@@ -270,12 +270,12 @@ async def process_task(request: TaskRequest):
 
 @app.get("/demo")
 async def demo_endpoint():
-    """Endpoint de démonstration"""
+    """Endpoint de dmonstration"""
     demo_tasks = [
-        "Analyser les performances de la base de données",
+        "Analyser les performances de la base de donnes",
         "Coordonner la communication entre IA-1 et IA-2", 
         "Optimiser l'architecture PostgreSQL",
-        "Valider les tests de sécurité"
+        "Valider les tests de scurit"
     ]
     
     results = []
@@ -291,17 +291,17 @@ async def demo_endpoint():
         "demo": "Orchestrateur NextGeneration",
         "tasks_processed": len(results),
         "results": results,
-        "configuration": "PostgreSQL configuré par IA-2, SQLite pour démarrage"
+        "configuration": "PostgreSQL configur par IA-2, SQLite pour dmarrage"
     }
 
 @app.get("/")
 async def root():
     """Page d'accueil de l'API"""
     return {
-        "service": "🚀 Orchestrateur NextGeneration",
-        "status": "Opérationnel",
-        "configuration": "PostgreSQL configuré par IA-2",
-        "database_current": "SQLite (démarrage rapide)",
+        "service": "[ROCKET] Orchestrateur NextGeneration",
+        "status": "Oprationnel",
+        "configuration": "PostgreSQL configur par IA-2",
+        "database_current": "SQLite (dmarrage rapide)",
         "endpoints": {
             "health": "/health",
             "status": "/status", 
@@ -310,25 +310,25 @@ async def root():
         },
         "next_steps": [
             "1. Configurer PostgreSQL selon IA-2",
-            "2. Créer fichier .env avec identifiants",
+            "2. Crer fichier .env avec identifiants",
             "3. Migrer de SQLite vers PostgreSQL",
             "4. Tests de charge complets"
         ]
     }
 
 # =====================================
-# DÉMARRAGE
+# DMARRAGE
 # =====================================
 
 if __name__ == "__main__":
-    print("🚀 Démarrage Orchestrateur NextGeneration (SQLite)")
-    print("✅ Configuration PostgreSQL par IA-2 : Disponible") 
-    print("🔧 Base actuelle : SQLite (démarrage rapide)")
-    print("📋 Endpoints : /health /status /process /demo")
-    print("🎯 Port : 8004 (évite les conflits)")
+    print("[ROCKET] Dmarrage Orchestrateur NextGeneration (SQLite)")
+    print("[CHECK] Configuration PostgreSQL par IA-2 : Disponible") 
+    print("[TOOL] Base actuelle : SQLite (dmarrage rapide)")
+    print("[CLIPBOARD] Endpoints : /health /status /process /demo")
+    print("[TARGET] Port : 8004 (vite les conflits)")
     
     try:
         uvicorn.run(app, host="0.0.0.0", port=8004, log_level="info")
     except Exception as e:
-        print(f"❌ Erreur démarrage: {e}")
-        print("💡 Essayez un autre port ou vérifiez les permissions") 
+        print(f"[CROSS] Erreur dmarrage: {e}")
+        print("[BULB] Essayez un autre port ou vrifiez les permissions") 

@@ -1,6 +1,6 @@
 """
 Test de charge basique pour l'orchestrateur multi-agent.
-Valide que les performances ne se dégradent pas avec les correctifs sécurité.
+Valide que les performances ne se dgradent pas avec les correctifs scurit.
 """
 
 from locust import HttpUser, task, between
@@ -9,18 +9,18 @@ import random
 
 
 class OrchestratorUser(HttpUser):
-    """Utilisateur simulé pour les tests de charge."""
+    """Utilisateur simul pour les tests de charge."""
     
-    wait_time = between(1, 3)  # Attente entre 1 et 3 secondes entre les requêtes
+    wait_time = between(1, 3)  # Attente entre 1 et 3 secondes entre les requtes
     
     def on_start(self):
         """Initialisation de l'utilisateur."""
-        # Test de connectivité
+        # Test de connectivit
         response = self.client.get("/health")
         if response.status_code != 200:
-            print(f"❌ Service non disponible: {response.status_code}")
+            print(f"[CROSS] Service non disponible: {response.status_code}")
     
-    @task(3)  # Poids 3 - tâche principale
+    @task(3)  # Poids 3 - tche principale
     def health_check(self):
         """Test du endpoint de health check."""
         with self.client.get("/health", catch_response=True) as response:
@@ -38,7 +38,7 @@ class OrchestratorUser(HttpUser):
     
     @task(2)  # Poids 2 - test de l'API principale
     def orchestrate_simple_task(self):
-        """Test d'orchestration d'une tâche simple."""
+        """Test d'orchestration d'une tche simple."""
         payload = {
             "task_description": f"Simple task {random.randint(1, 1000)}",
             "file_paths": [],
@@ -66,9 +66,9 @@ class OrchestratorUser(HttpUser):
             else:
                 response.failure(f"HTTP {response.status_code}")
     
-    @task(1)  # Poids 1 - test de sécurité
+    @task(1)  # Poids 1 - test de scurit
     def test_code_analysis(self):
-        """Test de l'analyse de code sécurisée."""
+        """Test de l'analyse de code scurise."""
         safe_code = """
 def hello_world():
     return "Hello, World!"
@@ -94,9 +94,9 @@ print(result)
             else:
                 response.failure(f"HTTP {response.status_code}")
     
-    @task(1)  # Poids 1 - test endpoints de métriques
+    @task(1)  # Poids 1 - test endpoints de mtriques
     def metrics_check(self):
-        """Test des métriques Prometheus."""
+        """Test des mtriques Prometheus."""
         with self.client.get("/metrics", catch_response=True) as response:
             if response.status_code == 200:
                 if "orchestrator_" in response.text:
@@ -108,14 +108,14 @@ print(result)
 
 
 class SecurityTestUser(HttpUser):
-    """Utilisateur pour tests de sécurité sous charge."""
+    """Utilisateur pour tests de scurit sous charge."""
     
     wait_time = between(2, 5)
-    weight = 1  # Moins d'utilisateurs pour les tests de sécurité
+    weight = 1  # Moins d'utilisateurs pour les tests de scurit
     
     @task
     def test_malicious_code_blocked(self):
-        """Teste que le code malveilleux est bloqué même sous charge."""
+        """Teste que le code malveilleux est bloqu mme sous charge."""
         malicious_payloads = [
             "eval('__import__(\"os\").system(\"id\")')",
             "exec('import subprocess; subprocess.run([\"ls\", \"/\"])')",
@@ -135,10 +135,10 @@ class SecurityTestUser(HttpUser):
             catch_response=True,
             timeout=10
         ) as response:
-            # Le code malveilleux doit être rejeté (400/422) ou analysé de façon sécurisée (200)
+            # Le code malveilleux doit tre rejet (400/422) ou analys de faon scurise (200)
             if response.status_code in [200, 400, 422]:
                 if response.status_code == 200:
-                    # Vérifier que l'analyse ne contient pas d'exécution réelle
+                    # Vrifier que l'analyse ne contient pas d'excution relle
                     try:
                         data = response.json()
                         result = data.get("result", "").lower()
@@ -158,11 +158,11 @@ class AdminUser(HttpUser):
     """Utilisateur admin pour les endpoints sensibles."""
     
     wait_time = between(5, 10)
-    weight = 1  # Très peu d'utilisateurs admin
+    weight = 1  # Trs peu d'utilisateurs admin
     
     @task
     def admin_health_detailed(self):
-        """Test du health check détaillé admin."""
+        """Test du health check dtaill admin."""
         with self.client.get("/admin/health/detailed", catch_response=True) as response:
             if response.status_code in [200, 401, 403]:  # 401/403 = pas d'auth, c'est OK
                 response.success()
@@ -171,7 +171,7 @@ class AdminUser(HttpUser):
     
     @task
     def admin_metrics_detailed(self):
-        """Test des métriques détaillées."""
+        """Test des mtriques dtailles."""
         with self.client.get("/admin/metrics", catch_response=True) as response:
             if response.status_code in [200, 401, 403]:
                 response.success()
@@ -179,9 +179,9 @@ class AdminUser(HttpUser):
                 response.failure(f"HTTP {response.status_code}")
 
 
-# Configuration pour tests de charge spécialisés
+# Configuration pour tests de charge spcialiss
 class StressTestUser(HttpUser):
-    """Utilisateur pour tests de stress spécialisés."""
+    """Utilisateur pour tests de stress spcialiss."""
     
     wait_time = between(0.5, 1.5)  # Plus agressif
     

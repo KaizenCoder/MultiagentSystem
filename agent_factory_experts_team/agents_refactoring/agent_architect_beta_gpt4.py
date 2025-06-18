@@ -2,16 +2,16 @@
 # -*- coding: utf-8 -*-
 
 """
-🏗️ AGENT ARCHITECT BETA - GPT-4 TURBO
+[CONSTRUCTION] AGENT ARCHITECT BETA - GPT-4 TURBO
 Phase 2: Architecture alternative et Validation
 
 Mission: Fournir perspective alternative sur architecture modulaire
-- Validation croisée des plans Alpha
+- Validation croise des plans Alpha
 - Patterns alternatifs et optimisations
-- Détection des risques architecturaux
-- Recommandations d'amélioration
+- Dtection des risques architecturaux
+- Recommandations d'amlioration
 
-Spécialisation: Architecture Patterns et Best Practices
+Spcialisation: Architecture Patterns et Best Practices
 """
 
 import os
@@ -28,7 +28,7 @@ load_dotenv()
 
 @dataclass
 class AlternativeArchitecture:
-    """Architecture alternative proposée"""
+    """Architecture alternative propose"""
     file_path: str
     alternative_approach: str
     patterns_suggested: List[str]
@@ -40,7 +40,7 @@ class AlternativeArchitecture:
 
 @dataclass
 class ValidationResult:
-    """Résultat validation croisée"""
+    """Rsultat validation croise"""
     alpha_plan_valid: bool
     suggested_improvements: List[str]
     critical_issues: List[str]
@@ -48,7 +48,7 @@ class ValidationResult:
 
 class AgentArchitectBetaGPT4:
     """
-    🏗️ Agent Architect Beta - GPT-4 Turbo
+    [CONSTRUCTION] Agent Architect Beta - GPT-4 Turbo
     
     Expertise:
     - Architecture Patterns Validation
@@ -79,7 +79,7 @@ class AgentArchitectBetaGPT4:
             "adapter": "Adapter Pattern"
         }
         
-        # Métriques de qualité
+        # Mtriques de qualit
         self.quality_metrics = [
             "Cyclomatic Complexity",
             "Coupling Metrics",
@@ -93,14 +93,14 @@ class AgentArchitectBetaGPT4:
 
     async def validate_alpha_plan(self, alpha_plan_path: str) -> ValidationResult:
         """
-        ✅ Valider plan architectural Alpha
+        [CHECK] Valider plan architectural Alpha
         """
         try:
             # Charger plan Alpha
             with open(alpha_plan_path, 'r', encoding='utf-8') as f:
                 alpha_plan = json.load(f)
             
-            # Créer prompt validation
+            # Crer prompt validation
             prompt = self._create_validation_prompt(alpha_plan)
             
             # Analyser avec GPT-4
@@ -115,72 +115,72 @@ class AgentArchitectBetaGPT4:
             return validation
             
         except Exception as e:
-            print(f"❌ Erreur validation {alpha_plan_path}: {e}")
+            print(f"[CROSS] Erreur validation {alpha_plan_path}: {e}")
             return None
 
     def _create_validation_prompt(self, alpha_plan: Dict[str, Any]) -> str:
         """
-        🎯 Créer prompt validation spécialisé
+        [TARGET] Crer prompt validation spcialis
         """
         prompt = f"""
-Tu es un EXPERT EN ARCHITECTURE LOGICIEL avec 15+ ans d'expérience.
+Tu es un EXPERT EN ARCHITECTURE LOGICIEL avec 15+ ans d'exprience.
 
-MISSION: Valider et améliorer le plan architectural suivant.
+MISSION: Valider et amliorer le plan architectural suivant.
 
-PLAN À VALIDER:
+PLAN  VALIDER:
 {json.dumps(alpha_plan, indent=2)}
 
 ANALYSE CRITIQUE REQUISE:
 
 1. VALIDATION PATTERNS:
    - Les patterns choisis sont-ils optimaux?
-   - Y a-t-il des patterns alternatifs plus appropriés?
-   - Compatibilité entre patterns?
+   - Y a-t-il des patterns alternatifs plus appropris?
+   - Compatibilit entre patterns?
 
 2. ANALYSE RISQUES:
-   - Risques techniques identifiés
-   - Complexité d'implémentation
+   - Risques techniques identifis
+   - Complexit d'implmentation
    - Impact sur performance
-   - Risques de régression
+   - Risques de rgression
 
 3. OPTIMISATIONS:
-   - Améliorations suggérées
+   - Amliorations suggres
    - Patterns alternatifs
    - Simplifications possibles
    - Gains de performance
 
 4. ALTERNATIVE ARCHITECTURE:
-   - Approche complètement différente
-   - Avantages/inconvénients
-   - Effort d'implémentation
+   - Approche compltement diffrente
+   - Avantages/inconvnients
+   - Effort d'implmentation
 
 PATTERNS ALTERNATIFS DISPONIBLES:
 {json.dumps(self.alternative_patterns, indent=2)}
 
-MÉTRIQUES QUALITÉ À CONSIDÉRER:
+MTRIQUES QUALIT  CONSIDRER:
 {chr(10).join(f"- {metric}" for metric in self.quality_metrics)}
 
-RÉPONSE ATTENDUE (JSON):
+RPONSE ATTENDUE (JSON):
 {{
   "plan_alpha_valide": true/false,
-  "problèmes_critiques": ["problème1", "problème2"],
-  "améliorations_suggérées": [
+  "problmes_critiques": ["problme1", "problme2"],
+  "amliorations_suggres": [
     {{
       "type": "pattern_alternative",
-      "description": "Description amélioration",
-      "impact": "FAIBLE|MOYEN|ÉLEVÉ",
-      "effort": "heures estimées"
+      "description": "Description amlioration",
+      "impact": "FAIBLE|MOYEN|LEV",
+      "effort": "heures estimes"
     }}
   ],
   "architecture_alternative": {{
     "approche": "Description approche alternative",
     "patterns": ["pattern1", "pattern2"],
     "avantages": ["avantage1"],
-    "inconvénients": ["inconvénient1"],
+    "inconvnients": ["inconvnient1"],
     "score_recommandation": 8
   }},
   "analyse_risques": {{
-    "technique": "FAIBLE|MOYEN|ÉLEVÉ",
+    "technique": "FAIBLE|MOYEN|LEV",
     "performance": "Impact sur performance", 
     "maintenance": "Impact maintenance"
   }}
@@ -190,7 +190,7 @@ RÉPONSE ATTENDUE (JSON):
 
     async def _call_gpt4_async(self, prompt: str) -> str:
         """
-        🤖 Appel asynchrone à GPT-4 Turbo
+        [ROBOT] Appel asynchrone  GPT-4 Turbo
         """
         try:
             client = openai.AsyncOpenAI(api_key=os.getenv('OPENAI_API_KEY'))
@@ -205,12 +205,12 @@ RÉPONSE ATTENDUE (JSON):
             return response.choices[0].message.content
             
         except Exception as e:
-            print(f"❌ Erreur appel GPT-4: {e}")
+            print(f"[CROSS] Erreur appel GPT-4: {e}")
             return ""
 
     def _parse_validation_response(self, response: str) -> ValidationResult:
         """
-        📝 Parser réponse validation
+         Parser rponse validation
         """
         try:
             # Extraire JSON
@@ -223,13 +223,13 @@ RÉPONSE ATTENDUE (JSON):
                 
                 return ValidationResult(
                     alpha_plan_valid=data.get('plan_alpha_valide', False),
-                    suggested_improvements=data.get('améliorations_suggérées', []),
-                    critical_issues=data.get('problèmes_critiques', []),
+                    suggested_improvements=data.get('amliorations_suggres', []),
+                    critical_issues=data.get('problmes_critiques', []),
                     alternative_solutions=[data.get('architecture_alternative', {})]
                 )
                 
         except Exception as e:
-            print(f"❌ Erreur parsing validation: {e}")
+            print(f"[CROSS] Erreur parsing validation: {e}")
             
         # Fallback
         return ValidationResult(
@@ -241,7 +241,7 @@ RÉPONSE ATTENDUE (JSON):
 
     async def _save_validation_result(self, alpha_plan_path: str, validation: ValidationResult):
         """
-        💾 Sauvegarder résultat validation
+         Sauvegarder rsultat validation
         """
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         plan_name = Path(alpha_plan_path).stem.replace('architectural_plan_', '')
@@ -256,47 +256,47 @@ RÉPONSE ATTENDUE (JSON):
         with open(md_path, 'w', encoding='utf-8') as f:
             f.write(self._generate_validation_report(validation, plan_name))
         
-        print(f"✅ Validation sauvegardée: {json_path}")
+        print(f"[CHECK] Validation sauvegarde: {json_path}")
 
     def _generate_validation_report(self, validation: ValidationResult, plan_name: str) -> str:
         """
-        📋 Générer rapport validation
+        [CLIPBOARD] Gnrer rapport validation
         """
-        status_icon = "✅" if validation.alpha_plan_valid else "❌"
+        status_icon = "[CHECK]" if validation.alpha_plan_valid else "[CROSS]"
         
-        return f"""# 🔍 Validation Plan Architectural - {plan_name}
+        return f"""# [SEARCH] Validation Plan Architectural - {plan_name}
 
 ## {status_icon} Statut Validation
 
 **Plan Alpha valide:** {'Oui' if validation.alpha_plan_valid else 'Non'}
 
-## 🚨 Problèmes Critiques
+##  Problmes Critiques
 
-{chr(10).join(f"- {issue}" for issue in validation.critical_issues) if validation.critical_issues else "Aucun problème critique identifié"}
+{chr(10).join(f"- {issue}" for issue in validation.critical_issues) if validation.critical_issues else "Aucun problme critique identifi"}
 
-## 💡 Améliorations Suggérées
+## [BULB] Amliorations Suggres
 
 {self._format_improvements(validation.suggested_improvements)}
 
-## 🏗️ Solutions Alternatives
+## [CONSTRUCTION] Solutions Alternatives
 
 {self._format_alternatives(validation.alternative_solutions)}
 
 ---
-*Généré par Agent Architect Beta (GPT-4 Turbo)*
+*Gnr par Agent Architect Beta (GPT-4 Turbo)*
 """
 
     def _format_improvements(self, improvements: List[str]) -> str:
-        """Format améliorations"""
+        """Format amliorations"""
         if not improvements:
-            return "Aucune amélioration suggérée"
+            return "Aucune amlioration suggre"
         
         return "\n".join(f"- {imp}" for imp in improvements)
 
     def _format_alternatives(self, alternatives: List[Dict[str, Any]]) -> str:
         """Format solutions alternatives"""
         if not alternatives:
-            return "Aucune alternative proposée"
+            return "Aucune alternative propose"
         
         result = []
         for i, alt in enumerate(alternatives, 1):
@@ -304,7 +304,7 @@ RÉPONSE ATTENDUE (JSON):
                 result.append(f"""
 ### Alternative {i}
 
-**Approche:** {alt.get('approche', 'Non spécifiée')}
+**Approche:** {alt.get('approche', 'Non spcifie')}
 **Score:** {alt.get('score_recommandation', 'N/A')}/10
 """)
         
@@ -312,7 +312,7 @@ RÉPONSE ATTENDUE (JSON):
 
     async def create_alternative_architectures(self) -> Dict[str, AlternativeArchitecture]:
         """
-        🏗️ Créer architectures alternatives pour tous les fichiers
+        [CONSTRUCTION] Crer architectures alternatives pour tous les fichiers
         """
         god_mode_files = [
             "orchestrator/app/main.py",
@@ -321,21 +321,21 @@ RÉPONSE ATTENDUE (JSON):
             "orchestrator/app/observability/monitoring.py"
         ]
         
-        print("🏗️ Création d'architectures alternatives...")
+        print("[CONSTRUCTION] Cration d'architectures alternatives...")
         alternatives = {}
         
         for file_path in god_mode_files:
-            print(f"🔍 Architecture alternative pour {file_path}...")
+            print(f"[SEARCH] Architecture alternative pour {file_path}...")
             alternative = await self.create_alternative_for_file(file_path)
             if alternative:
                 alternatives[file_path] = alternative
-                print(f"✅ Alternative créée pour {file_path}")
+                print(f"[CHECK] Alternative cre pour {file_path}")
         
         return alternatives
 
     async def create_alternative_for_file(self, file_path: str) -> AlternativeArchitecture:
         """
-        🎯 Créer architecture alternative pour un fichier
+        [TARGET] Crer architecture alternative pour un fichier
         """
         try:
             # Lire fichier
@@ -343,7 +343,7 @@ RÉPONSE ATTENDUE (JSON):
             with open(full_path, 'r', encoding='utf-8') as f:
                 content = f.read()
             
-            # Créer prompt alternatif
+            # Crer prompt alternatif
             prompt = self._create_alternative_prompt(file_path, content)
             
             # Analyser avec GPT-4
@@ -358,21 +358,21 @@ RÉPONSE ATTENDUE (JSON):
             return alternative
             
         except Exception as e:
-            print(f"❌ Erreur alternative {file_path}: {e}")
+            print(f"[CROSS] Erreur alternative {file_path}: {e}")
             return None
 
     def _create_alternative_prompt(self, file_path: str, content: str) -> str:
-        """Créer prompt architecture alternative"""
+        """Crer prompt architecture alternative"""
         lines_count = len(content.split('\n'))
         
         return f"""
-Tu es un ARCHITECTE SENIOR avec expertise en refactoring à grande échelle.
+Tu es un ARCHITECTE SENIOR avec expertise en refactoring  grande chelle.
 
 MISSION: Proposer architecture ALTERNATIVE pour {file_path} ({lines_count} lignes)
 
-OBJECTIF: Approche différente et innovante pour le refactoring
+OBJECTIF: Approche diffrente et innovante pour le refactoring
 
-CODE (tronqué):
+CODE (tronqu):
 ```python
 {content[:8000]}
 ```
@@ -380,24 +380,24 @@ CODE (tronqué):
 PATTERNS ALTERNATIFS:
 {json.dumps(self.alternative_patterns, indent=2)}
 
-RÉPONSE ATTENDUE (JSON):
+RPONSE ATTENDUE (JSON):
 {{
-  "approche_alternative": "Description approche complètement différente",
-  "patterns_suggérés": ["pattern1", "pattern2"],
-  "opportunités_optimisation": ["opt1", "opt2"],
+  "approche_alternative": "Description approche compltement diffrente",
+  "patterns_suggrs": ["pattern1", "pattern2"],
+  "opportunits_optimisation": ["opt1", "opt2"],
   "analyse_risques": {{
-    "technique": "FAIBLE|MOYEN|ÉLEVÉ",
+    "technique": "FAIBLE|MOYEN|LEV",
     "performance": "Description impact",
     "maintenance": "Description impact"
   }},
-  "analyse_compatibilité": "Impact sur compatibilité",
+  "analyse_compatibilit": "Impact sur compatibilit",
   "impact_performance": "Description impact performance",
   "score_recommandation": 8
 }}
 """
 
     def _parse_alternative_response(self, file_path: str, response: str) -> AlternativeArchitecture:
-        """Parser réponse alternative"""
+        """Parser rponse alternative"""
         try:
             json_start = response.find('{')
             json_end = response.rfind('}') + 1
@@ -409,16 +409,16 @@ RÉPONSE ATTENDUE (JSON):
                 return AlternativeArchitecture(
                     file_path=file_path,
                     alternative_approach=data.get('approche_alternative', ''),
-                    patterns_suggested=data.get('patterns_suggérés', []),
-                    optimization_opportunities=data.get('opportunités_optimisation', []),
+                    patterns_suggested=data.get('patterns_suggrs', []),
+                    optimization_opportunities=data.get('opportunits_optimisation', []),
                     risk_assessment=data.get('analyse_risques', {}),
-                    compatibility_analysis=data.get('analyse_compatibilité', ''),
+                    compatibility_analysis=data.get('analyse_compatibilit', ''),
                     performance_impact=data.get('impact_performance', ''),
                     recommendation_score=data.get('score_recommandation', 5)
                 )
                 
         except Exception as e:
-            print(f"❌ Erreur parsing alternative: {e}")
+            print(f"[CROSS] Erreur parsing alternative: {e}")
             
         # Fallback
         return AlternativeArchitecture(
@@ -427,8 +427,8 @@ RÉPONSE ATTENDUE (JSON):
             patterns_suggested=[],
             optimization_opportunities=[],
             risk_assessment={"technique": "MOYEN"},
-            compatibility_analysis="À évaluer",
-            performance_impact="À évaluer",
+            compatibility_analysis=" valuer",
+            performance_impact=" valuer",
             recommendation_score=5
         )
 
@@ -447,78 +447,78 @@ RÉPONSE ATTENDUE (JSON):
         with open(md_path, 'w', encoding='utf-8') as f:
             f.write(self._generate_alternative_report(alternative))
         
-        print(f"✅ Alternative sauvegardée: {json_path}")
+        print(f"[CHECK] Alternative sauvegarde: {json_path}")
 
     def _generate_alternative_report(self, alternative: AlternativeArchitecture) -> str:
-        """Générer rapport architecture alternative"""
-        return f"""# 🏗️ Architecture Alternative - {Path(alternative.file_path).name}
+        """Gnrer rapport architecture alternative"""
+        return f"""# [CONSTRUCTION] Architecture Alternative - {Path(alternative.file_path).name}
 
-## 🎯 Approche Alternative
+## [TARGET] Approche Alternative
 
 {alternative.alternative_approach}
 
-## 📊 Score Recommandation: {alternative.recommendation_score}/10
+## [CHART] Score Recommandation: {alternative.recommendation_score}/10
 
-## 🏛️ Patterns Suggérés
+##  Patterns Suggrs
 
 {chr(10).join(f"- {pattern}" for pattern in alternative.patterns_suggested)}
 
-## ⚡ Opportunités d'Optimisation
+## [LIGHTNING] Opportunits d'Optimisation
 
 {chr(10).join(f"- {opt}" for opt in alternative.optimization_opportunities)}
 
-## 🔍 Analyse des Risques
+## [SEARCH] Analyse des Risques
 
-**Technique:** {alternative.risk_assessment.get('technique', 'Non évalué')}
-**Performance:** {alternative.risk_assessment.get('performance', 'Non évalué')}
-**Maintenance:** {alternative.risk_assessment.get('maintenance', 'Non évalué')}
+**Technique:** {alternative.risk_assessment.get('technique', 'Non valu')}
+**Performance:** {alternative.risk_assessment.get('performance', 'Non valu')}
+**Maintenance:** {alternative.risk_assessment.get('maintenance', 'Non valu')}
 
-## 🔄 Compatibilité
+##  Compatibilit
 
 {alternative.compatibility_analysis}
 
-## ⚡ Impact Performance
+## [LIGHTNING] Impact Performance
 
 {alternative.performance_impact}
 
 ---
-*Généré par Agent Architect Beta (GPT-4 Turbo)*
+*Gnr par Agent Architect Beta (GPT-4 Turbo)*
 """
 
-# 🎯 EXECUTION PRINCIPALE
+# [TARGET] EXECUTION PRINCIPALE
 async def main():
-    """Point d'entrée principal Agent Architect Beta"""
-    print("🏗️ AGENT ARCHITECT BETA - GPT-4 TURBO")
+    """Point d'entre principal Agent Architect Beta"""
+    print("[CONSTRUCTION] AGENT ARCHITECT BETA - GPT-4 TURBO")
     print("=" * 50)
     
     agent = AgentArchitectBetaGPT4()
     
     try:
-        # Créer architectures alternatives
+        # Crer architectures alternatives
         alternatives = await agent.create_alternative_architectures()
         
-        print(f"\n✅ SUCCÈS: {len(alternatives)} architectures alternatives créées!")
-        print("🎯 Prêt pour validation croisée")
+        print(f"\n[CHECK] SUCCS: {len(alternatives)} architectures alternatives cres!")
+        print("[TARGET] Prt pour validation croise")
         
         return alternatives
         
     except Exception as e:
-        print(f"❌ ERREUR: {e}")
+        print(f"[CROSS] ERREUR: {e}")
         return None
 
 if __name__ == "__main__":
     import sys
     
-    # Vérification environnement
+    # Vrification environnement
     if not os.getenv('OPENAI_API_KEY'):
-        print("❌ OPENAI_API_KEY manquante dans .env")
+        print("[CROSS] OPENAI_API_KEY manquante dans .env")
         sys.exit(1)
     
-    # Exécution asynchrone
+    # Excution asynchrone
     result = asyncio.run(main())
     
     if result:
-        print("🎉 Agent Architect Beta terminé avec succès!")
+        print(" Agent Architect Beta termin avec succs!")
     else:
-        print("💥 Échec Agent Architect Beta")
+        print(" chec Agent Architect Beta")
         sys.exit(1) 

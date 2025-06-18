@@ -1,9 +1,9 @@
 # Security utilities for the orchestrator
 
-# Module de sécurité pour l'orchestrateur multi-agent
+# Module de scurit pour l'orchestrateur multi-agent
 """
-Ce module contient les composants de sécurité pour protéger l'application
-contre les vulnérabilités identifiées dans l'audit de sécurité.
+Ce module contient les composants de scurit pour protger l'application
+contre les vulnrabilits identifies dans l'audit de scurit.
 """
 
 from .validators import CodeValidator, NetworkValidator, InputSanitizer

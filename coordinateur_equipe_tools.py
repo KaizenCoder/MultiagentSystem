@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-Coordinateur d'équipe NextGeneration - Mission SuperWhisper Tools Integration
-Orchestrateur autonome pour l'analyse et l'intégration d'outils externes
+Coordinateur d'quipe NextGeneration - Mission SuperWhisper Tools Integration
+Orchestrateur autonome pour l'analyse et l'intgration d'outils externes
 
-Équipe d'agents spécialisés :
+quipe d'agents spcialiss :
 - Agent 1 : Analyseur de structure (Claude Sonnet 4)
-- Agent 2 : Évaluateur d'utilité (GPT-4 Turbo)  
+- Agent 2 : valuateur d'utilit (GPT-4 Turbo)  
 - Agent 3 : Adaptateur de code (Claude Sonnet 4)
-- Agent 4 : Testeur d'intégration (GPT-4 Turbo)
+- Agent 4 : Testeur d'intgration (GPT-4 Turbo)
 - Agent 5 : Documenteur (Gemini 2.0 Flash)
 - Agent 6 : Validateur final (Claude Sonnet 4)
 """
@@ -28,7 +28,7 @@ TARGET_PATH = "tools/imported_tools"
 PROJECT_ROOT = Path(__file__).parent.absolute()
 
 class CoordinateurEquipeTools:
-    """Coordinateur principal pour la mission d'intégration des outils SuperWhisper"""
+    """Coordinateur principal pour la mission d'intgration des outils SuperWhisper"""
     
     def __init__(self):
         self.mission_start = datetime.now()
@@ -48,11 +48,11 @@ class CoordinateurEquipeTools:
         # Configuration logging
         self.setup_logging()
         
-        # Vérification des prérequis
+        # Vrification des prrequis
         self.verify_prerequisites()
         
     def setup_logging(self):
-        """Configuration du système de logging"""
+        """Configuration du systme de logging"""
         log_dir = PROJECT_ROOT / "logs" / "tools_integration"
         log_dir.mkdir(parents=True, exist_ok=True)
         
@@ -67,41 +67,41 @@ class CoordinateurEquipeTools:
         self.logger = logging.getLogger("CoordinateurEquipeTools")
         
     def verify_prerequisites(self):
-        """Vérification des prérequis de la mission"""
-        self.logger.info("🔍 Vérification des prérequis...")
+        """Vrification des prrequis de la mission"""
+        self.logger.info("[SEARCH] Vrification des prrequis...")
         
-        # Vérifier l'existence du répertoire source
+        # Vrifier l'existence du rpertoire source
         if not os.path.exists(SOURCE_PATH):
-            raise FileNotFoundError(f"Répertoire source introuvable: {SOURCE_PATH}")
+            raise FileNotFoundError(f"Rpertoire source introuvable: {SOURCE_PATH}")
             
-        # Créer le répertoire cible
+        # Crer le rpertoire cible
         target_dir = PROJECT_ROOT / TARGET_PATH
         target_dir.mkdir(parents=True, exist_ok=True)
         
-        # Vérifier Git
+        # Vrifier Git
         try:
             subprocess.run(["git", "status"], capture_output=True, check=True)
-            self.logger.info("✅ Git repository valide")
+            self.logger.info("[CHECK] Git repository valide")
         except subprocess.CalledProcessError:
-            self.logger.warning("⚠️ Pas de repository Git - opérations Git désactivées")
+            self.logger.warning(" Pas de repository Git - oprations Git dsactives")
             
-        self.logger.info("✅ Prérequis validés")
+        self.logger.info("[CHECK] Prrequis valids")
         
     def execute_mission(self):
-        """Exécution de la mission complète"""
-        self.logger.info(f"🚀 Démarrage mission {self.mission_id}")
+        """Excution de la mission complte"""
+        self.logger.info(f"[ROCKET] Dmarrage mission {self.mission_id}")
         
         try:
             # Phase 1: Analyse de structure
             phase1_results = self.execute_phase_1()
             
-            # Phase 2: Évaluation d'utilité
+            # Phase 2: valuation d'utilit
             phase2_results = self.execute_phase_2(phase1_results)
             
             # Phase 3: Adaptation de code
             phase3_results = self.execute_phase_3(phase2_results)
             
-            # Phase 4: Tests d'intégration
+            # Phase 4: Tests d'intgration
             phase4_results = self.execute_phase_4(phase3_results)
             
             # Phase 5: Documentation
@@ -110,19 +110,19 @@ class CoordinateurEquipeTools:
             # Phase 6: Validation finale
             phase6_results = self.execute_phase_6(phase5_results)
             
-            # Génération du rapport final
+            # Gnration du rapport final
             self.generate_mission_report()
             
-            self.logger.info("✅ Mission terminée avec succès")
+            self.logger.info("[CHECK] Mission termine avec succs")
             
         except Exception as e:
-            self.logger.error(f"❌ Erreur mission: {e}")
+            self.logger.error(f"[CROSS] Erreur mission: {e}")
             self.generate_error_report(str(e))
             raise
             
     def execute_phase_1(self) -> Dict[str, Any]:
         """Phase 1: Analyse de structure avec Agent Claude Sonnet 4"""
-        self.logger.info("📊 Phase 1: Analyse de structure (Claude Sonnet 4)")
+        self.logger.info("[CHART] Phase 1: Analyse de structure (Claude Sonnet 4)")
         
         from agent_1_analyseur_structure import AgentAnalyseurStructure
         
@@ -142,12 +142,12 @@ class CoordinateurEquipeTools:
             "results": results
         }
         
-        self.logger.info(f"✅ Phase 1 terminée - {len(results.get('tools', []))} outils analysés")
+        self.logger.info(f"[CHECK] Phase 1 termine - {len(results.get('tools', []))} outils analyss")
         return results
         
     def execute_phase_2(self, phase1_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Phase 2: Évaluation d'utilité avec Agent GPT-4 Turbo"""
-        self.logger.info("🎯 Phase 2: Évaluation d'utilité (GPT-4 Turbo)")
+        """Phase 2: valuation d'utilit avec Agent GPT-4 Turbo"""
+        self.logger.info("[TARGET] Phase 2: valuation d'utilit (GPT-4 Turbo)")
         
         from agent_2_evaluateur_utilite import AgentEvaluateurUtilite
         
@@ -161,18 +161,18 @@ class CoordinateurEquipeTools:
         self.mission_metrics["tools_selected"] = len(results.get("selected_tools", []))
         
         self.agents_results["phase2"] = {
-            "agent": "Agent 2 - Évaluateur Utilité",
+            "agent": "Agent 2 - valuateur Utilit",
             "model": "GPT-4 Turbo",
             "execution_time": execution_time,
             "results": results
         }
         
-        self.logger.info(f"✅ Phase 2 terminée - {len(results.get('selected_tools', []))} outils sélectionnés")
+        self.logger.info(f"[CHECK] Phase 2 termine - {len(results.get('selected_tools', []))} outils slectionns")
         return results
         
     def execute_phase_3(self, phase2_data: Dict[str, Any]) -> Dict[str, Any]:
         """Phase 3: Adaptation de code avec Agent Claude Sonnet 4"""
-        self.logger.info("🔧 Phase 3: Adaptation de code (Claude Sonnet 4)")
+        self.logger.info("[TOOL] Phase 3: Adaptation de code (Claude Sonnet 4)")
         
         from agent_3_adaptateur_code import AgentAdaptateurCode
         
@@ -192,12 +192,12 @@ class CoordinateurEquipeTools:
             "results": results
         }
         
-        self.logger.info(f"✅ Phase 3 terminée - {len(results.get('adapted_tools', []))} outils adaptés")
+        self.logger.info(f"[CHECK] Phase 3 termine - {len(results.get('adapted_tools', []))} outils adapts")
         return results
         
     def execute_phase_4(self, phase3_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Phase 4: Tests d'intégration avec Agent GPT-4 Turbo"""
-        self.logger.info("🧪 Phase 4: Tests d'intégration (GPT-4 Turbo)")
+        """Phase 4: Tests d'intgration avec Agent GPT-4 Turbo"""
+        self.logger.info(" Phase 4: Tests d'intgration (GPT-4 Turbo)")
         
         from agent_4_testeur_integration import AgentTesteurIntegration
         
@@ -211,18 +211,18 @@ class CoordinateurEquipeTools:
         self.mission_metrics["tools_tested"] = len(results.get("tested_tools", []))
         
         self.agents_results["phase4"] = {
-            "agent": "Agent 4 - Testeur Intégration",
+            "agent": "Agent 4 - Testeur Intgration",
             "model": "GPT-4 Turbo",
             "execution_time": execution_time,
             "results": results
         }
         
-        self.logger.info(f"✅ Phase 4 terminée - {len(results.get('tested_tools', []))} outils testés")
+        self.logger.info(f"[CHECK] Phase 4 termine - {len(results.get('tested_tools', []))} outils tests")
         return results
         
     def execute_phase_5(self, phase4_data: Dict[str, Any]) -> Dict[str, Any]:
         """Phase 5: Documentation avec Agent Gemini 2.0 Flash"""
-        self.logger.info("📚 Phase 5: Documentation (Gemini 2.0 Flash)")
+        self.logger.info(" Phase 5: Documentation (Gemini 2.0 Flash)")
         
         from agent_5_documenteur import AgentDocumenteur
         
@@ -242,12 +242,12 @@ class CoordinateurEquipeTools:
             "results": results
         }
         
-        self.logger.info(f"✅ Phase 5 terminée - {len(results.get('documentation_files', []))} docs créées")
+        self.logger.info(f"[CHECK] Phase 5 termine - {len(results.get('documentation_files', []))} docs cres")
         return results
         
     def execute_phase_6(self, phase5_data: Dict[str, Any]) -> Dict[str, Any]:
         """Phase 6: Validation finale avec Agent Claude Sonnet 4"""
-        self.logger.info("✅ Phase 6: Validation finale (Claude Sonnet 4)")
+        self.logger.info("[CHECK] Phase 6: Validation finale (Claude Sonnet 4)")
         
         from agent_6_validateur_final import AgentValidateurFinal
         
@@ -267,11 +267,11 @@ class CoordinateurEquipeTools:
             "results": results
         }
         
-        self.logger.info("✅ Phase 6 terminée - Validation et Git effectués")
+        self.logger.info("[CHECK] Phase 6 termine - Validation et Git effectus")
         return results
         
     def generate_mission_report(self):
-        """Génération du rapport de mission final"""
+        """Gnration du rapport de mission final"""
         self.mission_metrics["total_duration"] = (datetime.now() - self.mission_start).total_seconds()
         
         report = {
@@ -293,10 +293,10 @@ class CoordinateurEquipeTools:
         with open(report_file, 'w', encoding='utf-8') as f:
             json.dump(report, f, indent=2, ensure_ascii=False)
             
-        self.logger.info(f"📋 Rapport final généré: {report_file}")
+        self.logger.info(f"[CLIPBOARD] Rapport final gnr: {report_file}")
         
     def generate_error_report(self, error_message: str):
-        """Génération du rapport d'erreur"""
+        """Gnration du rapport d'erreur"""
         error_report = {
             "mission_id": self.mission_id,
             "timestamp": self.mission_start.isoformat(),
@@ -312,17 +312,17 @@ class CoordinateurEquipeTools:
         with open(error_file, 'w', encoding='utf-8') as f:
             json.dump(error_report, f, indent=2, ensure_ascii=False)
             
-        self.logger.error(f"📋 Rapport d'erreur généré: {error_file}")
+        self.logger.error(f"[CLIPBOARD] Rapport d'erreur gnr: {error_file}")
 
 def main():
-    """Point d'entrée principal"""
+    """Point d'entre principal"""
     try:
         coordinateur = CoordinateurEquipeTools()
         coordinateur.execute_mission()
-        print("🎉 Mission SuperWhisper Tools Integration terminée avec succès!")
+        print(" Mission SuperWhisper Tools Integration termine avec succs!")
         
     except Exception as e:
-        print(f"❌ Erreur lors de la mission: {e}")
+        print(f"[CROSS] Erreur lors de la mission: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":

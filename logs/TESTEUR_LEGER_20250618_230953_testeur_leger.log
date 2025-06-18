@@ -1,0 +1,11 @@
+2025-06-18 23:09:53,266 - AgentTesteurLeger_TESTEUR_LEGER_20250618_230953 - INFO - 🚀 Démarrage création tests
+2025-06-18 23:09:53,266 - AgentTesteurLeger_TESTEUR_LEGER_20250618_230953 - INFO - 🔍 Identification des outils à tester
+2025-06-18 23:09:53,267 - AgentTesteurLeger_TESTEUR_LEGER_20250618_230953 - INFO - ✅ 3 outils identifiés
+2025-06-18 23:09:53,267 - AgentTesteurLeger_TESTEUR_LEGER_20250618_230953 - INFO - 🧪 Création test unitaire pour: generate_pitch_document
+2025-06-18 23:09:53,268 - AgentTesteurLeger_TESTEUR_LEGER_20250618_230953 - INFO - 🔗 Création test intégration pour: generate_pitch_document
+2025-06-18 23:09:53,269 - AgentTesteurLeger_TESTEUR_LEGER_20250618_230953 - INFO - 🧪 Création test unitaire pour: install_phase3_dependencies
+2025-06-18 23:09:53,270 - AgentTesteurLeger_TESTEUR_LEGER_20250618_230953 - INFO - 🔗 Création test intégration pour: install_phase3_dependencies
+2025-06-18 23:09:53,270 - AgentTesteurLeger_TESTEUR_LEGER_20250618_230953 - INFO - 🧪 Création test unitaire pour: monitor_phase3
+2025-06-18 23:09:53,271 - AgentTesteurLeger_TESTEUR_LEGER_20250618_230953 - INFO - 🔗 Création test intégration pour: monitor_phase3
+2025-06-18 23:09:53,272 - AgentTesteurLeger_TESTEUR_LEGER_20250618_230953 - INFO - 📊 Rapport sauvegardé: C:\Dev\nextgeneration\logs\TESTEUR_LEGER_20250618_230953_creation_tests.json
+2025-06-18 23:09:53,272 - AgentTesteurLeger_TESTEUR_LEGER_20250618_230953 - INFO - ✅ Création tests terminée

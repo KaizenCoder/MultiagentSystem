@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-🐳 Agent Docker Specialist
-Mission: Diagnostic et résolution des problèmes Docker PostgreSQL
+ Agent Docker Specialist
+Mission: Diagnostic et rsolution des problmes Docker PostgreSQL
 """
 
 import os
@@ -35,7 +35,7 @@ class DockerSpecialistAgent:
         
     def diagnostic_docker_complet(self):
         """Diagnostic complet de l'environnement Docker pour PostgreSQL"""
-        self.logger.info("🔍 Démarrage diagnostic Docker PostgreSQL")
+        self.logger.info("[SEARCH] Dmarrage diagnostic Docker PostgreSQL")
         
         diagnostic = {
             "timestamp": datetime.now().isoformat(),
@@ -51,7 +51,7 @@ class DockerSpecialistAgent:
         }
         
         try:
-            # État général Docker
+            # tat gnral Docker
             diagnostic["docker_system"] = self.check_docker_system()
             
             # Containers
@@ -69,10 +69,10 @@ class DockerSpecialistAgent:
             # Configurations Docker Compose
             diagnostic["compose_configs"] = self.analyze_compose_files()
             
-            # Analyse spécifique PostgreSQL
+            # Analyse spcifique PostgreSQL
             diagnostic["postgresql_specifique"] = self.analyze_postgresql_containers()
             
-            # Analyse des problèmes
+            # Analyse des problmes
             self.analyze_docker_problems(diagnostic)
             
         except Exception as e:
@@ -82,7 +82,7 @@ class DockerSpecialistAgent:
         return diagnostic
     
     def check_docker_system(self):
-        """Vérifie l'état général du système Docker"""
+        """Vrifie l'tat gnral du systme Docker"""
         docker_system = {
             "docker_installed": False,
             "docker_version": None,
@@ -121,7 +121,7 @@ class DockerSpecialistAgent:
                     docker_system["disk_usage"] = result.stdout
                     
         except Exception as e:
-            self.logger.warning(f"Erreur vérification système Docker: {e}")
+            self.logger.warning(f"Erreur vrification systme Docker: {e}")
             
         return docker_system
     
@@ -240,7 +240,7 @@ class DockerSpecialistAgent:
         return volumes_info
     
     def analyze_networks(self):
-        """Analyse les réseaux Docker"""
+        """Analyse les rseaux Docker"""
         networks_info = {
             "total_networks": 0,
             "custom_networks": [],
@@ -270,7 +270,7 @@ class DockerSpecialistAgent:
                 networks_info["total_networks"] = len(networks)
                 
         except Exception as e:
-            self.logger.warning(f"Erreur analyse réseaux: {e}")
+            self.logger.warning(f"Erreur analyse rseaux: {e}")
             
         return networks_info
     
@@ -285,7 +285,7 @@ class DockerSpecialistAgent:
         }
         
         # Recherche fichiers compose
-        project_root = Path(__file__).parent.parent.parent  # Remonte à la racine du projet
+        project_root = Path(__file__).parent.parent.parent  # Remonte  la racine du projet
         compose_patterns = ['docker-compose*.yml', 'docker-compose*.yaml']
         
         for pattern in compose_patterns:
@@ -337,7 +337,7 @@ class DockerSpecialistAgent:
         return compose_info
     
     def analyze_postgresql_containers(self):
-        """Analyse spécifique des containers PostgreSQL"""
+        """Analyse spcifique des containers PostgreSQL"""
         pg_analysis = {
             "active_postgresql_containers": [],
             "container_logs": {},
@@ -358,7 +358,7 @@ class DockerSpecialistAgent:
                             
                             container_id = container.get('ID')
                             
-                            # Logs récents
+                            # Logs rcents
                             log_result = subprocess.run(['docker', 'logs', '--tail', '20', container_id], 
                                                       capture_output=True, text=True)
                             if log_result.returncode == 0:
@@ -379,7 +379,7 @@ class DockerSpecialistAgent:
                                 except json.JSONDecodeError:
                                     pass
                                     
-                            # Test de connectivité
+                            # Test de connectivit
                             connectivity_result = subprocess.run([
                                 'docker', 'exec', container_id, 'pg_isready', '-U', 'postgres'
                             ], capture_output=True, text=True)
@@ -398,47 +398,47 @@ class DockerSpecialistAgent:
         return pg_analysis
     
     def analyze_docker_problems(self, diagnostic):
-        """Analyse les problèmes Docker détectés"""
+        """Analyse les problmes Docker dtects"""
         problemes = []
         recommandations = []
         
-        # Vérification Docker de base
+        # Vrification Docker de base
         if not diagnostic["docker_system"]["docker_installed"]:
-            problemes.append("🔴 Docker non installé")
+            problemes.append(" Docker non install")
             recommandations.append("Installer Docker Desktop pour Windows")
             
         if not diagnostic["docker_system"]["docker_daemon_running"]:
-            problemes.append("🔴 Docker daemon non actif")
-            recommandations.append("Démarrer Docker Desktop et vérifier le service")
+            problemes.append(" Docker daemon non actif")
+            recommandations.append("Dmarrer Docker Desktop et vrifier le service")
             
         # Analyse containers PostgreSQL
         pg_containers = diagnostic["containers"]["postgresql_containers"]
         if not pg_containers:
-            problemes.append("🔴 Aucun container PostgreSQL trouvé")
-            recommandations.append("Démarrer les containers PostgreSQL avec docker-compose up")
+            problemes.append(" Aucun container PostgreSQL trouv")
+            recommandations.append("Dmarrer les containers PostgreSQL avec docker-compose up")
         else:
             running_pg = [c for c in pg_containers if c.get('State') == 'running']
             if not running_pg:
-                problemes.append("🔴 Containers PostgreSQL arrêtés")
-                recommandations.append("Redémarrer containers PostgreSQL")
+                problemes.append(" Containers PostgreSQL arrts")
+                recommandations.append("Redmarrer containers PostgreSQL")
                 
-        # Analyse connectivité
+        # Analyse connectivit
         for container_id, connectivity in diagnostic["postgresql_specifique"]["connectivity_tests"].items():
             if not connectivity["pg_isready"]:
-                problemes.append(f"🔴 Container {container_id[:12]} - PostgreSQL non accessible")
-                recommandations.append(f"Vérifier configuration et logs du container {container_id[:12]}")
+                problemes.append(f" Container {container_id[:12]} - PostgreSQL non accessible")
+                recommandations.append(f"Vrifier configuration et logs du container {container_id[:12]}")
                 
         # Analyse volumes
         if not diagnostic["volumes"]["postgresql_volumes"]:
-            problemes.append("⚠️ Aucun volume PostgreSQL dédié détecté")
-            recommandations.append("Configurer volumes persistants pour données PostgreSQL")
+            problemes.append(" Aucun volume PostgreSQL ddi dtect")
+            recommandations.append("Configurer volumes persistants pour donnes PostgreSQL")
             
         # Analyse fichiers compose
         if not diagnostic["compose_configs"]["compose_files_found"]:
-            problemes.append("⚠️ Aucun fichier docker-compose trouvé")
-            recommandations.append("Créer configuration docker-compose pour PostgreSQL")
+            problemes.append(" Aucun fichier docker-compose trouv")
+            recommandations.append("Crer configuration docker-compose pour PostgreSQL")
         elif not diagnostic["compose_configs"]["postgresql_configs"]:
-            problemes.append("⚠️ PostgreSQL non configuré dans docker-compose")
+            problemes.append(" PostgreSQL non configur dans docker-compose")
             recommandations.append("Ajouter service PostgreSQL dans docker-compose.yml")
             
         # Analyse variables d'environnement
@@ -446,15 +446,15 @@ class DockerSpecialistAgent:
         required_vars = ['POSTGRES_USER', 'POSTGRES_PASSWORD', 'POSTGRES_DB']
         for var in required_vars:
             if var not in env_vars:
-                problemes.append(f"⚠️ Variable {var} non définie dans docker-compose")
-                recommandations.append(f"Définir {var} dans la configuration docker-compose")
+                problemes.append(f" Variable {var} non dfinie dans docker-compose")
+                recommandations.append(f"Dfinir {var} dans la configuration docker-compose")
                 
         diagnostic["problemes_detectes"] = problemes
         diagnostic["recommandations"] = recommandations
     
     def generer_rapport(self, diagnostic):
-        """Génère le rapport Markdown détaillé"""
-        rapport_content = f"""# 🐳 Rapport Agent Docker Specialist
+        """Gnre le rapport Markdown dtaill"""
+        rapport_content = f"""#  Rapport Agent Docker Specialist
 
 **Agent :** {self.name}  
 **ID :** {self.agent_id}  
@@ -464,61 +464,61 @@ class DockerSpecialistAgent:
 
 ---
 
-## 📋 RÉSUMÉ EXÉCUTIF
+## [CLIPBOARD] RSUM EXCUTIF
 
-### 🎯 Mission
-Diagnostic complet de l'infrastructure Docker pour PostgreSQL et résolution des problèmes de conteneurisation.
+### [TARGET] Mission
+Diagnostic complet de l'infrastructure Docker pour PostgreSQL et rsolution des problmes de conteneurisation.
 
-### 📊 Résultats Globaux
-- **Problèmes détectés :** {len(diagnostic.get('problemes_detectes', []))}
+### [CHART] Rsultats Globaux
+- **Problmes dtects :** {len(diagnostic.get('problemes_detectes', []))}
 - **Recommandations :** {len(diagnostic.get('recommandations', []))}
-- **Docker installé :** {'✅ Oui' if diagnostic['docker_system'].get('docker_installed') else '❌ Non'}
-- **Docker actif :** {'✅ Oui' if diagnostic['docker_system'].get('docker_daemon_running') else '❌ Non'}
+- **Docker install :** {'[CHECK] Oui' if diagnostic['docker_system'].get('docker_installed') else '[CROSS] Non'}
+- **Docker actif :** {'[CHECK] Oui' if diagnostic['docker_system'].get('docker_daemon_running') else '[CROSS] Non'}
 - **Containers PostgreSQL :** {len(diagnostic['containers'].get('postgresql_containers', []))}
 - **Containers actifs :** {len([c for c in diagnostic['containers'].get('postgresql_containers', []) if c.get('State') == 'running'])}
 
 ---
 
-## 🔍 DIAGNOSTIC DÉTAILLÉ
+## [SEARCH] DIAGNOSTIC DTAILL
 
-### 🐳 Système Docker
+###  Systme Docker
 ```json
 {json.dumps(diagnostic['docker_system'], indent=2, ensure_ascii=False)}
 ```
 
-### 📦 Containers
+###  Containers
 ```json
 {json.dumps(diagnostic['containers'], indent=2, ensure_ascii=False)}
 ```
 
-### 💿 Images PostgreSQL
+###  Images PostgreSQL
 ```json
 {json.dumps(diagnostic['images'], indent=2, ensure_ascii=False)}
 ```
 
-### 💾 Volumes
+###  Volumes
 ```json
 {json.dumps(diagnostic['volumes'], indent=2, ensure_ascii=False)}
 ```
 
-### 🌐 Réseaux
+###  Rseaux
 ```json
 {json.dumps(diagnostic['networks'], indent=2, ensure_ascii=False)}
 ```
 
-### ⚙️ Configurations Docker Compose
+###  Configurations Docker Compose
 ```json
 {json.dumps(diagnostic['compose_configs'], indent=2, ensure_ascii=False)}
 ```
 
-### 🐘 Analyse PostgreSQL Spécifique
+###  Analyse PostgreSQL Spcifique
 ```json
 {json.dumps(diagnostic['postgresql_specifique'], indent=2, ensure_ascii=False)}
 ```
 
 ---
 
-## 🚨 PROBLÈMES IDENTIFIÉS
+##  PROBLMES IDENTIFIS
 
 """
         
@@ -528,7 +528,7 @@ Diagnostic complet de l'infrastructure Docker pour PostgreSQL et résolution des
         rapport_content += f"""
 ---
 
-## 💡 RECOMMANDATIONS
+## [BULB] RECOMMANDATIONS
 
 """
         
@@ -538,9 +538,9 @@ Diagnostic complet de l'infrastructure Docker pour PostgreSQL et résolution des
         rapport_content += f"""
 ---
 
-## 🔧 SOLUTIONS DOCKER PROPOSÉES
+## [TOOL] SOLUTIONS DOCKER PROPOSES
 
-### 1. Configuration Docker Compose Optimisée
+### 1. Configuration Docker Compose Optimise
 ```yaml
 version: '3.8'
 services:
@@ -570,13 +570,13 @@ volumes:
 
 ### 2. Scripts de Gestion Docker
 ```bash
-# Démarrage propre
+# Dmarrage propre
 docker-compose up -d postgres
 
-# Vérification santé
+# Vrification sant
 docker exec nextgen_postgres pg_isready -U postgres
 
-# Logs en temps réel
+# Logs en temps rel
 docker logs -f nextgen_postgres
 
 # Backup volume
@@ -585,85 +585,85 @@ docker run --rm -v postgres_data:/data -v $PWD:/backup alpine tar czf /backup/po
 
 ### 3. Troubleshooting Rapide
 ```bash
-# Reset complet (ATTENTION: Supprime données)
+# Reset complet (ATTENTION: Supprime donnes)
 docker-compose down -v
 docker-compose up -d
 
-# Test connectivité
+# Test connectivit
 docker exec -it nextgen_postgres psql -U postgres -d agent_memory_nextgen -c "SELECT version();"
 ```
 
 ---
 
-## 🎯 PLAN D'ACTION DOCKER
+## [TARGET] PLAN D'ACTION DOCKER
 
-### Priorité 1 - Infrastructure de base
+### Priorit 1 - Infrastructure de base
 - [ ] Valider installation Docker Desktop
-- [ ] Configurer docker-compose.yml optimisé
-- [ ] Créer volumes persistants
-- [ ] Tester connectivité PostgreSQL
+- [ ] Configurer docker-compose.yml optimis
+- [ ] Crer volumes persistants
+- [ ] Tester connectivit PostgreSQL
 
-### Priorité 2 - Configuration avancée
+### Priorit 2 - Configuration avance
 - [ ] Optimiser variables d'environnement
 - [ ] Configurer healthchecks
 - [ ] Mettre en place monitoring
-- [ ] Documenter procédures
+- [ ] Documenter procdures
 
-### Priorité 3 - Production ready
-- [ ] Sécuriser configuration
+### Priorit 3 - Production ready
+- [ ] Scuriser configuration
 - [ ] Automatiser backups
 - [ ] Performance tuning
-- [ ] Intégration CI/CD
+- [ ] Intgration CI/CD
 
 ---
 
-## 📞 COORDINATION AGENTS
+##  COORDINATION AGENTS
 
-### 🤝 Collaboration Requise
-- **🪟 Agent Windows :** Validation environnement hôte
-- **🔧 Agent SQLAlchemy :** Test connexions containers  
-- **🧪 Agent Testeur :** Validation infrastructure Docker
+###  Collaboration Requise
+- ** Agent Windows :** Validation environnement hte
+- **[TOOL] Agent SQLAlchemy :** Test connexions containers  
+- ** Agent Testeur :** Validation infrastructure Docker
 
-### 📤 Données Partagées
-- Configuration Docker Compose validée
-- Procédures de démarrage/arrêt
+###  Donnes Partages
+- Configuration Docker Compose valide
+- Procdures de dmarrage/arrt
 - Scripts de troubleshooting
-- Métriques de performance containers
+- Mtriques de performance containers
 
 ---
 
-## 📊 MÉTRIQUES DOCKER
+## [CHART] MTRIQUES DOCKER
 
-### ✅ Indicateurs de Succès
-- Docker daemon opérationnel
+### [CHECK] Indicateurs de Succs
+- Docker daemon oprationnel
 - Containers PostgreSQL running
-- Connectivité validée
-- Volumes persistants configurés
+- Connectivit valide
+- Volumes persistants configurs
 
-### ⚠️ Points de Surveillance
+###  Points de Surveillance
 - Utilisation ressources containers
 - Logs d'erreur PostgreSQL
-- Performance réseau
+- Performance rseau
 - Espace disque volumes
 
 ---
 
-**🐳 Infrastructure Docker PostgreSQL analysée et optimisée !**
+** Infrastructure Docker PostgreSQL analyse et optimise !**
 
-*Rapport généré automatiquement par {self.name} v{self.version}*
+*Rapport gnr automatiquement par {self.name} v{self.version}*
 """
         
         return rapport_content
     
     def executer_mission(self):
-        """Exécute la mission complète de l'agent Docker"""
-        self.logger.info(f"🚀 {self.name} - Démarrage mission")
+        """Excute la mission complte de l'agent Docker"""
+        self.logger.info(f"[ROCKET] {self.name} - Dmarrage mission")
         
         try:
             # Diagnostic complet Docker
             diagnostic = self.diagnostic_docker_complet()
             
-            # Génération rapport
+            # Gnration rapport
             rapport = self.generer_rapport(diagnostic)
             
             # Sauvegarde rapport
@@ -671,9 +671,9 @@ docker exec -it nextgen_postgres psql -U postgres -d agent_memory_nextgen -c "SE
             with open(self.rapport_file, 'w', encoding='utf-8') as f:
                 f.write(rapport)
                 
-            self.logger.info(f"✅ Rapport Docker sauvegardé: {self.rapport_file}")
+            self.logger.info(f"[CHECK] Rapport Docker sauvegard: {self.rapport_file}")
             
-            # Sauvegarde données JSON
+            # Sauvegarde donnes JSON
             json_file = self.rapport_file.with_suffix('.json')
             with open(json_file, 'w', encoding='utf-8') as f:
                 json.dump(diagnostic, f, indent=2, ensure_ascii=False)
@@ -688,7 +688,7 @@ docker exec -it nextgen_postgres psql -U postgres -d agent_memory_nextgen -c "SE
             }
             
         except Exception as e:
-            self.logger.error(f"❌ Erreur mission Docker: {e}")
+            self.logger.error(f"[CROSS] Erreur mission Docker: {e}")
             return {
                 "statut": "ERROR",
                 "erreur": str(e)
@@ -697,4 +697,4 @@ docker exec -it nextgen_postgres psql -U postgres -d agent_memory_nextgen -c "SE
 if __name__ == "__main__":
     agent = DockerSpecialistAgent()
     resultat = agent.executer_mission()
-    print(f"Mission Docker terminée: {resultat['statut']}")
+    print(f"Mission Docker termine: {resultat['statut']}")

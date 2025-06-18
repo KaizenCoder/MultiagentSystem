@@ -2,13 +2,13 @@ from typing import Dict, Any
 from ..graph.state import AgentState
 
 class Supervisor:
-    """Agent superviseur qui coordonne les tâches entre les agents spécialisés."""
+    """Agent superviseur qui coordonne les tches entre les agents spcialiss."""
     
     def create_plan(self, state: AgentState) -> AgentState:
-        """CORRECTIF 5: Crée un plan de tâche basé sur la description - CORRECTION IA-1 ajout testing."""
+        """CORRECTIF 5: Cre un plan de tche bas sur la description - CORRECTION IA-1 ajout testing."""
         task_description = state.get("task_description", "")
         
-        # CORRECTION IA-1: Ajout reconnaissance tâches testing
+        # CORRECTION IA-1: Ajout reconnaissance tches testing
         if "diagnose" in task_description.lower() and "postgresql" in task_description.lower():
             plan = "Diagnose PostgreSQL health and common issues."
             state["next"] = "diag_postgresql"
@@ -25,7 +25,7 @@ class Supervisor:
             plan = "Create documentation using documentation agent"
             state["next"] = "documentation"
         else:
-            # Plan par défaut
+            # Plan par dfaut
             plan = "Analyze task and determine appropriate agent for execution"
             state["next"] = "code_generation"
         
@@ -34,16 +34,16 @@ class Supervisor:
         return state
     
     def route(self, state: AgentState) -> Dict[str, Any]:
-        """Détermine le prochain agent à exécuter basé sur l'état actuel."""
+        """Dtermine le prochain agent  excuter bas sur l'tat actuel."""
         
-        # Si c'est la première fois, créer un plan. Le plan définit la première étape dans "next".
+        # Si c'est la premire fois, crer un plan. Le plan dfinit la premire tape dans "next".
         if not state.get("plan"):
             return self.create_plan(state)
         
-        # Analyser les résultats pour décider de la prochaine étape.
+        # Analyser les rsultats pour dcider de la prochaine tape.
         results = state.get("results", {})
         
-        # Fin de flux pour les tâches de diagnostic, test ou Gemini rapide.
+        # Fin de flux pour les tches de diagnostic, test ou Gemini rapide.
         if "diag_postgresql" in results or "testing" in results or "gemini_rapid" in results:
             state["next"] = "finish"
             return state
@@ -53,13 +53,13 @@ class Supervisor:
             state["next"] = "documentation"
             return state
 
-        # Si la documentation est terminée (avec ou sans code), le flux est terminé.
+        # Si la documentation est termine (avec ou sans code), le flux est termin.
         if "documentation" in results:
             state["next"] = "finish"
             return state
         
         # Si aucune condition de routage n'est remplie, on suppose que l'on continue avec le plan
-        # initialement défini, ou que le worker a échoué. La boucle retournera au superviseur.
+        # initialement dfini, ou que le worker a chou. La boucle retournera au superviseur.
         return state
 
 # Instance globale du superviseur

@@ -11,10 +11,10 @@ import numpy as np
 
 Base = declarative_base()
 
-# === Modèle TimescaleDB ===
+# === Modle TimescaleDB ===
 
 class ExperienceORM(Base):
-    """Experience stockée dans TimescaleDB"""
+    """Experience stocke dans TimescaleDB"""
     __tablename__ = "experiences"
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -27,7 +27,7 @@ class ExperienceORM(Base):
     context = Column(JSON)
     timestamp = Column(DateTime, nullable=False, default=datetime.utcnow)
     
-    # Index composites pour les requêtes fréquentes
+    # Index composites pour les requtes frquentes
     __table_args__ = (
         Index('idx_agent_timestamp', 'agent_id', 'timestamp'),
         Index('idx_task_timestamp', 'task_type', 'timestamp'),
@@ -37,7 +37,7 @@ class ExperienceORM(Base):
 # === Experience Buffer Persistant ===
 
 class PersistentExperienceBuffer:
-    """Buffer d'expériences avec persistance TimescaleDB et cache local"""
+    """Buffer d'expriences avec persistance TimescaleDB et cache local"""
     
     def __init__(
         self,
@@ -81,8 +81,8 @@ class PersistentExperienceBuffer:
         self._cache_refresh_task = None
     
     async def initialize(self):
-        """Initialise la base et démarre les tâches de fond"""
-        # Créer les tables
+        """Initialise la base et dmarre les tches de fond"""
+        # Crer les tables
         async with self.engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
             
@@ -93,13 +93,13 @@ class PersistentExperienceBuffer:
                 "if_not_exists => TRUE);"
             )
             
-            # Compression automatique après 7 jours
+            # Compression automatique aprs 7 jours
             await conn.execute(
                 "SELECT add_compression_policy('experiences', "
                 "INTERVAL '7 days', if_not_exists => TRUE);"
             )
         
-        # Démarrer les tâches de fond
+        # Dmarrer les tches de fond
         self._writer_task = asyncio.create_task(self._batch_writer())
         self._cache_refresh_task = asyncio.create_task(self._cache_refresher())
         
@@ -107,15 +107,15 @@ class PersistentExperienceBuffer:
         await self._refresh_cache()
     
     async def add_experience(self, experience: Experience):
-        """Ajoute une expérience avec write-through cache"""
+        """Ajoute une exprience avec write-through cache"""
         async with self.write_lock:
             self.write_queue.append(experience)
             
-            # Si la queue est pleine, forcer l'écriture
+            # Si la queue est pleine, forcer l'criture
             if len(self.write_queue) >= self.write_batch_size:
                 await self._flush_write_queue()
         
-        # Mise à jour du cache local
+        # Mise  jour du cache local
         async with self.cache_lock:
             self.local_cache.append(experience)
             
@@ -132,7 +132,7 @@ class PersistentExperienceBuffer:
         min_experiences: int = 100,
         lookback_days: int = 30
     ) -> List[Experience]:
-        """Récupère les expériences avec cache intelligent"""
+        """Rcupre les expriences avec cache intelligent"""
         
         # Tentative depuis le cache
         cached_results = await self._get_from_cache(
@@ -145,7 +145,7 @@ class PersistentExperienceBuffer:
         
         self.stats["cache_misses"] += 1
         
-        # Requête à la base
+        # Requte  la base
         async with self.async_session() as session:
             query = session.query(ExperienceORM)
             
@@ -160,9 +160,9 @@ class PersistentExperienceBuffer:
             
             # Ordre et limite
             query = query.order_by(ExperienceORM.timestamp.desc())
-            query = query.limit(min_experiences * 2)  # Marge de sécurité
+            query = query.limit(min_experiences * 2)  # Marge de scurit
             
-            # Exécution
+            # Excution
             result = await session.execute(query)
             experiences_orm = result.scalars().all()
         
@@ -174,7 +174,7 @@ class PersistentExperienceBuffer:
             for exp_orm in experiences_orm
         ]
         
-        # Mise à jour du cache
+        # Mise  jour du cache
         await self._update_cache_with_db_results(experiences)
         
         return experiences[:min_experiences] if len(experiences) >= min_experiences else experiences
@@ -185,7 +185,7 @@ class PersistentExperienceBuffer:
         time_bucket: str = "1 hour",
         lookback_hours: int = 24
     ) -> List[Dict[str, Any]]:
-        """Requêtes d'agrégation TimescaleDB optimisées"""
+        """Requtes d'agrgation TimescaleDB optimises"""
         
         async with self.async_session() as session:
             # Utilisation des fonctions TimescaleDB
@@ -222,7 +222,7 @@ class PersistentExperienceBuffer:
         ]
     
     async def _batch_writer(self):
-        """Tâche de fond pour écriture batch"""
+        """Tche de fond pour criture batch"""
         while True:
             await asyncio.sleep(self.write_interval)
             
@@ -231,7 +231,7 @@ class PersistentExperienceBuffer:
                     await self._flush_write_queue()
     
     async def _flush_write_queue(self):
-        """Écrit le batch en base"""
+        """crit le batch en base"""
         if not self.write_queue:
             return
         
@@ -261,15 +261,15 @@ class PersistentExperienceBuffer:
         self.stats["db_writes"] += len(batch)
     
     async def _cache_refresher(self):
-        """Rafraîchit périodiquement le cache"""
+        """Rafrachit priodiquement le cache"""
         while True:
             await asyncio.sleep(300)  # 5 minutes
             await self._refresh_cache()
     
     async def _refresh_cache(self):
-        """Charge les expériences récentes dans le cache"""
+        """Charge les expriences rcentes dans le cache"""
         async with self.async_session() as session:
-            # Dernières N expériences
+            # Dernires N expriences
             query = session.query(ExperienceORM)\
                 .order_by(ExperienceORM.timestamp.desc())\
                 .limit(self.cache_size)
@@ -308,7 +308,7 @@ class PersistentExperienceBuffer:
         return filtered
     
     async def _update_cache_with_db_results(self, experiences: List[Experience]):
-        """Met à jour le cache avec les résultats de la DB"""
+        """Met  jour le cache avec les rsultats de la DB"""
         async with self.cache_lock:
             # Fusionner intelligemment
             existing_ids = {exp.timestamp for exp in self.local_cache}
@@ -335,7 +335,7 @@ class PersistentExperienceBuffer:
         )
     
     async def cleanup_old_data(self, retention_days: int = 90):
-        """Nettoie les données anciennes"""
+        """Nettoie les donnes anciennes"""
         async with self.async_session() as session:
             cutoff_date = datetime.utcnow() - timedelta(days=retention_days)
             
@@ -346,7 +346,7 @@ class PersistentExperienceBuffer:
             await session.commit()
     
     async def get_statistics(self) -> Dict[str, Any]:
-        """Retourne les statistiques détaillées"""
+        """Retourne les statistiques dtailles"""
         async with self.async_session() as session:
             # Stats globales
             total_count = await session.execute(
@@ -365,7 +365,7 @@ class PersistentExperienceBuffer:
                 GROUP BY agent_id
             """)
             
-            # Stats par stratégie
+            # Stats par stratgie
             strategy_stats = await session.execute("""
                 SELECT 
                     strategy_used,
@@ -399,7 +399,7 @@ class PersistentExperienceBuffer:
             ]
         }
 
-# === Optimiseur Incrémental avec SGD ===
+# === Optimiseur Incrmental avec SGD ===
 
 from sklearn.linear_model import SGDClassifier
 from sklearn.preprocessing import StandardScaler
@@ -407,7 +407,7 @@ import joblib
 import os
 
 class IncrementalStrategyOptimizer:
-    """Optimiseur incrémental utilisant SGD pour éviter le retraining complet"""
+    """Optimiseur incrmental utilisant SGD pour viter le retraining complet"""
     
     def __init__(self, model_dir: str = "./models"):
         self.models: Dict[str, SGDClassifier] = {}
@@ -416,7 +416,7 @@ class IncrementalStrategyOptimizer:
         self.model_dir = model_dir
         self.model_lock = asyncio.Lock()
         
-        # Créer le répertoire des modèles
+        # Crer le rpertoire des modles
         os.makedirs(model_dir, exist_ok=True)
     
     async def learn_incremental(
@@ -425,34 +425,34 @@ class IncrementalStrategyOptimizer:
         task_type: str,
         batch_size: int = 32
     ):
-        """Apprentissage incrémental par mini-batch"""
+        """Apprentissage incrmental par mini-batch"""
         if len(experiences) < 10:
             return
         
         async with self.model_lock:
-            # Charger ou créer le modèle
+            # Charger ou crer le modle
             if task_type not in self.models:
                 await self._load_or_create_model(task_type)
             
             model = self.models[task_type]
             scaler = self.scalers[task_type]
             
-            # Préparer les données par batch
+            # Prparer les donnes par batch
             for i in range(0, len(experiences), batch_size):
                 batch = experiences[i:i + batch_size]
                 X_batch, y_batch = self._prepare_batch(batch)
                 
-                # Normalisation incrémentale
+                # Normalisation incrmentale
                 X_scaled = scaler.partial_fit(X_batch).transform(X_batch)
                 
-                # Apprentissage incrémental
+                # Apprentissage incrmental
                 model.partial_fit(X_scaled, y_batch, classes=[0, 1])
             
-            # Sauvegarder périodiquement
+            # Sauvegarder priodiquement
             if len(experiences) > 100:
                 await self._save_model(task_type)
             
-            # Mise à jour des stats
+            # Mise  jour des stats
             self._update_feature_importance(task_type, model)
     
     async def predict_strategy(
@@ -461,32 +461,32 @@ class IncrementalStrategyOptimizer:
         input_features: Dict[str, Any],
         available_strategies: List[str]
     ) -> Tuple[str, float]:
-        """Prédit la meilleure stratégie avec score de confiance"""
+        """Prdit la meilleure stratgie avec score de confiance"""
         
         async with self.model_lock:
             if task_type not in self.models:
-                # Pas de modèle, stratégie par défaut
+                # Pas de modle, stratgie par dfaut
                 return available_strategies[0], 0.5
             
             model = self.models[task_type]
             scaler = self.scalers[task_type]
             
-            # Tester chaque stratégie
+            # Tester chaque stratgie
             best_strategy = None
             best_score = -1
             
             for strategy in available_strategies:
-                # Features avec la stratégie
+                # Features avec la stratgie
                 features_with_strategy = {
                     **input_features,
                     "strategy": strategy
                 }
                 
-                # Préparer et prédire
+                # Prparer et prdire
                 X = self._extract_features(features_with_strategy).reshape(1, -1)
                 X_scaled = scaler.transform(X)
                 
-                # Probabilité de succès
+                # Probabilit de succs
                 prob_success = model.predict_proba(X_scaled)[0][1]
                 
                 if prob_success > best_score:
@@ -496,21 +496,21 @@ class IncrementalStrategyOptimizer:
         return best_strategy, best_score
     
     async def _load_or_create_model(self, task_type: str):
-        """Charge un modèle existant ou en crée un nouveau"""
+        """Charge un modle existant ou en cre un nouveau"""
         model_path = os.path.join(self.model_dir, f"{task_type}_model.pkl")
         scaler_path = os.path.join(self.model_dir, f"{task_type}_scaler.pkl")
         
         if os.path.exists(model_path) and os.path.exists(scaler_path):
-            # Charger le modèle existant
+            # Charger le modle existant
             self.models[task_type] = joblib.load(model_path)
             self.scalers[task_type] = joblib.load(scaler_path)
         else:
-            # Créer un nouveau modèle
+            # Crer un nouveau modle
             self.models[task_type] = SGDClassifier(
                 loss="log_loss",
                 penalty="l2",
                 alpha=0.0001,
-                max_iter=1,  # Important pour l'incrémental
+                max_iter=1,  # Important pour l'incrmental
                 warm_start=True,
                 learning_rate="adaptive",
                 eta0=0.01
@@ -518,7 +518,7 @@ class IncrementalStrategyOptimizer:
             self.scalers[task_type] = StandardScaler()
     
     async def _save_model(self, task_type: str):
-        """Sauvegarde le modèle et le scaler"""
+        """Sauvegarde le modle et le scaler"""
         model_path = os.path.join(self.model_dir, f"{task_type}_model.pkl")
         scaler_path = os.path.join(self.model_dir, f"{task_type}_scaler.pkl")
         
@@ -529,7 +529,7 @@ class IncrementalStrategyOptimizer:
         self,
         experiences: List[Experience]
     ) -> Tuple[np.ndarray, np.ndarray]:
-        """Prépare un batch pour l'entraînement"""
+        """Prpare un batch pour l'entranement"""
         X = []
         y = []
         
@@ -545,7 +545,7 @@ class IncrementalStrategyOptimizer:
     
     def _extract_features(self, data: Dict[str, Any]) -> np.ndarray:
         """Extraction de features robuste"""
-        # Liste ordonnée des features
+        # Liste ordonne des features
         feature_keys = sorted(data.keys())
         features = []
         
@@ -557,10 +557,10 @@ class IncrementalStrategyOptimizer:
             elif isinstance(value, bool):
                 features.append(1.0 if value else 0.0)
             elif isinstance(value, str):
-                # Hash stable pour les catégories
+                # Hash stable pour les catgories
                 features.append(hash(value) % 10000 / 10000.0)
             else:
-                # Valeur par défaut pour types non supportés
+                # Valeur par dfaut pour types non supports
                 features.append(0.0)
         
         return np.array(features)
@@ -570,7 +570,7 @@ class IncrementalStrategyOptimizer:
         task_type: str,
         model: SGDClassifier
     ):
-        """Met à jour l'importance des features"""
+        """Met  jour l'importance des features"""
         if hasattr(model, 'coef_'):
             # Coefficients comme proxy d'importance
             importance = np.abs(model.coef_[0])
@@ -585,10 +585,10 @@ class IncrementalStrategyOptimizer:
                 "last_updated": datetime.utcnow()
             }
 
-# === Coût et Quota LLM ===
+# === Cot et Quota LLM ===
 
 class LLMCostTracker:
-    """Tracker de coûts et quotas LLM"""
+    """Tracker de cots et quotas LLM"""
     
     def __init__(self, db_url: str):
         self.engine = create_async_engine(db_url)
@@ -608,19 +608,19 @@ class LLMCostTracker:
         prompt_tokens: int,
         completion_tokens: int
     ) -> Dict[str, float]:
-        """Enregistre l'utilisation et vérifie les quotas"""
+        """Enregistre l'utilisation et vrifie les quotas"""
         
-        # Calcul du coût
+        # Calcul du cot
         cost = self._calculate_cost(model, prompt_tokens, completion_tokens)
         
         async with self.usage_lock:
-            # Vérifier le quota
-            remaining_budget = self.quotas.get(workspace, 100.0)  # 100€ par défaut
+            # Vrifier le quota
+            remaining_budget = self.quotas.get(workspace, 100.0)  # 100 par dfaut
             
             if cost > remaining_budget:
                 raise Exception(f"Budget exceeded for workspace {workspace}")
             
-            # Mise à jour du quota
+            # Mise  jour du quota
             self.quotas[workspace] = remaining_budget - cost
             
             # Enregistrement en base
@@ -641,9 +641,9 @@ class LLMCostTracker:
         prompt_tokens: int,
         completion_tokens: int
     ) -> float:
-        """Calcule le coût en EUR"""
+        """Calcule le cot en EUR"""
         if model not in self.pricing:
-            model = "gpt-3.5-turbo"  # Défaut
+            model = "gpt-3.5-turbo"  # Dfaut
         
         prices = self.pricing[model]
         prompt_cost = (prompt_tokens / 1000) * prices["prompt"]
@@ -673,7 +673,7 @@ class LLMCostTracker:
         workspace: str,
         lookback_days: int = 30
     ) -> Dict[str, Any]:
-        """Génère un rapport d'utilisation"""
+        """Gnre un rapport d'utilisation"""
         async with self.engine.begin() as conn:
             result = await conn.execute(f"""
                 SELECT 
@@ -707,10 +707,10 @@ class LLMCostTracker:
             "remaining_budget": self.quotas.get(workspace, 100.0)
         }
 
-# === Exemple d'utilisation complète ===
+# === Exemple d'utilisation complte ===
 
 async def example_usage():
-    """Exemple avec tous les composants intégrés"""
+    """Exemple avec tous les composants intgrs"""
     
     # Initialisation
     db_url = "postgresql+asyncpg://user:pass@localhost/timescaledb"
@@ -724,16 +724,16 @@ async def example_usage():
     )
     await buffer.initialize()
     
-    # Optimiseur incrémental
+    # Optimiseur incrmental
     optimizer = IncrementalStrategyOptimizer(model_dir="./agent_models")
     
-    # Tracker de coûts
+    # Tracker de cots
     cost_tracker = LLMCostTracker(db_url)
-    cost_tracker.quotas["workspace-1"] = 50.0  # 50€ de budget
+    cost_tracker.quotas["workspace-1"] = 50.0  # 50 de budget
     
     # Simulation d'utilisation
     for i in range(100):
-        # Créer une expérience
+        # Crer une exprience
         exp = Experience(
             agent_id="agent-001",
             task_type="text_processing",
@@ -765,7 +765,7 @@ async def example_usage():
             )
             print(f"LLM usage: {usage}")
         
-        # Apprentissage incrémental périodique
+        # Apprentissage incrmental priodique
         if i % 20 == 0:
             experiences = await buffer.get_experiences_for_learning(
                 task_type="text_processing",
@@ -779,7 +779,7 @@ async def example_usage():
                     batch_size=10
                 )
                 
-                # Prédiction
+                # Prdiction
                 best_strategy, confidence = await optimizer.predict_strategy(
                     "text_processing",
                     {"text_length": 500, "complexity": "medium", "priority": 2},
@@ -791,7 +791,7 @@ async def example_usage():
     stats = await buffer.get_statistics()
     print(f"\nBuffer statistics: {stats}")
     
-    # Métriques agrégées
+    # Mtriques agrges
     metrics = await buffer.get_aggregated_metrics(
         group_by="strategy_used",
         time_bucket="10 minutes",
@@ -799,7 +799,7 @@ async def example_usage():
     )
     print(f"\nAggregated metrics: {metrics}")
     
-    # Rapport de coûts
+    # Rapport de cots
     cost_report = await cost_tracker.get_usage_report("workspace-1", 30)
     print(f"\nCost report: {cost_report}")
 

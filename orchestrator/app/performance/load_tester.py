@@ -241,7 +241,7 @@ function textSummary(data, options) {{
     const enableColors = options.enableColors || false;
     
     let summary = `
-${{indent}}✓ {config.name} Results:
+${{indent}} {config.name} Results:
 ${{indent}}  Total Requests: ${{data.metrics.http_reqs.count}}
 ${{indent}}  Failed Requests: ${{data.metrics.http_req_failed.count}}
 ${{indent}}  Error Rate: ${{(data.metrics.http_req_failed.rate * 100).toFixed(2)}}%
@@ -547,7 +547,7 @@ ${{indent}}  Data Sent: ${{(data.metrics.data_sent.count / 1024 / 1024).toFixed(
 </head>
 <body>
     <div class="header">
-        <h1>🚀 Performance Test Report</h1>
+        <h1>[ROCKET] Performance Test Report</h1>
         <p><strong>Generated:</strong> {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')} UTC</p>
         <p><strong>Base URL:</strong> {self.base_url}</p>
     </div>
@@ -571,7 +571,7 @@ ${{indent}}  Data Sent: ${{(data.metrics.data_sent.count / 1024 / 1024).toFixed(
         </div>
     </div>
     
-    <h2>📊 Test Results</h2>
+    <h2>[CHART] Test Results</h2>
     <table>
         <thead>
             <tr>
@@ -609,7 +609,7 @@ ${{indent}}  Data Sent: ${{(data.metrics.data_sent.count / 1024 / 1024).toFixed(
         </tbody>
     </table>
     
-    <h2>🎯 Performance Targets</h2>
+    <h2>[TARGET] Performance Targets</h2>
     <ul>
 """
         
@@ -619,7 +619,7 @@ ${{indent}}  Data Sent: ${{(data.metrics.data_sent.count / 1024 / 1024).toFixed(
         html_content += """
     </ul>
     
-    <h2>📈 Recommendations</h2>
+    <h2> Recommendations</h2>
     <ul>
         <li>Monitor response times during peak load</li>
         <li>Implement cache warming strategies for better performance</li>

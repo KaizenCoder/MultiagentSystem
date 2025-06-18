@@ -1,6 +1,6 @@
 """
-Tests pour les validateurs de sécurité - Sprint 3.1
-Module critique pour la prévention des vulnérabilités RCE et SSRF.
+Tests pour les validateurs de scurit - Sprint 3.1
+Module critique pour la prvention des vulnrabilits RCE et SSRF.
 """
 
 import pytest
@@ -8,7 +8,7 @@ from orchestrator.app.security.validators import CodeValidator, NetworkValidator
 
 
 class TestCodeValidator:
-    """Tests pour la validation de code Python et prévention RCE."""
+    """Tests pour la validation de code Python et prvention RCE."""
     
     def test_validate_python_code_empty(self):
         """Test avec code vide."""
@@ -21,7 +21,7 @@ class TestCodeValidator:
         assert error == "Code is empty"
     
     def test_validate_python_code_dangerous_imports(self):
-        """Test détection d'imports dangereux."""
+        """Test dtection d'imports dangereux."""
         dangerous_codes = [
             "import os",
             "import subprocess", 
@@ -34,7 +34,7 @@ class TestCodeValidator:
             assert "unsafe code pattern" in error.lower()
     
     def test_validate_python_code_dangerous_functions(self):
-        """Test détection de fonctions dangereuses."""
+        """Test dtection de fonctions dangereuses."""
         dangerous_codes = [
             "eval('1+1')",
             "exec('print(1)')",
@@ -47,7 +47,7 @@ class TestCodeValidator:
             assert "unsafe code pattern" in error.lower()
     
     def test_validate_python_code_safe_code(self):
-        """Test avec du code sûr qui doit passer."""
+        """Test avec du code sr qui doit passer."""
         safe_codes = [
             "x = 1 + 2",
             "def add(a, b):\n    return a + b",
@@ -61,7 +61,7 @@ class TestCodeValidator:
 
 
 class TestNetworkValidator:
-    """Tests pour la validation d'URLs et prévention SSRF."""
+    """Tests pour la validation d'URLs et prvention SSRF."""
     
     def test_validate_url_empty(self):
         """Test avec URL vide."""
@@ -70,7 +70,7 @@ class TestNetworkValidator:
         assert error == "URL is empty"
     
     def test_validate_url_blocked_hostnames(self):
-        """Test avec hostnames bloqués."""
+        """Test avec hostnames bloqus."""
         blocked_urls = [
             "http://127.0.0.1",
             "http://localhost",
@@ -96,7 +96,7 @@ class TestNetworkValidator:
             assert error is None
     
     def test_validate_memory_api_url_localhost_allowed(self):
-        """Test que localhost est autorisé pour Memory API avec ports sûrs."""
+        """Test que localhost est autoris pour Memory API avec ports srs."""
         allowed_urls = [
             "http://localhost:8001",
             "http://memory_api:8001",
@@ -110,7 +110,7 @@ class TestNetworkValidator:
 
 
 class TestInputSanitizer:
-    """Tests pour la sanitisation des entrées utilisateur."""
+    """Tests pour la sanitisation des entres utilisateur."""
     
     def test_sanitize_task_description_empty(self):
         """Test avec description vide."""
@@ -121,7 +121,7 @@ class TestInputSanitizer:
         assert result == ""
     
     def test_sanitize_task_description_html_escape(self):
-        """Test échappement HTML."""
+        """Test chappement HTML."""
         result = InputSanitizer.sanitize_task_description("<script>alert('xss')</script>")
         assert "<" not in result
         assert ">" not in result

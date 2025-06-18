@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-🔍 Agent Code Analyzer Alpha - Refactoring NextGeneration
+[SEARCH] Agent Code Analyzer Alpha - Refactoring NextGeneration
 Mission: Analyse approfondie fichiers god mode avec Mixtral RTX3090 local
-Modèle: mixtral:8x7b-instruct-v0.1-q3_k_m (RTX3090) - Qualité maximum
+Modle: mixtral:8x7b-instruct-v0.1-q3_k_m (RTX3090) - Qualit maximum
 """
 
 import os
@@ -24,7 +24,7 @@ os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
 
 @dataclass
 class CodeMetrics:
-    """Métriques complexité code"""
+    """Mtriques complexit code"""
     file_path: str
     total_lines: int
     code_lines: int
@@ -39,7 +39,7 @@ class CodeMetrics:
 
 @dataclass
 class DependencyGraph:
-    """Graphe dépendances"""
+    """Graphe dpendances"""
     file_path: str
     imports: List[str]
     internal_deps: List[str]
@@ -60,7 +60,7 @@ class RefactoringRecommendation:
 
 @dataclass
 class AnalysisResult:
-    """Résultat analyse complète"""
+    """Rsultat analyse complte"""
     timestamp: str
     agent_name: str
     model_used: str
@@ -88,7 +88,7 @@ class AgentCodeAnalyzerAlpha:
         self.vram_usage = "92%"  # Mixtral utilise quasi-toute la VRAM
         self.expected_performance = "5.4 tokens/s"
         
-        # Fichiers god mode à analyser
+        # Fichiers god mode  analyser
         self.project_root = Path.cwd()
         self.target_files = [
             "orchestrator/app/main.py",
@@ -104,7 +104,7 @@ class AgentCodeAnalyzerAlpha:
         self.include_complexity_metrics = True
         
     async def analyze_file_structure(self, file_path: Path) -> CodeMetrics:
-        """Analyse structure et métriques fichier"""
+        """Analyse structure et mtriques fichier"""
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
@@ -134,14 +134,14 @@ class AgentCodeAnalyzerAlpha:
                 functions_count = len(re.findall(r'^\s*def\s+\w+', content, re.MULTILINE))
                 classes_count = len(re.findall(r'^\s*class\s+\w+', content, re.MULTILINE))
             
-            # Complexité cyclomatique (approximation)
+            # Complexit cyclomatique (approximation)
             cyclomatic_complexity = self._calculate_cyclomatic_complexity(content)
             
-            # Scores approximatifs (seront affinés par Mixtral)
+            # Scores approximatifs (seront affins par Mixtral)
             coupling_score = min(10.0, len(re.findall(r'import\s+\w+|from\s+\w+', content)) / 10)
             cohesion_score = max(1.0, 10.0 - (functions_count / classes_count if classes_count > 0 else functions_count / 10))
             
-            # Index maintenabilité (approximation)
+            # Index maintenabilit (approximation)
             maintainability_index = max(0, 100 - (total_lines / 100) - (cyclomatic_complexity / 10))
             
             return CodeMetrics(
@@ -159,12 +159,12 @@ class AgentCodeAnalyzerAlpha:
             )
             
         except Exception as e:
-            print(f"❌ Erreur analyse structure {file_path}: {e}")
+            print(f"[CROSS] Erreur analyse structure {file_path}: {e}")
             return None
     
     def _calculate_cyclomatic_complexity(self, content: str) -> int:
-        """Calcule complexité cyclomatique approximative"""
-        # Mots-clés augmentant complexité
+        """Calcule complexit cyclomatique approximative"""
+        # Mots-cls augmentant complexit
         complexity_keywords = [
             r'\bif\b', r'\belif\b', r'\belse\b', r'\bwhile\b', 
             r'\bfor\b', r'\btry\b', r'\bexcept\b', r'\bwith\b',
@@ -178,7 +178,7 @@ class AgentCodeAnalyzerAlpha:
         return complexity
     
     async def analyze_dependencies(self, file_path: Path) -> DependencyGraph:
-        """Analyse dépendances fichier"""
+        """Analyse dpendances fichier"""
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
@@ -193,7 +193,7 @@ class AgentCodeAnalyzerAlpha:
                 else:
                     all_imports.append(f"import {import_items.strip()}")
             
-            # Classification dépendances
+            # Classification dpendances
             internal_deps = []
             external_deps = []
             
@@ -203,10 +203,10 @@ class AgentCodeAnalyzerAlpha:
                 else:
                     external_deps.append(imp)
             
-            # Détection dépendances circulaires (approximation)
+            # Dtection dpendances circulaires (approximation)
             circular_deps = []
             if 'from .app' in content and 'from orchestrator.app' in content:
-                circular_deps.append("Potentielle dépendance circulaire détectée")
+                circular_deps.append("Potentielle dpendance circulaire dtecte")
             
             # Niveau coupling
             total_deps = len(all_imports)
@@ -229,20 +229,20 @@ class AgentCodeAnalyzerAlpha:
             )
             
         except Exception as e:
-            print(f"❌ Erreur analyse dépendances {file_path}: {e}")
+            print(f"[CROSS] Erreur analyse dpendances {file_path}: {e}")
             return None
     
     async def analyze_with_mixtral(self, file_content: str, file_path: str) -> Dict[str, Any]:
         """Analyse approfondie avec Mixtral RTX3090"""
-        print(f"🔍 Analyse Mixtral RTX3090: {file_path}")
+        print(f"[SEARCH] Analyse Mixtral RTX3090: {file_path}")
         
-        # Prompt spécialisé pour analyse code
+        # Prompt spcialis pour analyse code
         prompt = f"""
 Tu es un expert analyste de code utilisant Mixtral-8x7B sur RTX 3090.
 Mission: Analyse approfondie pour refactoring architectural.
 
-FICHIER À ANALYSER: {file_path}
-TAILLE: {len(file_content)} caractères
+FICHIER  ANALYSER: {file_path}
+TAILLE: {len(file_content)} caractres
 
 CONTENU DU FICHIER:
 ```python
@@ -251,31 +251,31 @@ CONTENU DU FICHIER:
 
 ANALYSE REQUISE:
 
-1. **COMPLEXITÉ ET STRUCTURE**
-   - Complexité cyclomatique détaillée
+1. **COMPLEXIT ET STRUCTURE**
+   - Complexit cyclomatique dtaille
    - Violations du Single Responsibility Principle
-   - Couplage et cohésion
-   - Points de douleur maintenabilité
+   - Couplage et cohsion
+   - Points de douleur maintenabilit
 
-2. **REFACTORING OPPORTUNITÉS**
-   - Fonctions/classes candidates à l'extraction
-   - Responsabilités à séparer
-   - Patterns d'architecture recommandés
-   - Priorités de refactoring
+2. **REFACTORING OPPORTUNITS**
+   - Fonctions/classes candidates  l'extraction
+   - Responsabilits  sparer
+   - Patterns d'architecture recommands
+   - Priorits de refactoring
 
-3. **DÉPENDANCES ET ARCHITECTURE**
-   - Dépendances problématiques
-   - Inversions de contrôle possibles
+3. **DPENDANCES ET ARCHITECTURE**
+   - Dpendances problmatiques
+   - Inversions de contrle possibles
    - Abstractions manquantes
-   - Découplage recommandé
+   - Dcouplage recommand
 
-4. **RECOMMANDATIONS CONCRÈTES**
+4. **RECOMMANDATIONS CONCRTES**
    - Actions prioritaires (1-3)
    - Estimation effort (heures)
-   - Risques identifiés
-   - Bénéfices attendus
+   - Risques identifis
+   - Bnfices attendus
 
-Fournis une analyse JSON structurée avec métriques précises.
+Fournis une analyse JSON structure avec mtriques prcises.
 """
 
         try:
@@ -288,7 +288,7 @@ Fournis une analyse JSON structurée avec métriques précises.
                         "prompt": prompt,
                         "stream": False,
                         "options": {
-                            "temperature": 0.2,  # Analyse précise
+                            "temperature": 0.2,  # Analyse prcise
                             "top_p": 0.9,
                             "num_ctx": 8192,  # Contexte large pour Mixtral
                             "num_gpu": 1
@@ -300,7 +300,7 @@ Fournis une analyse JSON structurée avec métriques précises.
                     result = response.json()
                     analysis = result.get("response", "")
                     
-                    # Extraction métriques depuis réponse Mixtral
+                    # Extraction mtriques depuis rponse Mixtral
                     return {
                         "file_path": file_path,
                         "mixtral_analysis": analysis,
@@ -315,7 +315,7 @@ Fournis une analyse JSON structurée avec métriques précises.
                     raise Exception(f"Erreur Ollama: {response.status_code}")
                     
         except Exception as e:
-            print(f"❌ Erreur analyse Mixtral {file_path}: {e}")
+            print(f"[CROSS] Erreur analyse Mixtral {file_path}: {e}")
             return {
                 "file_path": file_path,
                 "mixtral_analysis": f"Erreur analyse: {e}",
@@ -323,17 +323,17 @@ Fournis une analyse JSON structurée avec métriques précises.
             }
     
     def generate_refactoring_recommendations(self, metrics: CodeMetrics, deps: DependencyGraph, mixtral_analysis: str) -> List[RefactoringRecommendation]:
-        """Génère recommandations refactoring"""
+        """Gnre recommandations refactoring"""
         recommendations = []
         
-        # Recommandations basées sur métriques
+        # Recommandations bases sur mtriques
         if metrics.total_lines > 500:
             recommendations.append(RefactoringRecommendation(
                 target_file=metrics.file_path,
                 issue_type="TAILLE_FICHIER",
                 severity="HIGH",
                 description=f"Fichier trop volumineux: {metrics.total_lines} lignes",
-                recommended_action="Diviser en modules spécialisés selon SRP",
+                recommended_action="Diviser en modules spcialiss selon SRP",
                 estimated_effort="2-3 jours",
                 priority=1
             ))
@@ -354,13 +354,13 @@ Fournis une analyse JSON structurée avec métriques précises.
                 target_file=metrics.file_path,
                 issue_type="COMPLEXITE_ELEVEE",
                 severity="CRITICAL",
-                description=f"Complexité cyclomatique: {metrics.cyclomatic_complexity}",
+                description=f"Complexit cyclomatique: {metrics.cyclomatic_complexity}",
                 recommended_action="Simplifier logique, extraire fonctions",
                 estimated_effort="3-5 jours",
                 priority=1
             ))
         
-        # Recommandations dépendances
+        # Recommandations dpendances
         if deps.coupling_level in ["HIGH", "CRITICAL"]:
             recommendations.append(RefactoringRecommendation(
                 target_file=deps.file_path,
@@ -372,7 +372,7 @@ Fournis une analyse JSON structurée avec métriques précises.
                 priority=1 if deps.coupling_level == "CRITICAL" else 2
             ))
         
-        # Tri par priorité
+        # Tri par priorit
         recommendations.sort(key=lambda x: x.priority)
         
         return recommendations
@@ -388,11 +388,11 @@ Fournis une analyse JSON structurée avec métriques précises.
             # Scoring hotspots
             if metrics.total_lines > 1000:
                 score += 3
-                issues.append(f"Fichier énorme ({metrics.total_lines} lignes)")
+                issues.append(f"Fichier norme ({metrics.total_lines} lignes)")
             
             if metrics.cyclomatic_complexity > 100:
                 score += 3
-                issues.append(f"Complexité extrême ({metrics.cyclomatic_complexity})")
+                issues.append(f"Complexit extrme ({metrics.cyclomatic_complexity})")
             
             if metrics.functions_count > 30:
                 score += 2
@@ -400,21 +400,21 @@ Fournis une analyse JSON structurée avec métriques précises.
             
             if metrics.maintainability_index < 20:
                 score += 2
-                issues.append(f"Maintenabilité faible ({metrics.maintainability_index:.1f})")
+                issues.append(f"Maintenabilit faible ({metrics.maintainability_index:.1f})")
             
             if score >= 5:  # Hotspot critique
-                hotspot = f"🔥 HOTSPOT CRITIQUE: {metrics.file_path} (Score: {score})"
+                hotspot = f" HOTSPOT CRITIQUE: {metrics.file_path} (Score: {score})"
                 hotspot += f"\n   Issues: {', '.join(issues)}"
                 hotspots.append(hotspot)
         
         return hotspots
     
     async def execute_mission(self) -> AnalysisResult:
-        """Exécute mission analyse Alpha avec Mixtral RTX3090"""
-        print(f"🚀 {self.name} - Démarrage analyse Mixtral RTX3090")
-        print(f"🎮 GPU: {self.gpu_device}")
-        print(f"🤖 Modèle: {self.model}")
-        print(f"📊 VRAM attendue: {self.vram_usage}")
+        """Excute mission analyse Alpha avec Mixtral RTX3090"""
+        print(f"[ROCKET] {self.name} - Dmarrage analyse Mixtral RTX3090")
+        print(f" GPU: {self.gpu_device}")
+        print(f"[ROBOT] Modle: {self.model}")
+        print(f"[CHART] VRAM attendue: {self.vram_usage}")
         
         try:
             self.status = "ACTIVE"
@@ -430,17 +430,17 @@ Fournis une analyse JSON structurée avec métriques précises.
                 file_path = self.project_root / target_file
                 
                 if not file_path.exists():
-                    print(f"⚠️ Fichier introuvable: {file_path}")
+                    print(f" Fichier introuvable: {file_path}")
                     continue
                 
-                print(f"🔍 Analyse: {target_file}")
+                print(f"[SEARCH] Analyse: {target_file}")
                 
                 # Analyse structure
                 metrics = await self.analyze_file_structure(file_path)
                 if metrics:
                     all_metrics.append(metrics)
                 
-                # Analyse dépendances
+                # Analyse dpendances
                 deps = await self.analyze_dependencies(file_path)
                 if deps:
                     all_dependencies.append(deps)
@@ -454,14 +454,14 @@ Fournis une analyse JSON structurée avec métriques précises.
                     all_mixtral_analyses.append(mixtral_analysis)
                     
                 except Exception as e:
-                    print(f"❌ Erreur lecture {file_path}: {e}")
+                    print(f"[CROSS] Erreur lecture {file_path}: {e}")
                 
                 files_analyzed.append(str(target_file))
                 
-                # Pause entre analyses pour éviter surcharge
+                # Pause entre analyses pour viter surcharge
                 await asyncio.sleep(1)
             
-            # Génération recommandations globales
+            # Gnration recommandations globales
             all_recommendations = []
             for i, metrics in enumerate(all_metrics):
                 if i < len(all_dependencies):
@@ -494,7 +494,7 @@ Fournis une analyse JSON structurée avec métriques précises.
                 }
             }
             
-            # Résultat final
+            # Rsultat final
             result = AnalysisResult(
                 timestamp=datetime.now().isoformat(),
                 agent_name=self.name,
@@ -510,19 +510,19 @@ Fournis une analyse JSON structurée avec métriques précises.
             
             self.status = "SUCCESS"
             
-            print(f"🎉 Analyse Alpha Mixtral TERMINÉE")
-            print(f"📊 {len(files_analyzed)} fichiers, {total_lines:,} lignes analysées")
-            print(f"🔥 {len(hotspots)} hotspots critiques identifiés")
-            print(f"⚠️ {critical_issues} issues critiques détectés")
-            print(f"⏱️ Durée: {summary['analysis_duration']}s")
+            print(f" Analyse Alpha Mixtral TERMINE")
+            print(f"[CHART] {len(files_analyzed)} fichiers, {total_lines:,} lignes analyses")
+            print(f" {len(hotspots)} hotspots critiques identifis")
+            print(f" {critical_issues} issues critiques dtects")
+            print(f" Dure: {summary['analysis_duration']}s")
             
             return result
             
         except Exception as e:
             self.status = "FAILED"
-            print(f"❌ Échec analyse Alpha: {e}")
+            print(f"[CROSS] chec analyse Alpha: {e}")
             
-            # Résultat d'erreur
+            # Rsultat d'erreur
             return AnalysisResult(
                 timestamp=datetime.now().isoformat(),
                 agent_name=self.name,
@@ -551,7 +551,7 @@ Fournis une analyse JSON structurée avec métriques précises.
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(result_dict, f, indent=2, ensure_ascii=False)
         
-        print(f"📄 Rapport sauvegardé: {output_path}")
+        print(f"[DOCUMENT] Rapport sauvegard: {output_path}")
 
 if __name__ == "__main__":
     # Test agent analyzer alpha
@@ -561,9 +561,9 @@ if __name__ == "__main__":
         result = await agent.execute_mission()
         agent.save_analysis_report(result)
         
-        print(f"\n📊 RÉSULTAT ANALYSE ALPHA MIXTRAL:")
+        print(f"\n[CHART] RSULTAT ANALYSE ALPHA MIXTRAL:")
         print(f"Status: {agent.status}")
-        print(f"Modèle: {result.model_used}")
+        print(f"Modle: {result.model_used}")
         print(f"GPU: {result.gpu_used}")
         print(f"Fichiers: {len(result.files_analyzed)}")
         print(f"Hotspots: {len(result.hotspots)}")

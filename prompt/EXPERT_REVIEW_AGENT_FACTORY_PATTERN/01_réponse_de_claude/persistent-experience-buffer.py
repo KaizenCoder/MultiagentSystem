@@ -11,10 +11,10 @@ import numpy as np
 
 Base = declarative_base()
 
-# === Modèle TimescaleDB ===
+# === Modle TimescaleDB ===
 
 class ExperienceORM(Base):
-    """Experience stockée dans TimescaleDB"""
+    """Experience stocke dans TimescaleDB"""
     __tablename__ = "experiences"
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -27,7 +27,7 @@ class ExperienceORM(Base):
     context = Column(JSON)
     timestamp = Column(DateTime, nullable=False, default=datetime.utcnow)
     
-    # Index composites pour les requêtes fréquentes
+    # Index composites pour les requtes frquentes
     __table_args__ = (
         Index('idx_agent_timestamp', 'agent_id', 'timestamp'),
         Index('idx_task_timestamp', 'task_type', 'timestamp'),
@@ -37,7 +37,7 @@ class ExperienceORM(Base):
 # === Experience Buffer Persistant ===
 
 class PersistentExperienceBuffer:
-    """Buffer d'expériences avec persistance TimescaleDB et cache local"""
+    """Buffer d'expriences avec persistance TimescaleDB et cache local"""
     
     def __init__(
         self,
@@ -81,8 +81,8 @@ class PersistentExperienceBuffer:
         self._cache_refresh_task = None
     
     async def initialize(self):
-        """Initialise la base et démarre les tâches de fond"""
-        # Créer les tables
+        """Initialise la base et dmarre les tches de fond"""
+        # Crer les tables
         async with self.engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
             
@@ -93,13 +93,13 @@ class PersistentExperienceBuffer:
                 "if_not_exists => TRUE);"
             )
             
-            # Compression automatique après 7 jours
+            # Compression automatique aprs 7 jours
             await conn.execute(
                 "SELECT add_compression_policy('experiences', "
                 "INTERVAL '7 days', if_not_exists => TRUE);"
             )
         
-        # Démarrer les tâches de fond
+        # Dmarrer les tches de fond
         self._writer_task = asyncio.create_task(self._batch_writer())
         self._cache_refresh_task = asyncio.create_task(self._cache_refresher())
         
@@ -107,15 +107,15 @@ class PersistentExperienceBuffer:
         await self._refresh_cache()
     
     async def add_experience(self, experience: Experience):
-        """Ajoute une expérience avec write-through cache"""
+        """Ajoute une exprience avec write-through cache"""
         async with self.write_lock:
             self.write_queue.append(experience)
             
-            # Si la queue est pleine, forcer l'écriture
+            # Si la queue est pleine, forcer l'criture
             if len(self.write_queue) >= self.write_batch_size:
                 await self._flush_write_queue()
         
-        # Mise à jour du cache local
+        # Mise  jour du cache local
         async with self.cache_lock:
             self.local_cache.append(experience)
             
@@ -132,7 +132,7 @@ class PersistentExperienceBuffer:
         min_experiences: int = 100,
         lookback_days: int = 30
     ) -> List[Experience]:
-        """Récupère les expériences avec cache intelligent"""
+        """Rcupre les expriences avec cache intelligent"""
         
         # Tentative depuis le cache
         cached_results = await self._get_from_cache(
@@ -145,7 +145,7 @@ class PersistentExperienceBuffer:
         
         self.stats["cache_misses"] += 1
         
-        # Requête à la base
+        # Requte  la base
         async with self.async_session() as session:
             query = session.query(ExperienceORM)
             
@@ -160,9 +160,9 @@ class PersistentExperienceBuffer:
             
             # Ordre et limite
             query = query.order_by(ExperienceORM.timestamp.desc())
-            query = query.limit(min_experiences * 2)  # Marge de sécurité
+            query = query.limit(min_experiences * 2)  # Marge de scurit
             
-            # Exécution
+            # Excution
             result = await session.execute(query)
             experiences_orm = result.scalars().all()
         
@@ -174,7 +174,7 @@ class PersistentExperienceBuffer:
             for exp_orm in experiences_orm
         ]
         
-        # Mise à jour du cache
+        # Mise  jour du cache
         await self._update_cache_with_db_results(experiences)
         
         return experiences[:min_experiences] if len(experiences) >= min_experiences else experiences
@@ -185,7 +185,7 @@ class PersistentExperienceBuffer:
         time_bucket: str = "1 hour",
         lookback_hours: int = 24
     ) -> List[Dict[str, Any]]:
-        """Requêtes d'agrégation TimescaleDB optimisées"""
+        """Requtes d'agrgation TimescaleDB optimises"""
         
         async with self.async_session() as session:
             # Utilisation des fonctions TimescaleDB
@@ -222,7 +222,7 @@ class PersistentExperienceBuffer:
         ]
     
     async def _batch_writer(self):
-        """Tâche de fond pour écriture batch"""
+        """Tche de fond pour criture batch"""
         while True:
             await asyncio.sleep(self.write_interval)
             
@@ -231,7 +231,7 @@ class PersistentExperienceBuffer:
                     await self._flush_write_queue()
     
     async def _flush_write_queue(self):
-        """Écrit le batch en base"""
+        """crit le batch en base"""
         if not self.write_queue:
             return
         
@@ -261,15 +261,15 @@ class PersistentExperienceBuffer:
         self.stats["db_writes"] += len(batch)
     
     async def _cache_refresher(self):
-        """Rafraîchit périodiquement le cache"""
+        """Rafrachit priodiquement le cache"""
         while True:
             await asyncio.sleep(300)  # 5 minutes
             await self._refresh_cache()
     
     async def _refresh_cache(self):
-        """Charge les expériences récentes dans le cache"""
+        """Charge les expriences rcentes dans le cache"""
         async with self.async_session() as session:
-            # Dernières N expériences
+            # Dernires N expriences
             query = session.query(ExperienceORM)\
                 .order_by(ExperienceORM.timestamp.desc())\
                 .limit(self.cache_size)
@@ -308,7 +308,7 @@ class PersistentExperienceBuffer:
         return filtered
     
     async def _update_cache_with_db_results(self, experiences: List[Experience]):
-        """Met à jour le cache avec les résultats de la DB"""
+        """Met  jour le cache avec les rsultats de la DB"""
         async with self.cache_lock:
             # Fusionner intelligemment
             existing_ids = {exp.timestamp for exp in self.local_cache}
@@ -335,7 +335,7 @@ class PersistentExperienceBuffer:
         )
     
     async def cleanup_old_data(self, retention_days: int = 90):
-        """Nettoie les données anciennes"""
+        """Nettoie les donnes anciennes"""
         async with self.async_session() as session:
             cutoff_date = datetime.utcnow() - timedelta(days=retention_days)
             

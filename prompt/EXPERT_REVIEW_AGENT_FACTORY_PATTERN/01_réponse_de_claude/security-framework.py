@@ -7,21 +7,21 @@ import asyncio
 from datetime import datetime, timedelta
 import re
 
-# === Modèle de Sécurité ===
+# === Modle de Scurit ===
 
 class SecurityLevel(Enum):
-    """Niveaux de sécurité pour les agents"""
-    PUBLIC = "public"          # Accès sans restriction
-    INTERNAL = "internal"      # Accès interne uniquement
-    RESTRICTED = "restricted"  # Accès avec permissions spécifiques
-    CRITICAL = "critical"      # Accès hautement sécurisé
+    """Niveaux de scurit pour les agents"""
+    PUBLIC = "public"          # Accs sans restriction
+    INTERNAL = "internal"      # Accs interne uniquement
+    RESTRICTED = "restricted"  # Accs avec permissions spcifiques
+    CRITICAL = "critical"      # Accs hautement scuris
 
 @dataclass
 class SecurityPolicy:
-    """Politique de sécurité pour un agent"""
+    """Politique de scurit pour un agent"""
     level: SecurityLevel
     allowed_domains: List[str]
-    rate_limit: int  # Requêtes par minute
+    rate_limit: int  # Requtes par minute
     max_resource_usage: Dict[str, Any]
     data_retention_days: int
     encryption_required: bool = True
@@ -30,7 +30,7 @@ class SecurityPolicy:
 # === Validation et Sandboxing ===
 
 class TemplateValidator:
-    """Validateur de templates avec règles de sécurité"""
+    """Validateur de templates avec rgles de scurit"""
     
     DANGEROUS_PATTERNS = [
         r"eval\s*\(",
@@ -42,12 +42,12 @@ class TemplateValidator:
     ]
     
     def validate_template(self, template: Dict[str, Any]) -> bool:
-        """Valide un template contre les règles de sécurité"""
-        # Vérification de la structure
+        """Valide un template contre les rgles de scurit"""
+        # Vrification de la structure
         if not self._validate_structure(template):
             return False
         
-        # Vérification des patterns dangereux
+        # Vrification des patterns dangereux
         template_str = str(template)
         for pattern in self.DANGEROUS_PATTERNS:
             if re.search(pattern, template_str):
@@ -60,7 +60,7 @@ class TemplateValidator:
         return True
     
     def _validate_structure(self, template: Dict[str, Any]) -> bool:
-        """Vérifie la structure du template"""
+        """Vrifie la structure du template"""
         required_fields = ["name", "role", "domain", "security_policy"]
         return all(field in template for field in required_fields)
     
@@ -77,7 +77,7 @@ class TemplateValidator:
         return True
 
 class AgentSandbox:
-    """Environnement d'exécution isolé pour les agents"""
+    """Environnement d'excution isol pour les agents"""
     
     def __init__(self, agent_id: str, security_policy: SecurityPolicy):
         self.agent_id = agent_id
@@ -85,8 +85,8 @@ class AgentSandbox:
         self.resource_monitor = ResourceMonitor()
     
     async def execute_in_sandbox(self, func, *args, **kwargs):
-        """Exécute une fonction dans le sandbox avec limitations"""
-        # Vérification des permissions
+        """Excute une fonction dans le sandbox avec limitations"""
+        # Vrification des permissions
         if not self._check_permissions():
             raise PermissionError("Agent lacks required permissions")
         
@@ -96,7 +96,7 @@ class AgentSandbox:
         
         # Monitoring des ressources
         with self.resource_monitor.track(self.agent_id):
-            # Timeout basé sur la politique
+            # Timeout bas sur la politique
             timeout = self.security_policy.max_resource_usage.get("timeout_seconds", 300)
             try:
                 return await asyncio.wait_for(func(*args, **kwargs), timeout=timeout)
@@ -104,13 +104,13 @@ class AgentSandbox:
                 raise TimeoutError(f"Agent execution exceeded {timeout}s timeout")
     
     def _check_permissions(self) -> bool:
-        """Vérifie les permissions de l'agent"""
-        # Implémentation simplifiée
+        """Vrifie les permissions de l'agent"""
+        # Implmentation simplifie
         return True
     
     async def _check_rate_limit(self) -> bool:
-        """Vérifie le rate limit"""
-        # Implémentation avec Redis en production
+        """Vrifie le rate limit"""
+        # Implmentation avec Redis en production
         return True
 
 # === Authentication et Authorization ===
@@ -123,7 +123,7 @@ class AgentAuthManager:
         self.token_expiry = timedelta(hours=24)
     
     def generate_agent_token(self, agent_id: str, permissions: List[str]) -> str:
-        """Génère un token JWT pour un agent"""
+        """Gnre un token JWT pour un agent"""
         payload = {
             "agent_id": agent_id,
             "permissions": permissions,
@@ -133,7 +133,7 @@ class AgentAuthManager:
         return jwt.encode(payload, self.secret_key, algorithm="HS256")
     
     def verify_agent_token(self, token: str) -> Dict[str, Any]:
-        """Vérifie et décode un token d'agent"""
+        """Vrifie et dcode un token d'agent"""
         try:
             payload = jwt.decode(token, self.secret_key, algorithms=["HS256"])
             return payload
@@ -155,7 +155,7 @@ class RBACManager:
         self.user_roles = {}
     
     def check_permission(self, user_id: str, action: str) -> bool:
-        """Vérifie si un utilisateur a la permission pour une action"""
+        """Vrifie si un utilisateur a la permission pour une action"""
         user_role = self.user_roles.get(user_id)
         if not user_role:
             return False
@@ -167,7 +167,7 @@ class RBACManager:
 
 @dataclass
 class AuditEvent:
-    """Événement d'audit"""
+    """vnement d'audit"""
     timestamp: datetime
     agent_id: str
     user_id: Optional[str]
@@ -177,7 +177,7 @@ class AuditEvent:
     metadata: Dict[str, Any]
 
 class AuditLogger:
-    """Logger d'audit pour conformité"""
+    """Logger d'audit pour conformit"""
     
     def __init__(self, retention_days: int = 90):
         self.retention_days = retention_days
@@ -192,7 +192,7 @@ class AuditLogger:
         user_id: Optional[str] = None,
         metadata: Dict[str, Any] = None
     ):
-        """Enregistre un événement d'audit"""
+        """Enregistre un vnement d'audit"""
         event = AuditEvent(
             timestamp=datetime.utcnow(),
             agent_id=agent_id,
@@ -203,22 +203,22 @@ class AuditLogger:
             metadata=metadata or {}
         )
         
-        # En production : stocker dans une base de données
+        # En production : stocker dans une base de donnes
         self.events.append(event)
         
-        # Alertes pour événements critiques
+        # Alertes pour vnements critiques
         if action in ["security_violation", "unauthorized_access"]:
             await self._send_security_alert(event)
     
     async def _send_security_alert(self, event: AuditEvent):
-        """Envoie une alerte de sécurité"""
-        # Implémentation avec système d'alerting
+        """Envoie une alerte de scurit"""
+        # Implmentation avec systme d'alerting
         pass
 
 # === Resource Monitoring ===
 
 class ResourceMonitor:
-    """Moniteur de ressources pour prévenir les abus"""
+    """Moniteur de ressources pour prvenir les abus"""
     
     def __init__(self):
         self.agent_resources = {}
@@ -247,13 +247,13 @@ class ResourceMonitor:
             end_metrics = await self._get_current_metrics()
             usage = self._calculate_usage(self.start_metrics, end_metrics)
             
-            # Vérifier les seuils
+            # Vrifier les seuils
             for resource, value in usage.items():
                 if value > self.monitor.alerts_threshold.get(resource, float('inf')):
                     await self.monitor._trigger_alert(self.agent_id, resource, value)
         
         async def _get_current_metrics(self) -> Dict[str, float]:
-            """Obtient les métriques actuelles (simplifié)"""
+            """Obtient les mtriques actuelles (simplifi)"""
             # En production : utiliser psutil ou prometheus
             return {
                 "memory_mb": 512.0,
@@ -267,13 +267,13 @@ class ResourceMonitor:
             return {k: end[k] - start.get(k, 0) for k in end}
     
     async def _trigger_alert(self, agent_id: str, resource: str, value: float):
-        """Déclenche une alerte pour utilisation excessive"""
+        """Dclenche une alerte pour utilisation excessive"""
         print(f"ALERT: Agent {agent_id} exceeded {resource} limit: {value}")
 
 # === Data Protection ===
 
 class DataProtectionManager:
-    """Gestionnaire de protection des données"""
+    """Gestionnaire de protection des donnes"""
     
     def __init__(self, encryption_key: bytes):
         self.encryption_key = encryption_key
@@ -283,7 +283,7 @@ class DataProtectionManager:
         ]
     
     def sanitize_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """Nettoie les données sensibles"""
+        """Nettoie les donnes sensibles"""
         sanitized = {}
         for key, value in data.items():
             if self._is_sensitive_field(key):
@@ -295,7 +295,7 @@ class DataProtectionManager:
         return sanitized
     
     def _is_sensitive_field(self, field_name: str) -> bool:
-        """Vérifie si un champ est sensible"""
+        """Vrifie si un champ est sensible"""
         field_lower = field_name.lower()
         return any(sensitive in field_lower for sensitive in self.sensitive_fields)
     
@@ -309,14 +309,14 @@ class DataProtectionManager:
         return "***REDACTED***"
     
     def encrypt_sensitive_data(self, data: bytes) -> bytes:
-        """Chiffre les données sensibles"""
+        """Chiffre les donnes sensibles"""
         # Utiliser cryptography.fernet en production
         return hashlib.sha256(data + self.encryption_key).digest()
 
 # === Secure Agent Factory ===
 
 class SecureAgentFactory(AgentFactory):
-    """Factory sécurisé avec toutes les protections"""
+    """Factory scuris avec toutes les protections"""
     
     def __init__(
         self,
@@ -339,14 +339,14 @@ class SecureAgentFactory(AgentFactory):
         user_id: str = None,
         auth_token: str = None
     ) -> BaseAgent:
-        """Création sécurisée d'agent avec authentification"""
+        """Cration scurise d'agent avec authentification"""
         
-        # Vérification de l'authentification
+        # Vrification de l'authentification
         if auth_token:
             token_data = self.auth_manager.verify_agent_token(auth_token)
             user_id = token_data.get("user_id", user_id)
         
-        # Vérification des permissions
+        # Vrification des permissions
         if not self.rbac_manager.check_permission(user_id, "create_agent"):
             await self.audit_logger.log_event(
                 agent_id="N/A",
@@ -366,10 +366,10 @@ class SecureAgentFactory(AgentFactory):
         if config:
             config = self.data_protection.sanitize_data(config)
         
-        # Création de l'agent avec sandbox
+        # Cration de l'agent avec sandbox
         agent = await super().create_agent(template_name, config)
         
-        # Configuration de la sécurité
+        # Configuration de la scurit
         security_policy = SecurityPolicy(
             level=SecurityLevel(template.get("security_level", "internal")),
             allowed_domains=template.get("allowed_domains", []),
@@ -380,7 +380,7 @@ class SecureAgentFactory(AgentFactory):
         
         agent.sandbox = AgentSandbox(agent.metadata.id, security_policy)
         
-        # Audit de la création
+        # Audit de la cration
         await self.audit_logger.log_event(
             agent_id=agent.metadata.id,
             action="agent_created",
@@ -395,7 +395,7 @@ class SecureAgentFactory(AgentFactory):
 # === Security Exceptions ===
 
 class SecurityError(Exception):
-    """Erreur de sécurité générique"""
+    """Erreur de scurit gnrique"""
     pass
 
 class AuthenticationError(SecurityError):
@@ -410,13 +410,13 @@ class RateLimitError(SecurityError):
     """Erreur de rate limiting"""
     pass
 
-# === Configuration de Sécurité ===
+# === Configuration de Scurit ===
 
 class SecurityConfig:
-    """Configuration centralisée de sécurité"""
+    """Configuration centralise de scurit"""
     
-    # Limites par défaut
-    DEFAULT_RATE_LIMIT = 100  # requêtes/minute
+    # Limites par dfaut
+    DEFAULT_RATE_LIMIT = 100  # requtes/minute
     DEFAULT_TIMEOUT = 300     # secondes
     DEFAULT_MAX_MEMORY = 1024 # MB
     DEFAULT_MAX_CPU = 50      # %
@@ -446,15 +446,15 @@ class SecurityConfig:
     
     @classmethod
     def get_policy_for_domain(cls, domain: str) -> Dict[str, Any]:
-        """Retourne la politique de sécurité pour un domaine"""
+        """Retourne la politique de scurit pour un domaine"""
         return cls.DOMAIN_POLICIES.get(domain, cls.DOMAIN_POLICIES["internal"])
 
-# === Exemple d'utilisation sécurisée ===
+# === Exemple d'utilisation scurise ===
 
 async def secure_usage_example():
     """Exemple d'utilisation avec toutes les protections"""
     
-    # Initialisation des composants de sécurité
+    # Initialisation des composants de scurit
     auth_manager = AgentAuthManager("super_secret_key")
     rbac_manager = RBACManager()
     audit_logger = AuditLogger()
@@ -463,13 +463,13 @@ async def secure_usage_example():
     rbac_manager.user_roles["admin_user"] = "admin"
     rbac_manager.user_roles["dev_user"] = "developer"
     
-    # Création du factory sécurisé
+    # Cration du factory scuris
     registry = AgentRegistry()
     secure_factory = SecureAgentFactory(
         registry, auth_manager, rbac_manager, audit_logger
     )
     
-    # Template sécurisé
+    # Template scuris
     secure_template = {
         "name": "secure_processor",
         "role": "processor",
@@ -495,14 +495,14 @@ async def secure_usage_example():
     
     registry.register_template("secure_processor", secure_template)
     
-    # Génération de token pour l'utilisateur
+    # Gnration de token pour l'utilisateur
     user_token = auth_manager.generate_agent_token(
         "dev_user",
         ["create_agent", "execute_agent"]
     )
     
     try:
-        # Création sécurisée d'un agent
+        # Cration scurise d'un agent
         agent = await secure_factory.create_agent(
             "secure_processor",
             config={"processing_mode": "batch"},
@@ -510,7 +510,7 @@ async def secure_usage_example():
             auth_token=user_token
         )
         
-        # Exécution dans le sandbox
+        # Excution dans le sandbox
         result = await agent.sandbox.execute_in_sandbox(
             agent.process,
             {"data": "sensitive information"},
@@ -524,7 +524,7 @@ async def secure_usage_example():
     except SecurityError as e:
         print(f"Security error: {e}")
     
-    # Affichage des événements d'audit
+    # Affichage des vnements d'audit
     for event in audit_logger.events:
         print(f"Audit: {event.timestamp} - {event.action} by {event.user_id}")
 

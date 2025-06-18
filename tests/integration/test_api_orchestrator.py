@@ -1,5 +1,5 @@
 """
-Tests d'intégration API Orchestrateur - CRITIQUE Phase 2.
+Tests d'intgration API Orchestrateur - CRITIQUE Phase 2.
 Tests des endpoints essentiels selon prompt Sprint 2.
 """
 
@@ -12,7 +12,7 @@ from unittest.mock import patch, AsyncMock
 
 @pytest.mark.integration
 class TestOrchestratorAPI:
-    """Tests d'intégration API Orchestrateur - CRITIQUE."""
+    """Tests d'intgration API Orchestrateur - CRITIQUE."""
     
     @pytest.fixture(autouse=True)
     def setup_client(self):
@@ -35,7 +35,7 @@ class TestOrchestratorAPI:
         assert data["status"] in ["healthy", "ok"]
     
     def test_status_endpoint(self):
-        """Test endpoint /status - CRITIQUE (corrigé v9)."""
+        """Test endpoint /status - CRITIQUE (corrig v9)."""
         # ACT
         response = self.client.get("/status")
         
@@ -75,8 +75,8 @@ class TestOrchestratorAPI:
         assert data["session_id"] == "test-session-api"
     
     def test_process_task_validation(self):
-        """Test validation entrée /process."""
-        # Test données invalides
+        """Test validation entre /process."""
+        # Test donnes invalides
         invalid_data = {"invalid_field": "test"}
         
         # ACT
@@ -101,7 +101,7 @@ class TestOrchestratorAPI:
     
     @patch('orchestrator.app.checkpoint.api_checkpointer.APICheckpointer.get_session')
     def test_get_session_status(self, mock_get_session):
-        """Test récupération statut session."""
+        """Test rcupration statut session."""
         # ARRANGE
         mock_get_session.return_value = {
             "session_id": "test-session",
@@ -127,18 +127,18 @@ class TestOrchestratorAPI:
             "session_id": "rate-test"
         }
         
-        # ACT - Envoyer plusieurs requêtes rapidement
+        # ACT - Envoyer plusieurs requtes rapidement
         responses = []
         for i in range(5):
             response = self.client.post("/process", json=task_data)
             responses.append(response.status_code)
         
         # ASSERT
-        # Au moins une requête devrait passer
+        # Au moins une requte devrait passer
         assert 200 in responses or 202 in responses
-        # Si rate limiting activé, certaines peuvent être rejetées
+        # Si rate limiting activ, certaines peuvent tre rejetes
         if 429 in responses:
-            print("✅ Rate limiting detecté et fonctionnel")
+            print("[CHECK] Rate limiting detect et fonctionnel")
     
     def test_cors_headers(self):
         """Test headers CORS."""
@@ -146,11 +146,11 @@ class TestOrchestratorAPI:
         response = self.client.options("/health")
         
         # ASSERT
-        # CORS peut être configuré ou non selon l'environnement
+        # CORS peut tre configur ou non selon l'environnement
         if "access-control-allow-origin" in response.headers:
-            print("✅ CORS headers présents")
+            print("[CHECK] CORS headers prsents")
         else:
-            print("ℹ️ CORS headers non configurés (normal en test)")
+            print(" CORS headers non configurs (normal en test)")
     
     def test_api_error_handling(self):
         """Test gestion d'erreurs API."""
@@ -162,7 +162,7 @@ class TestOrchestratorAPI:
     
     @patch('httpx.AsyncClient.post')
     def test_memory_api_integration(self, mock_http_post):
-        """Test intégration Memory API."""
+        """Test intgration Memory API."""
         # ARRANGE
         mock_response = AsyncMock()
         mock_response.status_code = 200
@@ -178,13 +178,13 @@ class TestOrchestratorAPI:
         response = self.client.post("/process", json=task_data)
         
         # ASSERT
-        # Le test passe si l'API répond, même avec erreur interne
+        # Le test passe si l'API rpond, mme avec erreur interne
         assert response.status_code in [200, 202, 500, 503]
 
 
 @pytest.mark.integration
 class TestOrchestratorSecurity:
-    """Tests de sécurité API - CRITIQUE."""
+    """Tests de scurit API - CRITIQUE."""
     
     @pytest.fixture(autouse=True)
     def setup_client(self):
@@ -207,9 +207,9 @@ class TestOrchestratorSecurity:
         response = self.client.post("/process", json=malicious_data)
         
         # ASSERT
-        # Ne devrait pas provoquer d'erreur 500 (injection réussie)
+        # Ne devrait pas provoquer d'erreur 500 (injection russie)
         assert response.status_code != 500
-        print("✅ Protection injection SQL active")
+        print("[CHECK] Protection injection SQL active")
     
     def test_xss_protection(self):
         """Test protection XSS."""
@@ -225,9 +225,9 @@ class TestOrchestratorSecurity:
         # ASSERT
         if response.status_code == 200:
             data = response.json()
-            # Vérifier que le script n'est pas exécuté
+            # Vrifier que le script n'est pas excut
             assert "<script>" not in str(data)
-        print("✅ Protection XSS basique")
+        print("[CHECK] Protection XSS basique")
     
     def test_large_payload_protection(self):
         """Test protection payloads volumineux."""
@@ -244,7 +244,7 @@ class TestOrchestratorSecurity:
         # Devrait rejeter ou accepter selon la configuration
         assert response.status_code in [200, 202, 413, 422]
         if response.status_code == 413:
-            print("✅ Protection payload volumineux active")
+            print("[CHECK] Protection payload volumineux active")
     
     def test_invalid_json_handling(self):
         """Test gestion JSON invalide."""
@@ -257,4 +257,4 @@ class TestOrchestratorSecurity:
         
         # ASSERT
         assert response.status_code == 422  # Unprocessable Entity
-        print("✅ Gestion JSON invalide fonctionnelle") 
+        print("[CHECK] Gestion JSON invalide fonctionnelle") 

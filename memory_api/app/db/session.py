@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 # Configuration PostgreSQL pour NextGeneration
 def get_database_url():
-    """Construit l'URL de la base de données"""
+    """Construit l'URL de la base de donnes"""
     # Variables d'environnement pour PostgreSQL
     postgres_user = os.getenv("POSTGRES_USER", "postgres")
     postgres_password = os.getenv("POSTGRES_PASSWORD", "postgres")
@@ -21,10 +21,10 @@ def get_database_url():
     # URL PostgreSQL
     postgresql_url = f"postgresql://{postgres_user}:{postgres_password}@{postgres_host}:{postgres_port}/{postgres_db}"
     
-    # Fallback SQLite pour développement
+    # Fallback SQLite pour dveloppement
     fallback_url = "sqlite:///./memory.db"
     
-    # Priorité : DATABASE_URL > PostgreSQL > SQLite
+    # Priorit : DATABASE_URL > PostgreSQL > SQLite
     database_url = os.getenv("DATABASE_URL", postgresql_url)
     
     logger.info(f"Database URL configured: {database_url.split('@')[0]}@***")
@@ -39,7 +39,7 @@ if DATABASE_URL.startswith("postgresql"):
         DATABASE_URL,
         # Pool settings pour haute charge
         pool_size=25,               # Connexions permanentes
-        max_overflow=50,            # Connexions supplémentaires en pic
+        max_overflow=50,            # Connexions supplmentaires en pic
         pool_pre_ping=True,         # Test connexions avant usage
         pool_recycle=7200,          # Renouveler connexions toutes les 2h
         
@@ -62,9 +62,9 @@ if DATABASE_URL.startswith("postgresql"):
         }
     )
     
-    logger.info("✅ PostgreSQL engine configured for enterprise production")
+    logger.info("[CHECK] PostgreSQL engine configured for enterprise production")
 else:
-    # Configuration SQLite pour développement
+    # Configuration SQLite pour dveloppement
     engine = create_engine(
         DATABASE_URL,
         poolclass=NullPool,
@@ -72,14 +72,14 @@ else:
         connect_args={"timeout": 20}
     )
     
-    logger.info("⚠️  SQLite engine configured for development only")
+    logger.info("  SQLite engine configured for development only")
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
 def get_db():
-    """Générateur de session de base de données avec gestion d'erreurs avancée"""
+    """Gnrateur de session de base de donnes avec gestion d'erreurs avance"""
     db = SessionLocal()
     try:
         yield db
@@ -91,7 +91,7 @@ def get_db():
         db.close()
 
 async def get_async_db():
-    """Version async du générateur de session (pour future implémentation)"""
+    """Version async du gnrateur de session (pour future implmentation)"""
     db = SessionLocal()
     try:
         yield db
@@ -103,7 +103,7 @@ async def get_async_db():
         db.close()
 
 def test_connection():
-    """Test de connexion à la base de données avec diagnostics avancés"""
+    """Test de connexion  la base de donnes avec diagnostics avancs"""
     try:
         db = SessionLocal()
         
@@ -114,7 +114,7 @@ def test_connection():
         if test_value != 1:
             raise Exception("Basic query test failed")
             
-        # Test PostgreSQL spécifique si applicable
+        # Test PostgreSQL spcifique si applicable
         if DATABASE_URL.startswith("postgresql"):
             # Test version PostgreSQL
             version_result = db.execute("SELECT version()")
@@ -134,11 +134,11 @@ def test_connection():
             logger.info(f"Query performance: {query_time:.2f}ms")
         
         db.close()
-        logger.info("✅ Database connection successful with full diagnostics")
+        logger.info("[CHECK] Database connection successful with full diagnostics")
         return True
         
     except Exception as e:
-        logger.error(f"❌ Database connection failed: {e}")
+        logger.error(f"[CROSS] Database connection failed: {e}")
         try:
             db.close()
         except:
@@ -146,7 +146,7 @@ def test_connection():
         return False
 
 def get_database_stats():
-    """Statistiques de la base de données pour monitoring"""
+    """Statistiques de la base de donnes pour monitoring"""
     try:
         db = SessionLocal()
         stats = {}

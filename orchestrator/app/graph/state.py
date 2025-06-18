@@ -3,12 +3,12 @@ from datetime import datetime
 from pydantic import BaseModel, Field
 
 class Feedback(BaseModel):
-    """Modèle pour le feedback utilisateur."""
+    """Modle pour le feedback utilisateur."""
     rating: int = Field(..., ge=1, le=5)
     comment: Optional[str] = None
 
 class AgentState(TypedDict):
-    """État partagé et persistant du workflow."""
+    """tat partag et persistant du workflow."""
     messages: List[Dict[str, Any]]
     plan: Optional[str]
     next: str

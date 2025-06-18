@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-🔍 Agent 19 - Architecture Scanner Real (Claude Sonnet 4)
-Mission: Scanner RÉEL de l'architecture + création configurations opérationnelles
+[SEARCH] Agent 19 - Architecture Scanner Real (Claude Sonnet 4)
+Mission: Scanner REL de l'architecture + cration configurations oprationnelles
 Travaille sur: refactoring_workspace/new_architecture/ (VRAIE ANALYSE)
 """
 
@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Dict, Any, List
 
 class RealArchitectureScannerAgent:
-    """Agent scanner réel - analyse et configure selon architecture réelle"""
+    """Agent scanner rel - analyse et configure selon architecture relle"""
     
     def __init__(self):
         self.name = "Agent 19 - Real Architecture Scanner"
@@ -26,7 +26,7 @@ class RealArchitectureScannerAgent:
         self.version = "1.0.0"
         self.model = "Claude Sonnet 4"
         
-        # Workspace réel
+        # Workspace rel
         self.workspace_root = Path("C:/Dev/nextgeneration")
         self.architecture_path = self.workspace_root / "refactoring_workspace/new_architecture"
         self.output_dir = self.workspace_root / "refactoring_workspace/results/phase5_real_analysis"
@@ -36,7 +36,7 @@ class RealArchitectureScannerAgent:
         self.setup_logging()
         self.output_dir.mkdir(parents=True, exist_ok=True)
         
-        # Résultats scan
+        # Rsultats scan
         self.scan_results = {
             "files_scanned": [],
             "components_found": {},
@@ -61,11 +61,11 @@ class RealArchitectureScannerAgent:
         self.logger = logging.getLogger(self.agent_id)
         
     def scan_architecture_files(self) -> Dict[str, Any]:
-        """🎯 Scanner RÉEL des fichiers architecture"""
-        self.logger.info("🔍 Démarrage scan RÉEL architecture NextGeneration")
+        """[TARGET] Scanner REL des fichiers architecture"""
+        self.logger.info("[SEARCH] Dmarrage scan REL architecture NextGeneration")
         
         if not self.architecture_path.exists():
-            self.logger.error(f"❌ Path architecture non trouvé: {self.architecture_path}")
+            self.logger.error(f"[CROSS] Path architecture non trouv: {self.architecture_path}")
             return {"error": "Architecture path not found"}
             
         scan_data = {
@@ -85,7 +85,7 @@ class RealArchitectureScannerAgent:
             }
         }
         
-        # Scan RÉEL de tous les fichiers Python
+        # Scan REL de tous les fichiers Python
         for py_file in self.architecture_path.rglob("*.py"):
             try:
                 with open(py_file, 'r', encoding='utf-8') as f:
@@ -96,7 +96,7 @@ class RealArchitectureScannerAgent:
                 scan_data["total_lines"] += len(lines)
                 
                 file_rel_path = str(py_file.relative_to(self.architecture_path))
-                self.logger.info(f"📄 Scan: {file_rel_path}")
+                self.logger.info(f"[DOCUMENT] Scan: {file_rel_path}")
                 
                 # Analyse contenu fichier
                 file_analysis = {
@@ -113,7 +113,7 @@ class RealArchitectureScannerAgent:
                     "endpoints": []
                 }
                 
-                # Parse AST pour analyse détaillée
+                # Parse AST pour analyse dtaille
                 try:
                     tree = ast.parse(content)
                     
@@ -138,9 +138,9 @@ class RealArchitectureScannerAgent:
                                 file_analysis["imports"].append(node.module)
                                 
                 except SyntaxError as e:
-                    self.logger.warning(f"⚠️ Erreur parsing AST {file_rel_path}: {e}")
+                    self.logger.warning(f" Erreur parsing AST {file_rel_path}: {e}")
                     
-                # Détection endpoints API
+                # Dtection endpoints API
                 endpoints = self._extract_api_endpoints(content)
                 file_analysis["endpoints"] = endpoints
                 
@@ -148,7 +148,7 @@ class RealArchitectureScannerAgent:
                 component_type = file_analysis["type"]
                 scan_data["components"][component_type].append(file_analysis)
                 
-                # Stockage dans résultats
+                # Stockage dans rsultats
                 self.scan_results["files_scanned"].append(file_analysis)
                 
                 # Comptage par type
@@ -156,9 +156,9 @@ class RealArchitectureScannerAgent:
                 scan_data["files_by_type"][file_ext] = scan_data["files_by_type"].get(file_ext, 0) + 1
                 
             except Exception as e:
-                self.logger.error(f"❌ Erreur scan {py_file}: {e}")
+                self.logger.error(f"[CROSS] Erreur scan {py_file}: {e}")
                 
-        # Calcul métriques globales
+        # Calcul mtriques globales
         scan_data["metrics"] = {
             "avg_lines_per_file": scan_data["total_lines"] / scan_data["total_files"] if scan_data["total_files"] > 0 else 0,
             "total_functions": sum(len(f["functions"]) for f in self.scan_results["files_scanned"]),
@@ -168,15 +168,15 @@ class RealArchitectureScannerAgent:
         }
         
         self.scan_results["components_found"] = scan_data
-        self.logger.info(f"✅ Scan terminé: {scan_data['total_files']} fichiers, {scan_data['total_lines']} lignes")
+        self.logger.info(f"[CHECK] Scan termin: {scan_data['total_files']} fichiers, {scan_data['total_lines']} lignes")
         
         return scan_data
         
     def _determine_file_type(self, file_path: Path, content: str) -> str:
-        """Détermine le type de fichier selon path et contenu"""
+        """Dtermine le type de fichier selon path et contenu"""
         path_parts = file_path.parts
         
-        # Classification par répertoire
+        # Classification par rpertoire
         if "router" in path_parts:
             return "routers"
         elif "service" in path_parts:
@@ -227,8 +227,8 @@ class RealArchitectureScannerAgent:
         return endpoints
         
     def create_architecture_map(self, scan_data: Dict[str, Any]) -> Path:
-        """🎯 Création carte architecture basée sur scan réel"""
-        self.logger.info("🗺️ Création carte architecture")
+        """[TARGET] Cration carte architecture base sur scan rel"""
+        self.logger.info(" Cration carte architecture")
         
         architecture_map = {
             "metadata": {
@@ -274,28 +274,28 @@ class RealArchitectureScannerAgent:
                     "component_type": file_data["type"]
                 })
                 
-        # Graphe dépendances (simplifié)
+        # Graphe dpendances (simplifi)
         all_imports = set()
         for file_data in self.scan_results["files_scanned"]:
             all_imports.update(file_data["imports"])
             
         architecture_map["dependencies_graph"] = list(all_imports)
         
-        # Recommandations basées sur scan
+        # Recommandations bases sur scan
         recommendations = []
         
         if scan_data["metrics"]["avg_lines_per_file"] > 200:
             recommendations.append({
                 "type": "maintainability",
                 "priority": "medium",
-                "message": f"Fichiers moyens de {scan_data['metrics']['avg_lines_per_file']:.0f} lignes - considérer refactoring"
+                "message": f"Fichiers moyens de {scan_data['metrics']['avg_lines_per_file']:.0f} lignes - considrer refactoring"
             })
             
         if scan_data["metrics"]["total_endpoints"] > 20:
             recommendations.append({
                 "type": "scalability",
                 "priority": "low",
-                "message": f"{scan_data['metrics']['total_endpoints']} endpoints détectés - monitoring performance recommandé"
+                "message": f"{scan_data['metrics']['total_endpoints']} endpoints dtects - monitoring performance recommand"
             })
             
         if len(scan_data["components"]["tests"]) < scan_data["total_files"] * 0.3:
@@ -312,14 +312,14 @@ class RealArchitectureScannerAgent:
         with open(map_file, 'w', encoding='utf-8') as f:
             json.dump(architecture_map, f, indent=2, ensure_ascii=False)
             
-        self.logger.info(f"✅ Carte architecture: {map_file}")
+        self.logger.info(f"[CHECK] Carte architecture: {map_file}")
         return map_file
         
     def create_monitoring_config(self, scan_data: Dict[str, Any]) -> Path:
-        """🎯 Configuration monitoring basée sur architecture scannée"""
-        self.logger.info("⚙️ Création configuration monitoring")
+        """[TARGET] Configuration monitoring base sur architecture scanne"""
+        self.logger.info(" Cration configuration monitoring")
         
-        # Configuration Prometheus adaptée
+        # Configuration Prometheus adapte
         prometheus_config = {
             "global": {
                 "scrape_interval": "15s",
@@ -341,7 +341,7 @@ class RealArchitectureScannerAgent:
             ]
         }
         
-        # Jobs spécifiques selon composants détectés
+        # Jobs spcifiques selon composants dtects
         if scan_data["components"]["routers"]:
             prometheus_config["scrape_configs"].append({
                 "job_name": "nextgeneration-routers",
@@ -364,7 +364,7 @@ class RealArchitectureScannerAgent:
                 }
             })
             
-        # Règles alerting
+        # Rgles alerting
         alerting_rules = {
             "groups": [
                 {
@@ -395,7 +395,7 @@ class RealArchitectureScannerAgent:
             ]
         }
         
-        # Ajout alertes spécifiques composants
+        # Ajout alertes spcifiques composants
         if len(scan_data["components"]["routers"]) > 3:
             alerting_rules["groups"][0]["rules"].append({
                 "alert": "RouterOverload",
@@ -417,95 +417,95 @@ class RealArchitectureScannerAgent:
         with open(alerts_file, 'w') as f:
             yaml.dump(alerting_rules, f, default_flow_style=False, indent=2)
             
-        self.logger.info(f"✅ Config monitoring: {config_file}")
-        self.logger.info(f"✅ Alertes: {alerts_file}")
+        self.logger.info(f"[CHECK] Config monitoring: {config_file}")
+        self.logger.info(f"[CHECK] Alertes: {alerts_file}")
         
         return config_file
         
     def create_deployment_scripts(self, scan_data: Dict[str, Any]) -> List[Path]:
-        """🎯 Scripts déploiement basés sur architecture"""
-        self.logger.info("🚀 Création scripts déploiement")
+        """[TARGET] Scripts dploiement bass sur architecture"""
+        self.logger.info("[ROCKET] Cration scripts dploiement")
         
         scripts = []
         
-        # Script déploiement principal
+        # Script dploiement principal
         deploy_script = f"""#!/bin/bash
-# Script déploiement NextGeneration - Architecture Réelle
-# Généré le {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
-# Basé sur scan de {scan_data['total_files']} fichiers
+# Script dploiement NextGeneration - Architecture Relle
+# Gnr le {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+# Bas sur scan de {scan_data['total_files']} fichiers
 
-echo "🚀 Déploiement NextGeneration - Architecture Réelle"
-echo "📊 Fichiers: {scan_data['total_files']} | Lignes: {scan_data['total_lines']} | Endpoints: {scan_data['metrics']['total_endpoints']}"
+echo "[ROCKET] Dploiement NextGeneration - Architecture Relle"
+echo "[CHART] Fichiers: {scan_data['total_files']} | Lignes: {scan_data['total_lines']} | Endpoints: {scan_data['metrics']['total_endpoints']}"
 
 # Variables
 APP_NAME="nextgeneration"
 ARCHITECTURE_PATH="refactoring_workspace/new_architecture"
 PORT=8000
 
-# Vérification prérequis
-echo "🔍 Vérification architecture..."
+# Vrification prrequis
+echo "[SEARCH] Vrification architecture..."
 if [ ! -d "$ARCHITECTURE_PATH" ]; then
-    echo "❌ Architecture path non trouvé: $ARCHITECTURE_PATH"
+    echo "[CROSS] Architecture path non trouv: $ARCHITECTURE_PATH"
     exit 1
 fi
 
-echo "✅ Architecture trouvée: {scan_data['total_files']} fichiers"
+echo "[CHECK] Architecture trouve: {scan_data['total_files']} fichiers"
 
-# Installation dépendances
-echo "📦 Installation dépendances..."
+# Installation dpendances
+echo " Installation dpendances..."
 pip install -r requirements.txt
 
 # Configuration monitoring
-echo "⚙️ Configuration monitoring..."
+echo " Configuration monitoring..."
 cp refactoring_workspace/results/phase5_real_analysis/prometheus_real_architecture.yml monitoring/
 cp refactoring_workspace/results/phase5_real_analysis/alerts_real_architecture.yml monitoring/
 
-# Démarrage application
-echo "🎯 Démarrage application..."
+# Dmarrage application
+echo "[TARGET] Dmarrage application..."
 cd $ARCHITECTURE_PATH
 uvicorn main:app --host 0.0.0.0 --port $PORT --reload &
 APP_PID=$!
 
-# Attente démarrage
-echo "⏳ Attente démarrage application..."
+# Attente dmarrage
+echo " Attente dmarrage application..."
 sleep 10
 
-# Tests santé
-echo "🏥 Tests santé..."
+# Tests sant
+echo " Tests sant..."
 """
 
-        # Ajout tests pour chaque endpoint détecté
+        # Ajout tests pour chaque endpoint dtect
         all_endpoints = []
         for file_data in self.scan_results["files_scanned"]:
             all_endpoints.extend(file_data["endpoints"])
             
         for endpoint in all_endpoints[:5]:  # Top 5 endpoints
             deploy_script += f"""
-curl -f http://localhost:$PORT{endpoint['path']} || echo "⚠️ Endpoint {endpoint['method']} {endpoint['path']} non accessible"
+curl -f http://localhost:$PORT{endpoint['path']} || echo " Endpoint {endpoint['method']} {endpoint['path']} non accessible"
 """
 
         deploy_script += f"""
-# Validation déploiement
-echo "✅ Déploiement terminé"
-echo "🌐 Application: http://localhost:$PORT"
-echo "📊 Métriques: http://localhost:$PORT/metrics"
-echo "🏥 Santé: http://localhost:$PORT/health"
-echo "📋 PID: $APP_PID"
+# Validation dploiement
+echo "[CHECK] Dploiement termin"
+echo " Application: http://localhost:$PORT"
+echo "[CHART] Mtriques: http://localhost:$PORT/metrics"
+echo " Sant: http://localhost:$PORT/health"
+echo "[CLIPBOARD] PID: $APP_PID"
 """
 
         deploy_file = self.output_dir / "deploy_real_architecture.sh"
         with open(deploy_file, 'w') as f:
             f.write(deploy_script)
-        deploy_file.chmod(0o755)  # Exécutable
+        deploy_file.chmod(0o755)  # Excutable
         scripts.append(deploy_file)
         
         # Script tests
         test_script = f"""#!/bin/bash
-# Tests architecture réelle NextGeneration
-# Généré le {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+# Tests architecture relle NextGeneration
+# Gnr le {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 
-echo "🧪 Tests architecture réelle"
-echo "📊 Architecture: {scan_data['total_files']} fichiers, {scan_data['metrics']['total_endpoints']} endpoints"
+echo " Tests architecture relle"
+echo "[CHART] Architecture: {scan_data['total_files']} fichiers, {scan_data['metrics']['total_endpoints']} endpoints"
 
 BASE_URL="http://localhost:8000"
 FAILED_TESTS=0
@@ -516,7 +516,7 @@ test_endpoint() {{
     local path=$2
     local expected_status=${{3:-200}}
     
-    echo "🔍 Test $method $path"
+    echo "[SEARCH] Test $method $path"
     
     case $method in
         "GET")
@@ -531,14 +531,14 @@ test_endpoint() {{
     esac
     
     if [ "$status" -eq "$expected_status" ]; then
-        echo "✅ $method $path: $status"
+        echo "[CHECK] $method $path: $status"
     else
-        echo "❌ $method $path: $status (attendu: $expected_status)"
+        echo "[CROSS] $method $path: $status (attendu: $expected_status)"
         FAILED_TESTS=$((FAILED_TESTS + 1))
     fi
 }}
 
-# Tests endpoints découverts
+# Tests endpoints dcouverts
 """
 
         for endpoint in all_endpoints:
@@ -546,17 +546,17 @@ test_endpoint() {{
 """
 
         test_script += f"""
-# Tests santé
+# Tests sant
 test_endpoint "GET" "/health" 200
 test_endpoint "GET" "/metrics" 200
 
-# Résultat final
+# Rsultat final
 echo ""
 if [ $FAILED_TESTS -eq 0 ]; then
-    echo "✅ Tous les tests passent ({len(all_endpoints)} endpoints testés)"
+    echo "[CHECK] Tous les tests passent ({len(all_endpoints)} endpoints tests)"
     exit 0
 else
-    echo "❌ $FAILED_TESTS tests échoués sur {len(all_endpoints)}"
+    echo "[CROSS] $FAILED_TESTS tests chous sur {len(all_endpoints)}"
     exit 1
 fi
 """
@@ -567,12 +567,12 @@ fi
         test_file.chmod(0o755)
         scripts.append(test_file)
         
-        self.logger.info(f"✅ Scripts créés: {len(scripts)} fichiers")
+        self.logger.info(f"[CHECK] Scripts crs: {len(scripts)} fichiers")
         return scripts
         
     def create_documentation_report(self, scan_data: Dict[str, Any]) -> Path:
-        """🎯 Rapport documentation complet"""
-        self.logger.info("📚 Création rapport documentation")
+        """[TARGET] Rapport documentation complet"""
+        self.logger.info(" Cration rapport documentation")
         
         report_content = f"""# NextGeneration - Real Architecture Scan Report
 
@@ -640,7 +640,7 @@ fi
                 for endpoint in endpoints:
                     report_content += f"- `{endpoint['path']}`\n"
                     
-        # Dépendances
+        # Dpendances
         all_imports = set()
         for file_data in self.scan_results["files_scanned"]:
             all_imports.update(file_data["imports"])
@@ -659,16 +659,16 @@ fi
         recommendations = []
         
         if scan_data["metrics"]["avg_lines_per_file"] > 200:
-            recommendations.append(f"📏 **File Size:** Average file size is {scan_data['metrics']['avg_lines_per_file']:.0f} lines. Consider breaking down larger files.")
+            recommendations.append(f" **File Size:** Average file size is {scan_data['metrics']['avg_lines_per_file']:.0f} lines. Consider breaking down larger files.")
             
         if scan_data["metrics"]["total_endpoints"] > 15:
-            recommendations.append(f"🔗 **API Endpoints:** {scan_data['metrics']['total_endpoints']} endpoints detected. Implement comprehensive monitoring.")
+            recommendations.append(f" **API Endpoints:** {scan_data['metrics']['total_endpoints']} endpoints detected. Implement comprehensive monitoring.")
             
         if len(scan_data["components"]["tests"]) < scan_data["total_files"] * 0.3:
-            recommendations.append(f"🧪 **Testing:** Low test coverage - {len(scan_data['components']['tests'])} test files for {scan_data['total_files']} source files.")
+            recommendations.append(f" **Testing:** Low test coverage - {len(scan_data['components']['tests'])} test files for {scan_data['total_files']} source files.")
             
         if scan_data["metrics"]["async_functions"] > 10:
-            recommendations.append(f"⚡ **Async Code:** {scan_data['metrics']['async_functions']} async functions detected. Monitor async performance.")
+            recommendations.append(f"[LIGHTNING] **Async Code:** {scan_data['metrics']['async_functions']} async functions detected. Monitor async performance.")
             
         if recommendations:
             report_content += f"""
@@ -740,12 +740,12 @@ fi
         with open(report_file, 'w', encoding='utf-8') as f:
             f.write(report_content)
             
-        self.logger.info(f"✅ Rapport documentation: {report_file}")
+        self.logger.info(f"[CHECK] Rapport documentation: {report_file}")
         return report_file
         
     def generate_final_report(self) -> Dict[str, Any]:
-        """🎯 Génération rapport final agent"""
-        time.sleep(2.1)  # Simulation traitement réaliste
+        """[TARGET] Gnration rapport final agent"""
+        time.sleep(2.1)  # Simulation traitement raliste
         duration = (datetime.now() - self.start_time).total_seconds()
         
         scan_data = self.scan_results["components_found"]
@@ -794,16 +794,16 @@ fi
         return report
         
     def execute_mission(self) -> Dict[str, Any]:
-        """🎯 Exécution mission complète Agent 19"""
-        self.logger.info(f"🚀 {self.name} - Démarrage scan RÉEL architecture")
+        """[TARGET] Excution mission complte Agent 19"""
+        self.logger.info(f"[ROCKET] {self.name} - Dmarrage scan REL architecture")
         
         try:
-            # 1. Scan RÉEL architecture
+            # 1. Scan REL architecture
             scan_data = self.scan_architecture_files()
             if "error" in scan_data:
                 return {"status": "ERROR", "error": scan_data["error"]}
                 
-            self.logger.info(f"🔍 Scan terminé: {scan_data['total_files']} fichiers, {scan_data['total_lines']} lignes")
+            self.logger.info(f"[SEARCH] Scan termin: {scan_data['total_files']} fichiers, {scan_data['total_lines']} lignes")
             
             # 2. Carte architecture
             architecture_map = self.create_architecture_map(scan_data)
@@ -811,7 +811,7 @@ fi
             # 3. Configuration monitoring
             monitoring_config = self.create_monitoring_config(scan_data)
             
-            # 4. Scripts déploiement
+            # 4. Scripts dploiement
             deployment_scripts = self.create_deployment_scripts(scan_data)
             
             # 5. Rapport documentation
@@ -820,7 +820,7 @@ fi
             # 6. Rapport final
             report = self.generate_final_report()
             
-            self.logger.info("✅ Mission Agent 19 terminée avec succès")
+            self.logger.info("[CHECK] Mission Agent 19 termine avec succs")
             
             return {
                 "status": "SUCCESS",
@@ -833,11 +833,11 @@ fi
                 "files_generated": report["files_generated"],
                 "quality_score": report["architecture_insights"]["quality_score"],
                 "real_architecture_scan": True,
-                "message": f"🔍 Scan RÉEL terminé - {scan_data['total_files']} fichiers analysés ✅"
+                "message": f"[SEARCH] Scan REL termin - {scan_data['total_files']} fichiers analyss [CHECK]"
             }
             
         except Exception as e:
-            self.logger.error(f"❌ Erreur mission Agent 19: {e}")
+            self.logger.error(f"[CROSS] Erreur mission Agent 19: {e}")
             return {
                 "status": "ERROR",
                 "error": str(e)
@@ -847,15 +847,15 @@ if __name__ == "__main__":
     agent = RealArchitectureScannerAgent()
     result = agent.execute_mission()
     
-    print(f"\n🎯 {agent.name}")
+    print(f"\n[TARGET] {agent.name}")
     print(f"Status: {result['status']}")
     if result['status'] == 'SUCCESS':
-        print(f"📊 Fichiers scannés: {result['files_scanned']}")
-        print(f"📏 Lignes scannées: {result['lines_scanned']:,}")
-        print(f"🔗 Endpoints découverts: {result['endpoints_discovered']}")
-        print(f"🏗️ Composants trouvés: {result['components_found']}")
-        print(f"📄 Fichiers générés: {result['files_generated']}")
-        print(f"🏆 Score qualité: {result['quality_score']}%")
-        print(f"✅ {result['message']}")
+        print(f"[CHART] Fichiers scanns: {result['files_scanned']}")
+        print(f" Lignes scannes: {result['lines_scanned']:,}")
+        print(f" Endpoints dcouverts: {result['endpoints_discovered']}")
+        print(f"[CONSTRUCTION] Composants trouvs: {result['components_found']}")
+        print(f"[DOCUMENT] Fichiers gnrs: {result['files_generated']}")
+        print(f" Score qualit: {result['quality_score']}%")
+        print(f"[CHECK] {result['message']}")
     else:
-        print(f"❌ Erreur: {result['error']}") 
+        print(f"[CROSS] Erreur: {result['error']}") 

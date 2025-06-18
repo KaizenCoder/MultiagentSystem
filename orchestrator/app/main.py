@@ -56,7 +56,7 @@ http_client = None
 # --- Lifespan Manager ---
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Initialiser le logging sécurisé
+    # Initialiser le logging scuris
     setup_secure_logging()
     
     global workflow_app, http_client
@@ -68,7 +68,7 @@ async def lifespan(app: FastAPI):
                 "component": "orchestrator",
                 "status": "success"
             })
-            print("[lifespan] Workflow compiled successfully ✔️")
+            print("[lifespan] Workflow compiled successfully ")
             break
         except httpx.RequestError as e:
             wait_time = 2 ** attempt
@@ -85,43 +85,43 @@ async def lifespan(app: FastAPI):
         # Initialize database manager
         db_manager = get_database_manager()
         await db_manager.initialize()
-        print("[lifespan] Database manager initialized ✔️")
+        print("[lifespan] Database manager initialized ")
         
         # Initialize Redis cluster manager
         redis_manager = get_redis_cluster_manager()
         await redis_manager.initialize()
-        print("[lifespan] Redis cluster manager initialized ✔️")
+        print("[lifespan] Redis cluster manager initialized ")
         
         # Initialize load tester
         load_tester = get_load_tester()
-        print("[lifespan] Load tester initialized ✔️")
+        print("[lifespan] Load tester initialized ")
           # Sprint 1.3 - Initialize advanced observability
         tracer = initialize_tracing(
             service_name="nextgeneration-orchestrator",
             environment=settings.ENVIRONMENT
         )
-        print("[lifespan] Distributed tracing initialized ✔️")
+        print("[lifespan] Distributed tracing initialized ")
         
         # Initialize business metrics
         business_metrics = initialize_business_metrics()
-        print("[lifespan] Business metrics initialized ✔️")
+        print("[lifespan] Business metrics initialized ")
         
         # Initialize circuit breaker manager
         circuit_manager = get_circuit_manager()
-        print("[lifespan] Circuit breaker manager initialized ✔️")
+        print("[lifespan] Circuit breaker manager initialized ")
         
         # Sprint 2.1 - Initialize advanced architecture components
         memory_optimizer = get_memory_optimizer()
         await memory_optimizer.initialize()
-        print("[lifespan] Memory optimizer initialized ✔️")
+        print("[lifespan] Memory optimizer initialized ")
         
         state_manager = get_advanced_state_manager()
         await state_manager.initialize()
-        print("[lifespan] Advanced state manager initialized ✔️")
+        print("[lifespan] Advanced state manager initialized ")
         
         coordination = get_advanced_coordination()
         await coordination.initialize()
-        print("[lifespan] Advanced agent coordination initialized ✔️")
+        print("[lifespan] Advanced agent coordination initialized ")
         
     except Exception as e:
         security_logger.log_error("Performance components initialization failed", e)
@@ -176,8 +176,8 @@ app = FastAPI(title="Multi-Agent Orchestrator", version="3.3-final", lifespan=li
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-# --- Middlewares de Sécurité ---
-# CORS sécurisé
+# --- Middlewares de Scurit ---
+# CORS scuris
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["https://trusted-frontend.com"] if not settings.DEBUG else ["*"],
@@ -201,7 +201,7 @@ app.add_middleware(
 # --- Dependencies & Security ---
 def get_api_key(key: str = Security(api_key_header), request: Request = None):
     if key != settings.ORCHESTRATOR_API_KEY:
-        # Log tentative d'accès non autorisé
+        # Log tentative d'accs non autoris
         client_ip = request.client.host if request else "unknown"
         AuditLogger.log_event(AuditEventType.API_ACCESS_DENIED, None, {
             "client_ip": client_ip,
@@ -214,7 +214,7 @@ def get_api_key(key: str = Security(api_key_header), request: Request = None):
         })
         raise HTTPException(status_code=401, detail="Invalid API key")
     
-    # Log accès autorisé
+    # Log accs autoris
     if request:
         client_ip = request.client.host
         AuditLogger.log_event(AuditEventType.API_ACCESS, None, {
@@ -229,7 +229,7 @@ def require_workflow():
         raise HTTPException(503, "Service Unavailable: Orchestrator is not ready.")
     return workflow_app
 
-# --- Pydantic Models Sécurisés ---
+# --- Pydantic Models Scuriss ---
 class TaskRequest(BaseModel):
     task_description: str = Field(..., min_length=1, max_length=settings.MAX_TASK_DESCRIPTION_LENGTH)
     session_id: Optional[str] = Field(None, regex=r'^[a-f0-9-]{36}$')
@@ -265,7 +265,7 @@ class FeedbackRequest(Feedback):
 
 # --- Workflow Creation ---
 def mark_as_completed(state: AgentState) -> dict:
-    """Nœud final pour marquer la tâche comme terminée."""
+    """Nud final pour marquer la tche comme termine."""
     state["task_status"] = "completed"
     return state
 
@@ -291,14 +291,14 @@ def create_workflow(client: httpx.AsyncClient):
 async def invoke(req: TaskRequest, request: Request, app_instance=Depends(require_workflow), _=Depends(get_api_key)):
     session_id = req.session_id or str(uuid.uuid4())
     
-    # Log de création de tâche
+    # Log de cration de tche
     AuditLogger.log_task_event(AuditEventType.TASK_CREATED, session_id, {
         "client_ip": request.client.host,
         "task_description_length": len(req.task_description),
         "has_code_context": req.code_context is not None
     })
     
-    # Création de l'état initial
+    # Cration de l'tat initial
     initial_state = AgentState(
         messages=[],
         plan=None,
@@ -316,7 +316,7 @@ async def invoke(req: TaskRequest, request: Request, app_instance=Depends(requir
         feedback=None
     )
     
-    # CORRECTIF 5: Appel de supervisor.create_plan juste après construction de l'état initial
+    # CORRECTIF 5: Appel de supervisor.create_plan juste aprs construction de l'tat initial
     initial_state = supervisor.create_plan(initial_state)
     
     async def event_stream():
@@ -325,13 +325,13 @@ async def invoke(req: TaskRequest, request: Request, app_instance=Depends(requir
             async for chunk in app_instance.astream(initial_state, config):
                 yield f"data: {json.dumps(chunk, default=str)}\n\n"
             
-            # Log de fin de tâche
+            # Log de fin de tche
             AuditLogger.log_task_event(AuditEventType.TASK_COMPLETED, session_id, {
                 "client_ip": request.client.host
             })
             yield f"data: {json.dumps({'status': 'completed'})}\n\n"
         except Exception as e:
-            # Log de l'erreur de manière sécurisée
+            # Log de l'erreur de manire scurise
             security_logger.log_error("Task execution failed", e, include_details=settings.DEBUG)
             AuditLogger.log_task_event(AuditEventType.TASK_FAILED, session_id, {
                 "client_ip": request.client.host,
@@ -353,7 +353,7 @@ async def status(session_id: str, request: Request, app_instance=Depends(require
         if not state: 
             raise HTTPException(404, "Session not found")
         
-        # Log de l'accès au statut
+        # Log de l'accs au statut
         AuditLogger.log_event(AuditEventType.API_ACCESS, None, {
             "client_ip": request.client.host,
             "action": "status_check",
@@ -366,7 +366,7 @@ async def status(session_id: str, request: Request, app_instance=Depends(require
         # Re-raise HTTP exceptions
         raise
     except Exception as e:
-        # Log de l'erreur de manière sécurisée
+        # Log de l'erreur de manire scurise
         security_logger.log_error("Status check failed", e, include_details=settings.DEBUG)
         raise HTTPException(500, "Error retrieving status")
 
@@ -379,7 +379,7 @@ async def feedback(session_id: str, fb: FeedbackRequest, request: Request, app_i
         if not sanitized_session_id:
             raise HTTPException(400, "Invalid session ID format")
         
-        # Mise à jour de l'état avec le feedback
+        # Mise  jour de l'tat avec le feedback
         config = {"configurable": {"thread_id": sanitized_session_id}}
         current_state = await app_instance.aget_state(config)
         if not current_state:
@@ -402,19 +402,19 @@ async def feedback(session_id: str, fb: FeedbackRequest, request: Request, app_i
         # Re-raise HTTP exceptions
         raise
     except Exception as e:
-        # Log de l'erreur de manière sécurisée
+        # Log de l'erreur de manire scurise
         security_logger.log_error("Feedback recording failed", e, include_details=settings.DEBUG)
         raise HTTPException(500, "Error recording feedback")
 
 @app.get("/health", tags=["Monitoring"])
 async def health():
-    """Health check endpoint avec vérifications détaillées"""
+    """Health check endpoint avec vrifications dtailles"""
     monitoring = get_monitoring()
     cache = await get_cache()
     secrets_manager = get_secrets_manager()
     network_security = get_network_security()
     
-    # Health checks détaillés
+    # Health checks dtaills
     health_status = {
         "status": "healthy",
         "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -454,7 +454,7 @@ async def health():
         "security_level": network_metrics["security_level"]
     }
     
-    # Exécuter les health checks du monitoring
+    # Excuter les health checks du monitoring
     monitoring_health = await monitoring.run_health_checks()
     health_status["components"]["monitoring"] = monitoring_health
     
@@ -463,7 +463,7 @@ async def health():
 
 @app.get("/metrics", tags=["Monitoring"])
 async def metrics():
-    """Endpoint Prometheus pour métriques"""
+    """Endpoint Prometheus pour mtriques"""
     monitoring = get_monitoring()
     return Response(
         content=monitoring.get_prometheus_metrics(),
@@ -473,21 +473,21 @@ async def metrics():
 
 @app.get("/business-metrics", tags=["Monitoring"])
 async def business_metrics():
-    """Métriques business spécifiques"""
+    """Mtriques business spcifiques"""
     monitoring = get_monitoring()
     
-    # Récupérer les métriques cache
+    # Rcuprer les mtriques cache
     cache = await get_cache()
     cache_metrics = await cache.get_metrics()
     
-    # Récupérer les métriques secrets
+    # Rcuprer les mtriques secrets
     secrets_manager = get_secrets_manager()
     try:
         secrets_stats = secrets_manager.get_cache_stats()
     except:
         secrets_stats = {}
     
-    # Combiner toutes les métriques business
+    # Combiner toutes les mtriques business
     business_data = {
         "cache_performance": cache_metrics,
         "secrets_usage": secrets_stats,
@@ -499,7 +499,7 @@ async def business_metrics():
 
 @app.get("/security-metrics", tags=["Monitoring"])
 async def security_metrics():
-    """Métriques de sécurité"""
+    """Mtriques de scurit"""
     network_security = get_network_security()
     
     security_data = {
@@ -507,7 +507,7 @@ async def security_metrics():
         "timestamp": datetime.now(timezone.utc).isoformat()
     }
     
-    # Ajouter les métriques de logs de sécurité
+    # Ajouter les mtriques de logs de scurit
     try:
         audit_trail = AuditLogger.get_recent_events(limit=100)
         security_events_count = len([e for e in audit_trail if e.get("event_type") in [
@@ -526,14 +526,14 @@ async def security_metrics():
 
 @app.get("/monitoring/dashboard", tags=["Monitoring"])
 async def monitoring_dashboard():
-    """Génère la configuration du dashboard Grafana"""
+    """Gnre la configuration du dashboard Grafana"""
     monitoring = get_monitoring()
     return monitoring.generate_grafana_dashboard()
 
 
 @app.get("/monitoring/alerts", tags=["Monitoring"])
 async def monitoring_alerts():
-    """Génère la configuration des alertes Prometheus"""
+    """Gnre la configuration des alertes Prometheus"""
     monitoring = get_monitoring()
     return Response(
         content=monitoring.generate_alert_rules_yaml(),
@@ -543,7 +543,7 @@ async def monitoring_alerts():
 
 @app.get("/cache/stats", tags=["Performance"])
 async def cache_stats():
-    """Statistiques détaillées du cache"""
+    """Statistiques dtailles du cache"""
     cache = await get_cache()
     return await cache.get_metrics()
 
@@ -657,7 +657,7 @@ async def unblock_ip(
     ip_address: str,
     api_key: str = Depends(get_api_key)
 ):
-    """Débloquer une adresse IP"""
+    """Dbloquer une adresse IP"""
     network_security = get_network_security()
     network_security.unblock_ip(ip_address)
     
@@ -667,26 +667,26 @@ async def unblock_ip(
     }
 
 
-# Middleware pour tracking automatique des métriques
+# Middleware pour tracking automatique des mtriques
 @app.middleware("http")
 async def metrics_middleware(request: Request, call_next):
-    """Middleware pour tracker automatiquement les métriques"""
+    """Middleware pour tracker automatiquement les mtriques"""
     start_time = time.time()
     monitoring = get_monitoring()
     
-    # Exécuter la requête
+    # Excuter la requte
     response = await call_next(request)
     
-    # Calculer la durée
+    # Calculer la dure
     duration = time.time() - start_time
     
-    # Tracker les métriques
+    # Tracker les mtriques
     monitoring.track_request(
         method=request.method,
         endpoint=str(request.url.path),
         status_code=response.status_code,
         duration=duration,
-        user_type="api"  # Pourrait être déterminé par l'API key
+        user_type="api"  # Pourrait tre dtermin par l'API key
     )
     
     # Ajouter headers de monitoring
@@ -696,7 +696,7 @@ async def metrics_middleware(request: Request, call_next):
     return response
 
 
-# Ajout d'imports nécessaires en haut du fichier
+# Ajout d'imports ncessaires en haut du fichier
 import time
 import os
 from fastapi.responses import Response
@@ -705,7 +705,7 @@ from fastapi.responses import Response
 
 @app.get("/database/health", tags=["Database"])
 async def database_health(api_key: str = Depends(get_api_key)):
-    """Health check complet de la base de données"""
+    """Health check complet de la base de donnes"""
     try:
         db_manager = get_database_manager()
         health_status = await db_manager.health_check()
@@ -716,7 +716,7 @@ async def database_health(api_key: str = Depends(get_api_key)):
 
 @app.get("/database/metrics", tags=["Database"])
 async def database_metrics(api_key: str = Depends(get_api_key)):
-    """Métriques de performance de la base de données"""
+    """Mtriques de performance de la base de donnes"""
     try:
         db_manager = get_database_manager()
         
@@ -756,7 +756,7 @@ async def database_metrics(api_key: str = Depends(get_api_key)):
 
 @app.post("/database/optimize", tags=["Database"])
 async def optimize_database(api_key: str = Depends(get_api_key)):
-    """Optimiser la base de données (VACUUM, ANALYZE, REINDEX)"""
+    """Optimiser la base de donnes (VACUUM, ANALYZE, REINDEX)"""
     try:
         db_manager = get_database_manager()
         results = await db_manager.optimize_database()
@@ -771,7 +771,7 @@ async def optimize_database(api_key: str = Depends(get_api_key)):
 
 @app.post("/database/backup", tags=["Database"])
 async def backup_database(api_key: str = Depends(get_api_key)):
-    """Créer une sauvegarde de la base de données"""
+    """Crer une sauvegarde de la base de donnes"""
     try:
         db_manager = get_database_manager()
         backup_result = await db_manager.backup_database()
@@ -795,7 +795,7 @@ async def pgbouncer_stats(api_key: str = Depends(get_api_key)):
 
 @app.get("/redis/cluster/status", tags=["Cache"])
 async def redis_cluster_status(api_key: str = Depends(get_api_key)):
-    """État complet du cluster Redis"""
+    """tat complet du cluster Redis"""
     try:
         redis_manager = get_redis_cluster_manager()
         status = await redis_manager.get_cluster_status()
@@ -820,7 +820,7 @@ async def warmup_redis_cache(
     patterns: Optional[List[str]] = None,
     api_key: str = Depends(get_api_key)
 ):
-    """Préchauffer le cache Redis"""
+    """Prchauffer le cache Redis"""
     try:
         redis_manager = get_redis_cluster_manager()
         warmup_result = await redis_manager.warmup_cache(patterns)
@@ -831,7 +831,7 @@ async def warmup_redis_cache(
 
 @app.get("/redis/metrics", tags=["Cache"])
 async def redis_metrics(api_key: str = Depends(get_api_key)):
-    """Métriques détaillées du cluster Redis"""
+    """Mtriques dtailles du cluster Redis"""
     try:
         redis_manager = get_redis_cluster_manager()
         cluster_metrics = await redis_manager._collect_cluster_metrics()
@@ -889,7 +889,7 @@ async def run_load_test(
     test_name: str,
     api_key: str = Depends(get_api_key)
 ):
-    """Exécuter un test de charge spécifique"""
+    """Excuter un test de charge spcifique"""
     try:
         load_tester = get_load_tester()
         
@@ -922,7 +922,7 @@ async def run_load_test(
 
 @app.post("/load-test/suite", tags=["Performance"])
 async def run_performance_suite(api_key: str = Depends(get_api_key)):
-    """Exécuter la suite complète de tests de performance"""
+    """Excuter la suite complte de tests de performance"""
     try:
         load_tester = get_load_tester()
         
@@ -946,7 +946,7 @@ async def update_performance_targets(
     targets: dict,
     api_key: str = Depends(get_api_key)
 ):
-    """Mettre à jour les cibles de performance"""
+    """Mettre  jour les cibles de performance"""
     try:
         load_tester = get_load_tester()
         await load_tester.update_performance_targets(targets)
@@ -965,7 +965,7 @@ async def update_performance_targets(
 
 @app.get("/performance/overview", tags=["Performance"])
 async def performance_overview(api_key: str = Depends(get_api_key)):
-    """Vue d'ensemble complète des performances du système"""
+    """Vue d'ensemble complte des performances du systme"""
     try:
         # Get all performance data
         db_manager = get_database_manager()

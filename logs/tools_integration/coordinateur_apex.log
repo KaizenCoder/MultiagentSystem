@@ -1,0 +1,123 @@
+2025-06-18 22:36:37,932 - CoordinateurEquipeToolsApex - INFO - 🚀 Démarrage mission APEX_INTEGRATION_20250618_223637
+2025-06-18 22:36:37,933 - CoordinateurEquipeToolsApex - INFO - 🔍 Vérification des prérequis...
+2025-06-18 22:36:37,965 - CoordinateurEquipeToolsApex - INFO - ✅ Git repository valide
+2025-06-18 22:36:37,965 - CoordinateurEquipeToolsApex - INFO - ✅ Prérequis validés
+2025-06-18 22:36:37,965 - CoordinateurEquipeToolsApex - INFO - 📊 Phase 1: Analyse de structure (Claude Sonnet 4)
+2025-06-18 22:36:37,974 - CoordinateurEquipeToolsApex - ERROR - ❌ Erreur Phase 1: cannot import name 'Agent1AnalyseurStructure' from 'agent_1_analyseur_structure' (C:\Dev\nextgeneration\agent_1_analyseur_structure.py)
+2025-06-18 22:36:37,974 - CoordinateurEquipeToolsApex - ERROR - ❌ Échec mission: cannot import name 'Agent1AnalyseurStructure' from 'agent_1_analyseur_structure' (C:\Dev\nextgeneration\agent_1_analyseur_structure.py)
+2025-06-18 22:36:37,975 - CoordinateurEquipeToolsApex - INFO - 📋 Rapport final généré: C:\Dev\nextgeneration\reports\tools_integration\APEX_INTEGRATION_20250618_223637_FINAL_REPORT.json
+2025-06-18 22:37:02,701 - CoordinateurEquipeToolsApex - INFO - 🚀 Démarrage mission APEX_INTEGRATION_20250618_223702
+2025-06-18 22:37:02,701 - CoordinateurEquipeToolsApex - INFO - 🔍 Vérification des prérequis...
+2025-06-18 22:37:02,734 - CoordinateurEquipeToolsApex - INFO - ✅ Git repository valide
+2025-06-18 22:37:02,734 - CoordinateurEquipeToolsApex - INFO - ✅ Prérequis validés
+2025-06-18 22:37:02,734 - CoordinateurEquipeToolsApex - INFO - 📊 Phase 1: Analyse de structure (Claude Sonnet 4)
+2025-06-18 22:37:02,737 - Agent1_AnalyseurStructure - INFO - 🔍 Analyse spécialisée Apex_VBA_FRAMEWORK: G:\Dev\Apex_VBA_FRAMEWORK\tools
+2025-06-18 22:37:04,783 - Agent1_AnalyseurStructure - ERROR - ❌ Erreur analyse fichier G:\Dev\Apex_VBA_FRAMEWORK\tools\python\analyze_cache_results.py: invalid syntax. Perhaps you forgot a comma? (<unknown>, line 380)
+2025-06-18 22:37:21,926 - CoordinateurEquipeToolsApex - ERROR - ❌ Erreur Phase 1: name 'datetime' is not defined
+2025-06-18 22:37:21,927 - CoordinateurEquipeToolsApex - ERROR - ❌ Échec mission: name 'datetime' is not defined
+2025-06-18 22:37:21,927 - CoordinateurEquipeToolsApex - INFO - 📋 Rapport final généré: C:\Dev\nextgeneration\reports\tools_integration\APEX_INTEGRATION_20250618_223702_FINAL_REPORT.json
+2025-06-18 22:37:46,731 - CoordinateurEquipeToolsApex - INFO - 🚀 Démarrage mission APEX_INTEGRATION_20250618_223746
+2025-06-18 22:37:46,732 - CoordinateurEquipeToolsApex - INFO - 🔍 Vérification des prérequis...
+2025-06-18 22:37:46,764 - CoordinateurEquipeToolsApex - INFO - ✅ Git repository valide
+2025-06-18 22:37:46,764 - CoordinateurEquipeToolsApex - INFO - ✅ Prérequis validés
+2025-06-18 22:37:46,765 - CoordinateurEquipeToolsApex - INFO - 📊 Phase 1: Analyse de structure (Claude Sonnet 4)
+2025-06-18 22:37:46,770 - Agent1_AnalyseurStructure - INFO - 🔍 Analyse spécialisée Apex_VBA_FRAMEWORK: G:\Dev\Apex_VBA_FRAMEWORK\tools
+2025-06-18 22:37:46,803 - Agent1_AnalyseurStructure - ERROR - ❌ Erreur analyse fichier G:\Dev\Apex_VBA_FRAMEWORK\tools\python\analyze_cache_results.py: invalid syntax. Perhaps you forgot a comma? (<unknown>, line 380)
+2025-06-18 22:37:47,281 - Agent1_AnalyseurStructure - INFO - ✅ Analyse Apex terminée: 325 outils trouvés
+2025-06-18 22:37:47,282 - CoordinateurEquipeToolsApex - INFO - ✅ Phase 1 terminée - 325 outils analysés
+2025-06-18 22:37:47,282 - CoordinateurEquipeToolsApex - INFO - 🎯 Phase 2: Évaluation d'utilité (GPT-4 Turbo)
+2025-06-18 22:37:47,286 - Agent2_EvaluateurUtilite - INFO - 🎯 Évaluation spécialisée outils Apex_VBA_FRAMEWORK
+2025-06-18 22:37:47,287 - CoordinateurEquipeToolsApex - ERROR - ❌ Erreur Phase 2: name 'datetime' is not defined
+2025-06-18 22:37:47,288 - CoordinateurEquipeToolsApex - ERROR - ❌ Échec mission: name 'datetime' is not defined
+2025-06-18 22:37:47,288 - CoordinateurEquipeToolsApex - INFO - 📋 Rapport final généré: C:\Dev\nextgeneration\reports\tools_integration\APEX_INTEGRATION_20250618_223746_FINAL_REPORT.json
+2025-06-18 22:39:20,711 - CoordinateurEquipeToolsApex - INFO - 🚀 Démarrage mission APEX_INTEGRATION_20250618_223920
+2025-06-18 22:39:20,711 - CoordinateurEquipeToolsApex - INFO - 🔍 Vérification des prérequis...
+2025-06-18 22:39:20,744 - CoordinateurEquipeToolsApex - INFO - ✅ Git repository valide
+2025-06-18 22:39:20,745 - CoordinateurEquipeToolsApex - INFO - ✅ Prérequis validés
+2025-06-18 22:39:20,745 - CoordinateurEquipeToolsApex - INFO - 📊 Phase 1: Analyse de structure (Claude Sonnet 4)
+2025-06-18 22:39:20,747 - Agent1_AnalyseurStructure - INFO - 🔍 Analyse spécialisée Apex_VBA_FRAMEWORK: G:\Dev\Apex_VBA_FRAMEWORK\tools
+2025-06-18 22:39:20,781 - Agent1_AnalyseurStructure - ERROR - ❌ Erreur analyse fichier G:\Dev\Apex_VBA_FRAMEWORK\tools\python\analyze_cache_results.py: invalid syntax. Perhaps you forgot a comma? (<unknown>, line 380)
+2025-06-18 22:39:21,261 - Agent1_AnalyseurStructure - INFO - ✅ Analyse Apex terminée: 325 outils trouvés
+2025-06-18 22:39:21,261 - CoordinateurEquipeToolsApex - INFO - ✅ Phase 1 terminée - 325 outils analysés
+2025-06-18 22:39:21,261 - CoordinateurEquipeToolsApex - INFO - 🎯 Phase 2: Évaluation d'utilité (GPT-4 Turbo)
+2025-06-18 22:39:21,265 - Agent2_EvaluateurUtilite - INFO - 🎯 Évaluation spécialisée outils Apex_VBA_FRAMEWORK
+2025-06-18 22:39:21,266 - Agent2_EvaluateurUtilite - INFO - ✅ Évaluation Apex terminée: 4 outils sélectionnés
+2025-06-18 22:39:21,266 - CoordinateurEquipeToolsApex - INFO - ✅ Phase 2 terminée - 4 outils sélectionnés
+2025-06-18 22:39:21,266 - CoordinateurEquipeToolsApex - INFO - 🔧 Phase 3: Adaptation de code (Claude Sonnet 4)
+2025-06-18 22:39:21,271 - Agent3_AdaptateurCode - INFO - 🔧 Adaptation spécialisée outils Apex_VBA_FRAMEWORK
+2025-06-18 22:39:21,280 - Agent3_AdaptateurCode - ERROR - ❌ Erreur adaptation Python fallback_excel_export: [Errno 2] No such file or directory: 'excel\\fallback_excel_export.py'
+2025-06-18 22:39:21,280 - Agent3_AdaptateurCode - ERROR - ❌ Erreur adaptation Python test_write_excel: [Errno 2] No such file or directory: 'excel\\test_write_excel.py'
+2025-06-18 22:39:21,280 - Agent3_AdaptateurCode - ERROR - ❌ Erreur adaptation Python write_excel: [Errno 2] No such file or directory: 'excel\\write_excel.py'
+2025-06-18 22:39:21,281 - Agent3_AdaptateurCode - ERROR - ❌ Erreur adaptation Python write_excel: [Errno 2] No such file or directory: 'python\\excel\\write_excel.py'
+2025-06-18 22:39:21,281 - CoordinateurEquipeToolsApex - ERROR - ❌ Erreur Phase 3: name 'datetime' is not defined
+2025-06-18 22:39:21,281 - CoordinateurEquipeToolsApex - ERROR - ❌ Échec mission: name 'datetime' is not defined
+2025-06-18 22:39:21,281 - CoordinateurEquipeToolsApex - INFO - 📋 Rapport final généré: C:\Dev\nextgeneration\reports\tools_integration\APEX_INTEGRATION_20250618_223920_FINAL_REPORT.json
+2025-06-18 22:40:26,378 - CoordinateurEquipeToolsApex - INFO - 🚀 Démarrage mission APEX_INTEGRATION_20250618_224026
+2025-06-18 22:40:26,378 - CoordinateurEquipeToolsApex - INFO - 🔍 Vérification des prérequis...
+2025-06-18 22:40:26,410 - CoordinateurEquipeToolsApex - INFO - ✅ Git repository valide
+2025-06-18 22:40:26,411 - CoordinateurEquipeToolsApex - INFO - ✅ Prérequis validés
+2025-06-18 22:40:26,411 - CoordinateurEquipeToolsApex - INFO - 📊 Phase 1: Analyse de structure (Claude Sonnet 4)
+2025-06-18 22:40:26,413 - Agent1_AnalyseurStructure - INFO - 🔍 Analyse spécialisée Apex_VBA_FRAMEWORK: G:\Dev\Apex_VBA_FRAMEWORK\tools
+2025-06-18 22:40:26,446 - Agent1_AnalyseurStructure - ERROR - ❌ Erreur analyse fichier G:\Dev\Apex_VBA_FRAMEWORK\tools\python\analyze_cache_results.py: invalid syntax. Perhaps you forgot a comma? (<unknown>, line 380)
+2025-06-18 22:40:26,922 - Agent1_AnalyseurStructure - INFO - ✅ Analyse Apex terminée: 325 outils trouvés
+2025-06-18 22:40:26,922 - CoordinateurEquipeToolsApex - INFO - ✅ Phase 1 terminée - 325 outils analysés
+2025-06-18 22:40:26,922 - CoordinateurEquipeToolsApex - INFO - 🎯 Phase 2: Évaluation d'utilité (GPT-4 Turbo)
+2025-06-18 22:40:26,923 - Agent2_EvaluateurUtilite - INFO - 🎯 Évaluation spécialisée outils Apex_VBA_FRAMEWORK
+2025-06-18 22:40:26,924 - Agent2_EvaluateurUtilite - INFO - ✅ Évaluation Apex terminée: 4 outils sélectionnés
+2025-06-18 22:40:26,925 - CoordinateurEquipeToolsApex - INFO - ✅ Phase 2 terminée - 4 outils sélectionnés
+2025-06-18 22:40:26,925 - CoordinateurEquipeToolsApex - INFO - 🔧 Phase 3: Adaptation de code (Claude Sonnet 4)
+2025-06-18 22:40:26,929 - Agent3_AdaptateurCode - INFO - 🔧 Adaptation spécialisée outils Apex_VBA_FRAMEWORK
+2025-06-18 22:40:26,930 - Agent3_AdaptateurCode - ERROR - ❌ Erreur adaptation Python fallback_excel_export: [Errno 2] No such file or directory: 'excel\\fallback_excel_export.py'
+2025-06-18 22:40:26,930 - Agent3_AdaptateurCode - ERROR - ❌ Erreur adaptation Python test_write_excel: [Errno 2] No such file or directory: 'excel\\test_write_excel.py'
+2025-06-18 22:40:26,930 - Agent3_AdaptateurCode - ERROR - ❌ Erreur adaptation Python write_excel: [Errno 2] No such file or directory: 'excel\\write_excel.py'
+2025-06-18 22:40:26,930 - Agent3_AdaptateurCode - ERROR - ❌ Erreur adaptation Python write_excel: [Errno 2] No such file or directory: 'python\\excel\\write_excel.py'
+2025-06-18 22:40:26,932 - Agent3_AdaptateurCode - INFO - ✅ Adaptation Apex terminée: 0 outils adaptés
+2025-06-18 22:40:26,932 - CoordinateurEquipeToolsApex - INFO - ✅ Phase 3 terminée - 0 outils adaptés
+2025-06-18 22:40:26,932 - CoordinateurEquipeToolsApex - INFO - 🧪 Phase 4: Tests d'intégration (GPT-4 Turbo)
+2025-06-18 22:40:26,938 - Agent4_TesteurIntegration - INFO - 🧪 Tests d'intégration spécialisés Apex_VBA_FRAMEWORK
+2025-06-18 22:40:26,938 - CoordinateurEquipeToolsApex - ERROR - ❌ Erreur Phase 4: name 'datetime' is not defined
+2025-06-18 22:40:26,938 - CoordinateurEquipeToolsApex - ERROR - ❌ Échec mission: name 'datetime' is not defined
+2025-06-18 22:40:26,939 - CoordinateurEquipeToolsApex - INFO - 📋 Rapport final généré: C:\Dev\nextgeneration\reports\tools_integration\APEX_INTEGRATION_20250618_224026_FINAL_REPORT.json
+2025-06-18 22:41:37,352 - CoordinateurEquipeToolsApex - INFO - 🚀 Démarrage mission APEX_INTEGRATION_20250618_224137
+2025-06-18 22:41:37,352 - CoordinateurEquipeToolsApex - INFO - 🔍 Vérification des prérequis...
+2025-06-18 22:41:37,385 - CoordinateurEquipeToolsApex - INFO - ✅ Git repository valide
+2025-06-18 22:41:37,385 - CoordinateurEquipeToolsApex - INFO - ✅ Prérequis validés
+2025-06-18 22:41:37,385 - CoordinateurEquipeToolsApex - INFO - 📊 Phase 1: Analyse de structure (Claude Sonnet 4)
+2025-06-18 22:41:37,388 - Agent1_AnalyseurStructure - INFO - 🔍 Analyse spécialisée Apex_VBA_FRAMEWORK: G:\Dev\Apex_VBA_FRAMEWORK\tools
+2025-06-18 22:41:37,423 - Agent1_AnalyseurStructure - ERROR - ❌ Erreur analyse fichier G:\Dev\Apex_VBA_FRAMEWORK\tools\python\analyze_cache_results.py: invalid syntax. Perhaps you forgot a comma? (<unknown>, line 380)
+2025-06-18 22:41:37,905 - Agent1_AnalyseurStructure - INFO - ✅ Analyse Apex terminée: 325 outils trouvés
+2025-06-18 22:41:37,905 - CoordinateurEquipeToolsApex - INFO - ✅ Phase 1 terminée - 325 outils analysés
+2025-06-18 22:41:37,905 - CoordinateurEquipeToolsApex - INFO - 🎯 Phase 2: Évaluation d'utilité (GPT-4 Turbo)
+2025-06-18 22:41:37,906 - Agent2_EvaluateurUtilite - INFO - 🎯 Évaluation spécialisée outils Apex_VBA_FRAMEWORK
+2025-06-18 22:41:37,907 - Agent2_EvaluateurUtilite - INFO - ✅ Évaluation Apex terminée: 4 outils sélectionnés
+2025-06-18 22:41:37,907 - CoordinateurEquipeToolsApex - INFO - ✅ Phase 2 terminée - 4 outils sélectionnés
+2025-06-18 22:41:37,907 - CoordinateurEquipeToolsApex - INFO - 🔧 Phase 3: Adaptation de code (Claude Sonnet 4)
+2025-06-18 22:41:37,908 - Agent3_AdaptateurCode - INFO - 🔧 Adaptation spécialisée outils Apex_VBA_FRAMEWORK
+2025-06-18 22:41:37,908 - Agent3_AdaptateurCode - ERROR - ❌ Erreur adaptation Python fallback_excel_export: [Errno 2] No such file or directory: 'excel\\fallback_excel_export.py'
+2025-06-18 22:41:37,908 - Agent3_AdaptateurCode - ERROR - ❌ Erreur adaptation Python test_write_excel: [Errno 2] No such file or directory: 'excel\\test_write_excel.py'
+2025-06-18 22:41:37,908 - Agent3_AdaptateurCode - ERROR - ❌ Erreur adaptation Python write_excel: [Errno 2] No such file or directory: 'excel\\write_excel.py'
+2025-06-18 22:41:37,908 - Agent3_AdaptateurCode - ERROR - ❌ Erreur adaptation Python write_excel: [Errno 2] No such file or directory: 'python\\excel\\write_excel.py'
+2025-06-18 22:41:37,909 - Agent3_AdaptateurCode - INFO - ✅ Adaptation Apex terminée: 0 outils adaptés
+2025-06-18 22:41:37,909 - CoordinateurEquipeToolsApex - INFO - ✅ Phase 3 terminée - 0 outils adaptés
+2025-06-18 22:41:37,909 - CoordinateurEquipeToolsApex - INFO - 🧪 Phase 4: Tests d'intégration (GPT-4 Turbo)
+2025-06-18 22:41:37,915 - Agent4_TesteurIntegration - INFO - 🧪 Tests d'intégration spécialisés Apex_VBA_FRAMEWORK
+2025-06-18 22:41:37,915 - Agent4_TesteurIntegration - INFO - ✅ Tests Apex terminés: 0/0 succès
+2025-06-18 22:41:37,915 - CoordinateurEquipeToolsApex - INFO - ✅ Phase 4 terminée - 0 outils testés
+2025-06-18 22:41:37,915 - CoordinateurEquipeToolsApex - INFO - 📚 Phase 5: Documentation (Gemini 2.0 Flash)
+2025-06-18 22:41:37,921 - Agent5_Documenteur - INFO - 📚 Génération documentation spécialisée Apex_VBA_FRAMEWORK
+2025-06-18 22:41:37,922 - Agent5_Documenteur - INFO - ✅ Documentation Apex terminée: 2 documents créés
+2025-06-18 22:41:37,922 - CoordinateurEquipeToolsApex - INFO - ✅ Phase 5 terminée - 2 docs créées
+2025-06-18 22:41:37,922 - CoordinateurEquipeToolsApex - INFO - ✅ Phase 6: Validation finale (Claude Sonnet 4)
+2025-06-18 22:41:37,922 - Agent6_ValidateurFinal - INFO - 🔍 Démarrage validation finale de l'intégration
+2025-06-18 22:41:37,923 - Agent6_ValidateurFinal - INFO - 🔍 Validation structure des outils
+2025-06-18 22:41:37,923 - Agent6_ValidateurFinal - INFO - 🔍 Validation cohérence des rapports
+2025-06-18 22:41:37,923 - Agent6_ValidateurFinal - INFO - 📊 Cohérence: 5/5 phases, cohérent: True
+2025-06-18 22:41:37,923 - Agent6_ValidateurFinal - INFO - 🔍 Validation configuration
+2025-06-18 22:41:37,923 - Agent6_ValidateurFinal - INFO - ⚙️ Config: False, Launcher: False, Req: False
+2025-06-18 22:41:37,924 - Agent6_ValidateurFinal - INFO - 🔍 Validation documentation
+2025-06-18 22:41:37,924 - Agent6_ValidateurFinal - INFO - 📚 Documentation: 0 fichiers, README: False
+2025-06-18 22:41:37,924 - Agent6_ValidateurFinal - WARNING - ⚠️ Intégration partielle - pas d'opérations Git
+2025-06-18 22:41:37,924 - Agent6_ValidateurFinal - INFO - ✅ Validation terminée - Status: partial
+2025-06-18 22:41:37,924 - CoordinateurEquipeToolsApex - INFO - ✅ Phase 6 terminée - Validation et Git effectués
+2025-06-18 22:41:37,925 - CoordinateurEquipeToolsApex - INFO - 📋 Rapport final généré: C:\Dev\nextgeneration\reports\tools_integration\APEX_INTEGRATION_20250618_224137_FINAL_REPORT.json
+2025-06-18 22:41:37,925 - CoordinateurEquipeToolsApex - INFO - ✅ Mission terminée avec succès

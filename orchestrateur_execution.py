@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Orchestrateur Multi-Agents - Exécution immédiate
+Orchestrateur Multi-Agents - Excution immdiate
 """
 
 import asyncio
@@ -16,21 +16,21 @@ class OrchestrateurExecution:
         self.workspace_root = Path('C:/Dev')
         
     async def executer_analyse_complete(self):
-        print('🚀 Démarrage analyse multi-agents...')
+        print('[ROCKET] Dmarrage analyse multi-agents...')
         
         # Agent Documentaliste
-        print('\n📁 Agent Documentaliste - Analyse structure')
+        print('\n[FOLDER] Agent Documentaliste - Analyse structure')
         doc_rapport = await self.agent_documentaliste()
         
-        # Agent Génie Logiciel  
-        print('\n🔧 Agent Génie Logiciel - Synthèse rapports')
+        # Agent Gnie Logiciel  
+        print('\n[TOOL] Agent Gnie Logiciel - Synthse rapports')
         gl_rapport = await self.agent_genie_logiciel()
         
         # Agent Hardware
-        print('\n💻 Agent Hardware - Diagnostic physique')
+        print('\n Agent Hardware - Diagnostic physique')
         hw_rapport = await self.agent_hardware()
         
-        # Synthèse finale
+        # Synthse finale
         synthese = {
             'meta': {
                 'timestamp': datetime.now().isoformat(),
@@ -50,7 +50,7 @@ class OrchestrateurExecution:
         with open(rapport_path, 'w', encoding='utf-8') as f:
             json.dump(synthese, f, indent=2, ensure_ascii=False)
             
-        print(f'\n💾 Rapport sauvegardé: {rapport_path.absolute()}')
+        print(f'\n Rapport sauvegard: {rapport_path.absolute()}')
         return synthese
         
     async def agent_documentaliste(self):
@@ -82,14 +82,14 @@ class OrchestrateurExecution:
                 'problemes_identifies': [
                     {
                         'categorie': 'Duplication',
-                        'severite': 'Élevée',
-                        'description': f'{len(superwhisper_versions)} versions SuperWhisper dispersées',
-                        'impact': 'Confusion développeur, espace gaspillé'
+                        'severite': 'leve',
+                        'description': f'{len(superwhisper_versions)} versions SuperWhisper disperses',
+                        'impact': 'Confusion dveloppeur, espace gaspill'
                     },
                     {
                         'categorie': 'Organisation',
                         'severite': 'Moyenne',
-                        'description': 'Mélange projets actifs/archives',
+                        'description': 'Mlange projets actifs/archives',
                         'impact': 'Navigation difficile, perte de temps'
                     }
                 ],
@@ -97,12 +97,12 @@ class OrchestrateurExecution:
                     {
                         'priorite': 'URGENT',
                         'titre': 'Consolidation SuperWhisper',
-                        'action': 'Créer SuperWhisper_Unified/ avec sous-dossiers par version',
-                        'gain_estime': '40-60% espace récupérable'
+                        'action': 'Crer SuperWhisper_Unified/ avec sous-dossiers par version',
+                        'gain_estime': '40-60% espace rcuprable'
                     },
                     {
-                        'priorite': 'ÉLEVÉE',
-                        'titre': 'Hiérarchie projets',
+                        'priorite': 'LEVE',
+                        'titre': 'Hirarchie projets',
                         'action': 'Structure active_projects/archived/experimental/',
                         'benefice': 'Navigation 300% plus rapide'
                     }
@@ -110,16 +110,16 @@ class OrchestrateurExecution:
                 'plan_reorganisation': {
                     'phase_1': 'Backup + audit (30min)',
                     'phase_2': 'Consolidation SuperWhisper (2h)',
-                    'phase_3': 'Nouvelle hiérarchie (1h)',
-                    'benefices': 'Productivité +200%, maintenance -60%'
+                    'phase_3': 'Nouvelle hirarchie (1h)',
+                    'benefices': 'Productivit +200%, maintenance -60%'
                 }
             }
         }
         
     async def agent_genie_logiciel(self):
-        """Agent Génie Logiciel - Synthèse technique"""
+        """Agent Gnie Logiciel - Synthse technique"""
         
-        # Vérification présence rapports
+        # Vrification prsence rapports
         rapports_path = Path('rapports')
         rapports_detectes = []
         if rapports_path.exists():
@@ -130,13 +130,13 @@ class OrchestrateurExecution:
             'timestamp': datetime.now().isoformat(),
             'synthese': {
                 'vue_ensemble': {
-                    'architecture': 'Multi-agents orchestrée (FastAPI + LangGraph)',
+                    'architecture': 'Multi-agents orchestre (FastAPI + LangGraph)',
                     'paradigme': 'Event-driven microservices avec orchestration',
-                    'maturite': 'Production-ready avancé',
+                    'maturite': 'Production-ready avanc',
                     'stack_technique': [
                         'Python + FastAPI (orchestrateur)',
                         'LangGraph (workflow agents)',
-                        'PostgreSQL + ChromaDB (mémoire)',
+                        'PostgreSQL + ChromaDB (mmoire)',
                         'Prometheus + Grafana (monitoring)',
                         'Docker + Kubernetes (infrastructure)'
                     ]
@@ -155,22 +155,22 @@ class OrchestrateurExecution:
                 'recommandations_techniques': [
                     {
                         'domaine': 'Architecture',
-                        'priorite': 'ÉLEVÉE',
+                        'priorite': 'LEVE',
                         'titre': 'Event Sourcing',
-                        'description': 'Implémentation pour audit complet et replay',
+                        'description': 'Implmentation pour audit complet et replay',
                         'effort': '3-4 semaines',
-                        'roi': 'Auditabilité + debugging facilité'
+                        'roi': 'Auditabilit + debugging facilit'
                     },
                     {
                         'domaine': 'Performance',
                         'priorite': 'MOYENNE',
                         'titre': 'GraphQL DataLoader',
-                        'description': 'Optimisation requêtes N+1',
+                        'description': 'Optimisation requtes N+1',
                         'effort': '1-2 semaines',
-                        'gain': '60-80% réduction requêtes DB'
+                        'gain': '60-80% rduction requtes DB'
                     },
                     {
-                        'domaine': 'Sécurité',
+                        'domaine': 'Scurit',
                         'priorite': 'CRITIQUE',
                         'titre': 'mTLS inter-services',
                         'description': 'Mutual TLS pour communications',
@@ -180,7 +180,7 @@ class OrchestrateurExecution:
                 ],
                 'roadmap_2025': {
                     'q1': 'Finalisation v1.0 + tests charge',
-                    'q2_q3': 'Multi-région + AI renforcée',
+                    'q2_q3': 'Multi-rgion + AI renforce',
                     'q4': 'Plateforme globale + marketplace agents',
                     'vision': 'Leader technique agents IA intelligents'
                 }
@@ -190,7 +190,7 @@ class OrchestrateurExecution:
     async def agent_hardware(self):
         """Agent Hardware - Diagnostic physique complet"""
         
-        # Informations système
+        # Informations systme
         memory = psutil.virtual_memory()
         cpu_count = psutil.cpu_count()
         cpu_freq = psutil.cpu_freq()
@@ -259,7 +259,7 @@ class OrchestrateurExecution:
         }
     
     async def generer_synthese_executive(self, doc_rapport, gl_rapport, hw_rapport):
-        """Génère la synthèse exécutive consolidée"""
+        """Gnre la synthse excutive consolide"""
         
         memory_gb = psutil.virtual_memory().total / (1024**3)
         cpu_cores = psutil.cpu_count()
@@ -267,18 +267,18 @@ class OrchestrateurExecution:
         return {
             'situation_actuelle': {
                 'organisation': f"Workspace avec {doc_rapport['analyse']['structure_actuelle']['projets_total']} projets, consolidation SuperWhisper urgente",
-                'technique': 'Architecture multi-agents mature, niveau production-ready avancé',
-                'infrastructure': f'Machine {memory_gb:.1f}GB RAM, {cpu_cores} cœurs - {"adaptée" if memory_gb >= 16 else "limitée"} pour IA'
+                'technique': 'Architecture multi-agents mature, niveau production-ready avanc',
+                'infrastructure': f'Machine {memory_gb:.1f}GB RAM, {cpu_cores} curs - {"adapte" if memory_gb >= 16 else "limite"} pour IA'
             },
             'points_forts': [
                 'Architecture technique solide et scalable',
-                'Monitoring et observabilité enterprise-grade',
-                'Sécurité renforcée implémentée',
-                f'Infrastructure avec {memory_gb:.1f}GB RAM correcte pour développement'
+                'Monitoring et observabilit enterprise-grade',
+                'Scurit renforce implmente',
+                f'Infrastructure avec {memory_gb:.1f}GB RAM correcte pour dveloppement'
             ],
             'problemes_critiques': [
-                f"{len([p for p in doc_rapport['analyse']['structure_actuelle']['projets_detectes'] if 'superwhisper' in p['nom'].lower()])} versions SuperWhisper dispersées",
-                'Workspace désordonné impactant productivité',
+                f"{len([p for p in doc_rapport['analyse']['structure_actuelle']['projets_detectes'] if 'superwhisper' in p['nom'].lower()])} versions SuperWhisper disperses",
+                'Workspace dsordonn impactant productivit',
                 'Optimisations hardware possibles pour IA',
                 'Event Sourcing manquant pour audit complet'
             ],
@@ -286,32 +286,32 @@ class OrchestrateurExecution:
                 {
                     'rang': 1,
                     'priorite': 'URGENT',
-                    'action': 'Réorganisation workspace + consolidation SuperWhisper',
+                    'action': 'Rorganisation workspace + consolidation SuperWhisper',
                     'effort': '4-6 heures',
-                    'roi': 'Productivité +200%, maintenance -60%',
+                    'roi': 'Productivit +200%, maintenance -60%',
                     'source': 'Agent Documentaliste'
                 },
                 {
                     'rang': 2,
-                    'priorite': 'ÉLEVÉE',
-                    'action': 'Implémentation Event Sourcing',
+                    'priorite': 'LEVE',
+                    'action': 'Implmentation Event Sourcing',
                     'effort': '3-4 semaines',
-                    'roi': 'Auditabilité complète + debugging facilité',
-                    'source': 'Agent Génie Logiciel'
+                    'roi': 'Auditabilit complte + debugging facilit',
+                    'source': 'Agent Gnie Logiciel'
                 },
                 {
                     'rang': 3,
                     'priorite': 'MOYENNE',
                     'action': f'Upgrade RAM vers 32GB+' if memory_gb < 32 else 'Configuration RAM optimale',
                     'effort': '1 jour',
-                    'roi': 'Performance IA +300%, modèles plus larges',
+                    'roi': 'Performance IA +300%, modles plus larges',
                     'source': 'Agent Hardware'
                 }
             ],
             'impact_business': {
-                'immediat': 'Workspace organisé = efficacité développeur x2',
+                'immediat': 'Workspace organis = efficacit dveloppeur x2',
                 'court_terme': 'Architecture audit-ready pour compliance enterprise',
-                'moyen_terme': 'Plateforme IA compétitive avec scalabilité globale',
+                'moyen_terme': 'Plateforme IA comptitive avec scalabilit globale',
                 'long_terme': 'Position de leader technique agents IA intelligents'
             },
             'metriques_cles': {
@@ -323,7 +323,7 @@ class OrchestrateurExecution:
             }
         }
     
-    # Méthodes utilitaires
+    # Mthodes utilitaires
     
     def estimer_taille_dossier(self, path):
         """Estime la taille d'un dossier"""
@@ -339,20 +339,20 @@ class OrchestrateurExecution:
             return "Inconnue"
     
     def detecter_type_projet(self, path):
-        """Détecte le type de projet"""
+        """Dtecte le type de projet"""
         if (path / "package.json").exists():
             return "Node.js"
         elif any((path / f).exists() for f in ["requirements.txt", "pyproject.toml", "setup.py"]):
             return "Python"
         elif (path / "Dockerfile").exists():
-            return "Containerisé"
+            return "Containeris"
         elif any(f.suffix == '.md' for f in path.iterdir() if f.is_file()):
             return "Documentation"
         else:
             return "Mixte/Autre"
     
     def detecter_gpu(self):
-        """Détecte la présence de GPU NVIDIA"""
+        """Dtecte la prsence de GPU NVIDIA"""
         try:
             import subprocess
             result = subprocess.run(['nvidia-smi', '--query-gpu=name,memory.total', '--format=csv,noheader'], 
@@ -365,7 +365,7 @@ class OrchestrateurExecution:
                     if len(parts) >= 2:
                         gpus.append({'nom': parts[0], 'memoire_mb': parts[1]})
                 return {
-                    'detection': f'{len(gpus)} GPU(s) NVIDIA détecté(s)',
+                    'detection': f'{len(gpus)} GPU(s) NVIDIA dtect(s)',
                     'gpus': gpus,
                     'cuda_support': True,
                     'adequation_ia': 'Excellente pour IA/ML'
@@ -374,10 +374,10 @@ class OrchestrateurExecution:
             pass
         
         return {
-            'detection': 'Aucun GPU NVIDIA détecté',
+            'detection': 'Aucun GPU NVIDIA dtect',
             'gpus': [],
             'cuda_support': False,
-            'adequation_ia': 'CPU uniquement - IA limitée'
+            'adequation_ia': 'CPU uniquement - IA limite'
         }
     
     def analyser_processus_top(self):
@@ -392,7 +392,7 @@ class OrchestrateurExecution:
                 except (psutil.NoSuchProcess, psutil.AccessDenied):
                     continue
             
-            # Top 5 CPU et mémoire
+            # Top 5 CPU et mmoire
             top_cpu = sorted(processes, key=lambda x: x['cpu_percent'], reverse=True)[:5]
             top_memory = sorted(processes, key=lambda x: x['memory_percent'], reverse=True)[:5]
             
@@ -405,39 +405,39 @@ class OrchestrateurExecution:
             return {'erreur': 'Impossible d\'analyser les processus'}
     
     def evaluer_cpu(self, cores):
-        """Évalue les performances CPU"""
+        """value les performances CPU"""
         if cores >= 16: return "Excellent"
         elif cores >= 8: return "Bon"
         elif cores >= 4: return "Correct"
-        else: return "Limité"
+        else: return "Limit"
     
     def evaluer_memoire(self, percent):
-        """Évalue l'utilisation mémoire"""
+        """value l'utilisation mmoire"""
         if percent < 60: return "Optimal"
         elif percent < 80: return "Correct"
         elif percent < 90: return "Attention"
         else: return "Critique"
     
     def evaluer_ia_memoire(self, total_bytes):
-        """Évalue l'adéquation mémoire pour IA"""
+        """value l'adquation mmoire pour IA"""
         gb = total_bytes / (1024**3)
         if gb >= 32: return "Excellent pour IA lourde"
-        elif gb >= 16: return "Bon pour IA modérée"
-        elif gb >= 8: return "Correct pour IA légère"
+        elif gb >= 16: return "Bon pour IA modre"
+        elif gb >= 8: return "Correct pour IA lgre"
         else: return "Insuffisant pour IA"
     
     def evaluer_stockage_global(self, disques):
-        """Évalue la situation globale du stockage"""
+        """value la situation globale du stockage"""
         if not disques:
             return "Aucun disque analysable"
         
         critiques = len([d for d in disques if d['pourcentage'] > 90])
         if critiques > 0:
-            return f"Critique - {critiques} disque(s) saturé(s)"
+            return f"Critique - {critiques} disque(s) satur(s)"
         
         attention = len([d for d in disques if d['pourcentage'] > 80])
         if attention > 0:
-            return f"Attention - {attention} disque(s) à surveiller"
+            return f"Attention - {attention} disque(s)  surveiller"
         
         return "Situation correcte"
     
@@ -451,7 +451,7 @@ class OrchestrateurExecution:
             return 50
     
     def evaluer_adequation_ia_complete(self):
-        """Évaluation complète pour l'IA"""
+        """valuation complte pour l'IA"""
         memory_gb = psutil.virtual_memory().total / (1024**3)
         cpu_cores = psutil.cpu_count()
         
@@ -467,56 +467,56 @@ class OrchestrateurExecution:
         if memory_gb >= 32 and cpu_cores >= 16 and gpu_present:
             return "Excellent pour IA/ML lourde"
         elif memory_gb >= 16 and cpu_cores >= 8:
-            return "Adapté pour IA/ML modérée"
+            return "Adapt pour IA/ML modre"
         elif memory_gb >= 8 and cpu_cores >= 4:
-            return "Basique pour IA légère"
+            return "Basique pour IA lgre"
         else:
             return "Insuffisant pour IA"
     
     def identifier_goulets_etranglement(self):
-        """Identifie les goulets d'étranglement"""
+        """Identifie les goulets d'tranglement"""
         goulets = []
         
         try:
             if psutil.cpu_percent(interval=1) > 80:
-                goulets.append("CPU surchargé")
+                goulets.append("CPU surcharg")
             
             if psutil.virtual_memory().percent > 85:
-                goulets.append("Mémoire saturée")
+                goulets.append("Mmoire sature")
             
             for partition in psutil.disk_partitions():
                 try:
                     usage = psutil.disk_usage(partition.mountpoint)
                     if (usage.used / usage.total * 100) > 90:
-                        goulets.append(f"Disque {partition.device} saturé")
+                        goulets.append(f"Disque {partition.device} satur")
                 except:
                     continue
         except:
             pass
         
-        return goulets if goulets else ["Aucun goulet critique identifié"]
+        return goulets if goulets else ["Aucun goulet critique identifi"]
     
     def generer_recommandations_hardware(self):
-        """Génère des recommandations hardware"""
+        """Gnre des recommandations hardware"""
         recommandations = []
         
-        # Mémoire
+        # Mmoire
         memory_gb = psutil.virtual_memory().total / (1024**3)
         if memory_gb < 16:
             recommandations.append({
-                'categorie': 'Mémoire',
+                'categorie': 'Mmoire',
                 'priorite': 'CRITIQUE',
-                'probleme': f'Mémoire insuffisante pour IA ({memory_gb:.1f} GB)',
+                'probleme': f'Mmoire insuffisante pour IA ({memory_gb:.1f} GB)',
                 'solution': 'Upgrade vers 32GB minimum',
                 'impact': 'Performance IA +300%'
             })
         elif memory_gb < 32:
             recommandations.append({
-                'categorie': 'Mémoire',
+                'categorie': 'Mmoire',
                 'priorite': 'MOYENNE',
-                'probleme': f'Mémoire correcte mais optimisable ({memory_gb:.1f} GB)',
-                'solution': 'Upgrade vers 64GB pour modèles larges',
-                'impact': 'Capacité modèles +500%'
+                'probleme': f'Mmoire correcte mais optimisable ({memory_gb:.1f} GB)',
+                'solution': 'Upgrade vers 64GB pour modles larges',
+                'impact': 'Capacit modles +500%'
             })
         
         # GPU
@@ -526,18 +526,18 @@ class OrchestrateurExecution:
             if result.returncode != 0:
                 recommandations.append({
                     'categorie': 'GPU',
-                    'priorite': 'ÉLEVÉE',
-                    'probleme': 'Aucun GPU NVIDIA détecté',
-                    'solution': 'GPU NVIDIA RTX pour accélération IA',
+                    'priorite': 'LEVE',
+                    'probleme': 'Aucun GPU NVIDIA dtect',
+                    'solution': 'GPU NVIDIA RTX pour acclration IA',
                     'impact': 'Performance IA +1000%'
                 })
         except:
             recommandations.append({
                 'categorie': 'GPU',
-                'priorite': 'ÉLEVÉE',
-                'probleme': 'GPU non détectable',
-                'solution': 'Vérifier drivers NVIDIA ou installer GPU',
-                'impact': 'Capacités IA étendues'
+                'priorite': 'LEVE',
+                'probleme': 'GPU non dtectable',
+                'solution': 'Vrifier drivers NVIDIA ou installer GPU',
+                'impact': 'Capacits IA tendues'
             })
         
         # Stockage
@@ -549,9 +549,9 @@ class OrchestrateurExecution:
                     recommandations.append({
                         'categorie': 'Stockage',
                         'priorite': 'CRITIQUE',
-                        'probleme': f'Disque {partition.device} saturé ({percent:.1f}%)',
+                        'probleme': f'Disque {partition.device} satur ({percent:.1f}%)',
                         'solution': 'Nettoyage urgent ou extension stockage',
-                        'impact': 'Éviter dysfonctionnements système'
+                        'impact': 'viter dysfonctionnements systme'
                     })
             except:
                 continue
@@ -562,14 +562,14 @@ class OrchestrateurExecution:
                 'priorite': 'INFO',
                 'probleme': 'Configuration hardware correcte',
                 'solution': 'Optimisations mineures possibles',
-                'impact': 'Amélioration marginale'
+                'impact': 'Amlioration marginale'
             })
         
         return recommandations
 
-# Exécution principale
+# Excution principale
 async def main():
-    print("🎯 ORCHESTRATEUR MULTI-AGENTS - ANALYSE COMPLÈTE")
+    print("[TARGET] ORCHESTRATEUR MULTI-AGENTS - ANALYSE COMPLTE")
     print("=" * 60)
     
     orchestrateur = OrchestrateurExecution()
@@ -578,33 +578,33 @@ async def main():
         synthese = await orchestrateur.executer_analyse_complete()
         
         print("\n" + "=" * 60)
-        print("✅ ANALYSE TERMINÉE AVEC SUCCÈS")
+        print("[CHECK] ANALYSE TERMINE AVEC SUCCS")
         print("=" * 60)
         
-        # Affichage synthèse exécutive
+        # Affichage synthse excutive
         executive = synthese['synthese_executive']
         
-        print(f"\n📊 SITUATION ACTUELLE:")
+        print(f"\n[CHART] SITUATION ACTUELLE:")
         for aspect, description in executive['situation_actuelle'].items():
-            print(f"• {aspect.capitalize()}: {description}")
+            print(f" {aspect.capitalize()}: {description}")
         
-        print(f"\n🎯 RECOMMANDATIONS PRIORITAIRES:")
+        print(f"\n[TARGET] RECOMMANDATIONS PRIORITAIRES:")
         for rec in executive['recommandations_prioritaires']:
             print(f"{rec['rang']}. [{rec['priorite']}] {rec['action']}")
             print(f"   Effort: {rec['effort']} | ROI: {rec['roi']}")
         
-        print(f"\n📈 IMPACT BUSINESS:")
+        print(f"\n IMPACT BUSINESS:")
         for horizon, impact in executive['impact_business'].items():
-            print(f"• {horizon.replace('_', ' ').title()}: {impact}")
+            print(f" {horizon.replace('_', ' ').title()}: {impact}")
         
-        print(f"\n📊 MÉTRIQUES CLÉS:")
+        print(f"\n[CHART] MTRIQUES CLS:")
         for metrique, valeur in executive['metriques_cles'].items():
-            print(f"• {metrique.replace('_', ' ').title()}: {valeur}")
+            print(f" {metrique.replace('_', ' ').title()}: {valeur}")
         
         return synthese
         
     except Exception as e:
-        print(f"\n❌ ERREUR: {e}")
+        print(f"\n[CROSS] ERREUR: {e}")
         return None
 
 if __name__ == "__main__":

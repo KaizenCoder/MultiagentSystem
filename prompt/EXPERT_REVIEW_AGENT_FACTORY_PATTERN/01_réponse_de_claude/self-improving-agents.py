@@ -12,7 +12,7 @@ from collections import defaultdict
 
 @dataclass
 class Experience:
-    """Représente une expérience d'apprentissage"""
+    """Reprsente une exprience d'apprentissage"""
     agent_id: str
     task_type: str
     input_features: Dict[str, Any]
@@ -23,7 +23,7 @@ class Experience:
     context: Dict[str, Any] = field(default_factory=dict)
 
 class ExperienceBuffer:
-    """Buffer d'expériences pour apprentissage"""
+    """Buffer d'expriences pour apprentissage"""
     
     def __init__(self, max_size: int = 10000):
         self.max_size = max_size
@@ -32,7 +32,7 @@ class ExperienceBuffer:
         self.by_task: Dict[str, List[Experience]] = defaultdict(list)
     
     def add_experience(self, experience: Experience):
-        """Ajoute une expérience au buffer"""
+        """Ajoute une exprience au buffer"""
         self.experiences.append(experience)
         self.by_agent[experience.agent_id].append(experience)
         self.by_task[experience.task_type].append(experience)
@@ -49,7 +49,7 @@ class ExperienceBuffer:
         task_type: Optional[str] = None,
         min_experiences: int = 100
     ) -> List[Experience]:
-        """Récupère les expériences pour apprentissage"""
+        """Rcupre les expriences pour apprentissage"""
         if agent_id:
             experiences = self.by_agent.get(agent_id, [])
         elif task_type:
@@ -57,7 +57,7 @@ class ExperienceBuffer:
         else:
             experiences = self.experiences
         
-        # Filtrer les expériences récentes
+        # Filtrer les expriences rcentes
         cutoff_date = datetime.utcnow() - timedelta(days=30)
         recent_experiences = [
             exp for exp in experiences 
@@ -69,7 +69,7 @@ class ExperienceBuffer:
 # === Strategy Learning ===
 
 class StrategyOptimizer:
-    """Optimise les stratégies basé sur l'apprentissage"""
+    """Optimise les stratgies bas sur l'apprentissage"""
     
     def __init__(self):
         self.models: Dict[str, Any] = {}  # task_type -> model
@@ -81,18 +81,18 @@ class StrategyOptimizer:
         experiences: List[Experience],
         task_type: str
     ):
-        """Apprend des expériences pour optimiser les stratégies"""
+        """Apprend des expriences pour optimiser les stratgies"""
         if len(experiences) < 50:
-            return  # Pas assez de données
+            return  # Pas assez de donnes
         
-        # Préparer les données
+        # Prparer les donnes
         X, y = self._prepare_training_data(experiences)
         
-        # Entraîner le modèle
+        # Entraner le modle
         model = RandomForestClassifier(n_estimators=100, random_state=42)
         model.fit(X, y)
         
-        # Sauvegarder le modèle
+        # Sauvegarder le modle
         self.models[task_type] = model
         
         # Analyser l'importance des features
@@ -101,7 +101,7 @@ class StrategyOptimizer:
             zip(feature_names, model.feature_importances_)
         )
         
-        # Calculer les performances par stratégie
+        # Calculer les performances par stratgie
         for strategy in set(exp.strategy_used for exp in experiences):
             strategy_exps = [exp for exp in experiences if exp.strategy_used == strategy]
             success_rate = sum(1 for exp in strategy_exps if exp.outcome == "success") / len(strategy_exps)
@@ -113,8 +113,8 @@ class StrategyOptimizer:
         input_features: Dict[str, Any],
         available_strategies: List[str]
     ) -> str:
-        """Recommande la meilleure stratégie pour une tâche"""
-        # Si pas de modèle, utiliser les performances historiques
+        """Recommande la meilleure stratgie pour une tche"""
+        # Si pas de modle, utiliser les performances historiques
         if task_type not in self.models:
             if task_type in self.strategy_performance:
                 perfs = self.strategy_performance[task_type]
@@ -124,16 +124,16 @@ class StrategyOptimizer:
                     default=available_strategies[0]
                 )
                 return best_strategy
-            return available_strategies[0]  # Stratégie par défaut
+            return available_strategies[0]  # Stratgie par dfaut
         
-        # Utiliser le modèle pour prédire
+        # Utiliser le modle pour prdire
         model = self.models[task_type]
         
-        # Tester chaque stratégie
+        # Tester chaque stratgie
         predictions = {}
         for strategy in available_strategies:
             features = self._extract_features({**input_features, "strategy": strategy})
-            prob_success = model.predict_proba([features])[0][1]  # Probabilité de succès
+            prob_success = model.predict_proba([features])[0][1]  # Probabilit de succs
             predictions[strategy] = prob_success
         
         # Choisir la meilleure
@@ -143,7 +143,7 @@ class StrategyOptimizer:
         self,
         experiences: List[Experience]
     ) -> Tuple[np.ndarray, np.ndarray]:
-        """Prépare les données pour l'entraînement"""
+        """Prpare les donnes pour l'entranement"""
         X = []
         y = []
         
@@ -158,7 +158,7 @@ class StrategyOptimizer:
         return np.array(X), np.array(y)
     
     def _extract_features(self, data: Dict[str, Any]) -> List[float]:
-        """Extrait les features numériques des données"""
+        """Extrait les features numriques des donnes"""
         features = []
         for key, value in sorted(data.items()):
             if isinstance(value, (int, float)):
@@ -166,7 +166,7 @@ class StrategyOptimizer:
             elif isinstance(value, bool):
                 features.append(1.0 if value else 0.0)
             elif isinstance(value, str):
-                # Simple hash pour les catégories
+                # Simple hash pour les catgories
                 features.append(hash(value) % 1000 / 1000.0)
         return features
     
@@ -178,7 +178,7 @@ class StrategyOptimizer:
 # === Self-Improving Agent ===
 
 class SelfImprovingAgent(BaseAgent):
-    """Agent capable d'auto-amélioration"""
+    """Agent capable d'auto-amlioration"""
     
     def __init__(
         self,
@@ -197,7 +197,7 @@ class SelfImprovingAgent(BaseAgent):
         self.performance_history = []
     
     def _initialize_strategies(self) -> Dict[str, Any]:
-        """Initialise les stratégies disponibles"""
+        """Initialise les stratgies disponibles"""
         return {
             "fast": self._fast_strategy,
             "thorough": self._thorough_strategy,
@@ -210,15 +210,15 @@ class SelfImprovingAgent(BaseAgent):
         input_data: Any,
         context: Dict[str, Any]
     ) -> Dict[str, Any]:
-        """Traitement avec sélection de stratégie intelligente"""
+        """Traitement avec slection de stratgie intelligente"""
         task_type = context.get("task_type", "general")
         
         # Extraction des features
         input_features = self._extract_input_features(input_data, context)
         
-        # Sélection de la stratégie
+        # Slection de la stratgie
         if np.random.random() < self.exploration_rate and self.learning_enabled:
-            # Exploration : choisir aléatoirement
+            # Exploration : choisir alatoirement
             strategy_name = np.random.choice(list(self.strategies.keys()))
         else:
             # Exploitation : utiliser la recommandation
@@ -228,7 +228,7 @@ class SelfImprovingAgent(BaseAgent):
                 list(self.strategies.keys())
             )
         
-        # Exécuter la stratégie
+        # Excuter la stratgie
         start_time = asyncio.get_event_loop().time()
         try:
             strategy_func = self.strategies[strategy_name]
@@ -240,7 +240,7 @@ class SelfImprovingAgent(BaseAgent):
         
         processing_time = asyncio.get_event_loop().time() - start_time
         
-        # Enregistrer l'expérience
+        # Enregistrer l'exprience
         if self.learning_enabled:
             experience = Experience(
                 agent_id=self.metadata.id,
@@ -256,10 +256,10 @@ class SelfImprovingAgent(BaseAgent):
             )
             self.experience_buffer.add_experience(experience)
         
-        # Mise à jour des métriques
+        # Mise  jour des mtriques
         self._update_performance_metrics(outcome, processing_time)
         
-        # Apprentissage périodique
+        # Apprentissage priodique
         if len(self.experience_buffer.by_agent[self.metadata.id]) % 100 == 0:
             await self._periodic_learning()
         
@@ -274,8 +274,8 @@ class SelfImprovingAgent(BaseAgent):
         input_data: Any,
         context: Dict[str, Any]
     ) -> Dict[str, Any]:
-        """Stratégie rapide mais moins précise"""
-        # Implémentation simplifiée
+        """Stratgie rapide mais moins prcise"""
+        # Implmentation simplifie
         return {"status": "completed_fast", "data": str(input_data)[:100]}
     
     async def _thorough_strategy(
@@ -283,7 +283,7 @@ class SelfImprovingAgent(BaseAgent):
         input_data: Any,
         context: Dict[str, Any]
     ) -> Dict[str, Any]:
-        """Stratégie approfondie mais plus lente"""
+        """Stratgie approfondie mais plus lente"""
         await asyncio.sleep(0.1)  # Simulation de traitement complexe
         return {"status": "completed_thorough", "data": str(input_data)}
     
@@ -292,7 +292,7 @@ class SelfImprovingAgent(BaseAgent):
         input_data: Any,
         context: Dict[str, Any]
     ) -> Dict[str, Any]:
-        """Stratégie équilibrée"""
+        """Stratgie quilibre"""
         return {"status": "completed_balanced", "data": str(input_data)[:200]}
     
     async def _experimental_strategy(
@@ -300,7 +300,7 @@ class SelfImprovingAgent(BaseAgent):
         input_data: Any,
         context: Dict[str, Any]
     ) -> Dict[str, Any]:
-        """Stratégie expérimentale pour exploration"""
+        """Stratgie exprimentale pour exploration"""
         # Essayer des approches nouvelles
         if "priority" in context and context["priority"] == "high":
             return await self._thorough_strategy(input_data, context)
@@ -328,7 +328,7 @@ class SelfImprovingAgent(BaseAgent):
         return features
     
     def _update_performance_metrics(self, outcome: str, processing_time: float):
-        """Met à jour les métriques de performance"""
+        """Met  jour les mtriques de performance"""
         self.performance_metrics["tasks_completed"] += 1
         if outcome == "success":
             self.performance_metrics["successful_requests"] += 1
@@ -339,20 +339,20 @@ class SelfImprovingAgent(BaseAgent):
             current_avg * 0.9 + processing_time * 0.1
         )
         
-        # Taux de succès
+        # Taux de succs
         self.performance_metrics["success_rate"] = (
             self.performance_metrics["successful_requests"] /
             self.performance_metrics["tasks_completed"]
         )
     
     async def _periodic_learning(self):
-        """Apprentissage périodique des expériences"""
+        """Apprentissage priodique des expriences"""
         experiences = self.experience_buffer.get_experiences_for_learning(
             agent_id=self.metadata.id
         )
         
         if experiences:
-            # Grouper par type de tâche
+            # Grouper par type de tche
             task_experiences = defaultdict(list)
             for exp in experiences:
                 task_experiences[exp.task_type].append(exp)
@@ -370,7 +370,7 @@ class SelfImprovingAgent(BaseAgent):
                 for s in self.strategies.keys()
             ])
             
-            # Réduire l'exploration si performance stable
+            # Rduire l'exploration si performance stable
             if avg_success_rate > 0.8:
                 self.exploration_rate = max(0.05, self.exploration_rate * 0.9)
             elif avg_success_rate < 0.6:
@@ -394,9 +394,9 @@ class ABTestingFramework:
         duration_hours: int = 24,
         min_samples: int = 1000
     ) -> 'ABTest':
-        """Crée un nouveau test A/B"""
+        """Cre un nouveau test A/B"""
         if traffic_split is None:
-            # Répartition égale par défaut
+            # Rpartition gale par dfaut
             n_variants = len(variant_agents) + 1
             traffic_split = [1.0 / n_variants] * n_variants
         
@@ -420,12 +420,12 @@ class ABTestingFramework:
         input_data: Any,
         context: Dict[str, Any]
     ) -> Tuple[BaseAgent, str]:
-        """Route une requête vers un agent selon le test A/B"""
+        """Route une requte vers un agent selon le test A/B"""
         test = self.active_tests.get(test_name)
         if not test or not test.is_active():
             raise ValueError(f"No active test: {test_name}")
         
-        # Sélection de la variante
+        # Slection de la variante
         variant_idx = self._select_variant(test.traffic_split)
         
         if variant_idx == 0:
@@ -441,7 +441,7 @@ class ABTestingFramework:
         return agent, variant_name
     
     def _select_variant(self, traffic_split: List[float]) -> int:
-        """Sélectionne une variante selon la répartition du trafic"""
+        """Slectionne une variante selon la rpartition du trafic"""
         r = np.random.random()
         cumulative = 0.0
         
@@ -458,7 +458,7 @@ class ABTestingFramework:
         request_id: str,
         metrics: Dict[str, float]
     ):
-        """Enregistre le résultat d'une requête"""
+        """Enregistre le rsultat d'une requte"""
         test = self.active_tests.get(test_name)
         if not test:
             return
@@ -469,17 +469,17 @@ class ABTestingFramework:
         
         test.results[variant_name].append(metrics)
         
-        # Vérifier si le test est terminé
+        # Vrifier si le test est termin
         if await self._should_stop_test(test):
             await self.conclude_test(test_name)
     
     async def _should_stop_test(self, test: 'ABTest') -> bool:
-        """Détermine si un test doit être arrêté"""
-        # Vérifier la durée
+        """Dtermine si un test doit tre arrt"""
+        # Vrifier la dure
         if datetime.utcnow() > test.end_time:
             return True
         
-        # Vérifier le nombre d'échantillons
+        # Vrifier le nombre d'chantillons
         min_samples_reached = all(
             len(results) >= test.min_samples
             for results in test.results.values()
@@ -488,7 +488,7 @@ class ABTestingFramework:
         if not min_samples_reached:
             return False
         
-        # Arrêt précoce si différence significative
+        # Arrt prcoce si diffrence significative
         if len(test.results) >= 2:
             control_metrics = test.results.get("control", [])
             if control_metrics and len(control_metrics) >= 100:
@@ -497,7 +497,7 @@ class ABTestingFramework:
                         p_value = self._calculate_significance(
                             control_metrics, variant_metrics
                         )
-                        if p_value < 0.001:  # Très significatif
+                        if p_value < 0.001:  # Trs significatif
                             return True
         
         return False
@@ -507,7 +507,7 @@ class ABTestingFramework:
         control_metrics: List[Dict[str, float]],
         variant_metrics: List[Dict[str, float]]
     ) -> float:
-        """Calcule la significance statistique (p-value simplifiée)"""
+        """Calcule la significance statistique (p-value simplifie)"""
         # Utiliser scipy.stats.ttest_ind en production
         control_success = [m.get("success", 0) for m in control_metrics]
         variant_success = [m.get("success", 0) for m in variant_metrics]
@@ -515,17 +515,17 @@ class ABTestingFramework:
         control_mean = np.mean(control_success)
         variant_mean = np.mean(variant_success)
         
-        # P-value simplifiée (utiliser un vrai test statistique en prod)
+        # P-value simplifie (utiliser un vrai test statistique en prod)
         diff = abs(control_mean - variant_mean)
         return 1.0 - min(diff * 10, 0.99)  # Simplification
     
     async def conclude_test(self, test_name: str) -> 'TestResult':
-        """Conclut un test et génère les résultats"""
+        """Conclut un test et gnre les rsultats"""
         test = self.active_tests.pop(test_name, None)
         if not test:
             return None
         
-        # Analyser les résultats
+        # Analyser les rsultats
         result = TestResult(
             test_name=test_name,
             start_time=test.start_time,
@@ -533,7 +533,7 @@ class ABTestingFramework:
             total_requests=sum(len(r) for r in test.results.values())
         )
         
-        # Calculer les métriques pour chaque variante
+        # Calculer les mtriques pour chaque variante
         for variant_name, metrics_list in test.results.items():
             if metrics_list:
                 variant_stats = {
@@ -544,7 +544,7 @@ class ABTestingFramework:
                 }
                 result.variant_results[variant_name] = variant_stats
         
-        # Déterminer le gagnant
+        # Dterminer le gagnant
         if "control" in result.variant_results:
             control_success = result.variant_results["control"]["success_rate"]
             best_variant = "control"
@@ -565,7 +565,7 @@ class ABTestingFramework:
 
 @dataclass
 class ABTest:
-    """Représente un test A/B actif"""
+    """Reprsente un test A/B actif"""
     name: str
     control_agent: BaseAgent
     variant_agents: List[BaseAgent]
@@ -577,12 +577,12 @@ class ABTest:
     results: Dict[str, List[Dict[str, float]]] = field(default_factory=lambda: defaultdict(list))
     
     def is_active(self) -> bool:
-        """Vérifie si le test est actif"""
+        """Vrifie si le test est actif"""
         return datetime.utcnow() < self.end_time
 
 @dataclass
 class TestResult:
-    """Résultat d'un test A/B"""
+    """Rsultat d'un test A/B"""
     test_name: str
     start_time: datetime
     end_time: datetime
@@ -614,8 +614,8 @@ class ContinuousLearningPipeline:
         self.model_versions: Dict[str, int] = defaultdict(int)
     
     async def start_pipeline(self):
-        """Démarre le pipeline d'apprentissage continu"""
-        # Tâches d'apprentissage périodiques
+        """Dmarre le pipeline d'apprentissage continu"""
+        # Tches d'apprentissage priodiques
         asyncio.create_task(self._hourly_learning())
         asyncio.create_task(self._daily_learning())
         asyncio.create_task(self._weekly_learning())
@@ -628,7 +628,7 @@ class ContinuousLearningPipeline:
         while True:
             await asyncio.sleep(3600)  # 1 heure
             
-            # Mise à jour des stratégies pour les tâches fréquentes
+            # Mise  jour des stratgies pour les tches frquentes
             for task_type, experiences in self._get_recent_experiences_by_task(hours=1).items():
                 if len(experiences) >= 10:
                     await self.strategy_optimizer.learn_from_experiences(
@@ -642,7 +642,7 @@ class ContinuousLearningPipeline:
         while True:
             await asyncio.sleep(86400)  # 24 heures
             
-            # Réévaluation complète des modèles
+            # Rvaluation complte des modles
             all_tasks = self._get_all_task_types()
             
             for task_type in all_tasks:
@@ -651,13 +651,13 @@ class ContinuousLearningPipeline:
                 )
                 
                 if len(experiences) >= 100:
-                    # Créer un nouveau modèle
+                    # Crer un nouveau modle
                     await self.strategy_optimizer.learn_from_experiences(
                         experiences, task_type
                     )
                     self.model_versions[task_type] += 1
                     
-                    # Lancer un A/B test si amélioration significative
+                    # Lancer un A/B test si amlioration significative
                     await self._create_ab_test_for_improved_model(task_type)
             
             self.last_learning["daily"] = datetime.utcnow()
@@ -667,10 +667,10 @@ class ContinuousLearningPipeline:
         while True:
             await asyncio.sleep(604800)  # 7 jours
             
-            # Analyse approfondie et refonte des stratégies
+            # Analyse approfondie et refonte des stratgies
             await self._deep_strategy_analysis()
             
-            # Nettoyage des anciennes expériences
+            # Nettoyage des anciennes expriences
             self._cleanup_old_experiences()
             
             self.last_learning["weekly"] = datetime.utcnow()
@@ -679,7 +679,7 @@ class ContinuousLearningPipeline:
         self,
         hours: int
     ) -> Dict[str, List[Experience]]:
-        """Récupère les expériences récentes par type de tâche"""
+        """Rcupre les expriences rcentes par type de tche"""
         cutoff = datetime.utcnow() - timedelta(hours=hours)
         recent_by_task = defaultdict(list)
         
@@ -690,24 +690,24 @@ class ContinuousLearningPipeline:
         return recent_by_task
     
     def _get_all_task_types(self) -> List[str]:
-        """Obtient tous les types de tâches connus"""
+        """Obtient tous les types de tches connus"""
         return list(self.experience_buffer.by_task.keys())
     
     async def _create_ab_test_for_improved_model(self, task_type: str):
-        """Crée un test A/B pour un modèle amélioré"""
-        # Logique pour créer des agents avec ancien/nouveau modèle
+        """Cre un test A/B pour un modle amlior"""
+        # Logique pour crer des agents avec ancien/nouveau modle
         # et lancer un test A/B
         pass
     
     async def _deep_strategy_analysis(self):
-        """Analyse approfondie des stratégies"""
-        # Analyser les patterns de succès/échec
-        # Identifier les nouvelles opportunités d'optimisation
-        # Proposer de nouvelles stratégies expérimentales
+        """Analyse approfondie des stratgies"""
+        # Analyser les patterns de succs/chec
+        # Identifier les nouvelles opportunits d'optimisation
+        # Proposer de nouvelles stratgies exprimentales
         pass
     
     def _cleanup_old_experiences(self):
-        """Nettoie les expériences anciennes"""
+        """Nettoie les expriences anciennes"""
         cutoff = datetime.utcnow() - timedelta(days=90)
         self.experience_buffer.experiences = [
             exp for exp in self.experience_buffer.experiences
@@ -715,16 +715,16 @@ class ContinuousLearningPipeline:
         ]
     
     async def _monitor_performance(self):
-        """Monitore la performance et génère des alertes"""
+        """Monitore la performance et gnre des alertes"""
         while True:
             await asyncio.sleep(300)  # 5 minutes
             
-            # Vérifier les dégradations de performance
+            # Vrifier les dgradations de performance
             for task_type in self._get_all_task_types():
                 recent_perf = self._calculate_recent_performance(task_type)
                 historical_perf = self._calculate_historical_performance(task_type)
                 
-                if recent_perf < historical_perf * 0.9:  # Dégradation de 10%
+                if recent_perf < historical_perf * 0.9:  # Dgradation de 10%
                     await self._trigger_performance_alert(
                         task_type, recent_perf, historical_perf
                     )
@@ -734,7 +734,7 @@ class ContinuousLearningPipeline:
         task_type: str,
         hours: int = 1
     ) -> float:
-        """Calcule la performance récente"""
+        """Calcule la performance rcente"""
         recent_exps = self._get_recent_experiences_by_task(hours).get(task_type, [])
         if not recent_exps:
             return 0.0
@@ -766,7 +766,7 @@ class ContinuousLearningPipeline:
         recent_perf: float,
         historical_perf: float
     ):
-        """Déclenche une alerte de performance"""
+        """Dclenche une alerte de performance"""
         alert = {
             "type": "performance_degradation",
             "task_type": task_type,
@@ -776,13 +776,13 @@ class ContinuousLearningPipeline:
             "timestamp": datetime.utcnow()
         }
         
-        # En production : envoyer à un système d'alerting
+        # En production : envoyer  un systme d'alerting
         print(f"ALERT: Performance degradation for {task_type}: {alert}")
 
 # === Exemple d'utilisation ===
 
 async def self_improving_example():
-    """Exemple d'utilisation du framework d'auto-amélioration"""
+    """Exemple d'utilisation du framework d'auto-amlioration"""
     
     # Initialisation des composants
     experience_buffer = ExperienceBuffer(max_size=10000)
@@ -797,7 +797,7 @@ async def self_improving_example():
     )
     await pipeline.start_pipeline()
     
-    # Créer des agents auto-améliorants
+    # Crer des agents auto-amliorants
     agent1 = SelfImprovingAgent(
         "agent_v1",
         "processor",
@@ -815,7 +815,7 @@ async def self_improving_example():
     )
     agent2.exploration_rate = 0.2  # Plus d'exploration
     
-    # Créer un test A/B
+    # Crer un test A/B
     ab_test = await ab_testing.create_test(
         "strategy_optimization_test",
         control_agent=agent1,
@@ -845,10 +845,10 @@ async def self_improving_example():
             context
         )
         
-        # Traiter la requête
+        # Traiter la requte
         result = await agent.process(input_data, context)
         
-        # Enregistrer les métriques
+        # Enregistrer les mtriques
         metrics = {
             "success": "error" not in result,
             "processing_time": result.get("processing_time", 0),
@@ -861,13 +861,13 @@ async def self_improving_example():
             metrics
         )
         
-        # Afficher les progrès
+        # Afficher les progrs
         if i % 100 == 0:
             print(f"Processed {i} requests")
             print(f"Agent 1 success rate: {agent1.performance_metrics.get('success_rate', 0):.2%}")
             print(f"Agent 2 success rate: {agent2.performance_metrics.get('success_rate', 0):.2%}")
             
-            # Afficher les stratégies préférées
+            # Afficher les stratgies prfres
             if strategy_optimizer.strategy_performance:
                 print("Strategy performance:")
                 for task, strategies in strategy_optimizer.strategy_performance.items():

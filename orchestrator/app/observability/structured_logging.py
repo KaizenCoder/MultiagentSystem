@@ -1,6 +1,6 @@
 """
-Système de logs structurés avec audit trail et contexte de sécurité.
-Implémentation de l'observabilité complète selon les spécifications.
+Systme de logs structurs avec audit trail et contexte de scurit.
+Implmentation de l'observabilit complte selon les spcifications.
 """
 
 import structlog
@@ -16,7 +16,7 @@ import logging
 import traceback
 import os
 
-# Variables de contexte pour tracing distribué
+# Variables de contexte pour tracing distribu
 correlation_id: ContextVar[str] = ContextVar('correlation_id')
 user_session: ContextVar[str] = ContextVar('user_session', default="anonymous")
 request_id: ContextVar[str] = ContextVar('request_id')
@@ -24,7 +24,7 @@ security_context: ContextVar[Dict] = ContextVar('security_context', default={})
 
 
 class LogLevel(Enum):
-    """Niveaux de log standardisés."""
+    """Niveaux de log standardiss."""
     DEBUG = "DEBUG"
     INFO = "INFO"
     WARNING = "WARNING"
@@ -33,7 +33,7 @@ class LogLevel(Enum):
 
 
 class SecurityEventType(Enum):
-    """Types d'événements de sécurité pour audit."""
+    """Types d'vnements de scurit pour audit."""
     CODE_INJECTION_ATTEMPT = "code_injection_attempt"
     SSRF_ATTEMPT = "ssrf_attempt"
     AUTHENTICATION_SUCCESS = "authentication_success"
@@ -49,7 +49,7 @@ class SecurityEventType(Enum):
 
 
 class PerformanceMetrics:
-    """Métriques de performance pour observabilité."""
+    """Mtriques de performance pour observabilit."""
     
     def __init__(self):
         self.start_time = time.time()
@@ -60,11 +60,11 @@ class PerformanceMetrics:
         self.checkpoints[name] = time.time() - self.start_time
     
     def get_duration_ms(self) -> float:
-        """Retourne la durée totale en millisecondes."""
+        """Retourne la dure totale en millisecondes."""
         return (time.time() - self.start_time) * 1000
     
     def to_dict(self) -> Dict[str, Any]:
-        """Convertit les métriques en dictionnaire."""
+        """Convertit les mtriques en dictionnaire."""
         return {
             'total_duration_ms': self.get_duration_ms(),
             'checkpoints': {k: v * 1000 for k, v in self.checkpoints.items()}
@@ -72,7 +72,7 @@ class PerformanceMetrics:
 
 
 class SecurityAuditLogger:
-    """Logger spécialisé pour les événements de sécurité avec conformité audit."""
+    """Logger spcialis pour les vnements de scurit avec conformit audit."""
     
     def __init__(self):
         self.security_logger = structlog.get_logger("security_audit")
@@ -87,12 +87,12 @@ class SecurityAuditLogger:
         source_ip: Optional[str] = None
     ) -> None:
         """
-        Log un événement de sécurité avec contexte complet.
+        Log un vnement de scurit avec contexte complet.
         
         Args:
-            event_type: Type d'événement sécurité
-            details: Détails spécifiques à l'événement
-            severity: Niveau de gravité
+            event_type: Type d'vnement scurit
+            details: Dtails spcifiques  l'vnement
+            severity: Niveau de gravit
             user_id: Identifiant utilisateur (optionnel)
             source_ip: IP source (optionnel)
         """
@@ -116,7 +116,7 @@ class SecurityAuditLogger:
         
         self.security_logger.info("security_event", **event_data)
         
-        # Log compliance pour événements critiques
+        # Log compliance pour vnements critiques
         if severity in [LogLevel.ERROR, LogLevel.CRITICAL]:
             self._log_compliance_event(event_data)
     
@@ -127,7 +127,7 @@ class SecurityAuditLogger:
         risk_level: str,
         analysis_result: str
     ) -> None:
-        """Log spécialisé pour les demandes d'analyse de code."""
+        """Log spcialis pour les demandes d'analyse de code."""
         self.log_security_event(
             SecurityEventType.SECURITY_SCAN_COMPLETED,
             {
@@ -170,7 +170,7 @@ class SecurityAuditLogger:
         details: Dict[str, Any],
         severity: LogLevel = LogLevel.CRITICAL
     ) -> None:
-        """Log détection de vulnérabilité."""
+        """Log dtection de vulnrabilit."""
         self.log_security_event(
             SecurityEventType.VULNERABILITY_DETECTED,
             {
@@ -183,7 +183,7 @@ class SecurityAuditLogger:
         )
     
     def _get_correlation_id(self) -> str:
-        """Récupère ou génère un ID de corrélation."""
+        """Rcupre ou gnre un ID de corrlation."""
         try:
             return correlation_id.get()
         except LookupError:
@@ -192,7 +192,7 @@ class SecurityAuditLogger:
             return new_id
     
     def _get_request_id(self) -> str:
-        """Récupère ou génère un ID de requête."""
+        """Rcupre ou gnre un ID de requte."""
         try:
             return request_id.get()
         except LookupError:
@@ -201,11 +201,11 @@ class SecurityAuditLogger:
             return new_id
     
     def _get_service_version(self) -> str:
-        """Récupère la version du service."""
+        """Rcupre la version du service."""
         return os.getenv('SERVICE_VERSION', 'v9.0')
     
     def _compute_event_hash(self, event_data: Dict[str, Any]) -> str:
-        """Calcule un hash de l'événement pour intégrité."""
+        """Calcule un hash de l'vnement pour intgrit."""
         # Exclude timestamp and hash itself for consistent hashing
         hashable_data = {k: v for k, v in event_data.items() 
                         if k not in ['timestamp', 'event_hash']}
@@ -213,7 +213,7 @@ class SecurityAuditLogger:
         return hashlib.sha256(data_string.encode()).hexdigest()[:16]
     
     def _categorize_code_size(self, size: int) -> str:
-        """Catégorise la taille du code pour analyse."""
+        """Catgorise la taille du code pour analyse."""
         if size < 1000:
             return 'small'
         elif size < 5000:
@@ -224,7 +224,7 @@ class SecurityAuditLogger:
             return 'very_large'
     
     def _log_compliance_event(self, event_data: Dict[str, Any]) -> None:
-        """Log événement pour conformité réglementaire."""
+        """Log vnement pour conformit rglementaire."""
         compliance_data = {
             'compliance_framework': 'SOC2_TYPE2',
             'data_classification': 'internal',
@@ -236,7 +236,7 @@ class SecurityAuditLogger:
 
 
 class StructuredLogger:
-    """Logger structuré principal avec contexte automatique."""
+    """Logger structur principal avec contexte automatique."""
     
     def __init__(self, name: str):
         self.logger = structlog.get_logger(name)
@@ -268,12 +268,12 @@ class StructuredLogger:
         self.logger.critical(message, **kwargs)
     
     def debug(self, message: str, **kwargs) -> None:
-        """Log niveau DEBUG (développement uniquement)."""
+        """Log niveau DEBUG (dveloppement uniquement)."""
         if os.getenv('DEBUG', 'false').lower() == 'true':
             self._log(LogLevel.DEBUG, message, **kwargs)
     
     def start_operation(self, operation_name: str, **context) -> str:
-        """Démarre une opération trackée."""
+        """Dmarre une opration tracke."""
         operation_id = str(uuid.uuid4())
         self.metrics.checkpoint(f"{operation_name}_start")
         
@@ -284,7 +284,7 @@ class StructuredLogger:
         return operation_id
     
     def end_operation(self, operation_name: str, operation_id: str, success: bool = True, **context) -> None:
-        """Termine une opération trackée."""
+        """Termine une opration tracke."""
         self.metrics.checkpoint(f"{operation_name}_end")
         duration_ms = self.metrics.get_duration_ms()
         
@@ -313,7 +313,7 @@ class StructuredLogger:
         log_method(message, **log_data)
     
     def _safe_get_context_var(self, var: ContextVar, default: Any = None) -> Any:
-        """Récupère une variable de contexte de manière sûre."""
+        """Rcupre une variable de contexte de manire sre."""
         try:
             return var.get()
         except LookupError:
@@ -325,7 +325,7 @@ def configure_structured_logging(
     log_level: str = "INFO"
 ) -> None:
     """
-    Configure le système de logs structurés.
+    Configure le systme de logs structurs.
     
     Args:
         environment: Environnement (development, staging, production)
@@ -333,7 +333,7 @@ def configure_structured_logging(
     """
     
     def add_correlation_context(logger, method_name, event_dict):
-        """Ajoute le contexte de corrélation automatiquement."""
+        """Ajoute le contexte de corrlation automatiquement."""
         try:
             event_dict['correlation_id'] = correlation_id.get()
         except LookupError:
@@ -352,7 +352,7 @@ def configure_structured_logging(
         return event_dict
     
     def add_security_context(logger, method_name, event_dict):
-        """Ajoute le contexte de sécurité."""
+        """Ajoute le contexte de scurit."""
         event_dict['service'] = "orchestrator"
         event_dict['version'] = os.getenv('SERVICE_VERSION', 'v9')
         event_dict['environment'] = environment
@@ -360,9 +360,9 @@ def configure_structured_logging(
         return event_dict
     
     def add_performance_context(logger, method_name, event_dict):
-        """Ajoute les métriques de performance."""
+        """Ajoute les mtriques de performance."""
         if 'duration_ms' not in event_dict:
-            # Ajouter timestamp haute précision pour mesurer latence
+            # Ajouter timestamp haute prcision pour mesurer latence
             event_dict['log_timestamp_ns'] = time.time_ns()
         return event_dict
     
@@ -401,25 +401,25 @@ security_audit_logger = SecurityAuditLogger()
 
 def get_logger(name: str) -> StructuredLogger:
     """
-    Factory pour créer des loggers structurés.
+    Factory pour crer des loggers structurs.
     
     Args:
-        name: Nom du logger (généralement __name__)
+        name: Nom du logger (gnralement __name__)
         
     Returns:
-        StructuredLogger: Instance de logger configuré
+        StructuredLogger: Instance de logger configur
     """
     return StructuredLogger(name)
 
 
 def set_correlation_context(corr_id: str, session_id: str = "anonymous", req_id: Optional[str] = None) -> None:
     """
-    Définit le contexte de corrélation pour la requête courante.
+    Dfinit le contexte de corrlation pour la requte courante.
     
     Args:
-        corr_id: ID de corrélation
+        corr_id: ID de corrlation
         session_id: ID de session utilisateur
-        req_id: ID de requête (généré automatiquement si None)
+        req_id: ID de requte (gnr automatiquement si None)
     """
     correlation_id.set(corr_id)
     user_session.set(session_id)
@@ -428,10 +428,10 @@ def set_correlation_context(corr_id: str, session_id: str = "anonymous", req_id:
 
 def get_correlation_context() -> Dict[str, str]:
     """
-    Récupère le contexte de corrélation actuel.
+    Rcupre le contexte de corrlation actuel.
     
     Returns:
-        Dict: Contexte de corrélation
+        Dict: Contexte de corrlation
     """
     return {
         'correlation_id': correlation_id.get("unknown"),
@@ -440,5 +440,5 @@ def get_correlation_context() -> Dict[str, str]:
     }
 
 
-# Configuration automatique au démarrage
+# Configuration automatique au dmarrage
 configure_structured_logging()

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-🗂️ Agent Workspace Organizer - Refactoring NextGeneration
-Mission: Organisation structure Green et préparation espace refactoring
-Modèle: Claude Sonnet 4.0 - Organisation structurelle
+ Agent Workspace Organizer - Refactoring NextGeneration
+Mission: Organisation structure Green et prparation espace refactoring
+Modle: Claude Sonnet 4.0 - Organisation structurelle
 """
 
 import os
@@ -38,7 +38,7 @@ class AgentWorkspaceOrganizerRefactoring:
     def __init__(self):
         self.name = "Agent Workspace Organizer Refactoring"
         self.model = "Claude Sonnet 4.0"
-        self.mission = "Organisation structure Green et préparation espace refactoring"
+        self.mission = "Organisation structure Green et prparation espace refactoring"
         self.version = "1.0.0"
         self.status = "INITIALIZING"
         
@@ -87,20 +87,20 @@ class AgentWorkspaceOrganizerRefactoring:
         self.workspace_structures: List[WorkspaceStructure] = []
         
     def create_green_environment(self) -> bool:
-        """Crée environnement Green (copie Blue)"""
-        print("🟢 Création environnement Green...")
+        """Cre environnement Green (copie Blue)"""
+        print(" Cration environnement Green...")
         
         try:
             # Suppression ancien Green si existe
             if self.green_environment.exists():
-                print(f"🗑️ Suppression ancien Green: {self.green_environment}")
+                print(f" Suppression ancien Green: {self.green_environment}")
                 shutil.rmtree(self.green_environment)
             
-            # Copie complète Blue → Green
+            # Copie complte Blue  Green
             if self.blue_environment.exists():
-                print(f"📋 Copie Blue → Green...")
+                print(f"[CLIPBOARD] Copie Blue  Green...")
                 shutil.copytree(self.blue_environment, self.green_environment, dirs_exist_ok=True)
-                print(f"✅ Environnement Green créé: {self.green_environment}")
+                print(f"[CHECK] Environnement Green cr: {self.green_environment}")
                 
                 # Marque Green comme environnement refactoring
                 green_marker = self.green_environment / ".green_environment"
@@ -117,15 +117,15 @@ class AgentWorkspaceOrganizerRefactoring:
                 raise FileNotFoundError(f"Environnement Blue introuvable: {self.blue_environment}")
                 
         except Exception as e:
-            print(f"❌ Échec création Green: {e}")
+            print(f"[CROSS] chec cration Green: {e}")
             return False
     
     def create_refactoring_workspace(self) -> bool:
-        """Crée workspace structuré pour refactoring"""
-        print("🗂️ Création workspace refactoring...")
+        """Cre workspace structur pour refactoring"""
+        print(" Cration workspace refactoring...")
         
         try:
-            # Création structure principale
+            # Cration structure principale
             self.refactoring_workspace.mkdir(exist_ok=True)
             
             # Structure documentaire
@@ -165,7 +165,7 @@ class AgentWorkspaceOrganizerRefactoring:
             tests_structure = WorkspaceStructure(
                 name="tests_refactoring",
                 path=str(self.refactoring_workspace / "tests"),
-                description="Tests spécifiques refactoring",
+                description="Tests spcifiques refactoring",
                 created=False,
                 subdirectories=["unit", "integration", "performance", "regression"],
                 template_files=["conftest.py", "test_baseline.py"]
@@ -186,16 +186,16 @@ class AgentWorkspaceOrganizerRefactoring:
             return True
             
         except Exception as e:
-            print(f"❌ Échec création workspace: {e}")
+            print(f"[CROSS] chec cration workspace: {e}")
             return False
     
     def _create_workspace_structure(self, structure: WorkspaceStructure) -> bool:
-        """Crée structure workspace individuelle"""
+        """Cre structure workspace individuelle"""
         try:
             base_path = Path(structure.path)
             base_path.mkdir(parents=True, exist_ok=True)
             
-            # Création sous-répertoires
+            # Cration sous-rpertoires
             for subdir in structure.subdirectories:
                 subdir_path = base_path / subdir
                 subdir_path.mkdir(exist_ok=True)
@@ -206,7 +206,7 @@ class AgentWorkspaceOrganizerRefactoring:
                     with open(init_file, 'w') as f:
                         f.write(f'"""Module {subdir} - Refactoring NextGeneration"""\n')
             
-            # Création fichiers templates
+            # Cration fichiers templates
             for template_file in structure.template_files:
                 template_path = base_path / template_file
                 self._create_template_file(template_path, template_file)
@@ -214,18 +214,18 @@ class AgentWorkspaceOrganizerRefactoring:
             structure.created = True
             self.workspace_structures.append(structure)
             
-            print(f"✅ Structure créée: {structure.name}")
+            print(f"[CHECK] Structure cre: {structure.name}")
             return True
             
         except Exception as e:
-            print(f"❌ Échec structure {structure.name}: {e}")
+            print(f"[CROSS] chec structure {structure.name}: {e}")
             return False
     
     def _create_template_file(self, file_path: Path, template_name: str):
-        """Crée fichier template"""
+        """Cre fichier template"""
         templates = {
             "main.py": '''"""
-Main FastAPI refactorisé - NextGeneration
+Main FastAPI refactoris - NextGeneration
 Architecture modulaire avec SRP
 """
 
@@ -237,7 +237,7 @@ from dependencies import core_deps
 
 app = FastAPI(
     title="NextGeneration Orchestrator",
-    description="Architecture refactorisée - Modular & Maintainable",
+    description="Architecture refactorise - Modular & Maintainable",
     version="2.0.0"
 )
 
@@ -282,11 +282,11 @@ class BaseRouter:
         self._setup_routes()
     
     def _setup_routes(self):
-        """Setup routes spécifiques - À override"""
+        """Setup routes spcifiques -  override"""
         pass
     
     def get_router(self) -> APIRouter:
-        """Retourne router configuré"""
+        """Retourne router configur"""
         return self.router
 ''',
 
@@ -307,22 +307,22 @@ class BaseService(ABC):
         self._setup()
     
     def _setup(self):
-        """Setup service - À override"""
+        """Setup service -  override"""
         self._initialized = True
     
     @abstractmethod
     async def execute(self, *args, **kwargs) -> Any:
-        """Méthode principale - À implémenter"""
+        """Mthode principale -  implmenter"""
         pass
     
     def is_ready(self) -> bool:
-        """Vérifie si service prêt"""
+        """Vrifie si service prt"""
         return self._initialized
 ''',
 
             "base_repository.py": '''"""
 Template Repository base - NextGeneration
-Pattern standard pour accès données
+Pattern standard pour accs donnes
 """
 
 from abc import ABC, abstractmethod
@@ -337,17 +337,17 @@ class BaseRepository(ABC):
     
     @abstractmethod
     async def connect(self):
-        """Connexion - À implémenter"""
+        """Connexion -  implmenter"""
         pass
     
     @abstractmethod
     async def disconnect(self):
-        """Déconnexion - À implémenter"""
+        """Dconnexion -  implmenter"""
         pass
     
     @abstractmethod
     async def health_check(self) -> bool:
-        """Vérification santé - À implémenter"""
+        """Vrification sant -  implmenter"""
         pass
 ''',
 
@@ -358,14 +358,14 @@ class BaseRepository(ABC):
 ## Objectif
 Migration god mode files vers architecture modulaire
 
-## Étapes
+## tapes
 1. Extraction routes
-2. Création services
-3. Implémentation repositories
+2. Cration services
+3. Implmentation repositories
 4. Tests et validation
 
 ## Rollback
-Procédure retour Blue environment si problème
+Procdure retour Blue environment si problme
 ''',
 
             "conftest.py": '''"""Configuration tests refactoring"""
@@ -388,12 +388,12 @@ def test_client():
     
     def setup_new_architecture_templates(self) -> bool:
         """Setup templates nouvelle architecture"""
-        print("🏗️ Setup templates nouvelle architecture...")
+        print("[CONSTRUCTION] Setup templates nouvelle architecture...")
         
         try:
             new_arch_path = self.refactoring_workspace / "new_architecture"
             
-            # Création structure modules
+            # Cration structure modules
             for module_type, files in self.target_architecture.items():
                 module_path = new_arch_path / module_type
                 module_path.mkdir(exist_ok=True)
@@ -408,21 +408,21 @@ def test_client():
                     template_file = module_path / file_name
                     self._create_module_template(template_file, module_type, file_name)
             
-            print("✅ Templates architecture créés")
+            print("[CHECK] Templates architecture crs")
             return True
             
         except Exception as e:
-            print(f"❌ Échec setup templates: {e}")
+            print(f"[CROSS] chec setup templates: {e}")
             return False
     
     def _create_module_template(self, file_path: Path, module_type: str, file_name: str):
-        """Crée template pour module spécifique"""
+        """Cre template pour module spcifique"""
         module_name = file_name.replace('.py', '').replace('_', ' ').title()
         
         if module_type == "routers":
             content = f'''"""
 {module_name} Router - NextGeneration Refactored
-Routes spécialisées selon SRP
+Routes spcialises selon SRP
 """
 
 from fastapi import APIRouter, Depends
@@ -434,13 +434,13 @@ router = APIRouter()
 async def health_check() -> Dict[str, str]:
     return {{"status": "OK", "module": "{module_name}"}}
 
-# TODO: Implémenter routes spécifiques {module_name}
+# TODO: Implmenter routes spcifiques {module_name}
 '''
         
         elif module_type == "services":
             content = f'''"""
 {module_name} Service - NextGeneration Refactored
-Logique métier {module_name}
+Logique mtier {module_name}
 """
 
 from typing import Dict, Any
@@ -450,15 +450,15 @@ class {module_name.replace(' ', '')}Service(BaseService):
     """Service {module_name}"""
     
     async def execute(self, *args, **kwargs) -> Any:
-        """Exécute logique {module_name}"""
-        # TODO: Implémenter logique
+        """Excute logique {module_name}"""
+        # TODO: Implmenter logique
         return {{"result": "success", "service": "{module_name}"}}
 '''
         
         elif module_type == "repositories":
             content = f'''"""
 {module_name} Repository - NextGeneration Refactored  
-Accès données {module_name}
+Accs donnes {module_name}
 """
 
 from typing import Dict, Any, List
@@ -469,50 +469,50 @@ class {module_name.replace(' ', '')}Repository(BaseRepository):
     
     async def connect(self):
         """Connexion {module_name}"""
-        # TODO: Implémenter connexion
+        # TODO: Implmenter connexion
         pass
     
     async def disconnect(self):
-        """Déconnexion {module_name}"""
-        # TODO: Implémenter déconnexion  
+        """Dconnexion {module_name}"""
+        # TODO: Implmenter dconnexion  
         pass
     
     async def health_check(self) -> bool:
-        """Santé {module_name}"""
-        # TODO: Implémenter vérification
+        """Sant {module_name}"""
+        # TODO: Implmenter vrification
         return True
 '''
         
         elif module_type == "schemas":
             content = f'''"""
 {module_name} Schemas - NextGeneration Refactored
-Modèles Pydantic {module_name}
+Modles Pydantic {module_name}
 """
 
 from pydantic import BaseModel
 from typing import Optional, Dict, Any
 
 class {module_name.replace(' ', '')}Request(BaseModel):
-    """Requête {module_name}"""
-    # TODO: Définir champs requête
+    """Requte {module_name}"""
+    # TODO: Dfinir champs requte
     pass
 
 class {module_name.replace(' ', '')}Response(BaseModel):
-    """Réponse {module_name}"""
+    """Rponse {module_name}"""
     status: str
     data: Optional[Dict[str, Any]] = None
     message: Optional[str] = None
 '''
         
         else:
-            content = f'"""{module_name} - NextGeneration Refactored"""\n# TODO: Implémenter\n'
+            content = f'"""{module_name} - NextGeneration Refactored"""\n# TODO: Implmenter\n'
         
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(content)
     
     def create_workspace_documentation(self) -> bool:
-        """Crée documentation workspace"""
-        print("📚 Création documentation workspace...")
+        """Cre documentation workspace"""
+        print(" Cration documentation workspace...")
         
         try:
             docs_path = self.refactoring_workspace / "docs"
@@ -529,17 +529,17 @@ Ce workspace contient tous les outils et structures pour le refactoring des fich
 - `new_architecture/`: Nouvelle architecture modulaire
 - `templates/`: Templates et patterns
 - `migration/`: Outils de migration
-- `tests/`: Tests spécifiques refactoring
+- `tests/`: Tests spcifiques refactoring
 - `docs/`: Documentation
 
 ## Processus
 1. Backup Blue environment
-2. Création Green environment 
+2. Cration Green environment 
 3. Refactoring modulaire
 4. Tests et validation
-5. Switch Blue→Green
+5. Switch BlueGreen
 
-## Sécurité
+## Scurit
 - Rollback automatique disponible
 - Tests continus
 - Monitoring performance
@@ -554,24 +554,24 @@ Ce workspace contient tous les outils et structures pour le refactoring des fich
 - Single Responsibility Principle (SRP)
 - Dependency Injection
 - Separation of Concerns
-- Testabilité maximale
+- Testabilit maximale
 
 ## Structure
-- `routers/`: Points d'entrée HTTP
-- `services/`: Logique métier
-- `repositories/`: Accès données
-- `schemas/`: Modèles Pydantic
-- `dependencies/`: Injection dépendances
+- `routers/`: Points d'entre HTTP
+- `services/`: Logique mtier
+- `repositories/`: Accs donnes
+- `schemas/`: Modles Pydantic
+- `dependencies/`: Injection dpendances
 
 ## Migration
-Chaque fichier god mode sera décomposé selon cette structure.
+Chaque fichier god mode sera dcompos selon cette structure.
 ''')
             
-            print("✅ Documentation créée")
+            print("[CHECK] Documentation cre")
             return True
             
         except Exception as e:
-            print(f"❌ Échec documentation: {e}")
+            print(f"[CROSS] chec documentation: {e}")
             return False
     
     def get_workspace_status(self) -> Dict[str, Any]:
@@ -599,7 +599,7 @@ Chaque fichier god mode sera décomposé selon cette structure.
         }
     
     def generate_workspace_report(self) -> Dict[str, Any]:
-        """Génère rapport workspace"""
+        """Gnre rapport workspace"""
         status = self.get_workspace_status()
         
         return {
@@ -619,43 +619,43 @@ Chaque fichier god mode sera décomposé selon cette structure.
             "next_actions": [
                 "Validation structure Green",
                 "Tests baseline environment",
-                "Démarrage agents analyse"
+                "Dmarrage agents analyse"
             ]
         }
     
     async def execute_mission(self) -> Dict[str, Any]:
-        """Exécute mission organisation workspace"""
-        print(f"🚀 {self.name} - Démarrage organisation workspace")
+        """Excute mission organisation workspace"""
+        print(f"[ROCKET] {self.name} - Dmarrage organisation workspace")
         
         try:
             self.status = "ACTIVE"
             
-            # ÉTAPE 1: Création environnement Green
+            # TAPE 1: Cration environnement Green
             green_created = self.create_green_environment()
             if not green_created:
-                raise RuntimeError("Échec création environnement Green")
+                raise RuntimeError("chec cration environnement Green")
             
-            # ÉTAPE 2: Création workspace refactoring
+            # TAPE 2: Cration workspace refactoring
             workspace_created = self.create_refactoring_workspace()
             if not workspace_created:
-                raise RuntimeError("Échec création workspace refactoring")
+                raise RuntimeError("chec cration workspace refactoring")
             
-            # ÉTAPE 3: Setup templates architecture
+            # TAPE 3: Setup templates architecture
             templates_created = self.setup_new_architecture_templates()
             if not templates_created:
-                raise RuntimeError("Échec setup templates")
+                raise RuntimeError("chec setup templates")
             
-            # ÉTAPE 4: Documentation
+            # TAPE 4: Documentation
             docs_created = self.create_workspace_documentation()
             if not docs_created:
-                raise RuntimeError("Échec création documentation")
+                raise RuntimeError("chec cration documentation")
             
-            # Génération rapport
+            # Gnration rapport
             report = self.generate_workspace_report()
             
             self.status = "SUCCESS"
             
-            print(f"🎉 Mission workspace organizer ACCOMPLIE")
+            print(f" Mission workspace organizer ACCOMPLIE")
             
             return {
                 "status": "SUCCESS",
@@ -673,7 +673,7 @@ Chaque fichier god mode sera décomposé selon cette structure.
             
         except Exception as e:
             self.status = "FAILED"
-            print(f"❌ Échec mission workspace organizer: {e}")
+            print(f"[CROSS] chec mission workspace organizer: {e}")
             
             return {
                 "status": "FAILED",
@@ -689,13 +689,13 @@ if __name__ == "__main__":
     import asyncio
     result = asyncio.run(agent.execute_mission())
     
-    print(f"\n📊 RÉSULTAT MISSION WORKSPACE:")
+    print(f"\n[CHART] RSULTAT MISSION WORKSPACE:")
     print(f"Status: {result['status']}")
     
     if result['status'] == 'SUCCESS':
-        print(f"✅ Green Environment: {result['green_environment_ready']}")
-        print(f"✅ Workspace: {result['workspace_organized']}")
-        print(f"✅ Templates: {result['templates_ready']}")
-        print(f"✅ Structures: {result['structures_created']}")
+        print(f"[CHECK] Green Environment: {result['green_environment_ready']}")
+        print(f"[CHECK] Workspace: {result['workspace_organized']}")
+        print(f"[CHECK] Templates: {result['templates_ready']}")
+        print(f"[CHECK] Structures: {result['structures_created']}")
     else:
-        print(f"❌ Erreur: {result['error']}") 
+        print(f"[CROSS] Erreur: {result['error']}") 

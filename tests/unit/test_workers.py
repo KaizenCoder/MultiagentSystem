@@ -1,6 +1,6 @@
 """
-Tests unitaires pour les Workers - SPRINT 3.2 SOLUTION AVANCÉE.
-Approche Mock Total pour éviter les conflits LangChain.
+Tests unitaires pour les Workers - SPRINT 3.2 SOLUTION AVANCE.
+Approche Mock Total pour viter les conflits LangChain.
 """
 
 import pytest
@@ -23,7 +23,7 @@ class TestWorkersLogic:
         self.mock_workers.worker_node_wrapper = AsyncMock()
         
     def test_get_agent_executor_logic_code_generation(self):
-        """Test logique création agent génération code."""
+        """Test logique cration agent gnration code."""
         # ARRANGE - Simuler logique workers
         agent_type = "code_generation"
         expected_executor = Mock()
@@ -37,7 +37,7 @@ class TestWorkersLogic:
         self.mock_workers.get_agent_executor.assert_called_once_with(agent_type)
 
     def test_get_agent_executor_logic_documentation(self):
-        """Test logique création agent documentation."""
+        """Test logique cration agent documentation."""
         # ARRANGE
         agent_type = "documentation"
         expected_executor = Mock()
@@ -51,7 +51,7 @@ class TestWorkersLogic:
         self.mock_workers.get_agent_executor.assert_called_once_with(agent_type)
 
     def test_get_agent_executor_logic_testing(self):
-        """Test logique création agent testing."""
+        """Test logique cration agent testing."""
         # ARRANGE
         agent_type = "testing"
         expected_executor = Mock()
@@ -65,7 +65,7 @@ class TestWorkersLogic:
         self.mock_workers.get_agent_executor.assert_called_once_with(agent_type)
 
     def test_get_agent_executor_logic_invalid_type(self):
-        """Test création agent avec type invalide."""
+        """Test cration agent avec type invalide."""
         # ARRANGE
         self.mock_workers.get_agent_executor.side_effect = ValueError("Unknown agent type: invalid_type")
         
@@ -75,7 +75,7 @@ class TestWorkersLogic:
 
     @pytest.mark.asyncio
     async def test_worker_node_wrapper_code_generation_logic(self):
-        """Test logique wrapper worker pour génération code."""
+        """Test logique wrapper worker pour gnration code."""
         # ARRANGE
         state = {
             "task_description": "Generate Python code",
@@ -169,7 +169,7 @@ class TestWorkersLogic:
 
     @pytest.mark.asyncio
     async def test_worker_state_preservation_logic(self):
-        """Test logique préservation de l'état par les workers."""
+        """Test logique prservation de l'tat par les workers."""
         # ARRANGE
         original_state = {
             "session_id": "test-session-123",
@@ -192,7 +192,7 @@ class TestWorkersLogic:
         assert result["task_description"] == original_state["task_description"]
 
     def test_worker_agent_types_validation(self):
-        """Test validation des types d'agents supportés."""
+        """Test validation des types d'agents supports."""
         # ARRANGE
         valid_types = ["code_generation", "documentation", "testing"]
         
@@ -222,12 +222,12 @@ class TestWorkersLogic:
         agent3 = self.mock_workers.get_agent_executor("documentation")
         
         # ASSERT
-        assert agent1 is agent2  # Cache doit réutiliser
-        assert agent1 is not agent3  # Différents types = différentes instances
+        assert agent1 is agent2  # Cache doit rutiliser
+        assert agent1 is not agent3  # Diffrents types = diffrentes instances
 
     @pytest.mark.asyncio
     async def test_worker_workflow_integration_logic(self):
-        """Test logique intégration workflow workers."""
+        """Test logique intgration workflow workers."""
         # ARRANGE
         workflow_state = {
             "session_id": "workflow-123",
@@ -277,7 +277,7 @@ class TestWorkersLogic:
 
     @pytest.mark.asyncio
     async def test_worker_error_recovery_logic(self):
-        """Test logique récupération d'erreurs workers."""
+        """Test logique rcupration d'erreurs workers."""
         # ARRANGE
         state_with_errors = {
             "task_description": "Test error recovery",
@@ -285,7 +285,7 @@ class TestWorkersLogic:
             "errors": ["Previous error"]
         }
         
-        # Simuler récupération après erreur
+        # Simuler rcupration aprs erreur
         recovery_result = {
             **state_with_errors,
             "results": {"code_generation": "Recovered successfully"},
@@ -299,11 +299,11 @@ class TestWorkersLogic:
         # ASSERT
         assert "code_generation" in result["results"]
         assert "Recovered successfully" in result["results"]["code_generation"]
-        assert len(result["errors"]) >= 1  # Erreurs précédentes conservées
+        assert len(result["errors"]) >= 1  # Erreurs prcdentes conserves
 
     @pytest.mark.asyncio
     async def test_worker_parallel_execution_logic(self):
-        """Test logique exécution parallèle workers."""
+        """Test logique excution parallle workers."""
         # ARRANGE
         import copy
         base_state = {
@@ -397,13 +397,13 @@ class TestWorkersLogic:
 
     def test_worker_cache_size_logic(self):
         """Test logique taille cache workers."""
-        # ARRANGE - Simuler cache LRU avec taille limitée
+        # ARRANGE - Simuler cache LRU avec taille limite
         cache = {}
         cache_size = 3
         
         def mock_cached_get_agent_executor(agent_type):
             if len(cache) >= cache_size and agent_type not in cache:
-                # Simuler éviction LRU
+                # Simuler viction LRU
                 oldest_key = next(iter(cache))
                 del cache[oldest_key]
             
@@ -413,7 +413,7 @@ class TestWorkersLogic:
         
         self.mock_workers.get_agent_executor.side_effect = mock_cached_get_agent_executor
         
-        # ACT - Tester débordement cache
+        # ACT - Tester dbordement cache
         agents = []
         types = ["code_generation", "documentation", "testing", "extra1"]
         
@@ -445,7 +445,7 @@ class TestWorkersLogic:
             await self.mock_workers.worker_node_wrapper(state, "code_generation")
 
     def test_worker_input_validation_logic(self):
-        """Test logique validation entrées workers."""
+        """Test logique validation entres workers."""
         # ARRANGE
         valid_inputs = [
             ("code_generation", {"task_description": "Valid task", "code_context": "Valid context"}),
@@ -461,14 +461,14 @@ class TestWorkersLogic:
         
         # ACT & ASSERT
         for agent_type, inputs in valid_inputs:
-            # Simuler validation réussie
+            # Simuler validation russie
             self.mock_workers.get_agent_executor.return_value = Mock()
             result = self.mock_workers.get_agent_executor(agent_type)
             assert result is not None
         
         for agent_type, inputs in invalid_inputs:
             if not agent_type or agent_type == "invalid_type":
-                # Simuler validation échouée
+                # Simuler validation choue
                 self.mock_workers.get_agent_executor.side_effect = ValueError(f"Invalid agent type: {agent_type}")
                 with pytest.raises(ValueError):
                     self.mock_workers.get_agent_executor(agent_type)
@@ -479,7 +479,7 @@ class TestWorkersLogic:
         ("testing", "gpt-4o")
     ])
     def test_worker_model_selection_logic(self, worker_type, expected_model):
-        """Test logique sélection modèle pour chaque worker."""
+        """Test logique slection modle pour chaque worker."""
         # ARRANGE
         mock_agent = Mock()
         mock_agent.model = expected_model
@@ -493,7 +493,7 @@ class TestWorkersLogic:
 
     @pytest.mark.asyncio
     async def test_worker_result_format_logic(self):
-        """Test logique format des résultats workers."""
+        """Test logique format des rsultats workers."""
         # ARRANGE
         state = {
             "task_description": "Format test",

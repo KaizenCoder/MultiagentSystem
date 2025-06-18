@@ -31,47 +31,47 @@ class TestApiCheckpointer:
         assert hasattr(checkpointer, 'client')
     
     def test_put_method_exists(self):
-        """Test méthode put existe (synchrone)."""
+        """Test mthode put existe (synchrone)."""
         config = {"session_id": "test-123"}
         checkpoint = Mock(spec=Checkpoint)
         
-        # La méthode put existe mais est un stub
+        # La mthode put existe mais est un stub
         result = self.checkpointer.put(config, checkpoint)
         
-        # Doit retourner None (implémentation basique)
+        # Doit retourner None (implmentation basique)
         assert result is None
     
     def test_get_method_exists(self):
-        """Test méthode get existe (synchrone)."""
+        """Test mthode get existe (synchrone)."""
         config = {"session_id": "test-123"}
         
-        # La méthode get existe mais est un stub
+        # La mthode get existe mais est un stub
         result = self.checkpointer.get(config)
         
-        # Doit retourner None (implémentation basique)
+        # Doit retourner None (implmentation basique)
         assert result is None
     
     @pytest.mark.asyncio
     async def test_aput_method_exists(self):
-        """Test méthode aput asynchrone existe."""
+        """Test mthode aput asynchrone existe."""
         config = {"session_id": "test-123"}
         checkpoint = Mock(spec=Checkpoint)
         
-        # La méthode aput existe mais est un stub
+        # La mthode aput existe mais est un stub
         result = await self.checkpointer.aput(config, checkpoint)
         
-        # Doit retourner None (implémentation basique)
+        # Doit retourner None (implmentation basique)
         assert result is None
     
     @pytest.mark.asyncio
     async def test_aget_method_exists(self):
-        """Test méthode aget asynchrone existe."""
+        """Test mthode aget asynchrone existe."""
         config = {"session_id": "test-123"}
         
-        # La méthode aget existe mais est un stub
+        # La mthode aget existe mais est un stub
         result = await self.checkpointer.aget(config)
         
-        # Doit retourner None (implémentation basique)
+        # Doit retourner None (implmentation basique)
         assert result is None
     
     def test_checkpointer_config_handling(self):
@@ -81,7 +81,7 @@ class TestApiCheckpointer:
         
         checkpoint = Mock(spec=Checkpoint)
         
-        # Les méthodes doivent accepter différents types de config
+        # Les mthodes doivent accepter diffrents types de config
         result1 = self.checkpointer.put(config1, checkpoint)
         result2 = self.checkpointer.put(config2, checkpoint)
         
@@ -93,7 +93,7 @@ class TestApiCheckpointer:
         config = {}
         checkpoint = Mock(spec=Checkpoint)
         
-        # Doit gérer une config vide sans erreur
+        # Doit grer une config vide sans erreur
         result = self.checkpointer.put(config, checkpoint)
         assert result is None
         
@@ -102,7 +102,7 @@ class TestApiCheckpointer:
     
     @pytest.mark.asyncio
     async def test_async_methods_with_none_checkpoint(self):
-        """Test méthodes async avec checkpoint None."""
+        """Test mthodes async avec checkpoint None."""
         config = {"session_id": "test"}
         
         # Test aput avec checkpoint None
@@ -114,7 +114,7 @@ class TestApiCheckpointer:
         assert result is None
     
     def test_checkpointer_inheritance(self):
-        """Test héritage de BaseCheckpointSaver."""
+        """Test hritage de BaseCheckpointSaver."""
         from langgraph.checkpoint.base import BaseCheckpointSaver
         
         assert isinstance(self.checkpointer, BaseCheckpointSaver)
@@ -127,7 +127,7 @@ class TestApiCheckpointer:
         config = {"session_id": "multi-test"}
         checkpoint = Mock(spec=Checkpoint)
         
-        # Exécuter plusieurs appels simultanés
+        # Excuter plusieurs appels simultans
         tasks = [
             self.checkpointer.aput(config, checkpoint),
             self.checkpointer.aget(config),
@@ -141,15 +141,15 @@ class TestApiCheckpointer:
         assert all(result is None for result in results)
     
     def test_checkpointer_with_mock_client_methods(self):
-        """Test checkpointer avec méthodes client mockées."""
-        # Vérifier que le client est stocké correctement
+        """Test checkpointer avec mthodes client mockes."""
+        # Vrifier que le client est stock correctement
         assert self.checkpointer.client == self.mock_client
         
-        # Le client peut avoir des méthodes mockées
+        # Le client peut avoir des mthodes mockes
         self.mock_client.post = Mock()
         self.mock_client.get = Mock()
         
-        # Les méthodes du checkpointer fonctionnent toujours
+        # Les mthodes du checkpointer fonctionnent toujours
         config = {"session_id": "mock-test"}
         checkpoint = Mock(spec=Checkpoint)
         
@@ -158,7 +158,7 @@ class TestApiCheckpointer:
     
     @pytest.mark.asyncio
     async def test_async_performance(self):
-        """Test performance méthodes asynchrones."""
+        """Test performance mthodes asynchrones."""
         import time
         
         config = {"session_id": "perf-test"}
@@ -166,17 +166,17 @@ class TestApiCheckpointer:
         
         start_time = time.time()
         
-        # Les méthodes doivent être très rapides (stubs)
+        # Les mthodes doivent tre trs rapides (stubs)
         await self.checkpointer.aput(config, checkpoint)
         await self.checkpointer.aget(config)
         
         duration = time.time() - start_time
         
-        # Doit être très rapide (< 10ms)
+        # Doit tre trs rapide (< 10ms)
         assert duration < 0.01
     
     def test_checkpointer_config_types(self):
-        """Test différents types de configurations."""
+        """Test diffrents types de configurations."""
         checkpoint = Mock(spec=Checkpoint)
         
         # Config dict standard
@@ -196,14 +196,14 @@ class TestApiCheckpointer:
     
     @pytest.mark.asyncio
     async def test_concurrent_access(self):
-        """Test accès concurrent aux méthodes."""
+        """Test accs concurrent aux mthodes."""
         config = {"session_id": "concurrent-test"}
         checkpoint = Mock(spec=Checkpoint)
         
-        # Créer plusieurs checkpointers avec le même client
+        # Crer plusieurs checkpointers avec le mme client
         checkpointers = [ApiCheckpointer(self.mock_client) for _ in range(3)]
         
-        # Exécuter des opérations concurrentes
+        # Excuter des oprations concurrentes
         tasks = []
         for cp in checkpointers:
             tasks.append(cp.aput(config, checkpoint))
@@ -211,27 +211,27 @@ class TestApiCheckpointer:
         
         results = await asyncio.gather(*tasks)
         
-        # Tous doivent réussir et retourner None
+        # Tous doivent russir et retourner None
         assert len(results) == 6
         assert all(result is None for result in results)
     
     def test_checkpointer_memory_usage(self):
-        """Test utilisation mémoire du checkpointer."""
+        """Test utilisation mmoire du checkpointer."""
         import sys
         
         # Mesurer la taille du checkpointer
         size = sys.getsizeof(self.checkpointer)
         
-        # Doit être raisonnable (moins de 1KB)
+        # Doit tre raisonnable (moins de 1KB)
         assert size < 1024
         
-        # Vérifier que le client n'est pas dupliqué
+        # Vrifier que le client n'est pas dupliqu
         assert self.checkpointer.client is self.mock_client
 
 
 @pytest.mark.unit
 class TestApiCheckpointerIntegration:
-    """Tests d'intégration pour ApiCheckpointer."""
+    """Tests d'intgration pour ApiCheckpointer."""
     
     @pytest.mark.asyncio
     async def test_with_real_httpx_client(self):
@@ -242,7 +242,7 @@ class TestApiCheckpointerIntegration:
             config = {"session_id": "integration-test"}
             checkpoint = Mock(spec=Checkpoint)
             
-            # Les méthodes doivent fonctionner avec un vrai client
+            # Les mthodes doivent fonctionner avec un vrai client
             result_put = await checkpointer.aput(config, checkpoint)
             result_get = await checkpointer.aget(config)
             
@@ -252,7 +252,7 @@ class TestApiCheckpointerIntegration:
     @pytest.mark.asyncio 
     async def test_client_lifecycle(self):
         """Test cycle de vie du client."""
-        # Créer client avec timeout
+        # Crer client avec timeout
         timeout = httpx.Timeout(10.0)
         client = httpx.AsyncClient(timeout=timeout)
         
@@ -265,23 +265,23 @@ class TestApiCheckpointerIntegration:
         # Fermer le client
         await client.aclose()
         
-        # Le checkpointer garde la référence mais le client est fermé
+        # Le checkpointer garde la rfrence mais le client est ferm
         assert checkpointer.client is client
     
     def test_checkpointer_serialization_compatibility(self):
-        """Test compatibilité sérialisation."""
+        """Test compatibilit srialisation."""
         import pickle
         
         client = Mock(spec=httpx.AsyncClient)
         checkpointer = ApiCheckpointer(client)
         
-        # Le checkpointer doit être sérialisable (sans le client HTTPX)
+        # Le checkpointer doit tre srialisable (sans le client HTTPX)
         checkpointer_data = {
             'class': 'ApiCheckpointer',
             'client_type': type(client).__name__
         }
         
-        # Sérialisation des métadonnées (pas du client HTTPX lui-même)
+        # Srialisation des mtadonnes (pas du client HTTPX lui-mme)
         serialized = pickle.dumps(checkpointer_data)
         deserialized = pickle.loads(serialized)
         
@@ -294,14 +294,14 @@ class TestApiCheckpointerEdgeCases:
     
     def test_checkpointer_with_none_client(self):
         """Test comportement avec client None."""
-        # Normalement ne devrait pas arriver, mais test défensif
+        # Normalement ne devrait pas arriver, mais test dfensif
         try:
             # TypeHint attend httpx.AsyncClient, mais Python permet None
             checkpointer = ApiCheckpointer(None)
-            # Si pas d'erreur, vérifier que client est None
+            # Si pas d'erreur, vrifier que client est None
             assert checkpointer.client is None
         except TypeError:
-            # Si TypeError est levée, c'est acceptable
+            # Si TypeError est leve, c'est acceptable
             pass
     
     @pytest.mark.asyncio
@@ -310,7 +310,7 @@ class TestApiCheckpointerEdgeCases:
         client = Mock(spec=httpx.AsyncClient)
         checkpointer = ApiCheckpointer(client)
         
-        # Configuration avec beaucoup de données
+        # Configuration avec beaucoup de donnes
         large_config = {
             f"key_{i}": f"value_{i}" * 100 
             for i in range(100)
@@ -318,37 +318,37 @@ class TestApiCheckpointerEdgeCases:
         
         checkpoint = Mock(spec=Checkpoint)
         
-        # Doit gérer sans problème (implémentation stub)
+        # Doit grer sans problme (implmentation stub)
         result = await checkpointer.aput(large_config, checkpoint)
         assert result is None
     
     def test_checkpointer_str_representation(self):
-        """Test représentation string du checkpointer."""
+        """Test reprsentation string du checkpointer."""
         client = Mock(spec=httpx.AsyncClient)
         checkpointer = ApiCheckpointer(client)
         
-        # Doit avoir une représentation valide
+        # Doit avoir une reprsentation valide
         str_repr = str(checkpointer)
         assert 'ApiCheckpointer' in str_repr or 'object' in str_repr
     
     @pytest.mark.asyncio
     async def test_exception_handling(self):
-        """Test gestion d'exceptions dans les méthodes."""
+        """Test gestion d'exceptions dans les mthodes."""
         client = Mock(spec=httpx.AsyncClient)
         checkpointer = ApiCheckpointer(client)
         
-        # Même avec des données étranges, ne doit pas lever d'exception
-        weird_config = {"session_id": object()}  # Object non sérialisable
+        # Mme avec des donnes tranges, ne doit pas lever d'exception
+        weird_config = {"session_id": object()}  # Object non srialisable
         
         try:
             result = await checkpointer.aput(weird_config, Mock(spec=Checkpoint))
             assert result is None
         except Exception:
-            # Si exception, c'est acceptable car implémentation basique
+            # Si exception, c'est acceptable car implmentation basique
             pass 
 
     def test_sync_methods_coverage(self):
-        """Test pour couvrir spécifiquement les méthodes synchrones."""
+        """Test pour couvrir spcifiquement les mthodes synchrones."""
         client = Mock(spec=httpx.AsyncClient)
         checkpointer = ApiCheckpointer(client)
         
@@ -365,7 +365,7 @@ class TestApiCheckpointerEdgeCases:
     
     @pytest.mark.asyncio
     async def test_async_methods_coverage(self):
-        """Test pour couvrir spécifiquement les méthodes asynchrones."""
+        """Test pour couvrir spcifiquement les mthodes asynchrones."""
         client = Mock(spec=httpx.AsyncClient)
         checkpointer = ApiCheckpointer(client)
         
@@ -381,14 +381,14 @@ class TestApiCheckpointerEdgeCases:
         assert result_aget is None
     
     def test_init_coverage(self):
-        """Test pour couvrir l'initialisation complète."""
+        """Test pour couvrir l'initialisation complte."""
         client = Mock(spec=httpx.AsyncClient)
         
         # Test __init__ avec super() call - couvre lignes 10-11
         checkpointer = ApiCheckpointer(client)
         
-        # Vérifier que l'initialisation s'est bien passée
+        # Vrifier que l'initialisation s'est bien passe
         assert checkpointer.client is client
-        # Vérifier que super().__init__() a été appelé (BaseCheckpointSaver)
+        # Vrifier que super().__init__() a t appel (BaseCheckpointSaver)
         from langgraph.checkpoint.base import BaseCheckpointSaver
         assert isinstance(checkpointer, BaseCheckpointSaver) 

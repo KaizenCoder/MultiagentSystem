@@ -1,5 +1,5 @@
 
-# Configuration SQLite pour développement NextGeneration
+# Configuration SQLite pour dveloppement NextGeneration
 DATABASE_URL = "sqlite:///./nextgen_dev.db"
 
 # Pour tests
@@ -14,7 +14,7 @@ def get_test_engine():
     return engine
 
 def get_dev_engine():
-    """Moteur SQLite pour développement"""
+    """Moteur SQLite pour dveloppement"""
     engine = create_engine("sqlite:///./nextgen_dev.db", echo=False)
     Base.metadata.create_all(engine)
     return engine

@@ -435,7 +435,7 @@ class AdvancedBusinessMetrics:
                 kpi.trend = trend
             
             logger.info(
-                f"Updated KPI {kpi_name}: {previous_value} → {current_value} "
+                f"Updated KPI {kpi_name}: {previous_value}  {current_value} "
                 f"(target: {kpi.target_value}, trend: {kpi.trend})"
             )
             

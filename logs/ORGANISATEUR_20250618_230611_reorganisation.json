@@ -1,0 +1,195 @@
+{
+  "agent_id": "ORGANISATEUR_20250618_230611",
+  "timestamp": "2025-06-18T23:06:11.564692",
+  "structure_actuelle": {
+    "imported_tools_files": [
+      {
+        "nom": "CHANGELOG.md",
+        "chemin": "C:\\Dev\\nextgeneration\\tools\\imported_tools\\CHANGELOG.md",
+        "taille": 800,
+        "extension": ".md"
+      },
+      {
+        "nom": "INSTALLATION.md",
+        "chemin": "C:\\Dev\\nextgeneration\\tools\\imported_tools\\INSTALLATION.md",
+        "taille": 980,
+        "extension": ".md"
+      },
+      {
+        "nom": "README.md",
+        "chemin": "C:\\Dev\\nextgeneration\\tools\\imported_tools\\README.md",
+        "taille": 1466,
+        "extension": ".md"
+      },
+      {
+        "nom": "requirements.txt",
+        "chemin": "C:\\Dev\\nextgeneration\\tools\\imported_tools\\requirements.txt",
+        "taille": 135,
+        "extension": ".txt"
+      },
+      {
+        "nom": "run_tool.py",
+        "chemin": "C:\\Dev\\nextgeneration\\tools\\imported_tools\\run_tool.py",
+        "taille": 1902,
+        "extension": ".py"
+      },
+      {
+        "nom": "tools_config.json",
+        "chemin": "C:\\Dev\\nextgeneration\\tools\\imported_tools\\tools_config.json",
+        "taille": 583,
+        "extension": ".json"
+      },
+      {
+        "nom": "USAGE.md",
+        "chemin": "C:\\Dev\\nextgeneration\\tools\\imported_tools\\USAGE.md",
+        "taille": 1665,
+        "extension": ".md"
+      }
+    ],
+    "subdirectories": {
+      "file": {
+        "chemin": "C:\\Dev\\nextgeneration\\tools\\imported_tools\\file",
+        "fichiers": [
+          "install_phase3_dependencies.py",
+          "install_phase3_dependencies_DOC.md",
+          "README.md",
+          "__init__.py"
+        ]
+      },
+      "monitoring": {
+        "chemin": "C:\\Dev\\nextgeneration\\tools\\imported_tools\\monitoring",
+        "fichiers": [
+          "monitor_phase3.py",
+          "monitor_phase3_DOC.md",
+          "README.md",
+          "__init__.py"
+        ]
+      }
+    },
+    "tools_config": {
+      "nextgeneration_tools": {
+        "version": "1.0.0",
+        "adapted_from": "SuperWhisper_V6",
+        "tools": [
+          {
+            "name": "install_phase3_dependencies",
+            "category": "file",
+            "path": "tools\\imported_tools\\file\\install_phase3_dependencies.py",
+            "priority": "HIGH",
+            "utility_score": 93.0
+          },
+          {
+            "name": "monitor_phase3",
+            "category": "monitoring",
+            "path": "tools\\imported_tools\\monitoring\\monitor_phase3.py",
+            "priority": "HIGH",
+            "utility_score": 91.6
+          }
+        ]
+      }
+    }
+  },
+  "plan_reorganisation": {
+    "outils_a_creer": [
+      {
+        "nom": "install_phase3_dependencies",
+        "repertoire_cible": "C:\\Dev\\nextgeneration\\tools\\install_phase3_dependencies",
+        "categorie": "file",
+        "priorite": "HIGH"
+      },
+      {
+        "nom": "monitor_phase3",
+        "repertoire_cible": "C:\\Dev\\nextgeneration\\tools\\monitor_phase3",
+        "categorie": "monitoring",
+        "priorite": "HIGH"
+      }
+    ],
+    "fichiers_a_deplacer": [],
+    "repertoires_a_creer": [],
+    "fichiers_a_adapter": [],
+    "structure_cible": {
+      "install_phase3_dependencies": {
+        "repertoire_principal": "C:\\Dev\\nextgeneration\\tools\\install_phase3_dependencies",
+        "fichiers_requis": [
+          "install_phase3_dependencies.py",
+          "README.md",
+          "config.json",
+          "__init__.py"
+        ],
+        "sous_repertoires": [
+          "docs",
+          "tests",
+          "config"
+        ]
+      },
+      "monitor_phase3": {
+        "repertoire_principal": "C:\\Dev\\nextgeneration\\tools\\monitor_phase3",
+        "fichiers_requis": [
+          "monitor_phase3.py",
+          "README.md",
+          "config.json",
+          "__init__.py"
+        ],
+        "sous_repertoires": [
+          "docs",
+          "tests",
+          "config"
+        ]
+      }
+    }
+  },
+  "resultats_creation": {
+    "install_phase3_dependencies": {
+      "repertoire_principal": "C:\\Dev\\nextgeneration\\tools\\install_phase3_dependencies",
+      "sous_repertoires_crees": [
+        "docs",
+        "tests",
+        "config",
+        "templates"
+      ],
+      "fichiers_base_crees": [
+        "__init__.py",
+        "README.md",
+        "config.json",
+        "USAGE.md"
+      ],
+      "statut": "CREE"
+    },
+    "monitor_phase3": {
+      "repertoire_principal": "C:\\Dev\\nextgeneration\\tools\\monitor_phase3",
+      "sous_repertoires_crees": [
+        "docs",
+        "tests",
+        "config",
+        "templates"
+      ],
+      "fichiers_base_crees": [
+        "__init__.py",
+        "README.md",
+        "config.json",
+        "USAGE.md"
+      ],
+      "statut": "CREE"
+    }
+  },
+  "resultats_migration": {
+    "install_phase3_dependencies": {
+      "fichiers_migres": [
+        "C:\\Dev\\nextgeneration\\tools\\install_phase3_dependencies\\install_phase3_dependencies.py",
+        "C:\\Dev\\nextgeneration\\tools\\install_phase3_dependencies\\docs\\DOC.md"
+      ],
+      "fichiers_adaptes": [],
+      "erreurs": []
+    },
+    "monitor_phase3": {
+      "fichiers_migres": [
+        "C:\\Dev\\nextgeneration\\tools\\monitor_phase3\\monitor_phase3.py",
+        "C:\\Dev\\nextgeneration\\tools\\monitor_phase3\\docs\\DOC.md"
+      ],
+      "fichiers_adaptes": [],
+      "erreurs": []
+    }
+  },
+  "erreurs": [],
+  "statut_global": "REUSSI"
+}

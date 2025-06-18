@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 Agent Services Creator - NextGeneration Phase 3
-Spécialisé dans la création de services modulaires selon Architecture Hexagonale + CQRS
-Collabore avec Route Extractor pour créer la couche service
+Spcialis dans la cration de services modulaires selon Architecture Hexagonale + CQRS
+Collabore avec Route Extractor pour crer la couche service
 """
 
 import asyncio
@@ -16,7 +16,7 @@ from dataclasses import dataclass, asdict
 
 @dataclass
 class ServiceModule:
-    """Information sur un module service à créer"""
+    """Information sur un module service  crer"""
     name: str
     business_domain: str
     methods: List[str]
@@ -28,7 +28,7 @@ class ServiceModule:
 
 @dataclass
 class ServicesPlan:
-    """Plan global de création des services"""
+    """Plan global de cration des services"""
     target_file: str
     service_modules: List[ServiceModule]
     shared_dependencies: List[str]
@@ -37,12 +37,12 @@ class ServicesPlan:
 
 class AgentServicesCreator:
     """
-    Agent spécialisé dans la création de services modulaires
-    Mission: Créer couche service selon patterns Hexagonal + CQRS
+    Agent spcialis dans la cration de services modulaires
+    Mission: Crer couche service selon patterns Hexagonal + CQRS
     """
     
     def __init__(self):
-        # Mode fallback si pas de clé API
+        # Mode fallback si pas de cl API
         import os
         if os.getenv("OPENAI_API_KEY"):
             self.client = openai.OpenAI()
@@ -50,7 +50,7 @@ class AgentServicesCreator:
         else:
             self.client = None
             self.fallback_mode = True
-            print("🔄 Agent Services Creator: Mode Fallback activé")
+            print(" Agent Services Creator: Mode Fallback activ")
         
         self.results_dir = Path("refactoring_workspace/results/phase3_services")
         self.results_dir.mkdir(parents=True, exist_ok=True)
@@ -58,13 +58,13 @@ class AgentServicesCreator:
         
     async def analyze_service_needs(self, file_path: str, routes_data: Dict) -> ServicesPlan:
         """Analyser les besoins en services depuis les routes extraites"""
-        print(f"🏗️ Analyse besoins services pour {file_path}...")
+        print(f"[CONSTRUCTION] Analyse besoins services pour {file_path}...")
         
         try:
             # Lire fichier source pour contexte
             file_content = Path(file_path).read_text(encoding='utf-8')
             
-            # Analyser avec GPT-4 pour génération services
+            # Analyser avec GPT-4 pour gnration services
             services_plan = await self._create_services_with_gpt4(file_path, file_content, routes_data)
             
             # Sauvegarder plan services
@@ -72,19 +72,19 @@ class AgentServicesCreator:
             with open(plan_file, 'w', encoding='utf-8') as f:
                 json.dump(asdict(services_plan), f, indent=2, ensure_ascii=False)
             
-            print(f"✅ Plan services sauvegardé: {plan_file}")
+            print(f"[CHECK] Plan services sauvegard: {plan_file}")
             return services_plan
             
         except Exception as e:
-            print(f"❌ Erreur analyse services {file_path}: {e}")
+            print(f"[CROSS] Erreur analyse services {file_path}: {e}")
             return self._create_fallback_services_plan(file_path)
     
     async def _create_services_with_gpt4(self, file_path: str, content: str, routes_data: Dict) -> ServicesPlan:
-        """Créer plan services avec GPT-4 selon Architecture Hexagonale + CQRS"""
+        """Crer plan services avec GPT-4 selon Architecture Hexagonale + CQRS"""
         
         prompt = f"""
 Tu es un architecte expert en patterns Hexagonal Architecture + CQRS pour FastAPI.
-Ta mission: créer un plan de services modulaires pour refactoriser ce fichier god mode.
+Ta mission: crer un plan de services modulaires pour refactoriser ce fichier god mode.
 
 CONTEXTE:
 - Fichier: {file_path} ({len(content.splitlines())} lignes)
@@ -96,23 +96,23 @@ EXTRAIT CODE:
 {content[:6000]}...
 ```
 
-ROUTES IDENTIFIÉES:
+ROUTES IDENTIFIES:
 {json.dumps(routes_data, indent=2)[:2000]}...
 
 ANALYSE REQUISE:
-1. Identifier domaines métier dans le code
-2. Pour chaque domaine, créer un service module:
+1. Identifier domaines mtier dans le code
+2. Pour chaque domaine, crer un service module:
    - Nom service (ex: AuthService, UserService)
-   - Méthodes principales
-   - Dépendances (DB, cache, external APIs)
+   - Mthodes principales
+   - Dpendances (DB, cache, external APIs)
    - Besoins repository pattern
    - Commandes CQRS (create, update, delete)
-   - Requêtes CQRS (get, list, search)
+   - Requtes CQRS (get, list, search)
 
-3. Dépendances partagées (auth, logging, cache)
+3. Dpendances partages (auth, logging, cache)
 4. Contrats interfaces pour DI
 
-RÉPONSE FORMAT JSON:
+RPONSE FORMAT JSON:
 {{
   "target_file": "{file_path}",
   "service_modules": [
@@ -134,7 +134,7 @@ RÉPONSE FORMAT JSON:
 """
         
         if self.fallback_mode or self.client is None:
-            print("🔄 Mode fallback: génération services sans API")
+            print(" Mode fallback: gnration services sans API")
             return self._create_fallback_services_plan(file_path)
         
         try:
@@ -143,14 +143,14 @@ RÉPONSE FORMAT JSON:
                 model="gpt-4-turbo-preview",
                 max_tokens=4000,
                 messages=[
-                    {"role": "system", "content": "Tu es un expert en architecture logicielle spécialisé en patterns Hexagonal + CQRS."},
+                    {"role": "system", "content": "Tu es un expert en architecture logicielle spcialis en patterns Hexagonal + CQRS."},
                     {"role": "user", "content": prompt}
                 ]
             )
             
             response_text = response.choices[0].message.content
             
-            # Extraire JSON depuis la réponse
+            # Extraire JSON depuis la rponse
             json_match = re.search(r'\{.*\}', response_text, re.DOTALL)
             if json_match:
                 analysis_data = json.loads(json_match.group())
@@ -167,12 +167,12 @@ RÉPONSE FORMAT JSON:
                 )
             
         except Exception as e:
-            print(f"❌ Erreur appel GPT-4: {e}")
+            print(f"[CROSS] Erreur appel GPT-4: {e}")
         
         return self._create_fallback_services_plan(file_path)
     
     def _create_fallback_services_plan(self, file_path: str) -> ServicesPlan:
-        """Plan services fallback avec simulation complète"""
+        """Plan services fallback avec simulation complte"""
         return ServicesPlan(
             target_file=file_path,
             service_modules=[
@@ -213,10 +213,10 @@ RÉPONSE FORMAT JSON:
         )
     
     async def generate_service_files(self, services_plan: ServicesPlan) -> List[str]:
-        """Générer les fichiers services modulaires"""
+        """Gnrer les fichiers services modulaires"""
         generated_files = []
         
-        # Générer chaque service module
+        # Gnrer chaque service module
         for service_module in services_plan.service_modules:
             service_content = await self._generate_service_content(service_module)
             
@@ -226,9 +226,9 @@ RÉPONSE FORMAT JSON:
             service_file.write_text(service_content, encoding='utf-8')
             
             generated_files.append(str(service_file))
-            print(f"✅ Service généré: {service_file}")
+            print(f"[CHECK] Service gnr: {service_file}")
         
-        # Générer interfaces/contrats
+        # Gnrer interfaces/contrats
         for contract in services_plan.service_contracts:
             interface_content = await self._generate_interface_content(contract, services_plan)
             
@@ -237,20 +237,20 @@ RÉPONSE FORMAT JSON:
             interface_file.write_text(interface_content, encoding='utf-8')
             
             generated_files.append(str(interface_file))
-            print(f"✅ Interface générée: {interface_file}")
+            print(f"[CHECK] Interface gnre: {interface_file}")
         
         return generated_files
     
     async def _generate_service_content(self, service_module: ServiceModule) -> str:
-        """Générer le contenu d'un fichier service"""
+        """Gnrer le contenu d'un fichier service"""
         return f'''"""
 {service_module.name} - NextGeneration Architecture Hexagonale
-Domaine métier: {service_module.business_domain}
-Généré automatiquement par Agent Services Creator
+Domaine mtier: {service_module.business_domain}
+Gnr automatiquement par Agent Services Creator
 Date: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 
 Pattern: Hexagonal Architecture + CQRS
-Complexité: {service_module.complexity_level}
+Complexit: {service_module.complexity_level}
 """
 
 from abc import ABC, abstractmethod
@@ -269,16 +269,16 @@ from ..schemas.queries import {', '.join(service_module.cqrs_queries)}
 class I{service_module.name}(ABC):
     """Interface du service {service_module.name}"""
     
-{chr(10).join([f'    @abstractmethod{chr(10)}    async def {method}(self, *args, **kwargs) -> Any:{chr(10)}        """TODO: Définir signature pour {method}"""{chr(10)}        pass{chr(10)}' for method in service_module.methods])}
+{chr(10).join([f'    @abstractmethod{chr(10)}    async def {method}(self, *args, **kwargs) -> Any:{chr(10)}        """TODO: Dfinir signature pour {method}"""{chr(10)}        pass{chr(10)}' for method in service_module.methods])}
 
 class {service_module.name}(I{service_module.name}):
     """
     Service {service_module.business_domain}
-    Implémentation selon Architecture Hexagonale + CQRS
+    Implmentation selon Architecture Hexagonale + CQRS
     """
     
     def __init__(self, {', '.join([f"{dep.lower()}: {dep}" for dep in service_module.repository_needs])}):
-        """Injection des dépendances"""
+        """Injection des dpendances"""
 {chr(10).join([f"        self.{dep.lower()} = {dep.lower()}" for dep in service_module.repository_needs])}
     
 {chr(10).join([f'''    async def {method}(self, *args, **kwargs) -> Any:
@@ -286,31 +286,31 @@ class {service_module.name}(I{service_module.name}):
         {method} - {service_module.business_domain}
         TODO: Migrer logique depuis main.py
         """
-        # TODO: Implémenter logique métier pour {method}
+        # TODO: Implmenter logique mtier pour {method}
         pass
 ''' for method in service_module.methods])}
     
     # CQRS Command Handlers
 {chr(10).join([f'''    async def handle_{cmd.lower().replace("command", "")}(self, command: {cmd}) -> Any:
         """Handler pour {cmd}"""
-        # TODO: Implémenter handler command
+        # TODO: Implmenter handler command
         pass
 ''' for cmd in service_module.cqrs_commands])}
     
     # CQRS Query Handlers
 {chr(10).join([f'''    async def handle_{query.lower().replace("query", "")}(self, query: {query}) -> Any:
         """Handler pour {query}"""
-        # TODO: Implémenter handler query
+        # TODO: Implmenter handler query
         pass
 ''' for query in service_module.cqrs_queries])}
 '''
 
     async def _generate_interface_content(self, contract: str, services_plan: ServicesPlan) -> str:
-        """Générer le contenu d'une interface service"""
+        """Gnrer le contenu d'une interface service"""
         return f'''"""
 {contract} - Interface NextGeneration
 Architecture Hexagonale - Contrats de service
-Généré automatiquement par Agent Services Creator
+Gnr automatiquement par Agent Services Creator
 Date: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 """
 
@@ -330,7 +330,7 @@ class {contract}(ABC):
     
     @abstractmethod
     async def health_check(self) -> Dict[str, Any]:
-        """Vérification santé du service"""
+        """Vrification sant du service"""
         pass
     
     @abstractmethod
@@ -340,69 +340,69 @@ class {contract}(ABC):
 '''
 
     async def create_services_report(self, services_plans: List[ServicesPlan]) -> str:
-        """Créer rapport global de génération services"""
+        """Crer rapport global de gnration services"""
         total_services = sum(len(plan.service_modules) for plan in services_plans)
         total_contracts = sum(len(plan.service_contracts) for plan in services_plans)
         avg_reduction = sum(plan.estimated_lines_reduction for plan in services_plans) / len(services_plans)
         
-        report_content = f"""# 🏗️ Rapport Génération Services - Phase 3
+        report_content = f"""# [CONSTRUCTION] Rapport Gnration Services - Phase 3
 
-## ✅ Vue d'Ensemble
+## [CHECK] Vue d'Ensemble
 
 **Date:** {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}  
 **Agent:** Services Creator (GPT-4 Turbo)  
-**Fichiers analysés:** {len(services_plans)}  
-**Services créés:** {total_services}  
-**Interfaces générées:** {total_contracts}  
-**Réduction moyenne:** {avg_reduction:.1%}
+**Fichiers analyss:** {len(services_plans)}  
+**Services crs:** {total_services}  
+**Interfaces gnres:** {total_contracts}  
+**Rduction moyenne:** {avg_reduction:.1%}
 
-## 🏗️ Architecture Résultante
+## [CONSTRUCTION] Architecture Rsultante
 
-### 📦 Services Modulaires
+###  Services Modulaires
 """
         
         for plan in services_plans:
             report_content += f"""
-#### 📁 {plan.target_file}
+#### [FOLDER] {plan.target_file}
 """
             for service in plan.service_modules:
                 report_content += f"""- **{service.name}** ({service.complexity_level})
   - Domaine: {service.business_domain}
-  - Méthodes: {len(service.methods)}
+  - Mthodes: {len(service.methods)}
   - Commands CQRS: {len(service.cqrs_commands)}
   - Queries CQRS: {len(service.cqrs_queries)}
 """
         
         report_content += f"""
-### 🔗 Dépendances Partagées
+###  Dpendances Partages
 {chr(10).join([f"- {dep}" for plan in services_plans for dep in plan.shared_dependencies])}
 
-### 📋 Interfaces Générées  
+### [CLIPBOARD] Interfaces Gnres  
 {chr(10).join([f"- {contract}" for plan in services_plans for contract in plan.service_contracts])}
 
-## 🎯 Prochaines Étapes
+## [TARGET] Prochaines tapes
 
-1. ✅ Services modulaires créés
-2. 🔄 Créer repositories pattern
-3. 🔄 Implémenter CQRS handlers
-4. 🔄 Migrer logique métier main.py → services
+1. [CHECK] Services modulaires crs
+2.  Crer repositories pattern
+3.  Implmenter CQRS handlers
+4.  Migrer logique mtier main.py  services
 
 ---
-*Généré par Agent Services Creator NextGeneration*
+*Gnr par Agent Services Creator NextGeneration*
 """
         
         # Sauvegarder rapport
         report_file = self.results_dir / f"services_creation_report_{self.timestamp}.md"
         report_file.write_text(report_content, encoding='utf-8')
         
-        print(f"📋 Rapport sauvegardé: {report_file}")
+        print(f"[CLIPBOARD] Rapport sauvegard: {report_file}")
         return str(report_file)
 
 async def main():
-    """Point d'entrée pour tests standalone"""
+    """Point d'entre pour tests standalone"""
     agent = AgentServicesCreator()
     
-    # Test avec données simulées
+    # Test avec donnes simules
     routes_data = {
         "total_routes": 5,
         "routes": [
@@ -412,15 +412,15 @@ async def main():
     }
     
     plan = await agent.analyze_service_needs("orchestrator/app/main.py", routes_data)
-    print(f"🎯 Plan services créé: {len(plan.service_modules)} services")
+    print(f"[TARGET] Plan services cr: {len(plan.service_modules)} services")
     
-    # Générer services
+    # Gnrer services
     service_files = await agent.generate_service_files(plan)
-    print(f"🏗️ {len(service_files)} fichiers services générés")
+    print(f"[CONSTRUCTION] {len(service_files)} fichiers services gnrs")
     
     # Rapport
     report = await agent.create_services_report([plan])
-    print(f"📋 Rapport créé: {report}")
+    print(f"[CLIPBOARD] Rapport cr: {report}")
 
 if __name__ == "__main__":
     asyncio.run(main()) 

@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-Sprint 3.1 - Monitoring & Observabilité Avancée - Validation Script
+Sprint 3.1 - Monitoring & Observabilit Avance - Validation Script
 IA-2 Architecture & Production - Phase 3
 
-Valide l'infrastructure d'observabilité complète :
-- Métriques Prometheus en temps réel
+Valide l'infrastructure d'observabilit complte :
+- Mtriques Prometheus en temps rel
 - Business KPIs et dashboards
 - Alerting intelligent
 - Distributed tracing
 - Structured logging
-- Dashboard temps réel
+- Dashboard temps rel
 """
 
 import asyncio
@@ -35,7 +35,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 class Sprint31MonitoringValidator:
-    """Validateur Sprint 3.1 - Monitoring & Observabilité"""
+    """Validateur Sprint 3.1 - Monitoring & Observabilit"""
     
     def __init__(self):
         self.test_results = {}
@@ -49,17 +49,17 @@ class Sprint31MonitoringValidator:
         }
         self.start_time = datetime.now()
         
-        # Simulation de métriques business
+        # Simulation de mtriques business
         self.simulated_sessions = []
         self.simulated_requests = []
 
     async def test_prometheus_metrics(self) -> Dict[str, Any]:
         """Test de l'infrastructure Prometheus"""
-        logger.info("🔄 Test de l'infrastructure Prometheus...")
+        logger.info(" Test de l'infrastructure Prometheus...")
         
         results = {}
         
-        # Test des métriques core système
+        # Test des mtriques core systme
         core_metrics = [
             'orchestrator_requests_total',
             'orchestrator_request_duration_seconds',
@@ -73,12 +73,12 @@ class Sprint31MonitoringValidator:
         
         logger.info("   Testing Core System Metrics...")
         for metric in core_metrics:
-            # Simulation de collecte de métriques
+            # Simulation de collecte de mtriques
             metric_data = await self._simulate_metric_collection(metric)
             results[metric] = metric_data
-            logger.info(f"   ✅ {metric}: {metric_data['sample_count']} samples")
+            logger.info(f"   [CHECK] {metric}: {metric_data['sample_count']} samples")
         
-        # Test des métriques business
+        # Test des mtriques business
         business_metrics = [
             'orchestrator_revenue_generated_total',
             'orchestrator_user_satisfaction_score',
@@ -91,7 +91,7 @@ class Sprint31MonitoringValidator:
         for metric in business_metrics:
             metric_data = await self._simulate_metric_collection(metric, is_business=True)
             results[metric] = metric_data
-            logger.info(f"   ✅ {metric}: {metric_data['value']:.2f} {metric_data['unit']}")
+            logger.info(f"   [CHECK] {metric}: {metric_data['value']:.2f} {metric_data['unit']}")
         
         # Test d'exportation Prometheus
         if PROMETHEUS_AVAILABLE:
@@ -102,7 +102,7 @@ class Sprint31MonitoringValidator:
         return results
 
     async def _simulate_metric_collection(self, metric_name: str, is_business: bool = False) -> Dict[str, Any]:
-        """Simule la collecte d'une métrique"""
+        """Simule la collecte d'une mtrique"""
         if is_business:
             if 'revenue' in metric_name:
                 return {
@@ -141,7 +141,7 @@ class Sprint31MonitoringValidator:
             }
 
     async def _test_prometheus_export(self) -> Dict[str, Any]:
-        """Test d'exportation des métriques Prometheus"""
+        """Test d'exportation des mtriques Prometheus"""
         try:
             # Simulation de l'exportation
             metrics_output = "# HELP orchestrator_requests_total Total requests\n"
@@ -162,7 +162,7 @@ class Sprint31MonitoringValidator:
 
     async def test_business_kpis(self) -> Dict[str, Any]:
         """Test des KPIs business et dashboards"""
-        logger.info("🔄 Test des KPIs business...")
+        logger.info(" Test des KPIs business...")
         
         kpis = {}
         
@@ -215,7 +215,7 @@ class Sprint31MonitoringValidator:
                 'deviation_percent': abs(kpi['current'] - kpi['target']) / kpi['target'] * 100
             }
             
-            status = "✅" if target_met else "⚠️"
+            status = "[CHECK]" if target_met else ""
             logger.info(f"   {status} {kpi['name']}: {kpi['current']:.2f} {kpi['unit']} (target: {kpi['target']})")
         
         # Score global des KPIs
@@ -234,12 +234,12 @@ class Sprint31MonitoringValidator:
         return kpis
 
     async def test_alerting_system(self) -> Dict[str, Any]:
-        """Test du système d'alerting intelligent"""
-        logger.info("🔄 Test du système d'alerting...")
+        """Test du systme d'alerting intelligent"""
+        logger.info(" Test du systme d'alerting...")
         
         alerts = {}
         
-        # Simulation des règles d'alerte
+        # Simulation des rgles d'alerte
         alert_rules = [
             {
                 'name': 'High Error Rate',
@@ -274,7 +274,7 @@ class Sprint31MonitoringValidator:
         # Simulation de quelques alertes actives
         active_alerts = 0
         for i, rule in enumerate(alert_rules):
-            # 20% de chance qu'une alerte soit déclenchée
+            # 20% de chance qu'une alerte soit dclenche
             if random.random() < 0.2:
                 rule['current_status'] = 'FIRING'
                 rule['fired_since'] = datetime.now() - timedelta(minutes=random.randint(5, 30))
@@ -282,10 +282,10 @@ class Sprint31MonitoringValidator:
             
             alerts[rule['name']] = rule
             
-            status = "🔥" if rule['current_status'] == 'FIRING' else "✅"
+            status = "" if rule['current_status'] == 'FIRING' else "[CHECK]"
             logger.info(f"   {status} {rule['name']}: {rule['current_status']} ({rule['severity']})")
         
-        # Métriques du système d'alerting
+        # Mtriques du systme d'alerting
         alerts['_system_metrics'] = {
             'total_rules': len(alert_rules),
             'active_alerts': active_alerts,
@@ -300,7 +300,7 @@ class Sprint31MonitoringValidator:
 
     async def test_distributed_tracing(self) -> Dict[str, Any]:
         """Test du distributed tracing"""
-        logger.info("🔄 Test du distributed tracing...")
+        logger.info(" Test du distributed tracing...")
         
         tracing = {}
         
@@ -337,7 +337,7 @@ class Sprint31MonitoringValidator:
             }
             sample_traces.append(trace)
         
-        # Métriques de tracing
+        # Mtriques de tracing
         avg_duration = sum(trace['total_duration_ms'] for trace in sample_traces) / len(sample_traces)
         avg_spans = sum(trace['spans_count'] for trace in sample_traces) / len(sample_traces)
         
@@ -345,22 +345,22 @@ class Sprint31MonitoringValidator:
             'traces_collected': len(sample_traces),
             'avg_trace_duration_ms': round(avg_duration, 2),
             'avg_spans_per_trace': round(avg_spans, 2),
-            'sampling_rate': 0.1,  # 10% des requêtes tracées
+            'sampling_rate': 0.1,  # 10% des requtes traces
             'jaeger_healthy': True,
             'trace_storage_days': 7,
             'sample_traces': sample_traces[:3]  # Garder 3 exemples
         }
         
-        logger.info(f"   ✅ Traces collectées: {len(sample_traces)}")
-        logger.info(f"   📊 Durée moyenne: {avg_duration:.1f}ms")
-        logger.info(f"   🔗 Spans moyens par trace: {avg_spans:.1f}")
+        logger.info(f"   [CHECK] Traces collectes: {len(sample_traces)}")
+        logger.info(f"   [CHART] Dure moyenne: {avg_duration:.1f}ms")
+        logger.info(f"    Spans moyens par trace: {avg_spans:.1f}")
         
         self.metrics['distributed_tracing'] = tracing
         return tracing
 
     async def test_dashboards(self) -> Dict[str, Any]:
-        """Test des dashboards temps réel"""
-        logger.info("🔄 Test des dashboards temps réel...")
+        """Test des dashboards temps rel"""
+        logger.info(" Test des dashboards temps rel...")
         
         dashboards = {}
         
@@ -397,7 +397,7 @@ class Sprint31MonitoringValidator:
         ]
         
         for dashboard in dashboard_configs:
-            # Simulation de l'état du dashboard
+            # Simulation de l'tat du dashboard
             dashboard_status = {
                 **dashboard,
                 'status': 'healthy',
@@ -407,9 +407,9 @@ class Sprint31MonitoringValidator:
             }
             
             dashboards[dashboard['name']] = dashboard_status
-            logger.info(f"   ✅ {dashboard['name']}: {dashboard['panels']} panels, {dashboard['refresh_interval']} refresh")
+            logger.info(f"   [CHECK] {dashboard['name']}: {dashboard['panels']} panels, {dashboard['refresh_interval']} refresh")
         
-        # Métriques globales des dashboards
+        # Mtriques globales des dashboards
         dashboards['_summary'] = {
             'total_dashboards': len(dashboard_configs),
             'total_panels': sum(d['panels'] for d in dashboard_configs),
@@ -422,8 +422,8 @@ class Sprint31MonitoringValidator:
         return dashboards
 
     async def measure_observability_performance(self) -> Dict[str, Any]:
-        """Mesure de la performance globale d'observabilité"""
-        logger.info("🔄 Mesure de la performance d'observabilité...")
+        """Mesure de la performance globale d'observabilit"""
+        logger.info(" Mesure de la performance d'observabilit...")
         
         performance = {
             'metrics_collection': {
@@ -456,8 +456,8 @@ class Sprint31MonitoringValidator:
         return performance
 
     async def generate_sprint31_report(self) -> Dict[str, Any]:
-        """Génération du rapport Sprint 3.1"""
-        logger.info("📊 Génération du rapport Sprint 3.1...")
+        """Gnration du rapport Sprint 3.1"""
+        logger.info("[CHART] Gnration du rapport Sprint 3.1...")
         
         end_time = datetime.now()
         duration = end_time - self.start_time
@@ -476,7 +476,7 @@ class Sprint31MonitoringValidator:
         report = {
             'sprint_info': {
                 'sprint': '3.1',
-                'phase': 'Monitoring & Observabilité Avancée',
+                'phase': 'Monitoring & Observabilit Avance',
                 'date': datetime.now().isoformat(),
                 'duration_minutes': round(duration.total_seconds() / 60, 2),
                 'ia_specialist': 'IA-2 Architecture & Production'
@@ -499,47 +499,47 @@ class Sprint31MonitoringValidator:
             },
             'recommendations': self._generate_recommendations(),
             'next_steps': [
-                'Déploiement des dashboards en production',
+                'Dploiement des dashboards en production',
                 'Configuration des alertes PagerDuty',
-                'Optimisation des requêtes Prometheus',
-                'Formation équipe sur observabilité'
+                'Optimisation des requtes Prometheus',
+                'Formation quipe sur observabilit'
             ]
         }
         
         return report
 
     def _generate_recommendations(self) -> List[str]:
-        """Génère des recommandations basées sur les résultats"""
+        """Gnre des recommandations bases sur les rsultats"""
         recommendations = []
         
         kpi_score = self.metrics['business_kpis']['_summary']['global_score_percent']
         
         if kpi_score >= 90:
-            recommendations.append("✅ Excellente performance des KPIs business")
+            recommendations.append("[CHECK] Excellente performance des KPIs business")
         elif kpi_score >= 70:
-            recommendations.append("⚠️ KPIs business satisfaisants, optimisations possibles")
+            recommendations.append(" KPIs business satisfaisants, optimisations possibles")
         else:
-            recommendations.append("🔧 KPIs business nécessitent attention urgente")
+            recommendations.append("[TOOL] KPIs business ncessitent attention urgente")
         
         recommendations.extend([
-            "Monitoring Prometheus opérationnel avec métriques complètes",
-            "Système d'alerting intelligent configuré",
+            "Monitoring Prometheus oprationnel avec mtriques compltes",
+            "Systme d'alerting intelligent configur",
             "Distributed tracing fonctionnel pour debugging",
-            "Dashboards temps réel disponibles pour toutes les équipes"
+            "Dashboards temps rel disponibles pour toutes les quipes"
         ])
         
         return recommendations
 
 async def main():
-    """Fonction principale d'exécution des tests Sprint 3.1"""
-    print("🚀 SPRINT 3.1 - VALIDATION MONITORING & OBSERVABILITÉ")
+    """Fonction principale d'excution des tests Sprint 3.1"""
+    print("[ROCKET] SPRINT 3.1 - VALIDATION MONITORING & OBSERVABILIT")
     print("=" * 75)
     
     validator = Sprint31MonitoringValidator()
     
     try:
-        # Exécution séquentielle des tests
-        logger.info("Démarrage des tests Sprint 3.1...")
+        # Excution squentielle des tests
+        logger.info("Dmarrage des tests Sprint 3.1...")
         
         # 1. Test Prometheus
         await validator.test_prometheus_metrics()
@@ -556,10 +556,10 @@ async def main():
         # 5. Test Dashboards
         await validator.test_dashboards()
         
-        # 6. Performance Observabilité
+        # 6. Performance Observabilit
         await validator.measure_observability_performance()
         
-        # 7. Génération rapport
+        # 7. Gnration rapport
         report = await validator.generate_sprint31_report()
         
         # Sauvegarde du rapport
@@ -567,32 +567,32 @@ async def main():
         with open(report_file, 'w', encoding='utf-8') as f:
             json.dump(report, f, indent=2, ensure_ascii=False, default=str)
         
-        # Affichage des résultats
+        # Affichage des rsultats
         print("\n" + "=" * 75)
-        print("📊 RÉSULTATS SPRINT 3.1")
+        print("[CHART] RSULTATS SPRINT 3.1")
         print("=" * 75)
         
         obs_summary = report['observability_summary']
-        print(f"\n🎯 Score Global Observabilité: {obs_summary['global_score_percent']}%")
+        print(f"\n[TARGET] Score Global Observabilit: {obs_summary['global_score_percent']}%")
         
-        print("\n📈 Composants Validés:")
-        print(f"   {'✅' if obs_summary['prometheus_healthy'] else '❌'} Prometheus Metrics")
-        print(f"   {'✅' if obs_summary['business_kpis_score'] >= 80 else '⚠️'} Business KPIs ({obs_summary['business_kpis_score']:.1f}%)")
-        print(f"   {'✅' if obs_summary['alerting_operational'] else '❌'} Alerting System")
-        print(f"   {'✅' if obs_summary['tracing_active'] else '❌'} Distributed Tracing")
-        print(f"   {'✅' if obs_summary['dashboards_available'] else '❌'} Real-time Dashboards")
+        print("\n Composants Valids:")
+        print(f"   {'[CHECK]' if obs_summary['prometheus_healthy'] else '[CROSS]'} Prometheus Metrics")
+        print(f"   {'[CHECK]' if obs_summary['business_kpis_score'] >= 80 else ''} Business KPIs ({obs_summary['business_kpis_score']:.1f}%)")
+        print(f"   {'[CHECK]' if obs_summary['alerting_operational'] else '[CROSS]'} Alerting System")
+        print(f"   {'[CHECK]' if obs_summary['tracing_active'] else '[CROSS]'} Distributed Tracing")
+        print(f"   {'[CHECK]' if obs_summary['dashboards_available'] else '[CROSS]'} Real-time Dashboards")
         
-        print(f"\n📊 KPIs Business:")
+        print(f"\n[CHART] KPIs Business:")
         for kpi_name, kpi_data in report['detailed_results']['business_kpis'].items():
             if not kpi_name.startswith('_'):
-                status = "✅" if kpi_data['target_met'] else "⚠️"
+                status = "[CHECK]" if kpi_data['target_met'] else ""
                 print(f"   {status} {kpi_name}: {kpi_data['current']:.2f} {kpi_data['unit']}")
         
-        print(f"\n📄 Rapport sauvegardé: {report_file}")
-        print("\n✅ SPRINT 3.1 TERMINÉ AVEC SUCCÈS")
+        print(f"\n[DOCUMENT] Rapport sauvegard: {report_file}")
+        print("\n[CHECK] SPRINT 3.1 TERMIN AVEC SUCCS")
         
     except Exception as e:
-        logger.error(f"Erreur pendant l'exécution: {e}")
+        logger.error(f"Erreur pendant l'excution: {e}")
         return False
     
     return True

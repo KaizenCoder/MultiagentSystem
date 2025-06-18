@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-🎮 Agents Optimisations Complémentaires RTX3090 - NextGeneration
-Validation des optimisations optionnelles après succès des actions prioritaires
+ Agents Optimisations Complmentaires RTX3090 - NextGeneration
+Validation des optimisations optionnelles aprs succs des actions prioritaires
 """
 
 import asyncio
@@ -20,7 +20,7 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
 
 class BaseOptimizationAgent:
-    """Agent de base pour optimisations complémentaires RTX3090"""
+    """Agent de base pour optimisations complmentaires RTX3090"""
     
     def __init__(self, name: str, mission: str):
         self.name = name
@@ -33,23 +33,23 @@ class BaseOptimizationAgent:
         self.recommendations = []
     
     async def execute(self) -> Dict[str, Any]:
-        """Exécute la mission d'optimisation"""
+        """Excute la mission d'optimisation"""
         self.start_time = time.time()
         self.status = "running"
         
         try:
-            print(f"🔧 Agent {self.name}: Démarrage optimisation")
-            print(f"📋 Mission: {self.mission}")
+            print(f"[TOOL] Agent {self.name}: Dmarrage optimisation")
+            print(f"[CLIPBOARD] Mission: {self.mission}")
             
             await self._execute_optimization()
             
             self.status = "completed"
-            print(f"✅ Agent {self.name}: Optimisation terminée")
+            print(f"[CHECK] Agent {self.name}: Optimisation termine")
             
         except Exception as e:
             self.status = "failed"
             self.errors.append(str(e))
-            print(f"❌ Agent {self.name}: Échec - {e}")
+            print(f"[CROSS] Agent {self.name}: chec - {e}")
         
         finally:
             self.end_time = time.time()
@@ -61,7 +61,7 @@ class BaseOptimizationAgent:
         return self.results
     
     async def _execute_optimization(self):
-        """À implémenter par chaque agent spécialisé"""
+        """ implmenter par chaque agent spcialis"""
         raise NotImplementedError
 
 class CleanupAgent(BaseOptimizationAgent):
@@ -70,16 +70,16 @@ class CleanupAgent(BaseOptimizationAgent):
     def __init__(self):
         super().__init__(
             name="Nettoyeur Disque",
-            mission="Supprimer ancien Mixtral 26GB et nettoyer modèles redondants"
+            mission="Supprimer ancien Mixtral 26GB et nettoyer modles redondants"
         )
     
     async def _execute_optimization(self):
-        """Nettoyage intelligent des modèles Ollama"""
+        """Nettoyage intelligent des modles Ollama"""
         
-        # Analyser modèles actuels
+        # Analyser modles actuels
         proc = subprocess.run(['ollama', 'list'], capture_output=True, text=True)
         if proc.returncode != 0:
-            raise Exception("Impossible de lister les modèles Ollama")
+            raise Exception("Impossible de lister les modles Ollama")
         
         lines = proc.stdout.strip().split('\n')[1:]  # Skip header
         models_info = []
@@ -110,18 +110,18 @@ class CleanupAgent(BaseOptimizationAgent):
         self.results["models_before"] = models_info
         self.results["total_size_before_gb"] = total_size_gb
         
-        # Identifier modèles à supprimer
+        # Identifier modles  supprimer
         models_to_remove = []
         space_to_liberate = 0
         
-        # 1. Ancien Mixtral 26GB (priorité absolue)
+        # 1. Ancien Mixtral 26GB (priorit absolue)
         for model in models_info:
             if "mixtral-8x7b:latest" in model["name"] and model["size_gb"] > 25:
                 models_to_remove.append(model["name"])
                 space_to_liberate += model["size_gb"]
-                self.recommendations.append(f"Supprimer {model['name']} ({model['size_str']}) - Remplacé par version optimisée")
+                self.recommendations.append(f"Supprimer {model['name']} ({model['size_str']}) - Remplac par version optimise")
         
-        # 2. Modèles redondants recommandés précédemment
+        # 2. Modles redondants recommands prcdemment
         redundant_models = [
             "deepseek-coder:1.3b",
             "deepseek-coder:6.7b", 
@@ -134,32 +134,32 @@ class CleanupAgent(BaseOptimizationAgent):
                 if redundant in model["name"]:
                     models_to_remove.append(model["name"])
                     space_to_liberate += model["size_gb"]
-                    self.recommendations.append(f"Supprimer {model['name']} ({model['size_str']}) - Modèle redondant")
+                    self.recommendations.append(f"Supprimer {model['name']} ({model['size_str']}) - Modle redondant")
         
         self.results["models_to_remove"] = models_to_remove
         self.results["space_to_liberate_gb"] = space_to_liberate
         
-        # Exécuter suppression
+        # Excuter suppression
         if models_to_remove:
             removed_models = []
             for model_name in models_to_remove:
                 try:
-                    print(f"🗑️ Suppression: {model_name}")
+                    print(f" Suppression: {model_name}")
                     proc = subprocess.run(['ollama', 'rm', model_name], capture_output=True, text=True)
                     if proc.returncode == 0:
                         removed_models.append(model_name)
-                        print(f"✅ {model_name} supprimé")
+                        print(f"[CHECK] {model_name} supprim")
                     else:
-                        print(f"⚠️ Échec suppression {model_name}: {proc.stderr}")
+                        print(f" chec suppression {model_name}: {proc.stderr}")
                 except Exception as e:
-                    print(f"❌ Erreur {model_name}: {e}")
+                    print(f"[CROSS] Erreur {model_name}: {e}")
             
             self.results["models_removed"] = removed_models
             self.results["cleanup_success"] = len(removed_models) > 0
         else:
             self.results["cleanup_success"] = False
             self.results["models_removed"] = []
-            print("ℹ️ Aucun modèle à supprimer trouvé")
+            print(" Aucun modle  supprimer trouv")
 
 class MonitoringAgent(BaseOptimizationAgent):
     """Agent pour surveillance continue RTX3090"""
@@ -167,28 +167,28 @@ class MonitoringAgent(BaseOptimizationAgent):
     def __init__(self):
         super().__init__(
             name="Surveillance RTX3090",
-            mission="Lancer monitoring continu RTX3090 et créer surveillance automatique"
+            mission="Lancer monitoring continu RTX3090 et crer surveillance automatique"
         )
     
     async def _execute_optimization(self):
         """Configuration monitoring continu"""
         
-        # Vérifier script monitoring
+        # Vrifier script monitoring
         monitor_script = Path("monitor_rtx3090.py")
         if not monitor_script.exists():
-            raise FileNotFoundError("Script monitor_rtx3090.py non trouvé")
+            raise FileNotFoundError("Script monitor_rtx3090.py non trouv")
         
         self.results["monitor_script_exists"] = True
         
-        # Créer script de surveillance automatique
+        # Crer script de surveillance automatique
         monitoring_service = '''@echo off
-echo 🎮 Surveillance Continue RTX3090 - NextGeneration
-echo Démarrage monitoring automatique...
+echo  Surveillance Continue RTX3090 - NextGeneration
+echo Dmarrage monitoring automatique...
 
 :loop
 echo [%DATE% %TIME%] Lancement monitoring RTX3090
 python monitor_rtx3090.py --duration 300 --interval 5
-echo [%DATE% %TIME%] Monitoring terminé, pause 30s
+echo [%DATE% %TIME%] Monitoring termin, pause 30s
 timeout /t 30 /nobreak >nul
 goto loop
 '''
@@ -199,7 +199,7 @@ goto loop
         
         self.results["service_script_created"] = service_script
         
-        # Créer monitoring dashboard simple
+        # Crer monitoring dashboard simple
         dashboard_script = '''#!/usr/bin/env python3
 """
 Dashboard Monitoring RTX3090 Simple
@@ -212,7 +212,7 @@ import subprocess
 from datetime import datetime
 
 def get_gpu_info():
-    """Récupère infos GPU RTX3090"""
+    """Rcupre infos GPU RTX3090"""
     try:
         result = subprocess.run(['nvidia-smi', '--query-gpu=memory.used,memory.total,temperature.gpu,utilization.gpu', '--format=csv,noheader,nounits'], 
                               capture_output=True, text=True)
@@ -229,7 +229,7 @@ def get_gpu_info():
 
 def main():
     """Dashboard simple RTX3090"""
-    print("🎮 DASHBOARD RTX3090 - NextGeneration")
+    print(" DASHBOARD RTX3090 - NextGeneration")
     print("=" * 50)
     
     while True:
@@ -240,15 +240,15 @@ def main():
             memory_percent = (gpu_info["memory_used_mb"] / gpu_info["memory_total_mb"]) * 100
             
             print(f"[{timestamp}] VRAM: {gpu_info['memory_used_mb']}/{gpu_info['memory_total_mb']}MB ({memory_percent:.1f}%)")
-            print(f"[{timestamp}] Temp: {gpu_info['temperature_c']}°C | Usage: {gpu_info['utilization_percent']}%")
+            print(f"[{timestamp}] Temp: {gpu_info['temperature_c']}C | Usage: {gpu_info['utilization_percent']}%")
             
             # Alertes
             if memory_percent > 90:
-                print("⚠️ ALERTE: VRAM > 90%")
+                print(" ALERTE: VRAM > 90%")
             if gpu_info["temperature_c"] > 80:
-                print("🔥 ALERTE: Température > 80°C")
+                print(" ALERTE: Temprature > 80C")
         else:
-            print(f"[{timestamp}] ❌ Impossible de lire GPU")
+            print(f"[{timestamp}] [CROSS] Impossible de lire GPU")
         
         time.sleep(5)
 
@@ -264,23 +264,23 @@ if __name__ == "__main__":
         
         # Test rapide du monitoring
         try:
-            print("🧪 Test monitoring...")
+            print(" Test monitoring...")
             result = subprocess.run(['nvidia-smi', '--query-gpu=memory.used,memory.total', '--format=csv,noheader,nounits'], 
                                   capture_output=True, text=True, timeout=10)
             self.results["monitor_test"] = result.returncode == 0
             if result.returncode == 0:
-                print("✅ Monitoring fonctionnel")
-                print(f"📊 VRAM actuelle: {result.stdout.strip()}")
+                print("[CHECK] Monitoring fonctionnel")
+                print(f"[CHART] VRAM actuelle: {result.stdout.strip()}")
             else:
-                print(f"⚠️ Test monitoring: {result.stderr}")
+                print(f" Test monitoring: {result.stderr}")
         except Exception as e:
             self.results["monitor_test"] = False
-            print(f"⚠️ Test monitoring échoué: {e}")
+            print(f" Test monitoring chou: {e}")
         
         self.recommendations.extend([
             f"Lancer surveillance: {service_script}",
-            f"Dashboard temps réel: python {dashboard_file}",
-            "Monitoring automatique configuré pour sessions 5 min"
+            f"Dashboard temps rel: python {dashboard_file}",
+            "Monitoring automatique configur pour sessions 5 min"
         ])
 
 class BenchmarkAgent(BaseOptimizationAgent):
@@ -289,14 +289,14 @@ class BenchmarkAgent(BaseOptimizationAgent):
     def __init__(self):
         super().__init__(
             name="Benchmarks Performance",
-            mission="Exécuter tests performance approfondis RTX3090 avec modèles optimisés"
+            mission="Excuter tests performance approfondis RTX3090 avec modles optimiss"
         )
     
     async def _execute_optimization(self):
         """Benchmarks complets RTX3090"""
         
         # Test simple de performance Ollama
-        print("🧪 Test performance Ollama rapide...")
+        print(" Test performance Ollama rapide...")
         try:
             import httpx
             
@@ -307,9 +307,9 @@ class BenchmarkAgent(BaseOptimizationAgent):
                     models = response.json()["models"]
                     self.results["ollama_available"] = True
                     self.results["models_count"] = len(models)
-                    print(f"✅ Ollama connecté ({len(models)} modèles)")
+                    print(f"[CHECK] Ollama connect ({len(models)} modles)")
                     
-                    # Test performance avec nouveau Mixtral optimisé
+                    # Test performance avec nouveau Mixtral optimis
                     test_model = "mixtral:8x7b-instruct-v0.1-q3_k_m"
                     test_prompt = "Test performance RTX3090"
                     
@@ -341,7 +341,7 @@ class BenchmarkAgent(BaseOptimizationAgent):
                             "success": True
                         }
                         
-                        print(f"📊 Performance: {processing_time:.1f}s, {tokens_per_sec:.1f} tokens/s")
+                        print(f"[CHART] Performance: {processing_time:.1f}s, {tokens_per_sec:.1f} tokens/s")
                         
                     else:
                         self.results["performance_test"] = {"success": False, "error": f"HTTP {test_response.status_code}"}
@@ -352,9 +352,9 @@ class BenchmarkAgent(BaseOptimizationAgent):
         except Exception as e:
             self.results["ollama_available"] = False
             self.results["error"] = str(e)
-            print(f"❌ Test performance échoué: {e}")
+            print(f"[CROSS] Test performance chou: {e}")
         
-        # Créer script benchmark complet
+        # Crer script benchmark complet
         benchmark_script = '''#!/usr/bin/env python3
 """
 Benchmark RTX3090 Complet - NextGeneration
@@ -370,8 +370,8 @@ from datetime import datetime
 os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
 async def benchmark_model(model_name, test_prompts):
-    """Benchmark un modèle"""
-    print(f"🧪 Test: {model_name}")
+    """Benchmark un modle"""
+    print(f" Test: {model_name}")
     
     results = []
     
@@ -414,7 +414,7 @@ async def benchmark_model(model_name, test_prompts):
 
 async def main():
     """Benchmark principal"""
-    print("🎮 BENCHMARK RTX3090 COMPLET")
+    print(" BENCHMARK RTX3090 COMPLET")
     print("=" * 40)
     
     models_to_test = [
@@ -425,7 +425,7 @@ async def main():
     
     test_prompts = [
         "Explique l'IA en 2 phrases",
-        "Écris une fonction Python",
+        "cris une fonction Python",
         "Analyse les avantages du cloud"
     ]
     
@@ -447,7 +447,7 @@ async def main():
                 "tests": results
             }
             
-            print(f"📊 {model}: {avg_tokens_per_sec:.1f} tokens/s moyenne")
+            print(f"[CHART] {model}: {avg_tokens_per_sec:.1f} tokens/s moyenne")
     
     # Sauvegarde
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -456,7 +456,7 @@ async def main():
     with open(filename, 'w', encoding='utf-8') as f:
         json.dump(benchmark_results, f, indent=2, ensure_ascii=False)
     
-    print(f"\\n📄 Résultats: {filename}")
+    print(f"\\n[DOCUMENT] Rsultats: {filename}")
 
 if __name__ == "__main__":
     asyncio.run(main())
@@ -470,12 +470,12 @@ if __name__ == "__main__":
         
         self.recommendations.extend([
             f"Benchmark complet: python {benchmark_file}",
-            "Performance RTX3090 validée avec modèles optimisés",
-            "Monitoring automatique de performance recommandé"
+            "Performance RTX3090 valide avec modles optimiss",
+            "Monitoring automatique de performance recommand"
         ])
 
 class OptimizationOrchestrator:
-    """Orchestrateur pour optimisations complémentaires"""
+    """Orchestrateur pour optimisations complmentaires"""
     
     def __init__(self):
         self.agents = [
@@ -485,17 +485,17 @@ class OptimizationOrchestrator:
         ]
     
     async def execute_optimizations(self) -> Dict[str, Any]:
-        """Exécution séquentielle des optimisations"""
+        """Excution squentielle des optimisations"""
         
-        print("🔧 ORCHESTRATEUR OPTIMISATIONS COMPLÉMENTAIRES RTX3090")
+        print("[TOOL] ORCHESTRATEUR OPTIMISATIONS COMPLMENTAIRES RTX3090")
         print("=" * 60)
-        print(f"🎯 {len(self.agents)} optimisations complémentaires")
-        print(f"🎮 Configuration GPU: RTX 3090 (Device {os.environ.get('CUDA_VISIBLE_DEVICES')})")
+        print(f"[TARGET] {len(self.agents)} optimisations complmentaires")
+        print(f" Configuration GPU: RTX 3090 (Device {os.environ.get('CUDA_VISIBLE_DEVICES')})")
         print()
         
         start_time = time.time()
         
-        # Exécution séquentielle
+        # Excution squentielle
         results = []
         for agent in self.agents:
             result = await agent.execute()
@@ -521,7 +521,7 @@ class OptimizationOrchestrator:
             "recommendations": []
         }
         
-        # Traitement résultats
+        # Traitement rsultats
         for agent, result in zip(self.agents, results):
             rapport["optimizations_results"][agent.name] = result
             
@@ -541,7 +541,7 @@ class OptimizationOrchestrator:
         return rapport
 
 async def main():
-    """Point d'entrée principal"""
+    """Point d'entre principal"""
     
     orchestrateur = OptimizationOrchestrator()
     rapport = await orchestrateur.execute_optimizations()
@@ -553,33 +553,33 @@ async def main():
     with open(rapport_file, 'w', encoding='utf-8') as f:
         json.dump(rapport, f, indent=2, ensure_ascii=False)
     
-    # Affichage résumé
-    print("\n🎯 RAPPORT FINAL - Optimisations Complémentaires RTX3090")
+    # Affichage rsum
+    print("\n[TARGET] RAPPORT FINAL - Optimisations Complmentaires RTX3090")
     print("=" * 60)
-    print(f"⏱️  Temps total: {rapport['execution_info']['total_execution_time']:.1f}s")
-    print(f"✅ Optimisations réussies: {rapport['summary']['completed']}")
-    print(f"❌ Optimisations échouées: {rapport['summary']['failed']}")
-    print(f"📄 Rapport détaillé: {rapport_file}")
+    print(f"  Temps total: {rapport['execution_info']['total_execution_time']:.1f}s")
+    print(f"[CHECK] Optimisations russies: {rapport['summary']['completed']}")
+    print(f"[CROSS] Optimisations choues: {rapport['summary']['failed']}")
+    print(f"[DOCUMENT] Rapport dtaill: {rapport_file}")
     print()
     
-    # Détail par optimisation
+    # Dtail par optimisation
     for agent_name, result in rapport["optimizations_results"].items():
         status = result.get("status", "unknown")
         exec_time = result.get("execution_time", 0)
         
         if status == "completed":
-            print(f"✅ {agent_name}: Succès ({exec_time:.1f}s)")
+            print(f"[CHECK] {agent_name}: Succs ({exec_time:.1f}s)")
         else:
             errors = result.get("errors", [])
-            print(f"❌ {agent_name}: Échec - {errors[0] if errors else 'Erreur inconnue'}")
+            print(f"[CROSS] {agent_name}: chec - {errors[0] if errors else 'Erreur inconnue'}")
     
     # Recommandations principales
     if rapport["recommendations"]:
-        print(f"\n🎯 RECOMMANDATIONS PRINCIPALES:")
+        print(f"\n[TARGET] RECOMMANDATIONS PRINCIPALES:")
         for i, rec in enumerate(rapport["recommendations"][:5], 1):
             print(f"{i}. {rec}")
     
-    print(f"\n🎮 Optimisations RTX3090 terminées - Rapport: {rapport_file}")
+    print(f"\n Optimisations RTX3090 termines - Rapport: {rapport_file}")
 
 if __name__ == "__main__":
     asyncio.run(main()) 

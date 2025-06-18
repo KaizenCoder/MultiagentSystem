@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-🤖 Agent 14 - Documentation Manager (Gemini 2.5)
-Coordination documentation + Guides opérationnels + Standards
+[ROBOT] Agent 14 - Documentation Manager (Gemini 2.5)
+Coordination documentation + Guides oprationnels + Standards
 """
 
 import os
@@ -17,8 +17,8 @@ class AgentDocumentationManager:
         self.start_time = datetime.now()
         
     def coordinate_documentation(self):
-        """Coordination documents créés par agents 12-13"""
-        print("📋 Coordination documentation...")
+        """Coordination documents crs par agents 12-13"""
+        print("[CLIPBOARD] Coordination documentation...")
         
         coordination = {
             "monitoring_docs": self.validate_monitoring_docs(),
@@ -59,16 +59,16 @@ class AgentDocumentationManager:
         }
     
     def create_operational_guides(self):
-        """Guides opérationnels NextGeneration"""
+        """Guides oprationnels NextGeneration"""
         ops_dir = self.docs_dir / "operations"
         ops_dir.mkdir(parents=True, exist_ok=True)
         
-        # Guide déploiement
-        deployment_guide = """# Guide Déploiement NextGeneration
+        # Guide dploiement
+        deployment_guide = """# Guide Dploiement NextGeneration
 
-## 🚀 Déploiement Production
+## [ROCKET] Dploiement Production
 
-### 1. Prérequis
+### 1. Prrequis
 - Docker 20.10+
 - Kubernetes 1.21+
 - Helm 3.0+
@@ -84,7 +84,7 @@ export REDIS_HOST=redis.internal
 kubectl create secret generic nextgen-secrets --from-env-file=.env.prod
 ```
 
-### 3. Déploiement
+### 3. Dploiement
 ```bash
 # Helm chart
 helm upgrade --install nextgeneration ./k8s/helm/orchestrator \\
@@ -96,7 +96,7 @@ kubectl get pods -n nextgeneration
 kubectl logs -f deployment/nextgeneration-orchestrator
 ```
 
-## 🏥 Health Checks
+##  Health Checks
 
 ### Endpoints
 - `/health/live` - Liveness probe
@@ -111,7 +111,7 @@ kubectl logs -f deployment/nextgeneration-orchestrator
 
         runbook = """# Runbook Incidents NextGeneration
 
-## 🚨 Procédures d'Urgence
+##  Procdures d'Urgence
 
 ### Application Down
 1. **Diagnostic**
@@ -122,12 +122,12 @@ kubectl logs -f deployment/nextgeneration-orchestrator
    ```
 
 2. **Actions**
-   - Vérifier health checks: `/health/live`
-   - Consulter métriques Grafana
-   - Redémarrer si nécessaire: `kubectl rollout restart deployment/nextgeneration`
+   - Vrifier health checks: `/health/live`
+   - Consulter mtriques Grafana
+   - Redmarrer si ncessaire: `kubectl rollout restart deployment/nextgeneration`
 
-### Performance Dégradée
-1. **Métriques clés**
+### Performance Dgrade
+1. **Mtriques cls**
    - Response time P95 > 500ms
    - Error rate > 5%
    - Memory usage > 80%
@@ -137,17 +137,17 @@ kubectl logs -f deployment/nextgeneration-orchestrator
    - Scaling: `kubectl scale deployment nextgeneration --replicas=5`
    - Investigation logs
 
-### Base de Données
-1. **Connexions saturées**
+### Base de Donnes
+1. **Connexions satures**
    ```sql
    SELECT count(*) FROM pg_stat_activity;
    SELECT * FROM pg_stat_activity WHERE state = 'active';
    ```
 
 2. **Actions**
-   - Redémarrer pgBouncer
-   - Analyser requêtes lentes
-   - Optimiser index si nécessaire
+   - Redmarrer pgBouncer
+   - Analyser requtes lentes
+   - Optimiser index si ncessaire
 """
 
         guides = [
@@ -171,14 +171,14 @@ kubectl logs -f deployment/nextgeneration-orchestrator
     def generate_report(self):
         """Rapport Agent 14"""
         import time
-        time.sleep(1.8)  # Simulation coordination documentation réaliste
+        time.sleep(1.8)  # Simulation coordination documentation raliste
         duration = (datetime.now() - self.start_time).total_seconds()
         coordination = self.coordinate_documentation()
         
         report = {
             "agent": "Agent 14 - Documentation Manager",
             "model": "Gemini 2.5",
-            "specialization": "Coordination + Guides opérationnels",
+            "specialization": "Coordination + Guides oprationnels",
             "start_time": self.start_time.isoformat(),
             "duration_seconds": round(duration, 2),
             "coordination_results": coordination,
@@ -200,16 +200,16 @@ kubectl logs -f deployment/nextgeneration-orchestrator
         return report
 
 def main():
-    """Exécution Agent 14"""
-    print("🚀 Agent 14 - Documentation Manager (Gemini 2.5)")
+    """Excution Agent 14"""
+    print("[ROCKET] Agent 14 - Documentation Manager (Gemini 2.5)")
     
     agent = AgentDocumentationManager()
     coordination = agent.coordinate_documentation()
     report = agent.generate_report()
     
-    print(f"✅ AGENT 14 TERMINÉ:")
-    print(f"📋 Coordination: {coordination}")
-    print(f"⏱️ Durée: {report['duration_seconds']}s")
+    print(f"[CHECK] AGENT 14 TERMIN:")
+    print(f"[CLIPBOARD] Coordination: {coordination}")
+    print(f" Dure: {report['duration_seconds']}s")
     
     return report
 

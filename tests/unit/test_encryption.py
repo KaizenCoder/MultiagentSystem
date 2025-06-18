@@ -1,7 +1,7 @@
 """
 Tests unitaires pour le module encryption.py
-Objectif : 85% couverture (49% → 85%)
-Sprint 2.2 - Tests & Qualité
+Objectif : 85% couverture (49%  85%)
+Sprint 2.2 - Tests & Qualit
 """
 
 import pytest
@@ -23,18 +23,18 @@ class TestEncryptionService:
     
     @pytest.fixture
     def encryption_service(self):
-        """Fixture pour service de chiffrement avec clé fixe."""
-        # Utiliser une clé fixe pour tests reproductibles
+        """Fixture pour service de chiffrement avec cl fixe."""
+        # Utiliser une cl fixe pour tests reproductibles
         key = Fernet.generate_key()
         return EncryptionService(key)
     
     @pytest.fixture
     def encryption_service_auto_key(self):
-        """Fixture pour service avec clé auto-générée."""
+        """Fixture pour service avec cl auto-gnre."""
         return EncryptionService()
     
     def test_initialization_with_key(self):
-        """Test initialisation avec clé fournie."""
+        """Test initialisation avec cl fournie."""
         key = Fernet.generate_key()
         service = EncryptionService(key)
         
@@ -42,25 +42,25 @@ class TestEncryptionService:
         assert isinstance(service.cipher, Fernet)
     
     def test_initialization_without_key(self, encryption_service_auto_key):
-        """Test initialisation avec clé auto-générée."""
+        """Test initialisation avec cl auto-gnre."""
         service = encryption_service_auto_key
         
         assert service.cipher is not None
         assert isinstance(service.cipher, Fernet)
     
     def test_generate_key(self):
-        """Test génération de clé."""
+        """Test gnration de cl."""
         key = EncryptionService.generate_key()
         
         assert isinstance(key, bytes)
-        assert len(key) == 44  # Taille standard d'une clé Fernet en base64
+        assert len(key) == 44  # Taille standard d'une cl Fernet en base64
         
-        # Vérifier que deux clés générées sont différentes
+        # Vrifier que deux cls gnres sont diffrentes
         key2 = EncryptionService.generate_key()
         assert key != key2
     
     def test_derive_key_from_password_with_salt(self):
-        """Test dérivation de clé avec salt fourni."""
+        """Test drivation de cl avec salt fourni."""
         password = "test_password"
         salt = secrets.token_bytes(32)
         
@@ -69,10 +69,10 @@ class TestEncryptionService:
         assert isinstance(key, bytes)
         assert isinstance(returned_salt, bytes)
         assert returned_salt == salt
-        assert len(key) == 44  # Clé Fernet en base64
+        assert len(key) == 44  # Cl Fernet en base64
     
     def test_derive_key_from_password_without_salt(self):
-        """Test dérivation de clé avec salt auto-généré."""
+        """Test drivation de cl avec salt auto-gnr."""
         password = "test_password"
         
         key, salt = EncryptionService.derive_key_from_password(password)
@@ -80,10 +80,10 @@ class TestEncryptionService:
         assert isinstance(key, bytes)
         assert isinstance(salt, bytes)
         assert len(salt) == 32  # Taille du salt
-        assert len(key) == 44   # Clé Fernet en base64
+        assert len(key) == 44   # Cl Fernet en base64
     
     def test_derive_key_reproducible(self):
-        """Test que la dérivation est reproductible avec même salt."""
+        """Test que la drivation est reproductible avec mme salt."""
         password = "test_password"
         salt = secrets.token_bytes(32)
         
@@ -93,9 +93,9 @@ class TestEncryptionService:
         assert key1 == key2
     
     def test_encrypt_decrypt_data(self, encryption_service):
-        """Test chiffrement et déchiffrement de données."""
+        """Test chiffrement et dchiffrement de donnes."""
         service = encryption_service
-        original_data = "Données sensibles à chiffrer"
+        original_data = "Donnes sensibles  chiffrer"
         
         # Chiffrement
         encrypted_data = service.encrypt_data(original_data)
@@ -104,13 +104,13 @@ class TestEncryptionService:
         assert encrypted_data != original_data
         assert len(encrypted_data) > len(original_data)  # Overhead du chiffrement
         
-        # Déchiffrement
+        # Dchiffrement
         decrypted_data = service.decrypt_data(encrypted_data)
         
         assert decrypted_data == original_data
     
     def test_encrypt_empty_string(self, encryption_service):
-        """Test chiffrement de chaîne vide."""
+        """Test chiffrement de chane vide."""
         service = encryption_service
         
         encrypted = service.encrypt_data("")
@@ -119,9 +119,9 @@ class TestEncryptionService:
         assert decrypted == ""
     
     def test_encrypt_unicode_data(self, encryption_service):
-        """Test chiffrement de données Unicode."""
+        """Test chiffrement de donnes Unicode."""
         service = encryption_service
-        unicode_data = "Données avec émojis 🔒🛡️ et caractères spéciaux àéîôù"
+        unicode_data = "Donnes avec mojis  et caractres spciaux "
         
         encrypted = service.encrypt_data(unicode_data)
         decrypted = service.decrypt_data(encrypted)
@@ -129,9 +129,9 @@ class TestEncryptionService:
         assert decrypted == unicode_data
     
     def test_encrypt_large_data(self, encryption_service):
-        """Test chiffrement de grandes quantités de données."""
+        """Test chiffrement de grandes quantits de donnes."""
         service = encryption_service
-        large_data = "A" * 10000  # 10KB de données
+        large_data = "A" * 10000  # 10KB de donnes
         
         encrypted = service.encrypt_data(large_data)
         decrypted = service.decrypt_data(encrypted)
@@ -139,20 +139,20 @@ class TestEncryptionService:
         assert decrypted == large_data
     
     def test_decrypt_invalid_data(self, encryption_service):
-        """Test déchiffrement de données invalides."""
+        """Test dchiffrement de donnes invalides."""
         service = encryption_service
         
-        with pytest.raises(Exception):  # Peut être InvalidToken ou autre
+        with pytest.raises(Exception):  # Peut tre InvalidToken ou autre
             service.decrypt_data("invalid_encrypted_data")
     
     def test_decrypt_corrupted_data(self, encryption_service):
-        """Test déchiffrement de données corrompues."""
+        """Test dchiffrement de donnes corrompues."""
         service = encryption_service
         original_data = "Test data"
         
         encrypted = service.encrypt_data(original_data)
         
-        # Corrompre les données
+        # Corrompre les donnes
         corrupted = encrypted[:-1] + "X"
         
         with pytest.raises(Exception):
@@ -161,20 +161,20 @@ class TestEncryptionService:
     def test_encrypt_sensitive_data_alias(self, encryption_service):
         """Test que encrypt_sensitive_data est un alias."""
         service = encryption_service
-        data = "Données sensibles"
+        data = "Donnes sensibles"
         
         encrypted1 = service.encrypt_data(data)
         encrypted2 = service.encrypt_sensitive_data(data)
         
-        # Les résultats peuvent être différents (random IV)
-        # mais les deux doivent se déchiffrer correctement
+        # Les rsultats peuvent tre diffrents (random IV)
+        # mais les deux doivent se dchiffrer correctement
         assert service.decrypt_data(encrypted1) == data
         assert service.decrypt_sensitive_data(encrypted2) == data
     
     def test_decrypt_sensitive_data_alias(self, encryption_service):
         """Test que decrypt_sensitive_data est un alias."""
         service = encryption_service
-        data = "Données sensibles"
+        data = "Donnes sensibles"
         
         encrypted = service.encrypt_data(data)
         
@@ -184,7 +184,7 @@ class TestEncryptionService:
         assert decrypted1 == decrypted2 == data
     
     def test_different_services_different_results(self):
-        """Test que différents services produisent des résultats différents."""
+        """Test que diffrents services produisent des rsultats diffrents."""
         service1 = EncryptionService()
         service2 = EncryptionService()
         
@@ -193,14 +193,14 @@ class TestEncryptionService:
         encrypted1 = service1.encrypt_data(data)
         encrypted2 = service2.encrypt_data(data)
         
-        # Clés différentes = résultats différents
+        # Cls diffrentes = rsultats diffrents
         assert encrypted1 != encrypted2
         
-        # Mais chaque service peut déchiffrer ses propres données
+        # Mais chaque service peut dchiffrer ses propres donnes
         assert service1.decrypt_data(encrypted1) == data
         assert service2.decrypt_data(encrypted2) == data
         
-        # Et ne peut pas déchiffrer les données de l'autre
+        # Et ne peut pas dchiffrer les donnes de l'autre
         with pytest.raises(Exception):
             service1.decrypt_data(encrypted2)
         with pytest.raises(Exception):
@@ -226,7 +226,7 @@ class TestSecureHasher:
         assert hash_b64 != password
     
     def test_hash_password_without_salt(self):
-        """Test hachage de mot de passe avec salt auto-généré."""
+        """Test hachage de mot de passe avec salt auto-gnr."""
         password = "test_password"
         
         hash_b64, salt_b64 = SecureHasher.hash_password(password)
@@ -239,7 +239,7 @@ class TestSecureHasher:
         assert salt_b64 != password
     
     def test_hash_password_reproducible(self):
-        """Test que le hachage est reproductible avec même salt."""
+        """Test que le hachage est reproductible avec mme salt."""
         password = "test_password"
         salt = secrets.token_bytes(32)
         
@@ -249,7 +249,7 @@ class TestSecureHasher:
         assert hash1 == hash2
     
     def test_hash_password_different_salts(self):
-        """Test que des salts différents produisent des hashs différents."""
+        """Test que des salts diffrents produisent des hashs diffrents."""
         password = "test_password"
         
         hash1, salt1 = SecureHasher.hash_password(password)
@@ -259,7 +259,7 @@ class TestSecureHasher:
         assert salt1 != salt2
     
     def test_verify_password_correct(self):
-        """Test vérification de mot de passe correct."""
+        """Test vrification de mot de passe correct."""
         password = "test_password"
         hash_b64, salt_b64 = SecureHasher.hash_password(password)
         
@@ -268,7 +268,7 @@ class TestSecureHasher:
         assert result is True
     
     def test_verify_password_incorrect(self):
-        """Test vérification de mot de passe incorrect."""
+        """Test vrification de mot de passe incorrect."""
         password = "test_password"
         wrong_password = "wrong_password"
         hash_b64, salt_b64 = SecureHasher.hash_password(password)
@@ -278,7 +278,7 @@ class TestSecureHasher:
         assert result is False
     
     def test_verify_password_invalid_hash(self):
-        """Test vérification avec hash invalide."""
+        """Test vrification avec hash invalide."""
         password = "test_password"
         invalid_hash = "invalid_hash"
         salt_b64 = base64.urlsafe_b64encode(secrets.token_bytes(32)).decode('ascii')
@@ -288,7 +288,7 @@ class TestSecureHasher:
         assert result is False
     
     def test_verify_password_invalid_salt(self):
-        """Test vérification avec salt invalide."""
+        """Test vrification avec salt invalide."""
         password = "test_password"
         hash_b64, _ = SecureHasher.hash_password(password)
         invalid_salt = "invalid_salt"
@@ -298,27 +298,27 @@ class TestSecureHasher:
         assert result is False
     
     def test_verify_password_empty_inputs(self):
-        """Test vérification avec entrées vides."""
+        """Test vrification avec entres vides."""
         assert SecureHasher.verify_password("", "", "") is False
         assert SecureHasher.verify_password("password", "", "") is False
         assert SecureHasher.verify_password("", "hash", "salt") is False
     
     def test_hash_data_sha256(self):
-        """Test hachage de données avec SHA-256."""
+        """Test hachage de donnes avec SHA-256."""
         data = "Test data to hash"
         
         hash_hex = SecureHasher.hash_data(data)
         
         assert isinstance(hash_hex, str)
-        assert len(hash_hex) == 64  # SHA-256 produit 64 caractères hex
+        assert len(hash_hex) == 64  # SHA-256 produit 64 caractres hex
         assert hash_hex != data
         
-        # Test reproductibilité
+        # Test reproductibilit
         hash_hex2 = SecureHasher.hash_data(data)
         assert hash_hex == hash_hex2
     
     def test_hash_data_different_inputs(self):
-        """Test hachage de données différentes."""
+        """Test hachage de donnes diffrentes."""
         data1 = "First data"
         data2 = "Second data"
         
@@ -328,17 +328,17 @@ class TestSecureHasher:
         assert hash1 != hash2
     
     def test_hash_data_empty_string(self):
-        """Test hachage de chaîne vide."""
+        """Test hachage de chane vide."""
         hash_hex = SecureHasher.hash_data("")
         
         assert isinstance(hash_hex, str)
         assert len(hash_hex) == 64
-        # Hash SHA-256 de chaîne vide est connu
+        # Hash SHA-256 de chane vide est connu
         assert hash_hex == "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     
     def test_hash_data_unicode(self):
-        """Test hachage de données Unicode."""
-        unicode_data = "Données avec émojis 🔒 et caractères spéciaux àéîôù"
+        """Test hachage de donnes Unicode."""
+        unicode_data = "Donnes avec mojis  et caractres spciaux "
         
         hash_hex = SecureHasher.hash_data(unicode_data)
         
@@ -346,31 +346,31 @@ class TestSecureHasher:
         assert len(hash_hex) == 64
     
     def test_generate_secure_token_default_length(self):
-        """Test génération de token sécurisé avec longueur par défaut."""
+        """Test gnration de token scuris avec longueur par dfaut."""
         token = SecureHasher.generate_secure_token()
         
         assert isinstance(token, str)
         # Base64 encoding d'un token de 32 bytes
-        assert len(token) >= 40  # Au moins 40 caractères pour 32 bytes
+        assert len(token) >= 40  # Au moins 40 caractres pour 32 bytes
     
     def test_generate_secure_token_custom_length(self):
-        """Test génération de token sécurisé avec longueur personnalisée."""
+        """Test gnration de token scuris avec longueur personnalise."""
         length = 64
         token = SecureHasher.generate_secure_token(length)
         
         assert isinstance(token, str)
         # Base64 encoding d'un token de 64 bytes
-        assert len(token) >= 80  # Au moins 80 caractères pour 64 bytes
+        assert len(token) >= 80  # Au moins 80 caractres pour 64 bytes
     
     def test_generate_secure_token_uniqueness(self):
-        """Test que les tokens générés sont uniques."""
+        """Test que les tokens gnrs sont uniques."""
         tokens = [SecureHasher.generate_secure_token() for _ in range(100)]
         
-        # Tous les tokens doivent être uniques
+        # Tous les tokens doivent tre uniques
         assert len(set(tokens)) == 100
     
     def test_generate_secure_token_small_length(self):
-        """Test génération de token avec petite longueur."""
+        """Test gnration de token avec petite longueur."""
         token = SecureHasher.generate_secure_token(1)
         
         assert isinstance(token, str)
@@ -379,15 +379,15 @@ class TestSecureHasher:
 
 @pytest.mark.unit
 class TestEncryptionServiceIntegration:
-    """Tests d'intégration pour EncryptionService."""
+    """Tests d'intgration pour EncryptionService."""
     
     def test_encrypt_decrypt_with_derived_key(self):
-        """Test chiffrement/déchiffrement avec clé dérivée."""
+        """Test chiffrement/dchiffrement avec cl drive."""
         password = "strong_password_123"
         key, salt = EncryptionService.derive_key_from_password(password)
         
         service = EncryptionService(key)
-        data = "Données sensibles à protéger"
+        data = "Donnes sensibles  protger"
         
         encrypted = service.encrypt_data(data)
         decrypted = service.decrypt_data(encrypted)
@@ -395,7 +395,7 @@ class TestEncryptionServiceIntegration:
         assert decrypted == data
     
     def test_multiple_encryption_cycles(self):
-        """Test plusieurs cycles de chiffrement/déchiffrement."""
+        """Test plusieurs cycles de chiffrement/dchiffrement."""
         service = EncryptionService()
         original_data = "Test data for multiple cycles"
         
@@ -408,24 +408,24 @@ class TestEncryptionServiceIntegration:
         assert current_data == original_data
     
     def test_password_and_encryption_integration(self):
-        """Test intégration hachage de mot de passe et chiffrement."""
+        """Test intgration hachage de mot de passe et chiffrement."""
         password = "user_password"
         sensitive_data = "User sensitive information"
         
         # Hacher le mot de passe
         pwd_hash, salt = SecureHasher.hash_password(password)
         
-        # Utiliser le mot de passe pour dériver une clé de chiffrement
+        # Utiliser le mot de passe pour driver une cl de chiffrement
         enc_key, enc_salt = EncryptionService.derive_key_from_password(password)
         
-        # Chiffrer les données sensibles
+        # Chiffrer les donnes sensibles
         service = EncryptionService(enc_key)
         encrypted_data = service.encrypt_data(sensitive_data)
         
-        # Vérifier le mot de passe
+        # Vrifier le mot de passe
         assert SecureHasher.verify_password(password, pwd_hash, salt)
         
-        # Déchiffrer les données
+        # Dchiffrer les donnes
         decrypted_data = service.decrypt_data(encrypted_data)
         assert decrypted_data == sensitive_data
 
@@ -435,14 +435,14 @@ class TestEncryptionServiceGlobalInstance:
     """Tests pour l'instance globale d'EncryptionService."""
     
     def test_get_encryption_service_default(self):
-        """Test récupération service par défaut."""
+        """Test rcupration service par dfaut."""
         service = get_encryption_service()
         
         assert isinstance(service, EncryptionService)
         assert service.cipher is not None
     
     def test_get_encryption_service_with_key(self):
-        """Test récupération service avec clé spécifiée."""
+        """Test rcupration service avec cl spcifie."""
         key = Fernet.generate_key()
         service = get_encryption_service(key)
         
@@ -461,7 +461,7 @@ class TestEncryptionServiceGlobalInstance:
             service1 = get_encryption_service()
             service2 = get_encryption_service()
             
-            # Même instance retournée
+            # Mme instance retourne
             assert service1 is service2
             
         finally:
@@ -475,17 +475,17 @@ class TestEncryptionEdgeCases:
     """Tests pour les cas limites."""
     
     def test_encryption_with_very_long_password(self):
-        """Test dérivation de clé avec mot de passe très long."""
+        """Test drivation de cl avec mot de passe trs long."""
         very_long_password = "a" * 10000  # 10KB mot de passe
         
         key, salt = EncryptionService.derive_key_from_password(very_long_password)
         
         assert isinstance(key, bytes)
         assert isinstance(salt, bytes)
-        assert len(key) == 44  # Toujours même longueur de clé
+        assert len(key) == 44  # Toujours mme longueur de cl
     
     def test_encryption_special_characters(self):
-        """Test chiffrement avec caractères spéciaux."""
+        """Test chiffrement avec caractres spciaux."""
         special_data = "!@#$%^&*()_+-=[]{}|;':\",./<>?\n\t\r"
         
         service = EncryptionService()
@@ -498,7 +498,7 @@ class TestEncryptionEdgeCases:
         """Test cas limites de padding base64."""
         service = EncryptionService()
         
-        # Données de différentes longueurs pour tester padding
+        # Donnes de diffrentes longueurs pour tester padding
         test_data = ["a", "ab", "abc", "abcd", "abcde"]
         
         for data in test_data:
@@ -507,7 +507,7 @@ class TestEncryptionEdgeCases:
             assert decrypted == data
     
     def test_concurrent_encryption_safety(self):
-        """Test sécurité en accès concurrent."""
+        """Test scurit en accs concurrent."""
         import threading
         
         service = EncryptionService()
@@ -530,15 +530,15 @@ class TestEncryptionEdgeCases:
         for thread in threads:
             thread.join()
         
-        # Vérifier que tous les résultats sont corrects
+        # Vrifier que tous les rsultats sont corrects
         for thread_id, (original, decrypted) in results.items():
             assert original == decrypted
     
     def test_memory_cleanup(self):
-        """Test nettoyage mémoire après utilisation."""
+        """Test nettoyage mmoire aprs utilisation."""
         import gc
         
-        # Créer et utiliser plusieurs services
+        # Crer et utiliser plusieurs services
         for _ in range(100):
             service = EncryptionService()
             data = "Test data for memory cleanup"
@@ -549,5 +549,5 @@ class TestEncryptionEdgeCases:
         # Forcer le garbage collection
         gc.collect()
         
-        # Ce test vérifie surtout qu'il n'y a pas de fuite mémoire évidente
-        # L'assertion principale est que le code s'exécute sans erreur 
+        # Ce test vrifie surtout qu'il n'y a pas de fuite mmoire vidente
+        # L'assertion principale est que le code s'excute sans erreur 

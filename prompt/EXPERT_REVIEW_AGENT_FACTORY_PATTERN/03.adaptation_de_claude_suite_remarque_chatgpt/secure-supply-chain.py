@@ -7,7 +7,7 @@ package agent_factory.templates
 import future.keywords.if
 import future.keywords.contains
 
-# Règle principale : un template est autorisé si toutes les checks passent
+# Rgle principale : un template est autoris si toutes les checks passent
 allow if {
     valid_structure
     no_dangerous_patterns
@@ -38,14 +38,14 @@ contains_dangerous_code if {
     contains(input.template_string, pattern)
 }
 
-# Limites de ressources respectées
+# Limites de ressources respectes
 resource_limits_ok if {
     input.template.resource_limits.memory_mb <= 4096
     input.template.resource_limits.cpu_percent <= 80
     input.template.resource_limits.timeout_seconds <= 300
 }
 
-# Capacités approuvées uniquement
+# Capacits approuves uniquement
 approved_capabilities if {
     allowed := {
         "analysis", "generation", "transformation",
@@ -58,13 +58,13 @@ approved_capabilities if {
     count(all_approved) == count(input.template.capabilities)
 }
 
-# Template signé
+# Template sign
 signed_template if {
     input.signature
     input.signature != ""
 }
 
-# Règles spécifiques par domaine
+# Rgles spcifiques par domaine
 domain_specific_rules["security"] := {
     "max_memory_mb": 8192,
     "required_capabilities": ["analysis", "monitoring"],
@@ -78,7 +78,7 @@ domain_specific_rules["public"] := {
 }
 """
 
-# === Intégration Cosign et SBOM ===
+# === Intgration Cosign et SBOM ===
 
 import subprocess
 import json
@@ -100,7 +100,7 @@ class SignatureInfo:
     payload_hash: str
 
 class CosignIntegration:
-    """Intégration Cosign pour signature de templates et images"""
+    """Intgration Cosign pour signature de templates et images"""
     
     def __init__(
         self,
@@ -119,11 +119,11 @@ class CosignIntegration:
     ) -> SignatureInfo:
         """Signe un template avec Cosign"""
         
-        # Sérialiser le template
+        # Srialiser le template
         template_json = json.dumps(template, sort_keys=True)
         template_hash = hashlib.sha256(template_json.encode()).hexdigest()
         
-        # Créer un fichier temporaire
+        # Crer un fichier temporaire
         temp_file = f"/tmp/template_{template_hash}.json"
         async with aiofiles.open(temp_file, 'w') as f:
             await f.write(template_json)
@@ -184,9 +184,9 @@ class CosignIntegration:
         signature: str,
         certificate: Optional[str] = None
     ) -> bool:
-        """Vérifie la signature d'un template"""
+        """Vrifie la signature d'un template"""
         
-        # Recréer le hash
+        # Recrer le hash
         template_json = json.dumps(template, sort_keys=True)
         template_hash = hashlib.sha256(template_json.encode()).hexdigest()
         
@@ -195,14 +195,14 @@ class CosignIntegration:
         sig_file = f"/tmp/verify_{template_hash}.sig"
         
         try:
-            # Écrire le template et la signature
+            # crire le template et la signature
             async with aiofiles.open(temp_file, 'w') as f:
                 await f.write(template_json)
             
             async with aiofiles.open(sig_file, 'wb') as f:
                 await f.write(base64.b64decode(signature))
             
-            # Vérifier avec Cosign
+            # Vrifier avec Cosign
             cmd = [
                 "cosign", "verify-blob",
                 "--key", self.public_key_path,
@@ -246,7 +246,7 @@ class SBOMComponent:
     vulnerabilities: List[str] = None
 
 class SBOMGenerator:
-    """Générateur de Software Bill of Materials"""
+    """Gnrateur de Software Bill of Materials"""
     
     def __init__(self):
         self.vulnerability_db = {}  # Cache des CVE
@@ -256,11 +256,11 @@ class SBOMGenerator:
         template: Dict[str, Any],
         scan_vulnerabilities: bool = True
     ) -> Dict[str, Any]:
-        """Génère un SBOM pour un template"""
+        """Gnre un SBOM pour un template"""
         
         components = []
         
-        # Analyser les dépendances Python
+        # Analyser les dpendances Python
         if "requirements" in template:
             for req in template["requirements"]:
                 component = await self._analyze_python_package(req)
@@ -272,14 +272,14 @@ class SBOMGenerator:
                 component = await self._analyze_tool(tool)
                 components.append(component)
         
-        # Scanner les vulnérabilités si demandé
+        # Scanner les vulnrabilits si demand
         if scan_vulnerabilities:
             for component in components:
                 component.vulnerabilities = await self._scan_vulnerabilities(
                     component.name, component.version
                 )
         
-        # Générer le SBOM au format SPDX
+        # Gnrer le SBOM au format SPDX
         sbom = {
             "spdxVersion": "SPDX-2.3",
             "creationInfo": {
@@ -303,7 +303,7 @@ class SBOMGenerator:
     
     async def _analyze_python_package(self, requirement: str) -> SBOMComponent:
         """Analyse un package Python"""
-        # Parser le requirement (simplifié)
+        # Parser le requirement (simplifi)
         if "==" in requirement:
             name, version = requirement.split("==")
         elif ">=" in requirement:
@@ -326,7 +326,7 @@ class SBOMGenerator:
         package: str,
         version: str
     ) -> List[str]:
-        """Scanne les vulnérabilités connues"""
+        """Scanne les vulnrabilits connues"""
         
         # En production : utiliser OSV API ou Grype
         cmd = [
@@ -355,10 +355,10 @@ class SBOMGenerator:
         
         return []
 
-# === Validation complète avec OPA ===
+# === Validation complte avec OPA ===
 
 class SecureTemplateValidator:
-    """Validateur sécurisé avec OPA, Cosign et SBOM"""
+    """Validateur scuris avec OPA, Cosign et SBOM"""
     
     def __init__(
         self,
@@ -376,7 +376,7 @@ class SecureTemplateValidator:
         signature: Optional[str] = None,
         user_context: Dict[str, Any] = None
     ) -> Dict[str, Any]:
-        """Validation complète d'un template"""
+        """Validation complte d'un template"""
         
         validation_results = {
             "valid": True,
@@ -395,7 +395,7 @@ class SecureTemplateValidator:
                 f"OPA policy violation: {opa_result.get('reason', 'Unknown')}"
             )
         
-        # 2. Vérification de signature
+        # 2. Vrification de signature
         if signature:
             sig_valid = await self.cosign.verify_template(template, signature)
             validation_results["checks"]["signature"] = sig_valid
@@ -411,11 +411,11 @@ class SecureTemplateValidator:
                 "Template should be signed for production use."
             )
         
-        # 3. Génération et analyse SBOM
+        # 3. Gnration et analyse SBOM
         sbom = await self.sbom_gen.generate_sbom(template, scan_vulnerabilities=True)
         validation_results["sbom"] = sbom
         
-        # Analyser les vulnérabilités
+        # Analyser les vulnrabilits
         critical_vulns = []
         for package in sbom["packages"]:
             for vuln in package.get("vulnerabilities", []):
@@ -446,9 +446,9 @@ class SecureTemplateValidator:
         template: Dict[str, Any],
         user_context: Dict[str, Any] = None
     ) -> Dict[str, Any]:
-        """Appel à OPA pour validation"""
+        """Appel  OPA pour validation"""
         
-        # Préparer l'input pour OPA
+        # Prparer l'input pour OPA
         opa_input = {
             "template": template,
             "template_string": json.dumps(template),
@@ -456,7 +456,7 @@ class SecureTemplateValidator:
             "timestamp": datetime.utcnow().isoformat()
         }
         
-        # Appel HTTP à OPA
+        # Appel HTTP  OPA
         import aiohttp
         async with aiohttp.ClientSession() as session:
             async with session.post(
@@ -473,7 +473,7 @@ class SecureTemplateValidator:
         issues = []
         limits = template.get("resource_limits", {})
         
-        # Vérifications par domaine
+        # Vrifications par domaine
         domain = template.get("domain", "general")
         domain_limits = {
             "public": {"memory_mb": 1024, "cpu_percent": 25},
@@ -507,7 +507,7 @@ from kubernetes.client.rest import ApiException
 import base64
 
 class AgentAdmissionController:
-    """Admission controller pour valider les déploiements d'agents"""
+    """Admission controller pour valider les dploiements d'agents"""
     
     def __init__(self, validator: SecureTemplateValidator):
         self.validator = validator
@@ -527,10 +527,10 @@ class AgentAdmissionController:
         object_kind = request["kind"]["kind"]
         object_name = request["name"]
         
-        # Vérifier les annotations
+        # Vrifier les annotations
         annotations = request["object"]["metadata"].get("annotations", {})
         
-        # Template associé
+        # Template associ
         template_name = annotations.get("agent-factory.io/template")
         template_signature = annotations.get("agent-factory.io/signature")
         
@@ -550,20 +550,20 @@ class AgentAdmissionController:
             reasons = "\n".join(validation_result["recommendations"])
             return self._deny_response(f"Template validation failed:\n{reasons}")
         
-        # Vérifier l'image du conteneur
+        # Vrifier l'image du conteneur
         containers = request["object"]["spec"].get("containers", [])
         for container in containers:
             image = container["image"]
             if not await self._verify_image_signature(image):
                 return self._deny_response(f"Image {image} is not signed")
         
-        # Appliquer les mutations si nécessaire
+        # Appliquer les mutations si ncessaire
         patches = self._generate_security_patches(template, request["object"])
         
         return self._allow_response(patches)
     
     async def _verify_image_signature(self, image: str) -> bool:
-        """Vérifie la signature d'une image avec Cosign"""
+        """Vrifie la signature d'une image avec Cosign"""
         
         cmd = [
             "cosign", "verify",
@@ -585,7 +585,7 @@ class AgentAdmissionController:
         template: Dict[str, Any],
         pod_spec: Dict[str, Any]
     ) -> List[Dict[str, Any]]:
-        """Génère des patches pour sécuriser le pod"""
+        """Gnre des patches pour scuriser le pod"""
         
         patches = []
         
@@ -637,7 +637,7 @@ class AgentAdmissionController:
         return patches
     
     def _allow_response(self, patches: List[Dict[str, Any]] = None) -> Dict[str, Any]:
-        """Réponse d'autorisation avec patches optionnels"""
+        """Rponse d'autorisation avec patches optionnels"""
         response = {
             "apiVersion": "admission.k8s.io/v1",
             "kind": "AdmissionReview",
@@ -656,7 +656,7 @@ class AgentAdmissionController:
         return response
     
     def _deny_response(self, reason: str) -> Dict[str, Any]:
-        """Réponse de refus avec raison"""
+        """Rponse de refus avec raison"""
         return {
             "apiVersion": "admission.k8s.io/v1",
             "kind": "AdmissionReview",
@@ -672,7 +672,7 @@ class AgentAdmissionController:
 # === CI/CD Pipeline Security ===
 
 class SecureCIPipeline:
-    """Pipeline CI/CD sécurisé pour les agents"""
+    """Pipeline CI/CD scuris pour les agents"""
     
     def __init__(
         self,
@@ -695,7 +695,7 @@ class SecureCIPipeline:
         
         template = json.loads(template_content)
         
-        # 1. Validation complète
+        # 1. Validation complte
         validation = await self.validator.validate_template(template)
         
         if not validation["valid"]:
@@ -706,7 +706,7 @@ class SecureCIPipeline:
         # 2. Signature
         signature_info = await self.cosign.sign_template(template, signer_email)
         
-        # 3. Créer le bundle signé
+        # 3. Crer le bundle sign
         signed_bundle = {
             "template": template,
             "signature": signature_info.signature,
@@ -725,20 +725,20 @@ class SecureCIPipeline:
         async with aiofiles.open(bundle_path, 'w') as f:
             await f.write(json.dumps(signed_bundle, indent=2))
         
-        # 5. Upload vers registry sécurisé (S3, etc.)
+        # 5. Upload vers registry scuris (S3, etc.)
         await self._upload_to_registry(signed_bundle)
         
         return signed_bundle
     
     async def _upload_to_registry(self, bundle: Dict[str, Any]):
-        """Upload le bundle vers un registry sécurisé"""
-        # Implémentation S3 ou similaire
+        """Upload le bundle vers un registry scuris"""
+        # Implmentation S3 ou similaire
         pass
 
-# === Exemple d'utilisation complète ===
+# === Exemple d'utilisation complte ===
 
 async def secure_template_example():
-    """Exemple de supply chain sécurisée"""
+    """Exemple de supply chain scurise"""
     
     # Configuration
     cosign = CosignIntegration(
@@ -792,7 +792,7 @@ async def secure_template_example():
     # 2. Admission controller en action
     admission_controller = AgentAdmissionController(validator)
     
-    # Simuler une requête d'admission
+    # Simuler une requte d'admission
     admission_request = {
         "request": {
             "uid": "test-123",
@@ -823,7 +823,7 @@ async def secure_template_example():
     # 3. Rapport de validation
     print("\n=== Validation Report ===")
     for check, result in signed_bundle["validation_report"]["checks"].items():
-        print(f"{check}: {'✓' if result else '✗'}")
+        print(f"{check}: {'' if result else ''}")
     
     if signed_bundle["validation_report"]["recommendations"]:
         print("\nRecommendations:")

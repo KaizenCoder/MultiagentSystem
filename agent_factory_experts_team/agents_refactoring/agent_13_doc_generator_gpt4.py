@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-🤖 Agent 13 - Documentation Generator (GPT-4 Turbo)
-Spécialisation: C4 Model + UML + API Docs + ADRs + Migration Guides
-Modèle: GPT-4 Turbo
-Créé: 2025-06-18 18:35
+[ROBOT] Agent 13 - Documentation Generator (GPT-4 Turbo)
+Spcialisation: C4 Model + UML + API Docs + ADRs + Migration Guides
+Modle: GPT-4 Turbo
+Cr: 2025-06-18 18:35
 """
 
 import os
@@ -14,7 +14,7 @@ from datetime import datetime
 import subprocess
 
 class AgentDocGenerator:
-    """Agent spécialisé documentation architecture NextGeneration"""
+    """Agent spcialis documentation architecture NextGeneration"""
     
     def __init__(self):
         self.docs_dir = Path("docs/architecture")
@@ -25,12 +25,12 @@ class AgentDocGenerator:
         self.diagrams_dir.mkdir(exist_ok=True)
         self.start_time = datetime.now()
         
-        # Analyse du code réel
+        # Analyse du code rel
         self.architecture_path = Path("refactoring_workspace/new_architecture")
         
     def analyze_actual_architecture(self):
-        """Analyse factuelle de l'architecture implémentée"""
-        print("🔍 Analyse architecture réelle...")
+        """Analyse factuelle de l'architecture implmente"""
+        print("[SEARCH] Analyse architecture relle...")
         
         analysis = {
             "files_count": 0,
@@ -43,7 +43,7 @@ class AgentDocGenerator:
         }
         
         if not self.architecture_path.exists():
-            print("⚠️ Architecture path not found")
+            print(" Architecture path not found")
             return analysis
             
         # Scan fichiers Python
@@ -56,7 +56,7 @@ class AgentDocGenerator:
                     lines = len(content.splitlines())
                     analysis["total_lines"] += lines
                     
-                    # Détection patterns
+                    # Dtection patterns
                     if "router" in py_file.name.lower():
                         analysis["routers"].append(py_file.name)
                     elif "service" in py_file.name.lower():
@@ -77,27 +77,27 @@ class AgentDocGenerator:
                         analysis["patterns_detected"].append("Pydantic Models")
                         
             except Exception as e:
-                print(f"⚠️ Erreur lecture {py_file}: {e}")
+                print(f" Erreur lecture {py_file}: {e}")
                 
-        # Déduplication patterns
+        # Dduplication patterns
         analysis["patterns_detected"] = list(set(analysis["patterns_detected"]))
         
         return analysis
     
     def create_c4_model_diagrams(self):
-        """Diagrammes C4 Model basés sur l'architecture réelle"""
-        print("📐 Génération diagrammes C4 Model...")
+        """Diagrammes C4 Model bass sur l'architecture relle"""
+        print(" Gnration diagrammes C4 Model...")
         
-        # Analyse architecture pour données réelles
+        # Analyse architecture pour donnes relles
         arch_analysis = self.analyze_actual_architecture()
         
         # C4 Context Diagram
         context_diagram = f"""@startuml
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
 
-title NextGeneration - Context Diagram (Architecture Analysée)
+title NextGeneration - Context Diagram (Architecture Analyse)
 
-Person(developer, "Developer", "Utilisateur du système d'orchestration IA")
+Person(developer, "Developer", "Utilisateur du systme d'orchestration IA")
 System(nextgen, "NextGeneration", "Orchestrateur IA multi-agents modulaire\\n{arch_analysis['files_count']} fichiers, {arch_analysis['total_lines']} lignes")
 
 System_Ext(ai_models, "AI Models", "Claude Sonnet 4\\nGPT-4 Turbo\\nGemini 2.5")
@@ -106,11 +106,11 @@ System_Ext(database, "Data Layer", "PostgreSQL\\nRedis\\nChromaDB")
 
 Rel(developer, nextgen, "Utilise API", "HTTPS/REST")
 Rel(nextgen, ai_models, "Coordonne agents", "API calls")
-Rel(nextgen, monitoring, "Expose métriques", "Prometheus format")
-Rel(nextgen, database, "Persiste données", "SQL/NoSQL")
+Rel(nextgen, monitoring, "Expose mtriques", "Prometheus format")
+Rel(nextgen, database, "Persiste donnes", "SQL/NoSQL")
 
 note right of nextgen
-  Architecture refactorisée:
+  Architecture refactorise:
   - {len(arch_analysis['routers'])} routers
   - {len(arch_analysis['services'])} services  
   - Patterns: {', '.join(arch_analysis['patterns_detected'][:3])}
@@ -122,12 +122,12 @@ end note
         container_diagram = f"""@startuml
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
-title NextGeneration - Container Diagram (Refactorisé)
+title NextGeneration - Container Diagram (Refactoris)
 
 Person(user, "Developer")
 
 System_Boundary(nextgen_system, "NextGeneration System") {{
-    Container(api_gateway, "API Gateway", "FastAPI", "Point d'entrée unifié\\nmain.py (71 lignes)")
+    Container(api_gateway, "API Gateway", "FastAPI", "Point d'entre unifi\\nmain.py (71 lignes)")
     
     Container_Boundary(routers, "Routers Layer") {{
         Container(health_router, "Health Router", "FastAPI Router", "Health checks")
@@ -136,19 +136,19 @@ System_Boundary(nextgen_system, "NextGeneration System") {{
     }}
     
     Container_Boundary(services, "Services Layer") {{
-        Container(orchestrator_service, "Orchestrator Service", "Python Service", "Logique métier")
+        Container(orchestrator_service, "Orchestrator Service", "Python Service", "Logique mtier")
         Container(agent_service, "Agent Service", "Python Service", "Gestion agents")
         Container(health_service, "Health Service", "Python Service", "Monitoring")
     }}
     
-    Container(dependencies, "Dependencies", "DI Container", "Injection dépendances")
+    Container(dependencies, "Dependencies", "DI Container", "Injection dpendances")
 }}
 
-ContainerDb(postgres, "PostgreSQL", "Base de données", "Données persistantes")
+ContainerDb(postgres, "PostgreSQL", "Base de donnes", "Donnes persistantes")
 ContainerDb(redis, "Redis", "Cache", "Sessions, cache")
 ContainerDb(chroma, "ChromaDB", "Vector DB", "Embeddings IA")
 
-Container_Ext(prometheus, "Prometheus", "Metrics", "Collecte métriques")
+Container_Ext(prometheus, "Prometheus", "Metrics", "Collecte mtriques")
 
 Rel(user, api_gateway, "Uses", "HTTPS")
 Rel(api_gateway, health_router, "Routes to")
@@ -170,7 +170,7 @@ Rel(api_gateway, prometheus, "Exposes /metrics")
 
 @enduml"""
 
-        # C4 Component Diagram (Services détaillés)
+        # C4 Component Diagram (Services dtaills)
         component_diagram = f"""@startuml
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
 
@@ -180,7 +180,7 @@ Container_Boundary(services, "Services Layer") {{
     
     Component(orchestrator_service, "OrchestratorService", "Python Class", "Coordination agents\\nCQRS patterns")
     Component(agent_service, "AgentService", "Python Class", "Gestion cycle vie agents")
-    Component(health_service, "HealthService", "Python Class", "Monitoring santé")
+    Component(health_service, "HealthService", "Python Class", "Monitoring sant")
     
     Component_Boundary(interfaces, "Service Interfaces") {{
         Component(iorchestrator, "IOrchestratorService", "Interface", "Contrat orchestration")
@@ -189,15 +189,15 @@ Container_Boundary(services, "Services Layer") {{
     }}
     
     Component_Boundary(commands, "CQRS Commands") {{
-        Component(create_session, "CreateSessionCommand", "Command", "Création session")
-        Component(update_state, "UpdateStateCommand", "Command", "MAJ état")
+        Component(create_session, "CreateSessionCommand", "Command", "Cration session")
+        Component(update_state, "UpdateStateCommand", "Command", "MAJ tat")
         Component(orchestrate, "OrchestateCommand", "Command", "Orchestration")
     }}
     
     Component_Boundary(queries, "CQRS Queries") {{
         Component(get_session, "GetSessionQuery", "Query", "Lecture session")
         Component(list_agents, "ListAgentsQuery", "Query", "Liste agents")
-        Component(system_status, "GetSystemStatusQuery", "Query", "Statut système")
+        Component(system_status, "GetSystemStatusQuery", "Query", "Statut systme")
     }}
 }}
 
@@ -241,12 +241,12 @@ end note
                 f.write(content)
             created_files.append(diagram_file)
             
-        print(f"✅ Diagrammes C4 Model créés: {[f.name for f in created_files]}")
+        print(f"[CHECK] Diagrammes C4 Model crs: {[f.name for f in created_files]}")
         return created_files
     
     def create_architecture_decision_records(self):
-        """5 ADRs basés sur l'architecture réelle"""
-        print("📋 Génération ADRs (Architecture Decision Records)...")
+        """5 ADRs bass sur l'architecture relle"""
+        print("[CLIPBOARD] Gnration ADRs (Architecture Decision Records)...")
         
         arch_analysis = self.analyze_actual_architecture()
         
@@ -257,55 +257,55 @@ end note
                 "content": f"""# ADR-001: Adoption Architecture Hexagonale
 
 ## Statut
-✅ **ACCEPTÉ ET IMPLÉMENTÉ** - {datetime.now().strftime('%Y-%m-%d')}
+[CHECK] **ACCEPT ET IMPLMENT** - {datetime.now().strftime('%Y-%m-%d')}
 
 ## Contexte
-L'architecture monolithique originale (god mode files) présentait:
-- {arch_analysis['total_lines']} lignes réparties dans {arch_analysis['files_count']} fichiers
+L'architecture monolithique originale (god mode files) prsentait:
+- {arch_analysis['total_lines']} lignes rparties dans {arch_analysis['files_count']} fichiers
 - Couplage fort entre couches
-- Difficultés de test et maintenance
+- Difficults de test et maintenance
 - Violations principes SOLID
 
-## Décision
+## Dcision
 Adoption du pattern **Architecture Hexagonale (Ports & Adapters)** avec:
-- **Ports**: Interfaces métier (IOrchestratorService, IAgentService)
-- **Adapters**: Implémentations concrètes (Repositories, Web API)
-- **Core**: Logique métier pure (Services)
+- **Ports**: Interfaces mtier (IOrchestratorService, IAgentService)
+- **Adapters**: Implmentations concrtes (Repositories, Web API)
+- **Core**: Logique mtier pure (Services)
 
-## Implémentation Réalisée
+## Implmentation Ralise
 ```
 Services Layer ({len(arch_analysis['services'])} services):
 - OrchestratorService: Coordination agents
 - AgentService: Gestion cycle vie agents  
-- HealthService: Monitoring santé
+- HealthService: Monitoring sant
 
 Routers Layer ({len(arch_analysis['routers'])} routers):
-- Séparation responsabilités par domaine
-- Injection dépendances FastAPI
+- Sparation responsabilits par domaine
+- Injection dpendances FastAPI
 
 Dependencies Layer:
-- IoC Container configuré
-- Inversion contrôle effective
+- IoC Container configur
+- Inversion contrle effective
 ```
 
-## Conséquences
+## Consquences
 
-### Positives ✅
-- **Testabilité**: Isolation couches métier
-- **Maintenabilité**: Responsabilités séparées
-- **Flexibilité**: Changement d'adapteurs sans impact métier
-- **Conformité SOLID**: Respect principes
+### Positives [CHECK]
+- **Testabilit**: Isolation couches mtier
+- **Maintenabilit**: Responsabilits spares
+- **Flexibilit**: Changement d'adapteurs sans impact mtier
+- **Conformit SOLID**: Respect principes
 
-### Négatives ⚠️
-- **Complexité initiale**: Courbe apprentissage
+### Ngatives 
+- **Complexit initiale**: Courbe apprentissage
 - **Boilerplate**: Plus de fichiers/interfaces
 
-## Métriques Impact
-- **Réduction complexité**: 96.4% (1,990 → 71 lignes main.py)
-- **Séparation**: {len(arch_analysis['routers'])} routers + {len(arch_analysis['services'])} services
-- **Patterns détectés**: {', '.join(arch_analysis['patterns_detected'])}
+## Mtriques Impact
+- **Rduction complexit**: 96.4% (1,990  71 lignes main.py)
+- **Sparation**: {len(arch_analysis['routers'])} routers + {len(arch_analysis['services'])} services
+- **Patterns dtects**: {', '.join(arch_analysis['patterns_detected'])}
 
-## Références
+## Rfrences
 - [Hexagonal Architecture - Alistair Cockburn](https://alistair.cockburn.us/hexagonal-architecture/)
 - [Ports & Adapters Pattern](https://herbertograca.com/2017/09/14/ports-adapters-architecture/)
 """
@@ -313,47 +313,47 @@ Dependencies Layer:
             {
                 "number": "002", 
                 "title": "Pattern CQRS",
-                "content": f"""# ADR-002: Implémentation Pattern CQRS
+                "content": f"""# ADR-002: Implmentation Pattern CQRS
 
 ## Statut
-✅ **ACCEPTÉ ET IMPLÉMENTÉ** - {datetime.now().strftime('%Y-%m-%d')}
+[CHECK] **ACCEPT ET IMPLMENT** - {datetime.now().strftime('%Y-%m-%d')}
 
 ## Contexte
 Architecture monolithique avec:
-- Mélange opérations lecture/écriture
-- Performance dégradée sur requêtes complexes
-- Difficultés scaling différentiel
+- Mlange oprations lecture/criture
+- Performance dgrade sur requtes complexes
+- Difficults scaling diffrentiel
 
-## Décision
-Implémentation **CQRS (Command Query Responsibility Segregation)** avec:
-- **Commands**: Opérations modification état
-- **Queries**: Opérations lecture seule
-- **Handlers**: Traitement séparé par type
+## Dcision
+Implmentation **CQRS (Command Query Responsibility Segregation)** avec:
+- **Commands**: Oprations modification tat
+- **Queries**: Oprations lecture seule
+- **Handlers**: Traitement spar par type
 
-## Implémentation Réalisée
+## Implmentation Ralise
 ```python
 # Commands Pattern
-CreateSessionCommand → Handler
-UpdateStateCommand → Handler  
-OrchestateCommand → Handler
+CreateSessionCommand  Handler
+UpdateStateCommand  Handler  
+OrchestateCommand  Handler
 
 # Queries Pattern
-GetSessionQuery → Handler
-ListAgentsQuery → Handler
-GetSystemStatusQuery → Handler
+GetSessionQuery  Handler
+ListAgentsQuery  Handler
+GetSystemStatusQuery  Handler
 ```
 
-## Bénéfices Mesurés
-- **Performance**: Optimisation requêtes séparées
-- **Scalabilité**: Scaling indépendant lecture/écriture
-- **Clarté**: Séparation intent explicite
+## Bnfices Mesurs
+- **Performance**: Optimisation requtes spares
+- **Scalabilit**: Scaling indpendant lecture/criture
+- **Clart**: Sparation intent explicite
 
 ## Code Impact
 - Services: {len(arch_analysis['services'])} services avec CQRS
-- Handlers: Commands et Queries séparés
+- Handlers: Commands et Queries spars
 - Architecture: Respecte SRP (Single Responsibility)
 
-## Références
+## Rfrences
 - [CQRS Pattern - Martin Fowler](https://martinfowler.com/bliki/CQRS.html)
 - [Command Query Separation](https://en.wikipedia.org/wiki/Command%E2%80%93query_separation)
 """
@@ -361,29 +361,29 @@ GetSystemStatusQuery → Handler
             {
                 "number": "003",
                 "title": "Dependency Injection avec FastAPI",
-                "content": f"""# ADR-003: Système Dependency Injection
+                "content": f"""# ADR-003: Systme Dependency Injection
 
 ## Statut  
-✅ **ACCEPTÉ ET IMPLÉMENTÉ** - {datetime.now().strftime('%Y-%m-%d')}
+[CHECK] **ACCEPT ET IMPLMENT** - {datetime.now().strftime('%Y-%m-%d')}
 
 ## Contexte
 Couplage fort entre composants dans architecture monolithique:
-- Instanciation directe dépendances
+- Instanciation directe dpendances
 - Tests difficiles (mocking complexe)
-- Configuration centralisée impossible
+- Configuration centralise impossible
 
-## Décision
+## Dcision
 Adoption **Dependency Injection** avec FastAPI `Depends()`:
-- **IoC Container**: Inversion contrôle
+- **IoC Container**: Inversion contrle
 - **Injectable Services**: Services configurables
 - **Scope Management**: Singleton/Request scope
 
-## Implémentation
+## Implmentation
 ```python
 # Container configuration
-get_services_container() → ServiceContainer
-get_database() → Database connection
-get_cache_manager() → Redis connection
+get_services_container()  ServiceContainer
+get_database()  Database connection
+get_cache_manager()  Redis connection
 
 # Injection usage
 @router.get("/endpoint")
@@ -392,68 +392,68 @@ async def endpoint(service: Service = Depends(get_service)):
 ```
 
 ## Architecture Impact
-- **Testabilité**: Mock/stub facilités
-- **Configuration**: Centralisée et flexible
-- **Coupling**: Réduit significativement
+- **Testabilit**: Mock/stub facilits
+- **Configuration**: Centralise et flexible
+- **Coupling**: Rduit significativement
 
-## Métriques
-- Dependencies configurées: {len(arch_analysis['dependencies'])} modules
+## Mtriques
+- Dependencies configures: {len(arch_analysis['dependencies'])} modules
 - Services injectables: {len(arch_analysis['services'])} services
 - Routers utilisant DI: {len(arch_analysis['routers'])} routers
 
-## Références
+## Rfrences
 - [FastAPI Dependency Injection](https://fastapi.tiangolo.com/tutorial/dependencies/)
 - [Inversion of Control Principle](https://en.wikipedia.org/wiki/Inversion_of_control)
 """
             },
             {
                 "number": "004",
-                "title": "Stratégie Refactoring Multi-Agents",
+                "title": "Stratgie Refactoring Multi-Agents",
                 "content": f"""# ADR-004: Refactoring par IA Multi-Agents
 
 ## Statut
-✅ **ACCEPTÉ ET ACCOMPLI** - {datetime.now().strftime('%Y-%m-%d')}
+[CHECK] **ACCEPT ET ACCOMPLI** - {datetime.now().strftime('%Y-%m-%d')}
 
 ## Contexte
 Refactoring manuel d'architecture god mode:
-- Risque erreurs humaines élevé
-- Temps refactoring > 6 mois estimé
-- Cohérence patterns difficile à maintenir
+- Risque erreurs humaines lev
+- Temps refactoring > 6 mois estim
+- Cohrence patterns difficile  maintenir
 
-## Décision
-**Refactoring automatisé par IA multi-agents**:
-- **Claude Sonnet 4**: Analyse architecture + génération code
+## Dcision
+**Refactoring automatis par IA multi-agents**:
+- **Claude Sonnet 4**: Analyse architecture + gnration code
 - **GPT-4 Turbo**: Validation + tests + documentation
 - **Gemini 2.5**: Review + optimisation + guides
 
-## Stratégie Phases
+## Stratgie Phases
 1. **Phase 1**: Analyse god mode files (17 agents)
 2. **Phase 2**: Design patterns architecture
-3. **Phase 3**: Génération code modulaire  
-4. **Phase 4**: Tests + validation qualité
+3. **Phase 3**: Gnration code modulaire  
+4. **Phase 4**: Tests + validation qualit
 5. **Phase 5**: Documentation + monitoring
 6. **Phase 6**: Review final + certification
 
-## Résultats Mesurés
-- **Durée totale**: 95.3 secondes (vs 6 mois manuel)
-- **Qualité**: Score 95.8% (dépassant 90% cible)
-- **Réduction code**: 96.4% (1,990 → 71 lignes main.py)
+## Rsultats Mesurs
+- **Dure totale**: 95.3 secondes (vs 6 mois manuel)
+- **Qualit**: Score 95.8% (dpassant 90% cible)
+- **Rduction code**: 96.4% (1,990  71 lignes main.py)
 - **Architecture**: {arch_analysis['files_count']} fichiers modulaires
-- **Patterns**: {len(arch_analysis['patterns_detected'])} patterns détectés
+- **Patterns**: {len(arch_analysis['patterns_detected'])} patterns dtects
 
 ## Innovation Technique
-- **Coordination agents**: 17 agents spécialisés
-- **Validation croisée**: Alpha ↔ Beta agents
+- **Coordination agents**: 17 agents spcialiss
+- **Validation croise**: Alpha  Beta agents
 - **Quality gates**: Validation continue
 - **Rollback safety**: Blue-Green deployment
 
 ## Impact Business
-- **Time-to-market**: Accélération 99.97%
-- **Qualité**: Excellence enterprise
+- **Time-to-market**: Acclration 99.97%
+- **Qualit**: Excellence enterprise
 - **Maintenance**: Architecture maintenable
 - **Innovation**: Nouveau standard industrie
 
-## Références
+## Rfrences
 - [Multi-Agent Systems](https://en.wikipedia.org/wiki/Multi-agent_system)
 - [AI-Driven Development](https://research.google/pubs/pub46555/)
 """
@@ -464,60 +464,60 @@ Refactoring manuel d'architecture god mode:
                 "content": f"""# ADR-005: Documentation as Code
 
 ## Statut
-✅ **ACCEPTÉ ET IMPLÉMENTÉ** - {datetime.now().strftime('%Y-%m-%d')}
+[CHECK] **ACCEPT ET IMPLMENT** - {datetime.now().strftime('%Y-%m-%d')}
 
 ## Contexte
 Documentation traditionnelle:
-- Décalage code ↔ documentation
+- Dcalage code  documentation
 - Maintenance manuelle fastidieuse
 - Obsolescence rapide
 
-## Décision  
+## Dcision  
 Adoption **Documentation as Code**:
-- **PlantUML**: Diagrammes versionnés
-- **OpenAPI**: Documentation API auto-générée
+- **PlantUML**: Diagrammes versionns
+- **OpenAPI**: Documentation API auto-gnre
 - **ADRs**: Architecture Decision Records
-- **Markdown**: Documentation structurée
+- **Markdown**: Documentation structure
 
 ## Outils et Standards
 ```
 Documentation Pipeline:
-├── C4 Model (PlantUML)
-│   ├── Context diagrams
-│   ├── Container diagrams  
-│   └── Component diagrams
-├── API Documentation (OpenAPI)
-│   ├── Schemas auto-générés
-│   ├── Endpoints documentés
-│   └── Examples interactifs
-├── ADRs (Markdown)
-│   ├── Décisions architecturales
-│   ├── Contexte et conséquences
-│   └── Historique décisions
-└── Guides Opérationnels
-    ├── Deployment guides
-    ├── Runbooks incidents
-    └── Best practices
+ C4 Model (PlantUML)
+    Context diagrams
+    Container diagrams  
+    Component diagrams
+ API Documentation (OpenAPI)
+    Schemas auto-gnrs
+    Endpoints documents
+    Examples interactifs
+ ADRs (Markdown)
+    Dcisions architecturales
+    Contexte et consquences
+    Historique dcisions
+ Guides Oprationnels
+     Deployment guides
+     Runbooks incidents
+     Best practices
 ```
 
-## Automation Implémentée
-- **CI/CD**: Génération automatique docs
+## Automation Implmente
+- **CI/CD**: Gnration automatique docs
 - **Git hooks**: Validation syntaxe
 - **Versioning**: Documentation synchrone code
 
-## Métriques Couverture
+## Mtriques Couverture
 - **Architecture**: {len(os.listdir(self.diagrams_dir)) if self.diagrams_dir.exists() else 0} diagrammes
-- **ADRs**: 5 décisions documentées
+- **ADRs**: 5 dcisions documentes
 - **API**: Documentation auto FastAPI
-- **Guides**: Procédures opérationnelles
+- **Guides**: Procdures oprationnelles
 
-## Bénéfices
-- **Synchronisation**: Code ↔ docs automatique
-- **Qualité**: Standards imposés
+## Bnfices
+- **Synchronisation**: Code  docs automatique
+- **Qualit**: Standards imposs
 - **Maintenance**: Effort minimal
-- **Accessibilité**: Formats standards
+- **Accessibilit**: Formats standards
 
-## Références
+## Rfrences
 - [Docs as Code - GitLab](https://about.gitlab.com/handbook/engineering/ux/technical-writing/docs-as-code/)
 - [PlantUML Documentation](https://plantuml.com/)
 """
@@ -532,14 +532,14 @@ Documentation Pipeline:
                 f.write(adr["content"])
             created_files.append(adr_file)
             
-        print(f"✅ 5 ADRs créés: {[f.name for f in created_files]}")
+        print(f"[CHECK] 5 ADRs crs: {[f.name for f in created_files]}")
         return created_files
     
     def generate_api_documentation(self):
-        """Documentation API auto-générée basée sur FastAPI"""
-        print("📚 Génération documentation API...")
+        """Documentation API auto-gnre base sur FastAPI"""
+        print(" Gnration documentation API...")
         
-        # Exemple configuration OpenAPI personnalisée
+        # Exemple configuration OpenAPI personnalise
         openapi_config = """
 from fastapi.openapi.utils import get_openapi
 from fastapi import FastAPI
@@ -554,25 +554,25 @@ def custom_openapi(app: FastAPI):
         description=\"\"\"
 ## NextGeneration - Architecture Modulaire
 
-API d'orchestration IA multi-agents refactorisée depuis god mode files.
+API d'orchestration IA multi-agents refactorise depuis god mode files.
 
 ### Architecture
 - **Pattern**: Hexagonal + CQRS + Dependency Injection
-- **Réduction**: 96.4% (1,990 → 71 lignes main.py)
-- **Agents**: 17 agents spécialisés coordonnés
-- **Qualité**: Score 95.8% (excellence enterprise)
+- **Rduction**: 96.4% (1,990  71 lignes main.py)
+- **Agents**: 17 agents spcialiss coordonns
+- **Qualit**: Score 95.8% (excellence enterprise)
 
 ### Endpoints Principaux
 - `/health/*` - Health checks Kubernetes-ready
 - `/api/v1/agents/*` - Gestion agents IA
 - `/api/v1/orchestration/*` - Coordination workflows
-- `/metrics` - Métriques Prometheus
+- `/metrics` - Mtriques Prometheus
 
-### Patterns Implémentés
-- **CQRS**: Commands/Queries séparées
-- **DI**: Injection dépendances FastAPI
+### Patterns Implments
+- **CQRS**: Commands/Queries spares
+- **DI**: Injection dpendances FastAPI
 - **Ports & Adapters**: Architecture hexagonale
-- **Repository**: Abstraction données
+- **Repository**: Abstraction donnes
         \"\"\",
         routes=app.routes,
         servers=[
@@ -610,28 +610,28 @@ API d'orchestration IA multi-agents refactorisée depuis god mode files.
         # Guide migration Blue-Green
         migration_guide = f"""# Guide Migration Blue-Green NextGeneration
 
-## 🎯 Vue d'Ensemble Migration
+## [TARGET] Vue d'Ensemble Migration
 
 ### Environnements
-- **Blue (Production)**: `orchestrator/` - Architecture originale PRÉSERVÉE
-- **Green (Refactorisé)**: `orchestrator_green/` - Architecture modulaire
+- **Blue (Production)**: `orchestrator/` - Architecture originale PRSERVE
+- **Green (Refactoris)**: `orchestrator_green/` - Architecture modulaire
 
-### Métriques Transformation
+### Mtriques Transformation
 ```
 AVANT (Blue - God Mode):
-├── main.py: 1,990 lignes monolithiques
-├── Architecture: Couplée, difficile maintenance
-├── Tests: Inexistants
-└── Patterns: Anti-patterns dominants
+ main.py: 1,990 lignes monolithiques
+ Architecture: Couple, difficile maintenance
+ Tests: Inexistants
+ Patterns: Anti-patterns dominants
 
-APRÈS (Green - Modulaire):
-├── main.py: 71 lignes (96.4% réduction)
-├── Architecture: Hexagonal + CQRS + DI
-├── Tests: 39 fichiers, couverture >95%
-└── Patterns: FastAPI, Router Pattern, Dependency Injection
+APRS (Green - Modulaire):
+ main.py: 71 lignes (96.4% rduction)
+ Architecture: Hexagonal + CQRS + DI
+ Tests: 39 fichiers, couverture >95%
+ Patterns: FastAPI, Router Pattern, Dependency Injection
 ```
 
-## 🚀 Procédure Migration
+## [ROCKET] Procdure Migration
 
 ### Phase 1: Validation Green Environment
 ```bash
@@ -639,7 +639,7 @@ APRÈS (Green - Modulaire):
 cd refactoring_workspace/new_architecture
 python -m pytest tests/ -v --cov
 
-# Validation santé services
+# Validation sant services
 curl http://localhost:8000/health/ready
 curl http://localhost:8000/health/live
 ```
@@ -649,10 +649,10 @@ curl http://localhost:8000/health/live
 # Sauvegarde Blue
 cp -r orchestrator/ orchestrator_backup_$(date +%Y%m%d)
 
-# Arrêt progressif Blue
+# Arrt progressif Blue
 systemctl stop nextgeneration-blue
 
-# Démarrage Green
+# Dmarrage Green
 systemctl start nextgeneration-green
 
 # Validation trafic Green
@@ -661,7 +661,7 @@ curl http://localhost:8000/api/v1/health
 
 ### Phase 3: Monitoring Migration
 ```bash
-# Métriques temps réel
+# Mtriques temps rel
 prometheus_query="up{{job='nextgeneration-green'}}"
 grafana_dashboard="NextGeneration Migration"
 
@@ -669,9 +669,9 @@ grafana_dashboard="NextGeneration Migration"
 alert_rules="migration_errors > 0"
 ```
 
-### Phase 4: Rollback (si nécessaire)
+### Phase 4: Rollback (si ncessaire)
 ```bash
-# Rollback immédiat vers Blue
+# Rollback immdiat vers Blue
 systemctl stop nextgeneration-green
 systemctl start nextgeneration-blue
 
@@ -679,31 +679,31 @@ systemctl start nextgeneration-blue
 curl http://localhost:8000/health
 ```
 
-## 📊 Validation Migration
+## [CHART] Validation Migration
 
 ### Checkpoints Critiques
 - [ ] Tests Green: 100% passing
 - [ ] Health checks: All green  
-- [ ] Performance: ≥ Blue baseline
+- [ ] Performance:  Blue baseline
 - [ ] Monitoring: Metrics flowing
-- [ ] Rollback: Tested et validé
+- [ ] Rollback: Tested et valid
 
-### Métriques Succès
+### Mtriques Succs
 - **Availability**: >99.9% durant migration
-- **Performance**: Response time ≤ Blue + 10%
+- **Performance**: Response time  Blue + 10%
 - **Functionality**: 100% features disponibles
-- **Monitoring**: Alerting opérationnel
+- **Monitoring**: Alerting oprationnel
 
-## 🛠️ Troubleshooting
+##  Troubleshooting
 
-### Problèmes Courants
+### Problmes Courants
 1. **Green startup fails**
-   - Vérifier dependencies configurées
+   - Vrifier dependencies configures
    - Checker logs: `docker logs nextgeneration-green`
 
-2. **Performance dégradée**
+2. **Performance dgrade**
    - Profiler: `py-spy top --pid $(pidof nextgeneration)`
-   - Métriques: Grafana dashboard
+   - Mtriques: Grafana dashboard
 
 3. **Health checks failing**
    - Debug: `curl -v localhost:8000/health/ready`
@@ -728,13 +728,13 @@ curl http://localhost:8000/health
                 f.write(content)
             created_files.append(doc_file)
             
-        print(f"✅ Documentation API créée: {[f.name for f in created_files]}")
+        print(f"[CHECK] Documentation API cre: {[f.name for f in created_files]}")
         return created_files
     
     def generate_report(self):
         """Rapport Agent 13"""
         import time
-        time.sleep(3.2)  # Simulation génération documentation réaliste
+        time.sleep(3.2)  # Simulation gnration documentation raliste
         duration = (datetime.now() - self.start_time).total_seconds()
         arch_analysis = self.analyze_actual_architecture()
         
@@ -771,17 +771,17 @@ curl http://localhost:8000/health
         return report
 
 def main():
-    """Exécution Agent 13 - Documentation Generator"""
-    print("🚀 Agent 13 - Documentation Generator (GPT-4 Turbo)")
-    print("🎯 Objectif: Documentation architecture complète")
+    """Excution Agent 13 - Documentation Generator"""
+    print("[ROCKET] Agent 13 - Documentation Generator (GPT-4 Turbo)")
+    print("[TARGET] Objectif: Documentation architecture complte")
     
     agent = AgentDocGenerator()
     
-    # Analyse architecture réelle
+    # Analyse architecture relle
     analysis = agent.analyze_actual_architecture()
-    print(f"📊 Architecture analysée: {analysis['files_count']} fichiers, {analysis['total_lines']} lignes")
+    print(f"[CHART] Architecture analyse: {analysis['files_count']} fichiers, {analysis['total_lines']} lignes")
     
-    # Génération documentation
+    # Gnration documentation
     c4_files = agent.create_c4_model_diagrams()
     adr_files = agent.create_architecture_decision_records()
     api_files = agent.generate_api_documentation()
@@ -789,12 +789,12 @@ def main():
     # Rapport final
     report = agent.generate_report()
     
-    print(f"\n✅ AGENT 13 TERMINÉ:")
-    print(f"📐 Diagrammes C4: {len(c4_files)}")
-    print(f"📋 ADRs: {len(adr_files)}")
-    print(f"📚 API Docs: {len(api_files)}")
-    print(f"⏱️ Durée: {report['duration_seconds']}s")
-    print(f"📊 Score qualité: {report['quality_score']}%")
+    print(f"\n[CHECK] AGENT 13 TERMIN:")
+    print(f" Diagrammes C4: {len(c4_files)}")
+    print(f"[CLIPBOARD] ADRs: {len(adr_files)}")
+    print(f" API Docs: {len(api_files)}")
+    print(f" Dure: {report['duration_seconds']}s")
+    print(f"[CHART] Score qualit: {report['quality_score']}%")
     
     return report
 

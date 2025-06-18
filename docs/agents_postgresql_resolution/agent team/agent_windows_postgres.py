@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-🪟 Agent Windows-PostgreSQL Specialist
-Mission: Diagnostic et résolution des problèmes PostgreSQL sur Windows
+ Agent Windows-PostgreSQL Specialist
+Mission: Diagnostic et rsolution des problmes PostgreSQL sur Windows
 """
 
 import os
@@ -34,7 +34,7 @@ class WindowsPostgreSQLAgent:
         
     def diagnostic_environnement_windows(self):
         """Diagnostic complet de l'environnement Windows pour PostgreSQL"""
-        self.logger.info("🔍 Démarrage diagnostic environnement Windows")
+        self.logger.info("[SEARCH] Dmarrage diagnostic environnement Windows")
         
         diagnostic = {
             "timestamp": datetime.now().isoformat(),
@@ -49,7 +49,7 @@ class WindowsPostgreSQLAgent:
         }
         
         try:
-            # Information système
+            # Information systme
             diagnostic["systeme"] = self.get_system_info()
             
             # PostgreSQL natif
@@ -67,7 +67,7 @@ class WindowsPostgreSQLAgent:
             # Services Windows
             diagnostic["services"] = self.check_windows_services()
             
-            # Analyse des problèmes
+            # Analyse des problmes
             self.analyze_problems(diagnostic)
             
         except Exception as e:
@@ -77,7 +77,7 @@ class WindowsPostgreSQLAgent:
         return diagnostic
     
     def get_system_info(self):
-        """Récupère les informations système Windows"""
+        """Rcupre les informations systme Windows"""
         try:
             system_info = {
                 "os": os.name,
@@ -85,7 +85,7 @@ class WindowsPostgreSQLAgent:
                 "version": "",
                 "architecture": "",
                 "user": os.getenv('USERNAME', 'Unknown'),
-                "path": os.getenv('PATH', '').split(';')[:10]  # Premiers 10 éléments PATH
+                "path": os.getenv('PATH', '').split(';')[:10]  # Premiers 10 lments PATH
             }
             
             # Version Windows
@@ -93,7 +93,7 @@ class WindowsPostgreSQLAgent:
                 result = subprocess.run(['ver'], shell=True, capture_output=True, text=True)
                 system_info["version"] = result.stdout.strip()
             except:
-                system_info["version"] = "Non déterminable"
+                system_info["version"] = "Non dterminable"
                 
             # Architecture
             try:
@@ -103,11 +103,11 @@ class WindowsPostgreSQLAgent:
                 
             return system_info
         except Exception as e:
-            self.logger.error(f"Erreur récupération info système: {e}")
+            self.logger.error(f"Erreur rcupration info systme: {e}")
             return {"erreur": str(e)}
     
     def check_postgresql_native(self):
-        """Vérifie PostgreSQL installé nativement sur Windows"""
+        """Vrifie PostgreSQL install nativement sur Windows"""
         postgresql_info = {
             "installe": False,
             "version": None,
@@ -142,12 +142,12 @@ class WindowsPostgreSQLAgent:
                     break
                     
         except Exception as e:
-            self.logger.warning(f"Erreur vérification PostgreSQL natif: {e}")
+            self.logger.warning(f"Erreur vrification PostgreSQL natif: {e}")
             
         return postgresql_info
     
     def check_python_environment(self):
-        """Vérifie l'environnement Python et packages PostgreSQL"""
+        """Vrifie l'environnement Python et packages PostgreSQL"""
         python_info = {
             "version": sys.version,
             "executable": sys.executable,
@@ -156,7 +156,7 @@ class WindowsPostgreSQLAgent:
             "psycopg2_version": None
         }
         
-        # Vérification packages PostgreSQL
+        # Vrification packages PostgreSQL
         packages_to_check = ['psycopg2', 'psycopg2-binary', 'sqlalchemy', 'alembic']
         
         for package in packages_to_check:
@@ -169,7 +169,7 @@ class WindowsPostgreSQLAgent:
                         if line.startswith('Version:'):
                             python_info["packages_postgresql"][package] = line.split(':')[1].strip()
                             
-                            # Versions spécifiques importantes
+                            # Versions spcifiques importantes
                             if package == 'sqlalchemy':
                                 python_info["sqlalchemy_version"] = line.split(':')[1].strip()
                             elif package.startswith('psycopg2'):
@@ -182,7 +182,7 @@ class WindowsPostgreSQLAgent:
         return python_info
     
     def check_docker_environment(self):
-        """Vérifie l'environnement Docker"""
+        """Vrifie l'environnement Docker"""
         docker_info = {
             "installe": False,
             "version": None,
@@ -211,12 +211,12 @@ class WindowsPostgreSQLAgent:
                     docker_info["docker_compose"] = True
                     
         except Exception as e:
-            self.logger.warning(f"Erreur vérification Docker: {e}")
+            self.logger.warning(f"Erreur vrification Docker: {e}")
             
         return docker_info
     
     def check_environment_variables(self):
-        """Vérifie les variables d'environnement importantes"""
+        """Vrifie les variables d'environnement importantes"""
         important_vars = [
             'PATH', 'PYTHONPATH', 'POSTGRES_USER', 'POSTGRES_PASSWORD', 
             'POSTGRES_DB', 'DATABASE_URL', 'PGUSER', 'PGPASSWORD', 'PGHOST', 'PGPORT'
@@ -237,7 +237,7 @@ class WindowsPostgreSQLAgent:
         return env_vars
     
     def check_windows_services(self):
-        """Vérifie les services Windows liés à PostgreSQL"""
+        """Vrifie les services Windows lis  PostgreSQL"""
         services_info = {
             "postgresql_services": [],
             "service_manager_accessible": False
@@ -257,28 +257,28 @@ class WindowsPostgreSQLAgent:
                         services_info["postgresql_services"].append(lines[i:i+3])
                         
         except Exception as e:
-            self.logger.warning(f"Erreur vérification services Windows: {e}")
+            self.logger.warning(f"Erreur vrification services Windows: {e}")
             
         return services_info
     
     def analyze_problems(self, diagnostic):
-        """Analyse les problèmes détectés et propose des recommandations"""
+        """Analyse les problmes dtects et propose des recommandations"""
         problemes = []
         recommandations = []
         
         # Analyse PostgreSQL
         if not diagnostic["postgresql"]["installe"]:
-            problemes.append("🔴 PostgreSQL non installé nativement sur Windows")
+            problemes.append(" PostgreSQL non install nativement sur Windows")
             recommandations.append("Installer PostgreSQL Windows ou utiliser exclusivement Docker")
             
         if not diagnostic["postgresql"]["pg_isready"]:
-            problemes.append("🔴 pg_isready non fonctionnel")
-            recommandations.append("Vérifier installation PostgreSQL ou ajouter au PATH")
+            problemes.append(" pg_isready non fonctionnel")
+            recommandations.append("Vrifier installation PostgreSQL ou ajouter au PATH")
             
         # Analyse Python
         if diagnostic["python"]["packages_postgresql"].get("psycopg2", "NON_INSTALLE") == "NON_INSTALLE":
             if diagnostic["python"]["packages_postgresql"].get("psycopg2-binary", "NON_INSTALLE") == "NON_INSTALLE":
-                problemes.append("🔴 Aucun driver PostgreSQL Python installé")
+                problemes.append(" Aucun driver PostgreSQL Python install")
                 recommandations.append("Installer psycopg2-binary avec: pip install psycopg2-binary")
                 
         # Analyse SQLAlchemy
@@ -286,28 +286,28 @@ class WindowsPostgreSQLAgent:
         if sqlalchemy_version:
             major_version = int(sqlalchemy_version.split('.')[0])
             if major_version >= 2:
-                problemes.append("⚠️ SQLAlchemy 2.x peut causer des incompatibilités")
-                recommandations.append("Considérer downgrade vers SQLAlchemy 1.4.x ou adapter le code")
+                problemes.append(" SQLAlchemy 2.x peut causer des incompatibilits")
+                recommandations.append("Considrer downgrade vers SQLAlchemy 1.4.x ou adapter le code")
                 
         # Analyse Docker
         if not diagnostic["docker"]["installe"]:
-            problemes.append("⚠️ Docker non installé")
+            problemes.append(" Docker non install")
             recommandations.append("Installer Docker Desktop pour Windows")
         elif not diagnostic["docker"]["service_actif"]:
-            problemes.append("🔴 Service Docker non actif")
-            recommandations.append("Démarrer Docker Desktop")
+            problemes.append(" Service Docker non actif")
+            recommandations.append("Dmarrer Docker Desktop")
             
         # Variables d'environnement
         if diagnostic["variables_env"]["DATABASE_URL"] == "NON_DEFINIE":
-            problemes.append("⚠️ Variable DATABASE_URL non définie")
-            recommandations.append("Définir DATABASE_URL dans l'environnement")
+            problemes.append(" Variable DATABASE_URL non dfinie")
+            recommandations.append("Dfinir DATABASE_URL dans l'environnement")
             
         diagnostic["problemes_detectes"] = problemes
         diagnostic["recommandations"] = recommandations
     
     def generer_rapport(self, diagnostic):
-        """Génère le rapport Markdown détaillé"""
-        rapport_content = f"""# 🪟 Rapport Agent Windows-PostgreSQL
+        """Gnre le rapport Markdown dtaill"""
+        rapport_content = f"""#  Rapport Agent Windows-PostgreSQL
 
 **Agent :** {self.name}  
 **ID :** {self.agent_id}  
@@ -317,55 +317,55 @@ class WindowsPostgreSQLAgent:
 
 ---
 
-## 📋 RÉSUMÉ EXÉCUTIF
+## [CLIPBOARD] RSUM EXCUTIF
 
-### 🎯 Mission
-Diagnostic complet de l'environnement Windows pour PostgreSQL et identification des problèmes bloquants.
+### [TARGET] Mission
+Diagnostic complet de l'environnement Windows pour PostgreSQL et identification des problmes bloquants.
 
-### 📊 Résultats Globaux
-- **Problèmes détectés :** {len(diagnostic.get('problemes_detectes', []))}
+### [CHART] Rsultats Globaux
+- **Problmes dtects :** {len(diagnostic.get('problemes_detectes', []))}
 - **Recommandations :** {len(diagnostic.get('recommandations', []))}
-- **PostgreSQL natif :** {'✅ Opérationnel' if diagnostic['postgresql'].get('installe') else '❌ Non fonctionnel'}
-- **Environment Python :** {'✅ Correct' if diagnostic['python'].get('sqlalchemy_version') else '⚠️ Incomplet'}
-- **Docker :** {'✅ Actif' if diagnostic['docker'].get('service_actif') else '❌ Problème'}
+- **PostgreSQL natif :** {'[CHECK] Oprationnel' if diagnostic['postgresql'].get('installe') else '[CROSS] Non fonctionnel'}
+- **Environment Python :** {'[CHECK] Correct' if diagnostic['python'].get('sqlalchemy_version') else ' Incomplet'}
+- **Docker :** {'[CHECK] Actif' if diagnostic['docker'].get('service_actif') else '[CROSS] Problme'}
 
 ---
 
-## 🔍 DIAGNOSTIC DÉTAILLÉ
+## [SEARCH] DIAGNOSTIC DTAILL
 
-### 🖥️ Système Windows
+###  Systme Windows
 ```json
 {json.dumps(diagnostic['systeme'], indent=2, ensure_ascii=False)}
 ```
 
-### 🐘 PostgreSQL Natif
+###  PostgreSQL Natif
 ```json
 {json.dumps(diagnostic['postgresql'], indent=2, ensure_ascii=False)}
 ```
 
-### 🐍 Environnement Python
+###  Environnement Python
 ```json
 {json.dumps(diagnostic['python'], indent=2, ensure_ascii=False)}
 ```
 
-### 🐳 Docker
+###  Docker
 ```json
 {json.dumps(diagnostic['docker'], indent=2, ensure_ascii=False)}
 ```
 
-### 🌍 Variables d'Environnement
+###  Variables d'Environnement
 ```json
 {json.dumps(diagnostic['variables_env'], indent=2, ensure_ascii=False)}
 ```
 
-### 🛠️ Services Windows
+###  Services Windows
 ```json
 {json.dumps(diagnostic['services'], indent=2, ensure_ascii=False)}
 ```
 
 ---
 
-## 🚨 PROBLÈMES IDENTIFIÉS
+##  PROBLMES IDENTIFIS
 
 """
         
@@ -375,7 +375,7 @@ Diagnostic complet de l'environnement Windows pour PostgreSQL et identification 
         rapport_content += f"""
 ---
 
-## 💡 RECOMMANDATIONS
+## [BULB] RECOMMANDATIONS
 
 """
         
@@ -385,69 +385,69 @@ Diagnostic complet de l'environnement Windows pour PostgreSQL et identification 
         rapport_content += f"""
 ---
 
-## 🎯 PLAN D'ACTION PROPOSÉ
+## [TARGET] PLAN D'ACTION PROPOS
 
-### Priorité 1 - Critique
-- [ ] Résoudre problèmes PostgreSQL bloquants
+### Priorit 1 - Critique
+- [ ] Rsoudre problmes PostgreSQL bloquants
 - [ ] Corriger configuration Python/SQLAlchemy
 - [ ] Valider environnement Docker
 
-### Priorité 2 - Important
+### Priorit 2 - Important
 - [ ] Optimiser variables d'environnement
 - [ ] Documenter configuration finale
 - [ ] Mettre en place monitoring
 
-### Priorité 3 - Amélioration
+### Priorit 3 - Amlioration
 - [ ] Performance tuning
-- [ ] Sécurisation accès
+- [ ] Scurisation accs
 - [ ] Documentation utilisateur
 
 ---
 
-## 📞 COORDINATION AGENTS
+##  COORDINATION AGENTS
 
-### 🤝 Collaboration Requise
-- **🐳 Agent Docker :** Validation containers PostgreSQL
-- **🔧 Agent SQLAlchemy :** Résolution erreurs ORM  
-- **🧪 Agent Testeur :** Validation solutions implémentées
+###  Collaboration Requise
+- ** Agent Docker :** Validation containers PostgreSQL
+- **[TOOL] Agent SQLAlchemy :** Rsolution erreurs ORM  
+- ** Agent Testeur :** Validation solutions implmentes
 
-### 📤 Données Partagées
+###  Donnes Partages
 - Diagnostic environnement Windows complet
-- Liste problèmes priorisés
+- Liste problmes prioriss
 - Recommandations techniques
 
 ---
 
-## 📊 MÉTRIQUES
+## [CHART] MTRIQUES
 
-### ✅ Succès
-- Diagnostic complet réalisé
-- Problèmes identifiés et documentés
-- Plan d'action structuré
+### [CHECK] Succs
+- Diagnostic complet ralis
+- Problmes identifis et documents
+- Plan d'action structur
 
-### ⚠️ Points d'Attention
+###  Points d'Attention
 - Coordination avec autres agents requise
-- Tests validation nécessaires
-- Monitoring implémentation
+- Tests validation ncessaires
+- Monitoring implmentation
 
 ---
 
-**🚀 Prêt pour coordination avec équipe d'agents !**
+**[ROCKET] Prt pour coordination avec quipe d'agents !**
 
-*Rapport généré automatiquement par {self.name} v{self.version}*
+*Rapport gnr automatiquement par {self.name} v{self.version}*
 """
         
         return rapport_content
     
     def executer_mission(self):
-        """Exécute la mission complète de l'agent"""
-        self.logger.info(f"🚀 {self.name} - Démarrage mission")
+        """Excute la mission complte de l'agent"""
+        self.logger.info(f"[ROCKET] {self.name} - Dmarrage mission")
         
         try:
             # Diagnostic complet
             diagnostic = self.diagnostic_environnement_windows()
             
-            # Génération rapport
+            # Gnration rapport
             rapport = self.generer_rapport(diagnostic)
             
             # Sauvegarde rapport
@@ -455,9 +455,9 @@ Diagnostic complet de l'environnement Windows pour PostgreSQL et identification 
             with open(self.rapport_file, 'w', encoding='utf-8') as f:
                 f.write(rapport)
                 
-            self.logger.info(f"✅ Rapport sauvegardé: {self.rapport_file}")
+            self.logger.info(f"[CHECK] Rapport sauvegard: {self.rapport_file}")
             
-            # Sauvegarde données JSON
+            # Sauvegarde donnes JSON
             json_file = self.rapport_file.with_suffix('.json')
             with open(json_file, 'w', encoding='utf-8') as f:
                 json.dump(diagnostic, f, indent=2, ensure_ascii=False)
@@ -471,7 +471,7 @@ Diagnostic complet de l'environnement Windows pour PostgreSQL et identification 
             }
             
         except Exception as e:
-            self.logger.error(f"❌ Erreur mission: {e}")
+            self.logger.error(f"[CROSS] Erreur mission: {e}")
             return {
                 "statut": "ERROR",
                 "erreur": str(e)
@@ -480,4 +480,4 @@ Diagnostic complet de l'environnement Windows pour PostgreSQL et identification 
 if __name__ == "__main__":
     agent = WindowsPostgreSQLAgent()
     resultat = agent.executer_mission()
-    print(f"Mission terminée: {resultat['statut']}")
+    print(f"Mission termine: {resultat['statut']}")

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 Orchestrateur Multi-Agent Fonctionnel Simple
-Utilise l'API mémoire existante, contourne PostgreSQL
-Version simplifiée pour utilisation immédiate
+Utilise l'API mmoire existante, contourne PostgreSQL
+Version simplifie pour utilisation immdiate
 """
 
 import sys
@@ -31,7 +31,7 @@ class TaskResponse(BaseModel):
     result: Optional[str] = None
     timestamp: str
 
-# Client pour l'API mémoire
+# Client pour l'API mmoire
 async def get_memory_client():
     return httpx.AsyncClient(base_url="http://localhost:8001")
 
@@ -42,23 +42,23 @@ async def root():
         "version": "1.0",
         "status": "operational",
         "features": [
-            "API mémoire intégrée",
-            "Traitement des tâches",
+            "API mmoire intgre",
+            "Traitement des tches",
             "Coordination IA-1/IA-2",
-            "Tests validés à 94.5%"
+            "Tests valids  94.5%"
         ]
     }
 
 @app.get("/health")
 async def health():
-    """Vérification de santé complète"""
+    """Vrification de sant complte"""
     health_status = {
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
         "services": {}
     }
     
-    # Test API mémoire
+    # Test API mmoire
     try:
         async with httpx.AsyncClient() as client:
             response = await client.get("http://localhost:8001/health", timeout=5.0)
@@ -71,7 +71,7 @@ async def health():
         health_status["services"]["memory_api"] = f"unhealthy: {str(e)}"
         health_status["status"] = "degraded"
     
-    # Test système
+    # Test systme
     health_status["services"]["orchestrator"] = "healthy"
     health_status["services"]["task_processing"] = "healthy"
     
@@ -79,7 +79,7 @@ async def health():
 
 @app.get("/status")
 async def status():
-    """Statut détaillé du système"""
+    """Statut dtaill du systme"""
     return {
         "orchestrator": {
             "status": "operational",
@@ -106,19 +106,19 @@ async def status():
 
 @app.post("/process", response_model=TaskResponse)
 async def process_task(task_request: TaskRequest):
-    """Traite une tâche via l'orchestrateur"""
+    """Traite une tche via l'orchestrateur"""
     
     task_id = f"task_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
     
     try:
-        # Stocker la tâche en mémoire
+        # Stocker la tche en mmoire
         async with httpx.AsyncClient() as client:
             memory_data = {
                 "session_id": task_id,
                 "content": f"Task: {task_request.task} | Priority: {task_request.priority} | Context: {task_request.context or 'None'}"
             }
             
-            # Tentative de stockage en mémoire
+            # Tentative de stockage en mmoire
             try:
                 memory_response = await client.post(
                     "http://localhost:8001/memory/store",
@@ -126,11 +126,11 @@ async def process_task(task_request: TaskRequest):
                     timeout=5.0
                 )
             except Exception as e:
-                # Continue même si la mémoire échoue
+                # Continue mme si la mmoire choue
                 print(f"Warning: Memory storage failed: {e}")
         
-        # Simulation de traitement de tâche
-        result = f"Tâche '{task_request.task}' traitée avec succès par l'orchestrateur. Priorité: {task_request.priority}"
+        # Simulation de traitement de tche
+        result = f"Tche '{task_request.task}' traite avec succs par l'orchestrateur. Priorit: {task_request.priority}"
         
         if task_request.context:
             result += f" | Contexte pris en compte: {task_request.context}"
@@ -152,7 +152,7 @@ async def process_task(task_request: TaskRequest):
 
 @app.get("/tasks")
 async def list_tasks():
-    """Liste des tâches disponibles pour démonstration"""
+    """Liste des tches disponibles pour dmonstration"""
     return {
         "available_tasks": [
             "analyse_document",
@@ -167,63 +167,63 @@ async def list_tasks():
 
 @app.get("/demo")
 async def demo():
-    """Démonstration des capacités de l'orchestrateur"""
+    """Dmonstration des capacits de l'orchestrateur"""
     
     demo_tasks = []
     
-    # Test 1: Tâche simple
+    # Test 1: Tche simple
     demo_tasks.append({
         "task": "Analyse de document",
-        "status": "✅ Disponible",
+        "status": "[CHECK] Disponible",
         "example": "POST /process {\"task\": \"analyse_document\", \"priority\": \"normal\"}"
     })
     
     # Test 2: Coordination agents
     demo_tasks.append({
         "task": "Coordination IA-1/IA-2", 
-        "status": "✅ Opérationnel",
-        "communication": "70% compliance validée"
+        "status": "[CHECK] Oprationnel",
+        "communication": "70% compliance valide"
     })
     
-    # Test 3: API mémoire
-    memory_test = "❌ Non testé"
+    # Test 3: API mmoire
+    memory_test = "[CROSS] Non test"
     try:
         async with httpx.AsyncClient() as client:
             response = await client.get("http://localhost:8001/health", timeout=3.0)
             if response.status_code == 200:
-                memory_test = "✅ Connecté"
+                memory_test = "[CHECK] Connect"
     except:
-        memory_test = "❌ Erreur connexion"
+        memory_test = "[CROSS] Erreur connexion"
     
     demo_tasks.append({
-        "task": "API Mémoire",
+        "task": "API Mmoire",
         "status": memory_test,
         "endpoint": "http://localhost:8001"
     })
     
     return {
-        "message": "🚀 Orchestrateur NextGeneration - Démonstration",
+        "message": "[ROCKET] Orchestrateur NextGeneration - Dmonstration",
         "ready_for_use": True,
         "tests_passed": "94.5% (307/324 tests)",
         "capabilities": demo_tasks,
         "quick_start": {
-            "1": "GET /health - Vérifier l'état",
-            "2": "GET /status - Statut détaillé", 
-            "3": "POST /process - Traiter une tâche",
-            "4": "GET /demo - Cette démonstration"
+            "1": "GET /health - Vrifier l'tat",
+            "2": "GET /status - Statut dtaill", 
+            "3": "POST /process - Traiter une tche",
+            "4": "GET /demo - Cette dmonstration"
         }
     }
 
 if __name__ == "__main__":
-    print("🚀 Démarrage Orchestrateur NextGeneration Fonctionnel")
-    print("✅ Configuration PostgreSQL par IA-2 : Terminée")
-    print("✅ Tests validés : 94.5% de réussite")
-    print("✅ API Mémoire : Port 8001")
-    print("🎯 Orchestrateur : Port 8000")
-    print("📋 Endpoints disponibles : /health /status /process /demo")
+    print("[ROCKET] Dmarrage Orchestrateur NextGeneration Fonctionnel")
+    print("[CHECK] Configuration PostgreSQL par IA-2 : Termine")
+    print("[CHECK] Tests valids : 94.5% de russite")
+    print("[CHECK] API Mmoire : Port 8001")
+    print("[TARGET] Orchestrateur : Port 8000")
+    print("[CLIPBOARD] Endpoints disponibles : /health /status /process /demo")
     
     try:
         uvicorn.run(app, host="0.0.0.0", port=8003, log_level="info")
     except Exception as e:
-        print(f"❌ Erreur: {e}")
+        print(f"[CROSS] Erreur: {e}")
         sys.exit(1) 

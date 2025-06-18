@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-🔒 Agent Backup Engine - Refactoring NextGeneration
-Mission: Backup ultra-sécurisé et versioning pour refactoring god mode files
-Modèle: Claude Sonnet 4.0 - Fiabilité critique
+ Agent Backup Engine - Refactoring NextGeneration
+Mission: Backup ultra-scuris et versioning pour refactoring god mode files
+Modle: Claude Sonnet 4.0 - Fiabilit critique
 """
 
 import os
@@ -20,7 +20,7 @@ import subprocess
 
 @dataclass
 class BackupSnapshot:
-    """Snapshot de backup avec intégrité"""
+    """Snapshot de backup avec intgrit"""
     timestamp: str
     snapshot_id: str
     description: str
@@ -33,7 +33,7 @@ class BackupSnapshot:
 
 @dataclass
 class BackupOperation:
-    """Opération de backup"""
+    """Opration de backup"""
     operation_id: str
     timestamp: str
     operation_type: str  # FULL, INCREMENTAL, PHASE, EMERGENCY
@@ -44,12 +44,12 @@ class BackupOperation:
     error_message: Optional[str] = None
 
 class AgentBackupEngineRefactoring:
-    """Agent de backup ultra-sécurisé pour refactoring"""
+    """Agent de backup ultra-scuris pour refactoring"""
     
     def __init__(self):
         self.name = "Agent Backup Engine Refactoring"
         self.model = "Claude Sonnet 4.0"
-        self.mission = "Backup ultra-sécurisé et protection orchestrateur pendant refactoring"
+        self.mission = "Backup ultra-scuris et protection orchestrateur pendant refactoring"
         self.version = "1.0.0"
         self.status = "INITIALIZING"
         
@@ -60,7 +60,7 @@ class AgentBackupEngineRefactoring:
         self.incremental_dir = self.backup_root / "incremental"
         self.metadata_dir = self.backup_root / "metadata"
         
-        # Fichiers critiques à protéger ABSOLUMENT
+        # Fichiers critiques  protger ABSOLUMENT
         self.critical_files = [
             "orchestrator/app/main.py",
             "orchestrator/app/agents/advanced_coordination.py", 
@@ -70,7 +70,7 @@ class AgentBackupEngineRefactoring:
             "orchestrator/app/graph/state.py"
         ]
         
-        # État du backup
+        # tat du backup
         self.backup_history: List[BackupOperation] = []
         self.current_snapshot: Optional[BackupSnapshot] = None
         self.baseline_established = False
@@ -78,28 +78,28 @@ class AgentBackupEngineRefactoring:
         self._setup_backup_environment()
     
     def _setup_backup_environment(self):
-        """Setup sécurisé de l'environnement backup"""
+        """Setup scuris de l'environnement backup"""
         try:
-            # Création structure backup
+            # Cration structure backup
             self.backup_root.mkdir(exist_ok=True)
             self.snapshots_dir.mkdir(exist_ok=True)
             self.incremental_dir.mkdir(exist_ok=True)
             self.metadata_dir.mkdir(exist_ok=True)
             
-            # Vérification permissions
+            # Vrification permissions
             if not os.access(self.backup_root, os.W_OK):
-                raise PermissionError(f"Pas de permissions écriture sur {self.backup_root}")
+                raise PermissionError(f"Pas de permissions criture sur {self.backup_root}")
                 
-            # Création fichiers de configuration
+            # Cration fichiers de configuration
             self._create_backup_config()
             
-            print(f"✅ Environnement backup initialisé: {self.backup_root}")
+            print(f"[CHECK] Environnement backup initialis: {self.backup_root}")
             
         except Exception as e:
-            raise RuntimeError(f"❌ Échec setup environnement backup: {e}")
+            raise RuntimeError(f"[CROSS] chec setup environnement backup: {e}")
     
     def _create_backup_config(self):
-        """Crée configuration backup"""
+        """Cre configuration backup"""
         config = {
             "version": "1.0.0",
             "created": datetime.now().isoformat(),
@@ -107,7 +107,7 @@ class AgentBackupEngineRefactoring:
             "critical_files": self.critical_files,
             "retention_days": 30,
             "compression_enabled": True,
-            "encryption_enabled": False,  # Peut être activé plus tard
+            "encryption_enabled": False,  # Peut tre activ plus tard
             "auto_rollback_threshold": 0.8,  # Si performance < 80%
             "max_snapshots": 50
         }
@@ -128,8 +128,8 @@ class AgentBackupEngineRefactoring:
             return "ERROR"
     
     def create_baseline_snapshot(self) -> BackupSnapshot:
-        """Crée snapshot baseline AVANT tout refactoring"""
-        print("🔒 Création baseline snapshot CRITIQUE...")
+        """Cre snapshot baseline AVANT tout refactoring"""
+        print(" Cration baseline snapshot CRITIQUE...")
         
         operation_id = f"baseline_{int(time.time())}"
         operation = BackupOperation(
@@ -155,7 +155,7 @@ class AgentBackupEngineRefactoring:
             
             if orchestrator_source.exists():
                 shutil.copytree(orchestrator_source, orchestrator_backup, dirs_exist_ok=True)
-                print(f"✅ Orchestrateur sauvegardé: {orchestrator_backup}")
+                print(f"[CHECK] Orchestrateur sauvegard: {orchestrator_backup}")
             
             # Backup fichiers critiques individuellement
             critical_backup_dir = snapshot_dir / "critical_files"
@@ -168,17 +168,17 @@ class AgentBackupEngineRefactoring:
             for critical_file in self.critical_files:
                 source_file = self.project_root / critical_file
                 if source_file.exists():
-                    # Création structure répertoire
+                    # Cration structure rpertoire
                     backup_file = critical_backup_dir / critical_file
                     backup_file.parent.mkdir(parents=True, exist_ok=True)
                     
-                    # Copie avec métadonnées
+                    # Copie avec mtadonnes
                     shutil.copy2(source_file, backup_file)
                     
                     # Calcul checksum
                     checksum = self.calculate_file_checksum(source_file)
                     
-                    # Métadonnées fichier
+                    # Mtadonnes fichier
                     metadata = {
                         "original_path": str(source_file),
                         "backup_path": str(backup_file),
@@ -196,12 +196,12 @@ class AgentBackupEngineRefactoring:
                     total_size += source_file.stat().st_size
                     critical_files_backed.append(str(critical_file))
                     
-                    print(f"✅ Backup critique: {critical_file}")
+                    print(f"[CHECK] Backup critique: {critical_file}")
             
             # Checksum global snapshot
             checksum_global = self._calculate_snapshot_checksum(snapshot_dir)
             
-            # Création snapshot
+            # Cration snapshot
             snapshot = BackupSnapshot(
                 timestamp=datetime.now().isoformat(),
                 snapshot_id=snapshot_id,
@@ -214,7 +214,7 @@ class AgentBackupEngineRefactoring:
                 critical_files=critical_files_backed
             )
             
-            # Sauvegarde métadonnées snapshot
+            # Sauvegarde mtadonnes snapshot
             snapshot_metadata = snapshot_dir / "snapshot.json"
             with open(snapshot_metadata, 'w') as f:
                 json.dump(asdict(snapshot), f, indent=2, ensure_ascii=False)
@@ -232,9 +232,9 @@ class AgentBackupEngineRefactoring:
             self.current_snapshot = snapshot
             self.baseline_established = True
             
-            print(f"🎉 BASELINE SNAPSHOT CRÉÉ: {snapshot_id}")
-            print(f"📊 {files_count} fichiers, {total_size:,} bytes")
-            print(f"⏱️ Durée: {operation.duration:.1f}s")
+            print(f" BASELINE SNAPSHOT CR: {snapshot_id}")
+            print(f"[CHART] {files_count} fichiers, {total_size:,} bytes")
+            print(f" Dure: {operation.duration:.1f}s")
             
             return snapshot
             
@@ -244,7 +244,7 @@ class AgentBackupEngineRefactoring:
             operation.duration = time.time() - start_time
             self.backup_history.append(operation)
             
-            raise RuntimeError(f"❌ Échec création baseline: {e}")
+            raise RuntimeError(f"[CROSS] chec cration baseline: {e}")
     
     def _calculate_snapshot_checksum(self, snapshot_dir: Path) -> str:
         """Calcule checksum global d'un snapshot"""
@@ -269,12 +269,12 @@ class AgentBackupEngineRefactoring:
                     arcname = file_path.relative_to(snapshot_dir)
                     zipf.write(file_path, arcname)
         
-        print(f"📦 Snapshot compressé: {compressed_file}")
+        print(f" Snapshot compress: {compressed_file}")
         return compressed_file
     
     def create_phase_checkpoint(self, phase_name: str, description: str) -> BackupSnapshot:
-        """Crée checkpoint avant chaque phase"""
-        print(f"🔄 Checkpoint phase: {phase_name}")
+        """Cre checkpoint avant chaque phase"""
+        print(f" Checkpoint phase: {phase_name}")
         
         operation_id = f"phase_{phase_name}_{int(time.time())}"
         operation = BackupOperation(
@@ -293,7 +293,7 @@ class AgentBackupEngineRefactoring:
             snapshot_dir = self.snapshots_dir / snapshot_id
             snapshot_dir.mkdir(exist_ok=True)
             
-            # Backup incrémental des fichiers critiques
+            # Backup incrmental des fichiers critiques
             files_count = 0
             total_size = 0
             critical_files_backed = []
@@ -324,7 +324,7 @@ class AgentBackupEngineRefactoring:
                 critical_files=critical_files_backed
             )
             
-            # Sauvegarde métadonnées
+            # Sauvegarde mtadonnes
             snapshot_metadata = snapshot_dir / "snapshot.json"
             with open(snapshot_metadata, 'w') as f:
                 json.dump(asdict(snapshot), f, indent=2, ensure_ascii=False)
@@ -336,7 +336,7 @@ class AgentBackupEngineRefactoring:
             
             self.backup_history.append(operation)
             
-            print(f"✅ Checkpoint créé: {snapshot_id}")
+            print(f"[CHECK] Checkpoint cr: {snapshot_id}")
             return snapshot
             
         except Exception as e:
@@ -345,14 +345,14 @@ class AgentBackupEngineRefactoring:
             operation.duration = time.time() - start_time
             self.backup_history.append(operation)
             
-            raise RuntimeError(f"❌ Échec checkpoint {phase_name}: {e}")
+            raise RuntimeError(f"[CROSS] chec checkpoint {phase_name}: {e}")
     
     def emergency_rollback(self, target_snapshot_id: Optional[str] = None) -> bool:
         """Rollback d'urgence vers snapshot"""
-        print("🚨 ROLLBACK D'URGENCE INITIÉ...")
+        print(" ROLLBACK D'URGENCE INITI...")
         
         try:
-            # Détermine snapshot cible
+            # Dtermine snapshot cible
             if target_snapshot_id is None:
                 if self.current_snapshot:
                     target_snapshot_id = self.current_snapshot.snapshot_id
@@ -368,14 +368,14 @@ class AgentBackupEngineRefactoring:
             # Localise snapshot
             snapshot_dir = self.snapshots_dir / target_snapshot_id
             if not snapshot_dir.exists():
-                # Essaie de décompresser
+                # Essaie de dcompresser
                 compressed_file = self.snapshots_dir / f"{target_snapshot_id}.zip"
                 if compressed_file.exists():
                     self._decompress_snapshot(compressed_file, snapshot_dir)
                 else:
                     raise FileNotFoundError(f"Snapshot {target_snapshot_id} introuvable")
             
-            # Lecture métadonnées snapshot
+            # Lecture mtadonnes snapshot
             snapshot_metadata = snapshot_dir / "snapshot.json"
             with open(snapshot_metadata, 'r') as f:
                 snapshot_data = json.load(f)
@@ -385,7 +385,7 @@ class AgentBackupEngineRefactoring:
             orchestrator_backup = snapshot_dir / "orchestrator"
             
             if orchestrator_backup.exists():
-                # Sauvegarde état actuel avant rollback
+                # Sauvegarde tat actuel avant rollback
                 current_backup = self.project_root / f"orchestrator_before_rollback_{int(time.time())}"
                 shutil.copytree(self.project_root / "orchestrator", current_backup)
                 
@@ -396,7 +396,7 @@ class AgentBackupEngineRefactoring:
                 shutil.copytree(orchestrator_backup, self.project_root / "orchestrator")
                 files_restored += 1
                 
-                print(f"✅ Orchestrateur restauré depuis {target_snapshot_id}")
+                print(f"[CHECK] Orchestrateur restaur depuis {target_snapshot_id}")
             
             # Restauration fichiers critiques individuels
             critical_backup_dir = snapshot_dir / "critical_files"
@@ -409,23 +409,23 @@ class AgentBackupEngineRefactoring:
                         shutil.copy2(backup_file, target_file)
                         files_restored += 1
             
-            print(f"🎉 ROLLBACK RÉUSSI: {files_restored} fichiers restaurés")
-            print(f"📋 Snapshot source: {target_snapshot_id}")
+            print(f" ROLLBACK RUSSI: {files_restored} fichiers restaurs")
+            print(f"[CLIPBOARD] Snapshot source: {target_snapshot_id}")
             
             return True
             
         except Exception as e:
-            print(f"❌ ÉCHEC ROLLBACK: {e}")
+            print(f"[CROSS] CHEC ROLLBACK: {e}")
             return False
     
     def _decompress_snapshot(self, compressed_file: Path, target_dir: Path):
-        """Décompresse un snapshot"""
+        """Dcompresse un snapshot"""
         target_dir.mkdir(exist_ok=True)
         
         with zipfile.ZipFile(compressed_file, 'r') as zipf:
             zipf.extractall(target_dir)
         
-        print(f"📦 Snapshot décompressé: {target_dir}")
+        print(f" Snapshot dcompress: {target_dir}")
     
     def get_backup_status(self) -> Dict[str, Any]:
         """Retourne status complet backup"""
@@ -443,7 +443,7 @@ class AgentBackupEngineRefactoring:
         }
     
     def generate_backup_report(self) -> Dict[str, Any]:
-        """Génère rapport complet backup"""
+        """Gnre rapport complet backup"""
         status = self.get_backup_status()
         
         report = {
@@ -463,7 +463,7 @@ class AgentBackupEngineRefactoring:
             "recommendations": self._generate_backup_recommendations(),
             "next_actions": [
                 "Validation backup baseline",
-                "Test rollback procédure",
+                "Test rollback procdure",
                 "Configuration monitoring continu"
             ]
         }
@@ -471,49 +471,49 @@ class AgentBackupEngineRefactoring:
         return report
     
     def _generate_backup_recommendations(self) -> List[str]:
-        """Génère recommandations backup"""
+        """Gnre recommandations backup"""
         recommendations = []
         
         if not self.baseline_established:
-            recommendations.append("🔴 CRITIQUE: Créer baseline snapshot immédiatement")
+            recommendations.append(" CRITIQUE: Crer baseline snapshot immdiatement")
         
         if len(self.backup_history) == 0:
-            recommendations.append("⚠️ Aucune opération backup effectuée")
+            recommendations.append(" Aucune opration backup effectue")
         
         failed_ops = [op for op in self.backup_history if op.status == "FAILED"]
         if failed_ops:
-            recommendations.append(f"⚠️ {len(failed_ops)} opérations backup échouées")
+            recommendations.append(f" {len(failed_ops)} oprations backup choues")
         
-        recommendations.append("✅ Tester procédure rollback régulièrement")
-        recommendations.append("✅ Monitoring espace disque backup")
+        recommendations.append("[CHECK] Tester procdure rollback rgulirement")
+        recommendations.append("[CHECK] Monitoring espace disque backup")
         
         return recommendations
     
     async def execute_mission(self) -> Dict[str, Any]:
-        """Exécute mission backup engine"""
-        print(f"🚀 {self.name} - Démarrage mission backup critique")
+        """Excute mission backup engine"""
+        print(f"[ROCKET] {self.name} - Dmarrage mission backup critique")
         
         try:
             self.status = "ACTIVE"
             
-            # ÉTAPE 1: Création baseline OBLIGATOIRE
+            # TAPE 1: Cration baseline OBLIGATOIRE
             if not self.baseline_established:
                 baseline_snapshot = self.create_baseline_snapshot()
-                print(f"✅ Baseline établie: {baseline_snapshot.snapshot_id}")
+                print(f"[CHECK] Baseline tablie: {baseline_snapshot.snapshot_id}")
             
-            # ÉTAPE 2: Test procédure rollback
-            print("🧪 Test procédure rollback...")
-            # Note: En production, on éviterait le test rollback complet
-            # Ici on vérifie juste la disponibilité
+            # TAPE 2: Test procdure rollback
+            print(" Test procdure rollback...")
+            # Note: En production, on viterait le test rollback complet
+            # Ici on vrifie juste la disponibilit
             if self.current_snapshot:
-                print(f"✅ Rollback disponible vers: {self.current_snapshot.snapshot_id}")
+                print(f"[CHECK] Rollback disponible vers: {self.current_snapshot.snapshot_id}")
             
-            # ÉTAPE 3: Génération rapport
+            # TAPE 3: Gnration rapport
             report = self.generate_backup_report()
             
             self.status = "SUCCESS"
             
-            print(f"🎉 Mission backup engine ACCOMPLIE")
+            print(f" Mission backup engine ACCOMPLIE")
             
             return {
                 "status": "SUCCESS",
@@ -530,7 +530,7 @@ class AgentBackupEngineRefactoring:
             
         except Exception as e:
             self.status = "FAILED"
-            print(f"❌ Échec mission backup engine: {e}")
+            print(f"[CROSS] chec mission backup engine: {e}")
             
             return {
                 "status": "FAILED",
@@ -547,13 +547,13 @@ if __name__ == "__main__":
     import asyncio
     result = asyncio.run(agent.execute_mission())
     
-    print(f"\n📊 RÉSULTAT MISSION BACKUP:")
+    print(f"\n[CHART] RSULTAT MISSION BACKUP:")
     print(f"Status: {result['status']}")
     
     if result['status'] == 'SUCCESS':
-        print(f"✅ Baseline: {result['baseline_established']}")
-        print(f"✅ Snapshot: {result['current_snapshot']}")
-        print(f"✅ Rollback: {result['rollback_available']}")
-        print(f"✅ Prêt phase suivante: {result['next_phase_ready']}")
+        print(f"[CHECK] Baseline: {result['baseline_established']}")
+        print(f"[CHECK] Snapshot: {result['current_snapshot']}")
+        print(f"[CHECK] Rollback: {result['rollback_available']}")
+        print(f"[CHECK] Prt phase suivante: {result['next_phase_ready']}")
     else:
-        print(f"❌ Erreur: {result['error']}") 
+        print(f"[CROSS] Erreur: {result['error']}") 

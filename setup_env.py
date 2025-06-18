@@ -8,17 +8,17 @@ import secrets
 import string
 
 def generate_secret_key(length=32):
-    """Génère une clé secrète aléatoire."""
+    """Gnre une cl secrte alatoire."""
     alphabet = string.ascii_letters + string.digits + "!@#$%^&*"
     return ''.join(secrets.choice(alphabet) for _ in range(length))
 
 def create_env_file():
-    """Crée le fichier .env avec les configurations par défaut."""
+    """Cre le fichier .env avec les configurations par dfaut."""
     
     env_content = f"""# Configuration de l'orchestrateur NextGeneration
-# Généré automatiquement par setup_env.py
+# Gnr automatiquement par setup_env.py
 
-# Clés API - REMPLACEZ PAR VOS VRAIES CLÉS
+# Cls API - REMPLACEZ PAR VOS VRAIES CLS
 OPENAI_API_KEY=sk-your-openai-api-key-here
 ANTHROPIC_API_KEY=sk-ant-your-anthropic-api-key-here
 GOOGLE_API_KEY=AIzaSy-your-google-api-key-here
@@ -40,7 +40,7 @@ REDIS_HOST=localhost
 REDIS_PORT=6379
 REDIS_PASSWORD=
 
-# Configuration générale
+# Configuration gnrale
 DEBUG=true
 ENVIRONMENT=development
 MAX_TASK_DESCRIPTION_LENGTH=5000
@@ -54,7 +54,7 @@ OLLAMA_HOST=http://localhost:11434
 # Configuration Docker
 DOCKER_HOST=unix:///var/run/docker.sock
 
-# Configuration de sécurité
+# Configuration de scurit
 SECRET_KEY={generate_secret_key(64)}
 JWT_SECRET={generate_secret_key(32)}
 
@@ -77,51 +77,51 @@ PGBOUNCER_POOL_SIZE=25
 PGBOUNCER_MAX_CLIENT_CONN=100
 """
 
-    # Écrire le fichier .env
+    # crire le fichier .env
     try:
         with open('.env', 'w', encoding='utf-8') as f:
             f.write(env_content)
         
-        print("✅ Fichier .env créé avec succès!")
-        print("\n🔑 IMPORTANT: Vous devez maintenant:")
+        print("[CHECK] Fichier .env cr avec succs!")
+        print("\n IMPORTANT: Vous devez maintenant:")
         print("1. Ouvrir le fichier .env")
-        print("2. Remplacer 'your-openai-api-key-here' par votre vraie clé OpenAI")
-        print("3. Remplacer 'your-anthropic-api-key-here' par votre vraie clé Anthropic")
-        print("4. Remplacer 'your-google-api-key-here' par votre vraie clé Google/Gemini (optionnel)")
-        print("5. Ajuster les autres paramètres selon votre configuration")
+        print("2. Remplacer 'your-openai-api-key-here' par votre vraie cl OpenAI")
+        print("3. Remplacer 'your-anthropic-api-key-here' par votre vraie cl Anthropic")
+        print("4. Remplacer 'your-google-api-key-here' par votre vraie cl Google/Gemini (optionnel)")
+        print("5. Ajuster les autres paramtres selon votre configuration")
         
-        # Créer le dossier logs s'il n'existe pas
+        # Crer le dossier logs s'il n'existe pas
         os.makedirs('logs', exist_ok=True)
-        print("\n📁 Dossier 'logs' créé pour les fichiers de log")
+        print("\n[FOLDER] Dossier 'logs' cr pour les fichiers de log")
         
         return True
         
     except Exception as e:
-        print(f"❌ Erreur lors de la création du fichier .env: {e}")
+        print(f"[CROSS] Erreur lors de la cration du fichier .env: {e}")
         return False
 
 def check_existing_env():
-    """Vérifie si un fichier .env existe déjà."""
+    """Vrifie si un fichier .env existe dj."""
     if os.path.exists('.env'):
-        response = input("⚠️  Un fichier .env existe déjà. Le remplacer? (y/N): ")
+        response = input("  Un fichier .env existe dj. Le remplacer? (y/N): ")
         return response.lower() in ['y', 'yes', 'o', 'oui']
     return True
 
 def main():
     """Fonction principale."""
-    print("🚀 Configuration de l'environnement NextGeneration")
+    print("[ROCKET] Configuration de l'environnement NextGeneration")
     print("="*50)
     
     if not check_existing_env():
-        print("❌ Configuration annulée.")
+        print("[CROSS] Configuration annule.")
         return
     
     if create_env_file():
-        print("\n🎯 Configuration terminée!")
+        print("\n[TARGET] Configuration termine!")
         print("\nPour tester l'agent de diagnostic PostgreSQL:")
         print("python postgresql_diagnostic_agent.py")
     else:
-        print("\n❌ Échec de la configuration.")
+        print("\n[CROSS] chec de la configuration.")
 
 if __name__ == "__main__":
     main() 

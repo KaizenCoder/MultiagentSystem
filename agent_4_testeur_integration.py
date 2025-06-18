@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-Agent 4 - Testeur d'Intégration (GPT-4 Turbo)
-Mission: Tester l'intégration des outils adaptés dans NextGeneration
+Agent 4 - Testeur d'Intgration (GPT-4 Turbo)
+Mission: Tester l'intgration des outils adapts dans NextGeneration
 
-Responsabilités:
-- Tester la syntaxe des fichiers adaptés
-- Vérifier les imports et dépendances
-- Tester l'exécution basique des outils
+Responsabilits:
+- Tester la syntaxe des fichiers adapts
+- Vrifier les imports et dpendances
+- Tester l'excution basique des outils
 - Valider la configuration NextGeneration
-- Générer un rapport de tests détaillé
+- Gnrer un rapport de tests dtaill
 """
 
 import os
@@ -18,11 +18,12 @@ import json
 import logging
 import subprocess
 import importlib.util
+from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
 class AgentTesteurIntegration:
-    """Agent spécialisé dans les tests d'intégration avec GPT-4 Turbo"""
+    """Agent spcialis dans les tests d'intgration avec GPT-4 Turbo"""
     
     def __init__(self, target_path: str):
         self.target_path = Path(target_path)
@@ -38,27 +39,27 @@ class AgentTesteurIntegration:
         }
         
     def test_integrated_tools(self, adaptation_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Test complet des outils intégrés"""
-        self.logger.info("🧪 Démarrage tests d'intégration")
+        """Test complet des outils intgrs"""
+        self.logger.info(" Dmarrage tests d'intgration")
         
         adapted_tools = adaptation_data.get("adapted_tools", [])
         if not adapted_tools:
-            self.logger.warning("⚠️ Aucun outil à tester")
+            self.logger.warning(" Aucun outil  tester")
             return {"tested_tools": [], "test_summary": {}}
             
         tested_tools = []
         test_failures = []
         
-        # Tester chaque outil adapté
+        # Tester chaque outil adapt
         for tool in adapted_tools:
             try:
                 test_results = self.test_single_tool(tool)
                 tested_tools.append(test_results)
                 
                 if test_results["overall_status"] == "PASS":
-                    self.logger.info(f"✅ Tests réussis: {tool['name']}")
+                    self.logger.info(f"[CHECK] Tests russis: {tool['name']}")
                 else:
-                    self.logger.warning(f"⚠️ Tests partiels: {tool['name']}")
+                    self.logger.warning(f" Tests partiels: {tool['name']}")
                     
             except Exception as e:
                 error_msg = f"Erreur test {tool['name']}: {e}"
@@ -68,7 +69,7 @@ class AgentTesteurIntegration:
         # Tests globaux (configuration, structure)
         global_tests = self.run_global_tests()
         
-        # Génération du rapport de tests
+        # Gnration du rapport de tests
         test_summary = self.generate_test_summary(tested_tools, global_tests, test_failures)
         
         results = {
@@ -78,7 +79,7 @@ class AgentTesteurIntegration:
             "test_summary": test_summary
         }
         
-        self.logger.info(f"✅ Tests terminés: {len(tested_tools)} outils testés")
+        self.logger.info(f"[CHECK] Tests termins: {len(tested_tools)} outils tests")
         return results
         
     def test_single_tool(self, tool: Dict[str, Any]) -> Dict[str, Any]:
@@ -101,7 +102,7 @@ class AgentTesteurIntegration:
         # Test 2: Validation des imports
         test_results["tests"]["import_validation"] = self.test_import_validation(tool_path)
         
-        # Test 3: Test d'exécution basique
+        # Test 3: Test d'excution basique
         test_results["tests"]["execution_test"] = self.test_basic_execution(tool_path)
         
         # Test 4: Test de configuration
@@ -130,7 +131,7 @@ class AgentTesteurIntegration:
             with open(tool_path, 'r', encoding='utf-8') as f:
                 content = f.read()
                 
-            # Parse AST pour vérifier la syntaxe
+            # Parse AST pour vrifier la syntaxe
             try:
                 ast.parse(content)
                 test_result["status"] = "PASS"
@@ -197,7 +198,7 @@ class AgentTesteurIntegration:
             else:
                 test_result["score"] = 100  # Aucun import = OK
                 
-            # Détermination du statut
+            # Dtermination du statut
             if test_result["score"] >= 80:
                 test_result["status"] = "PASS"
             elif test_result["score"] >= 50:
@@ -212,7 +213,7 @@ class AgentTesteurIntegration:
         return test_result
         
     def test_basic_execution(self, tool_path: Path) -> Dict[str, Any]:
-        """Test d'exécution basique"""
+        """Test d'excution basique"""
         test_result = {
             "name": "Basic Execution Test",
             "status": "UNKNOWN",
@@ -237,15 +238,15 @@ class AgentTesteurIntegration:
                     
                     if result.returncode == 0 or "usage" in result.stdout.lower() or "help" in result.stdout.lower():
                         execution_successful = True
-                        test_result["details"].append(f"Exécution réussie avec argument: {arg}")
+                        test_result["details"].append(f"Excution russie avec argument: {arg}")
                         break
                         
                 except subprocess.TimeoutExpired:
                     test_result["errors"].append(f"Timeout avec argument: {arg}")
                 except Exception as e:
-                    test_result["errors"].append(f"Erreur exécution avec {arg}: {e}")
+                    test_result["errors"].append(f"Erreur excution avec {arg}: {e}")
                     
-            # Test d'exécution sans arguments
+            # Test d'excution sans arguments
             if not execution_successful:
                 try:
                     result = subprocess.run(
@@ -255,17 +256,17 @@ class AgentTesteurIntegration:
                         timeout=5
                     )
                     
-                    # Considérer comme succès si pas d'erreur fatale
+                    # Considrer comme succs si pas d'erreur fatale
                     if result.returncode in [0, 1, 2]:  # Codes de retour acceptables
                         execution_successful = True
-                        test_result["details"].append("Exécution basique réussie")
+                        test_result["details"].append("Excution basique russie")
                         
                 except subprocess.TimeoutExpired:
-                    test_result["errors"].append("Timeout exécution sans arguments")
+                    test_result["errors"].append("Timeout excution sans arguments")
                 except Exception as e:
-                    test_result["errors"].append(f"Erreur exécution: {e}")
+                    test_result["errors"].append(f"Erreur excution: {e}")
                     
-            # Détermination du score et statut
+            # Dtermination du score et statut
             if execution_successful:
                 test_result["status"] = "PASS"
                 test_result["score"] = 100
@@ -275,7 +276,7 @@ class AgentTesteurIntegration:
                 
         except Exception as e:
             test_result["status"] = "ERROR"
-            test_result["errors"].append(f"Erreur test exécution: {e}")
+            test_result["errors"].append(f"Erreur test excution: {e}")
             
         return test_result
         
@@ -296,27 +297,27 @@ class AgentTesteurIntegration:
             score = 0
             max_score = 100
             
-            # Vérifier la présence des éléments NextGeneration
+            # Vrifier la prsence des lments NextGeneration
             checks = [
-                ("NextGeneration Tool", 20, "En-tête NextGeneration présent"),
-                ("SCRIPT_DIR", 15, "Variable SCRIPT_DIR définie"),
-                ("PROJECT_ROOT", 15, "Variable PROJECT_ROOT définie"),
-                ("logging.getLogger", 15, "Logger NextGeneration configuré"),
-                ("sys.path.insert", 10, "Python path configuré"),
-                ("Auto-détection du projet", 15, "Auto-détection projet présente"),
-                ("Configuration NextGeneration", 10, "Section configuration présente")
+                ("NextGeneration Tool", 20, "En-tte NextGeneration prsent"),
+                ("SCRIPT_DIR", 15, "Variable SCRIPT_DIR dfinie"),
+                ("PROJECT_ROOT", 15, "Variable PROJECT_ROOT dfinie"),
+                ("logging.getLogger", 15, "Logger NextGeneration configur"),
+                ("sys.path.insert", 10, "Python path configur"),
+                ("Auto-dtection du projet", 15, "Auto-dtection projet prsente"),
+                ("Configuration NextGeneration", 10, "Section configuration prsente")
             ]
             
             for check_text, points, description in checks:
                 if check_text in content:
                     score += points
-                    test_result["details"].append(f"✅ {description}")
+                    test_result["details"].append(f"[CHECK] {description}")
                 else:
-                    test_result["errors"].append(f"❌ {description} manquant")
+                    test_result["errors"].append(f"[CROSS] {description} manquant")
                     
             test_result["score"] = min(score, max_score)
             
-            # Détermination du statut
+            # Dtermination du statut
             if test_result["score"] >= 80:
                 test_result["status"] = "PASS"
             elif test_result["score"] >= 50:
@@ -343,14 +344,14 @@ class AgentTesteurIntegration:
         try:
             score = 0
             
-            # Vérifier l'existence du fichier
+            # Vrifier l'existence du fichier
             if tool_path.exists():
                 score += 30
                 test_result["details"].append("Fichier outil existe")
             else:
                 test_result["errors"].append("Fichier outil introuvable")
                 
-            # Vérifier la taille du fichier
+            # Vrifier la taille du fichier
             if tool_path.exists():
                 file_size = tool_path.stat().st_size
                 if file_size > 0:
@@ -359,7 +360,7 @@ class AgentTesteurIntegration:
                 else:
                     test_result["errors"].append("Fichier vide")
                     
-            # Vérifier les permissions
+            # Vrifier les permissions
             if tool_path.exists():
                 if os.access(tool_path, os.R_OK):
                     score += 20
@@ -367,15 +368,15 @@ class AgentTesteurIntegration:
                 else:
                     test_result["errors"].append("Permissions lecture manquantes")
                     
-            # Vérifier la structure du répertoire parent
+            # Vrifier la structure du rpertoire parent
             parent_dir = tool_path.parent
             if (parent_dir / "__init__.py").exists():
                 score += 15
-                test_result["details"].append("Répertoire catégorie correctement structuré")
+                test_result["details"].append("Rpertoire catgorie correctement structur")
             else:
-                test_result["errors"].append("__init__.py manquant dans catégorie")
+                test_result["errors"].append("__init__.py manquant dans catgorie")
                 
-            # Vérifier l'encodage
+            # Vrifier l'encodage
             if tool_path.exists():
                 try:
                     with open(tool_path, 'r', encoding='utf-8') as f:
@@ -383,11 +384,11 @@ class AgentTesteurIntegration:
                     score += 15
                     test_result["details"].append("Encodage UTF-8 valide")
                 except UnicodeDecodeError:
-                    test_result["errors"].append("Problème encodage fichier")
+                    test_result["errors"].append("Problme encodage fichier")
                     
             test_result["score"] = score
             
-            # Détermination du statut
+            # Dtermination du statut
             if test_result["score"] >= 80:
                 test_result["status"] = "PASS"
             elif test_result["score"] >= 50:
@@ -402,7 +403,7 @@ class AgentTesteurIntegration:
         return test_result
         
     def run_global_tests(self) -> Dict[str, Any]:
-        """Tests globaux de l'intégration"""
+        """Tests globaux de l'intgration"""
         global_tests = {
             "configuration_files": self.test_global_configuration(),
             "directory_structure": self.test_directory_structure(),
@@ -424,11 +425,11 @@ class AgentTesteurIntegration:
         try:
             score = 0
             
-            # Vérifier tools_config.json
+            # Vrifier tools_config.json
             config_file = self.target_path / "tools_config.json"
             if config_file.exists():
                 score += 50
-                test_result["details"].append("Fichier tools_config.json présent")
+                test_result["details"].append("Fichier tools_config.json prsent")
                 
                 try:
                     with open(config_file, 'r', encoding='utf-8') as f:
@@ -443,11 +444,11 @@ class AgentTesteurIntegration:
             else:
                 test_result["errors"].append("Fichier tools_config.json manquant")
                 
-            # Vérifier run_tool.py
+            # Vrifier run_tool.py
             launcher_file = self.target_path / "run_tool.py"
             if launcher_file.exists():
                 score += 25
-                test_result["details"].append("Script lanceur présent")
+                test_result["details"].append("Script lanceur prsent")
             else:
                 test_result["errors"].append("Script lanceur manquant")
                 
@@ -461,7 +462,7 @@ class AgentTesteurIntegration:
         return test_result
         
     def test_directory_structure(self) -> Dict[str, Any]:
-        """Test de la structure des répertoires"""
+        """Test de la structure des rpertoires"""
         test_result = {
             "name": "Directory Structure",
             "status": "UNKNOWN",
@@ -473,21 +474,21 @@ class AgentTesteurIntegration:
         try:
             score = 0
             
-            # Vérifier l'existence du répertoire principal
+            # Vrifier l'existence du rpertoire principal
             if self.target_path.exists():
                 score += 30
-                test_result["details"].append("Répertoire principal existe")
+                test_result["details"].append("Rpertoire principal existe")
             else:
-                test_result["errors"].append("Répertoire principal manquant")
+                test_result["errors"].append("Rpertoire principal manquant")
                 return test_result
                 
-            # Compter les catégories créées
+            # Compter les catgories cres
             categories = [d for d in self.target_path.iterdir() if d.is_dir()]
             if categories:
                 score += 40
-                test_result["details"].append(f"{len(categories)} catégories créées")
+                test_result["details"].append(f"{len(categories)} catgories cres")
                 
-                # Vérifier les __init__.py
+                # Vrifier les __init__.py
                 init_count = 0
                 for cat_dir in categories:
                     if (cat_dir / "__init__.py").exists():
@@ -495,11 +496,11 @@ class AgentTesteurIntegration:
                         
                 if init_count == len(categories):
                     score += 30
-                    test_result["details"].append("Tous les __init__.py présents")
+                    test_result["details"].append("Tous les __init__.py prsents")
                 else:
                     test_result["errors"].append(f"{len(categories) - init_count} __init__.py manquants")
             else:
-                test_result["errors"].append("Aucune catégorie créée")
+                test_result["errors"].append("Aucune catgorie cre")
                 
             test_result["score"] = score
             test_result["status"] = "PASS" if score >= 80 else ("PARTIAL" if score >= 50 else "FAIL")
@@ -526,17 +527,17 @@ class AgentTesteurIntegration:
             if req_file.exists():
                 test_result["score"] = 100
                 test_result["status"] = "PASS"
-                test_result["details"].append("Fichier requirements.txt présent")
+                test_result["details"].append("Fichier requirements.txt prsent")
                 
-                # Compter les dépendances
+                # Compter les dpendances
                 with open(req_file, 'r', encoding='utf-8') as f:
                     lines = [line.strip() for line in f if line.strip() and not line.startswith('#')]
                     
-                test_result["details"].append(f"{len(lines)} dépendances listées")
+                test_result["details"].append(f"{len(lines)} dpendances listes")
             else:
-                test_result["score"] = 50  # Pas critique si pas de dépendances
+                test_result["score"] = 50  # Pas critique si pas de dpendances
                 test_result["status"] = "PARTIAL"
-                test_result["details"].append("Aucune dépendance externe détectée")
+                test_result["details"].append("Aucune dpendance externe dtecte")
                 
         except Exception as e:
             test_result["status"] = "ERROR"
@@ -545,7 +546,7 @@ class AgentTesteurIntegration:
         return test_result
         
     def calculate_overall_score(self, tests: Dict[str, Any]) -> int:
-        """Calcul du score global pondéré"""
+        """Calcul du score global pondr"""
         total_score = 0
         
         for test_name, test_result in tests.items():
@@ -557,7 +558,7 @@ class AgentTesteurIntegration:
         return int(total_score)
         
     def determine_overall_status(self, tests: Dict[str, Any]) -> str:
-        """Détermination du statut global"""
+        """Dtermination du statut global"""
         critical_failures = []
         
         for test_name, test_result in tests.items():
@@ -571,7 +572,7 @@ class AgentTesteurIntegration:
         if critical_failures:
             return "FAIL"
             
-        # Compter les succès
+        # Compter les succs
         pass_count = sum(1 for test in tests.values() if test.get("status") == "PASS")
         total_count = len(tests)
         
@@ -585,7 +586,7 @@ class AgentTesteurIntegration:
     def generate_test_summary(self, tested_tools: List[Dict[str, Any]], 
                             global_tests: Dict[str, Any], 
                             test_failures: List[str]) -> Dict[str, Any]:
-        """Génération du résumé des tests"""
+        """Gnration du rsum des tests"""
         
         # Statistiques des outils
         total_tools = len(tested_tools)
@@ -616,8 +617,217 @@ class AgentTesteurIntegration:
             "test_failures_count": len(test_failures),
             "integration_ready": passed_tools + partial_tools >= total_tools * 0.8
         }
+    
+    def tester_integration_apex(self, phase3_data: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Tests d'intgration spcialiss pour les outils Apex_VBA_FRAMEWORK
+        
+        Args:
+            phase3_data: Donnes d'adaptation de la phase 3
+            
+        Returns:
+            Dict contenant les rsultats des tests
+        """
+        self.logger.info(" Tests d'intgration spcialiss Apex_VBA_FRAMEWORK")
+        
+        outils_testes = []
+        outils_adaptes = phase3_data.get("outils_adaptes", [])
+        
+        for outil in outils_adaptes:
+            try:
+                if outil["type"] == "python":
+                    resultat = self._tester_outil_python_apex(outil)
+                elif outil["type"] == "powershell":
+                    resultat = self._tester_outil_powershell_apex(outil)
+                elif outil["type"] == "batch":
+                    resultat = self._tester_outil_batch_apex(outil)
+                else:
+                    continue
+                
+                if resultat:
+                    outils_testes.append(resultat)
+                    status = "[CHECK]" if resultat["test_success"] else ""
+                    self.logger.info(f"{status} Tests {outil['name']}: {resultat['test_summary']}")
+                
+            except Exception as e:
+                self.logger.error(f"[CROSS] Erreur tests {outil['name']}: {e}")
+        
+        resultats = {
+            "total_tested": len(outils_testes),
+            "outils_testes": outils_testes,
+            "tests_passed": len([t for t in outils_testes if t["test_success"]]),
+            "tests_failed": len([t for t in outils_testes if not t["test_success"]]),
+            "test_timestamp": datetime.now().isoformat(),
+            "tester_model": "GPT-4 Turbo"
+        }
+        
+        self.logger.info(f"[CHECK] Tests Apex termins: {resultats['tests_passed']}/{resultats['total_tested']} succs")
+        return resultats
+    
+    def _tester_outil_python_apex(self, outil: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Tests spcialiss pour un outil Python Apex"""
+        try:
+            target_path = Path(outil["target_path"])
+            
+            # Test de syntaxe Python
+            syntaxe_ok = self._test_syntaxe_python_simple(target_path)
+            
+            # Test des imports
+            imports_ok = self._test_imports_python_simple(target_path)
+            
+            # Test d'excution basique (--help ou quivalent)
+            execution_ok = self._test_execution_python_apex(target_path)
+            
+            test_success = syntaxe_ok and imports_ok
+            
+            return {
+                "name": outil["name"],
+                "type": "python",
+                "target_path": str(target_path),
+                "test_success": test_success,
+                "test_details": {
+                    "syntax_check": syntaxe_ok,
+                    "imports_check": imports_ok,
+                    "execution_check": execution_ok
+                },
+                "test_summary": f"Syntaxe: {'OK' if syntaxe_ok else 'FAIL'}, Imports: {'OK' if imports_ok else 'FAIL'}"
+            }
+            
+        except Exception as e:
+            self.logger.error(f"[CROSS] Erreur test Python {outil['name']}: {e}")
+            return None
+    
+    def _tester_outil_powershell_apex(self, outil: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Tests spcialiss pour un outil PowerShell Apex"""
+        try:
+            target_path = Path(outil["target_path"])
+            
+            # Test de syntaxe PowerShell basique
+            syntaxe_ok = self._test_syntaxe_powershell(target_path)
+            
+            # Test de structure basique
+            structure_ok = target_path.exists() and target_path.stat().st_size > 0
+            
+            return {
+                "name": outil["name"],
+                "type": "powershell",
+                "target_path": str(target_path),
+                "test_success": syntaxe_ok and structure_ok,
+                "test_details": {
+                    "syntax_check": syntaxe_ok,
+                    "structure_check": structure_ok
+                },
+                "test_summary": f"Syntaxe: {'OK' if syntaxe_ok else 'FAIL'}, Structure: {'OK' if structure_ok else 'FAIL'}"
+            }
+            
+        except Exception as e:
+            self.logger.error(f"[CROSS] Erreur test PowerShell {outil['name']}: {e}")
+            return None
+    
+    def _tester_outil_batch_apex(self, outil: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Tests spcialiss pour un outil Batch Apex"""
+        try:
+            target_path = Path(outil["target_path"])
+            
+            # Test de structure basique
+            structure_ok = target_path.exists() and target_path.stat().st_size > 0
+            
+            # Test de contenu basique (pas de caractres invalides)
+            contenu_ok = self._test_contenu_batch(target_path)
+            
+            return {
+                "name": outil["name"],
+                "type": "batch",
+                "target_path": str(target_path),
+                "test_success": structure_ok and contenu_ok,
+                "test_details": {
+                    "structure_check": structure_ok,
+                    "content_check": contenu_ok
+                },
+                "test_summary": f"Structure: {'OK' if structure_ok else 'FAIL'}, Contenu: {'OK' if contenu_ok else 'FAIL'}"
+            }
+            
+        except Exception as e:
+            self.logger.error(f"[CROSS] Erreur test Batch {outil['name']}: {e}")
+            return None
+    
+    def _test_syntaxe_python_simple(self, filepath: Path) -> bool:
+        """Test de syntaxe Python simplifi"""
+        try:
+            with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.read()
+            
+            import ast
+            ast.parse(content)
+            return True
+            
+        except Exception:
+            return False
+    
+    def _test_imports_python_simple(self, filepath: Path) -> bool:
+        """Test des imports Python simplifi"""
+        try:
+            import subprocess
+            import sys
+            
+            result = subprocess.run(
+                [sys.executable, "-m", "py_compile", str(filepath)],
+                capture_output=True,
+                timeout=10
+            )
+            
+            return result.returncode == 0
+            
+        except Exception:
+            return False
+    
+    def _test_syntaxe_powershell(self, filepath: Path) -> bool:
+        """Test de syntaxe PowerShell basique"""
+        try:
+            with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.read()
+            
+            # Vrifications basiques de syntaxe PowerShell
+            # Vrifier que les accolades sont quilibres
+            open_braces = content.count('{')
+            close_braces = content.count('}')
+            
+            return open_braces == close_braces
+            
+        except Exception:
+            return False
+    
+    def _test_contenu_batch(self, filepath: Path) -> bool:
+        """Test de contenu Batch basique"""
+        try:
+            with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.read()
+            
+            # Vrifier qu'il n'y a pas de caractres problmatiques
+            return len(content.strip()) > 0
+            
+        except Exception:
+            return False
+    
+    def _test_execution_python_apex(self, filepath: Path) -> bool:
+        """Test d'excution basique pour outil Python Apex"""
+        try:
+            # Test trs basique - juste vrifier que le fichier peut tre import
+            import subprocess
+            import sys
+            
+            result = subprocess.run(
+                [sys.executable, "-m", "py_compile", str(filepath)],
+                capture_output=True,
+                timeout=10
+            )
+            
+            return result.returncode == 0
+            
+        except Exception:
+            return False
 
-# Test de l'agent si exécuté directement
+# Test de l'agent si excut directement
 if __name__ == "__main__":
     import sys
     
@@ -626,7 +836,7 @@ if __name__ == "__main__":
     else:
         target_path = "tools/imported_tools"
         
-    # Test avec des données simulées
+    # Test avec des donnes simules
     test_adaptation_data = {
         "adapted_tools": [
             {

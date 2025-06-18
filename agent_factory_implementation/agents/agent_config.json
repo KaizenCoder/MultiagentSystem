@@ -1,0 +1,51 @@
+{
+  "name": "agent_factory_config",
+  "version": "1.0.0",
+  "description": "Configuration centralisée Agent Factory Pattern",
+  "created_at": "2025-06-18T23:01:07.543545",
+  "agent_creator": "Agent 03",
+  "environments": {
+    "development": {
+      "ttl_seconds": 60,
+      "cache_max_size": 100,
+      "thread_pool_size": 2,
+      "hot_reload": true,
+      "debug": true,
+      "log_level": "DEBUG"
+    },
+    "staging": {
+      "ttl_seconds": 300,
+      "cache_max_size": 500,
+      "thread_pool_size": 4,
+      "hot_reload": true,
+      "debug": false,
+      "log_level": "INFO"
+    },
+    "production": {
+      "ttl_seconds": 600,
+      "cache_max_size": 1000,
+      "thread_pool_size": 8,
+      "hot_reload": false,
+      "debug": false,
+      "log_level": "WARNING"
+    }
+  },
+  "cache": {
+    "lru_enabled": true,
+    "max_memory_mb": 256,
+    "cleanup_interval": 300,
+    "compression_enabled": true
+  },
+  "security": {
+    "signature_required": true,
+    "validation_strict": true,
+    "encryption_enabled": true,
+    "audit_enabled": true
+  },
+  "monitoring": {
+    "metrics_enabled": true,
+    "tracing_enabled": true,
+    "health_check_enabled": true,
+    "prometheus_port": 8080
+  }
+}

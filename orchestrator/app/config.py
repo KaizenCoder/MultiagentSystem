@@ -10,15 +10,15 @@ class Settings(BaseSettings):
     MEMORY_API_URL: str = "http://memory_api:8001"
     ORCHESTRATOR_API_KEY: str
     
-    # Configuration modèles locaux Ollama RTX 3090
+    # Configuration modles locaux Ollama RTX 3090
     LOCAL_MODELS_ENABLED: bool = True
     LOCAL_MODELS_PATH: str = "D:/modeles_llm"
     OLLAMA_BASE_URL: str = "http://localhost:11434"
     OLLAMA_GPU_DEVICE: str = "1"  # Force RTX 3090
     
-    # Paramètres de sécurité
+    # Paramtres de scurit
     DEBUG: bool = False
-    ENFORCE_HTTPS: bool = False  # False pour développement, True pour production
+    ENFORCE_HTTPS: bool = False  # False pour dveloppement, True pour production
     MAX_REQUEST_TIMEOUT: float = 30.0
     MAX_LLM_RESPONSE_TIME: float = 120.0
     MAX_CODE_SIZE: int = 50000
@@ -45,10 +45,10 @@ class Settings(BaseSettings):
         enforce_https = os.getenv('ENFORCE_HTTPS', 'false').lower() == 'true'
         
         if enforce_https and not v.startswith('https://'):
-            # Exceptions pour le développement local
+            # Exceptions pour le dveloppement local
             if not any(host in v for host in ['localhost', '127.0.0.1', 'memory_api']):
                 raise ValueError("HTTPS required for external APIs in production")
         return v
 
 settings = Settings()
-config = settings  # Alias pour la compatibilité
+config = settings  # Alias pour la compatibilit

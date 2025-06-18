@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-🎮 Agents de Validation Ollama RTX3090 - NextGeneration
-Système multi-agents pour validation autonome des optimisations RTX3090
+ Agents de Validation Ollama RTX3090 - NextGeneration
+Systme multi-agents pour validation autonome des optimisations RTX3090
 """
 
 import asyncio
@@ -31,24 +31,24 @@ class BaseAgent:
         self.errors = []
     
     async def execute(self) -> Dict[str, Any]:
-        """Exécute la mission de l'agent"""
+        """Excute la mission de l'agent"""
         self.start_time = time.time()
         self.status = "running"
         
         try:
-            print(f"🤖 Agent {self.name}: Démarrage mission")
-            print(f"📋 Mission: {self.mission}")
+            print(f"[ROBOT] Agent {self.name}: Dmarrage mission")
+            print(f"[CLIPBOARD] Mission: {self.mission}")
             
-            # Exécution spécifique à chaque agent
+            # Excution spcifique  chaque agent
             await self._execute_mission()
             
             self.status = "completed"
-            print(f"✅ Agent {self.name}: Mission accomplie")
+            print(f"[CHECK] Agent {self.name}: Mission accomplie")
             
         except Exception as e:
             self.status = "failed"
             self.errors.append(str(e))
-            print(f"❌ Agent {self.name}: Échec - {e}")
+            print(f"[CROSS] Agent {self.name}: chec - {e}")
         
         finally:
             self.end_time = time.time()
@@ -59,24 +59,24 @@ class BaseAgent:
         return self.results
     
     async def _execute_mission(self):
-        """À implémenter par chaque agent spécialisé"""
+        """ implmenter par chaque agent spcialis"""
         raise NotImplementedError
 
 class SelecteurTestAgent(BaseAgent):
-    """Agent pour tester le sélecteur Ollama RTX3090"""
+    """Agent pour tester le slecteur Ollama RTX3090"""
     
     def __init__(self):
         super().__init__(
-            name="Testeur Sélecteur",
+            name="Testeur Slecteur",
             mission="Valider le fonctionnement du selecteur_ollama_rtx3090.py"
         )
     
     async def _execute_mission(self):
-        """Test du sélecteur RTX3090"""
+        """Test du slecteur RTX3090"""
         
-        # Vérifier existence du fichier
+        # Vrifier existence du fichier
         if not Path("selecteur_ollama_rtx3090.py").exists():
-            raise FileNotFoundError("selecteur_ollama_rtx3090.py non trouvé")
+            raise FileNotFoundError("selecteur_ollama_rtx3090.py non trouv")
         
         self.results["file_exists"] = True
         
@@ -88,11 +88,11 @@ class SelecteurTestAgent(BaseAgent):
             self.results["import_success"] = True
             self.results["models_configured"] = len(selector.models)
             
-            # Test analyse de tâche
+            # Test analyse de tche
             test_tasks = [
-                "Écris du code Python pour trier une liste",
-                "Analyse complexe de données financières", 
-                "Réponse rapide: Quelle heure est-il?",
+                "cris du code Python pour trier une liste",
+                "Analyse complexe de donnes financires", 
+                "Rponse rapide: Quelle heure est-il?",
                 "Test simple"
             ]
             
@@ -118,7 +118,7 @@ class EnvironmentAgent(BaseAgent):
     def __init__(self):
         super().__init__(
             name="Config Environnement", 
-            mission="Configurer définitivement les variables d'environnement RTX3090"
+            mission="Configurer dfinitivement les variables d'environnement RTX3090"
         )
     
     async def _execute_mission(self):
@@ -136,7 +136,7 @@ class EnvironmentAgent(BaseAgent):
         current_config = {}
         missing_vars = []
         
-        # Vérifier configuration actuelle
+        # Vrifier configuration actuelle
         for var, expected in required_vars.items():
             current = os.environ.get(var, "NOT_SET")
             current_config[var] = current
@@ -148,10 +148,10 @@ class EnvironmentAgent(BaseAgent):
         self.results["required_config"] = required_vars
         self.results["missing_vars"] = missing_vars
         
-        # Créer script de configuration
+        # Crer script de configuration
         script_content = f"""@echo off
-echo 🎮 Configuration Ollama RTX3090 - NextGeneration
-echo Définition variables d'environnement permanentes...
+echo  Configuration Ollama RTX3090 - NextGeneration
+echo Dfinition variables d'environnement permanentes...
 
 setx CUDA_VISIBLE_DEVICES "1"
 setx CUDA_DEVICE_ORDER "PCI_BUS_ID"
@@ -159,8 +159,8 @@ setx OLLAMA_MODELS "D:\\modeles_llm"
 setx OLLAMA_GPU_DEVICE "1"
 setx OLLAMA_BASE_URL "http://localhost:11434"
 
-echo ✅ Variables configurées avec succès
-echo ⚠️  Redémarrage nécessaire pour prise en compte
+echo [CHECK] Variables configures avec succs
+echo   Redmarrage ncessaire pour prise en compte
 pause
 """
         
@@ -172,27 +172,27 @@ pause
         self.results["config_status"] = "script_ready"
 
 class OllamaWorkerAgent(BaseAgent):
-    """Agent pour développer le OllamaLocalWorker"""
+    """Agent pour dvelopper le OllamaLocalWorker"""
     
     def __init__(self):
         super().__init__(
-            name="Développeur Worker",
-            mission="Créer et intégrer OllamaLocalWorker dans l'orchestrateur"
+            name="Dveloppeur Worker",
+            mission="Crer et intgrer OllamaLocalWorker dans l'orchestrateur"
         )
     
     async def _execute_mission(self):
-        """Développement du worker Ollama"""
+        """Dveloppement du worker Ollama"""
         
-        # Vérifier structure orchestrateur
+        # Vrifier structure orchestrateur
         orchestrator_path = Path("orchestrator/app/agents")
         if not orchestrator_path.exists():
-            raise FileNotFoundError("Structure orchestrateur non trouvée")
+            raise FileNotFoundError("Structure orchestrateur non trouve")
         
         self.results["orchestrator_found"] = True
         
-        # Créer le worker Ollama
+        # Crer le worker Ollama
         worker_code = '''"""
-Worker Ollama Local pour modèles RTX3090
+Worker Ollama Local pour modles RTX3090
 """
 
 import httpx
@@ -201,13 +201,13 @@ from typing import Dict, Any, List, Optional
 from .workers import BaseWorker
 
 class OllamaLocalWorker(BaseWorker):
-    """Worker pour modèles Ollama locaux sur RTX 3090."""
+    """Worker pour modles Ollama locaux sur RTX 3090."""
     
     def __init__(self, config):
         super().__init__(config)
         self.ollama_url = getattr(config, 'OLLAMA_BASE_URL', 'http://localhost:11434')
         
-        # Configuration modèles RTX3090
+        # Configuration modles RTX3090
         self.models = {
             "speed": "nous-hermes-2-mistral-7b-dpo:latest",
             "quality": "mixtral-8x7b:latest", 
@@ -217,14 +217,14 @@ class OllamaLocalWorker(BaseWorker):
         }
     
     async def can_handle_task(self, task: str, requirements: List[str]) -> bool:
-        """Gère les tâches locales prioritaires."""
+        """Gre les tches locales prioritaires."""
         
-        # Priorité modèles locaux
+        # Priorit modles locaux
         local_keywords = ["local", "confidential", "private", "offline"]
         if any(keyword in requirements for keyword in local_keywords):
             return True
         
-        # Spécialités
+        # Spcialits
         if "code" in task.lower() and "code" in requirements:
             return True
         
@@ -234,12 +234,12 @@ class OllamaLocalWorker(BaseWorker):
         return False
     
     async def process_task(self, task: str, requirements: List[str] = None) -> Dict[str, Any]:
-        """Traite avec modèle RTX3090 optimal."""
+        """Traite avec modle RTX3090 optimal."""
         
         if requirements is None:
             requirements = []
         
-        # Sélection modèle
+        # Slection modle
         if "code" in task.lower():
             model = self.models["code"]
         elif "fast" in requirements:
@@ -313,7 +313,7 @@ class MonitoringAgent(BaseAgent):
     async def _execute_mission(self):
         """Validation monitoring"""
         
-        # Vérifier existence monitor
+        # Vrifier existence monitor
         if not Path("monitor_rtx3090.py").exists():
             self.results["monitor_exists"] = False
             self.results["monitor_status"] = "file_missing"
@@ -327,9 +327,9 @@ class MonitoringAgent(BaseAgent):
             import monitor_rtx3090
             self.results["monitor_importable"] = True
             
-            # Créer script de lancement automatique
+            # Crer script de lancement automatique
             launcher_script = '''@echo off
-echo 🎮 Lancement Monitoring RTX3090 - NextGeneration
+echo  Lancement Monitoring RTX3090 - NextGeneration
 echo Surveillance continue des performances...
 
 python monitor_rtx3090.py
@@ -359,7 +359,7 @@ class MixtralOptimizationAgent(BaseAgent):
     async def _execute_mission(self):
         """Test optimisation Mixtral"""
         
-        # Vérification théorique
+        # Vrification thorique
         self.results["current_mixtral"] = {
             "model": "mixtral-8x7b:latest",
             "estimated_vram": "26GB",
@@ -376,7 +376,7 @@ class MixtralOptimizationAgent(BaseAgent):
         
         self.results["optimization_recommendations"] = recommendations
         
-        # Créer script de test
+        # Crer script de test
         test_script = '''#!/usr/bin/env python3
 """
 Test optimisation Mixtral RTX3090
@@ -389,19 +389,19 @@ import asyncio
 import httpx
 
 async def test_mixtral_variants():
-    """Test différentes variantes Mixtral"""
+    """Test diffrentes variantes Mixtral"""
     
     models_to_test = [
-        "mixtral:8x7b-instruct-v0.1-q3_k_m",  # Version optimisée
-        "llama3.1:70b-instruct-q4_k_m",       # Alternative qualité
+        "mixtral:8x7b-instruct-v0.1-q3_k_m",  # Version optimise
+        "llama3.1:70b-instruct-q4_k_m",       # Alternative qualit
     ]
     
     for model in models_to_test:
-        print(f"Test modèle: {model}")
+        print(f"Test modle: {model}")
         
         try:
             async with httpx.AsyncClient(timeout=30) as client:
-                # Test disponibilité
+                # Test disponibilit
                 response = await client.get("http://localhost:11434/api/tags")
                 if response.status_code == 200:
                     available = any(model in m["name"] for m in response.json()["models"])
@@ -421,14 +421,14 @@ async def test_mixtral_variants():
                         )
                         
                         if test_response.status_code == 200:
-                            print(f"✅ {model}: Fonctionnel")
+                            print(f"[CHECK] {model}: Fonctionnel")
                         else:
-                            print(f"❌ {model}: Erreur {test_response.status_code}")
+                            print(f"[CROSS] {model}: Erreur {test_response.status_code}")
                     else:
-                        print(f"⚠️ {model}: Non installé")
+                        print(f" {model}: Non install")
                         
         except Exception as e:
-            print(f"❌ {model}: Exception {e}")
+            print(f"[CROSS] {model}: Exception {e}")
 
 if __name__ == "__main__":
     asyncio.run(test_mixtral_variants())
@@ -453,17 +453,17 @@ class OrchestrateurAgents:
         ]
     
     async def execute_all(self) -> Dict[str, Any]:
-        """Exécution parallèle de tous les agents"""
+        """Excution parallle de tous les agents"""
         
-        print("🚀 ORCHESTRATEUR RTX3090 - Validation Optimisations")
+        print("[ROCKET] ORCHESTRATEUR RTX3090 - Validation Optimisations")
         print("=" * 60)
-        print(f"📊 {len(self.agents)} agents en parallèle")
-        print(f"🎮 Configuration GPU: RTX 3090 (Device {os.environ.get('CUDA_VISIBLE_DEVICES')})")
+        print(f"[CHART] {len(self.agents)} agents en parallle")
+        print(f" Configuration GPU: RTX 3090 (Device {os.environ.get('CUDA_VISIBLE_DEVICES')})")
         print()
         
         start_time = time.time()
         
-        # Exécution parallèle
+        # Excution parallle
         tasks = [agent.execute() for agent in self.agents]
         results = await asyncio.gather(*tasks, return_exceptions=True)
         
@@ -486,7 +486,7 @@ class OrchestrateurAgents:
             }
         }
         
-        # Traitement résultats
+        # Traitement rsultats
         for i, (agent, result) in enumerate(zip(self.agents, results)):
             if isinstance(result, Exception):
                 rapport["agents_results"][agent.name] = {
@@ -508,7 +508,7 @@ class OrchestrateurAgents:
         return rapport
 
 async def main():
-    """Point d'entrée principal"""
+    """Point d'entre principal"""
     
     orchestrateur = OrchestrateurAgents()
     rapport = await orchestrateur.execute_all()
@@ -520,27 +520,27 @@ async def main():
     with open(rapport_file, 'w', encoding='utf-8') as f:
         json.dump(rapport, f, indent=2, ensure_ascii=False)
     
-    # Affichage résumé
-    print("\n🎯 RAPPORT FINAL - Validation Ollama RTX3090")
+    # Affichage rsum
+    print("\n[TARGET] RAPPORT FINAL - Validation Ollama RTX3090")
     print("=" * 60)
-    print(f"⏱️  Temps total: {rapport['execution_info']['total_execution_time']:.1f}s")
-    print(f"✅ Agents réussis: {rapport['summary']['completed']}")
-    print(f"❌ Agents échoués: {rapport['summary']['failed']}")
-    print(f"📄 Rapport détaillé: {rapport_file}")
+    print(f"  Temps total: {rapport['execution_info']['total_execution_time']:.1f}s")
+    print(f"[CHECK] Agents russis: {rapport['summary']['completed']}")
+    print(f"[CROSS] Agents chous: {rapport['summary']['failed']}")
+    print(f"[DOCUMENT] Rapport dtaill: {rapport_file}")
     print()
     
-    # Détail par agent
+    # Dtail par agent
     for agent_name, result in rapport["agents_results"].items():
         status = result.get("status", "unknown")
         exec_time = result.get("execution_time", 0)
         
         if status == "completed":
-            print(f"✅ {agent_name}: Succès ({exec_time:.1f}s)")
+            print(f"[CHECK] {agent_name}: Succs ({exec_time:.1f}s)")
         else:
             errors = result.get("errors", [])
-            print(f"❌ {agent_name}: Échec - {errors[0] if errors else 'Erreur inconnue'}")
+            print(f"[CROSS] {agent_name}: chec - {errors[0] if errors else 'Erreur inconnue'}")
     
-    print(f"\n🎮 Validation RTX3090 terminée - Rapport: {rapport_file}")
+    print(f"\n Validation RTX3090 termine - Rapport: {rapport_file}")
 
 if __name__ == "__main__":
     asyncio.run(main()) 

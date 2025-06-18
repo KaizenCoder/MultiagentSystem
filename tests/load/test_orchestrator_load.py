@@ -1,6 +1,6 @@
 """
 Tests de charge Orchestrateur - CRITIQUE Phase 2.
-Tests de performance et scalabilité selon prompt Sprint 2.
+Tests de performance et scalabilit selon prompt Sprint 2.
 """
 
 import pytest
@@ -25,7 +25,7 @@ class TestOrchestratorLoad:
             pytest.skip(f"Cannot import orchestrator app: {e}")
     
     def test_concurrent_requests_basic(self):
-        """Test requêtes concurrentes basiques."""
+        """Test requtes concurrentes basiques."""
         # ARRANGE
         def make_request(session_id):
             return self.client.post("/process", json={
@@ -45,17 +45,17 @@ class TestOrchestratorLoad:
         
         # ASSERT
         assert len(responses) == 10
-        # Au moins 50% des requêtes devraient réussir
+        # Au moins 50% des requtes devraient russir
         success_count = sum(1 for r in responses if r.status_code in [200, 202])
         assert success_count >= 5, f"Only {success_count}/10 requests succeeded"
         
-        # Performance basique: 10 requêtes en moins de 30 secondes
+        # Performance basique: 10 requtes en moins de 30 secondes
         assert duration < 30, f"Requests took {duration:.2f}s, should be < 30s"
-        print(f"✅ 10 requêtes concurrentes en {duration:.2f}s")
+        print(f"[CHECK] 10 requtes concurrentes en {duration:.2f}s")
     
     @patch('orchestrator.app.agents.supervisor.Supervisor.create_plan')
     def test_sequential_load(self, mock_create_plan):
-        """Test charge séquentielle."""
+        """Test charge squentielle."""
         # ARRANGE
         mock_create_plan.return_value = {
             "plan": "Fast test plan",
@@ -78,9 +78,9 @@ class TestOrchestratorLoad:
         success_count = sum(1 for r in responses if r.status_code in [200, 202])
         assert success_count >= 15, f"Only {success_count}/20 sequential requests succeeded"
         
-        # Performance: 20 requêtes séquentielles en moins de 60 secondes
+        # Performance: 20 requtes squentielles en moins de 60 secondes
         assert duration < 60, f"Sequential requests took {duration:.2f}s"
-        print(f"✅ 20 requêtes séquentielles en {duration:.2f}s")
+        print(f"[CHECK] 20 requtes squentielles en {duration:.2f}s")
     
     def test_health_endpoint_load(self):
         """Test charge endpoint /health."""
@@ -96,13 +96,13 @@ class TestOrchestratorLoad:
         success_count = sum(1 for code in responses if code == 200)
         assert success_count >= 45, f"Only {success_count}/50 health checks succeeded"
         
-        # Health checks doivent être rapides
+        # Health checks doivent tre rapides
         assert duration < 10, f"50 health checks took {duration:.2f}s"
-        print(f"✅ 50 health checks en {duration:.2f}s")
+        print(f"[CHECK] 50 health checks en {duration:.2f}s")
     
     @pytest.mark.skipif("CI" in __name__, reason="Skip in CI environment")
     def test_memory_pressure(self):
-        """Test pression mémoire."""
+        """Test pression mmoire."""
         # ARRANGE
         large_task = "Analyze this large dataset: " + "x" * 10000
         
@@ -116,14 +116,14 @@ class TestOrchestratorLoad:
             responses.append(response.status_code)
         
         # ASSERT
-        # Système devrait gérer la pression mémoire sans crash
+        # Systme devrait grer la pression mmoire sans crash
         success_count = sum(1 for code in responses if code in [200, 202, 413, 422])
         assert success_count == 5, "System should handle memory pressure gracefully"
-        print("✅ Gestion pression mémoire OK")
+        print("[CHECK] Gestion pression mmoire OK")
     
     def test_timeout_behavior(self):
         """Test comportement timeouts."""
-        # ARRANGE - Tâche potentiellement longue
+        # ARRANGE - Tche potentiellement longue
         complex_task = {
             "task_description": "Complex analysis requiring multiple steps and detailed processing",
             "session_id": "timeout-test"
@@ -135,13 +135,13 @@ class TestOrchestratorLoad:
         duration = time.time() - start_time
         
         # ASSERT
-        # Soit ça répond rapidement, soit ça timeout proprement
+        # Soit a rpond rapidement, soit a timeout proprement
         if response.status_code in [200, 202]:
-            print(f"✅ Réponse rapide en {duration:.2f}s")
+            print(f"[CHECK] Rponse rapide en {duration:.2f}s")
         elif response.status_code == 408:  # Request Timeout
-            print("✅ Timeout géré proprement")
+            print("[CHECK] Timeout gr proprement")
         else:
-            print(f"ℹ️ Statut inattendu: {response.status_code}")
+            print(f" Statut inattendu: {response.status_code}")
         
         # Ne devrait pas prendre plus de 60 secondes
         assert duration < 60, f"Request took {duration:.2f}s, too long"
@@ -150,19 +150,19 @@ class TestOrchestratorLoad:
 @pytest.mark.load
 @pytest.mark.asyncio
 class TestOrchestratorAsyncLoad:
-    """Tests de charge asynchrones - AVANCÉ."""
+    """Tests de charge asynchrones - AVANC."""
     
     @pytest.fixture(autouse=True)
     def setup_client(self):
         """Setup du client async."""
         try:
             import httpx
-            self.base_url = "http://localhost:8000"  # Ou port configuré
+            self.base_url = "http://localhost:8000"  # Ou port configur
         except ImportError:
             pytest.skip("httpx not available for async tests")
     
     async def test_async_concurrent_requests(self):
-        """Test requêtes concurrentes async."""
+        """Test requtes concurrentes async."""
         import httpx
         
         async def make_async_request(session_id):
@@ -190,14 +190,14 @@ class TestOrchestratorAsyncLoad:
         valid_responses = [r for r in responses if isinstance(r, int)]
         if len(valid_responses) > 0:
             success_count = sum(1 for code in valid_responses if code in [200, 202])
-            print(f"✅ {success_count}/{len(valid_responses)} requêtes async réussies en {duration:.2f}s")
+            print(f"[CHECK] {success_count}/{len(valid_responses)} requtes async russies en {duration:.2f}s")
         else:
             pytest.skip("No valid responses (server not running)")
 
 
 @pytest.mark.performance
 class TestOrchestratorPerformance:
-    """Tests de performance spécifiques."""
+    """Tests de performance spcifiques."""
     
     @pytest.fixture(autouse=True)
     def setup_client(self):
@@ -209,7 +209,7 @@ class TestOrchestratorPerformance:
             pytest.skip(f"Cannot import orchestrator app: {e}")
     
     def test_startup_performance(self):
-        """Test performance de démarrage."""
+        """Test performance de dmarrage."""
         # ACT
         start_time = time.time()
         response = self.client.get("/health")
@@ -217,12 +217,12 @@ class TestOrchestratorPerformance:
         
         # ASSERT
         assert response.status_code == 200
-        # Premier appel devrait être raisonnablement rapide
+        # Premier appel devrait tre raisonnablement rapide
         assert startup_duration < 5, f"Startup took {startup_duration:.2f}s"
-        print(f"✅ Démarrage en {startup_duration:.2f}s")
+        print(f"[CHECK] Dmarrage en {startup_duration:.2f}s")
     
     def test_response_time_consistency(self):
-        """Test cohérence temps de réponse."""
+        """Test cohrence temps de rponse."""
         # ACT
         durations = []
         for i in range(10):
@@ -237,4 +237,4 @@ class TestOrchestratorPerformance:
         
         assert avg_duration < 1.0, f"Average response time {avg_duration:.3f}s too high"
         assert max_duration < 2.0, f"Max response time {max_duration:.3f}s too high"
-        print(f"✅ Temps moyen: {avg_duration:.3f}s, max: {max_duration:.3f}s") 
+        print(f"[CHECK] Temps moyen: {avg_duration:.3f}s, max: {max_duration:.3f}s") 

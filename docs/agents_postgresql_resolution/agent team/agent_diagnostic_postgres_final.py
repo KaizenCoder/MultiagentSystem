@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Agent Diagnostic PostgreSQL - Spécialisé résolution encodage
-Mission: Diagnostiquer et résoudre définitivement le problème d'encodage UTF-8
+Agent Diagnostic PostgreSQL - Spcialis rsolution encodage
+Mission: Diagnostiquer et rsoudre dfinitivement le problme d'encodage UTF-8
 """
 
 import subprocess
@@ -14,12 +14,12 @@ from datetime import datetime
 from pathlib import Path
 
 class AgentDiagnosticPostgreSQL:
-    """Agent spécialisé diagnostic et résolution PostgreSQL encodage"""
+    """Agent spcialis diagnostic et rsolution PostgreSQL encodage"""
     
     def __init__(self):
         self.name = "Agent Diagnostic PostgreSQL"
         self.version = "2.0.0"
-        self.mission = "Résolution définitive encodage PostgreSQL"
+        self.mission = "Rsolution dfinitive encodage PostgreSQL"
         
         # Configuration logging
         log_dir = Path("C:\\Dev\\nextgeneration\\docs\\agents_postgresql_resolution\\logs")
@@ -48,7 +48,7 @@ class AgentDiagnosticPostgreSQL:
     def diagnostic_conteneur_postgres(self):
         """Diagnostic approfondi du conteneur PostgreSQL"""
         
-        self.logger.info("🔍 Diagnostic conteneur PostgreSQL...")
+        self.logger.info("[SEARCH] Diagnostic conteneur PostgreSQL...")
         
         diagnostic = {
             "etape": "diagnostic_conteneur",
@@ -57,7 +57,7 @@ class AgentDiagnosticPostgreSQL:
         }
         
         try:
-            # Vérifier les conteneurs
+            # Vrifier les conteneurs
             result = subprocess.run(['docker', 'ps', '-a', '--format', 'json'], 
                                   capture_output=True, text=True, check=True)
             
@@ -79,23 +79,23 @@ class AgentDiagnosticPostgreSQL:
                 if active_postgres:
                     container_name = active_postgres[0]['Names']
                     diagnostic["resultats"]["container_principal"] = container_name
-                    self.logger.info(f"✅ Conteneur PostgreSQL actif: {container_name}")
+                    self.logger.info(f"[CHECK] Conteneur PostgreSQL actif: {container_name}")
                 else:
-                    self.logger.warning("⚠️ Aucun conteneur PostgreSQL actif")
+                    self.logger.warning(" Aucun conteneur PostgreSQL actif")
             else:
-                self.logger.error("❌ Aucun conteneur PostgreSQL trouvé")
+                self.logger.error("[CROSS] Aucun conteneur PostgreSQL trouv")
                 
         except Exception as e:
             diagnostic["resultats"]["error"] = str(e)
-            self.logger.error(f"❌ Erreur diagnostic conteneur: {e}")
+            self.logger.error(f"[CROSS] Erreur diagnostic conteneur: {e}")
         
         self.rapport_data["diagnostics"].append(diagnostic)
         return diagnostic
     
     def diagnostic_encodage_conteneur(self, container_name):
-        """Diagnostic encodage depuis l'intérieur du conteneur"""
+        """Diagnostic encodage depuis l'intrieur du conteneur"""
         
-        self.logger.info(f"🔤 Diagnostic encodage conteneur {container_name}...")
+        self.logger.info(f" Diagnostic encodage conteneur {container_name}...")
         
         diagnostic = {
             "etape": "diagnostic_encodage_conteneur", 
@@ -105,7 +105,7 @@ class AgentDiagnosticPostgreSQL:
         }
         
         try:
-            # Vérifier l'encodage PostgreSQL
+            # Vrifier l'encodage PostgreSQL
             cmd = ['docker', 'exec', container_name, 'psql', '-U', 'postgres', '-d', 'nextgen_db', '-t', '-c']
             
             # Server encoding
@@ -135,20 +135,20 @@ class AgentDiagnosticPostgreSQL:
                 "status": "SUCCESS"
             }
             
-            self.logger.info(f"✅ Encodage serveur: {server_encoding}")
-            self.logger.info(f"✅ Encodage client: {client_encoding}")
+            self.logger.info(f"[CHECK] Encodage serveur: {server_encoding}")
+            self.logger.info(f"[CHECK] Encodage client: {client_encoding}")
             
         except Exception as e:
             diagnostic["resultats"]["error"] = str(e)
-            self.logger.error(f"❌ Erreur diagnostic encodage: {e}")
+            self.logger.error(f"[CROSS] Erreur diagnostic encodage: {e}")
         
         self.rapport_data["diagnostics"].append(diagnostic)
         return diagnostic
     
     def diagnostic_python_psycopg2(self):
-        """Diagnostic des problèmes Python/psycopg2"""
+        """Diagnostic des problmes Python/psycopg2"""
         
-        self.logger.info("🐍 Diagnostic Python/psycopg2...")
+        self.logger.info(" Diagnostic Python/psycopg2...")
         
         diagnostic = {
             "etape": "diagnostic_python_psycopg2",
@@ -167,10 +167,10 @@ class AgentDiagnosticPostgreSQL:
                 psycopg2_version = psycopg2.__version__
                 diagnostic["resultats"]["psycopg2_version"] = psycopg2_version
                 diagnostic["resultats"]["psycopg2_import"] = "SUCCESS"
-                self.logger.info(f"✅ psycopg2 version: {psycopg2_version}")
+                self.logger.info(f"[CHECK] psycopg2 version: {psycopg2_version}")
             except Exception as e:
                 diagnostic["resultats"]["psycopg2_import"] = f"FAILED: {e}"
-                self.logger.error(f"❌ Import psycopg2: {e}")
+                self.logger.error(f"[CROSS] Import psycopg2: {e}")
             
             # Variables d'environnement
             env_vars = {
@@ -183,26 +183,26 @@ class AgentDiagnosticPostgreSQL:
             
         except Exception as e:
             diagnostic["resultats"]["error"] = str(e)
-            self.logger.error(f"❌ Erreur diagnostic Python: {e}")
+            self.logger.error(f"[CROSS] Erreur diagnostic Python: {e}")
         
         self.rapport_data["diagnostics"].append(diagnostic)
         return diagnostic
     
     def generer_solution_encodage_definitive(self):
-        """Génération de la solution définitive pour l'encodage"""
+        """Gnration de la solution dfinitive pour l'encodage"""
         
-        self.logger.info("💡 Génération solution encodage définitive...")
+        self.logger.info("[BULB] Gnration solution encodage dfinitive...")
         
         solution = {
-            "nom": "Solution Encodage PostgreSQL Définitive",
+            "nom": "Solution Encodage PostgreSQL Dfinitive",
             "timestamp": datetime.now().isoformat(),
             "etapes": [],
             "scripts": []
         }
         
-        # Étape 1: Script PowerShell configuration système
+        # tape 1: Script PowerShell configuration systme
         script_ps1 = '''
-# Configuration encodage système Windows pour PostgreSQL
+# Configuration encodage systme Windows pour PostgreSQL
 Write-Host "Configuration encodage PostgreSQL Windows..." -ForegroundColor Green
 
 # Variables utilisateur
@@ -211,16 +211,16 @@ Write-Host "Configuration encodage PostgreSQL Windows..." -ForegroundColor Green
 [System.Environment]::SetEnvironmentVariable("LANG", "en_US.UTF-8", "User")
 [System.Environment]::SetEnvironmentVariable("LC_ALL", "en_US.UTF-8", "User")
 
-# Variables système (nécessite admin)
+# Variables systme (ncessite admin)
 try {
     [System.Environment]::SetEnvironmentVariable("PYTHONIOENCODING", "utf-8", "Machine")
     [System.Environment]::SetEnvironmentVariable("PYTHONUTF8", "1", "Machine")
-    Write-Host "Variables système configurées (admin)" -ForegroundColor Green
+    Write-Host "Variables systme configures (admin)" -ForegroundColor Green
 } catch {
-    Write-Host "Variables système non configurées (pas admin)" -ForegroundColor Yellow
+    Write-Host "Variables systme non configures (pas admin)" -ForegroundColor Yellow
 }
 
-Write-Host "Configuration terminée. Redémarrer le terminal." -ForegroundColor Red
+Write-Host "Configuration termine. Redmarrer le terminal." -ForegroundColor Red
 '''
         
         script_ps1_path = "C:\\Dev\\nextgeneration\\docs\\agents_postgresql_resolution\\solutions\\configure_encoding_system.ps1"
@@ -228,16 +228,16 @@ Write-Host "Configuration terminée. Redémarrer le terminal." -ForegroundColor 
             f.write(script_ps1)
         
         solution["scripts"].append({
-            "nom": "Configuration système PowerShell",
+            "nom": "Configuration systme PowerShell",
             "chemin": script_ps1_path,
-            "description": "Configure les variables d'environnement système"
+            "description": "Configure les variables d'environnement systme"
         })
         
-        # Étape 2: Script Python avec contournement
+        # tape 2: Script Python avec contournement
         script_python = '''#!/usr/bin/env python3
 """
-Contournement problème encodage psycopg2 Windows
-Solution: Utiliser SQLAlchemy avec options spécifiques
+Contournement problme encodage psycopg2 Windows
+Solution: Utiliser SQLAlchemy avec options spcifiques
 """
 
 import os
@@ -246,9 +246,9 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.pool import NullPool
 
 def connect_postgres_safe():
-    """Connexion PostgreSQL sécurisée avec gestion encodage"""
+    """Connexion PostgreSQL scurise avec gestion encodage"""
     
-    # Configuration forcée
+    # Configuration force
     os.environ['PYTHONIOENCODING'] = 'utf-8'
     os.environ['PYTHONUTF8'] = '1'
     
@@ -259,7 +259,7 @@ def connect_postgres_safe():
             "?client_encoding=utf8&application_name=nextgen"
         )
         
-        # Moteur SQLAlchemy avec options spécifiques
+        # Moteur SQLAlchemy avec options spcifiques
         engine = create_engine(
             DATABASE_URL,
             poolclass=NullPool,
@@ -278,12 +278,12 @@ def connect_postgres_safe():
 if __name__ == "__main__":
     engine = connect_postgres_safe()
     if engine:
-        print("✅ Connexion PostgreSQL réussie")
+        print("[CHECK] Connexion PostgreSQL russie")
         with engine.connect() as conn:
             result = conn.execute(text("SELECT current_database()"))
             print(f"Base: {result.fetchone()[0]}")
     else:
-        print("❌ Échec connexion")
+        print("[CROSS] chec connexion")
 '''
         
         script_python_path = "C:\\Dev\\nextgeneration\\docs\\agents_postgresql_resolution\\solutions\\postgres_safe_connect.py"
@@ -291,12 +291,12 @@ if __name__ == "__main__":
             f.write(script_python)
         
         solution["scripts"].append({
-            "nom": "Connexion PostgreSQL sécurisée",
+            "nom": "Connexion PostgreSQL scurise",
             "chemin": script_python_path,
             "description": "Script Python avec contournement encodage"
         })
         
-        # Étape 3: Configuration Docker améliorée
+        # tape 3: Configuration Docker amliore
         docker_compose_final = '''version: '3.8'
 
 services:
@@ -353,20 +353,20 @@ networks:
         })
         
         self.rapport_data["solutions"].append(solution)
-        self.logger.info("✅ Solution définitive générée")
+        self.logger.info("[CHECK] Solution dfinitive gnre")
         
         return solution
     
     def executer_mission(self):
-        """Exécution de la mission complète"""
+        """Excution de la mission complte"""
         
-        self.logger.info(f"🚀 {self.name} - Démarrage mission diagnostic PostgreSQL")
+        self.logger.info(f"[ROCKET] {self.name} - Dmarrage mission diagnostic PostgreSQL")
         
         try:
             # Diagnostic conteneur
             diag_conteneur = self.diagnostic_conteneur_postgres()
             
-            # Si conteneur PostgreSQL trouvé, diagnostic encodage
+            # Si conteneur PostgreSQL trouv, diagnostic encodage
             if diag_conteneur["resultats"].get("postgres_actifs", 0) > 0:
                 container_name = diag_conteneur["resultats"]["container_principal"]
                 self.diagnostic_encodage_conteneur(container_name)
@@ -374,24 +374,24 @@ networks:
             # Diagnostic Python/psycopg2  
             self.diagnostic_python_psycopg2()
             
-            # Génération solution
+            # Gnration solution
             self.generer_solution_encodage_definitive()
             
             self.rapport_data["status"] = "SUCCESS"
-            self.logger.info("✅ Mission diagnostic terminée avec succès")
+            self.logger.info("[CHECK] Mission diagnostic termine avec succs")
             
         except Exception as e:
             self.rapport_data["status"] = "FAILED" 
             self.rapport_data["error"] = str(e)
-            self.logger.error(f"❌ Échec mission: {e}")
+            self.logger.error(f"[CROSS] chec mission: {e}")
         
-        # Génération rapport final
+        # Gnration rapport final
         self.generer_rapport_final()
         
         return self.rapport_data
     
     def generer_rapport_final(self):
-        """Génération du rapport final"""
+        """Gnration du rapport final"""
         
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         
@@ -403,19 +403,19 @@ networks:
         # Rapport Markdown
         rapport_md = f"C:\\Dev\\nextgeneration\\docs\\agents_postgresql_resolution\\rapports\\DIAGNOSTIC_POSTGRES_FINAL.md"
         
-        md_content = f"""# 🔍 DIAGNOSTIC POSTGRESQL FINAL
+        md_content = f"""# [SEARCH] DIAGNOSTIC POSTGRESQL FINAL
 *Agent: {self.name} v{self.version}*
-*Généré le: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}*
+*Gnr le: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}*
 
-## 🎯 MISSION
+## [TARGET] MISSION
 {self.mission}
 
-## 📊 RÉSUMÉ EXÉCUTIF
+## [CHART] RSUM EXCUTIF
 **Statut:** {self.rapport_data['status']}
-**Diagnostics réalisés:** {len(self.rapport_data['diagnostics'])}
-**Solutions générées:** {len(self.rapport_data['solutions'])}
+**Diagnostics raliss:** {len(self.rapport_data['diagnostics'])}
+**Solutions gnres:** {len(self.rapport_data['solutions'])}
 
-## 🔍 DIAGNOSTICS RÉALISÉS
+## [SEARCH] DIAGNOSTICS RALISS
 
 """
         
@@ -423,32 +423,32 @@ networks:
             md_content += f"### {i}. {diag['etape'].replace('_', ' ').title()}\n"
             md_content += f"**Timestamp:** {diag['timestamp']}\n\n"
             if 'resultats' in diag:
-                md_content += "**Résultats:**\n```json\n"
+                md_content += "**Rsultats:**\n```json\n"
                 md_content += json.dumps(diag['resultats'], indent=2, ensure_ascii=False)
                 md_content += "\n```\n\n"
         
-        md_content += "## 💡 SOLUTIONS PROPOSÉES\n\n"
+        md_content += "## [BULB] SOLUTIONS PROPOSES\n\n"
         
         for i, sol in enumerate(self.rapport_data['solutions'], 1):
             md_content += f"### {i}. {sol['nom']}\n"
-            md_content += f"**Scripts générés:** {len(sol['scripts'])}\n\n"
+            md_content += f"**Scripts gnrs:** {len(sol['scripts'])}\n\n"
             for script in sol['scripts']:
                 md_content += f"- **{script['nom']}:** `{script['chemin']}`\n"
                 md_content += f"  - {script['description']}\n"
         
-        md_content += f"\n---\n*Rapport généré par {self.name} v{self.version}*"
+        md_content += f"\n---\n*Rapport gnr par {self.name} v{self.version}*"
         
         with open(rapport_md, 'w', encoding='utf-8') as f:
             f.write(md_content)
         
-        self.logger.info(f"📋 Rapport final: {rapport_md}")
+        self.logger.info(f"[CLIPBOARD] Rapport final: {rapport_md}")
 
 if __name__ == "__main__":
     agent = AgentDiagnosticPostgreSQL()
     resultat = agent.executer_mission()
     
-    print(f"\n🎯 Mission terminée: {resultat['status']}")
+    print(f"\n[TARGET] Mission termine: {resultat['status']}")
     if resultat['status'] == 'SUCCESS':
-        print("✅ Diagnostic complet et solutions générées")
+        print("[CHECK] Diagnostic complet et solutions gnres")
     else:
-        print("❌ Problèmes détectés pendant le diagnostic")
+        print("[CROSS] Problmes dtects pendant le diagnostic")

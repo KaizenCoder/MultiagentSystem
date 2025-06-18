@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Script d'initialisation de la base PostgreSQL NextGeneration
-Crée les tables et données de base nécessaires
+Cre les tables et donnes de base ncessaires
 """
 import asyncio
 import logging
@@ -16,30 +16,30 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def create_tables():
-    """Crée toutes les tables dans la base de données"""
+    """Cre toutes les tables dans la base de donnes"""
     try:
-        logger.info("🔧 Création des tables PostgreSQL...")
+        logger.info("[TOOL] Cration des tables PostgreSQL...")
         Base.metadata.create_all(bind=engine)
-        logger.info("✅ Tables créées avec succès")
+        logger.info("[CHECK] Tables cres avec succs")
         return True
     except Exception as e:
-        logger.error(f"❌ Erreur création tables: {e}")
+        logger.error(f"[CROSS] Erreur cration tables: {e}")
         return False
 
 def create_indexes():
-    """Crée les index de performance avancés"""
+    """Cre les index de performance avancs"""
     try:
         db = SessionLocal()
-        logger.info("🔧 Création des index de performance avancés...")
+        logger.info("[TOOL] Cration des index de performance avancs...")
         
-        # Extensions PostgreSQL nécessaires
+        # Extensions PostgreSQL ncessaires
         extensions = [
             "CREATE EXTENSION IF NOT EXISTS pg_trgm",  # Pour recherche full-text
             "CREATE EXTENSION IF NOT EXISTS btree_gin",  # Pour index composites
             "CREATE EXTENSION IF NOT EXISTS pg_stat_statements",  # Pour monitoring
         ]
         
-        # Index de performance spécialisés (sans CONCURRENTLY pour init)
+        # Index de performance spcialiss (sans CONCURRENTLY pour init)
         performance_indexes = [
             # Memory Items - Recherche et performance
             "CREATE INDEX IF NOT EXISTS idx_memory_content_hash ON memory_items(content_hash)",
@@ -51,7 +51,7 @@ def create_indexes():
             "CREATE INDEX IF NOT EXISTS idx_session_activity ON agent_sessions(last_activity DESC) WHERE is_active = true",
             "CREATE INDEX IF NOT EXISTS idx_session_cost_tracking ON agent_sessions(total_cost DESC, total_tokens_used DESC)",
             
-            # State Items - Gestion d'état performante
+            # State Items - Gestion d'tat performante
             "CREATE INDEX IF NOT EXISTS idx_state_namespace_ttl ON state_items(namespace, ttl_expires_at) WHERE ttl_expires_at IS NOT NULL",
             "CREATE INDEX IF NOT EXISTS idx_state_version_tracking ON state_items(key, version DESC)",
             
@@ -64,53 +64,53 @@ def create_indexes():
             "CREATE INDEX IF NOT EXISTS idx_metrics_analytics ON agent_metrics(metric_category, timestamp DESC, numeric_value)",
             "CREATE INDEX IF NOT EXISTS idx_metrics_performance_tracking ON agent_metrics(agent_type, metric_name, timestamp DESC)",
             
-            # Knowledge Base - Recherche sémantique et qualité
+            # Knowledge Base - Recherche smantique et qualit
             "CREATE INDEX IF NOT EXISTS idx_knowledge_quality ON knowledge_base(quality_score DESC, usage_count DESC)",
             "CREATE INDEX IF NOT EXISTS idx_knowledge_verification ON knowledge_base(is_verified, is_public, category)",
             "CREATE INDEX IF NOT EXISTS idx_knowledge_content_search ON knowledge_base USING gin(to_tsvector('french', title || ' ' || coalesce(summary, '')))",
         ]
         
-        # Création des extensions d'abord
+        # Cration des extensions d'abord
         for ext_sql in extensions:
             try:
                 db.execute(text(ext_sql))
                 db.commit()
-                logger.info(f"✅ Extension activée: {ext_sql.split('IF NOT EXISTS ')[1]}")
+                logger.info(f"[CHECK] Extension active: {ext_sql.split('IF NOT EXISTS ')[1]}")
             except Exception as e:
-                logger.warning(f"⚠️  Extension ignorée: {e}")
+                logger.warning(f"  Extension ignore: {e}")
                 db.rollback()
         
-        # Création des index de performance
+        # Cration des index de performance
         for index_sql in performance_indexes:
             try:
                 db.execute(text(index_sql))
                 db.commit()
                 index_name = index_sql.split('idx_')[1].split(' ')[0] if 'idx_' in index_sql else "custom_index"
-                logger.info(f"✅ Index créé: {index_name}")
+                logger.info(f"[CHECK] Index cr: {index_name}")
             except Exception as e:
-                logger.warning(f"⚠️  Index ignoré: {e}")
+                logger.warning(f"  Index ignor: {e}")
                 db.rollback()
         
         db.close()
-        logger.info("✅ Index de performance avancés créés")
+        logger.info("[CHECK] Index de performance avancs crs")
         return True
     except Exception as e:
-        logger.error(f"❌ Erreur création index: {e}")
+        logger.error(f"[CROSS] Erreur cration index: {e}")
         return False
 
 def insert_initial_data():
-    """Insert les données initiales nécessaires"""
+    """Insert les donnes initiales ncessaires"""
     try:
         db = SessionLocal()
-        logger.info("🔧 Insertion des données initiales...")
+        logger.info("[TOOL] Insertion des donnes initiales...")
         
-        # Données de base enterprise pour le système NextGeneration
+        # Donnes de base enterprise pour le systme NextGeneration
         import hashlib
         
         initial_knowledge = [
             {
                 "title": "Architecture NextGeneration Multi-Agent Enterprise",
-                "content": "Le système NextGeneration utilise une architecture multi-agent avancée avec IA-1 (Tests & Qualité) et IA-2 (Architecture & Production). Communication via journaux structurés, Memory API PostgreSQL centralisée, et orchestration LangGraph avec superviseur intelligent.",
+                "content": "Le systme NextGeneration utilise une architecture multi-agent avance avec IA-1 (Tests & Qualit) et IA-2 (Architecture & Production). Communication via journaux structurs, Memory API PostgreSQL centralise, et orchestration LangGraph avec superviseur intelligent.",
                 "summary": "Architecture multi-agent enterprise avec IA-1, IA-2, PostgreSQL et LangGraph",
                 "category": "architecture",
                 "subcategory": "system_design",
@@ -126,8 +126,8 @@ def insert_initial_data():
             },
             {
                 "title": "Standards Communication Inter-Agents Enterprise",
-                "content": "Format standardisé: PHASE4-[IA]-[SPRINT]-[TÂCHE]-[SOUS-TÂCHE]. Messages critiques avec réponse < 2h. Journal quotidien obligatoire avec références croisées. Support PostgreSQL pour persistance et recherche avancée.",
-                "summary": "Protocoles de communication standardisés pour agents IA",
+                "content": "Format standardis: PHASE4-[IA]-[SPRINT]-[TCHE]-[SOUS-TCHE]. Messages critiques avec rponse < 2h. Journal quotidien obligatoire avec rfrences croises. Support PostgreSQL pour persistance et recherche avance.",
+                "summary": "Protocoles de communication standardiss pour agents IA",
                 "category": "communication",
                 "subcategory": "protocols",
                 "tags": ["standards", "journaux", "communication", "persistance", "recherche"],
@@ -140,8 +140,8 @@ def insert_initial_data():
             },
             {
                 "title": "Configuration GPU RTX 3090 Ollama Production",
-                "content": "Modèles recommandés: Mixtral-8x7B (26GB), Qwen-Coder-32B (19GB), Llama3:8B (6.6GB), Nous-Hermes-2 (4.1GB). Configuration CUDA_VISIBLE_DEVICES=1 pour RTX 3090. Optimisations mémoire et performance pour production.",
-                "summary": "Configuration optimale RTX 3090 pour modèles LLM en production",
+                "content": "Modles recommands: Mixtral-8x7B (26GB), Qwen-Coder-32B (19GB), Llama3:8B (6.6GB), Nous-Hermes-2 (4.1GB). Configuration CUDA_VISIBLE_DEVICES=1 pour RTX 3090. Optimisations mmoire et performance pour production.",
+                "summary": "Configuration optimale RTX 3090 pour modles LLM en production",
                 "category": "configuration",
                 "subcategory": "hardware",
                 "tags": ["gpu", "rtx3090", "ollama", "modeles", "production", "performance"],
@@ -154,8 +154,8 @@ def insert_initial_data():
             },
             {
                 "title": "PostgreSQL Enterprise Configuration NextGeneration",
-                "content": "Configuration PostgreSQL 16 optimisée: 200 connexions max, shared_buffers 256MB, effective_cache_size 1GB. Index GIN pour JSONB, pg_trgm pour full-text. Modèles SQLAlchemy avec relations CASCADE et contraintes enterprise.",
-                "summary": "Configuration PostgreSQL optimisée pour système multi-agent",
+                "content": "Configuration PostgreSQL 16 optimise: 200 connexions max, shared_buffers 256MB, effective_cache_size 1GB. Index GIN pour JSONB, pg_trgm pour full-text. Modles SQLAlchemy avec relations CASCADE et contraintes enterprise.",
+                "summary": "Configuration PostgreSQL optimise pour systme multi-agent",
                 "category": "database",
                 "subcategory": "postgresql",
                 "tags": ["postgresql", "optimisation", "enterprise", "sqlalchemy", "index", "performance"],
@@ -167,9 +167,9 @@ def insert_initial_data():
                 "version": "1.0"
             },
             {
-                "title": "Agents Spécialisés NextGeneration Roadmap",
-                "content": "8 agents spécialisés proposés: DocumentationAgent, CodeReviewAgent, ArchitectureAgent, SecurityAgent, PerformanceAgent, TestingAgent, DeploymentAgent, AnalyticsAgent. Intégration supervisor avec coordination avancée et Memory API PostgreSQL.",
-                "summary": "Roadmap agents spécialisés pour extension système multi-agent",
+                "title": "Agents Spcialiss NextGeneration Roadmap",
+                "content": "8 agents spcialiss proposs: DocumentationAgent, CodeReviewAgent, ArchitectureAgent, SecurityAgent, PerformanceAgent, TestingAgent, DeploymentAgent, AnalyticsAgent. Intgration supervisor avec coordination avance et Memory API PostgreSQL.",
+                "summary": "Roadmap agents spcialiss pour extension systme multi-agent",
                 "category": "roadmap",
                 "subcategory": "agents",
                 "tags": ["agents", "specialises", "roadmap", "documentation", "security", "performance"],
@@ -182,7 +182,7 @@ def insert_initial_data():
             }
         ]
         
-        # Calcul automatique des hash pour éviter les doublons
+        # Calcul automatique des hash pour viter les doublons
         for kb_data in initial_knowledge:
             content_to_hash = f"{kb_data['title']}{kb_data['content']}"
             kb_data['content_hash'] = hashlib.sha256(content_to_hash.encode()).hexdigest()
@@ -193,17 +193,17 @@ def insert_initial_data():
         
         db.commit()
         db.close()
-        logger.info("✅ Données initiales insérées")
+        logger.info("[CHECK] Donnes initiales insres")
         return True
     except Exception as e:
-        logger.error(f"❌ Erreur insertion données: {e}")
+        logger.error(f"[CROSS] Erreur insertion donnes: {e}")
         return False
 
 def verify_installation():
-    """Vérifie que l'installation est correcte"""
+    """Vrifie que l'installation est correcte"""
     try:
         db = SessionLocal()
-        logger.info("🔧 Vérification de l'installation...")
+        logger.info("[TOOL] Vrification de l'installation...")
         
         # Test de comptage des tables
         tables_count = {
@@ -215,48 +215,48 @@ def verify_installation():
             "knowledge_base": db.query(KnowledgeBase).count(),
         }
         
-        logger.info("📊 État des tables:")
+        logger.info("[CHART] tat des tables:")
         for table, count in tables_count.items():
             logger.info(f"   {table}: {count} enregistrements")
         
         db.close()
-        logger.info("✅ Installation vérifiée avec succès")
+        logger.info("[CHECK] Installation vrifie avec succs")
         return True
     except Exception as e:
-        logger.error(f"❌ Erreur vérification: {e}")
+        logger.error(f"[CROSS] Erreur vrification: {e}")
         return False
 
 def main():
     """Fonction principale d'initialisation"""
-    logger.info("🚀 INITIALISATION POSTGRESQL NEXTGENERATION")
+    logger.info("[ROCKET] INITIALISATION POSTGRESQL NEXTGENERATION")
     logger.info("=" * 50)
     
     # 1. Test de connexion
     if not test_connection():
-        logger.error("❌ Connexion à PostgreSQL échouée")
-        logger.info("💡 Vérifiez que PostgreSQL est démarré (docker-compose up postgres)")
+        logger.error("[CROSS] Connexion  PostgreSQL choue")
+        logger.info("[BULB] Vrifiez que PostgreSQL est dmarr (docker-compose up postgres)")
         sys.exit(1)
     
-    # 2. Création des tables
+    # 2. Cration des tables
     if not create_tables():
-        logger.error("❌ Création des tables échouée")
+        logger.error("[CROSS] Cration des tables choue")
         sys.exit(1)
     
-    # 3. Création des index
+    # 3. Cration des index
     if not create_indexes():
-        logger.warning("⚠️  Certains index n'ont pas pu être créés")
+        logger.warning("  Certains index n'ont pas pu tre crs")
     
-    # 4. Insertion des données initiales
+    # 4. Insertion des donnes initiales
     if not insert_initial_data():
-        logger.warning("⚠️  Insertion des données initiales échouée")
+        logger.warning("  Insertion des donnes initiales choue")
     
-    # 5. Vérification
+    # 5. Vrification
     if not verify_installation():
-        logger.error("❌ Vérification finale échouée")
+        logger.error("[CROSS] Vrification finale choue")
         sys.exit(1)
     
-    logger.info("🎉 INITIALISATION POSTGRESQL TERMINÉE AVEC SUCCÈS!")
-    logger.info("💡 La Memory API est prête à utiliser PostgreSQL")
+    logger.info(" INITIALISATION POSTGRESQL TERMINE AVEC SUCCS!")
+    logger.info("[BULB] La Memory API est prte  utiliser PostgreSQL")
 
 if __name__ == "__main__":
     main()

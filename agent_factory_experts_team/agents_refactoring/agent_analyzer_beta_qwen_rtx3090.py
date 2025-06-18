@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-⚡ Agent Code Analyzer Beta - Refactoring NextGeneration 
-Mission: Analyse rapide et orientée code avec Qwen-Coder RTX3090 local
-Modèle: qwen2.5-coder:1.5b (RTX3090) - Spécialiste code ultra-rapide
+[LIGHTNING] Agent Code Analyzer Beta - Refactoring NextGeneration 
+Mission: Analyse rapide et oriente code avec Qwen-Coder RTX3090 local
+Modle: qwen2.5-coder:1.5b (RTX3090) - Spcialiste code ultra-rapide
 """
 
 import os
@@ -24,7 +24,7 @@ os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
 
 @dataclass
 class CodePattern:
-    """Pattern code détecté"""
+    """Pattern code dtect"""
     file_path: str
     pattern_type: str
     line_number: int
@@ -34,7 +34,7 @@ class CodePattern:
 
 @dataclass
 class FunctionAnalysis:
-    """Analyse fonction spécifique"""
+    """Analyse fonction spcifique"""
     function_name: str
     file_path: str
     start_line: int
@@ -48,7 +48,7 @@ class FunctionAnalysis:
 
 @dataclass
 class ClassAnalysis:
-    """Analyse classe spécifique"""
+    """Analyse classe spcifique"""
     class_name: str
     file_path: str
     start_line: int
@@ -61,7 +61,7 @@ class ClassAnalysis:
 
 @dataclass
 class CodeSmells:
-    """Code smells détectés"""
+    """Code smells dtects"""
     file_path: str
     long_methods: List[str]
     god_classes: List[str] 
@@ -72,7 +72,7 @@ class CodeSmells:
 
 @dataclass
 class RefactoringStrategy:
-    """Stratégie refactoring"""
+    """Stratgie refactoring"""
     target_file: str
     strategy_type: str  # EXTRACT_MODULE, SPLIT_CLASS, EXTRACT_FUNCTION, etc.
     priority: int
@@ -84,7 +84,7 @@ class RefactoringStrategy:
 
 @dataclass
 class BetaAnalysisResult:
-    """Résultat analyse Beta Qwen-Coder"""
+    """Rsultat analyse Beta Qwen-Coder"""
     timestamp: str
     agent_name: str
     model_used: str
@@ -104,17 +104,17 @@ class AgentCodeAnalyzerBeta:
     def __init__(self):
         self.name = "Agent Code Analyzer Beta"
         self.model = "qwen2.5-coder:1.5b"  # RTX3090 Local ultra-rapide
-        self.mission = "Analyse rapide et orientée code avec Qwen-Coder RTX3090"
+        self.mission = "Analyse rapide et oriente code avec Qwen-Coder RTX3090"
         self.version = "1.0.0"
         self.status = "INITIALIZING"
         
         # Configuration RTX3090
         self.ollama_url = "http://localhost:11434"
         self.gpu_device = "RTX 3090 (Device 1)"
-        self.vram_usage = "4%"  # Qwen-Coder très léger
+        self.vram_usage = "4%"  # Qwen-Coder trs lger
         self.expected_performance = "8.2 tokens/s"
         
-        # Fichiers god mode à analyser
+        # Fichiers god mode  analyser
         self.project_root = Path.cwd()
         self.target_files = [
             "orchestrator/app/main.py",
@@ -123,13 +123,13 @@ class AgentCodeAnalyzerBeta:
             "orchestrator/app/observability/monitoring.py"
         ]
         
-        # Configuration analyse rapide et spécialisée
-        self.analysis_focus = "CODE_QUALITY"  # Focus sur qualité code
+        # Configuration analyse rapide et spcialise
+        self.analysis_focus = "CODE_QUALITY"  # Focus sur qualit code
         self.extraction_threshold = 15  # Seuil extraction fonction (lignes)
-        self.complexity_threshold = 10  # Seuil complexité critique
+        self.complexity_threshold = 10  # Seuil complexit critique
         self.class_methods_threshold = 20  # Seuil split classe
         
-        # Patterns code à détecter
+        # Patterns code  dtecter
         self.code_patterns = {
             "god_function": r"def\s+\w+\(.*?\):",
             "nested_if": r"if\s+.*:\s*\n\s+if\s+.*:",
@@ -139,7 +139,7 @@ class AgentCodeAnalyzerBeta:
         }
     
     async def analyze_ast_structure(self, file_path: Path) -> Tuple[List[FunctionAnalysis], List[ClassAnalysis]]:
-        """Analyse AST détaillée pour fonctions et classes"""
+        """Analyse AST dtaille pour fonctions et classes"""
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
@@ -165,15 +165,15 @@ class AgentCodeAnalyzerBeta:
             return functions_analysis, classes_analysis
             
         except Exception as e:
-            print(f"❌ Erreur analyse AST {file_path}: {e}")
+            print(f"[CROSS] Erreur analyse AST {file_path}: {e}")
             return [], []
     
     async def _analyze_function(self, node: ast.FunctionDef, lines: List[str], file_path: str) -> FunctionAnalysis:
-        """Analyse détaillée fonction"""
+        """Analyse dtaille fonction"""
         start_line = node.lineno
         end_line = node.end_lineno if hasattr(node, 'end_lineno') else start_line + 10
         
-        # Calcul complexité cyclomatique
+        # Calcul complexit cyclomatique
         complexity = 1  # Base
         for child in ast.walk(node):
             if isinstance(child, (ast.If, ast.For, ast.While, ast.With)):
@@ -181,13 +181,13 @@ class AgentCodeAnalyzerBeta:
             elif isinstance(child, ast.BoolOp):
                 complexity += len(child.values) - 1
         
-        # Nombre paramètres
+        # Nombre paramtres
         parameters_count = len(node.args.args)
         
         # Nombre lignes
         lines_count = end_line - start_line + 1
         
-        # Détection responsabilités (approximation)
+        # Dtection responsabilits (approximation)
         func_content = '\n'.join(lines[start_line-1:end_line])
         responsibilities = []
         
@@ -209,7 +209,7 @@ class AgentCodeAnalyzerBeta:
             len(responsibilities) > 1
         )
         
-        # Module suggéré
+        # Module suggr
         suggested_module = self._suggest_module_for_function(node.name, responsibilities)
         
         return FunctionAnalysis(
@@ -226,11 +226,11 @@ class AgentCodeAnalyzerBeta:
         )
     
     async def _analyze_class(self, node: ast.ClassDef, lines: List[str], file_path: str) -> ClassAnalysis:
-        """Analyse détaillée classe"""
+        """Analyse dtaille classe"""
         start_line = node.lineno
         end_line = node.end_lineno if hasattr(node, 'end_lineno') else start_line + 50
         
-        # Comptage méthodes et propriétés
+        # Comptage mthodes et proprits
         methods_count = 0
         properties_count = 0
         
@@ -241,7 +241,7 @@ class AgentCodeAnalyzerBeta:
                 else:
                     methods_count += 1
         
-        # Détection responsabilités classe
+        # Dtection responsabilits classe
         class_content = '\n'.join(lines[start_line-1:end_line])
         responsibilities = []
         
@@ -261,18 +261,18 @@ class AgentCodeAnalyzerBeta:
         # Violations SRP
         srp_violations = []
         if len(responsibilities) > 2:
-            srp_violations.append(f"Multiple responsabilités: {', '.join(responsibilities)}")
+            srp_violations.append(f"Multiple responsabilits: {', '.join(responsibilities)}")
         if methods_count > self.class_methods_threshold:
-            srp_violations.append(f"Trop de méthodes: {methods_count}")
+            srp_violations.append(f"Trop de mthodes: {methods_count}")
         
         # Suggestions split
         split_suggestions = []
         if "DATABASE" in responsibilities and len(responsibilities) > 1:
-            split_suggestions.append(f"{node.name}Repository (responsabilité DATABASE)")
+            split_suggestions.append(f"{node.name}Repository (responsabilit DATABASE)")
         if "HTTP_API" in responsibilities and len(responsibilities) > 1:
-            split_suggestions.append(f"{node.name}Controller (responsabilité HTTP_API)")
+            split_suggestions.append(f"{node.name}Controller (responsabilit HTTP_API)")
         if "VALIDATION" in responsibilities and len(responsibilities) > 1:
-            split_suggestions.append(f"{node.name}Validator (responsabilité VALIDATION)")
+            split_suggestions.append(f"{node.name}Validator (responsabilit VALIDATION)")
         
         return ClassAnalysis(
             class_name=node.name,
@@ -287,7 +287,7 @@ class AgentCodeAnalyzerBeta:
         )
     
     def _suggest_module_for_function(self, func_name: str, responsibilities: List[str]) -> str:
-        """Suggère module approprié pour fonction"""
+        """Suggre module appropri pour fonction"""
         if "DATABASE" in responsibilities:
             return "repositories"
         elif "HTTP" in responsibilities:
@@ -302,7 +302,7 @@ class AgentCodeAnalyzerBeta:
             return "services"
     
     async def detect_code_patterns(self, file_path: Path) -> List[CodePattern]:
-        """Détection patterns code problématiques"""
+        """Dtection patterns code problmatiques"""
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
@@ -317,7 +317,7 @@ class AgentCodeAnalyzerBeta:
             
             for i, line in enumerate(lines):
                 if re.match(r'^\s*def\s+\w+', line):
-                    # Fin fonction précédente
+                    # Fin fonction prcdente
                     if current_func and func_lines > 30:
                         patterns.append(CodePattern(
                             file_path=str(file_path),
@@ -346,7 +346,7 @@ class AgentCodeAnalyzerBeta:
                         line_number=i + 1,
                         description=f"Nesting trop profond: niveau {indent_level}",
                         severity="MEDIUM",
-                        refactoring_suggestion="Extraire méthodes, simplifier logique"
+                        refactoring_suggestion="Extraire mthodes, simplifier logique"
                     ))
             
             # Pattern: Magic Numbers
@@ -358,19 +358,19 @@ class AgentCodeAnalyzerBeta:
                             file_path=str(file_path),
                             pattern_type="MAGIC_NUMBER",
                             line_number=i + 1,
-                            description=f"Magic number détecté: {number}",
+                            description=f"Magic number dtect: {number}",
                             severity="LOW",
-                            refactoring_suggestion="Remplacer par constante nommée"
+                            refactoring_suggestion="Remplacer par constante nomme"
                         ))
             
             return patterns
             
         except Exception as e:
-            print(f"❌ Erreur détection patterns {file_path}: {e}")
+            print(f"[CROSS] Erreur dtection patterns {file_path}: {e}")
             return []
     
     async def detect_code_smells(self, file_path: Path) -> CodeSmells:
-        """Détection code smells"""
+        """Dtection code smells"""
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
@@ -399,7 +399,7 @@ class AgentCodeAnalyzerBeta:
                 if isinstance(node, ast.ClassDef):
                     methods_count = len([n for n in node.body if isinstance(n, ast.FunctionDef)])
                     if methods_count > 15:
-                        god_classes.append(f"{node.name} ({methods_count} méthodes)")
+                        god_classes.append(f"{node.name} ({methods_count} mthodes)")
             
             # Duplicate code (approximation simple)
             duplicate_code = []
@@ -414,7 +414,7 @@ class AgentCodeAnalyzerBeta:
             
             for line, occurrences in line_counts.items():
                 if len(occurrences) > 2:
-                    duplicate_code.append(f"Ligne dupliquée {len(occurrences)} fois: {line[:50]}...")
+                    duplicate_code.append(f"Ligne duplique {len(occurrences)} fois: {line[:50]}...")
             
             # Complex conditionals
             complex_conditionals = []
@@ -450,22 +450,22 @@ class AgentCodeAnalyzerBeta:
             )
             
         except Exception as e:
-            print(f"❌ Erreur détection code smells {file_path}: {e}")
+            print(f"[CROSS] Erreur dtection code smells {file_path}: {e}")
             return CodeSmells(str(file_path), [], [], [], [], [], [])
     
     async def analyze_with_qwen_coder(self, file_content: str, file_path: str) -> Dict[str, Any]:
-        """Analyse spécialisée code avec Qwen-Coder RTX3090"""
-        print(f"⚡ Analyse Qwen-Coder RTX3090: {file_path}")
+        """Analyse spcialise code avec Qwen-Coder RTX3090"""
+        print(f"[LIGHTNING] Analyse Qwen-Coder RTX3090: {file_path}")
         
-        # Prompt spécialisé pour analyse code rapide
+        # Prompt spcialis pour analyse code rapide
         prompt = f"""
-Tu es Qwen-Coder, expert développeur ultra-rapide sur RTX 3090.
-Mission: Analyse code rapide pour refactoring immédiat.
+Tu es Qwen-Coder, expert dveloppeur ultra-rapide sur RTX 3090.
+Mission: Analyse code rapide pour refactoring immdiat.
 
 FICHIER: {file_path}
-TAILLE: {len(file_content)} caractères
+TAILLE: {len(file_content)} caractres
 
-CODE À ANALYSER:
+CODE  ANALYSER:
 ```python
 {file_content[:2000]}{'...' if len(file_content) > 2000 else ''}
 ```
@@ -474,25 +474,25 @@ ANALYSE RAPIDE REQUISE:
 
 1. **EXTRACTION DE FONCTIONS**
    - Fonctions candidates extraction (>15 lignes)
-   - Blocs code répétitifs
-   - Logique métier à isoler
+   - Blocs code rptitifs
+   - Logique mtier  isoler
 
 2. **SPLIT DE CLASSES** 
-   - Classes trop larges (>20 méthodes)
-   - Responsabilités multiples détectées
+   - Classes trop larges (>20 mthodes)
+   - Responsabilits multiples dtectes
    - Violations Single Responsibility
 
-3. **REFACTORING IMMÉDIAT**
+3. **REFACTORING IMMDIAT**
    - Top 3 actions prioritaires
-   - Gains estimés (lignes réduites)
-   - Modules cibles suggérés
+   - Gains estims (lignes rduites)
+   - Modules cibles suggrs
 
 4. **CODE PATTERNS**
-   - Anti-patterns détectés
+   - Anti-patterns dtects
    - Best practices manquantes
    - Optimisations rapides
 
-Fournis réponse JSON concise et actionnable.
+Fournis rponse JSON concise et actionnable.
 """
 
         try:
@@ -505,9 +505,9 @@ Fournis réponse JSON concise et actionnable.
                         "prompt": prompt,
                         "stream": False,
                         "options": {
-                            "temperature": 0.1,  # Code précis
+                            "temperature": 0.1,  # Code prcis
                             "top_p": 0.9,
-                            "num_ctx": 4096,  # Contexte adapté
+                            "num_ctx": 4096,  # Contexte adapt
                             "num_gpu": 1
                         }
                     }
@@ -532,7 +532,7 @@ Fournis réponse JSON concise et actionnable.
                     raise Exception(f"Erreur Ollama: {response.status_code}")
                     
         except Exception as e:
-            print(f"❌ Erreur analyse Qwen-Coder {file_path}: {e}")
+            print(f"[CROSS] Erreur analyse Qwen-Coder {file_path}: {e}")
             return {
                 "file_path": file_path,
                 "qwen_analysis": f"Erreur analyse: {e}",
@@ -544,10 +544,10 @@ Fournis réponse JSON concise et actionnable.
                                      classes: List[ClassAnalysis],
                                      patterns: List[CodePattern],
                                      smells: CodeSmells) -> List[RefactoringStrategy]:
-        """Génère stratégies refactoring prioritaires"""
+        """Gnre stratgies refactoring prioritaires"""
         strategies = []
         
-        # Stratégie 1: Extraction fonctions
+        # Stratgie 1: Extraction fonctions
         extraction_candidates = [f for f in functions if f.extraction_candidate]
         if extraction_candidates:
             total_lines_reduction = sum(f.lines_count for f in extraction_candidates)
@@ -557,17 +557,17 @@ Fournis réponse JSON concise et actionnable.
                 priority=1,
                 description=f"Extraire {len(extraction_candidates)} fonctions voluminoses/complexes",
                 steps=[
-                    "1. Identifier responsabilités de chaque fonction",
-                    "2. Créer modules spécialisés (services, repositories, utils)",
-                    "3. Extraire fonctions vers modules appropriés",
-                    "4. Mettre à jour imports et dépendances"
+                    "1. Identifier responsabilits de chaque fonction",
+                    "2. Crer modules spcialiss (services, repositories, utils)",
+                    "3. Extraire fonctions vers modules appropris",
+                    "4. Mettre  jour imports et dpendances"
                 ],
                 estimated_hours=len(extraction_candidates) * 0.5,
                 risk_level="LOW",
                 expected_lines_reduction=int(total_lines_reduction * 0.3)
             ))
         
-        # Stratégie 2: Split classes
+        # Stratgie 2: Split classes
         split_candidates = [c for c in classes if c.srp_violations]
         if split_candidates:
             strategies.append(RefactoringStrategy(
@@ -576,17 +576,17 @@ Fournis réponse JSON concise et actionnable.
                 priority=2,
                 description=f"Diviser {len(split_candidates)} classes violant SRP",
                 steps=[
-                    "1. Analyser responsabilités de chaque classe",
-                    "2. Créer classes spécialisées par responsabilité",
-                    "3. Extraire méthodes vers nouvelles classes",
-                    "4. Implémenter composition/injection dépendances"
+                    "1. Analyser responsabilits de chaque classe",
+                    "2. Crer classes spcialises par responsabilit",
+                    "3. Extraire mthodes vers nouvelles classes",
+                    "4. Implmenter composition/injection dpendances"
                 ],
                 estimated_hours=len(split_candidates) * 2.0,
                 risk_level="MEDIUM",
                 expected_lines_reduction=sum(c.methods_count for c in split_candidates) * 10
             ))
         
-        # Stratégie 3: Nettoyage code smells
+        # Stratgie 3: Nettoyage code smells
         total_smells = (len(smells.long_methods) + len(smells.complex_conditionals) + 
                        len(smells.deep_nesting) + len(smells.magic_numbers))
         if total_smells > 5:
@@ -594,11 +594,11 @@ Fournis réponse JSON concise et actionnable.
                 target_file=smells.file_path,
                 strategy_type="CLEAN_CODE_SMELLS",
                 priority=3,
-                description=f"Nettoyer {total_smells} code smells détectés",
+                description=f"Nettoyer {total_smells} code smells dtects",
                 steps=[
-                    "1. Simplifier méthodes longues",
+                    "1. Simplifier mthodes longues",
                     "2. Extraire conditions complexes",
-                    "3. Réduire nesting avec early returns",
+                    "3. Rduire nesting avec early returns",
                     "4. Remplacer magic numbers par constantes"
                 ],
                 estimated_hours=total_smells * 0.2,
@@ -606,17 +606,17 @@ Fournis réponse JSON concise et actionnable.
                 expected_lines_reduction=total_smells * 2
             ))
         
-        # Tri par priorité
+        # Tri par priorit
         strategies.sort(key=lambda x: x.priority)
         
         return strategies
     
     async def execute_mission(self) -> BetaAnalysisResult:
-        """Exécute mission analyse Beta avec Qwen-Coder RTX3090"""
-        print(f"🚀 {self.name} - Démarrage analyse Qwen-Coder RTX3090")
-        print(f"🎮 GPU: {self.gpu_device}")
-        print(f"🤖 Modèle: {self.model}")
-        print(f"⚡ Performance attendue: {self.expected_performance}")
+        """Excute mission analyse Beta avec Qwen-Coder RTX3090"""
+        print(f"[ROCKET] {self.name} - Dmarrage analyse Qwen-Coder RTX3090")
+        print(f" GPU: {self.gpu_device}")
+        print(f"[ROBOT] Modle: {self.model}")
+        print(f"[LIGHTNING] Performance attendue: {self.expected_performance}")
         
         try:
             self.status = "ACTIVE"
@@ -634,21 +634,21 @@ Fournis réponse JSON concise et actionnable.
                 file_path = self.project_root / target_file
                 
                 if not file_path.exists():
-                    print(f"⚠️ Fichier introuvable: {file_path}")
+                    print(f" Fichier introuvable: {file_path}")
                     continue
                 
-                print(f"⚡ Analyse rapide: {target_file}")
+                print(f"[LIGHTNING] Analyse rapide: {target_file}")
                 
                 # Analyse AST
                 functions, classes = await self.analyze_ast_structure(file_path)
                 all_functions.extend(functions)
                 all_classes.extend(classes)
                 
-                # Détection patterns
+                # Dtection patterns
                 patterns = await self.detect_code_patterns(file_path)
                 all_patterns.extend(patterns)
                 
-                # Détection code smells
+                # Dtection code smells
                 smells = await self.detect_code_smells(file_path)
                 all_smells.append(smells)
                 
@@ -661,14 +661,14 @@ Fournis réponse JSON concise et actionnable.
                     all_qwen_analyses.append(qwen_analysis)
                     
                 except Exception as e:
-                    print(f"❌ Erreur lecture {file_path}: {e}")
+                    print(f"[CROSS] Erreur lecture {file_path}: {e}")
                 
                 files_analyzed.append(str(target_file))
                 
                 # Pause courte (Qwen-Coder est rapide)
                 await asyncio.sleep(0.5)
             
-            # Génération stratégies refactoring
+            # Gnration stratgies refactoring
             refactoring_strategies = []
             for i, file_analyzed in enumerate(files_analyzed):
                 file_functions = [f for f in all_functions if f.file_path.endswith(file_analyzed)]
@@ -681,7 +681,7 @@ Fournis réponse JSON concise et actionnable.
                 )
                 refactoring_strategies.extend(strategies)
             
-            # Métriques performance
+            # Mtriques performance
             analysis_duration = time.time() - start_time
             performance_metrics = {
                 "analysis_duration": round(analysis_duration, 2),
@@ -709,7 +709,7 @@ Fournis réponse JSON concise et actionnable.
                 "performance": performance_metrics
             }
             
-            # Résultat final
+            # Rsultat final
             result = BetaAnalysisResult(
                 timestamp=datetime.now().isoformat(),
                 agent_name=self.name,
@@ -727,19 +727,19 @@ Fournis réponse JSON concise et actionnable.
             
             self.status = "SUCCESS"
             
-            print(f"🎉 Analyse Beta Qwen-Coder TERMINÉE")
-            print(f"⚡ {len(files_analyzed)} fichiers analysés en {analysis_duration:.1f}s")
-            print(f"🔧 {extraction_candidates} fonctions candidates extraction")
-            print(f"📦 {split_candidates} classes candidates split")
-            print(f"🎯 {len(refactoring_strategies)} stratégies générées")
+            print(f" Analyse Beta Qwen-Coder TERMINE")
+            print(f"[LIGHTNING] {len(files_analyzed)} fichiers analyss en {analysis_duration:.1f}s")
+            print(f"[TOOL] {extraction_candidates} fonctions candidates extraction")
+            print(f" {split_candidates} classes candidates split")
+            print(f"[TARGET] {len(refactoring_strategies)} stratgies gnres")
             
             return result
             
         except Exception as e:
             self.status = "FAILED"
-            print(f"❌ Échec analyse Beta: {e}")
+            print(f"[CROSS] chec analyse Beta: {e}")
             
-            # Résultat d'erreur
+            # Rsultat d'erreur
             return BetaAnalysisResult(
                 timestamp=datetime.now().isoformat(),
                 agent_name=self.name,
@@ -770,7 +770,7 @@ Fournis réponse JSON concise et actionnable.
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(result_dict, f, indent=2, ensure_ascii=False)
         
-        print(f"📄 Rapport sauvegardé: {output_path}")
+        print(f"[DOCUMENT] Rapport sauvegard: {output_path}")
 
 if __name__ == "__main__":
     # Test agent analyzer beta
@@ -780,13 +780,13 @@ if __name__ == "__main__":
         result = await agent.execute_mission()
         agent.save_analysis_report(result)
         
-        print(f"\n📊 RÉSULTAT ANALYSE BETA QWEN-CODER:")
+        print(f"\n[CHART] RSULTAT ANALYSE BETA QWEN-CODER:")
         print(f"Status: {agent.status}")
-        print(f"Modèle: {result.model_used}")
+        print(f"Modle: {result.model_used}")
         print(f"GPU: {result.gpu_used}")
         print(f"Fichiers: {len(result.files_analyzed)}")
         print(f"Fonctions: {len(result.functions_analysis)}")
         print(f"Classes: {len(result.classes_analysis)}")
-        print(f"Stratégies: {len(result.refactoring_strategies)}")
+        print(f"Stratgies: {len(result.refactoring_strategies)}")
     
     asyncio.run(main()) 

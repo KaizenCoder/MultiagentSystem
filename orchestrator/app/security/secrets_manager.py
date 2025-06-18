@@ -1,6 +1,6 @@
 """
-Gestionnaire de secrets production avec rotation automatique et conformité sécurité.
-Remplace la gestion de secrets hardcodés par un système externalisé et sécurisé.
+Gestionnaire de secrets production avec rotation automatique et conformit scurit.
+Remplace la gestion de secrets hardcods par un systme externalis et scuris.
 Supports Azure KeyVault, HashiCorp Vault, Docker Secrets et variables d'environnement.
 """
 
@@ -37,7 +37,7 @@ logger = logging.getLogger(__name__)
 
 
 class SecretType(Enum):
-    """Types de secrets supportés."""
+    """Types de secrets supports."""
     API_KEY = "api_key"
     DATABASE_PASSWORD = "database_password"
     JWT_SECRET = "jwt_secret"
@@ -46,18 +46,18 @@ class SecretType(Enum):
 
 
 class SecretSource(Enum):
-    """Sources de secrets supportées."""
+    """Sources de secrets supportes."""
     DOCKER_SECRETS = "docker_secrets"
     ENVIRONMENT_VARIABLES = "environment_variables"
     AZURE_KEY_VAULT = "azure_key_vault"
     HASHICORP_VAULT = "hashicorp_vault"
     AWS_SECRETS_MANAGER = "aws_secrets_manager"
-    LOCAL_FILE = "local_file"  # Développement uniquement
+    LOCAL_FILE = "local_file"  # Dveloppement uniquement
 
 
 @dataclass
 class SecretMetadata:
-    """Métadonnées d'un secret."""
+    """Mtadonnes d'un secret."""
     name: str
     secret_type: SecretType
     source: SecretSource
@@ -68,30 +68,30 @@ class SecretMetadata:
     rotation_interval: Optional[int] = None  # en secondes
     
     def is_expired(self) -> bool:
-        """Vérifie si le secret a expiré."""
+        """Vrifie si le secret a expir."""
         if self.expires_at is None:
             return False
         return time.time() > self.expires_at
     
     def needs_rotation(self) -> bool:
-        """Vérifie si le secret doit être tourné."""
+        """Vrifie si le secret doit tre tourn."""
         if self.rotation_interval is None:
             return False
         return time.time() - self.created_at > self.rotation_interval
 
 
 class SecretNotFoundError(Exception):
-    """Exception levée quand un secret n'est pas trouvé."""
+    """Exception leve quand un secret n'est pas trouv."""
     pass
 
 
 class SecretExpiredError(Exception):
-    """Exception levée quand un secret a expiré."""
+    """Exception leve quand un secret a expir."""
     pass
 
 
 class SecretRotationError(Exception):
-    """Exception levée lors d'erreurs de rotation."""
+    """Exception leve lors d'erreurs de rotation."""
     pass
 
 
@@ -100,7 +100,7 @@ class SecretProvider(ABC):
     
     @abstractmethod
     def get_secret(self, secret_name: str) -> str:
-        """Récupère un secret par son nom."""
+        """Rcupre un secret par son nom."""
         pass
     
     @abstractmethod
@@ -110,7 +110,7 @@ class SecretProvider(ABC):
     
     @abstractmethod
     def secret_exists(self, secret_name: str) -> bool:
-        """Vérifie si un secret existe."""
+        """Vrifie si un secret existe."""
         pass
 
 
@@ -123,7 +123,7 @@ class DockerSecretsProvider(SecretProvider):
             logger.warning(f"Docker secrets path {secrets_path} does not exist")
     
     def get_secret(self, secret_name: str) -> str:
-        """Récupère un secret Docker."""
+        """Rcupre un secret Docker."""
         secret_file = self.secrets_path / secret_name
         if not secret_file.exists():
             raise SecretNotFoundError(f"Docker secret {secret_name} not found")
@@ -145,7 +145,7 @@ class DockerSecretsProvider(SecretProvider):
         return [f.name for f in self.secrets_path.iterdir() if f.is_file()]
     
     def secret_exists(self, secret_name: str) -> bool:
-        """Vérifie si un secret Docker existe."""
+        """Vrifie si un secret Docker existe."""
         return (self.secrets_path / secret_name).is_file()
 
 
@@ -156,7 +156,7 @@ class EnvironmentVariablesProvider(SecretProvider):
         self.prefix = prefix
     
     def get_secret(self, secret_name: str) -> str:
-        """Récupère un secret depuis les variables d'environnement."""
+        """Rcupre un secret depuis les variables d'environnement."""
         env_var_name = f"{self.prefix}{secret_name.upper()}"
         value = os.getenv(env_var_name)
         
@@ -177,23 +177,23 @@ class EnvironmentVariablesProvider(SecretProvider):
         ]
     
     def secret_exists(self, secret_name: str) -> bool:
-        """Vérifie si un secret existe dans les variables d'environnement."""
+        """Vrifie si un secret existe dans les variables d'environnement."""
         env_var_name = f"{self.prefix}{secret_name.upper()}"
         return env_var_name in os.environ
 
 
 class LocalFileProvider(SecretProvider):
-    """Fournisseur de secrets via fichiers locaux (développement uniquement)."""
+    """Fournisseur de secrets via fichiers locaux (dveloppement uniquement)."""
     
     def __init__(self, secrets_dir: Path = Path(".secrets")):
         self.secrets_dir = secrets_dir
         self.secrets_dir.mkdir(exist_ok=True, mode=0o700)  # Permissions restrictives
         
-        # Avertissement sécurité
+        # Avertissement scurit
         logger.warning("Using LocalFileProvider - FOR DEVELOPMENT ONLY")
     
     def get_secret(self, secret_name: str) -> str:
-        """Récupère un secret depuis un fichier local."""
+        """Rcupre un secret depuis un fichier local."""
         secret_file = self.secrets_dir / f"{secret_name}.secret"
         
         if not secret_file.exists():
@@ -209,7 +209,7 @@ class LocalFileProvider(SecretProvider):
             raise SecretNotFoundError(f"Cannot read local secret {secret_name}")
     
     def list_secrets(self) -> List[str]:
-        """Liste tous les secrets dans le répertoire local."""
+        """Liste tous les secrets dans le rpertoire local."""
         if not self.secrets_dir.exists():
             return []        
         return [
@@ -217,7 +217,7 @@ class LocalFileProvider(SecretProvider):
         ]
     
     def secret_exists(self, secret_name: str) -> bool:
-        """Vérifie si un secret existe localement."""
+        """Vrifie si un secret existe localement."""
         return (self.secrets_dir / f"{secret_name}.secret").exists()
 
 
@@ -235,7 +235,7 @@ class AzureKeyVaultProvider(SecretProvider):
         logger.info(f"Initialized Azure KeyVault provider for {vault_url}")
     
     def get_secret(self, secret_name: str) -> str:
-        """Récupère un secret depuis Azure KeyVault."""
+        """Rcupre un secret depuis Azure KeyVault."""
         try:
             secret = self.client.get_secret(secret_name)
             if not secret.value:
@@ -254,7 +254,7 @@ class AzureKeyVaultProvider(SecretProvider):
             return []
     
     def secret_exists(self, secret_name: str) -> bool:
-        """Vérifie si un secret existe dans Azure KeyVault."""
+        """Vrifie si un secret existe dans Azure KeyVault."""
         try:
             self.client.get_secret(secret_name)
             return True
@@ -279,7 +279,7 @@ class HashiCorpVaultProvider(SecretProvider):
         logger.info(f"Initialized HashiCorp Vault provider for {vault_url}")
     
     def get_secret(self, secret_name: str) -> str:
-        """Récupère un secret depuis HashiCorp Vault."""
+        """Rcupre un secret depuis HashiCorp Vault."""
         try:
             # Support pour KV v2 (default) et v1
             try:
@@ -297,7 +297,7 @@ class HashiCorpVaultProvider(SecretProvider):
                 )
                 data = response['data']
             
-            # Cherche 'value' ou utilise la première clé
+            # Cherche 'value' ou utilise la premire cl
             if 'value' in data:
                 secret_value = data['value']
             else:
@@ -329,7 +329,7 @@ class HashiCorpVaultProvider(SecretProvider):
             return []
     
     def secret_exists(self, secret_name: str) -> bool:
-        """Vérifie si un secret existe dans HashiCorp Vault."""
+        """Vrifie si un secret existe dans HashiCorp Vault."""
         try:
             self.get_secret(secret_name)
             return True
@@ -344,7 +344,7 @@ class ProductionSecretsManager:
         self, 
         primary_provider: SecretProvider,
         fallback_providers: Optional[List[SecretProvider]] = None,
-        cache_ttl: int = 3600,  # 1 heure par défaut
+        cache_ttl: int = 3600,  # 1 heure par dfaut
         enable_rotation: bool = True
     ):
         self.primary_provider = primary_provider
@@ -352,7 +352,7 @@ class ProductionSecretsManager:
         self.cache_ttl = cache_ttl
         self.enable_rotation = enable_rotation
         
-        # Cache avec métadonnées
+        # Cache avec mtadonnes
         self._cache: Dict[str, str] = {}
         self._metadata: Dict[str, SecretMetadata] = {}
         
@@ -368,7 +368,7 @@ class ProductionSecretsManager:
         force_refresh: bool = False
     ) -> str:
         """
-        Récupère un secret avec cache et audit.
+        Rcupre un secret avec cache et audit.
         
         Args:
             secret_name: Nom du secret
@@ -380,35 +380,35 @@ class ProductionSecretsManager:
             
         Raises:
             SecretNotFoundError: Si le secret n'existe pas
-            SecretExpiredError: Si le secret a expiré
+            SecretExpiredError: Si le secret a expir
         """
         now = time.time()
         
-        # Vérification cache et expiration
+        # Vrification cache et expiration
         if not force_refresh and secret_name in self._cache:
             metadata = self._metadata.get(secret_name)
             if metadata:
-                # Vérification expiration
+                # Vrification expiration
                 if metadata.is_expired():
                     logger.warning(f"Secret {secret_name} has expired")
                     raise SecretExpiredError(f"Secret {secret_name} has expired")
                 
-                # Vérification TTL cache
+                # Vrification TTL cache
                 if now - metadata.last_accessed < self.cache_ttl:
                     metadata.last_accessed = now
                     metadata.access_count += 1
                     self._log_access(secret_name, "cache_hit", secret_type)
                     return self._cache[secret_name]
         
-        # Récupération du secret
+        # Rcupration du secret
         secret_value = self._fetch_secret(secret_name)
         
-        # Mise à jour cache et métadonnées
+        # Mise  jour cache et mtadonnes
         self._cache[secret_name] = secret_value
         self._metadata[secret_name] = SecretMetadata(
             name=secret_name,
             secret_type=secret_type,
-            source=SecretSource.DOCKER_SECRETS,  # À adapter selon le provider
+            source=SecretSource.DOCKER_SECRETS,  #  adapter selon le provider
             created_at=now,
             last_accessed=now,
             access_count=1
@@ -416,14 +416,14 @@ class ProductionSecretsManager:
         
         self._log_access(secret_name, "fetched", secret_type)
         
-        # Vérification rotation si activée
+        # Vrification rotation si active
         if self.enable_rotation:
             self._check_rotation_needed(secret_name)
         
         return secret_value
     
     def _fetch_secret(self, secret_name: str) -> str:
-        """Récupère un secret depuis les providers."""
+        """Rcupre un secret depuis les providers."""
         # Essai provider principal
         try:
             return self.primary_provider.get_secret(secret_name)
@@ -443,14 +443,14 @@ class ProductionSecretsManager:
         raise SecretNotFoundError(f"Secret {secret_name} not found in any provider")
     
     def _check_rotation_needed(self, secret_name: str) -> None:
-        """Vérifie si un secret doit être tourné."""
+        """Vrifie si un secret doit tre tourn."""
         metadata = self._metadata.get(secret_name)
         if metadata and metadata.needs_rotation():
             logger.warning(f"Secret {secret_name} needs rotation")
-            # TODO: Implémenter logique de rotation automatique
+            # TODO: Implmenter logique de rotation automatique
     
     def _log_access(self, secret_name: str, action: str, secret_type: SecretType) -> None:
-        """Log l'accès à un secret pour audit."""
+        """Log l'accs  un secret pour audit."""
         access_entry = {
             'timestamp': time.time(),
             'secret_name': secret_name,
@@ -461,7 +461,7 @@ class ProductionSecretsManager:
         
         self._access_log.append(access_entry)
         
-        # Gardez seulement les 1000 derniers accès
+        # Gardez seulement les 1000 derniers accs
         if len(self._access_log) > 1000:
             self._access_log = self._access_log[-1000:]
         
@@ -513,12 +513,12 @@ class ProductionSecretsManager:
         }
     
     def get_audit_trail(self, limit: int = 100) -> List[Dict[str, Any]]:
-        """Retourne l'audit trail des accès."""
+        """Retourne l'audit trail des accs."""
         return self._access_log[-limit:]
     
     @contextmanager
     def secret_context(self, secret_name: str, secret_type: SecretType = SecretType.API_KEY):
-        """Context manager pour utilisation sécurisée des secrets."""
+        """Context manager pour utilisation scurise des secrets."""
         try:
             secret_value = self.get_secret(secret_name, secret_type)
             yield secret_value
@@ -526,20 +526,20 @@ class ProductionSecretsManager:
             logger.error(f"Error in secret context for {secret_name}: {e}")
             raise
         finally:
-            # Nettoyage mémoire (optionnel)
+            # Nettoyage mmoire (optionnel)
             pass
 
 
-# Configuration par défaut selon l'environnement
+# Configuration par dfaut selon l'environnement
 def get_default_secrets_manager() -> ProductionSecretsManager:
     """
-    Crée un gestionnaire de secrets configuré selon l'environnement.
+    Cre un gestionnaire de secrets configur selon l'environnement.
     Production: Azure KeyVault + HashiCorp Vault + Docker Secrets
     Staging: Docker Secrets + Variables d'environnement
     Development: Fichiers locaux + Variables d'environnement
     
     Returns:
-        ProductionSecretsManager: Instance configurée
+        ProductionSecretsManager: Instance configure
     """
     environment = os.getenv('ENVIRONMENT', 'development').lower()
     
@@ -547,7 +547,7 @@ def get_default_secrets_manager() -> ProductionSecretsManager:
         # Production: Providers enterprise avec fallbacks
         providers = []
         
-        # Azure KeyVault (primary si configuré)
+        # Azure KeyVault (primary si configur)
         azure_vault_url = os.getenv('AZURE_KEYVAULT_URL')
         if azure_vault_url and AZURE_AVAILABLE:
             try:
@@ -556,7 +556,7 @@ def get_default_secrets_manager() -> ProductionSecretsManager:
             except Exception as e:
                 logger.warning(f"Failed to initialize Azure KeyVault: {e}")
         
-        # HashiCorp Vault (secondary si configuré)
+        # HashiCorp Vault (secondary si configur)
         vault_url = os.getenv('VAULT_URL')
         vault_token = os.getenv('VAULT_TOKEN')
         if vault_url and vault_token and VAULT_AVAILABLE:
@@ -616,28 +616,28 @@ def get_secrets_manager() -> ProductionSecretsManager:
     return _secrets_manager
 
 
-# Fonctions de convénience
+# Fonctions de convnience
 def get_secret(secret_name: str, secret_type: SecretType = SecretType.API_KEY) -> str:
-    """Fonction de convénience pour récupérer un secret."""
+    """Fonction de convnience pour rcuprer un secret."""
     return get_secrets_manager().get_secret(secret_name, secret_type)
 
 
 def get_openai_api_key() -> str:
-    """Récupère la clé API OpenAI."""
+    """Rcupre la cl API OpenAI."""
     return get_secret("openai_api_key", SecretType.API_KEY)
 
 
 def get_anthropic_api_key() -> str:
-    """Récupère la clé API Anthropic."""
+    """Rcupre la cl API Anthropic."""
     return get_secret("anthropic_api_key", SecretType.API_KEY)
 
 
 def get_jwt_secret() -> str:
-    """Récupère le secret JWT."""
+    """Rcupre le secret JWT."""
     return get_secret("jwt_secret", SecretType.JWT_SECRET)
 
 
-# Validation de sécurité
+# Validation de scurit
 def validate_secret_strength(secret_value: str, secret_type: SecretType) -> bool:
     """
     Valide la force d'un secret selon son type.
@@ -650,21 +650,21 @@ def validate_secret_strength(secret_value: str, secret_type: SecretType) -> bool
         bool: True si le secret est suffisamment fort
     """
     if secret_type == SecretType.API_KEY:
-        # Clés API: minimum 32 caractères
+        # Cls API: minimum 32 caractres
         return len(secret_value) >= 32
     
     elif secret_type == SecretType.JWT_SECRET:
-        # Secrets JWT: minimum 64 caractères, caractères variés
+        # Secrets JWT: minimum 64 caractres, caractres varis
         return (len(secret_value) >= 64 and 
                 any(c.isupper() for c in secret_value) and
                 any(c.islower() for c in secret_value) and
                 any(c.isdigit() for c in secret_value))
     
     elif secret_type == SecretType.DATABASE_PASSWORD:
-        # Mots de passe DB: minimum 16 caractères avec caractères spéciaux
+        # Mots de passe DB: minimum 16 caractres avec caractres spciaux
         return (len(secret_value) >= 16 and
                 any(c in "!@#$%^&*" for c in secret_value))
     
     else:
-        # Par défaut: minimum 16 caractères
+        # Par dfaut: minimum 16 caractres
         return len(secret_value) >= 16

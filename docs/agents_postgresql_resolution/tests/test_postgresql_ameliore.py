@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Test complet PostgreSQL NextGeneration - Version améliorée
-Agent Testing Specialist - Résolution problématiques
+Test complet PostgreSQL NextGeneration - Version amliore
+Agent Testing Specialist - Rsolution problmatiques
 """
 
 import asyncio
@@ -13,7 +13,7 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 
-# Configuration pour éviter les erreurs d'import
+# Configuration pour viter les erreurs d'import
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 class PostgreSQLTestSuite:
@@ -27,34 +27,34 @@ class PostgreSQLTestSuite:
         }
         
     def test_1_import_securise(self):
-        """Test d'import sécurisé des modules PostgreSQL"""
+        """Test d'import scuris des modules PostgreSQL"""
         test_name = "Import modules PostgreSQL"
         try:
             # Test progressif des imports
             import psycopg2
-            self.logger.info("✅ psycopg2 importé avec succès")
+            self.logger.info("[CHECK] psycopg2 import avec succs")
             
             import sqlalchemy
-            self.logger.info(f"✅ SQLAlchemy {sqlalchemy.__version__} importé")
+            self.logger.info(f"[CHECK] SQLAlchemy {sqlalchemy.__version__} import")
             
             # Test import modules projet
             try:
                 from memory_api.app.db.session import engine, SessionLocal
-                self.logger.info("✅ Modules projet importés")
+                self.logger.info("[CHECK] Modules projet imports")
                 import_status = "SUCCESS"
             except Exception as e:
-                self.logger.warning(f"⚠️ Import modules projet: {e}")
+                self.logger.warning(f" Import modules projet: {e}")
                 import_status = "PARTIAL"
                 
             self.resultats["tests_executes"].append({
                 "test": test_name,
                 "statut": import_status,
-                "details": "Imports essentiels validés"
+                "details": "Imports essentiels valids"
             })
             return True
             
         except Exception as e:
-            self.logger.error(f"❌ {test_name}: {e}")
+            self.logger.error(f"[CROSS] {test_name}: {e}")
             self.resultats["erreurs"].append(f"{test_name}: {e}")
             return False
     
@@ -64,7 +64,7 @@ class PostgreSQLTestSuite:
         try:
             import sqlalchemy
             
-            # Test avec différentes URLs
+            # Test avec diffrentes URLs
             test_urls = [
                 os.getenv('DATABASE_URL'),
                 "postgresql://postgres:postgres@localhost:5432/agent_memory_nextgen",
@@ -81,7 +81,7 @@ class PostgreSQLTestSuite:
                     with engine.connect() as conn:
                         result = conn.execute(sqlalchemy.text("SELECT 1 as test_value"))
                         if result.fetchone()[0] == 1:
-                            self.logger.info(f"✅ Connexion réussie: {url[:50]}...")
+                            self.logger.info(f"[CHECK] Connexion russie: {url[:50]}...")
                             self.resultats["tests_executes"].append({
                                 "test": test_name,
                                 "statut": "SUCCESS",
@@ -89,13 +89,13 @@ class PostgreSQLTestSuite:
                             })
                             return True
                 except Exception as e:
-                    self.logger.warning(f"⚠️ Échec connexion {url[:30]}...: {e}")
+                    self.logger.warning(f" chec connexion {url[:30]}...: {e}")
                     
             self.resultats["erreurs"].append(f"{test_name}: Aucune URL fonctionnelle")
             return False
             
         except Exception as e:
-            self.logger.error(f"❌ {test_name}: {e}")
+            self.logger.error(f"[CROSS] {test_name}: {e}")
             self.resultats["erreurs"].append(f"{test_name}: {e}")
             return False
     
@@ -105,12 +105,12 @@ class PostgreSQLTestSuite:
         try:
             import subprocess
             
-            # Vérification containers PostgreSQL
+            # Vrification containers PostgreSQL
             result = subprocess.run(['docker', 'ps', '--filter', 'ancestor=postgres'], 
                                   capture_output=True, text=True)
             
             if result.returncode == 0 and 'postgres' in result.stdout:
-                self.logger.info("✅ Container PostgreSQL détecté")
+                self.logger.info("[CHECK] Container PostgreSQL dtect")
                 
                 # Test pg_isready dans container
                 containers = result.stdout.split('\n')[1:]
@@ -122,7 +122,7 @@ class PostgreSQLTestSuite:
                         ], capture_output=True, text=True)
                         
                         if ready_result.returncode == 0:
-                            self.logger.info(f"✅ PostgreSQL prêt dans container {container_id[:12]}")
+                            self.logger.info(f"[CHECK] PostgreSQL prt dans container {container_id[:12]}")
                             self.resultats["tests_executes"].append({
                                 "test": test_name,
                                 "statut": "SUCCESS",
@@ -134,20 +134,20 @@ class PostgreSQLTestSuite:
             return False
             
         except Exception as e:
-            self.logger.error(f"❌ {test_name}: {e}")
+            self.logger.error(f"[CROSS] {test_name}: {e}")
             self.resultats["erreurs"].append(f"{test_name}: {e}")
             return False
     
     def test_4_sqlalchemy_models_corriges(self):
-        """Test des modèles SQLAlchemy avec corrections"""
-        test_name = "Modèles SQLAlchemy corrigés"
+        """Test des modles SQLAlchemy avec corrections"""
+        test_name = "Modles SQLAlchemy corrigs"
         try:
             import sqlalchemy
             from sqlalchemy import create_engine, text
             from sqlalchemy.ext.declarative import declarative_base
             from sqlalchemy.orm import sessionmaker
             
-            # Test création modèle simple sans conflit metadata
+            # Test cration modle simple sans conflit metadata
             Base = declarative_base()
             
             class TestModel(Base):
@@ -156,7 +156,7 @@ class PostgreSQLTestSuite:
                 id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
                 test_data = sqlalchemy.Column(sqlalchemy.String(100))
                 
-            self.logger.info("✅ Modèle SQLAlchemy créé sans erreur metadata")
+            self.logger.info("[CHECK] Modle SQLAlchemy cr sans erreur metadata")
             
             # Test avec engine temporaire
             engine = create_engine("sqlite:///:memory:")
@@ -170,20 +170,20 @@ class PostgreSQLTestSuite:
             session.add(test_obj)
             session.commit()
             
-            # Test requête avec text()
+            # Test requte avec text()
             result = session.execute(text("SELECT COUNT(*) FROM test_table_temp")).fetchone()
             
             if result[0] == 1:
-                self.logger.info("✅ CRUD SQLAlchemy fonctionnel")
+                self.logger.info("[CHECK] CRUD SQLAlchemy fonctionnel")
                 self.resultats["tests_executes"].append({
                     "test": test_name,
                     "statut": "SUCCESS",
-                    "details": "Modèles et CRUD validés"
+                    "details": "Modles et CRUD valids"
                 })
                 return True
                 
         except Exception as e:
-            self.logger.error(f"❌ {test_name}: {e}")
+            self.logger.error(f"[CROSS] {test_name}: {e}")
             self.resultats["erreurs"].append(f"{test_name}: {e}")
             return False
     
@@ -196,14 +196,14 @@ class PostgreSQLTestSuite:
             # Test simple de timing
             start_time = time.time()
             
-            # Simulation requête
+            # Simulation requte
             time.sleep(0.1)  # 100ms simulation
             
             end_time = time.time()
             duration = (end_time - start_time) * 1000  # en ms
             
             if duration < 1000:  # Moins d'1 seconde
-                self.logger.info(f"✅ Performance acceptable: {duration:.2f}ms")
+                self.logger.info(f"[CHECK] Performance acceptable: {duration:.2f}ms")
                 self.resultats["tests_executes"].append({
                     "test": test_name,
                     "statut": "SUCCESS",
@@ -211,16 +211,16 @@ class PostgreSQLTestSuite:
                 })
                 return True
             else:
-                self.resultats["erreurs"].append(f"{test_name}: Performance dégradée")
+                self.resultats["erreurs"].append(f"{test_name}: Performance dgrade")
                 return False
                 
         except Exception as e:
-            self.logger.error(f"❌ {test_name}: {e}")
+            self.logger.error(f"[CROSS] {test_name}: {e}")
             return False
     
     def executer_suite_complete(self):
-        """Exécute tous les tests de la suite"""
-        self.logger.info("🧪 Démarrage suite complète de tests PostgreSQL")
+        """Excute tous les tests de la suite"""
+        self.logger.info(" Dmarrage suite complte de tests PostgreSQL")
         
         tests = [
             self.test_1_import_securise,
@@ -246,7 +246,7 @@ class PostgreSQLTestSuite:
             "taux_reussite": taux_reussite
         }
         
-        self.logger.info(f"📊 Résultats: {tests_reussis}/{total_tests} ({taux_reussite:.1f}%)")
+        self.logger.info(f"[CHART] Rsultats: {tests_reussis}/{total_tests} ({taux_reussite:.1f}%)")
         
         return self.resultats
 
@@ -257,13 +257,13 @@ if __name__ == "__main__":
         format='%(asctime)s - %(levelname)s - %(message)s'
     )
     
-    # Exécution tests
+    # Excution tests
     suite = PostgreSQLTestSuite()
     resultats = suite.executer_suite_complete()
     
-    # Sauvegarde résultats
+    # Sauvegarde rsultats
     output_file = Path(__file__).parent / f"test_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(resultats, f, indent=2, ensure_ascii=False)
         
-    print(f"\n✅ Tests terminés - Résultats: {output_file}")
+    print(f"\n[CHECK] Tests termins - Rsultats: {output_file}")

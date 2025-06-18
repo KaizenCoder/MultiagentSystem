@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Correction définitive du problème d'encodage PostgreSQL 
+Correction dfinitive du problme d'encodage PostgreSQL 
 Reconfiguration du conteneur Docker avec encodage UTF-8
 """
 
@@ -12,35 +12,35 @@ from datetime import datetime
 def fix_postgres_encoding_docker():
     """Correction encodage PostgreSQL via Docker"""
     
-    print("🐳 CORRECTION ENCODAGE POSTGRESQL DOCKER")
+    print(" CORRECTION ENCODAGE POSTGRESQL DOCKER")
     print("="*50)
     
     steps = []
     
-    # Étape 1: Arrêter le conteneur actuel
-    print("\n1️⃣ Arrêt conteneur PostgreSQL actuel...")
+    # tape 1: Arrter le conteneur actuel
+    print("\n1 Arrt conteneur PostgreSQL actuel...")
     try:
         result = subprocess.run(['docker', 'stop', 'agent_postgres_nextgen'], 
                               capture_output=True, text=True, check=True)
-        print("   ✅ Conteneur arrêté")
+        print("   [CHECK] Conteneur arrt")
         steps.append({"step": "stop_container", "status": "SUCCESS"})
     except subprocess.CalledProcessError as e:
-        print(f"   ⚠️ Arrêt conteneur: {e}")
+        print(f"    Arrt conteneur: {e}")
         steps.append({"step": "stop_container", "status": "WARNING", "error": str(e)})
     
-    # Étape 2: Supprimer le conteneur
-    print("\n2️⃣ Suppression conteneur...")
+    # tape 2: Supprimer le conteneur
+    print("\n2 Suppression conteneur...")
     try:
         result = subprocess.run(['docker', 'rm', 'agent_postgres_nextgen'], 
                               capture_output=True, text=True, check=True)
-        print("   ✅ Conteneur supprimé")
+        print("   [CHECK] Conteneur supprim")
         steps.append({"step": "remove_container", "status": "SUCCESS"})
     except subprocess.CalledProcessError as e:
-        print(f"   ⚠️ Suppression conteneur: {e}")
+        print(f"    Suppression conteneur: {e}")
         steps.append({"step": "remove_container", "status": "WARNING", "error": str(e)})
     
-    # Étape 3: Créer fichier Docker Compose avec encodage UTF-8
-    print("\n3️⃣ Création configuration Docker Compose UTF-8...")
+    # tape 3: Crer fichier Docker Compose avec encodage UTF-8
+    print("\n3 Cration configuration Docker Compose UTF-8...")
     
     docker_compose_utf8 = """version: '3.8'
 
@@ -86,11 +86,11 @@ networks:
     with open(compose_file, 'w', encoding='utf-8') as f:
         f.write(docker_compose_utf8)
     
-    print(f"   ✅ Configuration UTF-8 créée: {compose_file}")
+    print(f"   [CHECK] Configuration UTF-8 cre: {compose_file}")
     steps.append({"step": "create_utf8_config", "status": "SUCCESS", "file": compose_file})
     
-    # Étape 4: Démarrer PostgreSQL avec configuration UTF-8
-    print("\n4️⃣ Démarrage PostgreSQL UTF-8...")
+    # tape 4: Dmarrer PostgreSQL avec configuration UTF-8
+    print("\n4 Dmarrage PostgreSQL UTF-8...")
     
     try:
         result = subprocess.run(
@@ -98,20 +98,20 @@ networks:
             capture_output=True, text=True, check=True,
             cwd="C:\\Dev\\nextgeneration"
         )
-        print("   ✅ PostgreSQL UTF-8 démarré")
+        print("   [CHECK] PostgreSQL UTF-8 dmarr")
         steps.append({"step": "start_utf8_postgres", "status": "SUCCESS"})
         
-        # Attendre que PostgreSQL soit prêt
-        print("   ⏳ Attente initialisation PostgreSQL...")
+        # Attendre que PostgreSQL soit prt
+        print("    Attente initialisation PostgreSQL...")
         time.sleep(15)
         
     except subprocess.CalledProcessError as e:
-        print(f"   ❌ Échec démarrage: {e}")
+        print(f"   [CROSS] chec dmarrage: {e}")
         steps.append({"step": "start_utf8_postgres", "status": "FAILED", "error": str(e)})
         return steps
     
-    # Étape 5: Test connexion avec encodage UTF-8
-    print("\n5️⃣ Test connexion PostgreSQL UTF-8...")
+    # tape 5: Test connexion avec encodage UTF-8
+    print("\n5 Test connexion PostgreSQL UTF-8...")
     
     try:
         import psycopg2
@@ -138,10 +138,10 @@ networks:
         cursor.close()
         conn.close()
         
-        print(f"   ✅ Connexion réussie")
-        print(f"   📊 Encodage serveur: {encoding}")
-        print(f"   📊 Encodage client: {client_encoding}")
-        print(f"   📊 Version: {version[:50]}...")
+        print(f"   [CHECK] Connexion russie")
+        print(f"   [CHART] Encodage serveur: {encoding}")
+        print(f"   [CHART] Encodage client: {client_encoding}")
+        print(f"   [CHART] Version: {version[:50]}...")
         
         steps.append({
             "step": "test_utf8_connection",
@@ -152,11 +152,11 @@ networks:
         })
         
     except Exception as e:
-        print(f"   ❌ Échec test connexion: {e}")
+        print(f"   [CROSS] chec test connexion: {e}")
         steps.append({"step": "test_utf8_connection", "status": "FAILED", "error": str(e)})
     
-    # Étape 6: Test création tables avec models corrigés
-    print("\n6️⃣ Test création tables avec models SQLAlchemy...")
+    # tape 6: Test cration tables avec models corrigs
+    print("\n6 Test cration tables avec models SQLAlchemy...")
     
     try:
         import sys
@@ -172,16 +172,16 @@ networks:
         
         Base.metadata.create_all(engine)
         
-        print("   ✅ Tables créées sans erreur d'encodage")
+        print("   [CHECK] Tables cres sans erreur d'encodage")
         steps.append({"step": "create_tables_utf8", "status": "SUCCESS"})
         
     except Exception as e:
-        print(f"   ❌ Échec création tables: {e}")
+        print(f"   [CROSS] chec cration tables: {e}")
         steps.append({"step": "create_tables_utf8", "status": "FAILED", "error": str(e)})
     
-    # Résumé
+    # Rsum
     print("\n" + "="*50)
-    print("📊 RÉSUMÉ CORRECTION ENCODAGE")
+    print("[CHART] RSUM CORRECTION ENCODAGE")
     print("="*50)
     
     success_count = sum(1 for s in steps if s["status"] == "SUCCESS")
@@ -189,10 +189,10 @@ networks:
     
     for i, step in enumerate(steps, 1):
         status = step["status"]
-        icon = "✅" if status == "SUCCESS" else "❌" if status == "FAILED" else "⚠️"
+        icon = "[CHECK]" if status == "SUCCESS" else "[CROSS]" if status == "FAILED" else ""
         print(f"{icon} {i}. {step['step']}: {status}")
     
-    print(f"\n🏆 Score: {success_count}/{total_count} étapes réussies")
+    print(f"\n Score: {success_count}/{total_count} tapes russies")
     
     # Sauvegarde rapport
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -209,14 +209,14 @@ networks:
     with open(rapport_path, 'w', encoding='utf-8') as f:
         json.dump(rapport, f, indent=2, ensure_ascii=False)
     
-    print(f"📋 Rapport sauvegardé: {rapport_path}")
+    print(f"[CLIPBOARD] Rapport sauvegard: {rapport_path}")
     
     if rapport["success_rate"] >= 80:
-        print("\n🎉 ENCODAGE RÉSOLU - PostgreSQL UTF-8 fonctionnel!")
+        print("\n ENCODAGE RSOLU - PostgreSQL UTF-8 fonctionnel!")
     elif rapport["success_rate"] >= 60:
-        print("\n✅ ENCODAGE PARTIELLEMENT RÉSOLU - Tests supplémentaires requis")
+        print("\n[CHECK] ENCODAGE PARTIELLEMENT RSOLU - Tests supplmentaires requis")
     else:
-        print("\n⚠️ PROBLÈMES PERSISTANTS - Intervention manuelle requise")
+        print("\n PROBLMES PERSISTANTS - Intervention manuelle requise")
     
     return rapport
 

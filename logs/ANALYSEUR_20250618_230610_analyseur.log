@@ -1,0 +1,15 @@
+2025-06-18 23:06:10,075 - AgentAnalyseur_ANALYSEUR_20250618_230610 - INFO - 🚀 Démarrage de l'analyse complète des outils
+2025-06-18 23:06:10,076 - AgentAnalyseur_ANALYSEUR_20250618_230610 - INFO - 🔍 Analyse approfondie de l'outil: install_phase3_dependencies
+2025-06-18 23:06:10,077 - AgentAnalyseur_ANALYSEUR_20250618_230610 - ERROR - ❌ Erreur lors de l'analyse du code: invalid character '🚀' (U+1F680) (<unknown>, line 49)
+2025-06-18 23:06:10,078 - AgentAnalyseur_ANALYSEUR_20250618_230610 - ERROR - ❌ Erreur extraction dépendances: invalid character '🚀' (U+1F680) (<unknown>, line 49)
+2025-06-18 23:06:10,079 - AgentAnalyseur_ANALYSEUR_20250618_230610 - ERROR - ❌ Erreur identification fonctionnalités: invalid character '🚀' (U+1F680) (<unknown>, line 49)
+2025-06-18 23:06:10,080 - AgentAnalyseur_ANALYSEUR_20250618_230610 - ERROR - ❌ Erreur évaluation complexité: invalid character '🚀' (U+1F680) (<unknown>, line 49)
+2025-06-18 23:06:10,080 - AgentAnalyseur_ANALYSEUR_20250618_230610 - INFO - ✅ Analyse terminée pour install_phase3_dependencies: 0 fonctionnalités identifiées
+2025-06-18 23:06:10,080 - AgentAnalyseur_ANALYSEUR_20250618_230610 - INFO - 🔍 Analyse approfondie de l'outil: monitor_phase3
+2025-06-18 23:06:10,081 - AgentAnalyseur_ANALYSEUR_20250618_230610 - ERROR - ❌ Erreur lors de l'analyse du code: invalid character '🚀' (U+1F680) (<unknown>, line 49)
+2025-06-18 23:06:10,082 - AgentAnalyseur_ANALYSEUR_20250618_230610 - ERROR - ❌ Erreur extraction dépendances: invalid character '🚀' (U+1F680) (<unknown>, line 49)
+2025-06-18 23:06:10,082 - AgentAnalyseur_ANALYSEUR_20250618_230610 - ERROR - ❌ Erreur identification fonctionnalités: invalid character '🚀' (U+1F680) (<unknown>, line 49)
+2025-06-18 23:06:10,082 - AgentAnalyseur_ANALYSEUR_20250618_230610 - ERROR - ❌ Erreur évaluation complexité: invalid character '🚀' (U+1F680) (<unknown>, line 49)
+2025-06-18 23:06:10,083 - AgentAnalyseur_ANALYSEUR_20250618_230610 - INFO - ✅ Analyse terminée pour monitor_phase3: 0 fonctionnalités identifiées
+2025-06-18 23:06:10,084 - AgentAnalyseur_ANALYSEUR_20250618_230610 - INFO - 📊 Rapport d'analyse sauvegardé: C:\Dev\nextgeneration\logs\ANALYSEUR_20250618_230610_analyse_complete.json
+2025-06-18 23:06:10,084 - AgentAnalyseur_ANALYSEUR_20250618_230610 - INFO - ✅ Analyse complète terminée: 2 outils analysés

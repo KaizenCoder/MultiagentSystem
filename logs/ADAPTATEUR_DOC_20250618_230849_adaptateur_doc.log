@@ -1,0 +1,16 @@
+2025-06-18 23:08:49,591 - AgentAdaptateurDoc_ADAPTATEUR_DOC_20250618_230849 - INFO - 🚀 Démarrage adaptation complète documentation
+2025-06-18 23:08:49,591 - AgentAdaptateurDoc_ADAPTATEUR_DOC_20250618_230849 - INFO - 🔍 Identification des outils pour adaptation documentation
+2025-06-18 23:08:49,592 - AgentAdaptateurDoc_ADAPTATEUR_DOC_20250618_230849 - INFO - ✅ 5 outils identifiés pour documentation
+2025-06-18 23:08:49,592 - AgentAdaptateurDoc_ADAPTATEUR_DOC_20250618_230849 - INFO - 📝 Adaptation README pour: generate_pitch_document
+2025-06-18 23:08:49,593 - AgentAdaptateurDoc_ADAPTATEUR_DOC_20250618_230849 - INFO - 📄 Création documentation manquante pour: generate_pitch_document
+2025-06-18 23:08:49,596 - AgentAdaptateurDoc_ADAPTATEUR_DOC_20250618_230849 - INFO - 📝 Adaptation README pour: imported_tools_apex
+2025-06-18 23:08:49,597 - AgentAdaptateurDoc_ADAPTATEUR_DOC_20250618_230849 - INFO - 📄 Création documentation manquante pour: imported_tools_apex
+2025-06-18 23:08:49,600 - AgentAdaptateurDoc_ADAPTATEUR_DOC_20250618_230849 - INFO - 📝 Adaptation README pour: install_phase3_dependencies
+2025-06-18 23:08:49,600 - AgentAdaptateurDoc_ADAPTATEUR_DOC_20250618_230849 - INFO - 📄 Création documentation manquante pour: install_phase3_dependencies
+2025-06-18 23:08:49,603 - AgentAdaptateurDoc_ADAPTATEUR_DOC_20250618_230849 - INFO - 📝 Adaptation README pour: monitor_phase3
+2025-06-18 23:08:49,609 - AgentAdaptateurDoc_ADAPTATEUR_DOC_20250618_230849 - INFO - 📄 Création documentation manquante pour: monitor_phase3
+2025-06-18 23:08:49,612 - AgentAdaptateurDoc_ADAPTATEUR_DOC_20250618_230849 - INFO - 📝 Adaptation README pour: zip_backup
+2025-06-18 23:08:49,612 - AgentAdaptateurDoc_ADAPTATEUR_DOC_20250618_230849 - INFO - 📄 Création documentation manquante pour: zip_backup
+2025-06-18 23:08:49,615 - AgentAdaptateurDoc_ADAPTATEUR_DOC_20250618_230849 - INFO - 📚 Mise à jour documentation globale tools
+2025-06-18 23:08:49,625 - AgentAdaptateurDoc_ADAPTATEUR_DOC_20250618_230849 - INFO - 📊 Rapport documentation sauvegardé: C:\Dev\nextgeneration\logs\ADAPTATEUR_DOC_20250618_230849_adaptation_documentation.json
+2025-06-18 23:08:49,625 - AgentAdaptateurDoc_ADAPTATEUR_DOC_20250618_230849 - INFO - ✅ Adaptation documentation terminée

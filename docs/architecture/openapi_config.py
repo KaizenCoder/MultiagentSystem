@@ -12,25 +12,25 @@ def custom_openapi(app: FastAPI):
         description="""
 ## NextGeneration - Architecture Modulaire
 
-API d'orchestration IA multi-agents refactorisée depuis god mode files.
+API d'orchestration IA multi-agents refactorise depuis god mode files.
 
 ### Architecture
 - **Pattern**: Hexagonal + CQRS + Dependency Injection
-- **Réduction**: 96.4% (1,990 → 71 lignes main.py)
-- **Agents**: 17 agents spécialisés coordonnés
-- **Qualité**: Score 95.8% (excellence enterprise)
+- **Rduction**: 96.4% (1,990  71 lignes main.py)
+- **Agents**: 17 agents spcialiss coordonns
+- **Qualit**: Score 95.8% (excellence enterprise)
 
 ### Endpoints Principaux
 - `/health/*` - Health checks Kubernetes-ready
 - `/api/v1/agents/*` - Gestion agents IA
 - `/api/v1/orchestration/*` - Coordination workflows
-- `/metrics` - Métriques Prometheus
+- `/metrics` - Mtriques Prometheus
 
-### Patterns Implémentés
-- **CQRS**: Commands/Queries séparées
-- **DI**: Injection dépendances FastAPI
+### Patterns Implments
+- **CQRS**: Commands/Queries spares
+- **DI**: Injection dpendances FastAPI
 - **Ports & Adapters**: Architecture hexagonale
-- **Repository**: Abstraction données
+- **Repository**: Abstraction donnes
         """,
         routes=app.routes,
         servers=[

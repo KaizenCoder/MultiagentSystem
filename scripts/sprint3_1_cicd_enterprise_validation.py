@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 """
-🚀 SPRINT 3.1 - VALIDATION CI/CD ENTERPRISE
+[ROCKET] SPRINT 3.1 - VALIDATION CI/CD ENTERPRISE
 ============================================
 IA-2 Architecture & Production
 Date: 17 Juin 2025
-Objectif: Validation complète des pipelines CI/CD Enterprise
+Objectif: Validation complte des pipelines CI/CD Enterprise
 
-Composants validés:
-1. ✅ Pipeline GitHub Actions Enterprise
-2. ✅ Blue/Green Deployment Automation  
-3. ✅ Canary Release Progressive
-4. ✅ Zero-Downtime Deployments
-5. ✅ Infrastructure as Code (Helm)
-6. ✅ Security Scanning intégré
-7. ✅ Performance Testing automatisé
+Composants valids:
+1. [CHECK] Pipeline GitHub Actions Enterprise
+2. [CHECK] Blue/Green Deployment Automation  
+3. [CHECK] Canary Release Progressive
+4. [CHECK] Zero-Downtime Deployments
+5. [CHECK] Infrastructure as Code (Helm)
+6. [CHECK] Security Scanning intgr
+7. [CHECK] Performance Testing automatis
 """
 
 import json
@@ -54,7 +54,7 @@ class CICDEnterpriseValidator:
         self.k8s_path = self.project_root / "k8s"
     
     def log_test_result(self, test_name: str, success: bool, score: float, details: str = ""):
-        """Enregistre le résultat d'un test"""
+        """Enregistre le rsultat d'un test"""
         result = {
             "test": test_name,
             "success": success,
@@ -64,17 +64,17 @@ class CICDEnterpriseValidator:
         }
         self.results["tests"].append(result)
         
-        status = "✅" if success else "❌"
+        status = "[CHECK]" if success else "[CROSS]"
         logger.info(f"   {status} {test_name}: {score:.1f}% - {details}")
     
     def validate_github_actions_pipeline(self) -> Dict:
         """Validation du pipeline GitHub Actions Enterprise"""
-        logger.info("🔄 Validation du pipeline GitHub Actions Enterprise...")
+        logger.info(" Validation du pipeline GitHub Actions Enterprise...")
         
         score = 0.0
         components = {}
         
-        # Vérification des fichiers de workflow
+        # Vrification des fichiers de workflow
         production_workflow = self.github_workflows_path / "production-deployment.yml"
         security_workflow = self.github_workflows_path / "security-validation.yml"
         
@@ -82,7 +82,7 @@ class CICDEnterpriseValidator:
             with open(production_workflow, 'r', encoding='utf-8') as f:
                 content = f.read()
                 
-            # Validation des composants clés du pipeline
+            # Validation des composants cls du pipeline
             checks = {
                 "Security Scanning": "security-scan" in content and "trivy" in content.lower(),
                 "Container Building": "docker/build-push-action" in content,
@@ -121,17 +121,17 @@ class CICDEnterpriseValidator:
     def validate_environment_config(self, environment: str) -> float:
         """Valide la configuration d'un environnement"""
         # Simulation de validation d'environnement
-        # En production, ceci vérifierait les secrets, kubeconfig, etc.
-        return 85.0  # Score simulé pour environnement configuré
+        # En production, ceci vrifierait les secrets, kubeconfig, etc.
+        return 85.0  # Score simul pour environnement configur
     
     def validate_blue_green_deployment(self) -> Dict:
-        """Validation du système Blue/Green Deployment"""
-        logger.info("🔄 Validation Blue/Green Deployment...")
+        """Validation du systme Blue/Green Deployment"""
+        logger.info(" Validation Blue/Green Deployment...")
         
         score = 0.0
         components = {}
         
-        # Vérification des scripts Blue/Green
+        # Vrification des scripts Blue/Green
         bg_scripts = [
             "blue-green-deploy.sh",
             "blue-green-deploy.ps1",
@@ -159,12 +159,12 @@ class CICDEnterpriseValidator:
         return {"score": final_score, "components": components}
     
     def analyze_deployment_script(self, script_path: Path, deployment_type: str) -> float:
-        """Analyse un script de déploiement"""
+        """Analyse un script de dploiement"""
         try:
             with open(script_path, 'r', encoding='utf-8') as f:
                 content = f.read()
             
-            # Critères d'évaluation selon le type de déploiement
+            # Critres d'valuation selon le type de dploiement
             if deployment_type == "blue-green":
                 criteria = {
                     "Health Checks": any(term in content.lower() for term in ["health", "readiness", "liveness"]),
@@ -196,9 +196,9 @@ class CICDEnterpriseValidator:
             return 0.0
     
     def simulate_blue_green_deployment(self) -> float:
-        """Simule un déploiement Blue/Green"""
-        # Simulation de déploiement Blue/Green
-        logger.info("   🎯 Simulation Blue/Green deployment...")
+        """Simule un dploiement Blue/Green"""
+        # Simulation de dploiement Blue/Green
+        logger.info("   [TARGET] Simulation Blue/Green deployment...")
         
         simulation_steps = [
             ("Infrastructure Check", 95.0),
@@ -211,18 +211,18 @@ class CICDEnterpriseValidator:
         total_score = 0.0
         for step, score in simulation_steps:
             total_score += score
-            logger.info(f"      ✅ {step}: {score:.1f}%")
+            logger.info(f"      [CHECK] {step}: {score:.1f}%")
         
         return total_score / len(simulation_steps)
     
     def validate_canary_deployment(self) -> Dict:
-        """Validation du système Canary Release"""
-        logger.info("🔄 Validation Canary Release...")
+        """Validation du systme Canary Release"""
+        logger.info(" Validation Canary Release...")
         
         score = 0.0
         components = {}
         
-        # Vérification des scripts Canary
+        # Vrification des scripts Canary
         canary_scripts = [
             "canary-deploy.sh",
             "canary-deploy.ps1", 
@@ -250,10 +250,10 @@ class CICDEnterpriseValidator:
         return {"score": final_score, "components": components}
     
     def simulate_canary_deployment(self) -> float:
-        """Simule un déploiement Canary Release"""
-        logger.info("   🐣 Simulation Canary release progressive...")
+        """Simule un dploiement Canary Release"""
+        logger.info("    Simulation Canary release progressive...")
         
-        # Simulation des étapes progressives
+        # Simulation des tapes progressives
         stages = [
             ("5% Traffic", 91.0),
             ("10% Traffic", 89.0),
@@ -265,17 +265,17 @@ class CICDEnterpriseValidator:
         total_score = 0.0
         for stage, score in stages:
             total_score += score
-            logger.info(f"      ✅ {stage}: {score:.1f}%")
+            logger.info(f"      [CHECK] {stage}: {score:.1f}%")
         
         return total_score / len(stages)
     
     def validate_zero_downtime_capability(self) -> Dict:
-        """Validation des capacités Zero-Downtime"""
-        logger.info("🔄 Validation Zero-Downtime Deployments...")
+        """Validation des capacits Zero-Downtime"""
+        logger.info(" Validation Zero-Downtime Deployments...")
         
         components = {}
         
-        # Vérification des stratégies zero-downtime
+        # Vrification des stratgies zero-downtime
         strategies = {
             "Blue/Green Ready": self.check_zero_downtime_feature("blue-green"),
             "Canary Ready": self.check_zero_downtime_feature("canary"),
@@ -293,15 +293,15 @@ class CICDEnterpriseValidator:
         return {"score": final_score, "components": components}
     
     def check_zero_downtime_feature(self, feature: str) -> float:
-        """Vérifie l'implémentation d'une fonctionnalité zero-downtime"""
-        # Simulation basée sur l'existence des scripts
+        """Vrifie l'implmentation d'une fonctionnalit zero-downtime"""
+        # Simulation base sur l'existence des scripts
         feature_files = list(self.scripts_path.glob(f"*{feature}*"))
         if feature_files:
-            return 85.0 + (len(feature_files) * 5.0)  # Bonus pour multiples implémentations
+            return 85.0 + (len(feature_files) * 5.0)  # Bonus pour multiples implmentations
         return 0.0
     
     def check_health_check_configuration(self) -> float:
-        """Vérifie la configuration des health checks"""
+        """Vrifie la configuration des health checks"""
         # Recherche de configurations health check dans Kubernetes
         k8s_files = list(self.k8s_path.rglob("*.yaml")) + list(self.k8s_path.rglob("*.yml"))
         
@@ -318,7 +318,7 @@ class CICDEnterpriseValidator:
         return min(health_check_score, 100.0)
     
     def check_circuit_breaker_implementation(self) -> float:
-        """Vérifie l'implémentation des circuit breakers"""
+        """Vrifie l'implmentation des circuit breakers"""
         # Recherche dans le code orchestrator
         orchestrator_path = self.project_root / "orchestrator"
         if orchestrator_path.exists():
@@ -327,7 +327,7 @@ class CICDEnterpriseValidator:
         return 0.0
     
     def check_load_balancing_configuration(self) -> float:
-        """Vérifie la configuration du load balancing"""
+        """Vrifie la configuration du load balancing"""
         # Recherche de configurations load balancing
         config_files = [
             self.project_root / "config" / "haproxy" / "haproxy.cfg",
@@ -350,11 +350,11 @@ class CICDEnterpriseValidator:
     
     def validate_infrastructure_as_code(self) -> Dict:
         """Validation Infrastructure as Code (Helm Charts)"""
-        logger.info("🔄 Validation Infrastructure as Code...")
+        logger.info(" Validation Infrastructure as Code...")
         
         components = {}
         
-        # Vérification des Helm Charts
+        # Vrification des Helm Charts
         helm_path = self.k8s_path / "helm"
         if helm_path.exists():
             chart_score = self.analyze_helm_charts(helm_path)
@@ -362,14 +362,14 @@ class CICDEnterpriseValidator:
             self.log_test_result("Helm Charts Quality", chart_score > 80, chart_score)
         else:
             components["Helm Charts"] = 0.0
-            self.log_test_result("Helm Charts", False, 0.0, "Pas de charts Helm trouvés")
+            self.log_test_result("Helm Charts", False, 0.0, "Pas de charts Helm trouvs")
         
-        # Vérification des fichiers de configuration
+        # Vrification des fichiers de configuration
         config_files_score = self.analyze_configuration_files()
         components["Configuration Files"] = config_files_score
         self.log_test_result("Configuration Management", config_files_score > 70, config_files_score)
         
-        # Vérification des manifests Kubernetes
+        # Vrification des manifests Kubernetes
         k8s_manifests_score = self.analyze_k8s_manifests()
         components["K8s Manifests"] = k8s_manifests_score
         self.log_test_result("Kubernetes Manifests", k8s_manifests_score > 75, k8s_manifests_score)
@@ -378,7 +378,7 @@ class CICDEnterpriseValidator:
         return {"score": final_score, "components": components}
     
     def analyze_helm_charts(self, helm_path: Path) -> float:
-        """Analyse la qualité des Helm Charts"""
+        """Analyse la qualit des Helm Charts"""
         score = 0.0
         
         # Recherche des Chart.yaml
@@ -387,7 +387,7 @@ class CICDEnterpriseValidator:
             score += 30.0  # Base score pour existence des charts
             
             for chart_file in chart_files:
-                # Vérification du contenu des charts
+                # Vrification du contenu des charts
                 try:
                     with open(chart_file, 'r', encoding='utf-8') as f:
                         content = f.read()
@@ -396,12 +396,12 @@ class CICDEnterpriseValidator:
                 except:
                     continue
         
-        # Vérification des templates
+        # Vrification des templates
         template_dirs = list(helm_path.rglob("templates"))
         if template_dirs:
             score += 30.0
             
-            # Bonus pour templates spécialisés
+            # Bonus pour templates spcialiss
             for template_dir in template_dirs:
                 specialized_templates = [
                     "deployment.yaml", "service.yaml", "ingress.yaml",
@@ -411,7 +411,7 @@ class CICDEnterpriseValidator:
                     if (template_dir / template).exists():
                         score += 3.0
         
-        # Vérification des values files
+        # Vrification des values files
         values_files = list(helm_path.rglob("values*.yaml"))
         if values_files:
             score += 20.0
@@ -457,12 +457,12 @@ class CICDEnterpriseValidator:
         return min(score, 100.0)
     
     def validate_security_integration(self) -> Dict:
-        """Validation de l'intégration sécurité dans CI/CD"""
-        logger.info("🔄 Validation Intégration Sécurité...")
+        """Validation de l'intgration scurit dans CI/CD"""
+        logger.info(" Validation Intgration Scurit...")
         
         components = {}
         
-        # Vérification des outils de sécurité dans les workflows
+        # Vrification des outils de scurit dans les workflows
         security_tools = {
             "Vulnerability Scanning": self.check_security_tool("trivy"),
             "Secret Scanning": self.check_security_tool("gitleaks"),
@@ -479,7 +479,7 @@ class CICDEnterpriseValidator:
         return {"score": final_score, "components": components}
     
     def check_security_tool(self, tool_name: str) -> float:
-        """Vérifie l'intégration d'un outil de sécurité"""
+        """Vrifie l'intgration d'un outil de scurit"""
         # Recherche dans les workflows
         workflow_files = list(self.github_workflows_path.glob("*.yml")) + list(self.github_workflows_path.glob("*.yaml"))
         
@@ -495,8 +495,8 @@ class CICDEnterpriseValidator:
         return 0.0
     
     def check_container_security(self) -> float:
-        """Vérifie la sécurité des conteneurs"""
-        # Vérification des Dockerfiles pour les bonnes pratiques
+        """Vrifie la scurit des conteneurs"""
+        # Vrification des Dockerfiles pour les bonnes pratiques
         dockerfiles = list(self.project_root.rglob("Dockerfile*"))
         
         security_score = 0.0
@@ -505,12 +505,12 @@ class CICDEnterpriseValidator:
                 with open(dockerfile, 'r', encoding='utf-8') as f:
                     content = f.read()
                     
-                    # Bonnes pratiques de sécurité
+                    # Bonnes pratiques de scurit
                     practices = [
                         "USER " in content,  # Utilisateur non-root
                         "HEALTHCHECK" in content,  # Health checks
-                        "COPY" in content and "ADD" not in content,  # Préférer COPY à ADD
-                        "alpine" in content.lower() or "distroless" in content.lower()  # Images sécurisées
+                        "COPY" in content and "ADD" not in content,  # Prfrer COPY  ADD
+                        "alpine" in content.lower() or "distroless" in content.lower()  # Images scurises
                     ]
                     
                     security_score += (sum(practices) / len(practices)) * 25.0
@@ -520,7 +520,7 @@ class CICDEnterpriseValidator:
         return min(security_score, 100.0)
     
     def check_policy_enforcement(self) -> float:
-        """Vérifie l'application des politiques de sécurité"""
+        """Vrifie l'application des politiques de scurit"""
         # Recherche de fichiers de politique
         policy_files = [
             self.project_root / "SECURITY.md",
@@ -536,12 +536,12 @@ class CICDEnterpriseValidator:
         return min(score, 100.0)
     
     def validate_performance_testing(self) -> Dict:
-        """Validation de l'intégration des tests de performance"""
-        logger.info("🔄 Validation Tests de Performance...")
+        """Validation de l'intgration des tests de performance"""
+        logger.info(" Validation Tests de Performance...")
         
         components = {}
         
-        # Vérification des outils de test de performance
+        # Vrification des outils de test de performance
         perf_tools = {
             "Load Testing Scripts": self.check_load_testing_scripts(),
             "K6 Integration": self.check_k6_integration(),
@@ -557,12 +557,12 @@ class CICDEnterpriseValidator:
         return {"score": final_score, "components": components}
     
     def check_load_testing_scripts(self) -> float:
-        """Vérifie l'existence de scripts de test de charge"""
+        """Vrifie l'existence de scripts de test de charge"""
         load_test_files = list(self.scripts_path.glob("*load*")) + list(self.project_root.glob("**/load_test*"))
         return 80.0 if load_test_files else 0.0
     
     def check_k6_integration(self) -> float:
-        """Vérifie l'intégration K6 dans les workflows"""
+        """Vrifie l'intgration K6 dans les workflows"""
         workflow_files = list(self.github_workflows_path.glob("*.yml"))
         
         for workflow_file in workflow_files:
@@ -577,14 +577,14 @@ class CICDEnterpriseValidator:
         return 0.0
     
     def check_performance_thresholds(self) -> float:
-        """Vérifie la définition de seuils de performance"""
+        """Vrifie la dfinition de seuils de performance"""
         # Recherche de fichiers de configuration de performance
         perf_configs = list(self.project_root.rglob("*performance*")) + list(self.project_root.rglob("*benchmark*"))
         return 75.0 if perf_configs else 0.0
     
     def check_automated_benchmarks(self) -> float:
-        """Vérifie l'automatisation des benchmarks"""
-        # Recherche dans les workflows pour tests automatisés
+        """Vrifie l'automatisation des benchmarks"""
+        # Recherche dans les workflows pour tests automatiss
         workflow_files = list(self.github_workflows_path.glob("*.yml"))
         
         for workflow_file in workflow_files:
@@ -599,10 +599,10 @@ class CICDEnterpriseValidator:
         return 0.0
     
     def generate_comprehensive_report(self) -> Dict:
-        """Génère un rapport complet de validation CI/CD Enterprise"""
-        logger.info("📊 Génération du rapport Sprint 3.1 CI/CD Enterprise...")
+        """Gnre un rapport complet de validation CI/CD Enterprise"""
+        logger.info("[CHART] Gnration du rapport Sprint 3.1 CI/CD Enterprise...")
         
-        # Exécution de toutes les validations
+        # Excution de toutes les validations
         validations = {
             "GitHub Actions Pipeline": self.validate_github_actions_pipeline(),
             "Blue/Green Deployment": self.validate_blue_green_deployment(),
@@ -616,15 +616,15 @@ class CICDEnterpriseValidator:
         # Calcul du score global
         total_score = sum(v["score"] for v in validations.values()) / len(validations)
         
-        # Mise à jour des résultats
+        # Mise  jour des rsultats
         self.results["global_score"] = total_score
         self.results["components"] = {k: v for k, v in validations.items()}
         
-        # Génération des recommandations
+        # Gnration des recommandations
         recommendations = self.generate_recommendations(validations)
         self.results["recommendations"] = recommendations
         
-        # Métriques de synthèse
+        # Mtriques de synthse
         self.results["summary"] = {
             "total_tests": len(self.results["tests"]),
             "passed_tests": sum(1 for test in self.results["tests"] if test["success"]),
@@ -636,7 +636,7 @@ class CICDEnterpriseValidator:
         return self.results
     
     def generate_recommendations(self, validations: Dict) -> List[str]:
-        """Génère des recommandations basées sur les résultats"""
+        """Gnre des recommandations bases sur les rsultats"""
         recommendations = []
         
         for component, result in validations.items():
@@ -644,23 +644,23 @@ class CICDEnterpriseValidator:
             
             if score < 70:
                 if "Pipeline" in component:
-                    recommendations.append(f"🔧 Améliorer le pipeline CI/CD - Score actuel: {score:.1f}%")
+                    recommendations.append(f"[TOOL] Amliorer le pipeline CI/CD - Score actuel: {score:.1f}%")
                 elif "Blue/Green" in component:
-                    recommendations.append(f"🔵 Renforcer l'implémentation Blue/Green - Score: {score:.1f}%")
+                    recommendations.append(f" Renforcer l'implmentation Blue/Green - Score: {score:.1f}%")
                 elif "Canary" in component:
-                    recommendations.append(f"🐣 Optimiser les releases Canary - Score: {score:.1f}%")
+                    recommendations.append(f" Optimiser les releases Canary - Score: {score:.1f}%")
                 elif "Security" in component:
-                    recommendations.append(f"🛡️ Renforcer l'intégration sécurité - Score: {score:.1f}%")
+                    recommendations.append(f" Renforcer l'intgration scurit - Score: {score:.1f}%")
                 elif "Performance" in component:
-                    recommendations.append(f"⚡ Améliorer les tests de performance - Score: {score:.1f}%")
+                    recommendations.append(f"[LIGHTNING] Amliorer les tests de performance - Score: {score:.1f}%")
         
         if not recommendations:
-            recommendations.append("🎉 Excellent! Tous les composants CI/CD sont optimaux")
+            recommendations.append(" Excellent! Tous les composants CI/CD sont optimaux")
         
         return recommendations
     
     def save_results(self) -> str:
-        """Sauvegarde les résultats dans un fichier JSON"""
+        """Sauvegarde les rsultats dans un fichier JSON"""
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"RAPPORT_SPRINT3_1_CICD_ENTERPRISE_{timestamp}.json"
         filepath = self.project_root / filename
@@ -668,64 +668,64 @@ class CICDEnterpriseValidator:
         with open(filepath, 'w', encoding='utf-8') as f:
             json.dump(self.results, f, indent=2, ensure_ascii=False)
         
-        logger.info(f"📄 Rapport sauvegardé: {filename}")
+        logger.info(f"[DOCUMENT] Rapport sauvegard: {filename}")
         return filename
 
 def main():
     """Fonction principale"""
-    print("🚀 SPRINT 3.1 - VALIDATION CI/CD ENTERPRISE")
+    print("[ROCKET] SPRINT 3.1 - VALIDATION CI/CD ENTERPRISE")
     print("=" * 75)
     
     # Initialisation du validateur
     validator = CICDEnterpriseValidator()
     
     try:
-        # Génération du rapport complet
+        # Gnration du rapport complet
         results = validator.generate_comprehensive_report()
         
-        # Affichage des résultats
+        # Affichage des rsultats
         print(f"\n{'=' * 75}")
-        print("📊 RÉSULTATS SPRINT 3.1 CI/CD ENTERPRISE")
+        print("[CHART] RSULTATS SPRINT 3.1 CI/CD ENTERPRISE")
         print("=" * 75)
         
-        print(f"\n🎯 Score Global CI/CD Enterprise: {results['global_score']:.1f}%")
+        print(f"\n[TARGET] Score Global CI/CD Enterprise: {results['global_score']:.1f}%")
         
-        print(f"\n📈 Composants Validés:")
+        print(f"\n Composants Valids:")
         for component, data in results["components"].items():
             score = data["score"]
-            status = "✅" if score >= 80 else "⚠️" if score >= 60 else "❌"
+            status = "[CHECK]" if score >= 80 else "" if score >= 60 else "[CROSS]"
             print(f"   {status} {component}: {score:.1f}%")
         
-        print(f"\n🔧 Recommandations:")
+        print(f"\n[TOOL] Recommandations:")
         for recommendation in results["recommendations"]:
             print(f"   {recommendation}")
         
-        print(f"\n📊 Statistiques:")
+        print(f"\n[CHART] Statistiques:")
         summary = results["summary"]
-        print(f"   Tests exécutés: {summary['total_tests']}")
-        print(f"   Tests réussis: {summary['passed_tests']}")
-        print(f"   Tests échoués: {summary['failed_tests']}")
-        print(f"   Taux de réussite: {(summary['passed_tests']/summary['total_tests']*100):.1f}%")
+        print(f"   Tests excuts: {summary['total_tests']}")
+        print(f"   Tests russis: {summary['passed_tests']}")
+        print(f"   Tests chous: {summary['failed_tests']}")
+        print(f"   Taux de russite: {(summary['passed_tests']/summary['total_tests']*100):.1f}%")
         
         # Sauvegarde
         filename = validator.save_results()
-        print(f"\n📄 Rapport sauvegardé: {filename}")
+        print(f"\n[DOCUMENT] Rapport sauvegard: {filename}")
         
         # Statut final
         if results['global_score'] >= 80:
-            print(f"\n🎉 SPRINT 3.1 CI/CD ENTERPRISE: SUCCÈS ✅")
-            print("🚀 Pipeline CI/CD Enterprise-grade opérationnel!")
+            print(f"\n SPRINT 3.1 CI/CD ENTERPRISE: SUCCS [CHECK]")
+            print("[ROCKET] Pipeline CI/CD Enterprise-grade oprationnel!")
         elif results['global_score'] >= 60:
-            print(f"\n⚠️ SPRINT 3.1 CI/CD ENTERPRISE: PARTIELLEMENT RÉUSSI")
-            print("🔧 Optimisations requises avant production")
+            print(f"\n SPRINT 3.1 CI/CD ENTERPRISE: PARTIELLEMENT RUSSI")
+            print("[TOOL] Optimisations requises avant production")
         else:
-            print(f"\n❌ SPRINT 3.1 CI/CD ENTERPRISE: NÉCESSITE AMÉLIORATION")
-            print("🚨 Intervention requise avant déploiement")
+            print(f"\n[CROSS] SPRINT 3.1 CI/CD ENTERPRISE: NCESSITE AMLIORATION")
+            print(" Intervention requise avant dploiement")
         
         return 0 if results['global_score'] >= 80 else 1
         
     except Exception as e:
-        logger.error(f"❌ Erreur lors de la validation: {e}")
+        logger.error(f"[CROSS] Erreur lors de la validation: {e}")
         return 1
 
 if __name__ == "__main__":

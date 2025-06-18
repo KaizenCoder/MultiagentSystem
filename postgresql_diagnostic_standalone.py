@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Agent de diagnostic PostgreSQL autonome - Version simplifiée
-Fonctionne sans dépendances de l'orchestrateur NextGeneration
+Agent de diagnostic PostgreSQL autonome - Version simplifie
+Fonctionne sans dpendances de l'orchestrateur NextGeneration
 """
 
 import asyncio
@@ -13,7 +13,7 @@ from datetime import datetime
 from typing import Dict, List, Any, Optional
 
 class SimplePostgreSQLDiagnostic:
-    """Agent de diagnostic PostgreSQL simplifié."""
+    """Agent de diagnostic PostgreSQL simplifi."""
     
     def __init__(self):
         self.diagnostic_results = {}
@@ -21,45 +21,45 @@ class SimplePostgreSQLDiagnostic:
     
     async def run_diagnostic(self) -> Dict[str, Any]:
         """Lance un diagnostic complet de PostgreSQL."""
-        print("🔍 Démarrage du diagnostic PostgreSQL...")
+        print("[SEARCH] Dmarrage du diagnostic PostgreSQL...")
         
         # Tests de diagnostic
         diagnostic_tests = [
-            ("Vérification de la disponibilité PostgreSQL", self.check_postgresql_availability),
-            ("Vérification des connexions actives", self.check_active_connections),
-            ("Vérification de l'espace disque", self.check_disk_space),
-            ("Vérification des logs d'erreur", self.check_error_logs),
-            ("Vérification de la configuration", self.check_configuration),
-            ("Vérification des performances", self.check_performance_metrics),
+            ("Vrification de la disponibilit PostgreSQL", self.check_postgresql_availability),
+            ("Vrification des connexions actives", self.check_active_connections),
+            ("Vrification de l'espace disque", self.check_disk_space),
+            ("Vrification des logs d'erreur", self.check_error_logs),
+            ("Vrification de la configuration", self.check_configuration),
+            ("Vrification des performances", self.check_performance_metrics),
         ]
         
         for test_name, test_func in diagnostic_tests:
-            print(f"📋 {test_name}...")
+            print(f"[CLIPBOARD] {test_name}...")
             try:
                 result = await test_func()
                 self.diagnostic_results[test_name] = result
-                print(f"✅ {test_name} - Terminé")
+                print(f"[CHECK] {test_name} - Termin")
             except Exception as e:
-                error_msg = f"❌ Erreur lors du test '{test_name}': {str(e)}"
+                error_msg = f"[CROSS] Erreur lors du test '{test_name}': {str(e)}"
                 print(error_msg)
                 self.diagnostic_results[test_name] = {"error": str(e)}
         
-        # Génération des recommandations
+        # Gnration des recommandations
         self.generate_recommendations()
         
-        # Génération du rapport final
+        # Gnration du rapport final
         return self.generate_report()
     
     async def execute_command(self, command: str) -> str:
-        """Exécute une commande shell de manière sécurisée."""
+        """Excute une commande shell de manire scurise."""
         try:
-            # Validation basique de sécurité
+            # Validation basique de scurit
             allowed_commands = ["pg_isready", "docker", "psql"]
             cmd_parts = command.strip().split()
             if not cmd_parts or cmd_parts[0] not in allowed_commands:
                 return f"Error: Command not allowed for security reasons. Command: {command}"
             
-            # Exécution de la commande
+            # Excution de la commande
             process = await asyncio.create_subprocess_shell(
                 command,
                 stdout=asyncio.subprocess.PIPE,
@@ -85,7 +85,7 @@ class SimplePostgreSQLDiagnostic:
             return f"Error executing command: {str(e)}"
     
     async def check_postgresql_availability(self) -> Dict[str, Any]:
-        """Vérifie si PostgreSQL est disponible et répond."""
+        """Vrifie si PostgreSQL est disponible et rpond."""
         # Test avec pg_isready
         pg_ready_result = await self.execute_command("pg_isready -h localhost -p 5432")
         
@@ -99,12 +99,12 @@ class SimplePostgreSQLDiagnostic:
         }
     
     async def check_active_connections(self) -> Dict[str, Any]:
-        """Vérifie le nombre de connexions actives."""
-        # Commande pour vérifier les connexions via Docker
+        """Vrifie le nombre de connexions actives."""
+        # Commande pour vrifier les connexions via Docker
         docker_exec_cmd = "docker exec postgres psql -U postgres -c \"SELECT count(*) as active_connections FROM pg_stat_activity WHERE state = 'active';\""
         connections_result = await self.execute_command(docker_exec_cmd)
         
-        # Vérification des connexions par base de données
+        # Vrification des connexions par base de donnes
         db_connections_cmd = "docker exec postgres psql -U postgres -c \"SELECT datname, count(*) FROM pg_stat_activity GROUP BY datname;\""
         db_connections_result = await self.execute_command(db_connections_cmd)
         
@@ -114,11 +114,11 @@ class SimplePostgreSQLDiagnostic:
         }
     
     async def check_disk_space(self) -> Dict[str, Any]:
-        """Vérifie l'espace disque disponible."""
-        # Vérification de l'espace disque du système
+        """Vrifie l'espace disque disponible."""
+        # Vrification de l'espace disque du systme
         disk_space_result = await self.execute_command("docker exec postgres df -h /var/lib/postgresql/data")
         
-        # Taille des bases de données
+        # Taille des bases de donnes
         db_sizes_cmd = "docker exec postgres psql -U postgres -c \"SELECT datname, pg_size_pretty(pg_database_size(datname)) as size FROM pg_database;\""
         db_sizes_result = await self.execute_command(db_sizes_cmd)
         
@@ -128,7 +128,7 @@ class SimplePostgreSQLDiagnostic:
         }
     
     async def check_error_logs(self) -> Dict[str, Any]:
-        """Vérifie les logs d'erreur récents."""
+        """Vrifie les logs d'erreur rcents."""
         # Logs Docker du conteneur PostgreSQL
         docker_logs_result = await self.execute_command("docker logs postgres --tail 50")
         
@@ -138,8 +138,8 @@ class SimplePostgreSQLDiagnostic:
         }
     
     async def check_configuration(self) -> Dict[str, Any]:
-        """Vérifie la configuration PostgreSQL."""
-        # Paramètres de configuration importants
+        """Vrifie la configuration PostgreSQL."""
+        # Paramtres de configuration importants
         config_cmd = "docker exec postgres psql -U postgres -c \"SELECT name, setting, unit FROM pg_settings WHERE name IN ('max_connections', 'shared_buffers', 'effective_cache_size', 'maintenance_work_mem', 'checkpoint_completion_target', 'wal_buffers', 'default_statistics_target');\""
         config_result = await self.execute_command(config_cmd)
         
@@ -148,8 +148,8 @@ class SimplePostgreSQLDiagnostic:
         }
     
     async def check_performance_metrics(self) -> Dict[str, Any]:
-        """Vérifie les métriques de performance."""
-        # Statistiques des requêtes lentes
+        """Vrifie les mtriques de performance."""
+        # Statistiques des requtes lentes
         slow_queries_cmd = "docker exec postgres psql -U postgres -c \"SELECT query, mean_time, calls FROM pg_stat_statements ORDER BY mean_time DESC LIMIT 10;\" 2>/dev/null || echo 'pg_stat_statements extension not available'"
         slow_queries_result = await self.execute_command(slow_queries_cmd)
         
@@ -163,47 +163,47 @@ class SimplePostgreSQLDiagnostic:
         }
     
     def analyze_logs(self, logs: str) -> List[str]:
-        """Analyse les logs pour identifier les problèmes courants."""
+        """Analyse les logs pour identifier les problmes courants."""
         issues = []
         
         if "FATAL" in logs:
-            issues.append("❌ Erreurs fatales détectées dans les logs")
+            issues.append("[CROSS] Erreurs fatales dtectes dans les logs")
         if "ERROR" in logs:
-            issues.append("⚠️ Erreurs détectées dans les logs")
+            issues.append(" Erreurs dtectes dans les logs")
         if "connection limit exceeded" in logs.lower():
-            issues.append("🔴 Limite de connexions dépassée")
+            issues.append(" Limite de connexions dpasse")
         if "out of memory" in logs.lower():
-            issues.append("🔴 Problème de mémoire insuffisante")
+            issues.append(" Problme de mmoire insuffisante")
         if "disk full" in logs.lower():
-            issues.append("🔴 Espace disque insuffisant")
+            issues.append(" Espace disque insuffisant")
         if "checkpoint" in logs.lower() and "slow" in logs.lower():
-            issues.append("⚠️ Checkpoints lents détectés")
+            issues.append(" Checkpoints lents dtects")
         
         if not issues:
-            issues.append("✅ Aucun problème majeur détecté dans les logs")
+            issues.append("[CHECK] Aucun problme majeur dtect dans les logs")
         
         return issues
     
     def generate_recommendations(self) -> None:
-        """Génère des recommandations basées sur les résultats du diagnostic."""
-        print("💡 Génération des recommandations...")
+        """Gnre des recommandations bases sur les rsultats du diagnostic."""
+        print("[BULB] Gnration des recommandations...")
         
-        # Analyse des résultats pour générer des recommandations
+        # Analyse des rsultats pour gnrer des recommandations
         for test_name, result in self.diagnostic_results.items():
-            if "disponibilité" in test_name and isinstance(result, dict):
+            if "disponibilit" in test_name and isinstance(result, dict):
                 if result.get("status") == "unavailable":
                     self.recommendations.append({
-                        "category": "Disponibilité",
+                        "category": "Disponibilit",
                         "issue": "PostgreSQL indisponible",
-                        "solution": "Redémarrer le service PostgreSQL avec: docker restart postgres"
+                        "solution": "Redmarrer le service PostgreSQL avec: docker restart postgres"
                     })
             
             elif "connexions" in test_name:
                 if "error" in str(result).lower():
                     self.recommendations.append({
                         "category": "Connexions",
-                        "issue": "Problème de connexions",
-                        "solution": "Vérifier la configuration max_connections et surveiller les connexions actives"
+                        "issue": "Problme de connexions",
+                        "solution": "Vrifier la configuration max_connections et surveiller les connexions actives"
                     })
             
             elif "espace disque" in test_name:
@@ -217,15 +217,15 @@ class SimplePostgreSQLDiagnostic:
             elif "logs d'erreur" in test_name:
                 if isinstance(result, dict) and result.get("log_analysis"):
                     for issue in result["log_analysis"]:
-                        if "❌" in issue or "🔴" in issue:
+                        if "[CROSS]" in issue or "" in issue:
                             self.recommendations.append({
                                 "category": "Logs",
                                 "issue": issue,
-                                "solution": "Analyser et corriger l'erreur identifiée"
+                                "solution": "Analyser et corriger l'erreur identifie"
                             })
     
     def generate_report(self) -> Dict[str, Any]:
-        """Génère le rapport final de diagnostic."""
+        """Gnre le rapport final de diagnostic."""
         report = {
             "timestamp": datetime.now().isoformat(),
             "diagnostic_summary": self.create_summary(),
@@ -237,7 +237,7 @@ class SimplePostgreSQLDiagnostic:
         return report
     
     def create_summary(self) -> Dict[str, Any]:
-        """Crée un résumé du diagnostic."""
+        """Cre un rsum du diagnostic."""
         summary = {
             "total_tests": len(self.diagnostic_results),
             "successful_tests": 0,
@@ -249,85 +249,85 @@ class SimplePostgreSQLDiagnostic:
         for test_name, result in self.diagnostic_results.items():
             if isinstance(result, dict) and "error" in result:
                 summary["failed_tests"] += 1
-                summary["critical_issues"].append(f"❌ {test_name}: {result['error']}")
+                summary["critical_issues"].append(f"[CROSS] {test_name}: {result['error']}")
             else:
                 summary["successful_tests"] += 1
                 
-                # Analyse des résultats pour identifier les problèmes
+                # Analyse des rsultats pour identifier les problmes
                 if "unavailable" in str(result).lower():
-                    summary["critical_issues"].append(f"🔴 {test_name}: Service indisponible")
+                    summary["critical_issues"].append(f" {test_name}: Service indisponible")
                 elif "error" in str(result).lower():
-                    summary["warnings"].append(f"⚠️ {test_name}: Problème détecté")
+                    summary["warnings"].append(f" {test_name}: Problme dtect")
         
         return summary
     
     def generate_action_items(self) -> List[str]:
-        """Génère une liste d'actions recommandées."""
+        """Gnre une liste d'actions recommandes."""
         actions = []
         
-        # Analyse des résultats pour générer des recommandations
+        # Analyse des rsultats pour gnrer des recommandations
         for test_name, result in self.diagnostic_results.items():
-            if "Vérification de la disponibilité" in test_name:
+            if "Vrification de la disponibilit" in test_name:
                 if isinstance(result, dict) and result.get("status") == "unavailable":
-                    actions.append("🔧 Redémarrer le service PostgreSQL")
-                    actions.append("🔧 Vérifier la configuration réseau")
+                    actions.append("[TOOL] Redmarrer le service PostgreSQL")
+                    actions.append("[TOOL] Vrifier la configuration rseau")
             
             elif "connexions actives" in test_name:
                 if "active_connections" in str(result):
-                    actions.append("📊 Surveiller le nombre de connexions actives")
+                    actions.append("[CHART] Surveiller le nombre de connexions actives")
             
             elif "espace disque" in test_name:
                 if "100%" in str(result) or "No space" in str(result):
-                    actions.append("💾 Nettoyer l'espace disque")
-                    actions.append("💾 Archiver les anciens logs")
+                    actions.append(" Nettoyer l'espace disque")
+                    actions.append(" Archiver les anciens logs")
             
             elif "logs d'erreur" in test_name:
                 if isinstance(result, dict) and result.get("log_analysis"):
                     for issue in result["log_analysis"]:
-                        if "❌" in issue or "🔴" in issue:
-                            actions.append(f"🔧 Résoudre: {issue}")
+                        if "[CROSS]" in issue or "" in issue:
+                            actions.append(f"[TOOL] Rsoudre: {issue}")
         
         if not actions:
-            actions.append("✅ Aucune action immédiate requise")
+            actions.append("[CHECK] Aucune action immdiate requise")
         
         return actions
     
     def print_report(self, report: Dict[str, Any]) -> None:
         """Affiche le rapport de diagnostic."""
         print("\n" + "="*60)
-        print("📊 RAPPORT DE DIAGNOSTIC POSTGRESQL")
+        print("[CHART] RAPPORT DE DIAGNOSTIC POSTGRESQL")
         print("="*60)
         
         summary = report["diagnostic_summary"]
-        print(f"\n📋 RÉSUMÉ:")
-        print(f"   Tests exécutés: {summary['total_tests']}")
-        print(f"   Tests réussis: {summary['successful_tests']}")
-        print(f"   Tests échoués: {summary['failed_tests']}")
+        print(f"\n[CLIPBOARD] RSUM:")
+        print(f"   Tests excuts: {summary['total_tests']}")
+        print(f"   Tests russis: {summary['successful_tests']}")
+        print(f"   Tests chous: {summary['failed_tests']}")
         
         if summary["critical_issues"]:
-            print(f"\n🚨 PROBLÈMES CRITIQUES:")
+            print(f"\n PROBLMES CRITIQUES:")
             for issue in summary["critical_issues"]:
                 print(f"   {issue}")
         
         if summary["warnings"]:
-            print(f"\n⚠️ AVERTISSEMENTS:")
+            print(f"\n AVERTISSEMENTS:")
             for warning in summary["warnings"]:
                 print(f"   {warning}")
         
-        print(f"\n🔧 ACTIONS RECOMMANDÉES:")
+        print(f"\n[TOOL] ACTIONS RECOMMANDES:")
         for action in report["action_items"]:
             print(f"   {action}")
         
         if report["recommendations"]:
-            print(f"\n💡 RECOMMANDATIONS:")
+            print(f"\n[BULB] RECOMMANDATIONS:")
             for rec in report["recommendations"]:
-                print(f"   📖 {rec['category']}: {rec['issue']}")
-                print(f"      → {rec['solution']}")
+                print(f"    {rec['category']}: {rec['issue']}")
+                print(f"       {rec['solution']}")
         
         print("\n" + "="*60)
 
 async def main():
-    """Fonction principale pour exécuter le diagnostic."""
+    """Fonction principale pour excuter le diagnostic."""
     if len(sys.argv) > 1 and sys.argv[1] == "--json":
         output_json = True
     else:
@@ -347,10 +347,10 @@ async def main():
             filename = f"postgresql_diagnostic_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
             with open(filename, "w", encoding="utf-8") as f:
                 json.dump(report, f, indent=2, ensure_ascii=False)
-            print(f"\n💾 Rapport sauvegardé dans {filename}")
+            print(f"\n Rapport sauvegard dans {filename}")
     
     except Exception as e:
-        print(f"❌ Erreur lors du diagnostic: {str(e)}")
+        print(f"[CROSS] Erreur lors du diagnostic: {str(e)}")
         sys.exit(1)
 
 if __name__ == "__main__":

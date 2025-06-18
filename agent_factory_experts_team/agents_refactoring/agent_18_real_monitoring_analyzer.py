@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-🔍 Agent 18 - Real Monitoring Analyzer (Claude Sonnet 4)
-Mission: Analyse RÉELLE de l'architecture + configuration monitoring opérationnelle
+[SEARCH] Agent 18 - Real Monitoring Analyzer (Claude Sonnet 4)
+Mission: Analyse RELLE de l'architecture + configuration monitoring oprationnelle
 Travaille sur: refactoring_workspace/new_architecture/ (VRAIE ANALYSE)
 """
 
@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Dict, Any, List, Tuple
 
 class RealMonitoringAnalyzerAgent:
-    """Agent monitoring réel - analyse architecture et crée configs opérationnelles"""
+    """Agent monitoring rel - analyse architecture et cre configs oprationnelles"""
     
     def __init__(self):
         self.name = "Agent 18 - Real Monitoring Analyzer"
@@ -26,7 +26,7 @@ class RealMonitoringAnalyzerAgent:
         self.version = "1.0.0"
         self.model = "Claude Sonnet 4"
         
-        # Workspace réel
+        # Workspace rel
         self.workspace_root = Path("C:/Dev/nextgeneration")
         self.architecture_path = self.workspace_root / "refactoring_workspace/new_architecture"
         self.monitoring_dir = self.workspace_root / "monitoring"
@@ -38,7 +38,7 @@ class RealMonitoringAnalyzerAgent:
         self.monitoring_dir.mkdir(exist_ok=True)
         self.config_dir.mkdir(exist_ok=True)
         
-        # Résultats analyse
+        # Rsultats analyse
         self.analysis_results = {
             "architecture_metrics": {},
             "endpoints_discovered": [],
@@ -63,11 +63,11 @@ class RealMonitoringAnalyzerAgent:
         self.logger = logging.getLogger(self.agent_id)
         
     def analyze_real_architecture(self) -> Dict[str, Any]:
-        """🎯 Analyse RÉELLE de l'architecture NextGeneration"""
-        self.logger.info("🔍 Démarrage analyse RÉELLE architecture")
+        """[TARGET] Analyse RELLE de l'architecture NextGeneration"""
+        self.logger.info("[SEARCH] Dmarrage analyse RELLE architecture")
         
         if not self.architecture_path.exists():
-            self.logger.error(f"❌ Architecture path non trouvé: {self.architecture_path}")
+            self.logger.error(f"[CROSS] Architecture path non trouv: {self.architecture_path}")
             return {"error": "Architecture path not found"}
             
         analysis = {
@@ -88,7 +88,7 @@ class RealMonitoringAnalyzerAgent:
             "cache_operations": 0
         }
         
-        # Parcours RÉEL de tous les fichiers Python
+        # Parcours REL de tous les fichiers Python
         for py_file in self.architecture_path.rglob("*.py"):
             try:
                 with open(py_file, 'r', encoding='utf-8') as f:
@@ -99,7 +99,7 @@ class RealMonitoringAnalyzerAgent:
                 analysis["total_lines"] += len(lines)
                 
                 file_rel_path = str(py_file.relative_to(self.architecture_path))
-                self.logger.info(f"📄 Analyse: {file_rel_path}")
+                self.logger.info(f"[DOCUMENT] Analyse: {file_rel_path}")
                 
                 # Classification composant
                 component_type = self._classify_component(py_file, content)
@@ -113,7 +113,7 @@ class RealMonitoringAnalyzerAgent:
                 if component_type in analysis["components"]:
                     analysis["components"][component_type].append(component_info)
                     
-                # Parse AST pour analyse détaillée
+                # Parse AST pour analyse dtaille
                 try:
                     tree = ast.parse(content)
                     
@@ -125,30 +125,30 @@ class RealMonitoringAnalyzerAgent:
                     imports = self._extract_imports(tree)
                     analysis["imports"].extend(imports)
                     
-                    # Détection patterns async
+                    # Dtection patterns async
                     async_count = len([n for n in ast.walk(tree) if isinstance(n, ast.AsyncFunctionDef)])
                     analysis["async_patterns"] += async_count
                     
                 except SyntaxError as e:
-                    self.logger.warning(f"⚠️ Erreur parsing AST {file_rel_path}: {e}")
+                    self.logger.warning(f" Erreur parsing AST {file_rel_path}: {e}")
                     
-                # Détection opérations base de données
+                # Dtection oprations base de donnes
                 db_patterns = ["query", "execute", "select", "insert", "update", "delete", "commit"]
                 for pattern in db_patterns:
                     analysis["database_operations"] += content.lower().count(pattern)
                     
-                # Détection opérations cache
+                # Dtection oprations cache
                 cache_patterns = ["redis", "cache", "get", "set", "expire"]
                 for pattern in cache_patterns:
                     analysis["cache_operations"] += content.lower().count(pattern)
                     
             except Exception as e:
-                self.logger.error(f"❌ Erreur analyse {py_file}: {e}")
+                self.logger.error(f"[CROSS] Erreur analyse {py_file}: {e}")
                 
-        # Déduplication imports
+        # Dduplication imports
         analysis["imports"] = list(set(analysis["imports"]))
         
-        # Calcul métriques
+        # Calcul mtriques
         analysis["metrics"] = {
             "avg_lines_per_file": analysis["total_lines"] / analysis["total_files"] if analysis["total_files"] > 0 else 0,
             "endpoints_count": len(analysis["endpoints"]),
@@ -157,7 +157,7 @@ class RealMonitoringAnalyzerAgent:
         }
         
         self.analysis_results["architecture_metrics"] = analysis
-        self.logger.info(f"✅ Analyse terminée: {analysis['total_files']} fichiers, {analysis['total_lines']} lignes")
+        self.logger.info(f"[CHECK] Analyse termine: {analysis['total_files']} fichiers, {analysis['total_lines']} lignes")
         
         return analysis
         
@@ -185,7 +185,7 @@ class RealMonitoringAnalyzerAgent:
             return "modules"
             
     def _extract_endpoints(self, tree: ast.AST, content: str, file_path: str) -> List[Dict[str, Any]]:
-        """Extraction RÉELLE des endpoints API"""
+        """Extraction RELLE des endpoints API"""
         endpoints = []
         
         # Pattern regex pour endpoints FastAPI
@@ -208,7 +208,7 @@ class RealMonitoringAnalyzerAgent:
         return endpoints
         
     def _extract_imports(self, tree: ast.AST) -> List[str]:
-        """Extraction imports pour analyse dépendances"""
+        """Extraction imports pour analyse dpendances"""
         imports = []
         
         for node in ast.walk(tree):
@@ -222,15 +222,15 @@ class RealMonitoringAnalyzerAgent:
         return imports
         
     def _calculate_complexity_score(self, analysis: Dict[str, Any]) -> float:
-        """Calcul score complexité architecture"""
+        """Calcul score complexit architecture"""
         score = 0
         
-        # Facteurs de complexité
+        # Facteurs de complexit
         total_files = analysis["total_files"]
         total_lines = analysis["total_lines"]
         endpoints_count = len(analysis["endpoints"])
         
-        # Score basé sur taille
+        # Score bas sur taille
         if total_files > 20:
             score += 30
         elif total_files > 10:
@@ -238,7 +238,7 @@ class RealMonitoringAnalyzerAgent:
         else:
             score += 10
             
-        # Score basé sur endpoints
+        # Score bas sur endpoints
         if endpoints_count > 15:
             score += 25
         elif endpoints_count > 8:
@@ -246,13 +246,13 @@ class RealMonitoringAnalyzerAgent:
         else:
             score += 5
             
-        # Score basé sur patterns async
+        # Score bas sur patterns async
         if analysis["async_patterns"] > 10:
             score += 20
         elif analysis["async_patterns"] > 5:
             score += 10
             
-        # Score basé sur opérations DB
+        # Score bas sur oprations DB
         if analysis["database_operations"] > 50:
             score += 15
         elif analysis["database_operations"] > 20:
@@ -261,10 +261,10 @@ class RealMonitoringAnalyzerAgent:
         return min(score, 100)
         
     def create_prometheus_config_advanced(self, analysis: Dict[str, Any]) -> Path:
-        """🎯 Configuration Prometheus AVANCÉE basée sur analyse réelle"""
-        self.logger.info("⚙️ Création configuration Prometheus avancée")
+        """[TARGET] Configuration Prometheus AVANCE base sur analyse relle"""
+        self.logger.info(" Cration configuration Prometheus avance")
         
-        # Configuration basée sur l'analyse réelle
+        # Configuration base sur l'analyse relle
         prometheus_config = {
             "global": {
                 "scrape_interval": "10s",
@@ -302,7 +302,7 @@ class RealMonitoringAnalyzerAgent:
         }
         prometheus_config["scrape_configs"].append(main_job)
         
-        # Jobs spécifiques selon composants détectés
+        # Jobs spcifiques selon composants dtects
         if analysis["components"]["routers"]:
             router_job = {
                 "job_name": "nextgeneration-routers",
@@ -327,7 +327,7 @@ class RealMonitoringAnalyzerAgent:
             }
             prometheus_config["scrape_configs"].append(service_job)
             
-        # Job base de données si opérations détectées
+        # Job base de donnes si oprations dtectes
         if analysis["database_operations"] > 10:
             db_job = {
                 "job_name": "nextgeneration-database",
@@ -337,7 +337,7 @@ class RealMonitoringAnalyzerAgent:
             }
             prometheus_config["scrape_configs"].append(db_job)
             
-        # Job cache si opérations détectées
+        # Job cache si oprations dtectes
         if analysis["cache_operations"] > 5:
             cache_job = {
                 "job_name": "nextgeneration-cache",
@@ -362,12 +362,12 @@ class RealMonitoringAnalyzerAgent:
         with open(config_file, 'w') as f:
             yaml.dump(prometheus_config, f, default_flow_style=False, indent=2)
             
-        self.logger.info(f"✅ Configuration Prometheus avancée: {config_file}")
+        self.logger.info(f"[CHECK] Configuration Prometheus avance: {config_file}")
         return config_file
         
     def create_architecture_alerts(self, analysis: Dict[str, Any]) -> Path:
-        """🎯 Alertes spécifiques à l'architecture analysée"""
-        self.logger.info("🚨 Création alertes architecture")
+        """[TARGET] Alertes spcifiques  l'architecture analyse"""
+        self.logger.info(" Cration alertes architecture")
         
         alerts = {
             "groups": [
@@ -378,7 +378,7 @@ class RealMonitoringAnalyzerAgent:
             ]
         }
         
-        # Alertes basées sur endpoints détectés
+        # Alertes bases sur endpoints dtects
         if analysis["endpoints"]:
             for endpoint in analysis["endpoints"][:10]:  # Top 10 endpoints
                 alert = {
@@ -398,7 +398,7 @@ class RealMonitoringAnalyzerAgent:
                 }
                 alerts["groups"][0]["rules"].append(alert)
                 
-        # Alertes spécifiques async si détecté
+        # Alertes spcifiques async si dtect
         if analysis["async_patterns"] > 5:
             async_alert = {
                 "alert": "AsyncBottleneck",
@@ -412,7 +412,7 @@ class RealMonitoringAnalyzerAgent:
             }
             alerts["groups"][0]["rules"].append(async_alert)
             
-        # Alertes base de données si opérations détectées
+        # Alertes base de donnes si oprations dtectes
         if analysis["database_operations"] > 20:
             db_alert = {
                 "alert": "DatabaseOverload",
@@ -426,7 +426,7 @@ class RealMonitoringAnalyzerAgent:
             }
             alerts["groups"][0]["rules"].append(db_alert)
             
-        # Alerte complexité architecture
+        # Alerte complexit architecture
         complexity_score = analysis["metrics"]["complexity_score"]
         if complexity_score > 70:
             complexity_alert = {
@@ -445,12 +445,12 @@ class RealMonitoringAnalyzerAgent:
         with open(alerts_file, 'w') as f:
             yaml.dump(alerts, f, default_flow_style=False, indent=2)
             
-        self.logger.info(f"✅ Alertes architecture: {alerts_file}")
+        self.logger.info(f"[CHECK] Alertes architecture: {alerts_file}")
         return alerts_file
         
     def create_grafana_dashboard_real(self, analysis: Dict[str, Any]) -> Path:
-        """🎯 Dashboard Grafana basé sur architecture réelle"""
-        self.logger.info("📊 Création dashboard Grafana architecture réelle")
+        """[TARGET] Dashboard Grafana bas sur architecture relle"""
+        self.logger.info("[CHART] Cration dashboard Grafana architecture relle")
         
         dashboard = {
             "dashboard": {
@@ -549,7 +549,7 @@ class RealMonitoringAnalyzerAgent:
         dashboard["dashboard"]["panels"].append(components_panel)
         y_pos += 8
         
-        # Panel base de données si détectée
+        # Panel base de donnes si dtecte
         if analysis["database_operations"] > 10:
             db_panel = {
                 "id": panel_id + 1,
@@ -576,12 +576,12 @@ class RealMonitoringAnalyzerAgent:
         with open(dashboard_file, 'w') as f:
             json.dump(dashboard, f, indent=2)
             
-        self.logger.info(f"✅ Dashboard Grafana: {dashboard_file}")
+        self.logger.info(f"[CHECK] Dashboard Grafana: {dashboard_file}")
         return dashboard_file
         
     def create_monitoring_documentation(self, analysis: Dict[str, Any]) -> Path:
-        """🎯 Documentation monitoring basée sur analyse réelle"""
-        self.logger.info("📚 Création documentation monitoring")
+        """[TARGET] Documentation monitoring base sur analyse relle"""
+        self.logger.info(" Cration documentation monitoring")
         
         doc_content = f"""# NextGeneration - Monitoring Documentation (Real Architecture)
 
@@ -752,12 +752,12 @@ curl http://localhost:9090/api/v1/rules
         with open(doc_file, 'w', encoding='utf-8') as f:
             f.write(doc_content)
             
-        self.logger.info(f"✅ Documentation monitoring: {doc_file}")
+        self.logger.info(f"[CHECK] Documentation monitoring: {doc_file}")
         return doc_file
         
     def generate_report(self) -> Dict[str, Any]:
-        """🎯 Génération rapport complet"""
-        time.sleep(3.8)  # Simulation traitement réaliste
+        """[TARGET] Gnration rapport complet"""
+        time.sleep(3.8)  # Simulation traitement raliste
         duration = (datetime.now() - self.start_time).total_seconds()
         
         analysis = self.analysis_results["architecture_metrics"]
@@ -806,18 +806,18 @@ curl http://localhost:9090/api/v1/rules
         return report
         
     def execute_mission(self) -> Dict[str, Any]:
-        """🎯 Exécution mission complète Agent 18 Real"""
-        self.logger.info(f"🚀 {self.name} - Démarrage analyse RÉELLE architecture")
+        """[TARGET] Excution mission complte Agent 18 Real"""
+        self.logger.info(f"[ROCKET] {self.name} - Dmarrage analyse RELLE architecture")
         
         try:
-            # 1. Analyse RÉELLE de l'architecture
+            # 1. Analyse RELLE de l'architecture
             analysis = self.analyze_real_architecture()
             if "error" in analysis:
                 return {"status": "ERROR", "error": analysis["error"]}
                 
-            self.logger.info(f"🔍 Architecture analysée: {analysis['total_files']} fichiers, {analysis['total_lines']} lignes")
+            self.logger.info(f"[SEARCH] Architecture analyse: {analysis['total_files']} fichiers, {analysis['total_lines']} lignes")
             
-            # 2. Configuration Prometheus avancée
+            # 2. Configuration Prometheus avance
             prometheus_config = self.create_prometheus_config_advanced(analysis)
             
             # 3. Alertes architecture
@@ -832,7 +832,7 @@ curl http://localhost:9090/api/v1/rules
             # 6. Rapport final
             report = self.generate_report()
             
-            self.logger.info("✅ Mission Agent 18 Real terminée avec succès")
+            self.logger.info("[CHECK] Mission Agent 18 Real termine avec succs")
             
             return {
                 "status": "SUCCESS",
@@ -844,11 +844,11 @@ curl http://localhost:9090/api/v1/rules
                 "monitoring_configs_created": 4,
                 "complexity_score": analysis['metrics']['complexity_score'],
                 "real_architecture_analysis": True,
-                "message": f"🔍 Analyse RÉELLE terminée - {analysis['total_files']} fichiers analysés ✅"
+                "message": f"[SEARCH] Analyse RELLE termine - {analysis['total_files']} fichiers analyss [CHECK]"
             }
             
         except Exception as e:
-            self.logger.error(f"❌ Erreur mission Agent 18: {e}")
+            self.logger.error(f"[CROSS] Erreur mission Agent 18: {e}")
             return {
                 "status": "ERROR",
                 "error": str(e)
@@ -858,14 +858,14 @@ if __name__ == "__main__":
     agent = RealMonitoringAnalyzerAgent()
     result = agent.execute_mission()
     
-    print(f"\n🎯 {agent.name}")
+    print(f"\n[TARGET] {agent.name}")
     print(f"Status: {result['status']}")
     if result['status'] == 'SUCCESS':
-        print(f"📊 Fichiers analysés: {result['files_analyzed']}")
-        print(f"📏 Lignes analysées: {result['lines_analyzed']}")
-        print(f"🔗 Endpoints découverts: {result['endpoints_discovered']}")
-        print(f"⚙️ Configs monitoring: {result['monitoring_configs_created']}")
-        print(f"📈 Score complexité: {result['complexity_score']:.1f}")
-        print(f"✅ {result['message']}")
+        print(f"[CHART] Fichiers analyss: {result['files_analyzed']}")
+        print(f" Lignes analyses: {result['lines_analyzed']}")
+        print(f" Endpoints dcouverts: {result['endpoints_discovered']}")
+        print(f" Configs monitoring: {result['monitoring_configs_created']}")
+        print(f" Score complexit: {result['complexity_score']:.1f}")
+        print(f"[CHECK] {result['message']}")
     else:
-        print(f"❌ Erreur: {result['error']}") 
+        print(f"[CROSS] Erreur: {result['error']}") 

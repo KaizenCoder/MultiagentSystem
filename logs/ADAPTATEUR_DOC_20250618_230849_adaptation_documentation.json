@@ -1,0 +1,98 @@
+{
+  "agent_id": "ADAPTATEUR_DOC_20250618_230849",
+  "timestamp": "2025-06-18T23:08:49.592062",
+  "outils_traites": 5,
+  "adaptations_readme": {
+    "generate_pitch_document": {
+      "fichier": "C:\\Dev\\nextgeneration\\tools\\generate_pitch_document\\README.md",
+      "statut": "ADAPTE",
+      "taille_originale": 5602,
+      "taille_nouvelle": 5765
+    },
+    "imported_tools_apex": {
+      "fichier": "C:\\Dev\\nextgeneration\\tools\\imported_tools_apex\\README.md",
+      "statut": "ADAPTE",
+      "taille_originale": 0,
+      "taille_nouvelle": 5589
+    },
+    "install_phase3_dependencies": {
+      "fichier": "C:\\Dev\\nextgeneration\\tools\\install_phase3_dependencies\\README.md",
+      "statut": "ADAPTE",
+      "taille_originale": 1043,
+      "taille_nouvelle": 5941
+    },
+    "monitor_phase3": {
+      "fichier": "C:\\Dev\\nextgeneration\\tools\\monitor_phase3\\README.md",
+      "statut": "ADAPTE",
+      "taille_originale": 934,
+      "taille_nouvelle": 5372
+    },
+    "zip_backup": {
+      "fichier": "C:\\Dev\\nextgeneration\\tools\\zip_backup\\README.md",
+      "statut": "ADAPTE",
+      "taille_originale": 5795,
+      "taille_nouvelle": 5196
+    }
+  },
+  "documentations_creees": {
+    "generate_pitch_document": {
+      "statut": "CREE",
+      "fichiers_crees": [
+        "USAGE.md",
+        "CONFIGURATION.md",
+        "API.md",
+        "DEVELOPMENT.md",
+        "FAQ.md"
+      ],
+      "repertoire": "C:\\Dev\\nextgeneration\\tools\\generate_pitch_document\\docs"
+    },
+    "imported_tools_apex": {
+      "statut": "CREE",
+      "fichiers_crees": [
+        "USAGE.md",
+        "CONFIGURATION.md",
+        "API.md",
+        "DEVELOPMENT.md",
+        "FAQ.md"
+      ],
+      "repertoire": "C:\\Dev\\nextgeneration\\tools\\imported_tools_apex\\docs"
+    },
+    "install_phase3_dependencies": {
+      "statut": "CREE",
+      "fichiers_crees": [
+        "CONFIGURATION.md",
+        "API.md",
+        "DEVELOPMENT.md",
+        "FAQ.md"
+      ],
+      "repertoire": "C:\\Dev\\nextgeneration\\tools\\install_phase3_dependencies\\docs"
+    },
+    "monitor_phase3": {
+      "statut": "CREE",
+      "fichiers_crees": [
+        "CONFIGURATION.md",
+        "API.md",
+        "DEVELOPMENT.md",
+        "FAQ.md"
+      ],
+      "repertoire": "C:\\Dev\\nextgeneration\\tools\\monitor_phase3\\docs"
+    },
+    "zip_backup": {
+      "statut": "CREE",
+      "fichiers_crees": [
+        "USAGE.md",
+        "CONFIGURATION.md",
+        "API.md",
+        "DEVELOPMENT.md",
+        "FAQ.md"
+      ],
+      "repertoire": "C:\\Dev\\nextgeneration\\tools\\zip_backup\\docs"
+    }
+  },
+  "documentation_globale": {
+    "statut": "MISE_A_JOUR",
+    "fichier": "C:\\Dev\\nextgeneration\\tools\\README.md",
+    "taille": 3949
+  },
+  "statut_global": "REUSSI"
+}

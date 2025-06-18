@@ -1,0 +1,34 @@
+{
+  "agent_id": "TESTEUR_LEGER_20250618_230953",
+  "timestamp": "2025-06-18T23:09:53.267533",
+  "outils_traites": 3,
+  "tests_unitaires": {
+    "generate_pitch_document": {
+      "fichier": "C:\\Dev\\nextgeneration\\tests\\unit\\test_generate_pitch_document.py",
+      "statut": "CREE"
+    },
+    "install_phase3_dependencies": {
+      "fichier": "C:\\Dev\\nextgeneration\\tests\\unit\\test_install_phase3_dependencies.py",
+      "statut": "CREE"
+    },
+    "monitor_phase3": {
+      "fichier": "C:\\Dev\\nextgeneration\\tests\\unit\\test_monitor_phase3.py",
+      "statut": "CREE"
+    }
+  },
+  "tests_integration": {
+    "generate_pitch_document": {
+      "fichier": "C:\\Dev\\nextgeneration\\tests\\integration\\test_generate_pitch_document_integration.py",
+      "statut": "CREE"
+    },
+    "install_phase3_dependencies": {
+      "fichier": "C:\\Dev\\nextgeneration\\tests\\integration\\test_install_phase3_dependencies_integration.py",
+      "statut": "CREE"
+    },
+    "monitor_phase3": {
+      "fichier": "C:\\Dev\\nextgeneration\\tests\\integration\\test_monitor_phase3_integration.py",
+      "statut": "CREE"
+    }
+  },
+  "statut_global": "REUSSI"
+}

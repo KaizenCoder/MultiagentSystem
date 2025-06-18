@@ -1,5 +1,5 @@
 """
-Redis Cache Implementation pour l'amélioration des performances
+Redis Cache Implementation pour l'amlioration des performances
 Gestion multi-layer du cache avec TTL intelligent
 """
 import os
@@ -20,7 +20,7 @@ from orchestrator.app.security.logging import security_logger
 
 
 class CacheType(Enum):
-    """Types de cache avec TTL différents"""
+    """Types de cache avec TTL diffrents"""
     LLM_RESPONSE = "llm_response"        # TTL 1h
     SESSION_DATA = "session_data"        # TTL 24h  
     RAG_RESULTS = "rag_results"          # TTL 30min
@@ -31,7 +31,7 @@ class CacheType(Enum):
 
 @dataclass
 class CacheEntry:
-    """Entrée de cache avec métadonnées"""
+    """Entre de cache avec mtadonnes"""
     key: str
     value: Any
     cache_type: CacheType
@@ -41,7 +41,7 @@ class CacheEntry:
     last_accessed: Optional[datetime] = None
     
     def is_expired(self) -> bool:
-        """Vérifie si l'entrée a expiré"""
+        """Vrifie si l'entre a expir"""
         return datetime.utcnow() > self.expires_at
     
     def to_dict(self) -> Dict[str, Any]:
@@ -58,7 +58,7 @@ class CacheEntry:
     
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'CacheEntry':
-        """Crée une entrée depuis un dictionnaire Redis"""
+        """Cre une entre depuis un dictionnaire Redis"""
         return cls(
             key=data['key'],
             value=data['value'],
@@ -76,7 +76,7 @@ class ProductionRedisCache:
     - Multi-layer caching strategy
     - TTL intelligent par type
     - Compression automatique
-    - Monitoring et métriques
+    - Monitoring et mtriques
     - Fallback gracieux
     """
     
@@ -100,7 +100,7 @@ class ProductionRedisCache:
         self.redis_pool = None
         self.redis_client = None
         
-        # Métriques
+        # Mtriques
         self.metrics = {
             'hits': 0,
             'misses': 0,
@@ -160,45 +160,45 @@ class ProductionRedisCache:
     
     async def get(self, key: str, cache_type: CacheType) -> Optional[Any]:
         """
-        Récupère une valeur du cache
+        Rcupre une valeur du cache
         
         Args:
-            key: Clé du cache
+            key: Cl du cache
             cache_type: Type de cache
             
         Returns:
-            Valeur cachée ou None si non trouvée/expirée
+            Valeur cache ou None si non trouve/expire
         """
         if not self.initialized or not self.redis_client:
             self.metrics['misses'] += 1
             return None
             
         try:
-            # Clé Redis avec préfixe
+            # Cl Redis avec prfixe
             redis_key = f"{cache_type.value}:{key}"
             
-            # Récupération depuis Redis
+            # Rcupration depuis Redis
             cached_data = await self.redis_client.get(redis_key)
             
             if cached_data is None:
                 self.metrics['misses'] += 1
                 return None
             
-            # Désérialisation
+            # Dsrialisation
             entry_dict = json.loads(cached_data)
             entry = CacheEntry.from_dict(entry_dict)
             
-            # Vérification expiration
+            # Vrification expiration
             if entry.is_expired():
                 await self._delete_key(redis_key)
                 self.metrics['misses'] += 1
                 return None
             
-            # Mise à jour statistiques d'accès
+            # Mise  jour statistiques d'accs
             entry.access_count += 1
             entry.last_accessed = datetime.utcnow()
             
-            # Mise à jour en arrière-plan (fire and forget)
+            # Mise  jour en arrire-plan (fire and forget)
             asyncio.create_task(self._update_access_stats(redis_key, entry))
             
             self.metrics['hits'] += 1
@@ -227,13 +227,13 @@ class ProductionRedisCache:
         Stocke une valeur dans le cache
         
         Args:
-            key: Clé du cache
-            value: Valeur à cacher
+            key: Cl du cache
+            value: Valeur  cacher
             cache_type: Type de cache
-            custom_ttl: TTL personnalisé (optionnel)
+            custom_ttl: TTL personnalis (optionnel)
             
         Returns:
-            True si succès, False sinon
+            True si succs, False sinon
         """
         if not self.initialized or not self.redis_client:
             return False
@@ -242,7 +242,7 @@ class ProductionRedisCache:
             # TTL selon le type ou custom
             ttl = custom_ttl or self.ttl_config.get(cache_type, timedelta(minutes=5))
             
-            # Création de l'entrée
+            # Cration de l'entre
             now = datetime.utcnow()
             entry = CacheEntry(
                 key=key,
@@ -252,10 +252,10 @@ class ProductionRedisCache:
                 expires_at=now + ttl
             )
             
-            # Sérialisation
+            # Srialisation
             entry_data = json.dumps(entry.to_dict())
             
-            # Compression si nécessaire
+            # Compression si ncessaire
             if len(entry_data) > self.compression_threshold:
                 # Ici on pourrait ajouter la compression (gzip)
                 # Pour simplifier, on log juste
@@ -289,7 +289,7 @@ class ProductionRedisCache:
             return False
     
     async def delete(self, key: str, cache_type: CacheType) -> bool:
-        """Supprime une entrée du cache"""
+        """Supprime une entre du cache"""
         if not self.initialized or not self.redis_client:
             return False
             
@@ -313,7 +313,7 @@ class ProductionRedisCache:
             return False
     
     async def clear_by_type(self, cache_type: CacheType) -> int:
-        """Supprime toutes les entrées d'un type de cache"""
+        """Supprime toutes les entres d'un type de cache"""
         if not self.initialized or not self.redis_client:
             return 0
             
@@ -340,7 +340,7 @@ class ProductionRedisCache:
             return 0
     
     async def clear_all(self) -> bool:
-        """Vide tout le cache (ATTENTION: opération destructive)"""
+        """Vide tout le cache (ATTENTION: opration destructive)"""
         if not self.initialized or not self.redis_client:
             return False
             
@@ -364,7 +364,7 @@ class ProductionRedisCache:
             return False
     
     async def get_metrics(self) -> Dict[str, Any]:
-        """Retourne les métriques du cache"""
+        """Retourne les mtriques du cache"""
         total_operations = sum(self.metrics.values())
         hit_rate = (self.metrics['hits'] / max(self.metrics['hits'] + self.metrics['misses'], 1)) * 100
         
@@ -394,7 +394,7 @@ class ProductionRedisCache:
         }
     
     async def health_check(self) -> Dict[str, Any]:
-        """Vérification de santé du cache Redis"""
+        """Vrification de sant du cache Redis"""
         health = {
             'status': 'unhealthy',
             'redis_available': REDIS_AVAILABLE,
@@ -429,7 +429,7 @@ class ProductionRedisCache:
         return health
     
     async def _update_access_stats(self, redis_key: str, entry: CacheEntry):
-        """Met à jour les statistiques d'accès en arrière-plan"""
+        """Met  jour les statistiques d'accs en arrire-plan"""
         try:
             entry_data = json.dumps(entry.to_dict())
             # Maintenir le TTL existant
@@ -438,7 +438,7 @@ class ProductionRedisCache:
             pass  # Non-critique, on ignore les erreurs
     
     async def _delete_key(self, redis_key: str):
-        """Supprime une clé expirée"""
+        """Supprime une cl expire"""
         try:
             await self.redis_client.delete(redis_key)
         except:
@@ -479,26 +479,26 @@ async def get_cache() -> ProductionRedisCache:
     return _cache_instance
 
 
-# Fonctions de convénience
+# Fonctions de convnience
 async def cache_llm_response(key: str, response: str, ttl: Optional[timedelta] = None) -> bool:
-    """Cache une réponse LLM"""
+    """Cache une rponse LLM"""
     cache = await get_cache()
     return await cache.set(key, response, CacheType.LLM_RESPONSE, ttl)
 
 
 async def get_cached_llm_response(key: str) -> Optional[str]:
-    """Récupère une réponse LLM cachée"""
+    """Rcupre une rponse LLM cache"""
     cache = await get_cache()
     return await cache.get(key, CacheType.LLM_RESPONSE)
 
 
 async def cache_session_data(session_id: str, data: Dict[str, Any]) -> bool:
-    """Cache des données de session"""
+    """Cache des donnes de session"""
     cache = await get_cache()
     return await cache.set(session_id, data, CacheType.SESSION_DATA)
 
 
 async def get_cached_session_data(session_id: str) -> Optional[Dict[str, Any]]:
-    """Récupère des données de session cachées"""
+    """Rcupre des donnes de session caches"""
     cache = await get_cache()
     return await cache.get(session_id, CacheType.SESSION_DATA)

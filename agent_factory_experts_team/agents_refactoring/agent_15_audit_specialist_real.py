@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-🔍 Agent 15 - Audit Specialist Real (Claude Sonnet 4)
-Mission: Audit réel architecture + sécurité + qualité code
+[SEARCH] Agent 15 - Audit Specialist Real (Claude Sonnet 4)
+Mission: Audit rel architecture + scurit + qualit code
 Travaille sur: refactoring_workspace/new_architecture/
 """
 
@@ -18,7 +18,7 @@ from typing import Dict, Any, List, Tuple
 import hashlib
 
 class RealAuditSpecialistAgent:
-    """Agent audit réel - analyse complète architecture, sécurité, qualité"""
+    """Agent audit rel - analyse complte architecture, scurit, qualit"""
     
     def __init__(self):
         self.name = "Agent 15 - Real Audit Specialist"
@@ -26,7 +26,7 @@ class RealAuditSpecialistAgent:
         self.version = "1.0.0"
         self.model = "Claude Sonnet 4"
         
-        # Workspace réel
+        # Workspace rel
         self.workspace_root = Path("C:/Dev/nextgeneration")
         self.architecture_path = self.workspace_root / "refactoring_workspace/new_architecture"
         self.audit_dir = self.workspace_root / "refactoring_workspace/results/phase6_validation"
@@ -36,7 +36,7 @@ class RealAuditSpecialistAgent:
         self.setup_logging()
         self.audit_dir.mkdir(parents=True, exist_ok=True)
         
-        # Métriques audit
+        # Mtriques audit
         self.audit_results = {
             "architecture_patterns": {},
             "code_quality": {},
@@ -62,8 +62,8 @@ class RealAuditSpecialistAgent:
         self.logger = logging.getLogger(self.agent_id)
         
     def audit_architecture_patterns(self) -> Dict[str, Any]:
-        """🎯 Audit patterns architecturaux réels"""
-        self.logger.info("🏗️ Audit patterns architecturaux")
+        """[TARGET] Audit patterns architecturaux rels"""
+        self.logger.info("[CONSTRUCTION] Audit patterns architecturaux")
         
         patterns_audit = {
             "hexagonal_architecture": {"score": 0, "evidence": [], "issues": []},
@@ -90,7 +90,7 @@ class RealAuditSpecialistAgent:
                     # Audit Hexagonal Architecture
                     if any(dir_name in file_rel_path for dir_name in ["routers", "services", "repositories", "schemas"]):
                         patterns_audit["hexagonal_architecture"]["score"] += 20
-                        patterns_audit["hexagonal_architecture"]["evidence"].append(f"Séparation couches: {file_rel_path}")
+                        patterns_audit["hexagonal_architecture"]["evidence"].append(f"Sparation couches: {file_rel_path}")
                         
                     # Audit CQRS
                     if "command" in content.lower() or "query" in content.lower():
@@ -128,24 +128,24 @@ class RealAuditSpecialistAgent:
         for pattern in patterns_audit:
             patterns_audit[pattern]["score"] = min(patterns_audit[pattern]["score"], 100)
             
-        # Détection issues
+        # Dtection issues
         if patterns_audit["hexagonal_architecture"]["score"] < 60:
-            patterns_audit["hexagonal_architecture"]["issues"].append("Architecture hexagonale incomplète")
+            patterns_audit["hexagonal_architecture"]["issues"].append("Architecture hexagonale incomplte")
             
         if patterns_audit["dependency_injection"]["score"] < 40:
-            patterns_audit["dependency_injection"]["issues"].append("DI insuffisante, couplage fort détecté")
+            patterns_audit["dependency_injection"]["issues"].append("DI insuffisante, couplage fort dtect")
             
         if patterns_audit["repository_pattern"]["score"] < 30:
             patterns_audit["repository_pattern"]["issues"].append("Pattern Repository manquant ou incomplet")
             
         self.audit_results["architecture_patterns"] = patterns_audit
-        self.logger.info(f"✅ Audit patterns: {analyzed_files}/{total_files} fichiers analysés")
+        self.logger.info(f"[CHECK] Audit patterns: {analyzed_files}/{total_files} fichiers analyss")
         
         return patterns_audit
         
     def audit_code_quality(self) -> Dict[str, Any]:
-        """🎯 Audit qualité code réel"""
-        self.logger.info("📊 Audit qualité code")
+        """[TARGET] Audit qualit code rel"""
+        self.logger.info("[CHART] Audit qualit code")
         
         quality_metrics = {
             "complexity": {"score": 100, "issues": [], "files_analyzed": 0},
@@ -170,7 +170,7 @@ class RealAuditSpecialistAgent:
                     total_lines += len(lines)
                     quality_metrics["complexity"]["files_analyzed"] += 1
                     
-                    # Parse AST pour analyse détaillée
+                    # Parse AST pour analyse dtaille
                     tree = ast.parse(content)
                     
                     # Analyse fonctions
@@ -178,7 +178,7 @@ class RealAuditSpecialistAgent:
                         if isinstance(node, ast.FunctionDef):
                             total_functions += 1
                             
-                            # Complexité cyclomatique simple
+                            # Complexit cyclomatique simple
                             complexity = self._calculate_complexity(node)
                             if complexity > 10:
                                 complex_functions += 1
@@ -192,10 +192,10 @@ class RealAuditSpecialistAgent:
                                 documented_functions += 1
                             else:
                                 quality_metrics["documentation"]["missing"].append(
-                                    f"Fonction {node.name} non documentée dans {py_file.name}"
+                                    f"Fonction {node.name} non documente dans {py_file.name}"
                                 )
                                 
-                    # Analyse maintenabilité
+                    # Analyse maintenabilit
                     file_lines = len(lines)
                     if file_lines > 300:
                         quality_metrics["maintainability"]["issues"].append(
@@ -203,7 +203,7 @@ class RealAuditSpecialistAgent:
                         )
                         quality_metrics["maintainability"]["score"] -= 10
                         
-                    # Analyse lisibilité
+                    # Analyse lisibilit
                     long_lines = [i for i, line in enumerate(lines) if len(line) > 120]
                     if long_lines:
                         quality_metrics["readability"]["violations"].extend([
@@ -212,9 +212,9 @@ class RealAuditSpecialistAgent:
                         quality_metrics["readability"]["score"] -= len(long_lines) * 2
                         
                 except Exception as e:
-                    self.logger.warning(f"Erreur qualité {py_file}: {e}")
+                    self.logger.warning(f"Erreur qualit {py_file}: {e}")
                     
-        # Calcul métriques finales
+        # Calcul mtriques finales
         quality_metrics["maintainability"]["metrics"] = {
             "total_lines": total_lines,
             "avg_lines_per_file": total_lines / quality_metrics["complexity"]["files_analyzed"] if quality_metrics["complexity"]["files_analyzed"] > 0 else 0,
@@ -242,12 +242,12 @@ class RealAuditSpecialistAgent:
             quality_metrics[metric]["score"] = min(quality_metrics[metric]["score"], 100)
             
         self.audit_results["code_quality"] = quality_metrics
-        self.logger.info(f"✅ Audit qualité: {total_functions} fonctions, {documented_functions} documentées")
+        self.logger.info(f"[CHECK] Audit qualit: {total_functions} fonctions, {documented_functions} documentes")
         
         return quality_metrics
         
     def _calculate_complexity(self, node: ast.FunctionDef) -> int:
-        """Calcul complexité cyclomatique simple"""
+        """Calcul complexit cyclomatique simple"""
         complexity = 1  # Base complexity
         
         for child in ast.walk(node):
@@ -261,8 +261,8 @@ class RealAuditSpecialistAgent:
         return complexity
         
     def audit_security(self) -> Dict[str, Any]:
-        """🎯 Audit sécurité réel"""
-        self.logger.info("🔒 Audit sécurité")
+        """[TARGET] Audit scurit rel"""
+        self.logger.info(" Audit scurit")
         
         security_audit = {
             "vulnerabilities": [],
@@ -281,7 +281,7 @@ class RealAuditSpecialistAgent:
                         
                     file_rel_path = str(py_file.relative_to(self.architecture_path))
                     
-                    # Détection vulnérabilités communes
+                    # Dtection vulnrabilits communes
                     
                     # SQL Injection
                     if re.search(r'execute\s*\(\s*["\'].*%.*["\']', content):
@@ -372,7 +372,7 @@ class RealAuditSpecialistAgent:
                         security_audit["best_practices"]["score"] -= 2
                         
                 except Exception as e:
-                    self.logger.warning(f"Erreur sécurité {py_file}: {e}")
+                    self.logger.warning(f"Erreur scurit {py_file}: {e}")
                     
         # Normalisation scores
         for metric in ["authentication", "authorization", "input_validation"]:
@@ -382,13 +382,13 @@ class RealAuditSpecialistAgent:
         security_audit["best_practices"]["score"] = max(security_audit["best_practices"]["score"], 0)
         
         self.audit_results["security_analysis"] = security_audit
-        self.logger.info(f"✅ Audit sécurité: {len(security_audit['vulnerabilities'])} vulnérabilités détectées")
+        self.logger.info(f"[CHECK] Audit scurit: {len(security_audit['vulnerabilities'])} vulnrabilits dtectes")
         
         return security_audit
         
     def audit_performance(self) -> List[Dict[str, Any]]:
-        """🎯 Audit performance réel"""
-        self.logger.info("⚡ Audit performance")
+        """[TARGET] Audit performance rel"""
+        self.logger.info("[LIGHTNING] Audit performance")
         
         performance_issues = []
         
@@ -400,7 +400,7 @@ class RealAuditSpecialistAgent:
                         
                     file_rel_path = str(py_file.relative_to(self.architecture_path))
                     
-                    # Détection anti-patterns performance
+                    # Dtection anti-patterns performance
                     
                     # Synchronous calls in async context
                     if "async def" in content and "requests.get" in content:
@@ -446,13 +446,13 @@ class RealAuditSpecialistAgent:
                     self.logger.warning(f"Erreur performance {py_file}: {e}")
                     
         self.audit_results["performance_issues"] = performance_issues
-        self.logger.info(f"✅ Audit performance: {len(performance_issues)} issues détectées")
+        self.logger.info(f"[CHECK] Audit performance: {len(performance_issues)} issues dtectes")
         
         return performance_issues
         
     def audit_best_practices(self) -> Dict[str, Any]:
-        """🎯 Audit bonnes pratiques réel"""
-        self.logger.info("✨ Audit bonnes pratiques")
+        """[TARGET] Audit bonnes pratiques rel"""
+        self.logger.info(" Audit bonnes pratiques")
         
         best_practices = {
             "code_style": {"score": 100, "violations": []},
@@ -545,13 +545,13 @@ class RealAuditSpecialistAgent:
         best_practices["code_style"]["score"] = max(best_practices["code_style"]["score"], 0)
         
         self.audit_results["best_practices"] = best_practices
-        self.logger.info(f"✅ Audit best practices: {typed_functions}/{total_functions} fonctions typées")
+        self.logger.info(f"[CHECK] Audit best practices: {typed_functions}/{total_functions} fonctions types")
         
         return best_practices
         
     def generate_recommendations(self) -> List[Dict[str, Any]]:
-        """🎯 Génération recommandations basées sur audit"""
-        self.logger.info("💡 Génération recommandations")
+        """[TARGET] Gnration recommandations bases sur audit"""
+        self.logger.info("[BULB] Gnration recommandations")
         
         recommendations = []
         
@@ -561,10 +561,10 @@ class RealAuditSpecialistAgent:
             recommendations.append({
                 "category": "Architecture",
                 "priority": "HIGH",
-                "title": "Améliorer séparation couches hexagonales",
-                "description": "L'architecture hexagonale n'est pas complètement implémentée",
-                "action": "Séparer davantage les couches: routers, services, repositories, schemas",
-                "impact": "Maintenabilité, testabilité"
+                "title": "Amliorer sparation couches hexagonales",
+                "description": "L'architecture hexagonale n'est pas compltement implmente",
+                "action": "Sparer davantage les couches: routers, services, repositories, schemas",
+                "impact": "Maintenabilit, testabilit"
             })
             
         if arch_patterns["dependency_injection"]["score"] < 60:
@@ -572,21 +572,21 @@ class RealAuditSpecialistAgent:
                 "category": "Architecture",
                 "priority": "MEDIUM",
                 "title": "Renforcer Dependency Injection",
-                "description": "DI insuffisante détectée, couplage fort possible",
-                "action": "Utiliser davantage Depends() et créer un container DI",
-                "impact": "Découplage, tests"
+                "description": "DI insuffisante dtecte, couplage fort possible",
+                "action": "Utiliser davantage Depends() et crer un container DI",
+                "impact": "Dcouplage, tests"
             })
             
-        # Recommandations qualité
+        # Recommandations qualit
         quality = self.audit_results["code_quality"]
         if quality["documentation"]["coverage"] < 70:
             recommendations.append({
                 "category": "Quality",
                 "priority": "MEDIUM",
-                "title": "Améliorer documentation code",
+                "title": "Amliorer documentation code",
                 "description": f"Couverture documentation: {quality['documentation']['coverage']}%",
                 "action": "Ajouter docstrings aux fonctions manquantes",
-                "impact": "Maintenabilité, onboarding"
+                "impact": "Maintenabilit, onboarding"
             })
             
         if quality["testing"]["coverage"] < 50:
@@ -595,20 +595,20 @@ class RealAuditSpecialistAgent:
                 "priority": "HIGH",
                 "title": "Augmenter couverture tests",
                 "description": f"Ratio tests/code: {quality['testing']['coverage']}%",
-                "action": "Créer tests unitaires et d'intégration manquants",
-                "impact": "Fiabilité, régression"
+                "action": "Crer tests unitaires et d'intgration manquants",
+                "impact": "Fiabilit, rgression"
             })
             
-        # Recommandations sécurité
+        # Recommandations scurit
         security = self.audit_results["security_analysis"]
         if len(security["vulnerabilities"]) > 0:
             recommendations.append({
                 "category": "Security",
                 "priority": "CRITICAL",
-                "title": "Corriger vulnérabilités détectées",
-                "description": f"{len(security['vulnerabilities'])} vulnérabilités trouvées",
-                "action": "Traiter chaque vulnérabilité selon sa sévérité",
-                "impact": "Sécurité application"
+                "title": "Corriger vulnrabilits dtectes",
+                "description": f"{len(security['vulnerabilities'])} vulnrabilits trouves",
+                "action": "Traiter chaque vulnrabilit selon sa svrit",
+                "impact": "Scurit application"
             })
             
         if security["authentication"]["score"] < 50:
@@ -616,9 +616,9 @@ class RealAuditSpecialistAgent:
                 "category": "Security",
                 "priority": "HIGH",
                 "title": "Renforcer authentification",
-                "description": "Mécanismes d'authentification insuffisants",
-                "action": "Implémenter JWT, OAuth2 ou système auth robuste",
-                "impact": "Sécurité accès"
+                "description": "Mcanismes d'authentification insuffisants",
+                "action": "Implmenter JWT, OAuth2 ou systme auth robuste",
+                "impact": "Scurit accs"
             })
             
         # Recommandations performance
@@ -629,20 +629,20 @@ class RealAuditSpecialistAgent:
                 recommendations.append({
                     "category": "Performance",
                     "priority": "HIGH",
-                    "title": "Résoudre problèmes performance critiques",
-                    "description": f"{len(high_perf_issues)} issues performance haute sévérité",
-                    "action": "Traiter en priorité les blocking I/O et N+1 queries",
+                    "title": "Rsoudre problmes performance critiques",
+                    "description": f"{len(high_perf_issues)} issues performance haute svrit",
+                    "action": "Traiter en priorit les blocking I/O et N+1 queries",
                     "impact": "Performance application"
                 })
                 
         self.audit_results["recommendations"] = recommendations
-        self.logger.info(f"✅ {len(recommendations)} recommandations générées")
+        self.logger.info(f"[CHECK] {len(recommendations)} recommandations gnres")
         
         return recommendations
         
     def calculate_overall_score(self) -> float:
-        """🎯 Calcul score global audit"""
-        self.logger.info("📊 Calcul score global")
+        """[TARGET] Calcul score global audit"""
+        self.logger.info("[CHART] Calcul score global")
         
         scores = []
         weights = {}
@@ -676,9 +676,9 @@ class RealAuditSpecialistAgent:
         ]
         security_avg = sum(security_scores) / len(security_scores)
         
-        # Pénalité vulnérabilités
+        # Pnalit vulnrabilits
         vuln_count = len(self.audit_results["security_analysis"]["vulnerabilities"])
-        security_penalty = min(vuln_count * 10, 50)  # Max 50 points de pénalité
+        security_penalty = min(vuln_count * 10, 50)  # Max 50 points de pnalit
         security_final = max(security_avg - security_penalty, 0)
         
         scores.append(security_final)
@@ -690,23 +690,23 @@ class RealAuditSpecialistAgent:
         scores.append(bp_avg)
         weights["best_practices"] = 0.20
         
-        # Calcul score pondéré
+        # Calcul score pondr
         weighted_score = sum(score * weight for score, weight in zip(scores, weights.values()))
         
-        # Pénalité performance issues critiques
+        # Pnalit performance issues critiques
         critical_perf = len([issue for issue in self.audit_results["performance_issues"] 
                            if issue["severity"] == "HIGH"])
-        perf_penalty = min(critical_perf * 5, 20)  # Max 20 points de pénalité
+        perf_penalty = min(critical_perf * 5, 20)  # Max 20 points de pnalit
         
         final_score = max(weighted_score - perf_penalty, 0)
         
-        self.logger.info(f"📊 Score global calculé: {final_score:.1f}%")
+        self.logger.info(f"[CHART] Score global calcul: {final_score:.1f}%")
         
         return round(final_score, 1)
         
     def generate_audit_report(self) -> Dict[str, Any]:
-        """🎯 Génération rapport audit complet"""
-        time.sleep(4.5)  # Simulation audit approfondi réaliste
+        """[TARGET] Gnration rapport audit complet"""
+        time.sleep(4.5)  # Simulation audit approfondi raliste
         duration = (datetime.now() - self.start_time).total_seconds()
         
         overall_score = self.calculate_overall_score()
@@ -743,7 +743,7 @@ class RealAuditSpecialistAgent:
         return report
         
     def _determine_certification(self, score: float) -> Dict[str, str]:
-        """Détermine certification selon score"""
+        """Dtermine certification selon score"""
         if score >= 95:
             return {"level": "EXCELLENCE", "grade": "A+", "status": "Production Ready"}
         elif score >= 90:
@@ -758,17 +758,17 @@ class RealAuditSpecialistAgent:
             return {"level": "POOR", "grade": "D", "status": "Major Refactoring Required"}
             
     def execute_mission(self) -> Dict[str, Any]:
-        """🎯 Exécution mission complète Agent 15 Real"""
-        self.logger.info(f"🚀 {self.name} - Démarrage audit réel complet")
+        """[TARGET] Excution mission complte Agent 15 Real"""
+        self.logger.info(f"[ROCKET] {self.name} - Dmarrage audit rel complet")
         
         try:
             # 1. Audit patterns architecturaux
             patterns_audit = self.audit_architecture_patterns()
             
-            # 2. Audit qualité code
+            # 2. Audit qualit code
             quality_audit = self.audit_code_quality()
             
-            # 3. Audit sécurité
+            # 3. Audit scurit
             security_audit = self.audit_security()
             
             # 4. Audit performance
@@ -777,13 +777,13 @@ class RealAuditSpecialistAgent:
             # 5. Audit bonnes pratiques
             best_practices_audit = self.audit_best_practices()
             
-            # 6. Génération recommandations
+            # 6. Gnration recommandations
             recommendations = self.generate_recommendations()
             
             # 7. Rapport final
             report = self.generate_audit_report()
             
-            self.logger.info("✅ Mission Agent 15 Real terminée avec succès")
+            self.logger.info("[CHECK] Mission Agent 15 Real termine avec succs")
             
             return {
                 "status": "SUCCESS",
@@ -795,11 +795,11 @@ class RealAuditSpecialistAgent:
                 "vulnerabilities": len(security_audit["vulnerabilities"]),
                 "recommendations": len(recommendations),
                 "real_audit_completed": True,
-                "message": f"🔍 Audit réel terminé - Score: {report['overall_score']}% ✅"
+                "message": f"[SEARCH] Audit rel termin - Score: {report['overall_score']}% [CHECK]"
             }
             
         except Exception as e:
-            self.logger.error(f"❌ Erreur mission Agent 15: {e}")
+            self.logger.error(f"[CROSS] Erreur mission Agent 15: {e}")
             return {
                 "status": "ERROR",
                 "error": str(e)
@@ -809,14 +809,14 @@ if __name__ == "__main__":
     agent = RealAuditSpecialistAgent()
     result = agent.execute_mission()
     
-    print(f"\n🎯 {agent.name}")
+    print(f"\n[TARGET] {agent.name}")
     print(f"Status: {result['status']}")
     if result['status'] == 'SUCCESS':
-        print(f"📊 Fichiers audités: {result['files_audited']}")
-        print(f"🏆 Score global: {result['overall_score']}%")
-        print(f"🎖️ Certification: {result['certification']['level']}")
-        print(f"🔒 Vulnérabilités: {result['vulnerabilities']}")
-        print(f"💡 Recommandations: {result['recommendations']}")
-        print(f"✅ {result['message']}")
+        print(f"[CHART] Fichiers audits: {result['files_audited']}")
+        print(f" Score global: {result['overall_score']}%")
+        print(f" Certification: {result['certification']['level']}")
+        print(f" Vulnrabilits: {result['vulnerabilities']}")
+        print(f"[BULB] Recommandations: {result['recommendations']}")
+        print(f"[CHECK] {result['message']}")
     else:
-        print(f"❌ Erreur: {result['error']}") 
+        print(f"[CROSS] Erreur: {result['error']}") 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Script de démarrage simple pour l'orchestrateur (mode développement)
+Script de dmarrage simple pour l'orchestrateur (mode dveloppement)
 Alternative au Docker Compose pour tests rapides
 """
 
@@ -16,35 +16,35 @@ ORCHESTRATOR_PORT = 8003
 ORCHESTRATOR_DIR = Path(__file__).parent / "orchestrator"
 
 def check_dependencies():
-    """Vérifier que les dépendances sont installées"""
+    """Vrifier que les dpendances sont installes"""
     try:
         import fastapi
         import uvicorn
         import langchain
-        print("✅ Dépendances FastAPI installées")
+        print("[CHECK] Dpendances FastAPI installes")
         return True
     except ImportError as e:
-        print(f"❌ Dépendances manquantes: {e}")
+        print(f"[CROSS] Dpendances manquantes: {e}")
         return False
 
 def start_orchestrator():
-    """Démarrer l'orchestrateur en mode développement"""
-    print("🚀 Démarrage de l'orchestrateur...")
-    print(f"📍 Port: {ORCHESTRATOR_PORT}")
-    print(f"📁 Répertoire: {ORCHESTRATOR_DIR}")
-    print("⏹️  Utilisez Ctrl+C pour arrêter")
+    """Dmarrer l'orchestrateur en mode dveloppement"""
+    print("[ROCKET] Dmarrage de l'orchestrateur...")
+    print(f" Port: {ORCHESTRATOR_PORT}")
+    print(f"[FOLDER] Rpertoire: {ORCHESTRATOR_DIR}")
+    print("  Utilisez Ctrl+C pour arrter")
     print("-" * 50)
     
     try:
-        # Changer vers le répertoire orchestrator
+        # Changer vers le rpertoire orchestrator
         os.chdir(ORCHESTRATOR_DIR)
         
-        # Configurer PYTHONPATH pour inclure le répertoire parent
+        # Configurer PYTHONPATH pour inclure le rpertoire parent
         env = os.environ.copy()
         project_root = str(Path(__file__).parent)
         env['PYTHONPATH'] = project_root + os.pathsep + env.get('PYTHONPATH', '')
         
-        # Démarrer uvicorn
+        # Dmarrer uvicorn
         cmd = [
             sys.executable, "-m", "uvicorn", 
             "app.main:app",
@@ -55,42 +55,42 @@ def start_orchestrator():
         ]        
         process = subprocess.Popen(cmd, env=env)
         
-        # Attendre et gérer l'arrêt
+        # Attendre et grer l'arrt
         try:
             process.wait()
         except KeyboardInterrupt:
-            print("\n⏹️  Arrêt de l'orchestrateur...")
+            print("\n  Arrt de l'orchestrateur...")
             process.terminate()
             process.wait()
-            print("✅ Orchestrateur arrêté")
+            print("[CHECK] Orchestrateur arrt")
             
     except Exception as e:
-        print(f"❌ Erreur lors du démarrage: {e}")
+        print(f"[CROSS] Erreur lors du dmarrage: {e}")
         return False
     
     return True
 
 def main():
     """Fonction principale"""
-    print("🎛️  DÉMARRAGE ORCHESTRATEUR - MODE DÉVELOPPEMENT")
+    print("  DMARRAGE ORCHESTRATEUR - MODE DVELOPPEMENT")
     print("=" * 60)
     
-    # Vérifier les dépendances
+    # Vrifier les dpendances
     if not check_dependencies():
-        print("\n💡 Installez les dépendances avec:")
+        print("\n[BULB] Installez les dpendances avec:")
         print("   cd orchestrator && pip install -r requirements.txt")
         return False
     
-    # Vérifier le fichier .env
+    # Vrifier le fichier .env
     env_file = Path(".env")
     if not env_file.exists():
-        print("❌ Fichier .env manquant")
-        print("💡 Copiez env.example vers .env et configurez vos clés API")
+        print("[CROSS] Fichier .env manquant")
+        print("[BULB] Copiez env.example vers .env et configurez vos cls API")
         return False
     
-    print("✅ Configuration trouvée")
+    print("[CHECK] Configuration trouve")
     
-    # Démarrer l'orchestrateur
+    # Dmarrer l'orchestrateur
     return start_orchestrator()
 
 if __name__ == "__main__":
@@ -98,8 +98,8 @@ if __name__ == "__main__":
         success = main()
         sys.exit(0 if success else 1)
     except KeyboardInterrupt:
-        print("\n\n⏹️  Arrêt demandé par l'utilisateur")
+        print("\n\n  Arrt demand par l'utilisateur")
         sys.exit(0)
     except Exception as e:
-        print(f"\n❌ Erreur inattendue: {e}")
+        print(f"\n[CROSS] Erreur inattendue: {e}")
         sys.exit(1)

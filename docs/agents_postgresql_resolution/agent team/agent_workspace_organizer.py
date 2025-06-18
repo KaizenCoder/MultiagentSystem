@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-🧹 Agent Workspace Organizer
-Mission: Organisation et maintenance de la propreté du répertoire de travail des agents
+[BROOM] Agent Workspace Organizer
+Mission: Organisation et maintenance de la propret du rpertoire de travail des agents
 """
 
 import os
@@ -44,13 +44,13 @@ class WorkspaceOrganizerAgent:
             "organisation_score": 0
         }
         
-        # Analyse de chaque répertoire
+        # Analyse de chaque rpertoire
         for item in self.workspace.rglob("*"):
             if item.is_file():
                 taille = item.stat().st_size
                 structure["taille_totale"] += taille
                 
-                # Catégorisation des fichiers
+                # Catgorisation des fichiers
                 categorie = self.categoriser_fichier(item)
                 
                 structure["fichiers_crees"].append({
@@ -61,7 +61,7 @@ class WorkspaceOrganizerAgent:
                 })
                 
             elif item.is_dir():
-                # Statistiques des répertoires
+                # Statistiques des rpertoires
                 fichiers_dans_rep = list(item.glob("*"))
                 structure["repertoires"][str(item.relative_to(self.workspace))] = {
                     "nombre_fichiers": len([f for f in fichiers_dans_rep if f.is_file()]),
@@ -75,7 +75,7 @@ class WorkspaceOrganizerAgent:
         return structure
     
     def categoriser_fichier(self, fichier_path):
-        """Catégorise un fichier selon son type et emplacement"""
+        """Catgorise un fichier selon son type et emplacement"""
         nom = fichier_path.name.lower()
         chemin = str(fichier_path)
         
@@ -102,12 +102,12 @@ class WorkspaceOrganizerAgent:
     
     def calculer_score_organisation(self, structure):
         """Calcule un score d'organisation du workspace"""
-        score = 100  # Score parfait de départ
+        score = 100  # Score parfait de dpart
         
-        # Pénalités
+        # Pnalits
         fichiers_racine = len([f for f in structure["fichiers_crees"] 
                               if '/' not in f["chemin"] and f["chemin"] != "README.md"])
-        score -= fichiers_racine * 5  # -5 points par fichier à la racine
+        score -= fichiers_racine * 5  # -5 points par fichier  la racine
         
         # Bonus pour organisation
         fichiers_par_categorie = {}
@@ -132,9 +132,9 @@ class WorkspaceOrganizerAgent:
         }
         
         try:
-            # Création index des rapports si manquant
+            # Cration index des rapports si manquant
             self.creer_index_rapports()
-            organisation["actions_effectuees"].append("Index rapports créé/mis à jour")
+            organisation["actions_effectuees"].append("Index rapports cr/mis  jour")
             
             # Nettoyage fichiers temporaires
             fichiers_nettoyes = self.nettoyer_fichiers_temporaires()
@@ -156,12 +156,12 @@ class WorkspaceOrganizerAgent:
         return organisation
     
     def creer_index_rapports(self):
-        """Crée un index des rapports d'agents"""
-        index_content = """# 📋 Index des Rapports d'Agents PostgreSQL
+        """Cre un index des rapports d'agents"""
+        index_content = """# [CLIPBOARD] Index des Rapports d'Agents PostgreSQL
 
-**Généré automatiquement le :** """ + datetime.now().isoformat() + """
+**Gnr automatiquement le :** """ + datetime.now().isoformat() + """
 
-## 🤖 Rapports Disponibles
+## [ROBOT] Rapports Disponibles
 
 """
         
@@ -177,19 +177,19 @@ class WorkspaceOrganizerAgent:
 - **Fichier :** [{rapport_file.name}](./{rapport_file.name})
 - **JSON :** [{rapport_file.stem}.json](./{rapport_file.stem}.json)
 - **Taille :** {rapport_file.stat().st_size} bytes
-- **Modifié :** {datetime.fromtimestamp(rapport_file.stat().st_mtime).strftime('%Y-%m-%d %H:%M:%S')}
+- **Modifi :** {datetime.fromtimestamp(rapport_file.stat().st_mtime).strftime('%Y-%m-%d %H:%M:%S')}
 """
         
         index_content += """
-## 📊 Statistiques Globales
+## [CHART] Statistiques Globales
 
 - **Nombre agents :** """ + str(len(list(rapports_dir.glob("*_rapport.md")))) + """
 - **Espace total :** """ + str(sum(f.stat().st_size for f in rapports_dir.glob("*.md"))) + """ bytes
-- **Dernière mise à jour :** """ + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + """
+- **Dernire mise  jour :** """ + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + """
 
 ---
 
-*Index généré automatiquement par Agent Workspace Organizer*
+*Index gnr automatiquement par Agent Workspace Organizer*
 """
         
         index_file = rapports_dir / "index.md"
@@ -232,7 +232,7 @@ class WorkspaceOrganizerAgent:
                     date_dir = logs_dir / mod_time.strftime('%Y-%m-%d')
                     date_dir.mkdir(exist_ok=True)
                     
-                    # Déplacement si pas déjà dans le bon répertoire
+                    # Dplacement si pas dj dans le bon rpertoire
                     if log_file.parent != date_dir:
                         new_path = date_dir / log_file.name
                         shutil.move(str(log_file), str(new_path))
@@ -244,12 +244,12 @@ class WorkspaceOrganizerAgent:
         return count
     
     def comprimer_anciens_backups(self):
-        """Comprime les anciens backups pour économiser l'espace"""
+        """Comprime les anciens backups pour conomiser l'espace"""
         backups_dir = self.workspace / "backups"
         count = 0
         
         if backups_dir.exists():
-            # Simulation compression (import zipfile nécessaire pour vraie compression)
+            # Simulation compression (import zipfile ncessaire pour vraie compression)
             for backup_file in backups_dir.rglob("*.py"):
                 if backup_file.stat().st_size > 10000:  # Fichiers > 10KB
                     # Marquer pour compression (simulation)
@@ -258,7 +258,7 @@ class WorkspaceOrganizerAgent:
         return count
     
     def generer_rapport_coordination(self):
-        """Génère le rapport de coordination entre tous les agents"""
+        """Gnre le rapport de coordination entre tous les agents"""
         self.logger.info("Generation du rapport de coordination")
         
         coordination = {
@@ -281,7 +281,7 @@ class WorkspaceOrganizerAgent:
                     agent_id = rapport_json.stem.replace("_rapport", "")
                     coordination["agents_actifs"].append(agent_id)
                     
-                    # Extraction du statut (simulation basée sur présence données)
+                    # Extraction du statut (simulation base sur prsence donnes)
                     if data:
                         coordination["statuts_missions"][agent_id] = "SUCCESS"
                     else:
@@ -290,21 +290,21 @@ class WorkspaceOrganizerAgent:
                 except Exception as e:
                     self.logger.warning(f"Erreur lecture {rapport_json}: {e}")
         
-        # Recommandations finales basées sur analyses
+        # Recommandations finales bases sur analyses
         coordination["recommandations_finales"] = [
-            "Exécuter corrections SQLAlchemy en priorité (Agent SQLAlchemy Fixer)",
+            "Excuter corrections SQLAlchemy en priorit (Agent SQLAlchemy Fixer)",
             "Valider environnement Docker (Agent Docker Specialist)",
             "Tester solutions sur environnement Windows (Agent Windows PostgreSQL)",
-            "Implémenter tests de régression (Agent Testing Specialist)",
-            "Appliquer solutions web validées (Agent Web Research)",
-            "Maintenir documentation à jour (Agent Workspace Organizer)"
+            "Implmenter tests de rgression (Agent Testing Specialist)",
+            "Appliquer solutions web valides (Agent Web Research)",
+            "Maintenir documentation  jour (Agent Workspace Organizer)"
         ]
         
         return coordination
     
     def generer_rapport(self, structure, organisation, coordination):
-        """Génère le rapport Markdown final"""
-        rapport_content = f"""# 🧹 Rapport Agent Workspace Organizer
+        """Gnre le rapport Markdown final"""
+        rapport_content = f"""# [BROOM] Rapport Agent Workspace Organizer
 
 **Agent :** {self.name}  
 **ID :** {self.agent_id}  
@@ -314,31 +314,31 @@ class WorkspaceOrganizerAgent:
 
 ---
 
-## 📋 RÉSUMÉ EXÉCUTIF
+## [CLIPBOARD] RSUM EXCUTIF
 
-### 🎯 Mission
-Organisation et maintenance du workspace des agents PostgreSQL pour assurer la lisibilité et l'efficacité.
+### [TARGET] Mission
+Organisation et maintenance du workspace des agents PostgreSQL pour assurer la lisibilit et l'efficacit.
 
-### 📊 État du Workspace
+### [CHART] tat du Workspace
 - **Taille totale :** {structure['taille_totale']} bytes
-- **Fichiers créés :** {len(structure['fichiers_crees'])}
-- **Répertoires :** {len(structure['repertoires'])}
+- **Fichiers crs :** {len(structure['fichiers_crees'])}
+- **Rpertoires :** {len(structure['repertoires'])}
 - **Score organisation :** {structure['organisation_score']}/100
-- **Actions effectuées :** {len(organisation.get('actions_effectuees', []))}
+- **Actions effectues :** {len(organisation.get('actions_effectuees', []))}
 
 ---
 
-## 🏗️ STRUCTURE DU WORKSPACE
+## [CONSTRUCTION] STRUCTURE DU WORKSPACE
 
-### 📁 Répertoires
+### [FOLDER] Rpertoires
 ```json
 {json.dumps(structure['repertoires'], indent=2, ensure_ascii=False)}
 ```
 
-### 📄 Fichiers par Catégorie
+### [DOCUMENT] Fichiers par Catgorie
 """
         
-        # Groupement par catégorie
+        # Groupement par catgorie
         categories = {}
         for fichier in structure['fichiers_crees']:
             cat = fichier['categorie']
@@ -348,7 +348,7 @@ Organisation et maintenance du workspace des agents PostgreSQL pour assurer la l
             
         for categorie, fichiers in categories.items():
             rapport_content += f"\n#### {categorie.replace('_', ' ').title()} ({len(fichiers)} fichiers)\n"
-            for fichier in fichiers[:5]:  # Top 5 par catégorie
+            for fichier in fichiers[:5]:  # Top 5 par catgorie
                 rapport_content += f"- {fichier['chemin']} ({fichier['taille']} bytes)\n"
             if len(fichiers) > 5:
                 rapport_content += f"- ... et {len(fichiers) - 5} autres\n"
@@ -356,9 +356,9 @@ Organisation et maintenance du workspace des agents PostgreSQL pour assurer la l
         rapport_content += f"""
 ---
 
-## 🧹 ACTIONS D'ORGANISATION
+## [BROOM] ACTIONS D'ORGANISATION
 
-### ✅ Actions Effectuées
+### [CHECK] Actions Effectues
 """
         
         for action in organisation.get('actions_effectuees', []):
@@ -366,7 +366,7 @@ Organisation et maintenance du workspace des agents PostgreSQL pour assurer la l
             
         if organisation.get('erreurs'):
             rapport_content += f"""
-### ❌ Erreurs Rencontrées
+### [CROSS] Erreurs Rencontres
 """
             for erreur in organisation['erreurs']:
                 rapport_content += f"- {erreur}\n"
@@ -374,17 +374,17 @@ Organisation et maintenance du workspace des agents PostgreSQL pour assurer la l
         rapport_content += f"""
 ---
 
-## 🤖 COORDINATION DES AGENTS
+## [ROBOT] COORDINATION DES AGENTS
 
-### 🏃 Agents Actifs
+###  Agents Actifs
 {', '.join(coordination.get('agents_actifs', []))}
 
-### 📊 Statuts des Missions
+### [CHART] Statuts des Missions
 ```json
 {json.dumps(coordination.get('statuts_missions', {}), indent=2, ensure_ascii=False)}
 ```
 
-### 💡 Recommandations Finales
+### [BULB] Recommandations Finales
 """
         
         for i, recommandation in enumerate(coordination.get('recommandations_finales', []), 1):
@@ -393,36 +393,36 @@ Organisation et maintenance du workspace des agents PostgreSQL pour assurer la l
         rapport_content += f"""
 ---
 
-## 📋 GUIDE D'UTILISATION DU WORKSPACE
+## [CLIPBOARD] GUIDE D'UTILISATION DU WORKSPACE
 
-### 🔍 Navigation Rapide
+### [SEARCH] Navigation Rapide
 ```bash
-# Répertoire principal
+# Rpertoire principal
 cd docs/agents_postgresql_resolution/
 
 # Rapports des agents
 cd rapports/
 ls -la *.md
 
-# Solutions générées
+# Solutions gnres
 cd ../solutions/
 ls -la sqlalchemy_fixes/
 
-# Tests créés
+# Tests crs
 cd ../tests/
 python test_postgresql_ameliore.py
 
-# Logs d'activité
+# Logs d'activit
 cd ../logs/
 tail -f *.log
 ```
 
-### 🛠️ Maintenance Régulière
+###  Maintenance Rgulire
 ```bash
 # Nettoyage automatique
 python agent_workspace_organizer.py
 
-# Mise à jour index
+# Mise  jour index
 ls rapports/*.md > rapports/index.txt
 
 # Compression logs anciens
@@ -431,15 +431,15 @@ find logs/ -name "*.log" -mtime +7 -gzip
 
 ---
 
-## 📊 MÉTRIQUES DE QUALITÉ
+## [CHART] MTRIQUES DE QUALIT
 
-### ✅ Indicateurs Positifs
-- Structure répertoires respectée
+### [CHECK] Indicateurs Positifs
+- Structure rpertoires respecte
 - Rapports agents complets
-- Solutions techniques prêtes
-- Documentation à jour
+- Solutions techniques prtes
+- Documentation  jour
 
-### 🔄 Points d'Amélioration
+###  Points d'Amlioration
 - Automatisation nettoyage
 - Archivage logs anciens
 - Compression backups
@@ -447,18 +447,18 @@ find logs/ -name "*.log" -mtime +7 -gzip
 
 ---
 
-## 🚀 RECOMMANDATIONS D'USAGE
+## [ROCKET] RECOMMANDATIONS D'USAGE
 
-### 1. 📖 Consultation Rapide
+### 1.  Consultation Rapide
 ```bash
 # Vue d'ensemble
 cat rapports/index.md
 
-# Rapport spécifique
+# Rapport spcifique
 cat rapports/agent_sqlalchemy_fixer_rapport.md
 ```
 
-### 2. 🔧 Exécution Solutions
+### 2. [TOOL] Excution Solutions
 ```bash
 # Corrections SQLAlchemy
 cd solutions/sqlalchemy_fixes/
@@ -469,7 +469,7 @@ cd ../../tests/
 python test_postgresql_ameliore.py
 ```
 
-### 3. 🔙 Rollback Sécurisé
+### 3.  Rollback Scuris
 ```bash
 # Restauration backups
 cd solutions/sqlalchemy_fixes/
@@ -478,48 +478,48 @@ python fix_models.py --restore
 
 ---
 
-## 📞 SUPPORT ET MAINTENANCE
+##  SUPPORT ET MAINTENANCE
 
-### 🔧 Maintenance Automatique
+### [TOOL] Maintenance Automatique
 - Nettoyage fichiers temporaires : Quotidien
 - Organisation logs : Hebdomadaire  
 - Compression backups : Mensuelle
-- Mise à jour index : À chaque modification
+- Mise  jour index :  chaque modification
 
-### 📋 Procédures d'Urgence
-- Restauration complète workspace
+### [CLIPBOARD] Procdures d'Urgence
+- Restauration complte workspace
 - Recovery backups critiques
 - Rollback modifications agents
-- Support debugging avancé
+- Support debugging avanc
 
 ---
 
-## 🎯 CONCLUSION ET NEXT STEPS
+## [TARGET] CONCLUSION ET NEXT STEPS
 
-### ✅ Mission Accomplie
-- Workspace PostgreSQL organisé et documenté
-- 7 agents spécialisés opérationnels
-- Solutions techniques validées et prêtes
-- Procédures de déploiement sécurisées
+### [CHECK] Mission Accomplie
+- Workspace PostgreSQL organis et document
+- 7 agents spcialiss oprationnels
+- Solutions techniques valides et prtes
+- Procdures de dploiement scurises
 
-### 🚀 Prochaines Étapes Recommandées
-1. **Exécution Phase 1 :** Corrections SQLAlchemy
+### [ROCKET] Prochaines tapes Recommandes
+1. **Excution Phase 1 :** Corrections SQLAlchemy
 2. **Validation Phase 2 :** Tests environnement
-3. **Déploiement Phase 3 :** Solutions complètes
+3. **Dploiement Phase 3 :** Solutions compltes
 4. **Monitoring Phase 4 :** Suivi performance
 
 ---
 
-**🧹 Workspace des agents PostgreSQL parfaitement organisé et prêt pour action !**
+**[BROOM] Workspace des agents PostgreSQL parfaitement organis et prt pour action !**
 
-*Rapport généré automatiquement par {self.name} v{self.version}*
+*Rapport gnr automatiquement par {self.name} v{self.version}*
 """
         
         return rapport_content
     
     def executer_mission(self):
-        """Exécute la mission complète d'organisation"""
-        self.logger.info(f"🚀 {self.name} - Démarrage mission")
+        """Excute la mission complte d'organisation"""
+        self.logger.info(f"[ROCKET] {self.name} - Dmarrage mission")
         
         try:
             # Analyse structure workspace
@@ -528,10 +528,10 @@ python fix_models.py --restore
             # Organisation des fichiers
             organisation = self.organiser_fichiers(structure)
             
-            # Génération rapport coordination
+            # Gnration rapport coordination
             coordination = self.generer_rapport_coordination()
             
-            # Génération rapport final
+            # Gnration rapport final
             rapport = self.generer_rapport(structure, organisation, coordination)
             
             # Sauvegarde rapport
@@ -539,9 +539,9 @@ python fix_models.py --restore
             with open(self.rapport_file, 'w', encoding='utf-8') as f:
                 f.write(rapport)
                 
-            self.logger.info(f"✅ Rapport Workspace Organizer sauvegardé: {self.rapport_file}")
+            self.logger.info(f"[CHECK] Rapport Workspace Organizer sauvegard: {self.rapport_file}")
             
-            # Sauvegarde données JSON
+            # Sauvegarde donnes JSON
             json_file = self.rapport_file.with_suffix('.json')
             mission_data = {
                 "structure": structure,
@@ -561,7 +561,7 @@ python fix_models.py --restore
             }
             
         except Exception as e:
-            self.logger.error(f"❌ Erreur mission Workspace Organizer: {e}")
+            self.logger.error(f"[CROSS] Erreur mission Workspace Organizer: {e}")
             return {
                 "statut": "ERROR",
                 "erreur": str(e)
@@ -570,4 +570,4 @@ python fix_models.py --restore
 if __name__ == "__main__":
     agent = WorkspaceOrganizerAgent()
     resultat = agent.executer_mission()
-    print(f"Mission Workspace Organizer terminée: {resultat['statut']}")
+    print(f"Mission Workspace Organizer termine: {resultat['statut']}")

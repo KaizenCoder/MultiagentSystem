@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Système d'Agents Parallèles pour Validation du Plan de Travail
-Orchestrateur NextGeneration - Validation des Prochaines Étapes
+Systme d'Agents Parallles pour Validation du Plan de Travail
+Orchestrateur NextGeneration - Validation des Prochaines tapes
 """
 
 import asyncio
@@ -15,7 +15,7 @@ from dataclasses import dataclass, asdict
 
 @dataclass
 class RapportAgent:
-    """Structure standardisée pour les rapports d'agents."""
+    """Structure standardise pour les rapports d'agents."""
     agent_nom: str
     mission: str
     statut: str  # SUCCESS, FAILURE, WARNING
@@ -27,15 +27,15 @@ class RapportAgent:
     timestamp: str
 
 class AgentTesteur:
-    """Agent spécialisé dans les tests de validation."""
+    """Agent spcialis dans les tests de validation."""
     
     def __init__(self):
         self.nom = "Agent Testeur"
-        self.mission = "Exécuter test_gemini_key_validation_windows.py et analyser les résultats"
+        self.mission = "Excuter test_gemini_key_validation_windows.py et analyser les rsultats"
     
     async def executer_mission(self) -> RapportAgent:
-        """Exécute la mission de test et génère un rapport."""
-        print(f"🤖 {self.nom} : Démarrage de la mission...")
+        """Excute la mission de test et gnre un rapport."""
+        print(f"[ROBOT] {self.nom} : Dmarrage de la mission...")
         debut = time.time()
         
         resultats = {}
@@ -44,8 +44,8 @@ class AgentTesteur:
         prochaines_actions = []
         
         try:
-            # Exécution du test de validation Gemini (version Windows)
-            print(f"   📋 Exécution de test_gemini_key_validation_windows.py...")
+            # Excution du test de validation Gemini (version Windows)
+            print(f"   [CLIPBOARD] Excution de test_gemini_key_validation_windows.py...")
             result = subprocess.run(
                 ["python", "test_gemini_key_validation_windows.py"],
                 capture_output=True,
@@ -57,26 +57,26 @@ class AgentTesteur:
             resultats["stdout"] = result.stdout
             resultats["stderr"] = result.stderr
             
-            # Analyse des résultats
+            # Analyse des rsultats
             if result.returncode == 0:
                 statut = "SUCCESS"
-                if "✅ Au moins une clé Gemini fonctionne!" in result.stdout:
+                if "[CHECK] Au moins une cl Gemini fonctionne!" in result.stdout:
                     resultats["gemini_fonctionnel"] = True
-                    if "38 modèles Gemini disponibles" in result.stdout:
+                    if "38 modles Gemini disponibles" in result.stdout:
                         resultats["modeles_disponibles"] = 38
-                        recommandations.append("Excellent ! 38 modèles Gemini détectés")
-                    prochaines_actions.append("Procéder à l'intégration dans l'orchestrateur")
+                        recommandations.append("Excellent ! 38 modles Gemini dtects")
+                    prochaines_actions.append("Procder  l'intgration dans l'orchestrateur")
                 else:
-                    problemes.append("Clé Gemini non fonctionnelle")
-                    prochaines_actions.append("Vérifier la configuration de GEMINI_API_KEY")
+                    problemes.append("Cl Gemini non fonctionnelle")
+                    prochaines_actions.append("Vrifier la configuration de GEMINI_API_KEY")
             else:
                 statut = "FAILURE"
-                problemes.append(f"Test échoué avec code {result.returncode}")
+                problemes.append(f"Test chou avec code {result.returncode}")
                 if result.stderr:
                     problemes.append(f"Erreur: {result.stderr}")
                 prochaines_actions.append("Corriger les erreurs de configuration")
             
-            # Vérification de la présence des fichiers
+            # Vrification de la prsence des fichiers
             if os.path.exists("test_gemini_key_validation_windows.py"):
                 resultats["script_present"] = True
             else:
@@ -85,13 +85,13 @@ class AgentTesteur:
         
         except subprocess.TimeoutExpired:
             statut = "FAILURE"
-            problemes.append("Timeout lors de l'exécution du test")
-            prochaines_actions.append("Vérifier la connectivité réseau")
+            problemes.append("Timeout lors de l'excution du test")
+            prochaines_actions.append("Vrifier la connectivit rseau")
         
         except Exception as e:
             statut = "FAILURE"
             problemes.append(f"Erreur inattendue: {str(e)}")
-            prochaines_actions.append("Déboguer l'environnement d'exécution")
+            prochaines_actions.append("Dboguer l'environnement d'excution")
         
         temps_execution = time.time() - debut
         
@@ -108,15 +108,15 @@ class AgentTesteur:
         )
 
 class AgentDocumentaliste:
-    """Agent spécialisé dans l'analyse de documentation."""
+    """Agent spcialis dans l'analyse de documentation."""
     
     def __init__(self):
         self.nom = "Agent Documentaliste"
-        self.mission = "Analyser GUIDE_FOURNISSEURS_MODELES_ORCHESTRATEUR.md et vérifier sa complétude"
+        self.mission = "Analyser GUIDE_FOURNISSEURS_MODELES_ORCHESTRATEUR.md et vrifier sa compltude"
     
     async def executer_mission(self) -> RapportAgent:
-        """Analyse la documentation et génère un rapport."""
-        print(f"🤖 {self.nom} : Démarrage de la mission...")
+        """Analyse la documentation et gnre un rapport."""
+        print(f"[ROBOT] {self.nom} : Dmarrage de la mission...")
         debut = time.time()
         
         resultats = {}
@@ -130,7 +130,7 @@ class AgentDocumentaliste:
             if not os.path.exists(fichier_guide):
                 statut = "FAILURE"
                 problemes.append(f"Fichier {fichier_guide} introuvable")
-                prochaines_actions.append("Créer la documentation manquante")
+                prochaines_actions.append("Crer la documentation manquante")
             else:
                 # Lecture et analyse du contenu
                 with open(fichier_guide, 'r', encoding='utf-8') as f:
@@ -139,7 +139,7 @@ class AgentDocumentaliste:
                 resultats["taille_fichier"] = len(contenu)
                 resultats["nombre_lignes"] = len(contenu.split('\n'))
                 
-                # Vérification des sections essentielles
+                # Vrification des sections essentielles
                 sections_requises = [
                     "OpenAI",
                     "Anthropic",
@@ -163,7 +163,7 @@ class AgentDocumentaliste:
                 resultats["sections_manquantes"] = sections_manquantes
                 resultats["completude"] = len(sections_trouvees) / len(sections_requises) * 100
                 
-                # Vérification des fournisseurs documentés
+                # Vrification des fournisseurs documents
                 fournisseurs = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GOOGLE_API_KEY", "GEMINI_API_KEY", "OLLAMA"]
                 fournisseurs_documentes = []
                 
@@ -174,33 +174,33 @@ class AgentDocumentaliste:
                 resultats["fournisseurs_documentes"] = fournisseurs_documentes
                 resultats["nombre_fournisseurs"] = len(fournisseurs_documentes)
                 
-                # Évaluation du statut
+                # valuation du statut
                 if resultats["completude"] >= 90:
                     statut = "SUCCESS"
-                    recommandations.append("Documentation excellente et complète")
-                    prochaines_actions.append("Documentation prête pour utilisation")
+                    recommandations.append("Documentation excellente et complte")
+                    prochaines_actions.append("Documentation prte pour utilisation")
                 elif resultats["completude"] >= 70:
                     statut = "WARNING"
-                    problemes.append(f"Documentation incomplète ({resultats['completude']:.1f}%)")
-                    prochaines_actions.append("Compléter les sections manquantes")
+                    problemes.append(f"Documentation incomplte ({resultats['completude']:.1f}%)")
+                    prochaines_actions.append("Complter les sections manquantes")
                 else:
                     statut = "FAILURE"
                     problemes.append("Documentation insuffisante")
-                    prochaines_actions.append("Réécrire la documentation")
+                    prochaines_actions.append("Rcrire la documentation")
                 
                 if sections_manquantes:
                     problemes.append(f"Sections manquantes: {', '.join(sections_manquantes)}")
                 
-                # Recommandations spécifiques
+                # Recommandations spcifiques
                 if "GEMINI_API_KEY" in fournisseurs_documentes:
-                    recommandations.append("Support Gemini correctement documenté")
+                    recommandations.append("Support Gemini correctement document")
                 else:
-                    problemes.append("Documentation Gemini incomplète")
+                    problemes.append("Documentation Gemini incomplte")
         
         except Exception as e:
             statut = "FAILURE"
             problemes.append(f"Erreur lors de l'analyse: {str(e)}")
-            prochaines_actions.append("Vérifier l'accès au fichier")
+            prochaines_actions.append("Vrifier l'accs au fichier")
         
         temps_execution = time.time() - debut
         
@@ -217,15 +217,15 @@ class AgentDocumentaliste:
         )
 
 class AgentExperimentateur:
-    """Agent spécialisé dans les expérimentations."""
+    """Agent spcialis dans les exprimentations."""
     
     def __init__(self):
-        self.nom = "Agent Expérimentateur"
-        self.mission = "Lancer test_gemini_rapide_windows.py et évaluer les performances"
+        self.nom = "Agent Exprimentateur"
+        self.mission = "Lancer test_gemini_rapide_windows.py et valuer les performances"
     
     async def executer_mission(self) -> RapportAgent:
-        """Exécute les expérimentations et génère un rapport."""
-        print(f"🤖 {self.nom} : Démarrage de la mission...")
+        """Excute les exprimentations et gnre un rapport."""
+        print(f"[ROBOT] {self.nom} : Dmarrage de la mission...")
         debut = time.time()
         
         resultats = {}
@@ -234,14 +234,14 @@ class AgentExperimentateur:
         prochaines_actions = []
         
         try:
-            # Vérification de l'existence du script
+            # Vrification de l'existence du script
             if not os.path.exists("test_gemini_rapide_windows.py"):
                 statut = "FAILURE"
                 problemes.append("Script test_gemini_rapide_windows.py manquant")
-                prochaines_actions.append("Créer le script de test rapide")
+                prochaines_actions.append("Crer le script de test rapide")
             else:
-                # Exécution du test rapide
-                print(f"   📋 Exécution de test_gemini_rapide_windows.py...")
+                # Excution du test rapide
+                print(f"   [CLIPBOARD] Excution de test_gemini_rapide_windows.py...")
                 result = subprocess.run(
                     ["python", "test_gemini_rapide_windows.py"],
                     capture_output=True,
@@ -255,42 +255,42 @@ class AgentExperimentateur:
                 
                 # Analyse des performances
                 if result.returncode == 0:
-                    # Recherche de métriques de performance
-                    if "Test réussi" in result.stdout or "✅" in result.stdout:
+                    # Recherche de mtriques de performance
+                    if "Test russi" in result.stdout or "[CHECK]" in result.stdout:
                         statut = "SUCCESS"
                         resultats["tests_reussis"] = True
                         
-                        # Extraction des temps de réponse si disponibles
+                        # Extraction des temps de rponse si disponibles
                         if "0.6s" in result.stdout or "rapide" in result.stdout.lower():
                             resultats["performance_excellente"] = True
-                            recommandations.append("Performances Gemini excellentes détectées")
+                            recommandations.append("Performances Gemini excellentes dtectes")
                         
-                        # Comptage des tests réussis
-                        nb_succes = result.stdout.count("✅")
+                        # Comptage des tests russis
+                        nb_succes = result.stdout.count("[CHECK]")
                         if nb_succes > 0:
                             resultats["nombre_tests_reussis"] = nb_succes
-                            recommandations.append(f"{nb_succes} tests réussis")
+                            recommandations.append(f"{nb_succes} tests russis")
                         
-                        prochaines_actions.append("Gemini prêt pour usage production")
+                        prochaines_actions.append("Gemini prt pour usage production")
                     else:
                         statut = "WARNING"
-                        problemes.append("Tests partiellement réussis")
-                        prochaines_actions.append("Analyser les échecs de tests")
+                        problemes.append("Tests partiellement russis")
+                        prochaines_actions.append("Analyser les checs de tests")
                 else:
                     statut = "FAILURE"
-                    problemes.append(f"Tests échoués avec code {result.returncode}")
+                    problemes.append(f"Tests chous avec code {result.returncode}")
                     if "API key" in result.stderr:
-                        problemes.append("Problème de clé API")
-                        prochaines_actions.append("Vérifier la configuration API")
+                        problemes.append("Problme de cl API")
+                        prochaines_actions.append("Vrifier la configuration API")
                     else:
-                        prochaines_actions.append("Déboguer les erreurs de test")
+                        prochaines_actions.append("Dboguer les erreurs de test")
                 
-                # Analyse des modèles testés
+                # Analyse des modles tests
                 if "gemini" in result.stdout.lower():
                     modeles_testes = result.stdout.lower().count("gemini")
                     resultats["modeles_testes"] = modeles_testes
                     if modeles_testes > 0:
-                        recommandations.append(f"{modeles_testes} modèles Gemini testés")
+                        recommandations.append(f"{modeles_testes} modles Gemini tests")
         
         except subprocess.TimeoutExpired:
             statut = "FAILURE"
@@ -299,8 +299,8 @@ class AgentExperimentateur:
         
         except Exception as e:
             statut = "FAILURE"
-            problemes.append(f"Erreur lors de l'expérimentation: {str(e)}")
-            prochaines_actions.append("Vérifier l'environnement de test")
+            problemes.append(f"Erreur lors de l'exprimentation: {str(e)}")
+            prochaines_actions.append("Vrifier l'environnement de test")
         
         temps_execution = time.time() - debut
         
@@ -317,15 +317,15 @@ class AgentExperimentateur:
         )
 
 class AgentIntegrateur:
-    """Agent spécialisé dans l'intégration technique."""
+    """Agent spcialis dans l'intgration technique."""
     
     def __init__(self):
-        self.nom = "Agent Intégrateur"
-        self.mission = "Concevoir et implémenter l'agent Gemini dans l'orchestrateur"
+        self.nom = "Agent Intgrateur"
+        self.mission = "Concevoir et implmenter l'agent Gemini dans l'orchestrateur"
     
     async def executer_mission(self) -> RapportAgent:
-        """Conçoit l'intégration Gemini et génère un rapport."""
-        print(f"🤖 {self.nom} : Démarrage de la mission...")
+        """Conoit l'intgration Gemini et gnre un rapport."""
+        print(f"[ROBOT] {self.nom} : Dmarrage de la mission...")
         debut = time.time()
         
         resultats = {}
@@ -359,7 +359,7 @@ class AgentIntegrateur:
                     with open("orchestrator/app/agents/workers.py", 'r', encoding='utf-8') as f:
                         contenu_workers = f.read()
                     
-                    # Vérification de la structure existante
+                    # Vrification de la structure existante
                     agents_existants = []
                     if "code_generation" in contenu_workers:
                         agents_existants.append("code_generation")
@@ -373,16 +373,16 @@ class AgentIntegrateur:
                     resultats["agents_existants"] = agents_existants
                     resultats["nombre_agents"] = len(agents_existants)
                     
-                    # Vérification si Gemini est déjà intégré
+                    # Vrification si Gemini est dj intgr
                     if "gemini" in contenu_workers.lower():
                         resultats["gemini_deja_integre"] = True
                         statut = "SUCCESS"
-                        recommandations.append("Gemini déjà partiellement intégré")
-                        prochaines_actions.append("Vérifier et optimiser l'intégration existante")
+                        recommandations.append("Gemini dj partiellement intgr")
+                        prochaines_actions.append("Vrifier et optimiser l'intgration existante")
                     else:
                         resultats["gemini_deja_integre"] = False
                         
-                        # Conception de l'intégration
+                        # Conception de l'intgration
                         integration_plan = {
                             "nouveau_agent": "gemini_rapid",
                             "modele_recommande": "gemini-1.5-flash",
@@ -393,19 +393,19 @@ class AgentIntegrateur:
                         
                         resultats["plan_integration"] = integration_plan
                         statut = "SUCCESS"
-                        recommandations.append("Plan d'intégration Gemini conçu")
-                        prochaines_actions.append("Implémenter l'agent gemini_rapid")
+                        recommandations.append("Plan d'intgration Gemini conu")
+                        prochaines_actions.append("Implmenter l'agent gemini_rapid")
                         prochaines_actions.append("Installer langchain-google-genai")
-                        prochaines_actions.append("Tester l'intégration")
+                        prochaines_actions.append("Tester l'intgration")
                 
-                # Vérification de la configuration
+                # Vrification de la configuration
                 if "orchestrator/app/config.py" in fichiers_presents:
                     with open("orchestrator/app/config.py", 'r', encoding='utf-8') as f:
                         contenu_config = f.read()
                     
                     if "GOOGLE_API_KEY" in contenu_config:
                         resultats["config_gemini_presente"] = True
-                        recommandations.append("Configuration Gemini déjà présente")
+                        recommandations.append("Configuration Gemini dj prsente")
                     else:
                         resultats["config_gemini_presente"] = False
                         problemes.append("Configuration Gemini manquante dans config.py")
@@ -416,12 +416,12 @@ class AgentIntegrateur:
             else:
                 statut = "FAILURE"
                 problemes.append("Fichiers orchestrateur manquants")
-                prochaines_actions.append("Vérifier l'installation de l'orchestrateur")
+                prochaines_actions.append("Vrifier l'installation de l'orchestrateur")
         
         except Exception as e:
             statut = "FAILURE"
-            problemes.append(f"Erreur lors de l'analyse d'intégration: {str(e)}")
-            prochaines_actions.append("Vérifier l'accès aux fichiers")
+            problemes.append(f"Erreur lors de l'analyse d'intgration: {str(e)}")
+            prochaines_actions.append("Vrifier l'accs aux fichiers")
         
         temps_execution = time.time() - debut
         
@@ -449,14 +449,14 @@ class CoordinateurAgents:
         ]
     
     async def executer_plan_travail(self) -> Dict[str, Any]:
-        """Exécute le plan de travail avec tous les agents en parallèle."""
-        print("🚀 VALIDATION DU PLAN DE TRAVAIL - AGENTS PARALLÈLES")
+        """Excute le plan de travail avec tous les agents en parallle."""
+        print("[ROCKET] VALIDATION DU PLAN DE TRAVAIL - AGENTS PARALLLES")
         print("=" * 60)
-        print(f"📅 Démarrage: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-        print(f"🤖 Nombre d'agents: {len(self.agents)}")
+        print(f" Dmarrage: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"[ROBOT] Nombre d'agents: {len(self.agents)}")
         print()
         
-        # Exécution parallèle des agents
+        # Excution parallle des agents
         debut_global = time.time()
         
         taches = [agent.executer_mission() for agent in self.agents]
@@ -464,13 +464,13 @@ class CoordinateurAgents:
         
         temps_total = time.time() - debut_global
         
-        # Génération du rapport consolidé
+        # Gnration du rapport consolid
         rapport_consolide = self.generer_rapport_consolide(rapports, temps_total)
         
         return rapport_consolide
     
     def generer_rapport_consolide(self, rapports: List[RapportAgent], temps_total: float) -> Dict[str, Any]:
-        """Génère un rapport consolidé à partir des rapports individuels."""
+        """Gnre un rapport consolid  partir des rapports individuels."""
         
         # Statistiques globales
         statuts = [r.statut for r in rapports]
@@ -481,7 +481,7 @@ class CoordinateurAgents:
         statut_global = "SUCCESS" if nb_success == len(rapports) else \
                        "WARNING" if nb_failure == 0 else "FAILURE"
         
-        # Consolidation des problèmes et recommandations
+        # Consolidation des problmes et recommandations
         tous_problemes = []
         toutes_recommandations = []
         toutes_actions = []
@@ -491,7 +491,7 @@ class CoordinateurAgents:
             toutes_recommandations.extend(rapport.recommandations)
             toutes_actions.extend(rapport.prochaines_actions)
         
-        # Analyse des résultats par tâche
+        # Analyse des rsultats par tche
         resultats_par_tache = {}
         for rapport in rapports:
             resultats_par_tache[rapport.agent_nom] = {
@@ -527,84 +527,84 @@ class CoordinateurAgents:
     def afficher_rapport_utilisateur(self, rapport: Dict[str, Any]) -> None:
         """Affiche le rapport final pour l'utilisateur."""
         print("\n" + "=" * 60)
-        print("📊 RAPPORT CONSOLIDÉ - VALIDATION PLAN DE TRAVAIL")
+        print("[CHART] RAPPORT CONSOLID - VALIDATION PLAN DE TRAVAIL")
         print("=" * 60)
         
         # Statut global
-        statut_emoji = {"SUCCESS": "✅", "WARNING": "⚠️", "FAILURE": "❌"}
-        print(f"\n🎯 STATUT GLOBAL: {statut_emoji[rapport['statut_global']]} {rapport['statut_global']}")
+        statut_emoji = {"SUCCESS": "[CHECK]", "WARNING": "", "FAILURE": "[CROSS]"}
+        print(f"\n[TARGET] STATUT GLOBAL: {statut_emoji[rapport['statut_global']]} {rapport['statut_global']}")
         
         # Statistiques
         stats = rapport['statistiques']
-        print(f"\n📈 STATISTIQUES:")
-        print(f"   🤖 Agents exécutés: {stats['agents_total']}")
-        print(f"   ✅ Succès: {stats['succes']}")
-        print(f"   ⚠️ Avertissements: {stats['avertissements']}")
-        print(f"   ❌ Échecs: {stats['echecs']}")
-        print(f"   📊 Taux de réussite: {stats['taux_reussite']:.1f}%")
-        print(f"   ⏱️ Temps total: {rapport['temps_execution_total']:.2f}s")
+        print(f"\n STATISTIQUES:")
+        print(f"   [ROBOT] Agents excuts: {stats['agents_total']}")
+        print(f"   [CHECK] Succs: {stats['succes']}")
+        print(f"    Avertissements: {stats['avertissements']}")
+        print(f"   [CROSS] checs: {stats['echecs']}")
+        print(f"   [CHART] Taux de russite: {stats['taux_reussite']:.1f}%")
+        print(f"    Temps total: {rapport['temps_execution_total']:.2f}s")
         
-        # Résultats par tâche
-        print(f"\n📋 RÉSULTATS PAR TÂCHE:")
+        # Rsultats par tche
+        print(f"\n[CLIPBOARD] RSULTATS PAR TCHE:")
         for nom_agent, resultats in rapport['resultats_par_tache'].items():
             emoji = statut_emoji[resultats['statut']]
             print(f"   {emoji} {nom_agent}: {resultats['statut']} ({resultats['temps']:.2f}s)")
             
-            # Résultats clés
+            # Rsultats cls
             if resultats['resultats_cles']:
                 for cle, valeur in list(resultats['resultats_cles'].items())[:2]:  # Limiter l'affichage
-                    print(f"      📌 {cle}: {valeur}")
+                    print(f"       {cle}: {valeur}")
         
-        # Synthèse
+        # Synthse
         synthese = rapport['synthese']
         
         if synthese['problemes_identifies']:
-            print(f"\n🚨 PROBLÈMES IDENTIFIÉS:")
+            print(f"\n PROBLMES IDENTIFIS:")
             for probleme in synthese['problemes_identifies'][:5]:  # Top 5
-                print(f"   ❗ {probleme}")
+                print(f"    {probleme}")
         
         if synthese['recommandations_globales']:
-            print(f"\n💡 RECOMMANDATIONS GLOBALES:")
+            print(f"\n[BULB] RECOMMANDATIONS GLOBALES:")
             for recommandation in synthese['recommandations_globales'][:5]:  # Top 5
-                print(f"   💡 {recommandation}")
+                print(f"   [BULB] {recommandation}")
         
         if synthese['prochaines_actions_prioritaires']:
-            print(f"\n🔧 PROCHAINES ACTIONS PRIORITAIRES:")
+            print(f"\n[TOOL] PROCHAINES ACTIONS PRIORITAIRES:")
             for action in synthese['prochaines_actions_prioritaires'][:5]:  # Top 5
-                print(f"   🎯 {action}")
+                print(f"   [TARGET] {action}")
         
         # Conclusion
-        print(f"\n🎉 CONCLUSION:")
+        print(f"\n CONCLUSION:")
         if rapport['statut_global'] == "SUCCESS":
-            print("   ✅ Plan de travail validé avec succès!")
-            print("   🚀 Prêt pour la mise en production")
+            print("   [CHECK] Plan de travail valid avec succs!")
+            print("   [ROCKET] Prt pour la mise en production")
         elif rapport['statut_global'] == "WARNING":
-            print("   ⚠️ Plan de travail partiellement validé")
-            print("   🔧 Corrections mineures requises")
+            print("    Plan de travail partiellement valid")
+            print("   [TOOL] Corrections mineures requises")
         else:
-            print("   ❌ Plan de travail nécessite des corrections")
-            print("   🛠️ Actions correctives requises")
+            print("   [CROSS] Plan de travail ncessite des corrections")
+            print("    Actions correctives requises")
         
         print("\n" + "=" * 60)
 
 async def main():
-    """Fonction principale d'exécution."""
+    """Fonction principale d'excution."""
     coordinateur = CoordinateurAgents()
     
-    # Exécution du plan de travail
+    # Excution du plan de travail
     rapport = await coordinateur.executer_plan_travail()
     
     # Affichage du rapport utilisateur
     coordinateur.afficher_rapport_utilisateur(rapport)
     
-    # Sauvegarde du rapport détaillé
+    # Sauvegarde du rapport dtaill
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     fichier_rapport = f"rapport_validation_plan_travail_{timestamp}.json"
     
     with open(fichier_rapport, 'w', encoding='utf-8') as f:
         json.dump(rapport, f, indent=2, ensure_ascii=False)
     
-    print(f"\n💾 Rapport détaillé sauvegardé: {fichier_rapport}")
+    print(f"\n Rapport dtaill sauvegard: {fichier_rapport}")
     
     return rapport['statut_global'] == "SUCCESS"
 

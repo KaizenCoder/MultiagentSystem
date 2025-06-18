@@ -1,71 +1,72 @@
 #!/usr/bin/env python3
 """
 Agent 5 - Documenteur (Gemini 2.0 Flash)
-Mission: Générer la documentation des outils intégrés dans NextGeneration
+Mission: Gnrer la documentation des outils intgrs dans NextGeneration
 
-Responsabilités:
-- Créer la documentation README principale
-- Générer la documentation individuelle de chaque outil
-- Créer les guides d'installation et d'utilisation
-- Documenter les catégories d'outils
-- Générer les exemples d'usage
+Responsabilits:
+- Crer la documentation README principale
+- Gnrer la documentation individuelle de chaque outil
+- Crer les guides d'installation et d'utilisation
+- Documenter les catgories d'outils
+- Gnrer les exemples d'usage
 """
 
 import os
 import json
 import logging
+from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 import ast
 import re
 
 class AgentDocumenteur:
-    """Agent spécialisé dans la génération de documentation avec Gemini 2.0 Flash"""
+    """Agent spcialis dans la gnration de documentation avec Gemini 2.0 Flash"""
     
     def __init__(self, target_path: str):
         self.target_path = Path(target_path)
         self.logger = logging.getLogger("Agent5_Documenteur")
         
     def generate_documentation(self, test_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Génération complète de la documentation"""
-        self.logger.info("📚 Démarrage génération documentation")
+        """Gnration complte de la documentation"""
+        self.logger.info(" Dmarrage gnration documentation")
         
         tested_tools = test_data.get("tested_tools", [])
         if not tested_tools:
-            self.logger.warning("⚠️ Aucun outil testé à documenter")
+            self.logger.warning(" Aucun outil test  documenter")
             return {"documentation_files": [], "documentation_summary": {}}
             
         documentation_files = []
         
-        # 1. Générer le README principal
+        # 1. Gnrer le README principal
         main_readme = self.generate_main_readme(tested_tools)
         if main_readme:
             documentation_files.append(main_readme)
             
-        # 2. Générer la documentation par catégorie
+        # 2. Gnrer la documentation par catgorie
         category_docs = self.generate_category_documentation(tested_tools)
         documentation_files.extend(category_docs)
         
-        # 3. Générer la documentation individuelle des outils
+        # 3. Gnrer la documentation individuelle des outils
         tool_docs = self.generate_individual_tool_docs(tested_tools)
         documentation_files.extend(tool_docs)
         
-        # 4. Générer le guide d'installation
+        # 4. Gnrer le guide d'installation
         installation_guide = self.generate_installation_guide(tested_tools)
         if installation_guide:
             documentation_files.append(installation_guide)
             
-        # 5. Générer le guide d'utilisation
+        # 5. Gnrer le guide d'utilisation
         usage_guide = self.generate_usage_guide(tested_tools)
         if usage_guide:
             documentation_files.append(usage_guide)
             
-        # 6. Générer le changelog
+        # 6. Gnrer le changelog
         changelog = self.generate_changelog(tested_tools)
         if changelog:
             documentation_files.append(changelog)
             
-        # Résumé de la documentation
+        # Rsum de la documentation
         documentation_summary = self.generate_documentation_summary(documentation_files, tested_tools)
         
         results = {
@@ -73,11 +74,11 @@ class AgentDocumenteur:
             "documentation_summary": documentation_summary
         }
         
-        self.logger.info(f"✅ Documentation générée: {len(documentation_files)} fichiers créés")
+        self.logger.info(f"[CHECK] Documentation gnre: {len(documentation_files)} fichiers crs")
         return results
         
     def generate_main_readme(self, tested_tools: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
-        """Génération du README principal"""
+        """Gnration du README principal"""
         try:
             # Statistiques des outils
             total_tools = len(tested_tools)
@@ -90,26 +91,26 @@ class AgentDocumenteur:
                     categories[category] = []
                 categories[category].append(tool)
                 
-            # Génération du contenu
-            content = f"""# NextGeneration Tools - Outils Importés
+            # Gnration du contenu
+            content = f"""# NextGeneration Tools - Outils Imports
 
 ## Vue d'ensemble
 
-Collection de {total_tools} outils professionnels importés depuis SuperWhisper V6 et adaptés pour NextGeneration.
+Collection de {total_tools} outils professionnels imports depuis SuperWhisper V6 et adapts pour NextGeneration.
 
-**Statut**: {passed_tools}/{total_tools} outils intégrés avec succès
+**Statut**: {passed_tools}/{total_tools} outils intgrs avec succs
 
-## Catégories d'Outils
+## Catgories d'Outils
 
 {self.format_categories_list(categories)}
 
 ## Installation
 
 ```bash
-# Installer les dépendances
+# Installer les dpendances
 pip install -r tools/imported_tools/requirements.txt
 
-# Vérifier l'installation
+# Vrifier l'installation
 python tools/imported_tools/run_tool.py
 ```
 
@@ -119,7 +120,7 @@ python tools/imported_tools/run_tool.py
 # Lister les outils disponibles
 python tools/imported_tools/run_tool.py
 
-# Exécuter un outil
+# Excuter un outil
 python tools/imported_tools/run_tool.py [nom_outil] [arguments]
 ```
 
@@ -136,14 +137,14 @@ python tools/imported_tools/run_tool.py [nom_outil] [arguments]
 - [Guide d'Installation](INSTALLATION.md)
 - [Guide d'Utilisation](USAGE.md)
 - [Changelog](CHANGELOG.md)
-- Documentation par catégorie dans chaque répertoire
+- Documentation par catgorie dans chaque rpertoire
 
 ## Support
 
-Les outils sont intégrés avec le système de logging NextGeneration. Consultez les logs pour le dépannage.
+Les outils sont intgrs avec le systme de logging NextGeneration. Consultez les logs pour le dpannage.
 """
             
-            # Écriture du fichier
+            # criture du fichier
             readme_path = self.target_path / "README.md"
             with open(readme_path, 'w', encoding='utf-8') as f:
                 f.write(content)
@@ -156,14 +157,14 @@ Les outils sont intégrés avec le système de logging NextGeneration. Consultez
             }
             
         except Exception as e:
-            self.logger.error(f"❌ Erreur génération README principal: {e}")
+            self.logger.error(f"[CROSS] Erreur gnration README principal: {e}")
             return None
             
     def generate_category_documentation(self, tested_tools: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """Génération de la documentation par catégorie"""
+        """Gnration de la documentation par catgorie"""
         category_docs = []
         
-        # Grouper par catégorie
+        # Grouper par catgorie
         categories = {}
         for tool in tested_tools:
             category = tool.get("category", "unknown")
@@ -171,7 +172,7 @@ Les outils sont intégrés avec le système de logging NextGeneration. Consultez
                 categories[category] = []
             categories[category].append(tool)
             
-        # Générer la doc pour chaque catégorie
+        # Gnrer la doc pour chaque catgorie
         for category, tools in categories.items():
             try:
                 content = f"""# {category.title()} - Documentation
@@ -192,18 +193,18 @@ Les outils sont intégrés avec le système de logging NextGeneration. Consultez
 
 ## Installation
 
-Tous les outils de cette catégorie sont installés automatiquement avec NextGeneration Tools.
+Tous les outils de cette catgorie sont installs automatiquement avec NextGeneration Tools.
 
 ## Support
 
-Consultez la documentation individuelle de chaque outil pour plus de détails.
+Consultez la documentation individuelle de chaque outil pour plus de dtails.
 """
                 
-                # Créer le répertoire de catégorie s'il n'existe pas
+                # Crer le rpertoire de catgorie s'il n'existe pas
                 category_path = self.target_path / category
                 category_path.mkdir(exist_ok=True)
                 
-                # Écrire le fichier README de catégorie
+                # crire le fichier README de catgorie
                 readme_path = category_path / "README.md"
                 with open(readme_path, 'w', encoding='utf-8') as f:
                     f.write(content)
@@ -217,12 +218,12 @@ Consultez la documentation individuelle de chaque outil pour plus de détails.
                 })
                 
             except Exception as e:
-                self.logger.error(f"❌ Erreur génération doc catégorie {category}: {e}")
+                self.logger.error(f"[CROSS] Erreur gnration doc catgorie {category}: {e}")
                 
         return category_docs
         
     def generate_individual_tool_docs(self, tested_tools: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """Génération de la documentation individuelle des outils"""
+        """Gnration de la documentation individuelle des outils"""
         tool_docs = []
         
         for tool in tested_tools:
@@ -233,18 +234,18 @@ Consultez la documentation individuelle de chaque outil pour plus de détails.
                 # Analyser le code de l'outil pour extraire des infos
                 tool_analysis = self.analyze_tool_for_documentation(tool_path)
                 
-                # Générer la documentation
+                # Gnrer la documentation
                 content = f"""# {tool_name} - Documentation
 
 ## Description
 
-{tool_analysis.get("description", "Outil importé depuis SuperWhisper V6")}
+{tool_analysis.get("description", "Outil import depuis SuperWhisper V6")}
 
-**Catégorie**: {tool.get("category", "unknown")}  
-**Statut d'intégration**: {tool.get("overall_status", "UNKNOWN")}  
-**Score de qualité**: {tool.get("overall_score", 0)}/100
+**Catgorie**: {tool.get("category", "unknown")}  
+**Statut d'intgration**: {tool.get("overall_status", "UNKNOWN")}  
+**Score de qualit**: {tool.get("overall_score", 0)}/100
 
-## Fonctionnalités
+## Fonctionnalits
 
 {self.format_functions_list(tool_analysis.get("functions", []))}
 
@@ -256,15 +257,15 @@ Consultez la documentation individuelle de chaque outil pour plus de détails.
 
 {self.format_tool_configuration(tool_analysis)}
 
-## Dépannage
+## Dpannage
 
 {self.format_troubleshooting_section(tool)}
 
 ---
-*Outil adapté depuis SuperWhisper V6 pour NextGeneration*
+*Outil adapt depuis SuperWhisper V6 pour NextGeneration*
 """
                 
-                # Écrire le fichier de documentation
+                # crire le fichier de documentation
                 doc_path = tool_path.parent / f"{tool_name}_DOC.md"
                 with open(doc_path, 'w', encoding='utf-8') as f:
                     f.write(content)
@@ -278,14 +279,14 @@ Consultez la documentation individuelle de chaque outil pour plus de détails.
                 })
                 
             except Exception as e:
-                self.logger.error(f"❌ Erreur génération doc outil {tool.get('name', 'unknown')}: {e}")
+                self.logger.error(f"[CROSS] Erreur gnration doc outil {tool.get('name', 'unknown')}: {e}")
                 
         return tool_docs
         
     def generate_installation_guide(self, tested_tools: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
-        """Génération du guide d'installation"""
+        """Gnration du guide d'installation"""
         try:
-            # Collecter les dépendances
+            # Collecter les dpendances
             all_dependencies = set()
             
             # Lire le fichier requirements.txt s'il existe
@@ -299,42 +300,42 @@ Consultez la documentation individuelle de chaque outil pour plus de détails.
                             
             content = f"""# Guide d'Installation - NextGeneration Tools
 
-## Prérequis
+## Prrequis
 
 - Python 3.8+
 - NextGeneration project
-- Accès en écriture au répertoire tools/
+- Accs en criture au rpertoire tools/
 
 ## Installation Automatique
 
 ```bash
-# Les outils sont déjà intégrés dans NextGeneration
-# Installer uniquement les dépendances
+# Les outils sont dj intgrs dans NextGeneration
+# Installer uniquement les dpendances
 pip install -r tools/imported_tools/requirements.txt
 ```
 
-## Dépendances ({len(all_dependencies)})
+## Dpendances ({len(all_dependencies)})
 
 {self.format_dependencies_list(all_dependencies)}
 
-## Vérification de l'Installation
+## Vrification de l'Installation
 
 {self.format_verification_steps(tested_tools[:3])}
 
-## Dépannage
+## Dpannage
 
-### Problèmes courants
+### Problmes courants
 
-1. **Erreur de dépendances**: Réinstaller requirements.txt
-2. **Erreur de chemin**: Vérifier la structure NextGeneration
-3. **Permissions**: Vérifier les droits d'accès aux fichiers
+1. **Erreur de dpendances**: Rinstaller requirements.txt
+2. **Erreur de chemin**: Vrifier la structure NextGeneration
+3. **Permissions**: Vrifier les droits d'accs aux fichiers
 
 ### Support
 
-Consultez les logs NextGeneration pour plus de détails sur les erreurs.
+Consultez les logs NextGeneration pour plus de dtails sur les erreurs.
 """
             
-            # Écrire le guide d'installation
+            # crire le guide d'installation
             install_path = self.target_path / "INSTALLATION.md"
             with open(install_path, 'w', encoding='utf-8') as f:
                 f.write(content)
@@ -347,36 +348,36 @@ Consultez les logs NextGeneration pour plus de détails sur les erreurs.
             }
             
         except Exception as e:
-            self.logger.error(f"❌ Erreur génération guide installation: {e}")
+            self.logger.error(f"[CROSS] Erreur gnration guide installation: {e}")
             return None
             
     def generate_usage_guide(self, tested_tools: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
-        """Génération du guide d'utilisation"""
+        """Gnration du guide d'utilisation"""
         try:
             content = f"""# Guide d'Utilisation - Outils NextGeneration
 
 ## Vue d'ensemble
 
-Ce guide vous explique comment utiliser les {len(tested_tools)} outils importés depuis SuperWhisper V6 et adaptés pour NextGeneration.
+Ce guide vous explique comment utiliser les {len(tested_tools)} outils imports depuis SuperWhisper V6 et adapts pour NextGeneration.
 
-## Méthodes d'Exécution
+## Mthodes d'Excution
 
-### 1. Exécution Directe
+### 1. Excution Directe
 
 ```bash
-# Depuis le répertoire de l'outil
+# Depuis le rpertoire de l'outil
 cd tools/imported_tools/[category]/
 python [tool_name].py [arguments]
 ```
 
-### 2. Exécution via le Lanceur
+### 2. Excution via le Lanceur
 
 ```bash
-# Depuis n'importe où dans NextGeneration
+# Depuis n'importe o dans NextGeneration
 python tools/imported_tools/run_tool.py [tool_name] [arguments]
 ```
 
-### 3. Exécution depuis Python
+### 3. Excution depuis Python
 
 ```python
 import sys
@@ -386,7 +387,7 @@ from [category] import [tool_name]
 # Utiliser l'outil...
 ```
 
-## Outils par Catégorie
+## Outils par Catgorie
 
 {self.format_usage_categories(tested_tools)}
 
@@ -396,26 +397,26 @@ from [category] import [tool_name]
 
 ## Configuration
 
-Tous les outils sont configurés avec:
-- Auto-détection du projet NextGeneration
-- Logging intégré
+Tous les outils sont configurs avec:
+- Auto-dtection du projet NextGeneration
+- Logging intgr
 - Chemins portables
-- Configuration centralisée
+- Configuration centralise
 
-## Dépannage
+## Dpannage
 
-### Problèmes Courants
+### Problmes Courants
 
-1. **Import Error**: Vérifiez que les dépendances sont installées
-2. **Path Error**: Les outils détectent automatiquement le projet root
-3. **Permission Error**: Vérifiez les permissions d'exécution
+1. **Import Error**: Vrifiez que les dpendances sont installes
+2. **Path Error**: Les outils dtectent automatiquement le projet root
+3. **Permission Error**: Vrifiez les permissions d'excution
 
 ### Support
 
 Consultez la documentation individuelle de chaque outil ou les logs NextGeneration.
 """
             
-            # Écrire le guide d'utilisation
+            # crire le guide d'utilisation
             usage_path = self.target_path / "USAGE.md"
             with open(usage_path, 'w', encoding='utf-8') as f:
                 f.write(content)
@@ -428,11 +429,11 @@ Consultez la documentation individuelle de chaque outil ou les logs NextGenerati
             }
             
         except Exception as e:
-            self.logger.error(f"❌ Erreur génération guide utilisation: {e}")
+            self.logger.error(f"[CROSS] Erreur gnration guide utilisation: {e}")
             return None
             
     def generate_changelog(self, tested_tools: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
-        """Génération du changelog"""
+        """Gnration du changelog"""
         try:
             from datetime import datetime
             
@@ -441,30 +442,30 @@ Consultez la documentation individuelle de chaque outil ou les logs NextGenerati
 ## Version 1.0.0 - {datetime.now().strftime('%Y-%m-%d')}
 
 ### Ajouts
-- Intégration de {len(tested_tools)} outils depuis SuperWhisper V6
-- Adaptation complète pour NextGeneration
-- Configuration portable et auto-détection projet
-- Logging intégré NextGeneration
-- Documentation complète
+- Intgration de {len(tested_tools)} outils depuis SuperWhisper V6
+- Adaptation complte pour NextGeneration
+- Configuration portable et auto-dtection projet
+- Logging intgr NextGeneration
+- Documentation complte
 
-### Outils Intégrés
+### Outils Intgrs
 
 {self.format_changelog_tools(tested_tools)}
 
-### Améliorations Techniques
-- En-têtes NextGeneration standardisés
+### Amliorations Techniques
+- En-ttes NextGeneration standardiss
 - Gestion automatique des chemins
-- Tests d'intégration complets
-- Structure modulaire par catégories
+- Tests d'intgration complets
+- Structure modulaire par catgories
 
 ### Configuration
 - Fichier de configuration global: `tools_config.json`
 - Script de lancement universel: `run_tool.py`
 - Requirements automatiques: `requirements.txt`
-- Documentation complète par catégorie
+- Documentation complte par catgorie
 """
             
-            # Écrire le changelog
+            # crire le changelog
             changelog_path = self.target_path / "CHANGELOG.md"
             with open(changelog_path, 'w', encoding='utf-8') as f:
                 f.write(content)
@@ -477,7 +478,7 @@ Consultez la documentation individuelle de chaque outil ou les logs NextGenerati
             }
             
         except Exception as e:
-            self.logger.error(f"❌ Erreur génération changelog: {e}")
+            self.logger.error(f"[CROSS] Erreur gnration changelog: {e}")
             return None
             
     def analyze_tool_for_documentation(self, tool_path: Path) -> Dict[str, Any]:
@@ -523,17 +524,17 @@ Consultez la documentation individuelle de chaque outil ou les logs NextGenerati
                     }
                     analysis["classes"].append(class_info)
                     
-            # Détecter interface CLI
+            # Dtecter interface CLI
             if "argparse" in content or "click" in content or "if __name__ == '__main__':" in content:
                 analysis["cli_interface"] = True
                 
         except Exception as e:
-            self.logger.warning(f"⚠️ Erreur analyse outil {tool_path}: {e}")
+            self.logger.warning(f" Erreur analyse outil {tool_path}: {e}")
             
         return analysis
         
     def format_categories_list(self, categories: Dict[str, List]) -> str:
-        """Formatage de la liste des catégories"""
+        """Formatage de la liste des catgories"""
         lines = []
         for category, tools in categories.items():
             lines.append(f"- **{category.title()}**: {len(tools)} outils")
@@ -541,33 +542,33 @@ Consultez la documentation individuelle de chaque outil ou les logs NextGenerati
         
     def format_tools_table(self, tested_tools: List[Dict[str, Any]]) -> str:
         """Formatage du tableau des outils"""
-        lines = ["| Outil | Catégorie | Statut | Score |", "|-------|-----------|--------|-------|"]
+        lines = ["| Outil | Catgorie | Statut | Score |", "|-------|-----------|--------|-------|"]
         
         for tool in tested_tools:
-            status_icon = "✅" if tool.get("overall_status") == "PASS" else ("⚠️" if tool.get("overall_status") == "PARTIAL" else "❌")
+            status_icon = "[CHECK]" if tool.get("overall_status") == "PASS" else ("" if tool.get("overall_status") == "PARTIAL" else "[CROSS]")
             lines.append(f"| {tool['name']} | {tool.get('category', 'unknown')} | {status_icon} {tool.get('overall_status', 'UNKNOWN')} | {tool.get('overall_score', 0)} |")
             
         return "\n".join(lines)
         
     def get_category_description(self, category: str) -> str:
-        """Description des catégories"""
+        """Description des catgories"""
         descriptions = {
             "automation": "Outils d'automatisation et de workflows",
             "monitoring": "Outils de surveillance et de monitoring",
-            "conversion": "Outils de conversion et transformation de données",
-            "generation": "Outils de génération de contenu et de code",
-            "utility": "Utilitaires et outils d'aide générale",
-            "api": "Outils d'API et de communication réseau",
-            "data": "Outils de gestion et manipulation de données",
-            "file": "Outils de gestion de fichiers et répertoires",
-            "network": "Outils réseau et de connectivité",
-            "security": "Outils de sécurité et cryptographie"
+            "conversion": "Outils de conversion et transformation de donnes",
+            "generation": "Outils de gnration de contenu et de code",
+            "utility": "Utilitaires et outils d'aide gnrale",
+            "api": "Outils d'API et de communication rseau",
+            "data": "Outils de gestion et manipulation de donnes",
+            "file": "Outils de gestion de fichiers et rpertoires",
+            "network": "Outils rseau et de connectivit",
+            "security": "Outils de scurit et cryptographie"
         }
-        return descriptions.get(category, f"Outils de catégorie {category}")
+        return descriptions.get(category, f"Outils de catgorie {category}")
         
     def generate_documentation_summary(self, documentation_files: List[Dict[str, Any]], 
                                      tested_tools: List[Dict[str, Any]]) -> Dict[str, Any]:
-        """Génération du résumé de documentation"""
+        """Gnration du rsum de documentation"""
         
         # Statistiques par type
         doc_types = {}
@@ -599,7 +600,7 @@ python tools/imported_tools/run_tool.py {tool['name']} --help
     def format_category_tools_list(self, tools: List[Dict[str, Any]]) -> str:
         lines = []
         for tool in tools:
-            status_icon = "✅" if tool.get("overall_status") == "PASS" else "⚠️"
+            status_icon = "[CHECK]" if tool.get("overall_status") == "PASS" else ""
             lines.append(f"- **{tool['name']}** {status_icon} - Score: {tool.get('overall_score', 0)}/100")
         return "\n".join(lines)
 
@@ -616,7 +617,7 @@ python tools/imported_tools/{tool.get('category', 'utility')}/{tool['name']}.py
 
     def format_functions_list(self, functions: List[Dict[str, Any]]) -> str:
         if not functions:
-            return "Aucune fonction documentée."
+            return "Aucune fonction documente."
         
         lines = []
         for func in functions:
@@ -625,7 +626,7 @@ python tools/imported_tools/{tool.get('category', 'utility')}/{tool['name']}.py
 
     def format_tool_usage_examples(self, tool_name: str, analysis: Dict[str, Any]) -> str:
         examples = [f"""```bash
-# Exécution directe
+# Excution directe
 python tools/imported_tools/*//{tool_name}.py
 
 # Via le lanceur
@@ -641,25 +642,25 @@ python tools/imported_tools/run_tool.py {tool_name} --help
         return "\n\n".join(examples)
 
     def format_tool_configuration(self, analysis: Dict[str, Any]) -> str:
-        return """L'outil est configuré automatiquement avec:
-- Auto-détection du projet NextGeneration
-- Logging intégré
+        return """L'outil est configur automatiquement avec:
+- Auto-dtection du projet NextGeneration
+- Logging intgr
 - Chemins portables
-- Configuration centralisée"""
+- Configuration centralise"""
 
     def format_troubleshooting_section(self, tool: Dict[str, Any]) -> str:
-        return f"""### Problèmes courants
+        return f"""### Problmes courants
 
-1. **Erreur d'import**: Vérifier les dépendances
-2. **Erreur de chemin**: L'outil détecte automatiquement NextGeneration
-3. **Erreur d'exécution**: Consulter les logs NextGeneration
+1. **Erreur d'import**: Vrifier les dpendances
+2. **Erreur de chemin**: L'outil dtecte automatiquement NextGeneration
+3. **Erreur d'excution**: Consulter les logs NextGeneration
 
 **Statut actuel**: {tool.get('overall_status', 'UNKNOWN')}
-**Score de qualité**: {tool.get('overall_score', 0)}/100"""
+**Score de qualit**: {tool.get('overall_score', 0)}/100"""
 
     def format_dependencies_list(self, dependencies: set) -> str:
         if not dependencies:
-            return "Aucune dépendance externe requise."
+            return "Aucune dpendance externe requise."
         
         lines = []
         for dep in sorted(dependencies):
@@ -667,7 +668,7 @@ python tools/imported_tools/run_tool.py {tool_name} --help
         return "\n".join(lines)
 
     def format_verification_steps(self, tools: List[Dict[str, Any]]) -> str:
-        steps = ["```bash", "# Vérifier que les outils sont disponibles"]
+        steps = ["```bash", "# Vrifier que les outils sont disponibles"]
         for tool in tools:
             steps.append(f"python tools/imported_tools/run_tool.py {tool['name']} --help")
         steps.append("```")
@@ -714,8 +715,284 @@ python tools/imported_tools/run_tool.py {tool['name']}
             sections.append("")
         
         return "\n".join(sections)
+    
+    def generer_documentation_apex(self, phase4_data: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Gnration de documentation spcialise pour les outils Apex_VBA_FRAMEWORK
+        
+        Args:
+            phase4_data: Donnes des tests de la phase 4
+            
+        Returns:
+            Dict contenant les rsultats de gnration de documentation
+        """
+        self.logger.info(" Gnration documentation spcialise Apex_VBA_FRAMEWORK")
+        
+        docs_generees = []
+        outils_testes = phase4_data.get("outils_testes", [])
+        
+        # Gnrer README principal pour Apex
+        readme_apex = self._generer_readme_apex(outils_testes)
+        docs_generees.append(readme_apex)
+        
+        # Gnrer documentation pour chaque outil
+        for outil in outils_testes:
+            if outil.get("test_success", False):
+                doc_outil = self._generer_doc_outil_apex(outil)
+                if doc_outil:
+                    docs_generees.append(doc_outil)
+        
+        # Gnrer guide d'installation Apex
+        guide_install = self._generer_guide_installation_apex(outils_testes)
+        docs_generees.append(guide_install)
+        
+        resultats = {
+            "total_docs": len(docs_generees),
+            "docs_generees": docs_generees,
+            "documentation_timestamp": datetime.now().isoformat(),
+            "documenteur_model": "Gemini 2.0 Flash"
+        }
+        
+        self.logger.info(f"[CHECK] Documentation Apex termine: {len(docs_generees)} documents crs")
+        return resultats
+    
+    def _generer_readme_apex(self, outils_testes: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Gnration du README principal pour outils Apex"""
+        readme_content = f'''# Outils Imports depuis Apex_VBA_FRAMEWORK
 
-# Test de l'agent si exécuté directement
+## [CLIPBOARD] Aperu
+
+Cette collection contient {len(outils_testes)} outils imports et adapts depuis Apex_VBA_FRAMEWORK pour NextGeneration.
+
+## [ROCKET] Outils Disponibles
+
+'''
+        
+        # Grouper par type
+        outils_par_type = {}
+        for outil in outils_testes:
+            type_outil = outil.get("type", "unknown")
+            if type_outil not in outils_par_type:
+                outils_par_type[type_outil] = []
+            outils_par_type[type_outil].append(outil)
+        
+        for type_outil, outils in outils_par_type.items():
+            readme_content += f"### {type_outil.title()}\n\n"
+            for outil in outils:
+                status = "[CHECK]" if outil.get("test_success", False) else ""
+                readme_content += f"- {status} **{outil['name']}** - {outil.get('test_summary', 'Outil Apex')}\n"
+            readme_content += "\n"
+        
+        readme_content += '''## [TOOL] Utilisation
+
+### Lanceur Universel
+
+```bash
+python run_apex_tool.py <nom_outil> [arguments...]
+```
+
+### Liste des outils disponibles
+
+```bash
+python run_apex_tool.py
+```
+
+## [FOLDER] Structure
+
+```
+apex_tools/
+ python/          # Outils Python adapts
+ powershell/      # Scripts PowerShell adapts  
+ batch/           # Scripts Batch adapts
+ apex_tools_config.json  # Configuration
+ run_apex_tool.py # Lanceur universel
+```
+
+##  Intgration NextGeneration
+
+Tous les outils ont t adapts pour fonctionner dans l'environnement NextGeneration avec:
+- Dtection automatique du projet root
+- Configuration portable
+- En-ttes NextGeneration standardiss
+
+##  Documentation
+
+Consultez les fichiers de documentation individuels pour chaque outil dans leurs rpertoires respectifs.
+'''
+        
+        readme_path = self.target_path / "README_APEX.md"
+        with open(readme_path, 'w', encoding='utf-8') as f:
+            f.write(readme_content)
+        
+        return {
+            "type": "readme",
+            "name": "README_APEX.md",
+            "path": str(readme_path),
+            "content_length": len(readme_content)
+        }
+    
+    def _generer_doc_outil_apex(self, outil: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Gnration de documentation pour un outil Apex spcifique"""
+        try:
+            nom_outil = outil["name"]
+            type_outil = outil["type"]
+            
+            doc_content = f'''# {nom_outil}
+
+## [CLIPBOARD] Informations
+
+- **Type**: {type_outil}
+- **Source**: Apex_VBA_FRAMEWORK
+- **Statut**: {"[CHECK] Test avec succs" if outil.get("test_success") else " Tests partiels"}
+
+## [TOOL] Utilisation
+
+### Via le lanceur universel
+```bash
+python run_apex_tool.py {nom_outil} [arguments...]
+```
+
+### Excution directe
+```bash
+'''
+            
+            if type_outil == "python":
+                doc_content += f"python {type_outil}/{nom_outil}.py [arguments...]\n"
+            elif type_outil == "powershell":
+                doc_content += f"powershell -ExecutionPolicy Bypass -File {type_outil}/{nom_outil}.ps1 [arguments...]\n"
+            elif type_outil == "batch":
+                doc_content += f"{type_outil}/{nom_outil}.bat [arguments...]\n"
+            
+            doc_content += '''```
+
+## [CHART] Tests d'Intgration
+
+'''
+            
+            test_details = outil.get("test_details", {})
+            for test_name, test_result in test_details.items():
+                status = "[CHECK]" if test_result else "[CROSS]"
+                doc_content += f"- {status} {test_name.replace('_', ' ').title()}\n"
+            
+            doc_content += f'''
+
+##  Intgration NextGeneration
+
+Cet outil a t adapt pour NextGeneration avec:
+- Configuration portable automatique
+- Dtection du projet root
+- En-tte NextGeneration standardis
+
+##  Notes
+
+- Import depuis: Apex_VBA_FRAMEWORK
+- Adaptation: Automatique via Agent 3 (Claude Sonnet 4)
+- Tests: Agent 4 (GPT-4 Turbo)
+- Documentation: Agent 5 (Gemini 2.0 Flash)
+'''
+            
+            doc_path = self.target_path / type_outil / f"{nom_outil}_README.md"
+            with open(doc_path, 'w', encoding='utf-8') as f:
+                f.write(doc_content)
+            
+            return {
+                "type": "tool_doc",
+                "name": f"{nom_outil}_README.md",
+                "path": str(doc_path),
+                "tool_name": nom_outil,
+                "content_length": len(doc_content)
+            }
+            
+        except Exception as e:
+            self.logger.error(f"[CROSS] Erreur gnration doc {outil['name']}: {e}")
+            return None
+    
+    def _generer_guide_installation_apex(self, outils_testes: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Gnration du guide d'installation pour outils Apex"""
+        guide_content = '''# Guide d'Installation - Outils Apex_VBA_FRAMEWORK
+
+## [ROCKET] Installation Rapide
+
+1. **Vrifier les prrequis**
+   ```bash
+   python --version  # Python 3.8+
+   ```
+
+2. **Installer les dpendances** (si ncessaire)
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Tester l'installation**
+   ```bash
+   python run_apex_tool.py
+   ```
+
+## [TOOL] Configuration
+
+### Variables d'Environnement
+
+Les outils Apex utilisent la dtection automatique du projet NextGeneration.
+Aucune configuration manuelle n'est requise.
+
+### PowerShell (Windows)
+
+Pour les outils PowerShell, assurez-vous que l'excution de scripts est autorise:
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+##  Tests
+
+### Test Global
+```bash
+python -m pytest tests/  # Si des tests sont disponibles
+```
+
+### Test Individuel
+```bash
+python run_apex_tool.py <nom_outil> --help
+```
+
+## [SEARCH] Dpannage
+
+### Erreurs Communes
+
+1. **Outil introuvable**
+   - Vrifiez que le nom est correct avec `python run_apex_tool.py`
+
+2. **Erreur d'importation Python**
+   - Installez les dpendances: `pip install -r requirements.txt`
+
+3. **Erreur PowerShell**
+   - Vrifiez la politique d'excution
+   - Utilisez: `powershell -ExecutionPolicy Bypass -File ...`
+
+##  Support
+
+Pour les problmes spcifiques aux outils Apex:
+1. Consultez la documentation individuelle de chaque outil
+2. Vrifiez les logs dans le rpertoire `logs/`
+3. Rfrez-vous  la documentation NextGeneration
+
+##  Ressources
+
+- [Documentation NextGeneration](../docs/)
+- [Apex_VBA_FRAMEWORK Original](G:/Dev/Apex_VBA_FRAMEWORK/)
+'''
+        
+        guide_path = self.target_path / "INSTALLATION_GUIDE_APEX.md"
+        with open(guide_path, 'w', encoding='utf-8') as f:
+            f.write(guide_content)
+        
+        return {
+            "type": "installation_guide",
+            "name": "INSTALLATION_GUIDE_APEX.md", 
+            "path": str(guide_path),
+            "content_length": len(guide_content)
+        }
+
+# Test de l'agent si excut directement
 if __name__ == "__main__":
     import sys
     
@@ -724,7 +1001,7 @@ if __name__ == "__main__":
     else:
         target_path = "tools/imported_tools"
         
-    # Test avec des données simulées
+    # Test avec des donnes simules
     test_data = {
         "tested_tools": [
             {

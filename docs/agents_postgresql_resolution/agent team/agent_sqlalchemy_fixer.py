@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-🔧 Agent SQLAlchemy Fixer
-Mission: Correction spécialisée des erreurs SQLAlchemy et modèles ORM
+[TOOL] Agent SQLAlchemy Fixer
+Mission: Correction spcialise des erreurs SQLAlchemy et modles ORM
 """
 
 import os
@@ -34,7 +34,7 @@ class SQLAlchemyFixerAgent:
         )
         self.logger = logging.getLogger(self.agent_id)
         
-        # Patterns de problèmes SQLAlchemy
+        # Patterns de problmes SQLAlchemy
         self.patterns_problemes = {
             "metadata_conflict": r"metadata\s*=\s*Column",
             "textual_sql": r'execute\s*\(\s*["\']([^"\']*)["\']',
@@ -59,7 +59,7 @@ class SQLAlchemyFixerAgent:
         python_files = list(project_root.glob("**/*.py"))
         
         for py_file in python_files:
-            # Éviter fichiers temporaires et cache
+            # viter fichiers temporaires et cache
             if any(skip in str(py_file) for skip in ['__pycache__', '.git', 'venv', 'node_modules']):
                 continue
                 
@@ -67,7 +67,7 @@ class SQLAlchemyFixerAgent:
                 with open(py_file, 'r', encoding='utf-8') as f:
                     contenu = f.read()
                     
-                # Vérifier si le fichier contient SQLAlchemy
+                # Vrifier si le fichier contient SQLAlchemy
                 if 'sqlalchemy' in contenu.lower() or 'Column' in contenu:
                     analyse_fichier = self.analyser_fichier_specifique(py_file, contenu)
                     if analyse_fichier["problemes_detectes"]:
@@ -79,7 +79,7 @@ class SQLAlchemyFixerAgent:
         return analyse
     
     def analyser_fichier_specifique(self, fichier_path, contenu):
-        """Analyse un fichier spécifique pour problèmes SQLAlchemy"""
+        """Analyse un fichier spcifique pour problmes SQLAlchemy"""
         analyse_fichier = {
             "fichier": str(fichier_path),
             "taille": len(contenu),
@@ -91,7 +91,7 @@ class SQLAlchemyFixerAgent:
         lignes = contenu.split('\n')
         
         for num_ligne, ligne in enumerate(lignes, 1):
-            # Détection conflit metadata
+            # Dtection conflit metadata
             if re.search(self.patterns_problemes["metadata_conflict"], ligne):
                 analyse_fichier["problemes_detectes"].append({
                     "type": "metadata_conflict",
@@ -103,10 +103,10 @@ class SQLAlchemyFixerAgent:
                     "ligne": num_ligne,
                     "original": ligne.strip(),
                     "corrige": ligne.replace("metadata =", "session_metadata ="),
-                    "explication": "Renommage pour éviter conflit avec SQLAlchemy metadata"
+                    "explication": "Renommage pour viter conflit avec SQLAlchemy metadata"
                 })
                 
-            # Détection expressions SQL sans text()
+            # Dtection expressions SQL sans text()
             match_sql = re.search(self.patterns_problemes["textual_sql"], ligne)
             if match_sql and 'text(' not in ligne:
                 sql_query = match_sql.group(1)
@@ -127,7 +127,7 @@ class SQLAlchemyFixerAgent:
                     "explication": "Ajout text() pour SQLAlchemy 2.x compatibility"
                 })
                 
-            # Vérification imports text manquants
+            # Vrification imports text manquants
             if 'execute(' in ligne and 'text(' in ligne and not any('from sqlalchemy import' in l and 'text' in l for l in lignes[:num_ligne]):
                 if not any(p["type"] == "import_text_missing" for p in analyse_fichier["problemes_detectes"]):
                     analyse_fichier["problemes_detectes"].append({
@@ -140,7 +140,7 @@ class SQLAlchemyFixerAgent:
         return analyse_fichier
     
     def creer_corrections_automatiques(self, analyse_fichiers):
-        """Crée les corrections automatiques pour les fichiers"""
+        """Cre les corrections automatiques pour les fichiers"""
         self.logger.info("Creation des corrections automatiques")
         
         corrections = {
@@ -150,7 +150,7 @@ class SQLAlchemyFixerAgent:
             "backups_requis": []
         }
         
-        # Répertoire pour les solutions
+        # Rpertoire pour les solutions
         solutions_dir = self.workspace / "solutions" / "sqlalchemy_fixes"
         solutions_dir.mkdir(parents=True, exist_ok=True)
         
@@ -160,7 +160,7 @@ class SQLAlchemyFixerAgent:
                 
             fichier_path = Path(fichier_analyse["fichier"])
             
-            # Création du script de correction
+            # Cration du script de correction
             script_correction = self.generer_script_correction(fichier_analyse)
             
             # Sauvegarde script
@@ -187,14 +187,14 @@ class SQLAlchemyFixerAgent:
         return corrections
     
     def generer_script_correction(self, fichier_analyse):
-        """Génère un script de correction pour un fichier"""
+        """Gnre un script de correction pour un fichier"""
         fichier_path = Path(fichier_analyse["fichier"])
         
         script_content = f'''#!/usr/bin/env python3
 """
 Script de correction automatique SQLAlchemy
 Fichier cible: {fichier_path}
-Généré par: Agent SQLAlchemy Fixer
+Gnr par: Agent SQLAlchemy Fixer
 Date: {datetime.now().isoformat()}
 """
 
@@ -210,7 +210,7 @@ def appliquer_corrections():
     # 1. Backup du fichier original
     fichier_backup.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(fichier_original, fichier_backup)
-    print(f"✅ Backup créé: {{fichier_backup}}")
+    print(f"[CHECK] Backup cr: {{fichier_backup}}")
     
     # 2. Lecture du contenu
     with open(fichier_original, 'r', encoding='utf-8') as f:
@@ -222,7 +222,7 @@ def appliquer_corrections():
     
 '''
         
-        # Ajout des corrections spécifiques
+        # Ajout des corrections spcifiques
         for correction in fichier_analyse["corrections_proposees"]:
             script_content += f'''
     # Correction ligne {correction["ligne"]}: {correction["explication"]}
@@ -233,24 +233,24 @@ def appliquer_corrections():
     corrections_appliquees += 1
 '''
         
-        # Ajout imports nécessaires si manquants
+        # Ajout imports ncessaires si manquants
         has_text_import = any(p["type"] == "import_text_missing" for p in fichier_analyse["problemes_detectes"])
         if has_text_import:
             script_content += '''
     # Ajout import text si manquant
     if "from sqlalchemy import text" not in contenu_corrige:
-        # Recherche d'un import SQLAlchemy existant pour insérer après
+        # Recherche d'un import SQLAlchemy existant pour insrer aprs
         lignes = contenu_corrige.split('\\n')
         for i, ligne in enumerate(lignes):
             if "from sqlalchemy import" in ligne and "text" not in ligne:
-                # Ajout text à l'import existant
+                # Ajout text  l'import existant
                 if ligne.endswith(')'):
                     lignes[i] = ligne[:-1] + ", text)"
                 else:
                     lignes[i] = ligne + ", text"
                 break
         else:
-            # Ajout nouvel import si aucun trouvé
+            # Ajout nouvel import si aucun trouv
             for i, ligne in enumerate(lignes):
                 if ligne.startswith("import ") or ligne.startswith("from "):
                     lignes.insert(i, "from sqlalchemy import text")
@@ -261,14 +261,14 @@ def appliquer_corrections():
         
         script_content += f'''
     
-    # 4. Vérification des corrections
+    # 4. Vrification des corrections
     if corrections_appliquees > 0:
-        # Sauvegarde du fichier corrigé
+        # Sauvegarde du fichier corrig
         with open(fichier_original, 'w', encoding='utf-8') as f:
             f.write(contenu_corrige)
-        print(f"✅ {{corrections_appliquees}} corrections appliquées à {{fichier_original}}")
+        print(f"[CHECK] {{corrections_appliquees}} corrections appliques  {{fichier_original}}")
         
-        # Création d'un rapport de correction
+        # Cration d'un rapport de correction
         rapport_correction = {{
             "timestamp": "{datetime.now().isoformat()}",
             "fichier": str(fichier_original),
@@ -278,7 +278,7 @@ def appliquer_corrections():
         
         return rapport_correction
     else:
-        print("ℹ️ Aucune correction nécessaire")
+        print(" Aucune correction ncessaire")
         return None
 
 def restaurer_backup():
@@ -288,10 +288,10 @@ def restaurer_backup():
     
     if fichier_backup.exists():
         shutil.copy2(fichier_backup, fichier_original)
-        print(f"✅ Fichier restauré depuis backup: {{fichier_backup}}")
+        print(f"[CHECK] Fichier restaur depuis backup: {{fichier_backup}}")
         return True
     else:
-        print(f"❌ Backup non trouvé: {{fichier_backup}}")
+        print(f"[CROSS] Backup non trouv: {{fichier_backup}}")
         return False
 
 if __name__ == "__main__":
@@ -302,15 +302,15 @@ if __name__ == "__main__":
     else:
         rapport = appliquer_corrections()
         if rapport:
-            print(f"\\n📊 Rapport: {{rapport}}")
+            print(f"\\n[CHART] Rapport: {{rapport}}")
         else:
-            print("\\n🎯 Aucune action requise")
+            print("\\n[TARGET] Aucune action requise")
 '''
         
         return script_content
     
     def executer_corrections_test(self, corrections):
-        """Exécute les corrections en mode test (simulation)"""
+        """Excute les corrections en mode test (simulation)"""
         self.logger.info("Execution des corrections en mode test")
         
         resultats_test = {
@@ -328,7 +328,7 @@ if __name__ == "__main__":
                 with open(script_path, 'r', encoding='utf-8') as f:
                     script_content = f.read()
                 
-                # Vérification syntaxe Python
+                # Vrification syntaxe Python
                 try:
                     ast.parse(script_content)
                     syntaxe_valide = True
@@ -353,7 +353,7 @@ if __name__ == "__main__":
                     "erreur": str(e)
                 })
         
-        # Calcul estimation succès
+        # Calcul estimation succs
         scripts_valides = len([t for t in resultats_test["corrections_testees"] if t["syntaxe_valide"]])
         total_scripts = len(resultats_test["corrections_testees"])
         
@@ -363,8 +363,8 @@ if __name__ == "__main__":
         return resultats_test
     
     def generer_rapport(self, analyse_fichiers, corrections, resultats_test):
-        """Génère le rapport Markdown détaillé"""
-        rapport_content = f"""# 🔧 Rapport Agent SQLAlchemy Fixer
+        """Gnre le rapport Markdown dtaill"""
+        rapport_content = f"""# [TOOL] Rapport Agent SQLAlchemy Fixer
 
 **Agent :** {self.name}  
 **ID :** {self.agent_id}  
@@ -374,84 +374,84 @@ if __name__ == "__main__":
 
 ---
 
-## 📋 RÉSUMÉ EXÉCUTIF
+## [CLIPBOARD] RSUM EXCUTIF
 
-### 🎯 Mission
-Détection et correction automatique des erreurs SQLAlchemy dans le projet NextGeneration.
+### [TARGET] Mission
+Dtection et correction automatique des erreurs SQLAlchemy dans le projet NextGeneration.
 
-### 📊 Résultats d'Analyse
-- **Fichiers analysés :** {len(analyse_fichiers.get('fichiers_analyses', []))}
-- **Scripts de correction créés :** {len(corrections.get('scripts_correction', []))}
-- **Corrections testées :** {len(resultats_test.get('corrections_testees', []))}
-- **Estimation succès :** {resultats_test.get('estimation_succes', 0):.1f}%
-- **Prêt pour exécution :** {'✅ Oui' if resultats_test.get('estimation_succes', 0) >= 80 else '⚠️ Avec précautions'}
+### [CHART] Rsultats d'Analyse
+- **Fichiers analyss :** {len(analyse_fichiers.get('fichiers_analyses', []))}
+- **Scripts de correction crs :** {len(corrections.get('scripts_correction', []))}
+- **Corrections testes :** {len(resultats_test.get('corrections_testees', []))}
+- **Estimation succs :** {resultats_test.get('estimation_succes', 0):.1f}%
+- **Prt pour excution :** {'[CHECK] Oui' if resultats_test.get('estimation_succes', 0) >= 80 else ' Avec prcautions'}
 
 ---
 
-## 🔍 ANALYSE FICHIERS SQLALCHEMY
+## [SEARCH] ANALYSE FICHIERS SQLALCHEMY
 
-### 📁 Fichiers Problématiques
+### [FOLDER] Fichiers Problmatiques
 ```json
 {json.dumps(analyse_fichiers.get('fichiers_analyses', []), indent=2, ensure_ascii=False)}
 ```
 
 ---
 
-## 🛠️ CORRECTIONS AUTOMATIQUES CRÉÉES
+##  CORRECTIONS AUTOMATIQUES CRES
 
-### 📜 Scripts de Correction
+###  Scripts de Correction
 ```json
 {json.dumps(corrections.get('scripts_correction', []), indent=2, ensure_ascii=False)}
 ```
 
-### 💾 Backups Requis
+###  Backups Requis
 ```json
 {json.dumps(corrections.get('backups_requis', []), indent=2, ensure_ascii=False)}
 ```
 
 ---
 
-## 🧪 RÉSULTATS TESTS DE CORRECTION
+##  RSULTATS TESTS DE CORRECTION
 
-### ✅ Tests de Validation
+### [CHECK] Tests de Validation
 ```json
 {json.dumps(resultats_test.get('corrections_testees', []), indent=2, ensure_ascii=False)}
 ```
 
-### ❌ Erreurs Détectées
+### [CROSS] Erreurs Dtectes
 ```json
 {json.dumps(resultats_test.get('erreurs_simulation', []), indent=2, ensure_ascii=False)}
 ```
 
 ---
 
-## 🚀 PROCÉDURE D'EXÉCUTION
+## [ROCKET] PROCDURE D'EXCUTION
 
-### 1. 📋 Pré-requis
+### 1. [CLIPBOARD] Pr-requis
 ```bash
-# Vérification environnement
+# Vrification environnement
 cd docs/agents_postgresql_resolution/solutions/sqlalchemy_fixes
 
 # Validation scripts
 ls -la *.py
 ```
 
-### 2. 🔄 Exécution Corrections
+### 2.  Excution Corrections
 ```bash
-# Exécution automatique de tous les scripts
+# Excution automatique de tous les scripts
 for script in fix_*.py; do
-    echo "Exécution: $script"
+    echo "Excution: $script"
     python "$script"
 done
 
-# Ou exécution individuelle
+# Ou excution individuelle
 python fix_models.py
 python fix_session.py
 ```
 
-### 3. 🔙 Procédure Rollback
+### 3.  Procdure Rollback
 ```bash
-# En cas de problème - restauration
+# En cas de problme - restauration
 for script in fix_*.py; do
     python "$script" --restore
 done
@@ -459,35 +459,35 @@ done
 
 ---
 
-## 🎯 CORRECTIONS PRINCIPALES
+## [TARGET] CORRECTIONS PRINCIPALES
 
-### 1. 🔧 Conflit Attribut Metadata
-**Problème :** `metadata = Column(...)` entre en conflit avec SQLAlchemy
+### 1. [TOOL] Conflit Attribut Metadata
+**Problme :** `metadata = Column(...)` entre en conflit avec SQLAlchemy
 **Solution :** 
 ```python
-# Avant (problématique)
+# Avant (problmatique)
 class AgentSession(Base):
     metadata = Column(JSON)
 
-# Après (corrigé)
+# Aprs (corrig)
 class AgentSession(Base):
     session_metadata = Column(JSON)
 ```
 
-### 2. 🔧 Expressions SQL sans text()
-**Problème :** SQLAlchemy 2.x requiert text() pour SQL brut
+### 2. [TOOL] Expressions SQL sans text()
+**Problme :** SQLAlchemy 2.x requiert text() pour SQL brut
 **Solution :**
 ```python
-# Avant (problématique)
+# Avant (problmatique)
 result = conn.execute("SELECT 1 as test_value")
 
-# Après (corrigé)
+# Aprs (corrig)
 from sqlalchemy import text
 result = conn.execute(text("SELECT 1 as test_value"))
 ```
 
-### 3. 🔧 Imports Manquants
-**Problème :** Import text() manquant
+### 3. [TOOL] Imports Manquants
+**Problme :** Import text() manquant
 **Solution :**
 ```python
 # Ajout automatique
@@ -496,99 +496,99 @@ from sqlalchemy import create_engine, Column, Integer, String, text
 
 ---
 
-## 📊 IMPACT DES CORRECTIONS
+## [CHART] IMPACT DES CORRECTIONS
 
-### ✅ Bénéfices Attendus
-- Résolution erreurs "metadata reserved"
-- Compatibilité SQLAlchemy 2.x
+### [CHECK] Bnfices Attendus
+- Rsolution erreurs "metadata reserved"
+- Compatibilit SQLAlchemy 2.x
 - Tests PostgreSQL fonctionnels
-- Stabilité environnement de développement
+- Stabilit environnement de dveloppement
 
-### ⚠️ Risques Mitigés
+###  Risques Mitigs
 - Backup automatique avant modification
-- Scripts réversibles (--restore)
-- Validation syntaxe préalable
+- Scripts rversibles (--restore)
+- Validation syntaxe pralable
 - Test en mode simulation
 
 ---
 
-## 📞 COORDINATION AGENTS
+##  COORDINATION AGENTS
 
-### 🤝 Collaboration Requise
-- **🧪 Agent Testing :** Validation corrections appliquées
-- **🪟 Agent Windows :** Test environnement local
-- **🐳 Agent Docker :** Validation containers après corrections
+###  Collaboration Requise
+- ** Agent Testing :** Validation corrections appliques
+- ** Agent Windows :** Test environnement local
+- ** Agent Docker :** Validation containers aprs corrections
 
-### 📤 Données Partagées
-- Scripts de correction prêts à exécuter
-- Procédures de backup/restore
+###  Donnes Partages
+- Scripts de correction prts  excuter
+- Procdures de backup/restore
 - Guide de validation post-correction
 - Documentation des modifications
 
 ---
 
-## 🔄 PLAN D'EXÉCUTION RECOMMANDÉ
+##  PLAN D'EXCUTION RECOMMAND
 
-### Phase 1 - Préparation (15 min)
-- [ ] Validation environnement de développement
-- [ ] Vérification backup système
-- [ ] Test accès fichiers projet
+### Phase 1 - Prparation (15 min)
+- [ ] Validation environnement de dveloppement
+- [ ] Vrification backup systme
+- [ ] Test accs fichiers projet
 
-### Phase 2 - Exécution (30 min)
+### Phase 2 - Excution (30 min)
 - [ ] Application corrections SQLAlchemy
 - [ ] Validation syntaxe Python
 - [ ] Test import modules
 
 ### Phase 3 - Validation (45 min)
-- [ ] Exécution suite tests PostgreSQL
-- [ ] Vérification absence erreurs
+- [ ] Excution suite tests PostgreSQL
+- [ ] Vrification absence erreurs
 - [ ] Documentation modifications
 
 ### Phase 4 - Finalisation (15 min)
 - [ ] Nettoyage fichiers temporaires
-- [ ] Mise à jour documentation
+- [ ] Mise  jour documentation
 - [ ] Rapport final
 
 ---
 
-## 📊 MÉTRIQUES DE SUCCÈS
+## [CHART] MTRIQUES DE SUCCS
 
-### 🎯 Objectifs Techniques
-- [ ] 100% des erreurs metadata résolues
+### [TARGET] Objectifs Techniques
+- [ ] 100% des erreurs metadata rsolues
 - [ ] 100% des expressions SQL avec text()
 - [ ] Imports SQLAlchemy corrects
 - [ ] Tests PostgreSQL passent
 
-### 📈 Indicateurs de Validation
+###  Indicateurs de Validation
 - Code compile sans erreur SQLAlchemy
-- Tests de connexion PostgreSQL réussissent
-- Modèles ORM initialisent correctement
-- Performance maintenue ou améliorée
+- Tests de connexion PostgreSQL russissent
+- Modles ORM initialisent correctement
+- Performance maintenue ou amliore
 
 ---
 
-**🔧 Corrections SQLAlchemy prêtes pour déploiement sécurisé !**
+**[TOOL] Corrections SQLAlchemy prtes pour dploiement scuris !**
 
-*Rapport généré automatiquement par {self.name} v{self.version}*
+*Rapport gnr automatiquement par {self.name} v{self.version}*
 """
         
         return rapport_content
     
     def executer_mission(self):
-        """Exécute la mission complète de correction SQLAlchemy"""
-        self.logger.info(f"🚀 {self.name} - Démarrage mission")
+        """Excute la mission complte de correction SQLAlchemy"""
+        self.logger.info(f"[ROCKET] {self.name} - Dmarrage mission")
         
         try:
             # Analyse des fichiers SQLAlchemy
             analyse_fichiers = self.analyser_fichiers_sqlalchemy()
             
-            # Création des corrections automatiques
+            # Cration des corrections automatiques
             corrections = self.creer_corrections_automatiques(analyse_fichiers)
             
             # Test des corrections
             resultats_test = self.executer_corrections_test(corrections)
             
-            # Génération rapport
+            # Gnration rapport
             rapport = self.generer_rapport(analyse_fichiers, corrections, resultats_test)
             
             # Sauvegarde rapport
@@ -596,9 +596,9 @@ from sqlalchemy import create_engine, Column, Integer, String, text
             with open(self.rapport_file, 'w', encoding='utf-8') as f:
                 f.write(rapport)
                 
-            self.logger.info(f"✅ Rapport SQLAlchemy Fixer sauvegardé: {self.rapport_file}")
+            self.logger.info(f"[CHECK] Rapport SQLAlchemy Fixer sauvegard: {self.rapport_file}")
             
-            # Sauvegarde données JSON
+            # Sauvegarde donnes JSON
             json_file = self.rapport_file.with_suffix('.json')
             mission_data = {
                 "analyse_fichiers": analyse_fichiers,
@@ -618,7 +618,7 @@ from sqlalchemy import create_engine, Column, Integer, String, text
             }
             
         except Exception as e:
-            self.logger.error(f"❌ Erreur mission SQLAlchemy Fixer: {e}")
+            self.logger.error(f"[CROSS] Erreur mission SQLAlchemy Fixer: {e}")
             return {
                 "statut": "ERROR",
                 "erreur": str(e)
@@ -627,4 +627,4 @@ from sqlalchemy import create_engine, Column, Integer, String, text
 if __name__ == "__main__":
     agent = SQLAlchemyFixerAgent()
     resultat = agent.executer_mission()
-    print(f"Mission SQLAlchemy Fixer terminée: {resultat['statut']}")
+    print(f"Mission SQLAlchemy Fixer termine: {resultat['statut']}")

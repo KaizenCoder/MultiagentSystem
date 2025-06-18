@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-🤖 Agent 12 - Performance Monitor (Claude Sonnet 4)
-Spécialisation: Prometheus + Grafana + Alerting + Health Checks temps réel
-Modèle: Claude Sonnet 4
-Créé: 2025-06-18 18:30
+[ROBOT] Agent 12 - Performance Monitor (Claude Sonnet 4)
+Spcialisation: Prometheus + Grafana + Alerting + Health Checks temps rel
+Modle: Claude Sonnet 4
+Cr: 2025-06-18 18:30
 """
 
 import os
@@ -15,7 +15,7 @@ import subprocess
 import requests
 
 class AgentPerformanceMonitor:
-    """Agent spécialisé monitoring temps réel enterprise NextGeneration"""
+    """Agent spcialis monitoring temps rel enterprise NextGeneration"""
     
     def __init__(self):
         self.monitoring_dir = Path("monitoring")
@@ -25,8 +25,8 @@ class AgentPerformanceMonitor:
         self.start_time = datetime.now()
         
     def setup_prometheus_config(self):
-        """Configuration Prometheus enterprise avec métriques NextGeneration"""
-        print("📊 Configuration Prometheus enterprise...")
+        """Configuration Prometheus enterprise avec mtriques NextGeneration"""
+        print("[CHART] Configuration Prometheus enterprise...")
         
         prometheus_config = {
             "global": {
@@ -82,12 +82,12 @@ class AgentPerformanceMonitor:
         with open(config_file, "w") as f:
             yaml.dump(prometheus_config, f, default_flow_style=False, sort_keys=False)
         
-        print(f"✅ Configuration Prometheus sauvée: {config_file}")
+        print(f"[CHECK] Configuration Prometheus sauve: {config_file}")
         return config_file
     
     def create_alerting_rules(self):
-        """Règles d'alerting spécifiques NextGeneration"""
-        print("🚨 Création règles alerting NextGeneration...")
+        """Rgles d'alerting spcifiques NextGeneration"""
+        print(" Cration rgles alerting NextGeneration...")
         
         alerting_rules = {
             "groups": [
@@ -102,7 +102,7 @@ class AgentPerformanceMonitor:
                             "labels": {"severity": "critical"},
                             "annotations": {
                                 "summary": "Application NextGeneration indisponible",
-                                "description": "L'application NextGeneration ne répond plus depuis {{ $value }} secondes."
+                                "description": "L'application NextGeneration ne rpond plus depuis {{ $value }} secondes."
                             }
                         },
                         {
@@ -111,8 +111,8 @@ class AgentPerformanceMonitor:
                             "for": "2m",
                             "labels": {"severity": "critical"},
                             "annotations": {
-                                "summary": "Taux d'erreur élevé: {{ $value }}%",
-                                "description": "Le taux d'erreur 5xx dépasse 10% sur 5 minutes."
+                                "summary": "Taux d'erreur lev: {{ $value }}%",
+                                "description": "Le taux d'erreur 5xx dpasse 10% sur 5 minutes."
                             }
                         },
                         {
@@ -121,8 +121,8 @@ class AgentPerformanceMonitor:
                             "for": "5m",
                             "labels": {"severity": "warning"},
                             "annotations": {
-                                "summary": "Temps de réponse élevé P95: {{ $value }}s",
-                                "description": "Le P95 des temps de réponse dépasse 500ms."
+                                "summary": "Temps de rponse lev P95: {{ $value }}s",
+                                "description": "Le P95 des temps de rponse dpasse 500ms."
                             }
                         },
                         {
@@ -131,8 +131,8 @@ class AgentPerformanceMonitor:
                             "for": "5m",
                             "labels": {"severity": "warning"},
                             "annotations": {
-                                "summary": "Usage mémoire élevé: {{ $value | humanize1024 }}B",
-                                "description": "L'usage mémoire dépasse 1GB."
+                                "summary": "Usage mmoire lev: {{ $value | humanize1024 }}B",
+                                "description": "L'usage mmoire dpasse 1GB."
                             }
                         },
                         {
@@ -141,8 +141,8 @@ class AgentPerformanceMonitor:
                             "for": "3m",
                             "labels": {"severity": "warning"},
                             "annotations": {
-                                "summary": "Échec coordination agents: {{ $value }}/min",
-                                "description": "Taux d'échec coordination agents > 5%."
+                                "summary": "chec coordination agents: {{ $value }}/min",
+                                "description": "Taux d'chec coordination agents > 5%."
                             }
                         }
                     ]
@@ -202,12 +202,12 @@ class AgentPerformanceMonitor:
         with open(alert_file, "w") as f:
             yaml.dump(alertmanager_config, f, default_flow_style=False)
         
-        print(f"✅ Règles alerting sauvées: {rules_file}")
+        print(f"[CHECK] Rgles alerting sauves: {rules_file}")
         return rules_file
     
     def create_grafana_dashboards(self):
-        """3 dashboards Grafana opérationnels NextGeneration"""
-        print("📈 Création dashboards Grafana...")
+        """3 dashboards Grafana oprationnels NextGeneration"""
+        print(" Cration dashboards Grafana...")
         
         # Dashboard 1: Business Metrics
         business_dashboard = {
@@ -401,12 +401,12 @@ class AgentPerformanceMonitor:
                 json.dump(dashboard, f, indent=2)
             created_files.append(dashboard_file)
             
-        print(f"✅ 3 dashboards Grafana créés: {[f.name for f in created_files]}")
+        print(f"[CHECK] 3 dashboards Grafana crs: {[f.name for f in created_files]}")
         return created_files
     
     def create_health_checks(self):
         """Health checks Kubernetes-ready (liveness, readiness, startup)"""
-        print("🏥 Création health checks enterprise...")
+        print(" Cration health checks enterprise...")
         
         health_checks_code = '''"""
 Health Checks Enterprise - NextGeneration
@@ -422,7 +422,7 @@ from datetime import datetime
 
 health_router = APIRouter(prefix="/health", tags=["health"])
 
-# État application
+# tat application
 app_state = {
     "startup_time": time.time(),
     "dependencies_ready": False,
@@ -432,11 +432,11 @@ app_state = {
 @health_router.get("/live")
 async def liveness_probe() -> Dict[str, Any]:
     """
-    Liveness probe - Vérifie que l'application tourne
-    Kubernetes: redémarre le pod si échoue
+    Liveness probe - Vrifie que l'application tourne
+    Kubernetes: redmarre le pod si choue
     """
     try:
-        # Vérifications basiques
+        # Vrifications basiques
         current_time = datetime.utcnow()
         uptime = time.time() - app_state["startup_time"]
         
@@ -458,13 +458,13 @@ async def liveness_probe() -> Dict[str, Any]:
 @health_router.get("/ready")
 async def readiness_probe() -> Dict[str, Any]:
     """
-    Readiness probe - Vérifie que l'app peut servir du trafic
-    Kubernetes: retire du load balancer si échoue
+    Readiness probe - Vrifie que l'app peut servir du trafic
+    Kubernetes: retire du load balancer si choue
     """
     try:
         checks = {}
         
-        # Vérification mémoire
+        # Vrification mmoire
         memory = psutil.virtual_memory()
         if memory.percent > 90:
             raise HTTPException(
@@ -473,7 +473,7 @@ async def readiness_probe() -> Dict[str, Any]:
             )
         checks["memory"] = f"{memory.percent}%"
         
-        # Vérification CPU
+        # Vrification CPU
         cpu_percent = psutil.cpu_percent(interval=0.1)
         if cpu_percent > 95:
             raise HTTPException(
@@ -482,9 +482,9 @@ async def readiness_probe() -> Dict[str, Any]:
             )
         checks["cpu"] = f"{cpu_percent}%"
         
-        # Vérification dépendances (simulé)
+        # Vrification dpendances (simul)
         if not app_state["dependencies_ready"]:
-            # En production: vérifier DB, Redis, APIs externes
+            # En production: vrifier DB, Redis, APIs externes
             pass
         checks["database"] = "connected"
         checks["cache"] = "connected"
@@ -507,13 +507,13 @@ async def readiness_probe() -> Dict[str, Any]:
 @health_router.get("/startup")
 async def startup_probe() -> Dict[str, Any]:
     """
-    Startup probe - Vérifie que l'app a démarré avec succès
-    Kubernetes: attend que ce probe réussisse avant liveness/readiness
+    Startup probe - Vrifie que l'app a dmarr avec succs
+    Kubernetes: attend que ce probe russisse avant liveness/readiness
     """
     try:
         startup_duration = time.time() - app_state["startup_time"]
         
-        # Considéré comme démarré après 30 secondes max
+        # Considr comme dmarr aprs 30 secondes max
         if startup_duration < 30:
             app_state["dependencies_ready"] = True
             
@@ -533,7 +533,7 @@ async def startup_probe() -> Dict[str, Any]:
 
 @health_router.get("/status")
 async def detailed_status() -> Dict[str, Any]:
-    """Status détaillé pour monitoring/debugging"""
+    """Status dtaill pour monitoring/debugging"""
     return {
         "application": "NextGeneration Orchestrator",
         "version": "2.0.0",
@@ -555,13 +555,13 @@ async def detailed_status() -> Dict[str, Any]:
         with open(health_file, "w") as f:
             f.write(health_checks_code)
             
-        print(f"✅ Health checks sauvés: {health_file}")
+        print(f"[CHECK] Health checks sauvs: {health_file}")
         return health_file
     
     def generate_report(self):
-        """Génération rapport Agent 12"""
+        """Gnration rapport Agent 12"""
         import time
-        time.sleep(2.5)  # Simulation traitement monitoring réaliste
+        time.sleep(2.5)  # Simulation traitement monitoring raliste
         duration = (datetime.now() - self.start_time).total_seconds()
         
         report = {
@@ -597,13 +597,13 @@ async def detailed_status() -> Dict[str, Any]:
         return report
 
 def main():
-    """Exécution Agent 12 - Performance Monitor"""
-    print("🚀 Agent 12 - Performance Monitor (Claude Sonnet 4)")
-    print("🎯 Objectif: Monitoring temps réel enterprise NextGeneration")
+    """Excution Agent 12 - Performance Monitor"""
+    print("[ROCKET] Agent 12 - Performance Monitor (Claude Sonnet 4)")
+    print("[TARGET] Objectif: Monitoring temps rel enterprise NextGeneration")
     
     agent = AgentPerformanceMonitor()
     
-    # Exécution séquentielle
+    # Excution squentielle
     prometheus_file = agent.setup_prometheus_config()
     alerting_file = agent.create_alerting_rules()
     dashboard_files = agent.create_grafana_dashboards()
@@ -612,13 +612,13 @@ def main():
     # Rapport final
     report = agent.generate_report()
     
-    print(f"\n✅ AGENT 12 TERMINÉ:")
-    print(f"📊 Configuration Prometheus: {prometheus_file.exists()}")
-    print(f"🚨 Règles alerting: {alerting_file.exists()}")
-    print(f"📈 Dashboards Grafana: {len(dashboard_files)}")
-    print(f"🏥 Health checks: {health_file.exists()}")
-    print(f"⏱️ Durée: {report['duration_seconds']}s")
-    print(f"📋 Rapport: {report['status']}")
+    print(f"\n[CHECK] AGENT 12 TERMIN:")
+    print(f"[CHART] Configuration Prometheus: {prometheus_file.exists()}")
+    print(f" Rgles alerting: {alerting_file.exists()}")
+    print(f" Dashboards Grafana: {len(dashboard_files)}")
+    print(f" Health checks: {health_file.exists()}")
+    print(f" Dure: {report['duration_seconds']}s")
+    print(f"[CLIPBOARD] Rapport: {report['status']}")
     
     return report
 

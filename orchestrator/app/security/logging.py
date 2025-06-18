@@ -1,10 +1,10 @@
 """
-Système de logging sécurisé pour l'orchestrateur.
+Systme de logging scuris pour l'orchestrateur.
 
 Ce module contient les utilitaires pour :
-- Logging sécurisé sans exposition d'informations sensibles
-- Audit logging pour les événements de sécurité
-- Masquage automatique des données sensibles
+- Logging scuris sans exposition d'informations sensibles
+- Audit logging pour les vnements de scurit
+- Masquage automatique des donnes sensibles
 """
 
 import logging
@@ -16,7 +16,7 @@ from orchestrator.app.config import settings
 
 
 class AuditEventType(Enum):
-    """Types d'événements d'audit."""
+    """Types d'vnements d'audit."""
     TASK_CREATED = "task_created"
     TASK_COMPLETED = "task_completed"
     TASK_FAILED = "task_failed"
@@ -31,7 +31,7 @@ class AuditEventType(Enum):
 
 
 class SecurityLogger:
-    """Logger sécurisé qui masque les informations sensibles."""
+    """Logger scuris qui masque les informations sensibles."""
     
     def __init__(self):
         self.logger = logging.getLogger("security")
@@ -39,17 +39,17 @@ class SecurityLogger:
     @staticmethod
     def _mask_sensitive_data(message: str) -> str:
         """
-        Masque les données sensibles dans les messages de log.
+        Masque les donnes sensibles dans les messages de log.
         
         Args:
-            message: Message à nettoyer
+            message: Message  nettoyer
             
         Returns:
-            str: Message avec données sensibles masquées
+            str: Message avec donnes sensibles masques
         """
         import re
         
-        # Masquer les clés API
+        # Masquer les cls API
         message = re.sub(r'(api[_-]?key["\s]*[:=]["\s]*)([a-zA-Z0-9-_]{20,})', r'\1***MASKED***', message, flags=re.IGNORECASE)
         
         # Masquer les tokens
@@ -58,21 +58,21 @@ class SecurityLogger:
         # Masquer les mots de passe
         message = re.sub(r'(password["\s]*[:=]["\s]*)([^\s"]{8,})', r'\1***MASKED***', message, flags=re.IGNORECASE)
         
-        # Masquer les IPs privées dans les messages d'erreur
+        # Masquer les IPs prives dans les messages d'erreur
         message = re.sub(r'\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.1[6-9]\.\d{1,3}\.\d{1,3}|172\.2[0-9]\.\d{1,3}\.\d{1,3}|172\.3[0-1]\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3})\b', '***PRIVATE_IP***', message)
         
         return message
     
     def log_error(self, message: str, error: Exception, include_details: bool = False) -> None:
         """
-        Log une erreur de manière sécurisée.
+        Log une erreur de manire scurise.
         
         Args:
             message: Message de base
-            error: Exception à logger
-            include_details: Inclure les détails complets (seulement en mode debug)
+            error: Exception  logger
+            include_details: Inclure les dtails complets (seulement en mode debug)
         """
-        # Masquer les données sensibles
+        # Masquer les donnes sensibles
         safe_message = self._mask_sensitive_data(message)
         
         if include_details and hasattr(settings, 'DEBUG') and settings.DEBUG:
@@ -83,13 +83,13 @@ class SecurityLogger:
     
     def log_security_event(self, event_type: str, details: Dict[str, Any]) -> None:
         """
-        Log un événement de sécurité.
+        Log un vnement de scurit.
         
         Args:
-            event_type: Type d'événement
-            details: Détails de l'événement
+            event_type: Type d'vnement
+            details: Dtails de l'vnement
         """
-        # Nettoyer les détails
+        # Nettoyer les dtails
         safe_details = {}
         for key, value in details.items():
             if isinstance(value, str):
@@ -101,12 +101,12 @@ class SecurityLogger:
     
     def log_access(self, endpoint: str, user_info: Dict[str, Any], success: bool) -> None:
         """
-        Log un accès API.
+        Log un accs API.
         
         Args:
-            endpoint: Endpoint accédé
-            user_info: Informations utilisateur (sanitisées)
-            success: Succès de l'accès
+            endpoint: Endpoint accd
+            user_info: Informations utilisateur (sanitises)
+            success: Succs de l'accs
         """
         status = "SUCCESS" if success else "DENIED"
         safe_user_info = {k: self._mask_sensitive_data(str(v)) for k, v in user_info.items()}
@@ -115,7 +115,7 @@ class SecurityLogger:
 
 
 class AuditLogger:
-    """Logger d'audit pour les événements système."""
+    """Logger d'audit pour les vnements systme."""
     
     def __init__(self):
         self.logger = logging.getLogger("audit")
@@ -123,12 +123,12 @@ class AuditLogger:
     @staticmethod
     def log_event(event_type: AuditEventType, user_id: Optional[str], details: Dict[str, Any]) -> None:
         """
-        Log un événement d'audit.
+        Log un vnement d'audit.
         
         Args:
-            event_type: Type d'événement d'audit
-            user_id: ID utilisateur (peut être None pour les événements système)
-            details: Détails de l'événement
+            event_type: Type d'vnement d'audit
+            user_id: ID utilisateur (peut tre None pour les vnements systme)
+            details: Dtails de l'vnement
         """
         audit_entry = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -137,19 +137,19 @@ class AuditLogger:
             "details": details
         }
         
-        # Log vers le système d'audit
+        # Log vers le systme d'audit
         logger = logging.getLogger("audit")
         logger.info("AUDIT_EVENT", extra=audit_entry)
     
     @staticmethod
     def log_task_event(event_type: AuditEventType, session_id: str, details: Dict[str, Any]) -> None:
         """
-        Log un événement lié à une tâche.
+        Log un vnement li  une tche.
         
         Args:
-            event_type: Type d'événement
+            event_type: Type d'vnement
             session_id: ID de session
-            details: Détails de l'événement
+            details: Dtails de l'vnement
         """
         task_details = {
             "session_id": session_id,
@@ -160,12 +160,12 @@ class AuditLogger:
     @staticmethod
     def log_security_violation(violation_type: str, source_ip: str, details: Dict[str, Any]) -> None:
         """
-        Log une violation de sécurité.
+        Log une violation de scurit.
         
         Args:
             violation_type: Type de violation
             source_ip: IP source
-            details: Détails de la violation
+            details: Dtails de la violation
         """
         security_details = {
             "violation_type": violation_type,
@@ -181,9 +181,9 @@ audit_logger = AuditLogger()
 
 
 def setup_secure_logging():
-    """Configure le logging sécurisé."""
+    """Configure le logging scuris."""
     
-    # Configuration du logger sécurité
+    # Configuration du logger scurit
     security_handler = logging.StreamHandler()
     security_handler.setFormatter(
         logging.Formatter(
@@ -207,6 +207,6 @@ def setup_secure_logging():
     audit_log.addHandler(audit_handler)
     audit_log.setLevel(logging.INFO)
     
-    # Empêcher la propagation vers le logger root
+    # Empcher la propagation vers le logger root
     security_log.propagate = False
     audit_log.propagate = False 

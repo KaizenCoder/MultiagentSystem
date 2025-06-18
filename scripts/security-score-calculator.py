@@ -443,23 +443,23 @@ def main():
         json.dump(result, f, indent=2)
     
     # Print summary
-    print(f"🔒 Security Analysis Summary")
+    print(f" Security Analysis Summary")
     print(f"Overall Security Score: {result['overall_score']}/100")
     print(f"Risk Level: {result['risk_level']}")
     print(f"Production Readiness: {result['production_readiness_score']:.1f}/100")
-    print(f"Deployment Approved: {'✅ YES' if result['deployment_approved'] else '❌ NO'}")
+    print(f"Deployment Approved: {'[CHECK] YES' if result['deployment_approved'] else '[CROSS] NO'}")
     
     if result['blocking_reasons']:
-        print(f"\n🚨 Blocking Reasons:")
+        print(f"\n Blocking Reasons:")
         for reason in result['blocking_reasons']:
             print(f"  - {reason}")
     
     if result['recommendations']:
-        print(f"\n💡 Recommendations:")
+        print(f"\n[BULB] Recommendations:")
         for rec in result['recommendations'][:5]:  # Show top 5 recommendations
             print(f"  - {rec}")
     
-    print(f"\n📊 Detailed Metrics:")
+    print(f"\n[CHART] Detailed Metrics:")
     for metric in result['metrics']:
         print(f"  {metric['name']}: {metric['score']:.1f}/100 (weight: {metric['weight']})")
     

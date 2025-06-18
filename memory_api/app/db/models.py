@@ -1,5 +1,5 @@
 """
-Modèles SQLAlchemy pour PostgreSQL - NextGeneration Memory API
+Modles SQLAlchemy pour PostgreSQL - NextGeneration Memory API
 Enterprise-grade models for multi-agent system
 """
 from sqlalchemy import Column, Integer, String, Text, DateTime, JSON, ForeignKey, Boolean, Index, Float, text
@@ -40,18 +40,18 @@ class AgentSession(Base):
     )
 
 class MemoryItem(Base):
-    """Table des éléments de mémoire - Enterprise optimized"""
+    """Table des lments de mmoire - Enterprise optimized"""
     __tablename__ = "memory_items"
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     session_id = Column(UUID(as_uuid=True), ForeignKey("agent_sessions.id", ondelete="CASCADE"), nullable=False, index=True)
     content = Column(Text, nullable=False)
-    content_hash = Column(String(64), index=True)  # SHA256 pour déduplication
+    content_hash = Column(String(64), index=True)  # SHA256 pour dduplication
     content_type = Column(String(100), default="text", index=True)  # text, code, analysis, error, result
     category = Column(String(100), index=True)  # task, plan, reflection, communication
-    importance_score = Column(Integer, default=1, index=True)  # 1-10 pour priorité
+    importance_score = Column(Integer, default=1, index=True)  # 1-10 pour priorit
     token_count = Column(Integer, default=0)
-    embeddings_vector = Column(JSONB)  # Pour recherche sémantique
+    embeddings_vector = Column(JSONB)  # Pour recherche smantique
     created_at = Column(DateTime(timezone=True), server_default=func.now(), index=True)
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     accessed_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -71,7 +71,7 @@ class MemoryItem(Base):
     )
 
 class StateItem(Base):
-    """Table des états d'agents - Enterprise optimized"""
+    """Table des tats d'agents - Enterprise optimized"""
     __tablename__ = "state_items"
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -104,7 +104,7 @@ class AgentCommunication(Base):
     from_agent = Column(String(255), nullable=False, index=True)
     to_agent = Column(String(255), nullable=False, index=True)
     session_id = Column(String(255), index=True)  # Pour regrouper les communications par session
-    conversation_id = Column(UUID(as_uuid=True), index=True)  # Pour chaîner les messages
+    conversation_id = Column(UUID(as_uuid=True), index=True)  # Pour chaner les messages
     parent_message_id = Column(UUID(as_uuid=True), ForeignKey("agent_communications.id"))
     message_type = Column(String(100), nullable=False, index=True)  # task, result, error, query, response
     subject = Column(String(500))  # Sujet du message
@@ -117,7 +117,7 @@ class AgentCommunication(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now(), index=True)
     delivered_at = Column(DateTime(timezone=True))
     processed_at = Column(DateTime(timezone=True))
-    response_time_ms = Column(Integer)  # Temps de réponse en millisecondes
+    response_time_ms = Column(Integer)  # Temps de rponse en millisecondes
     session_metadata = Column(JSONB)
     
     # Relations
@@ -132,7 +132,7 @@ class AgentCommunication(Base):
     )
 
 class AgentMetrics(Base):
-    """Table des métriques d'agents - Enterprise optimized"""
+    """Table des mtriques d'agents - Enterprise optimized"""
     __tablename__ = "agent_metrics"
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -140,13 +140,13 @@ class AgentMetrics(Base):
     agent_type = Column(String(100), index=True)  # supervisor, worker, specialist
     metric_name = Column(String(255), nullable=False, index=True)
     metric_category = Column(String(100), index=True)  # performance, quality, cost, usage
-    metric_value = Column(JSONB, nullable=False)  # Flexible pour différents types
-    numeric_value = Column(Float)  # Pour requêtes numériques rapides
+    metric_value = Column(JSONB, nullable=False)  # Flexible pour diffrents types
+    numeric_value = Column(Float)  # Pour requtes numriques rapides
     unit = Column(String(50))  # ms, count, mb, tokens, etc.
     timestamp = Column(DateTime(timezone=True), server_default=func.now(), index=True)
     session_id = Column(String(255), index=True)
     task_id = Column(String(255), index=True)
-    duration_ms = Column(Integer)  # Durée de la métrique si applicable
+    duration_ms = Column(Integer)  # Dure de la mtrique si applicable
     status = Column(String(50), default="active")  # active, archived, error
     session_metadata = Column(JSONB)
     
@@ -166,23 +166,23 @@ class KnowledgeBase(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     title = Column(String(500), nullable=False, index=True)
     content = Column(Text, nullable=False)
-    content_hash = Column(String(64), unique=True, index=True)  # Pour éviter les doublons
-    summary = Column(Text)  # Résumé pour recherche rapide
+    content_hash = Column(String(64), unique=True, index=True)  # Pour viter les doublons
+    summary = Column(Text)  # Rsum pour recherche rapide
     category = Column(String(100), index=True)  # documentation, best_practice, pattern, architecture, etc.
-    subcategory = Column(String(100), index=True)  # Plus de granularité
+    subcategory = Column(String(100), index=True)  # Plus de granularit
     tags = Column(JSONB)  # Liste de tags pour recherche
     source = Column(String(255), index=True)  # Source du document
-    author = Column(String(255))  # Auteur/Agent créateur
+    author = Column(String(255))  # Auteur/Agent crateur
     language = Column(String(10), default="fr", index=True)  # Langue du contenu
     confidence_score = Column(Integer, default=5, index=True)  # 1-10
-    quality_score = Column(Float, default=5.0)  # Score de qualité plus précis
+    quality_score = Column(Float, default=5.0)  # Score de qualit plus prcis
     usage_count = Column(Integer, default=0)  # Nombre d'utilisations
     last_accessed = Column(DateTime(timezone=True))
-    is_verified = Column(Boolean, default=False, index=True)  # Contenu vérifié
-    is_public = Column(Boolean, default=True, index=True)  # Visibilité
+    is_verified = Column(Boolean, default=False, index=True)  # Contenu vrifi
+    is_public = Column(Boolean, default=True, index=True)  # Visibilit
     version = Column(String(20), default="1.0")
-    embeddings_vector = Column(JSONB)  # Vecteurs pour recherche sémantique
-    related_documents = Column(JSONB)  # IDs de documents liés
+    embeddings_vector = Column(JSONB)  # Vecteurs pour recherche smantique
+    related_documents = Column(JSONB)  # IDs de documents lis
     created_at = Column(DateTime(timezone=True), server_default=func.now(), index=True)
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     session_metadata = Column(JSONB)

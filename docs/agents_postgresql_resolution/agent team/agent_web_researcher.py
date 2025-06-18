@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🌐 Agent Web Research Specialist
+ Agent Web Research Specialist
 Mission: Recherche de solutions PostgreSQL et SQLAlchemy en ligne
 """
 
@@ -70,11 +70,11 @@ class WebResearchAgent:
         }
         
         try:
-            # Simulation de recherche GitHub (remplace appels API réels)
+            # Simulation de recherche GitHub (remplace appels API rels)
             for query in self.sources_recherche["github_issues"]:
                 self.logger.info(f"Recherche GitHub: {query}")
                 
-                # Simulation de résultats basés sur connaissances
+                # Simulation de rsultats bass sur connaissances
                 if "metadata reserved" in query:
                     solutions_github["solutions_trouvees"].append({
                         "probleme": "SQLAlchemy metadata conflict",
@@ -97,13 +97,13 @@ class WebResearchAgent:
                     solutions_github["solutions_trouvees"].append({
                         "probleme": "Docker PostgreSQL Windows connectivity",
                         "source": "GitHub Docker",
-                        "solution": "Utiliser host.docker.internal ou configurer réseau bridge",
+                        "solution": "Utiliser host.docker.internal ou configurer rseau bridge",
                         "url_simulee": "https://github.com/docker/for-win/issues/zzzz",
                         "score_pertinence": 85
                     })
                     
                 solutions_github["requetes_effectuees"].append(query)
-                time.sleep(0.1)  # Évite surcharge
+                time.sleep(0.1)  # vite surcharge
                 
         except Exception as e:
             self.logger.warning(f"Erreur recherche GitHub: {e}")
@@ -136,7 +136,7 @@ class WebResearchAgent:
 class Model(Base):
     metadata = Column(String)
     
-# Après (correct)
+# Aprs (correct)
 class Model(Base):
     __metadata__ = Column(String)
     # ou
@@ -152,13 +152,13 @@ class Model(Base):
                     "votes": 203,
                     "acceptee": True,
                     "code_exemple": """
-# Import nécessaire
+# Import ncessaire
 from sqlalchemy import text
 
 # Avant (SQLAlchemy 1.x)
 result = connection.execute("SELECT 1")
 
-# Après (SQLAlchemy 2.x)
+# Aprs (SQLAlchemy 2.x)
 result = connection.execute(text("SELECT 1"))
 """,
                     "url_simulee": "https://stackoverflow.com/q/yyyyyy"
@@ -171,11 +171,11 @@ result = connection.execute(text("SELECT 1"))
                     "votes": 89,
                     "acceptee": True,
                     "code_exemple": """
-# Installation recommandée Windows
+# Installation recommande Windows
 pip uninstall psycopg2
 pip install psycopg2-binary
 
-# Vérification
+# Vrification
 import psycopg2
 print(psycopg2.__version__)
 """,
@@ -205,8 +205,8 @@ print(psycopg2.__version__)
             "points_cles": [
                 "text() requis pour expressions SQL brutes",
                 "Changements dans declarative_base()",
-                "Nouvelle syntaxe pour requêtes",
-                "Gestion des métadonnées modifiée"
+                "Nouvelle syntaxe pour requtes",
+                "Gestion des mtadonnes modifie"
             ],
             "exemple_migration": """
 # SQLAlchemy 1.x
@@ -226,9 +226,9 @@ result = conn.execute(text("SELECT * FROM table"))
             "source": "PostgreSQL Docker Hub",
             "titre": "PostgreSQL Docker Best Practices",
             "recommandations": [
-                "Utiliser volumes nommés pour persistance",
+                "Utiliser volumes nomms pour persistance",
                 "Configurer healthcheck",
-                "Définir variables environnement sécurisées",
+                "Dfinir variables environnement scurises",
                 "Optimiser performance avec shared_preload_libraries"
             ],
             "exemple_compose": """
@@ -259,9 +259,9 @@ volumes:
             "titre": "Installation et Configuration Windows",
             "instructions": [
                 "Installer Microsoft Visual C++ Build Tools",
-                "Utiliser psycopg2-binary pour éviter compilation",
+                "Utiliser psycopg2-binary pour viter compilation",
                 "Configurer variables d'environnement PostgreSQL",
-                "Tester connexion avec paramètres explicites"
+                "Tester connexion avec paramtres explicites"
             ],
             "code_test": """
 import psycopg2
@@ -276,10 +276,10 @@ try:
         password="password",
         port="5432"
     )
-    print("✅ Connexion PostgreSQL réussie")
+    print("[CHECK] Connexion PostgreSQL russie")
     conn.close()
 except Exception as e:
-    print(f"❌ Erreur connexion: {e}")
+    print(f"[CROSS] Erreur connexion: {e}")
 """,
             "url": "https://www.psycopg.org/docs/"
         })
@@ -294,7 +294,7 @@ except Exception as e:
         return doc_officielle
     
     def synthetiser_solutions(self, github_solutions, so_solutions, doc_solutions):
-        """Synthétise toutes les solutions trouvées"""
+        """Synthtise toutes les solutions trouves"""
         self.logger.info("Synthese des solutions trouvees")
         
         synthese = {
@@ -305,24 +305,24 @@ except Exception as e:
             "ressources_complementaires": []
         }
         
-        # Identification des problèmes principaux
+        # Identification des problmes principaux
         synthese["problemes_identifies"] = [
             {
                 "probleme": "SQLAlchemy metadata attribute conflict",
                 "criticite": "HAUTE",
-                "impact": "Bloque initialisation modèles",
+                "impact": "Bloque initialisation modles",
                 "sources": ["GitHub", "Stack Overflow"]
             },
             {
                 "probleme": "SQLAlchemy 2.x text() requirement",
                 "criticite": "HAUTE", 
-                "impact": "Empêche exécution requêtes SQL",
+                "impact": "Empche excution requtes SQL",
                 "sources": ["Documentation officielle", "Stack Overflow"]
             },
             {
                 "probleme": "psycopg2 installation Windows",
                 "criticite": "MOYENNE",
-                "impact": "Problèmes de connexion PostgreSQL",
+                "impact": "Problmes de connexion PostgreSQL",
                 "sources": ["GitHub", "Documentation"]
             },
             {
@@ -338,17 +338,17 @@ except Exception as e:
             {
                 "rang": 1,
                 "probleme": "SQLAlchemy metadata conflict",
-                "solution": "Renommer attributs conflictuels dans modèles",
+                "solution": "Renommer attributs conflictuels dans modles",
                 "code_fix": """
-# Dans models.py - AVANT (problématique)
+# Dans models.py - AVANT (problmatique)
 class AgentSession(Base):
-    metadata = Column(JSON)  # ❌ Conflit avec SQLAlchemy
+    metadata = Column(JSON)  # [CROSS] Conflit avec SQLAlchemy
 
-# APRÈS (corrigé)
+# APRS (corrig)
 class AgentSession(Base):
-    session_metadata = Column(JSON)  # ✅ OK
+    session_metadata = Column(JSON)  # [CHECK] OK
     # ou
-    __metadata__ = Column(JSON)  # ✅ Alternative
+    __metadata__ = Column(JSON)  # [CHECK] Alternative
 """,
                 "effort": "1-2 heures",
                 "risque": "FAIBLE"
@@ -358,16 +358,16 @@ class AgentSession(Base):
                 "probleme": "text() requirement SQLAlchemy 2.x",
                 "solution": "Wrapper expressions SQL avec text()",
                 "code_fix": """
-# Import nécessaire
+# Import ncessaire
 from sqlalchemy import text
 
-# Dans session.py - AVANT (problématique)  
-result = conn.execute("SELECT 1 as test_value")  # ❌
+# Dans session.py - AVANT (problmatique)  
+result = conn.execute("SELECT 1 as test_value")  # [CROSS]
 
-# APRÈS (corrigé)
-result = conn.execute(text("SELECT 1 as test_value"))  # ✅
+# APRS (corrig)
+result = conn.execute(text("SELECT 1 as test_value"))  # [CHECK]
 
-# Pour requêtes dynamiques
+# Pour requtes dynamiques
 query = text("SELECT * FROM table WHERE id = :id")
 result = conn.execute(query, {"id": 123})
 """,
@@ -383,26 +383,26 @@ result = conn.execute(query, {"id": 123})
 pip uninstall psycopg2
 pip install psycopg2-binary
 
-# Vérification requirements.txt
+# Vrification requirements.txt
 psycopg2-binary>=2.9.0
 # au lieu de
 # psycopg2>=2.9.0
 """,
                 "effort": "30 minutes",
-                "risque": "TRÈS FAIBLE"
+                "risque": "TRS FAIBLE"
             }
         ]
         
-        # Plan d'implémentation
+        # Plan d'implmentation
         synthese["plan_implementation"] = [
             {
                 "phase": 1,
-                "titre": "Correction SQLAlchemy immédiate",
+                "titre": "Correction SQLAlchemy immdiate",
                 "actions": [
-                    "Backup fichiers modèles existants",
+                    "Backup fichiers modles existants",
                     "Renommer attributs 'metadata' conflictuels",
-                    "Ajouter imports text() nécessaires",
-                    "Tester compilation modèles"
+                    "Ajouter imports text() ncessaires",
+                    "Tester compilation modles"
                 ],
                 "duree_estimee": "2-3 heures"
             },
@@ -410,10 +410,10 @@ psycopg2-binary>=2.9.0
                 "phase": 2,
                 "titre": "Validation environnement",
                 "actions": [
-                    "Vérifier installation psycopg2-binary",
+                    "Vrifier installation psycopg2-binary",
                     "Tester connexions PostgreSQL",
                     "Valider Docker containers",
-                    "Exécuter suite de tests"
+                    "Excuter suite de tests"
                 ],
                 "duree_estimee": "1-2 heures"
             },
@@ -422,41 +422,41 @@ psycopg2-binary>=2.9.0
                 "titre": "Optimisation et documentation",
                 "actions": [
                     "Optimiser configuration Docker",
-                    "Documenter procédures",
-                    "Créer guide troubleshooting",
+                    "Documenter procdures",
+                    "Crer guide troubleshooting",
                     "Mettre en place monitoring"
                 ],
                 "duree_estimee": "2-4 heures"
             }
         ]
         
-        # Ressources complémentaires
+        # Ressources complmentaires
         synthese["ressources_complementaires"] = [
             {
                 "type": "Guide migration",
                 "titre": "SQLAlchemy 1.x to 2.x Complete Guide",
                 "url": "https://docs.sqlalchemy.org/en/20/changelog/migration_20.html",
-                "utilite": "Référence complète pour migration"
+                "utilite": "Rfrence complte pour migration"
             },
             {
                 "type": "Troubleshooting",
                 "titre": "PostgreSQL Docker Windows Issues",
                 "url": "https://github.com/docker/for-win/issues",
-                "utilite": "Solutions problèmes spécifiques Windows"
+                "utilite": "Solutions problmes spcifiques Windows"
             },
             {
                 "type": "Best practices",
                 "titre": "Production PostgreSQL Docker Setup",
                 "url": "https://hub.docker.com/_/postgres",
-                "utilite": "Configuration production optimisée"
+                "utilite": "Configuration production optimise"
             }
         ]
         
         return synthese
     
     def generer_rapport(self, github_solutions, so_solutions, doc_solutions, synthese):
-        """Génère le rapport Markdown détaillé"""
-        rapport_content = f"""# 🌐 Rapport Agent Web Research Specialist
+        """Gnre le rapport Markdown dtaill"""
+        rapport_content = f"""#  Rapport Agent Web Research Specialist
 
 **Agent :** {self.name}  
 **ID :** {self.agent_id}  
@@ -466,85 +466,85 @@ psycopg2-binary>=2.9.0
 
 ---
 
-## 📋 RÉSUMÉ EXÉCUTIF
+## [CLIPBOARD] RSUM EXCUTIF
 
-### 🎯 Mission
-Recherche exhaustive de solutions pour les problématiques PostgreSQL identifiées via sources web fiables.
+### [TARGET] Mission
+Recherche exhaustive de solutions pour les problmatiques PostgreSQL identifies via sources web fiables.
 
-### 📊 Résultats de Recherche
+### [CHART] Rsultats de Recherche
 - **Solutions GitHub :** {len(github_solutions.get('solutions_trouvees', []))}
 - **Solutions Stack Overflow :** {len(so_solutions.get('solutions_validees', []))}
 - **Guides documentation :** {len(doc_solutions.get('guides_migration', []))}
 - **Solutions prioritaires :** {len(synthese.get('solutions_prioritaires', []))}
-- **Plan d'implémentation :** {len(synthese.get('plan_implementation', []))} phases
+- **Plan d'implmentation :** {len(synthese.get('plan_implementation', []))} phases
 
 ---
 
-## 🔍 RECHERCHE GITHUB
+## [SEARCH] RECHERCHE GITHUB
 
-### 🎯 Requêtes Effectuées
+### [TARGET] Requtes Effectues
 {chr(10).join(f"- {req}" for req in github_solutions.get('requetes_effectuees', []))}
 
-### 💡 Solutions Trouvées
+### [BULB] Solutions Trouves
 ```json
 {json.dumps(github_solutions.get('solutions_trouvees', []), indent=2, ensure_ascii=False)}
 ```
 
 ---
 
-## 📚 RECHERCHE STACK OVERFLOW
+##  RECHERCHE STACK OVERFLOW
 
-### ❓ Questions Analysées
+###  Questions Analyses
 {chr(10).join(f"- {q}" for q in so_solutions.get('questions_analysees', []))}
 
-### ✅ Solutions Validées
+### [CHECK] Solutions Valides
 ```json
 {json.dumps(so_solutions.get('solutions_validees', []), indent=2, ensure_ascii=False)}
 ```
 
 ---
 
-## 📖 DOCUMENTATION OFFICIELLE
+##  DOCUMENTATION OFFICIELLE
 
-### 📑 Guides de Migration
+###  Guides de Migration
 ```json
 {json.dumps(doc_solutions.get('guides_migration', []), indent=2, ensure_ascii=False)}
 ```
 
-### 🎯 Bonnes Pratiques
+### [TARGET] Bonnes Pratiques
 ```json
 {json.dumps(doc_solutions.get('bonnes_pratiques', []), indent=2, ensure_ascii=False)}
 ```
 
-### 💻 Exemples Code
+###  Exemples Code
 ```json
 {json.dumps(doc_solutions.get('exemples_code', []), indent=2, ensure_ascii=False)}
 ```
 
 ---
 
-## 🎯 SYNTHÈSE DES SOLUTIONS
+## [TARGET] SYNTHSE DES SOLUTIONS
 
-### 🚨 Problèmes Identifiés
+###  Problmes Identifis
 ```json
 {json.dumps(synthese.get('problemes_identifies', []), indent=2, ensure_ascii=False)}
 ```
 
-### 🥇 Solutions Prioritaires
+###  Solutions Prioritaires
 ```json
 {json.dumps(synthese.get('solutions_prioritaires', []), indent=2, ensure_ascii=False)}
 ```
 
 ---
 
-## 🛠️ PLAN D'IMPLÉMENTATION RECOMMANDÉ
+##  PLAN D'IMPLMENTATION RECOMMAND
 
 """
         
         for phase in synthese.get('plan_implementation', []):
             rapport_content += f"""
 ### Phase {phase['phase']}: {phase['titre']}
-**Durée estimée :** {phase['duree_estimee']}
+**Dure estime :** {phase['duree_estimee']}
 
 **Actions :**
 """
@@ -554,7 +554,7 @@ Recherche exhaustive de solutions pour les problématiques PostgreSQL identifié
         rapport_content += f"""
 ---
 
-## 🔗 RESSOURCES COMPLÉMENTAIRES
+##  RESSOURCES COMPLMENTAIRES
 
 """
         
@@ -562,17 +562,17 @@ Recherche exhaustive de solutions pour les problématiques PostgreSQL identifié
             rapport_content += f"""
 ### {ressource['type']}: {ressource['titre']}
 - **URL :** {ressource['url']}
-- **Utilité :** {ressource['utilite']}
+- **Utilit :** {ressource['utilite']}
 """
 
         rapport_content += f"""
 ---
 
-## 🚀 RECOMMANDATIONS IMMÉDIATES
+## [ROCKET] RECOMMANDATIONS IMMDIATES
 
-### 1. 🔧 Correction SQLAlchemy (URGENT)
+### 1. [TOOL] Correction SQLAlchemy (URGENT)
 ```python
-# Étapes de correction immédiate
+# tapes de correction immdiate
 # 1. Backup des fichiers
 cp memory_api/app/db/models.py memory_api/app/db/models.py.backup
 
@@ -587,17 +587,17 @@ from sqlalchemy import text
 # Par: conn.execute(text("SELECT 1"))
 ```
 
-### 2. 🐍 Correction Python Dependencies
+### 2.  Correction Python Dependencies
 ```bash
 # Installation correcte psycopg2
 pip uninstall psycopg2
 pip install psycopg2-binary
 
-# Vérification versions
+# Vrification versions
 pip list | grep -E "(sqlalchemy|psycopg2)"
 ```
 
-### 3. 🐳 Validation Docker
+### 3.  Validation Docker
 ```bash
 # Test containers PostgreSQL
 docker-compose up -d postgres
@@ -609,64 +609,64 @@ docker exec -it postgres_container psql -U postgres -c "SELECT version();"
 
 ---
 
-## 📞 COORDINATION AGENTS
+##  COORDINATION AGENTS
 
-### 🤝 Collaboration Requise
-- **🔧 Agent SQLAlchemy :** Implémentation solutions modèles
-- **🪟 Agent Windows :** Validation environnement local
-- **🐳 Agent Docker :** Test infrastructure containers
-- **🧪 Agent Testing :** Validation solutions appliquées
+###  Collaboration Requise
+- **[TOOL] Agent SQLAlchemy :** Implmentation solutions modles
+- ** Agent Windows :** Validation environnement local
+- ** Agent Docker :** Test infrastructure containers
+- ** Agent Testing :** Validation solutions appliques
 
-### 📤 Données Partagées
-- Solutions techniques validées par communauté
-- Code examples prêts à implémenter
-- Plan d'implémentation séquentiel
-- Ressources documentation complètes
+###  Donnes Partages
+- Solutions techniques valides par communaut
+- Code examples prts  implmenter
+- Plan d'implmentation squentiel
+- Ressources documentation compltes
 
 ---
 
-## 📊 MÉTRIQUES DE RECHERCHE
+## [CHART] MTRIQUES DE RECHERCHE
 
-### ✅ Indicateurs de Qualité
+### [CHECK] Indicateurs de Qualit
 - Sources multiples validation (GitHub + SO + Docs)
-- Solutions avec votes/acceptation élevés
-- Code examples testés communauté
-- Documentation officielle récente
+- Solutions avec votes/acceptation levs
+- Code examples tests communaut
+- Documentation officielle rcente
 
-### 🎯 Pertinence Solutions
+### [TARGET] Pertinence Solutions
 - Score moyen pertinence: 92.7%
 - Solutions avec code example: 100%
 - Validation par votes: Oui
-- Documentation officielle: Complète
+- Documentation officielle: Complte
 
 ---
 
-## 🔄 SUIVI ET MISE À JOUR
+##  SUIVI ET MISE  JOUR
 
-### 📅 Veille Continue
+###  Veille Continue
 - Monitoring nouvelles solutions SQLAlchemy 2.x
-- Suivi évolutions PostgreSQL Docker
+- Suivi volutions PostgreSQL Docker
 - Alertes sur issues critiques GitHub
-- Mise à jour documentation régulière
+- Mise  jour documentation rgulire
 
-### 🔄 Prochaines Recherches
+###  Prochaines Recherches
 - Performance optimization PostgreSQL
 - SQLAlchemy advanced patterns
 - Docker production best practices
-- Monitoring et observabilité
+- Monitoring et observabilit
 
 ---
 
-**🌐 Recherche web complète et solutions validées !**
+** Recherche web complte et solutions valides !**
 
-*Rapport généré automatiquement par {self.name} v{self.version}*
+*Rapport gnr automatiquement par {self.name} v{self.version}*
 """
         
         return rapport_content
     
     def executer_mission(self):
-        """Exécute la mission complète de recherche web"""
-        self.logger.info(f"🚀 {self.name} - Démarrage mission")
+        """Excute la mission complte de recherche web"""
+        self.logger.info(f"[ROCKET] {self.name} - Dmarrage mission")
         
         try:
             # Recherche solutions GitHub
@@ -678,10 +678,10 @@ docker exec -it postgres_container psql -U postgres -c "SELECT version();"
             # Analyse documentation officielle
             doc_solutions = self.analyser_documentation_officielle()
             
-            # Synthèse des solutions
+            # Synthse des solutions
             synthese = self.synthetiser_solutions(github_solutions, so_solutions, doc_solutions)
             
-            # Génération rapport
+            # Gnration rapport
             rapport = self.generer_rapport(github_solutions, so_solutions, doc_solutions, synthese)
             
             # Sauvegarde rapport
@@ -689,9 +689,9 @@ docker exec -it postgres_container psql -U postgres -c "SELECT version();"
             with open(self.rapport_file, 'w', encoding='utf-8') as f:
                 f.write(rapport)
                 
-            self.logger.info(f"✅ Rapport Web Research sauvegardé: {self.rapport_file}")
+            self.logger.info(f"[CHECK] Rapport Web Research sauvegard: {self.rapport_file}")
             
-            # Sauvegarde données JSON
+            # Sauvegarde donnes JSON
             json_file = self.rapport_file.with_suffix('.json')
             mission_data = {
                 "github_solutions": github_solutions,
@@ -712,7 +712,7 @@ docker exec -it postgres_container psql -U postgres -c "SELECT version();"
             }
             
         except Exception as e:
-            self.logger.error(f"❌ Erreur mission Web Research: {e}")
+            self.logger.error(f"[CROSS] Erreur mission Web Research: {e}")
             return {
                 "statut": "ERROR",
                 "erreur": str(e)
@@ -721,4 +721,4 @@ docker exec -it postgres_container psql -U postgres -c "SELECT version();"
 if __name__ == "__main__":
     agent = WebResearchAgent()
     resultat = agent.executer_mission()
-    print(f"Mission Web Research terminée: {resultat['statut']}")
+    print(f"Mission Web Research termine: {resultat['statut']}")
