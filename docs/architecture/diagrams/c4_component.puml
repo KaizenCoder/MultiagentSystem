@@ -1,0 +1,55 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title NextGeneration - Component Diagram (Services Layer)
+
+Container_Boundary(services, "Services Layer") {
+    
+    Component(orchestrator_service, "OrchestratorService", "Python Class", "Coordination agents\nCQRS patterns")
+    Component(agent_service, "AgentService", "Python Class", "Gestion cycle vie agents")
+    Component(health_service, "HealthService", "Python Class", "Monitoring santé")
+    
+    Component_Boundary(interfaces, "Service Interfaces") {
+        Component(iorchestrator, "IOrchestratorService", "Interface", "Contrat orchestration")
+        Component(iagent, "IAgentService", "Interface", "Contrat agents")
+        Component(ihealth, "IHealthService", "Interface", "Contrat health")
+    }
+    
+    Component_Boundary(commands, "CQRS Commands") {
+        Component(create_session, "CreateSessionCommand", "Command", "Création session")
+        Component(update_state, "UpdateStateCommand", "Command", "MAJ état")
+        Component(orchestrate, "OrchestateCommand", "Command", "Orchestration")
+    }
+    
+    Component_Boundary(queries, "CQRS Queries") {
+        Component(get_session, "GetSessionQuery", "Query", "Lecture session")
+        Component(list_agents, "ListAgentsQuery", "Query", "Liste agents")
+        Component(system_status, "GetSystemStatusQuery", "Query", "Statut système")
+    }
+}
+
+Component_Ext(repositories, "Repositories", "Data Access", "StateRepository\nAgentRepository")
+
+Rel(orchestrator_service, iorchestrator, "Implements")
+Rel(agent_service, iagent, "Implements")
+Rel(health_service, ihealth, "Implements")
+
+Rel(orchestrator_service, create_session, "Handles")
+Rel(orchestrator_service, update_state, "Handles")
+Rel(orchestrator_service, orchestrate, "Handles")
+
+Rel(orchestrator_service, get_session, "Handles")
+Rel(agent_service, list_agents, "Handles")
+Rel(health_service, system_status, "Handles")
+
+Rel(orchestrator_service, repositories, "Uses")
+Rel(agent_service, repositories, "Uses")
+
+note right of orchestrator_service
+  Architecture Hexagonale:
+  - Ports: Interfaces
+  - Adapters: Repositories
+  - Core: Services
+end note
+
+@enduml

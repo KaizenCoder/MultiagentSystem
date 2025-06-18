@@ -1,0 +1,41 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: nextgeneration-monitor
+rule_files:
+- alerts.yml
+- nextgeneration.rules.yml
+scrape_configs:
+- job_name: nextgeneration-app
+  static_configs:
+  - targets:
+    - localhost:8000
+  metrics_path: /metrics
+  scrape_interval: 5s
+  scrape_timeout: 3s
+- job_name: nextgeneration-orchestrator
+  static_configs:
+  - targets:
+    - localhost:8001
+  metrics_path: /api/v1/metrics
+  scrape_interval: 10s
+- job_name: nextgeneration-agents
+  static_configs:
+  - targets:
+    - localhost:8002
+  metrics_path: /agents/metrics
+- job_name: postgres-exporter
+  static_configs:
+  - targets:
+    - localhost:9187
+- job_name: redis-exporter
+  static_configs:
+  - targets:
+    - localhost:9121
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      - localhost:9093
+    timeout: 10s

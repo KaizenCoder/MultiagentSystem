@@ -1,0 +1,366 @@
+{
+  "metadata": {
+    "generated_at": "2025-06-18T19:25:13.994861",
+    "agent": "Agent 19 - Real Architecture Scanner",
+    "architecture_path": "C:\\Dev\\nextgeneration\\refactoring_workspace\\new_architecture",
+    "total_files": 39,
+    "total_lines": 1110
+  },
+  "overview": {
+    "files_by_type": {
+      ".py": 39
+    },
+    "metrics": {
+      "avg_lines_per_file": 28.46153846153846,
+      "total_functions": 4,
+      "total_classes": 26,
+      "total_endpoints": 11,
+      "async_functions": 0
+    },
+    "complexity_indicators": {
+      "files_count": 39,
+      "avg_file_size": 28.46153846153846,
+      "total_endpoints": 11,
+      "async_ratio": 0.0
+    }
+  },
+  "components_breakdown": {
+    "routers": {
+      "count": 10,
+      "total_lines": 315,
+      "avg_lines": 31.5,
+      "files": [
+        {
+          "name": "agents_router",
+          "path": "routers\\agents_router.py",
+          "lines": 29
+        },
+        {
+          "name": "cache_routes",
+          "path": "routers\\cache_routes.py",
+          "lines": 15
+        },
+        {
+          "name": "core_routes",
+          "path": "routers\\core_routes.py",
+          "lines": 15
+        },
+        {
+          "name": "database_routes",
+          "path": "routers\\database_routes.py",
+          "lines": 15
+        },
+        {
+          "name": "health_checks_enterprise",
+          "path": "routers\\health_checks_enterprise.py",
+          "lines": 141
+        },
+        {
+          "name": "health_router",
+          "path": "routers\\health_router.py",
+          "lines": 26
+        },
+        {
+          "name": "monitoring_routes",
+          "path": "routers\\monitoring_routes.py",
+          "lines": 15
+        },
+        {
+          "name": "orchestration_router",
+          "path": "routers\\orchestration_router.py",
+          "lines": 29
+        },
+        {
+          "name": "performance_routes",
+          "path": "routers\\performance_routes.py",
+          "lines": 15
+        },
+        {
+          "name": "security_routes",
+          "path": "routers\\security_routes.py",
+          "lines": 15
+        }
+      ]
+    },
+    "services": {
+      "count": 12,
+      "total_lines": 518,
+      "avg_lines": 43.166666666666664,
+      "files": [
+        {
+          "name": "agentservice",
+          "path": "services\\agentservice.py",
+          "lines": 127
+        },
+        {
+          "name": "cache_service",
+          "path": "services\\cache_service.py",
+          "lines": 15
+        },
+        {
+          "name": "core_service",
+          "path": "services\\core_service.py",
+          "lines": 15
+        },
+        {
+          "name": "database_service",
+          "path": "services\\database_service.py",
+          "lines": 15
+        },
+        {
+          "name": "healthservice",
+          "path": "services\\healthservice.py",
+          "lines": 96
+        },
+        {
+          "name": "monitoring_service",
+          "path": "services\\monitoring_service.py",
+          "lines": 15
+        },
+        {
+          "name": "orchestratorservice",
+          "path": "services\\orchestratorservice.py",
+          "lines": 115
+        },
+        {
+          "name": "performance_service",
+          "path": "services\\performance_service.py",
+          "lines": 15
+        },
+        {
+          "name": "security_service",
+          "path": "services\\security_service.py",
+          "lines": 15
+        },
+        {
+          "name": "iagentservice",
+          "path": "services\\interfaces\\iagentservice.py",
+          "lines": 30
+        },
+        {
+          "name": "ihealthservice",
+          "path": "services\\interfaces\\ihealthservice.py",
+          "lines": 30
+        },
+        {
+          "name": "iorchestratorservice",
+          "path": "services\\interfaces\\iorchestratorservice.py",
+          "lines": 30
+        }
+      ]
+    },
+    "schemas": {
+      "count": 4,
+      "total_lines": 72,
+      "avg_lines": 18.0,
+      "files": [
+        {
+          "name": "core_schemas",
+          "path": "schemas\\core_schemas.py",
+          "lines": 18
+        },
+        {
+          "name": "database_schemas",
+          "path": "schemas\\database_schemas.py",
+          "lines": 18
+        },
+        {
+          "name": "monitoring_schemas",
+          "path": "schemas\\monitoring_schemas.py",
+          "lines": 18
+        },
+        {
+          "name": "security_schemas",
+          "path": "schemas\\security_schemas.py",
+          "lines": 18
+        }
+      ]
+    },
+    "dependencies": {
+      "count": 4,
+      "total_lines": 55,
+      "avg_lines": 13.75,
+      "files": [
+        {
+          "name": "auth_deps",
+          "path": "dependencies\\auth_deps.py",
+          "lines": 2
+        },
+        {
+          "name": "core_deps",
+          "path": "dependencies\\core_deps.py",
+          "lines": 2
+        },
+        {
+          "name": "database_deps",
+          "path": "dependencies\\database_deps.py",
+          "lines": 2
+        },
+        {
+          "name": "__init__",
+          "path": "dependencies\\__init__.py",
+          "lines": 49
+        }
+      ]
+    },
+    "repositories": {
+      "count": 3,
+      "total_lines": 75,
+      "avg_lines": 25.0,
+      "files": [
+        {
+          "name": "cache_repository",
+          "path": "repositories\\cache_repository.py",
+          "lines": 25
+        },
+        {
+          "name": "database_repository",
+          "path": "repositories\\database_repository.py",
+          "lines": 25
+        },
+        {
+          "name": "monitoring_repository",
+          "path": "repositories\\monitoring_repository.py",
+          "lines": 25
+        }
+      ]
+    },
+    "other": {
+      "count": 6,
+      "total_lines": 75,
+      "avg_lines": 12.5,
+      "files": [
+        {
+          "name": "main",
+          "path": "main.py",
+          "lines": 70
+        },
+        {
+          "name": "__init__",
+          "path": "__init__.py",
+          "lines": 1
+        },
+        {
+          "name": "__init__",
+          "path": "repositories\\__init__.py",
+          "lines": 1
+        },
+        {
+          "name": "__init__",
+          "path": "routers\\__init__.py",
+          "lines": 1
+        },
+        {
+          "name": "__init__",
+          "path": "schemas\\__init__.py",
+          "lines": 1
+        },
+        {
+          "name": "__init__",
+          "path": "services\\__init__.py",
+          "lines": 1
+        }
+      ]
+    }
+  },
+  "endpoints_catalog": [
+    {
+      "method": "GET",
+      "path": "/",
+      "source_file": "main.py",
+      "component_type": "other"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "source_file": "main.py",
+      "component_type": "other"
+    },
+    {
+      "method": "GET",
+      "path": "/status",
+      "source_file": "routers\\agents_router.py",
+      "component_type": "routers"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "source_file": "routers\\cache_routes.py",
+      "component_type": "routers"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "source_file": "routers\\core_routes.py",
+      "component_type": "routers"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "source_file": "routers\\database_routes.py",
+      "component_type": "routers"
+    },
+    {
+      "method": "GET",
+      "path": "/status",
+      "source_file": "routers\\health_router.py",
+      "component_type": "routers"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "source_file": "routers\\monitoring_routes.py",
+      "component_type": "routers"
+    },
+    {
+      "method": "GET",
+      "path": "/status",
+      "source_file": "routers\\orchestration_router.py",
+      "component_type": "routers"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "source_file": "routers\\performance_routes.py",
+      "component_type": "routers"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "source_file": "routers\\security_routes.py",
+      "component_type": "routers"
+    }
+  ],
+  "dependencies_graph": [
+    "schemas.commands",
+    "typing",
+    "psutil",
+    "services",
+    "repositories",
+    "base_repository",
+    "fastapi",
+    "time",
+    "config",
+    "base_service",
+    "functools",
+    "schemas.queries",
+    "fastapi.middleware.cors",
+    "asyncio",
+    "dependencies",
+    "repositories.interfaces",
+    "datetime",
+    "schemas",
+    "pydantic",
+    "abc",
+    "dataclasses",
+    "routers",
+    "contextlib"
+  ],
+  "recommendations": [
+    {
+      "type": "quality",
+      "priority": "high",
+      "message": "Couverture tests faible: 0 tests pour 39 fichiers"
+    }
+  ]
+}

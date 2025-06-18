@@ -1,0 +1,41 @@
+global:
+  evaluation_interval: 15s
+  external_labels:
+    components: '6'
+    endpoints_count: '11'
+    files_count: '39'
+    monitor: nextgeneration-real-architecture
+  scrape_interval: 15s
+scrape_configs:
+- job_name: nextgeneration-main
+  metrics_path: /metrics
+  scrape_interval: 5s
+  static_configs:
+  - targets:
+    - localhost:8000
+- job_name: nextgeneration-routers
+  metrics_path: /metrics/routers
+  params:
+    routers:
+    - agents_router
+    - cache_routes
+    - core_routes
+    - database_routes
+    - health_checks_enterprise
+  scrape_interval: 10s
+  static_configs:
+  - targets:
+    - localhost:8000
+- job_name: nextgeneration-services
+  metrics_path: /metrics/services
+  params:
+    services:
+    - agentservice
+    - cache_service
+    - core_service
+    - database_service
+    - healthservice
+  scrape_interval: 15s
+  static_configs:
+  - targets:
+    - localhost:8000

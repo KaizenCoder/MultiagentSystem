@@ -1,0 +1,361 @@
+{
+  "agent": "Agent Analyzer Alpha - Claude Sonnet 4",
+  "model": "claude-3-5-sonnet-20241022",
+  "file_path": "orchestrator/app/agents/advanced_coordination.py",
+  "timestamp": "2025-06-18T14:49:45.215391",
+  "ast_analysis": {
+    "functions": [
+      {
+        "name": "get_advanced_coordination",
+        "line": 776,
+        "args_count": 0,
+        "is_async": false
+      },
+      {
+        "name": "__init__",
+        "line": 117,
+        "args_count": 1,
+        "is_async": false
+      },
+      {
+        "name": "add_task",
+        "line": 123,
+        "args_count": 2,
+        "is_async": false
+      },
+      {
+        "name": "get_next_task",
+        "line": 135,
+        "args_count": 1,
+        "is_async": false
+      },
+      {
+        "name": "mark_completed",
+        "line": 143,
+        "args_count": 2,
+        "is_async": false
+      },
+      {
+        "name": "_can_execute",
+        "line": 154,
+        "args_count": 2,
+        "is_async": false
+      },
+      {
+        "name": "get_queue_stats",
+        "line": 158,
+        "args_count": 1,
+        "is_async": false
+      },
+      {
+        "name": "__init__",
+        "line": 172,
+        "args_count": 1,
+        "is_async": false
+      },
+      {
+        "name": "can_allocate",
+        "line": 186,
+        "args_count": 3,
+        "is_async": false
+      },
+      {
+        "name": "allocate_resources",
+        "line": 200,
+        "args_count": 3,
+        "is_async": false
+      },
+      {
+        "name": "deallocate_resources",
+        "line": 221,
+        "args_count": 2,
+        "is_async": false
+      },
+      {
+        "name": "get_utilization",
+        "line": 242,
+        "args_count": 1,
+        "is_async": false
+      },
+      {
+        "name": "refresh_llm_tokens",
+        "line": 251,
+        "args_count": 1,
+        "is_async": false
+      },
+      {
+        "name": "__init__",
+        "line": 259,
+        "args_count": 1,
+        "is_async": false
+      },
+      {
+        "name": "get_communication_stats",
+        "line": 330,
+        "args_count": 1,
+        "is_async": false
+      },
+      {
+        "name": "__init__",
+        "line": 341,
+        "args_count": 1,
+        "is_async": false
+      },
+      {
+        "name": "get_coordination_metrics",
+        "line": 667,
+        "args_count": 1,
+        "is_async": false
+      }
+    ],
+    "classes": [
+      {
+        "name": "AgentPriority",
+        "line": 27,
+        "methods_count": 0
+      },
+      {
+        "name": "AgentStatus",
+        "line": 35,
+        "methods_count": 0
+      },
+      {
+        "name": "ResourceType",
+        "line": 45,
+        "methods_count": 0
+      },
+      {
+        "name": "AgentTask",
+        "line": 55,
+        "methods_count": 0
+      },
+      {
+        "name": "AgentInstance",
+        "line": 72,
+        "methods_count": 0
+      },
+      {
+        "name": "ResourcePool",
+        "line": 87,
+        "methods_count": 0
+      },
+      {
+        "name": "CoordinationMetrics",
+        "line": 100,
+        "methods_count": 0
+      },
+      {
+        "name": "TaskQueue",
+        "line": 114,
+        "methods_count": 6
+      },
+      {
+        "name": "ResourceManager",
+        "line": 169,
+        "methods_count": 6
+      },
+      {
+        "name": "CommunicationOptimizer",
+        "line": 256,
+        "methods_count": 2
+      },
+      {
+        "name": "AdvancedAgentCoordinator",
+        "line": 338,
+        "methods_count": 2
+      }
+    ],
+    "imports": [
+      "asyncio",
+      "logging",
+      "time",
+      "from datetime",
+      "from typing",
+      "from dataclasses",
+      "from enum",
+      "from collections",
+      "json",
+      "uuid",
+      "from config",
+      "from observability.monitoring",
+      "from security.logging",
+      "from advanced_state_manager",
+      "from performance.memory_optimizer",
+      "random"
+    ],
+    "total_nodes": 4052
+  },
+  "metrics": {
+    "lines_of_code": 624,
+    "cyclomatic_complexity": 50,
+    "cognitive_complexity": 40,
+    "nesting_depth": 5,
+    "number_of_functions": 36,
+    "number_of_classes": 11,
+    "god_class_score": 0.624
+  },
+  "dependencies": {
+    "imports": [
+      "asyncio",
+      "logging",
+      "time",
+      "from datetime",
+      "from typing",
+      "from dataclasses",
+      "from enum",
+      "from collections",
+      "json",
+      "uuid",
+      "from config",
+      "from observability.monitoring",
+      "from security.logging",
+      "from advanced_state_manager",
+      "from performance.memory_optimizer",
+      "random"
+    ],
+    "internal_dependencies": [],
+    "external_dependencies": [
+      "asyncio",
+      "logging",
+      "time",
+      "datetime",
+      "typing",
+      "dataclasses",
+      "enum",
+      "collections",
+      "json",
+      "uuid",
+      "config",
+      "observability.monitoring",
+      "security.logging",
+      "advanced_state_manager",
+      "performance.memory_optimizer",
+      "random"
+    ],
+    "circular_dependencies": [],
+    "coupling_score": 0.0
+  },
+  "hotspots": [
+    {
+      "type": "analysis_error",
+      "severity": "LOW",
+      "description": "Invalid format specifier ' \"...\", \"location\": \"line X\", \"severity\": \"HIGH/MEDIUM/LOW\", \"description\": \"...\"' for object of type 'str'"
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "HIGH",
+      "type": "SPLIT_FILE",
+      "description": "Fichier trop volumineux (624 lignes)",
+      "impact": "Améliore la maintenabilité",
+      "effort": "4-8 heures",
+      "affected_lines": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99
+      ]
+    }
+  ],
+  "summary": {
+    "god_class_score": 0.624,
+    "complexity_level": "TRÈS ÉLEVÉE",
+    "refactoring_priority": "CRITIQUE",
+    "estimated_effort": "2-8 heures (quelques jours)"
+  }
+}

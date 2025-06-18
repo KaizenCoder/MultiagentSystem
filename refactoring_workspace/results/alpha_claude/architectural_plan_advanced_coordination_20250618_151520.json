@@ -1,0 +1,11 @@
+{
+  "file_path": "orchestrator/app/agents/advanced_coordination.py",
+  "current_lines": 1000,
+  "target_lines": 150,
+  "modules_to_extract": [],
+  "dependencies": [],
+  "patterns_applied": [],
+  "migration_strategy": "Analyse manuelle requise",
+  "risk_level": "ÉLEVÉ",
+  "estimated_effort_hours": 16
+}

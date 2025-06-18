@@ -1,0 +1,68 @@
+{
+  "agent": "Agent 13 - Documentation Generator",
+  "model": "GPT-4 Turbo",
+  "specialization": "C4 Model + UML + API Docs + ADRs",
+  "start_time": "2025-06-18T18:44:23.169401",
+  "duration_seconds": 0.02,
+  "architecture_analysis": {
+    "files_count": 39,
+    "total_lines": 1110,
+    "routers": [
+      "agents_router.py",
+      "health_router.py",
+      "orchestration_router.py"
+    ],
+    "services": [
+      "agentservice.py",
+      "cache_service.py",
+      "core_service.py",
+      "database_service.py",
+      "healthservice.py",
+      "monitoring_service.py",
+      "orchestratorservice.py",
+      "performance_service.py",
+      "security_service.py",
+      "iagentservice.py",
+      "ihealthservice.py",
+      "iorchestratorservice.py"
+    ],
+    "dependencies": [
+      "auth_deps.py",
+      "core_deps.py",
+      "database_deps.py",
+      "__init__.py"
+    ],
+    "schemas": [
+      "core_schemas.py",
+      "database_schemas.py",
+      "monitoring_schemas.py",
+      "security_schemas.py"
+    ],
+    "patterns_detected": [
+      "Dependency Injection",
+      "FastAPI",
+      "Router Pattern",
+      "Pydantic Models"
+    ]
+  },
+  "deliverables": {
+    "c4_diagrams": 3,
+    "adrs_count": 5,
+    "api_documentation": "OpenAPI auto-generated",
+    "migration_guide": "Blue-Green procedure"
+  },
+  "documentation_coverage": {
+    "architecture_patterns": [
+      "Dependency Injection",
+      "FastAPI",
+      "Router Pattern",
+      "Pydantic Models"
+    ],
+    "files_analyzed": 39,
+    "total_lines": 1110,
+    "c4_model": "Context, Container, Component",
+    "decision_records": "5 ADRs complets"
+  },
+  "status": "COMPLETED",
+  "quality_score": 97.8
+}

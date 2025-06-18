@@ -1,0 +1,18 @@
+{
+  "version": "1.0.0",
+  "created": "2025-06-18T14:06:31.225274",
+  "project_root": "C:\\Dev\\nextgeneration",
+  "critical_files": [
+    "orchestrator/app/main.py",
+    "orchestrator/app/agents/advanced_coordination.py",
+    "orchestrator/app/performance/redis_cluster_manager.py",
+    "orchestrator/app/observability/monitoring.py",
+    "orchestrator/app/config_fixed.py",
+    "orchestrator/app/graph/state.py"
+  ],
+  "retention_days": 30,
+  "compression_enabled": true,
+  "encryption_enabled": false,
+  "auto_rollback_threshold": 0.8,
+  "max_snapshots": 50
+}

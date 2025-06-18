@@ -1,10 +1,16 @@
 import os
 import argparse
+import json
+from typing import List, Dict
 
-def get_project_tree(root_path, exclude_dirs, exclude_files):
+def get_project_tree(root_path, exclude_dirs, exclude_files, include_only=None):
     """Génère une arborescence de projet formatée."""
     tree_lines = ["."]
     for root, dirs, files in os.walk(root_path):
+        # Filtrer selon include_only si spécifié
+        if include_only:
+            dirs[:] = [d for d in dirs if any(pattern in os.path.join(root, d) for pattern in include_only)]
+        
         # Exclure les répertoires spécifiés
         dirs[:] = [d for d in dirs if d not in exclude_dirs and os.path.join(root, d) not in exclude_dirs]
         
@@ -17,6 +23,9 @@ def get_project_tree(root_path, exclude_dirs, exclude_files):
             
         for i, f in enumerate(sorted(files)):
             if f not in exclude_files:
+                # Filtrer les fichiers selon include_only si spécifié
+                if include_only and not any(pattern in os.path.join(root, f) for pattern in include_only):
+                    continue
                 sub_indent = '└── ' if i == len(files) - 1 else '├── '
                 tree_lines.append(f"{indent}{sub_indent}{f}")
     return "\n".join(tree_lines)
@@ -44,30 +53,65 @@ def get_file_content_as_markdown(file_path, root_path):
     except Exception as e:
         return f"\n<details><summary><code>{relative_path.replace(os.sep, '/')}</code> (Erreur de lecture)</summary>\n\n```text\nImpossible de lire le fichier: {e}\n```\n\n</details>"
 
-def main(template_file, output_file):
+def should_include_file(file_path, include_patterns, root_path):
+    """Vérifie si un fichier doit être inclus selon les patterns."""
+    if not include_patterns:
+        return True
+    
+    relative_path = os.path.relpath(file_path, root_path)
+    return any(pattern in relative_path for pattern in include_patterns)
+
+def main(template_file, output_file, mode='selective', include_patterns=None, config_file=None):
     """Fonction principale pour générer le document."""
     root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     
-    # Éléments à exclure
+    # Charger la configuration si fournie
+    if config_file and os.path.exists(config_file):
+        with open(config_file, 'r', encoding='utf-8') as f:
+            config = json.load(f)
+            include_patterns = config.get('include_patterns', include_patterns)
+            mode = config.get('mode', mode)
+    
+    # Éléments à exclure par défaut
     exclude_dirs = ['.git', '__pycache__', 'node_modules', '.vscode', 'chroma_db']
     exclude_files = [
         '.DS_Store', 'PITCH_NEXTGENERATION.md', 'PITCH_NEXTGENERATION_FINAL.md',
         os.path.basename(__file__)
     ]
     
+    # Configuration selon le mode
+    if mode == 'minimal':
+        # Mode minimal : seulement les fichiers essentiels
+        include_patterns = include_patterns or [
+            'agent_factory_experts_team/',
+            'coordinateur_equipe_experts.py',
+            'expert_claude_architecture.py',
+            'expert_chatgpt_robustesse.py',
+            'README.md',
+            'requirements.txt'
+        ]
+    elif mode == 'full':
+        # Mode complet : tout le codebase
+        include_patterns = None
+    else:
+        # Mode sélectif : patterns personnalisés
+        pass
+    
     # Lire le modèle de base
     with open(template_file, 'r', encoding='utf-8') as f:
         content = f.read()
 
     # Générer et insérer l'arborescence
-    print("Génération de l'arborescence du projet...")
-    project_tree = get_project_tree(root_dir, exclude_dirs, exclude_files)
+    print(f"Génération de l'arborescence du projet (mode: {mode})...")
+    project_tree = get_project_tree(root_dir, exclude_dirs, exclude_files, include_patterns)
     tree_placeholder = "L'arborescence complète du projet sera insérée ici"
     content = content.replace(tree_placeholder, f"```\n{project_tree}\n```")
 
     # Générer et insérer le contenu des fichiers
     print("Intégration du codebase...")
     codebase_content = []
+    files_included = 0
+    
     for root, dirs, files in os.walk(root_dir):
         dirs[:] = [d for d in dirs if d not in exclude_dirs]
         for file in files:
@@ -75,16 +119,51 @@ def main(template_file, output_file):
                 continue
             
             file_path = os.path.join(root, file)
+            
+            # Vérifier si le fichier doit être inclus
+            if not should_include_file(file_path, include_patterns, root_dir):
+                continue
+                
             codebase_content.append(get_file_content_as_markdown(file_path, root_dir))
+            files_included += 1
 
     codebase_placeholder = "(Le contenu des fichiers sera inséré ici)"
     content = content.replace(codebase_placeholder, "\n".join(codebase_content))
+
+    # Ajouter les métadonnées de génération
+    metadata = f"""
+<!-- Métadonnées de génération -->
+<!-- Mode: {mode} -->
+<!-- Fichiers inclus: {files_included} -->
+<!-- Patterns: {include_patterns if include_patterns else 'Tous les fichiers'} -->
+
+"""
+    content = metadata + content
 
     # Écrire le fichier final
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(content)
         
     print(f"🎉 Document final généré avec succès : {output_file}")
+    print(f"📊 Mode: {mode} | Fichiers inclus: {files_included}")
+
+def create_config_template():
+    """Crée un template de configuration."""
+    config_template = {
+        "mode": "selective",
+        "include_patterns": [
+            "agent_factory_experts_team/",
+            "coordinateur_equipe_experts.py",
+            "expert_claude_architecture.py",
+            "expert_chatgpt_robustesse.py",
+            "README.md"
+        ],
+        "description": "Configuration pour génération sélective du pitch Agent Factory"
+    }
+    
+    with open('pitch_config.json', 'w', encoding='utf-8') as f:
+        json.dump(config_template, f, indent=2, ensure_ascii=False)
+    print("📝 Template de configuration créé : pitch_config.json")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Générateur de document de présentation pour NextGeneration.")
@@ -98,5 +177,30 @@ if __name__ == '__main__':
         default='PITCH_NEXTGENERATION_FINAL.md', 
         help='Fichier de sortie à générer.'
     )
+    parser.add_argument(
+        '--mode',
+        choices=['minimal', 'selective', 'full'],
+        default='selective',
+        help='Mode de génération : minimal (fichiers essentiels), selective (patterns personnalisés), full (tout le codebase)'
+    )
+    parser.add_argument(
+        '--include',
+        nargs='*',
+        help='Patterns de fichiers/dossiers à inclure (mode selective)'
+    )
+    parser.add_argument(
+        '--config',
+        help='Fichier de configuration JSON'
+    )
+    parser.add_argument(
+        '--create-config',
+        action='store_true',
+        help='Créer un template de configuration'
+    )
+    
     args = parser.parse_args()
-    main(args.template, args.output) 
+    
+    if args.create_config:
+        create_config_template()
+    else:
+        main(args.template, args.output, args.mode, args.include, args.config) 

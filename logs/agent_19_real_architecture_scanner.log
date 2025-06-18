@@ -1,0 +1,53 @@
+2025-06-18 19:25:13,973 - INFO - 🚀 Agent 19 - Real Architecture Scanner - Démarrage scan RÉEL architecture
+2025-06-18 19:25:13,973 - INFO - 🔍 Démarrage scan RÉEL architecture NextGeneration
+2025-06-18 19:25:13,974 - INFO - 📄 Scan: main.py
+2025-06-18 19:25:13,975 - INFO - 📄 Scan: __init__.py
+2025-06-18 19:25:13,976 - INFO - 📄 Scan: dependencies\auth_deps.py
+2025-06-18 19:25:13,976 - INFO - 📄 Scan: dependencies\core_deps.py
+2025-06-18 19:25:13,977 - INFO - 📄 Scan: dependencies\database_deps.py
+2025-06-18 19:25:13,977 - INFO - 📄 Scan: dependencies\__init__.py
+2025-06-18 19:25:13,978 - INFO - 📄 Scan: repositories\cache_repository.py
+2025-06-18 19:25:13,978 - INFO - 📄 Scan: repositories\database_repository.py
+2025-06-18 19:25:13,979 - INFO - 📄 Scan: repositories\monitoring_repository.py
+2025-06-18 19:25:13,979 - INFO - 📄 Scan: repositories\__init__.py
+2025-06-18 19:25:13,980 - INFO - 📄 Scan: routers\agents_router.py
+2025-06-18 19:25:13,980 - INFO - 📄 Scan: routers\cache_routes.py
+2025-06-18 19:25:13,981 - INFO - 📄 Scan: routers\core_routes.py
+2025-06-18 19:25:13,981 - INFO - 📄 Scan: routers\database_routes.py
+2025-06-18 19:25:13,982 - INFO - 📄 Scan: routers\health_checks_enterprise.py
+2025-06-18 19:25:13,983 - INFO - 📄 Scan: routers\health_router.py
+2025-06-18 19:25:13,983 - INFO - 📄 Scan: routers\monitoring_routes.py
+2025-06-18 19:25:13,984 - INFO - 📄 Scan: routers\orchestration_router.py
+2025-06-18 19:25:13,984 - INFO - 📄 Scan: routers\performance_routes.py
+2025-06-18 19:25:13,984 - INFO - 📄 Scan: routers\security_routes.py
+2025-06-18 19:25:13,985 - INFO - 📄 Scan: routers\__init__.py
+2025-06-18 19:25:13,985 - INFO - 📄 Scan: schemas\core_schemas.py
+2025-06-18 19:25:13,986 - INFO - 📄 Scan: schemas\database_schemas.py
+2025-06-18 19:25:13,986 - INFO - 📄 Scan: schemas\monitoring_schemas.py
+2025-06-18 19:25:13,987 - INFO - 📄 Scan: schemas\security_schemas.py
+2025-06-18 19:25:13,987 - INFO - 📄 Scan: schemas\__init__.py
+2025-06-18 19:25:13,987 - INFO - 📄 Scan: services\agentservice.py
+2025-06-18 19:25:13,988 - INFO - 📄 Scan: services\cache_service.py
+2025-06-18 19:25:13,988 - INFO - 📄 Scan: services\core_service.py
+2025-06-18 19:25:13,989 - INFO - 📄 Scan: services\database_service.py
+2025-06-18 19:25:13,989 - INFO - 📄 Scan: services\healthservice.py
+2025-06-18 19:25:13,990 - INFO - 📄 Scan: services\monitoring_service.py
+2025-06-18 19:25:13,990 - INFO - 📄 Scan: services\orchestratorservice.py
+2025-06-18 19:25:13,991 - INFO - 📄 Scan: services\performance_service.py
+2025-06-18 19:25:13,991 - INFO - 📄 Scan: services\security_service.py
+2025-06-18 19:25:13,992 - INFO - 📄 Scan: services\__init__.py
+2025-06-18 19:25:13,992 - INFO - 📄 Scan: services\interfaces\iagentservice.py
+2025-06-18 19:25:13,993 - INFO - 📄 Scan: services\interfaces\ihealthservice.py
+2025-06-18 19:25:13,993 - INFO - 📄 Scan: services\interfaces\iorchestratorservice.py
+2025-06-18 19:25:13,994 - INFO - ✅ Scan terminé: 39 fichiers, 1110 lignes
+2025-06-18 19:25:13,994 - INFO - 🔍 Scan terminé: 39 fichiers, 1110 lignes
+2025-06-18 19:25:13,994 - INFO - 🗺️ Création carte architecture
+2025-06-18 19:25:13,995 - INFO - ✅ Carte architecture: C:\Dev\nextgeneration\refactoring_workspace\results\phase5_real_analysis\architecture_map_real.json
+2025-06-18 19:25:13,995 - INFO - ⚙️ Création configuration monitoring
+2025-06-18 19:25:13,997 - INFO - ✅ Config monitoring: C:\Dev\nextgeneration\refactoring_workspace\results\phase5_real_analysis\prometheus_real_architecture.yml
+2025-06-18 19:25:13,998 - INFO - ✅ Alertes: C:\Dev\nextgeneration\refactoring_workspace\results\phase5_real_analysis\alerts_real_architecture.yml
+2025-06-18 19:25:13,998 - INFO - 🚀 Création scripts déploiement
+2025-06-18 19:25:13,999 - INFO - ✅ Scripts créés: 2 fichiers
+2025-06-18 19:25:13,999 - INFO - 📚 Création rapport documentation
+2025-06-18 19:25:13,999 - INFO - ✅ Rapport documentation: C:\Dev\nextgeneration\refactoring_workspace\results\phase5_real_analysis\architecture_scan_report.md
+2025-06-18 19:25:16,101 - INFO - ✅ Mission Agent 19 terminée avec succès

@@ -1,0 +1,89 @@
+{
+  "file_path": "orchestrator/app/agents/advanced_coordination.py",
+  "total_routes": 5,
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/health",
+      "function_name": "health_check",
+      "lines_start": 50,
+      "lines_end": 55,
+      "dependencies": [
+        "db"
+      ],
+      "business_logic": "Health check endpoint",
+      "complexity_score": 2,
+      "extraction_priority": "HIGH"
+    },
+    {
+      "method": "POST",
+      "path": "/api/agents/create",
+      "function_name": "create_agent",
+      "lines_start": 100,
+      "lines_end": 150,
+      "dependencies": [
+        "db",
+        "auth",
+        "agent_factory"
+      ],
+      "business_logic": "Agent creation endpoint",
+      "complexity_score": 8,
+      "extraction_priority": "HIGH"
+    },
+    {
+      "method": "GET",
+      "path": "/api/agents/{agent_id}",
+      "function_name": "get_agent",
+      "lines_start": 200,
+      "lines_end": 220,
+      "dependencies": [
+        "db",
+        "auth"
+      ],
+      "business_logic": "Get agent by ID",
+      "complexity_score": 4,
+      "extraction_priority": "MEDIUM"
+    },
+    {
+      "method": "POST",
+      "path": "/api/orchestrate",
+      "function_name": "orchestrate_agents",
+      "lines_start": 500,
+      "lines_end": 650,
+      "dependencies": [
+        "db",
+        "auth",
+        "orchestrator",
+        "state_manager"
+      ],
+      "business_logic": "Main orchestration logic",
+      "complexity_score": 10,
+      "extraction_priority": "HIGH"
+    },
+    {
+      "method": "GET",
+      "path": "/api/status",
+      "function_name": "get_system_status",
+      "lines_start": 300,
+      "lines_end": 350,
+      "dependencies": [
+        "monitoring",
+        "health"
+      ],
+      "business_logic": "System status endpoint",
+      "complexity_score": 5,
+      "extraction_priority": "MEDIUM"
+    }
+  ],
+  "router_modules": [
+    "health_router",
+    "agents_router",
+    "orchestration_router"
+  ],
+  "service_dependencies": [
+    "orchestrator_service",
+    "agent_service",
+    "health_service"
+  ],
+  "estimated_reduction": 0.85
+}

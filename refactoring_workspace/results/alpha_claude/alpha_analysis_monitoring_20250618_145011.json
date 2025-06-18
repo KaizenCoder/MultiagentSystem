@@ -1,0 +1,376 @@
+{
+  "agent": "Agent Analyzer Alpha - Claude Sonnet 4",
+  "model": "claude-3-5-sonnet-20241022",
+  "file_path": "orchestrator/app/observability/monitoring.py",
+  "timestamp": "2025-06-18T14:50:11.096315",
+  "ast_analysis": {
+    "functions": [
+      {
+        "name": "get_monitoring",
+        "line": 659,
+        "args_count": 0,
+        "is_async": false
+      },
+      {
+        "name": "track_request_metrics",
+        "line": 670,
+        "args_count": 1,
+        "is_async": false
+      },
+      {
+        "name": "__post_init__",
+        "line": 51,
+        "args_count": 1,
+        "is_async": false
+      },
+      {
+        "name": "__init__",
+        "line": 81,
+        "args_count": 2,
+        "is_async": false
+      },
+      {
+        "name": "_init_core_metrics",
+        "line": 102,
+        "args_count": 1,
+        "is_async": false
+      },
+      {
+        "name": "_init_business_metrics",
+        "line": 171,
+        "args_count": 1,
+        "is_async": false
+      },
+      {
+        "name": "_create_metric",
+        "line": 217,
+        "args_count": 2,
+        "is_async": false
+      },
+      {
+        "name": "_init_alert_rules",
+        "line": 260,
+        "args_count": 1,
+        "is_async": false
+      },
+      {
+        "name": "increment_counter",
+        "line": 340,
+        "args_count": 4,
+        "is_async": false
+      },
+      {
+        "name": "set_gauge",
+        "line": 351,
+        "args_count": 4,
+        "is_async": false
+      },
+      {
+        "name": "observe_histogram",
+        "line": 362,
+        "args_count": 4,
+        "is_async": false
+      },
+      {
+        "name": "track_request",
+        "line": 373,
+        "args_count": 6,
+        "is_async": false
+      },
+      {
+        "name": "track_llm_request",
+        "line": 398,
+        "args_count": 5,
+        "is_async": false
+      },
+      {
+        "name": "track_cache_operation",
+        "line": 414,
+        "args_count": 4,
+        "is_async": false
+      },
+      {
+        "name": "update_cache_hit_ratio",
+        "line": 424,
+        "args_count": 3,
+        "is_async": false
+      },
+      {
+        "name": "track_user_session",
+        "line": 430,
+        "args_count": 3,
+        "is_async": false
+      },
+      {
+        "name": "update_active_sessions",
+        "line": 436,
+        "args_count": 2,
+        "is_async": false
+      },
+      {
+        "name": "track_security_event",
+        "line": 440,
+        "args_count": 4,
+        "is_async": false
+      },
+      {
+        "name": "track_user_satisfaction",
+        "line": 448,
+        "args_count": 4,
+        "is_async": false
+      },
+      {
+        "name": "update_memory_usage",
+        "line": 455,
+        "args_count": 3,
+        "is_async": false
+      },
+      {
+        "name": "update_api_quota_usage",
+        "line": 461,
+        "args_count": 4,
+        "is_async": false
+      },
+      {
+        "name": "add_health_check",
+        "line": 468,
+        "args_count": 3,
+        "is_async": false
+      },
+      {
+        "name": "get_prometheus_metrics",
+        "line": 521,
+        "args_count": 1,
+        "is_async": false
+      },
+      {
+        "name": "generate_alert_rules_yaml",
+        "line": 532,
+        "args_count": 1,
+        "is_async": false
+      },
+      {
+        "name": "generate_grafana_dashboard",
+        "line": 565,
+        "args_count": 1,
+        "is_async": false
+      },
+      {
+        "name": "decorator",
+        "line": 672,
+        "args_count": 1,
+        "is_async": false
+      }
+    ],
+    "classes": [
+      {
+        "name": "MetricType",
+        "line": 26,
+        "methods_count": 0
+      },
+      {
+        "name": "AlertSeverity",
+        "line": 34,
+        "methods_count": 0
+      },
+      {
+        "name": "CustomMetric",
+        "line": 43,
+        "methods_count": 1
+      },
+      {
+        "name": "AlertRule",
+        "line": 58,
+        "methods_count": 0
+      },
+      {
+        "name": "ProductionMonitoring",
+        "line": 71,
+        "methods_count": 22
+      }
+    ],
+    "imports": [
+      "os",
+      "time",
+      "asyncio",
+      "logging",
+      "from typing",
+      "from datetime",
+      "from dataclasses",
+      "from enum",
+      "json",
+      "from orchestrator.app.security.logging",
+      "from prometheus_client",
+      "yaml"
+    ],
+    "total_nodes": 2709
+  },
+  "metrics": {
+    "lines_of_code": 625,
+    "cyclomatic_complexity": 50,
+    "cognitive_complexity": 40,
+    "nesting_depth": 5,
+    "number_of_functions": 31,
+    "number_of_classes": 5,
+    "god_class_score": 0.625
+  },
+  "dependencies": {
+    "imports": [
+      "os",
+      "time",
+      "asyncio",
+      "logging",
+      "from typing",
+      "from datetime",
+      "from dataclasses",
+      "from enum",
+      "json",
+      "from orchestrator.app.security.logging",
+      "from prometheus_client",
+      "yaml"
+    ],
+    "internal_dependencies": [
+      "orchestrator.app.security.logging"
+    ],
+    "external_dependencies": [
+      "os",
+      "time",
+      "asyncio",
+      "logging",
+      "typing",
+      "datetime",
+      "dataclasses",
+      "enum",
+      "json",
+      "prometheus_client",
+      "yaml"
+    ],
+    "circular_dependencies": [
+      "orchestrator.app.security.logging"
+    ],
+    "coupling_score": 0.08333333333333333
+  },
+  "hotspots": [
+    {
+      "type": "analysis_error",
+      "severity": "LOW",
+      "description": "Invalid format specifier ' \"...\", \"location\": \"line X\", \"severity\": \"HIGH/MEDIUM/LOW\", \"description\": \"...\"' for object of type 'str'"
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "HIGH",
+      "type": "SPLIT_FILE",
+      "description": "Fichier trop volumineux (625 lignes)",
+      "impact": "Améliore la maintenabilité",
+      "effort": "4-8 heures",
+      "affected_lines": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99
+      ]
+    }
+  ],
+  "summary": {
+    "god_class_score": 0.625,
+    "complexity_level": "TRÈS ÉLEVÉE",
+    "refactoring_priority": "CRITIQUE",
+    "estimated_effort": "2-8 heures (quelques jours)"
+  }
+}

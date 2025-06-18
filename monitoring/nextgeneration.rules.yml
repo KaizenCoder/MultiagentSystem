@@ -1,0 +1,54 @@
+groups:
+- interval: 10s
+  name: nextgeneration.critical
+  rules:
+  - alert: NextGenerationDown
+    annotations:
+      description: "L'application NextGeneration ne r\xE9pond plus depuis {{ $value\
+        \ }} secondes."
+      summary: Application NextGeneration indisponible
+    expr: up{job="nextgeneration-app"} == 0
+    for: 30s
+    labels:
+      severity: critical
+  - alert: HighErrorRate
+    annotations:
+      description: "Le taux d'erreur 5xx d\xE9passe 10% sur 5 minutes."
+      summary: "Taux d'erreur \xE9lev\xE9: {{ $value }}%"
+    expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.1
+    for: 2m
+    labels:
+      severity: critical
+  - alert: HighResponseTime
+    annotations:
+      description: "Le P95 des temps de r\xE9ponse d\xE9passe 500ms."
+      summary: "Temps de r\xE9ponse \xE9lev\xE9 P95: {{ $value }}s"
+    expr: histogram_quantile(0.95, http_request_duration_seconds_bucket) > 0.5
+    for: 5m
+    labels:
+      severity: warning
+  - alert: HighMemoryUsage
+    annotations:
+      description: "L'usage m\xE9moire d\xE9passe 1GB."
+      summary: "Usage m\xE9moire \xE9lev\xE9: {{ $value | humanize1024 }}B"
+    expr: process_resident_memory_bytes > 1073741824
+    for: 5m
+    labels:
+      severity: warning
+  - alert: AgentCoordinationFailure
+    annotations:
+      description: "Taux d'\xE9chec coordination agents > 5%."
+      summary: "\xC9chec coordination agents: {{ $value }}/min"
+    expr: rate(agent_coordination_errors_total[5m]) > 0.05
+    for: 3m
+    labels:
+      severity: warning
+- interval: 30s
+  name: nextgeneration.performance
+  rules:
+  - expr: rate(http_requests_total[5m])
+    record: nextgeneration:request_rate_5m
+  - expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m])
+    record: nextgeneration:error_rate_5m
+  - expr: histogram_quantile(0.95, http_request_duration_seconds_bucket)
+    record: nextgeneration:response_time_p95

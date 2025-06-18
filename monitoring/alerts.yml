@@ -1,0 +1,15 @@
+global:
+  smtp_from: nextgeneration@localhost
+  smtp_smarthost: localhost:587
+receivers:
+- name: web.hook
+  webhook_configs:
+  - send_resolved: true
+    url: http://localhost:5001/alerts
+route:
+  group_by:
+  - alertname
+  group_interval: 10s
+  group_wait: 10s
+  receiver: web.hook
+  repeat_interval: 1h

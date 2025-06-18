@@ -1,0 +1,11 @@
+{
+  "mode": "selective",
+  "include_patterns": [
+    "agent_factory_experts_team/",
+    "coordinateur_equipe_experts.py",
+    "expert_claude_architecture.py",
+    "expert_chatgpt_robustesse.py",
+    "README.md"
+  ],
+  "description": "Configuration pour génération sélective du pitch Agent Factory"
+}

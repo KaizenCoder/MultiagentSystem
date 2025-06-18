@@ -1,0 +1,77 @@
+Question 1 : Les acteurs avec leur description
+Acteurs principaux :
+
+Détecteur de fumée : Dispositif IoT autonome qui détecte la fumée et envoie des messages via le réseau SigFox (FIRE_DETECTED, FIRE_OVER, HELLO).
+Opérateur YOJASSURE : Personnel de supervision qui surveille les alarmes, contacte les propriétaires, peut appeler les pompiers et couper l'avertisseur sonore à distance.
+Particulier/Propriétaire : Client de YOJASSURE qui possède le détecteur installé chez lui et reçoit les alertes par SMS et appel vocal.
+Serveur SigFox : Système externe qui gère la flotte de détecteurs, route les messages entre les détecteurs et YOJASSURE, et transmet les commandes descendantes.
+Service Pompiers : Services d'incendie contactés par l'opérateur en cas de confirmation d'incendie.
+Orange Business Services : Fournisseur de la plateforme téléphonique et de la passerelle SMS pour les communications avec les particuliers.
+
+Question 2 : Les cas d'utilisation (High level use-case)Diagramme de cas d'utilisation - Système YOJASSUREImage Cas d'utilisation principaux :
+
+Envoyer alarme incendie : Le détecteur envoie des messages FIRE_DETECTED/FIRE_OVER via SigFox
+Envoyer message quotidien : Le détecteur envoie le message HELLO avec les statistiques
+Installer/Affecter détecteur : Association du détecteur aux informations du particulier
+Superviser alarmes : Surveillance des alarmes sur carte avec informations propriétaire
+Contacter propriétaire : Envoi SMS et appel vocal au propriétaire (via Orange)
+Appeler pompiers : Contact des services d'incendie après confirmation
+Couper avertisseur sonore : Envoi commande STOP_BUZZER via SigFox
+Transmettre fichier mensuel : Envoi de la liste des détecteurs installés/retirés à SigFox
+
+Question 3 : Diagramme d'activité pour le départ d'incendieDiagramme d'activité - Gestion départ d'incendieImage Question 4 : Modèle conceptuel avec description des conceptsModèle conceptuel - Système YOJASSUREImage RéessayerHContinuerModifierModèle conceptuel - Système YOJASSUREImage ∙ Version 2 Description des concepts du modèle conceptuel :
+
+Détecteur : Représente le dispositif physique de détection de fumée
+
+Identifié par un numéro unique SigFox
+Maintient des statistiques (nombre d'alarmes, messages)
+Gère l'état de l'avertisseur sonore et le niveau de batterie
+
+
+Particulier : Client YOJASSURE propriétaire du détecteur
+
+Contient les informations de contact (nom, prénom, téléphone)
+Adresse d'installation du détecteur
+
+
+Message (classe abstraite) : Communication entre le détecteur et le système
+
+Trois types concrets : FireDetected, FireOver, HelloMessage
+Contient l'horodatage et l'identifiant du détecteur émetteur
+
+
+Alarme : Événement de détection de fumée
+
+Suit le cycle de vie d'une alerte (début, fin, statut)
+Indique si elle a été confirmée et si les pompiers ont été appelés
+
+
+Opérateur : Personnel YOJASSURE qui supervise les alarmes
+
+Identifié et nommé dans le système
+
+
+Supervision : Actions effectuées par un opérateur sur une alarme
+
+Enregistre le type d'action (contact propriétaire, appel pompiers, etc.)
+Horodatée avec possibilité de commentaires
+
+
+CommandeDistante : Ordre envoyé au détecteur (ex: STOP_BUZZER)
+
+Générée suite à une action de supervision
+Transmise via SigFox au détecteur
+
+
+
+Relations principales :
+
+Un détecteur est affecté à un particulier (1:1)
+Un détecteur envoie plusieurs messages (1:*)
+Plusieurs messages peuvent déclencher une alarme (*:1)
+Une alarme fait l'objet de plusieurs supervisions (1:*)
+Un opérateur effectue plusieurs supervisions (1:*)
+Une supervision peut générer une commande distante (1:0..1)
+
+Ce modèle conceptuel couvre l'ensemble du système de gestion des détecteurs connectés YOJASSURE, depuis la détection de fumée jusqu'à la gestion des alarmes par les opérateurs.
+

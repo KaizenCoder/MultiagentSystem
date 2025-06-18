@@ -1,0 +1,29 @@
+{
+  "mode": "selective",
+  "include_patterns": [
+    "agent_factory_experts_team/",
+    "coordinateur_equipe_experts.py",
+    "expert_claude_architecture.py",
+    "expert_chatgpt_robustesse.py",
+    "expert_gemini_innovation.py",
+    "expert_superviseur_synthese.py",
+    "expert_templates_specialist.py",
+    "expert_performance_optimizer.py",
+    "base_expert.py",
+    "README.md",
+    "requirements.txt",
+    "orchestrator/app/agents/",
+    "orchestrator/app/supervisor/",
+    "tests/unit/test_agent_factory",
+    "config/agent_factory"
+  ],
+  "description": "Configuration pour génération du pitch Agent Factory avec éléments obligatoires uniquement",
+  "required_sections": [
+    "Architecture BaseAgent",
+    "Agent Factory Core", 
+    "Template Management",
+    "Integration avec Supervisor existant",
+    "Tests et validation",
+    "Configuration déploiement"
+  ]
+} 
