@@ -1,0 +1,20 @@
+{
+  "tool_info": {
+    "name": "monitor_phase3",
+    "version": "1.0.0",
+    "category": "monitoring",
+    "priority": "HIGH",
+    "description": "Outil monitor_phase3 pour NextGeneration"
+  },
+  "settings": {
+    "enabled": true,
+    "debug_mode": false,
+    "log_level": "INFO",
+    "timeout": 30
+  },
+  "nextgeneration_integration": {
+    "use_ng_logging": true,
+    "use_ng_config": true,
+    "use_ng_monitoring": true
+  }
+}

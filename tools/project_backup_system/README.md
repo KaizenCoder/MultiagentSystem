@@ -1,8 +1,8 @@
-# Generate Pitch Document - NextGeneration
+# Zip Backup - NextGeneration
 
 ## 🎯 Vue d'ensemble
 
-Outil generate_pitch_document adapté et intégré à l'écosystème NextGeneration.
+Outil zip_backup adapté et intégré à l'écosystème NextGeneration.
 
 ### ✨ Fonctionnalités principales
 - 🔧 Outil spécialisé adapté pour NextGeneration
@@ -21,13 +21,13 @@ Outil generate_pitch_document adapté et intégré à l'écosystème NextGenerat
 ### Installation rapide
 ```bash
 # Depuis le répertoire NextGeneration
-cd tools/generate_pitch_document
+cd tools/zip_backup
 
 # Installation des dépendances
 pip install -r requirements.txt
 
 # Test de fonctionnement
-python generate_pitch_document.py --help
+python zip_backup.py --help
 ```
 
 ### Installation pour développement
@@ -45,25 +45,25 @@ pip install -r requirements-dev.txt
 
 ```bash
 # Utilisation basique
-python tools/generate_pitch_document/generate_pitch_document.py
+python tools/zip_backup/zip_backup.py
 
 # Avec configuration personnalisée
-python tools/generate_pitch_document/generate_pitch_document.py --config custom_config.json
+python tools/zip_backup/zip_backup.py --config custom_config.json
 
 # Mode debug
-python tools/generate_pitch_document/generate_pitch_document.py --debug --verbose
+python tools/zip_backup/zip_backup.py --debug --verbose
 ```
 
 ### Utilisation programmatique
 
 ```python
-from tools.generate_pitch_document import GeneratePitchDocument
+from tools.zip_backup import ZipBackup
 
 # Instance avec configuration par défaut
-tool = GeneratePitchDocument()
+tool = ZipBackup()
 
 # Configuration personnalisée
-tool = GeneratePitchDocument(
+tool = ZipBackup(
     config_file="config/custom.json",
     debug=True
 )
@@ -82,7 +82,7 @@ Le fichier `config/config.json` contient tous les paramètres configurables :
 ```json
 {
   "tool_info": {
-    "name": "generate_pitch_document",
+    "name": "zip_backup",
     "version": "1.0.0",
     "enabled": true
   },
@@ -102,37 +102,37 @@ Le fichier `config/config.json` contient tous les paramètres configurables :
 
 | Variable | Description | Défaut |
 |----------|-------------|--------|
-| `NG_GENERATE_PITCH_DOCUMENT_DEBUG` | Active le mode debug | `false` |
-| `NG_GENERATE_PITCH_DOCUMENT_LOG_LEVEL` | Niveau de logging | `INFO` |
-| `NG_GENERATE_PITCH_DOCUMENT_CONFIG` | Chemin configuration personnalisée | `config/config.json` |
+| `NG_ZIP_BACKUP_DEBUG` | Active le mode debug | `false` |
+| `NG_ZIP_BACKUP_LOG_LEVEL` | Niveau de logging | `INFO` |
+| `NG_ZIP_BACKUP_CONFIG` | Chemin configuration personnalisée | `config/config.json` |
 
 ## 🧪 Tests
 
 ### Tests unitaires
 ```bash
 # Tests unitaires complets
-python -m pytest tests/unit/test_generate_pitch_document.py -v
+python -m pytest tests/unit/test_zip_backup.py -v
 
 # Tests avec couverture
-python -m pytest tests/unit/test_generate_pitch_document.py --cov=generate_pitch_document
+python -m pytest tests/unit/test_zip_backup.py --cov=zip_backup
 ```
 
 ### Tests d'intégration
 ```bash
 # Tests d'intégration NextGeneration
-python -m pytest tests/integration/test_generate_pitch_document_integration.py -v
+python -m pytest tests/integration/test_zip_backup_integration.py -v
 
 # Tests de performance
-python -m pytest tests/integration/test_generate_pitch_document_performance.py
+python -m pytest tests/integration/test_zip_backup_performance.py
 ```
 
 ### Tests manuels
 ```bash
 # Test rapide de fonctionnement
-python tools/generate_pitch_document/generate_pitch_document.py --test
+python tools/zip_backup/zip_backup.py --test
 
 # Validation configuration
-python tools/generate_pitch_document/generate_pitch_document.py --validate-config
+python tools/zip_backup/zip_backup.py --validate-config
 ```
 
 ## 📊 Monitoring et Observabilité
@@ -146,10 +146,10 @@ L'outil est intégré avec le système de monitoring NextGeneration :
 ### Consultation des métriques
 ```bash
 # Logs en temps réel
-tail -f logs/generate_pitch_document.log
+tail -f logs/zip_backup.log
 
 # Métriques de performance
-curl http://localhost:9090/metrics | grep generate_pitch_document
+curl http://localhost:9090/metrics | grep zip_backup
 ```
 
 ## 🔧 Dépannage
@@ -159,19 +159,19 @@ curl http://localhost:9090/metrics | grep generate_pitch_document
 #### Erreur de configuration
 ```bash
 # Validation de la configuration
-python tools/generate_pitch_document/generate_pitch_document.py --validate-config
+python tools/zip_backup/zip_backup.py --validate-config
 
 # Régénération configuration par défaut
-python tools/generate_pitch_document/generate_pitch_document.py --reset-config
+python tools/zip_backup/zip_backup.py --reset-config
 ```
 
 #### Problèmes de permissions
 ```bash
 # Vérification des permissions
-ls -la tools/generate_pitch_document/
+ls -la tools/zip_backup/
 
 # Correction des permissions (Linux/Mac)
-chmod +x tools/generate_pitch_document/generate_pitch_document.py
+chmod +x tools/zip_backup/zip_backup.py
 ```
 
 #### Dépendances manquantes
@@ -188,14 +188,14 @@ pip install -r requirements.txt
 
 ```bash
 # Logs détaillés
-export NG_GENERATE_PITCH_DOCUMENT_LOG_LEVEL=DEBUG
-python tools/generate_pitch_document/generate_pitch_document.py
+export NG_ZIP_BACKUP_LOG_LEVEL=DEBUG
+python tools/zip_backup/zip_backup.py
 
 # Mode diagnostic
-python tools/generate_pitch_document/generate_pitch_document.py --diagnostic
+python tools/zip_backup/zip_backup.py --diagnostic
 
 # Rapport d'état
-python tools/generate_pitch_document/generate_pitch_document.py --status
+python tools/zip_backup/zip_backup.py --status
 ```
 
 ## 📚 Documentation
@@ -212,7 +212,7 @@ python tools/generate_pitch_document/generate_pitch_document.py --status
 ```bash
 # Clone et setup
 git clone <repo>
-cd tools/generate_pitch_document
+cd tools/zip_backup
 
 # Environnement de développement
 python -m venv venv

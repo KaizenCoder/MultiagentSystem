@@ -1,8 +1,10 @@
-# Generate Pitch Document - NextGeneration
+# 🔗 Excel VBA Tools Launcher - NextGeneration
 
-## 🎯 Vue d'ensemble
+**🎯 FONCTIONNALITÉ : Lanceur universel pour outils Excel/VBA importés d'Apex**
 
-Outil generate_pitch_document adapté et intégré à l'écosystème NextGeneration.
+## 🔍 Que fait cet outil ?
+
+**Cet outil lance et gère les outils Excel/VBA importés du framework Apex dans NextGeneration :**
 
 ### ✨ Fonctionnalités principales
 - 🔧 Outil spécialisé adapté pour NextGeneration
@@ -21,13 +23,13 @@ Outil generate_pitch_document adapté et intégré à l'écosystème NextGenerat
 ### Installation rapide
 ```bash
 # Depuis le répertoire NextGeneration
-cd tools/generate_pitch_document
+cd tools/imported_tools_apex
 
 # Installation des dépendances
 pip install -r requirements.txt
 
 # Test de fonctionnement
-python generate_pitch_document.py --help
+python imported_tools_apex.py --help
 ```
 
 ### Installation pour développement
@@ -45,25 +47,25 @@ pip install -r requirements-dev.txt
 
 ```bash
 # Utilisation basique
-python tools/generate_pitch_document/generate_pitch_document.py
+python tools/imported_tools_apex/imported_tools_apex.py
 
 # Avec configuration personnalisée
-python tools/generate_pitch_document/generate_pitch_document.py --config custom_config.json
+python tools/imported_tools_apex/imported_tools_apex.py --config custom_config.json
 
 # Mode debug
-python tools/generate_pitch_document/generate_pitch_document.py --debug --verbose
+python tools/imported_tools_apex/imported_tools_apex.py --debug --verbose
 ```
 
 ### Utilisation programmatique
 
 ```python
-from tools.generate_pitch_document import GeneratePitchDocument
+from tools.imported_tools_apex import ImportedToolsApex
 
 # Instance avec configuration par défaut
-tool = GeneratePitchDocument()
+tool = ImportedToolsApex()
 
 # Configuration personnalisée
-tool = GeneratePitchDocument(
+tool = ImportedToolsApex(
     config_file="config/custom.json",
     debug=True
 )
@@ -82,7 +84,7 @@ Le fichier `config/config.json` contient tous les paramètres configurables :
 ```json
 {
   "tool_info": {
-    "name": "generate_pitch_document",
+    "name": "imported_tools_apex",
     "version": "1.0.0",
     "enabled": true
   },
@@ -102,37 +104,37 @@ Le fichier `config/config.json` contient tous les paramètres configurables :
 
 | Variable | Description | Défaut |
 |----------|-------------|--------|
-| `NG_GENERATE_PITCH_DOCUMENT_DEBUG` | Active le mode debug | `false` |
-| `NG_GENERATE_PITCH_DOCUMENT_LOG_LEVEL` | Niveau de logging | `INFO` |
-| `NG_GENERATE_PITCH_DOCUMENT_CONFIG` | Chemin configuration personnalisée | `config/config.json` |
+| `NG_IMPORTED_TOOLS_APEX_DEBUG` | Active le mode debug | `false` |
+| `NG_IMPORTED_TOOLS_APEX_LOG_LEVEL` | Niveau de logging | `INFO` |
+| `NG_IMPORTED_TOOLS_APEX_CONFIG` | Chemin configuration personnalisée | `config/config.json` |
 
 ## 🧪 Tests
 
 ### Tests unitaires
 ```bash
 # Tests unitaires complets
-python -m pytest tests/unit/test_generate_pitch_document.py -v
+python -m pytest tests/unit/test_imported_tools_apex.py -v
 
 # Tests avec couverture
-python -m pytest tests/unit/test_generate_pitch_document.py --cov=generate_pitch_document
+python -m pytest tests/unit/test_imported_tools_apex.py --cov=imported_tools_apex
 ```
 
 ### Tests d'intégration
 ```bash
 # Tests d'intégration NextGeneration
-python -m pytest tests/integration/test_generate_pitch_document_integration.py -v
+python -m pytest tests/integration/test_imported_tools_apex_integration.py -v
 
 # Tests de performance
-python -m pytest tests/integration/test_generate_pitch_document_performance.py
+python -m pytest tests/integration/test_imported_tools_apex_performance.py
 ```
 
 ### Tests manuels
 ```bash
 # Test rapide de fonctionnement
-python tools/generate_pitch_document/generate_pitch_document.py --test
+python tools/imported_tools_apex/imported_tools_apex.py --test
 
 # Validation configuration
-python tools/generate_pitch_document/generate_pitch_document.py --validate-config
+python tools/imported_tools_apex/imported_tools_apex.py --validate-config
 ```
 
 ## 📊 Monitoring et Observabilité
@@ -146,10 +148,10 @@ L'outil est intégré avec le système de monitoring NextGeneration :
 ### Consultation des métriques
 ```bash
 # Logs en temps réel
-tail -f logs/generate_pitch_document.log
+tail -f logs/imported_tools_apex.log
 
 # Métriques de performance
-curl http://localhost:9090/metrics | grep generate_pitch_document
+curl http://localhost:9090/metrics | grep imported_tools_apex
 ```
 
 ## 🔧 Dépannage
@@ -159,19 +161,19 @@ curl http://localhost:9090/metrics | grep generate_pitch_document
 #### Erreur de configuration
 ```bash
 # Validation de la configuration
-python tools/generate_pitch_document/generate_pitch_document.py --validate-config
+python tools/imported_tools_apex/imported_tools_apex.py --validate-config
 
 # Régénération configuration par défaut
-python tools/generate_pitch_document/generate_pitch_document.py --reset-config
+python tools/imported_tools_apex/imported_tools_apex.py --reset-config
 ```
 
 #### Problèmes de permissions
 ```bash
 # Vérification des permissions
-ls -la tools/generate_pitch_document/
+ls -la tools/imported_tools_apex/
 
 # Correction des permissions (Linux/Mac)
-chmod +x tools/generate_pitch_document/generate_pitch_document.py
+chmod +x tools/imported_tools_apex/imported_tools_apex.py
 ```
 
 #### Dépendances manquantes
@@ -188,14 +190,14 @@ pip install -r requirements.txt
 
 ```bash
 # Logs détaillés
-export NG_GENERATE_PITCH_DOCUMENT_LOG_LEVEL=DEBUG
-python tools/generate_pitch_document/generate_pitch_document.py
+export NG_IMPORTED_TOOLS_APEX_LOG_LEVEL=DEBUG
+python tools/imported_tools_apex/imported_tools_apex.py
 
 # Mode diagnostic
-python tools/generate_pitch_document/generate_pitch_document.py --diagnostic
+python tools/imported_tools_apex/imported_tools_apex.py --diagnostic
 
 # Rapport d'état
-python tools/generate_pitch_document/generate_pitch_document.py --status
+python tools/imported_tools_apex/imported_tools_apex.py --status
 ```
 
 ## 📚 Documentation
@@ -212,7 +214,7 @@ python tools/generate_pitch_document/generate_pitch_document.py --status
 ```bash
 # Clone et setup
 git clone <repo>
-cd tools/generate_pitch_document
+cd tools/imported_tools_apex
 
 # Environnement de développement
 python -m venv venv

@@ -1,0 +1,20 @@
+{
+  "tool_info": {
+    "name": "install_phase3_dependencies",
+    "version": "1.0.0",
+    "category": "file",
+    "priority": "HIGH",
+    "description": "Outil install_phase3_dependencies pour NextGeneration"
+  },
+  "settings": {
+    "enabled": true,
+    "debug_mode": false,
+    "log_level": "INFO",
+    "timeout": 30
+  },
+  "nextgeneration_integration": {
+    "use_ng_logging": true,
+    "use_ng_config": true,
+    "use_ng_monitoring": true
+  }
+}
