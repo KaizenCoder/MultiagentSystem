@@ -7,7 +7,7 @@
 ### 1. 🗄️ **Backup Enterprise Immédiat**
 ```bash
 # Backup automatique du projet complet
-cd tools/zip_backup
+cd tools/project_backup_system
 python backup_now.py
 
 # ✅ Résultat: E:\DEV_BACKUP\nextgeneration\backup_nextgeneration_YYYYMMDD_HHMM.zip
@@ -29,7 +29,7 @@ python -c "from memory_api.app.db.models import Base, AgentSession; print('✅ S
 ### 3. 🧪 **Validation Système**
 ```bash
 # Tests backup enterprise
-cd tools/zip_backup && python tests/test_results_*.json
+cd tools/project_backup_system && python tests/test_results_*.json
 
 # Tests PostgreSQL
 python docs/agents_postgresql_resolution/tests/validation_finale_sqlalchemy.py
@@ -40,7 +40,7 @@ python docs/agents_postgresql_resolution/tests/validation_finale_sqlalchemy.py
 ### 🗄️ **Système Backup Enterprise**
 ```bash
 # Backup immédiat
-cd tools/zip_backup && python backup_now.py
+cd tools/project_backup_system && python backup_now.py
 
 # Configuration nouveau projet
 python agents/agent_configuration_manager.py --wizard
@@ -64,8 +64,8 @@ python docs/agents_postgresql_resolution/agent_testing_specialist.py
 ### 🔍 **Consulter la Documentation**
 ```bash
 # Documentation backup enterprise
-open tools/zip_backup/GUIDE_UTILISATION_BACKUP_NEXTGENERATION.md
-open tools/zip_backup/README.md
+open tools/project_backup_system/GUIDE_UTILISATION_BACKUP_NEXTGENERATION.md
+open tools/project_backup_system/README.md
 
 # Documentation PostgreSQL
 open docs/agents_postgresql_resolution/rapports/index.md

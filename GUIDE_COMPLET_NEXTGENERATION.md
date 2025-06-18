@@ -15,7 +15,7 @@
 ### 🚀 **Démarrage Rapide**
 ```bash
 # Backup immédiat du projet
-cd tools/zip_backup
+cd tools/project_backup_system
 python backup_now.py
 
 # ✅ Résultat: E:\DEV_BACKUP\nextgeneration\backup_nextgeneration_YYYYMMDD_HHMM.zip
@@ -172,7 +172,7 @@ NextGeneration Multi-Agent System
 ### ⚡ **Démarrage Express (5 minutes)**
 ```bash
 # 1. Backup immédiat
-cd tools/zip_backup && python backup_now.py
+cd tools/project_backup_system && python backup_now.py
 
 # 2. PostgreSQL
 docker-compose -f docker-compose.final.yml up -d
@@ -184,7 +184,7 @@ python dashboard_rtx3090.py &
 ### 🔧 **Opérations Courantes**
 ```bash
 # Nouveau projet backup
-cd tools/zip_backup
+cd tools/project_backup_system
 python agents/agent_configuration_manager.py --wizard
 
 # Tests PostgreSQL
@@ -202,7 +202,7 @@ open QUICKSTART.md
 open SYNTHESE_EXECUTIVE.md
 
 # Backup enterprise
-open tools/zip_backup/GUIDE_UTILISATION_BACKUP_NEXTGENERATION.md
+open tools/project_backup_system/GUIDE_UTILISATION_BACKUP_NEXTGENERATION.md
 
 # PostgreSQL
 open docs/agents_postgresql_resolution/rapports/index.md
@@ -238,7 +238,7 @@ open docs/RTX3090/GUIDE_EXPLOITATION_OLLAMA_RTX3090_OPTIMISE.md
 Test-Path "E:\DEV_BACKUP" && New-Item -ItemType Directory -Path "E:\DEV_BACKUP" -Force
 
 # Réinitialiser configuration
-cd tools/zip_backup && python agents/agent_configuration_manager.py --reset
+cd tools/project_backup_system && python agents/agent_configuration_manager.py --reset
 ```
 
 ### ❌ **PostgreSQL**
@@ -282,7 +282,7 @@ curl http://localhost:11434/api/tags
 - **[DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)** - Index complet
 
 ### 🔗 **Liens Rapides**
-- **Backup** : `tools/zip_backup/`
+- **Backup** : `tools/project_backup_system/`
 - **PostgreSQL** : `docs/agents_postgresql_resolution/`
 - **RTX3090** : `docs/RTX3090/`
 - **Tests** : `tests/`

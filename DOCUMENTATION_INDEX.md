@@ -22,9 +22,9 @@
   - Taille: 6,393 bytes | Modifié: 2025-06-18 02:02
 
 ### 🗄️ Système Backup Enterprise - NOUVEAU ⭐
-- **[Guide d'utilisation](tools/zip_backup/GUIDE_UTILISATION_BACKUP_NEXTGENERATION.md)** - Manuel production complet
-- **[README Backup](tools/zip_backup/README.md)** - Vue d'ensemble système
-- **[Dossier backup](tools/zip_backup/)** - 10 agents spécialisés + infrastructure
+- **[Guide d'utilisation](tools/project_backup_system/GUIDE_UTILISATION_BACKUP_NEXTGENERATION.md)** - Manuel production complet
+- **[README Backup](tools/project_backup_system/README.md)** - Vue d'ensemble système
+- **[Dossier backup](tools/project_backup_system/)** - 10 agents spécialisés + infrastructure
 
 ### 🤖 Système d'Agents PostgreSQL
 - **[Index des rapports](docs/agents_postgresql_resolution/rapports/index.md)** - Navigation complète
@@ -50,21 +50,21 @@
 ### 🚀 Pour Démarrer
 1. **[QUICKSTART.md](QUICKSTART.md)** - Démarrage en 5 minutes
 2. **[README.md](README.md)** - Vue d'ensemble complète
-3. **[tools/zip_backup/backup_now.py](tools/zip_backup/backup_now.py)** - ⚡ Backup immédiat
+3. **[tools/project_backup_system/backup_now.py](tools/project_backup_system/backup_now.py)** - ⚡ Backup immédiat
 
 ### 📈 Pour le Management  
 1. **[SYNTHESE_EXECUTIVE.md](SYNTHESE_EXECUTIVE.md)** - Rapport de mission
 2. **[CHANGELOG.md](CHANGELOG.md)** - Historique et métriques
-3. **[tools/zip_backup/reports/](tools/zip_backup/reports/)** - Rapports backup enterprise
+3. **[tools/project_backup_system/reports/](tools/project_backup_system/reports/)** - Rapports backup enterprise
 
 ### 🔧 Pour les Développeurs
 1. **[docs/agents_postgresql_resolution/](docs/agents_postgresql_resolution/)** - Système d'agents PostgreSQL
-2. **[tools/zip_backup/agents/](tools/zip_backup/agents/)** - Système d'agents backup
+2. **[tools/project_backup_system/agents/](tools/project_backup_system/agents/)** - Système d'agents backup
 3. **[memory_api/app/db/models.py](memory_api/app/db/models.py)** - Modèles corrigés
 
 ### 🧪 Pour les Tests
 1. **[docs/agents_postgresql_resolution/tests/](docs/agents_postgresql_resolution/tests/)** - Tests PostgreSQL
-2. **[tools/zip_backup/tests/](tools/zip_backup/tests/)** - Tests backup enterprise
+2. **[tools/project_backup_system/tests/](tools/project_backup_system/tests/)** - Tests backup enterprise
 3. **[docs/agents_postgresql_resolution/solutions/](docs/agents_postgresql_resolution/solutions/)** - Scripts
 
 ## 🎉 MISSIONS ACCOMPLIES - RÉSULTATS

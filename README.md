@@ -69,7 +69,14 @@ NextGeneration est un framework avancé d'agents IA autonomes capable de :
 
 ```
 nextgeneration/
-├── tools/zip_backup/              # 🗄️ SYSTÈME BACKUP ENTERPRISE
+├── tools/                       # 🛠️ OUTILS SPÉCIALISÉS NEXTGENERATION
+│   ├── tts_dependencies_installer/     # 📦 Installateur dépendances TTS
+│   ├── tts_performance_monitor/        # 📊 Surveillance performances TTS
+│   ├── excel_vba_tools_launcher/       # 🔗 Lanceur outils Excel/VBA
+│   ├── project_backup_system/          # 💾 Système sauvegarde projets
+│   ├── generate_pitch_document/        # 📄 Générateur documents pitch
+│   └── legacy_imported_tools/          # 📚 Archive historique
+├── tools/project_backup_system/   # 🗄️ SYSTÈME BACKUP ENTERPRISE
 │   ├── agents/                   # 🤖 10 agents spécialisés backup
 │   ├── config/                   # ⚙️ Configurations multi-projets
 │   ├── reports/                  # 📊 Rapports JSON détaillés
@@ -113,7 +120,7 @@ docker exec postgres_final_utf8 psql -U postgres -d nextgen_db -c "SELECT versio
 ### 🗄️ **Backup Enterprise Immédiat**
 ```bash
 # Backup automatique du projet
-cd tools/zip_backup
+cd tools/project_backup_system
 python backup_now.py
 
 # ✅ Résultat: E:\DEV_BACKUP\nextgeneration\backup_nextgeneration_YYYYMMDD_HHMM.zip
@@ -131,14 +138,48 @@ python -c "from memory_api.app.db.models import Base, AgentSession; print('✅ S
 docker exec postgres_final_utf8 psql -U postgres -d nextgen_db -c "SELECT version();"
 ```
 
+## 🛠️ Outils Spécialisés NextGeneration
+
+### 📦 **TTS Dependencies Installer**
+- **Répertoire :** `tools/tts_dependencies_installer/`
+- **Fonction :** Installateur automatique des dépendances TTS (Text-to-Speech)
+- **Usage :** `python tools/tts_dependencies_installer/tts_dependencies_installer.py --gpu`
+
+### 📊 **TTS Performance Monitor**
+- **Répertoire :** `tools/tts_performance_monitor/`
+- **Fonction :** Surveillance temps réel des performances TTS
+- **Usage :** `python tools/tts_performance_monitor/tts_performance_monitor.py --dashboard`
+
+### 🔗 **Excel VBA Tools Launcher**
+- **Répertoire :** `tools/excel_vba_tools_launcher/`
+- **Fonction :** Lanceur universel pour outils Excel/VBA importés d'Apex
+- **Usage :** `python tools/excel_vba_tools_launcher/run_apex_tool.py --tool write_excel`
+
+### 💾 **Project Backup System**
+- **Répertoire :** `tools/project_backup_system/`
+- **Fonction :** Système complet de sauvegarde automatique de projets
+- **Usage :** `python tools/project_backup_system/backup_now.py`
+
+### 📄 **Generate Pitch Document**
+- **Répertoire :** `tools/generate_pitch_document/`
+- **Fonction :** Générateur automatique de documents de présentation
+- **Usage :** `python tools/generate_pitch_document/generate_pitch_document.py`
+
+### 📚 **Legacy Imported Tools**
+- **Répertoire :** `tools/legacy_imported_tools/`
+- **Fonction :** Archive historique des anciens outils importés
+- **Statut :** Déprécié - Utiliser les nouveaux outils spécialisés ci-dessus
+
+---
+
 ## 📋 Documentation Complète
 
 ### 🗄️ **Système Backup Enterprise**
-- **[Guide d'utilisation](tools/zip_backup/GUIDE_UTILISATION_BACKUP_NEXTGENERATION.md)** - Manuel complet production
-- **[README Backup](tools/zip_backup/README.md)** - Vue d'ensemble et démarrage rapide
-- **[Rapports agents](tools/zip_backup/reports/)** - Rapports JSON détaillés (10 agents)
-- **[Tests automatisés](tools/zip_backup/tests/)** - Suite validation complète
-- **[Scripts PowerShell](tools/zip_backup/scripts/)** - Intégration Windows
+- **[Guide d'utilisation](tools/project_backup_system/GUIDE_UTILISATION_BACKUP_NEXTGENERATION.md)** - Manuel complet production
+- **[README Backup](tools/project_backup_system/README.md)** - Vue d'ensemble et démarrage rapide
+- **[Rapports agents](tools/project_backup_system/reports/)** - Rapports JSON détaillés (10 agents)
+- **[Tests automatisés](tools/project_backup_system/tests/)** - Suite validation complète
+- **[Scripts PowerShell](tools/project_backup_system/scripts/)** - Intégration Windows
 
 ### 🔧 **Résolution PostgreSQL**
 - **[Index des rapports](docs/agents_postgresql_resolution/rapports/index.md)** - Vue d'ensemble
