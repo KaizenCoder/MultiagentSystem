@@ -1,0 +1,280 @@
+#!/bin/bash
+# 🚀 PRE-COMMIT HOOK NEXTGENERATION
+# Validation qualité automatique avant commit
+# Version: 1.0 - Décembre 2024
+# Référence: Transposition SuperWhisper_V6 → NextGeneration
+
+set -e
+
+# 🎯 CONFIGURATION
+PROJECT_ROOT=$(git rev-parse --show-toplevel)
+HOOK_NAME="pre-commit"
+TIMESTAMP=$(date '+%Y%m%d_%H%M%S')
+LOG_FILE="$PROJECT_ROOT/logs/git_hooks/pre-commit_$TIMESTAMP.log"
+
+# Couleurs pour output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# 📊 FONCTIONS UTILITAIRES
+log_info() {
+    echo -e "${BLUE}[$(date '+%H:%M:%S')] INFO: $1${NC}"
+    mkdir -p "$(dirname "$LOG_FILE")"
+    echo "[$(date '+%H:%M:%S')] INFO: $1" >> "$LOG_FILE"
+}
+
+log_success() {
+    echo -e "${GREEN}[$(date '+%H:%M:%S')] SUCCESS: $1${NC}"
+    echo "[$(date '+%H:%M:%S')] SUCCESS: $1" >> "$LOG_FILE"
+}
+
+log_warning() {
+    echo -e "${YELLOW}[$(date '+%H:%M:%S')] WARNING: $1${NC}"
+    echo "[$(date '+%H:%M:%S')] WARNING: $1" >> "$LOG_FILE"
+}
+
+log_error() {
+    echo -e "${RED}[$(date '+%H:%M:%S')] ERROR: $1${NC}"
+    echo "[$(date '+%H:%M:%S')] ERROR: $1" >> "$LOG_FILE"
+}
+
+# 🔍 VALIDATION FICHIERS MODIFIÉS
+validate_modified_files() {
+    log_info "🔍 Validation fichiers modifiés"
+    
+    # Récupérer fichiers staged
+    STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
+    
+    if [ -z "$STAGED_FILES" ]; then
+        log_warning "Aucun fichier stagé pour commit"
+        return 0
+    fi
+    
+    log_info "Fichiers à valider: $(echo "$STAGED_FILES" | wc -l)"
+    
+    # Validation par type de fichier
+    PYTHON_FILES=$(echo "$STAGED_FILES" | grep '\.py$' || true)
+    MARKDOWN_FILES=$(echo "$STAGED_FILES" | grep '\.md$' || true)
+    POWERSHELL_FILES=$(echo "$STAGED_FILES" | grep '\.ps1$' || true)
+    
+    local validation_errors=0
+    
+    # Validation Python
+    if [ -n "$PYTHON_FILES" ]; then
+        log_info "🐍 Validation fichiers Python"
+        
+        for file in $PYTHON_FILES; do
+            if [ -f "$PROJECT_ROOT/$file" ]; then
+                # Syntaxe Python
+                if ! python -m py_compile "$PROJECT_ROOT/$file" 2>/dev/null; then
+                    log_error "Erreur syntaxe Python: $file"
+                    ((validation_errors++))
+                else
+                    log_success "Python syntaxe OK: $file"
+                fi
+                
+                # Standards de base (optionnel avec flake8 si disponible)
+                if command -v flake8 >/dev/null 2>&1; then
+                    if ! flake8 "$PROJECT_ROOT/$file" --max-line-length=120 --ignore=E501,W503 2>/dev/null; then
+                        log_warning "Standards PEP8 non respectés: $file"
+                    fi
+                fi
+            fi
+        done
+    fi
+    
+    # Validation Markdown
+    if [ -n "$MARKDOWN_FILES" ]; then
+        log_info "📝 Validation fichiers Markdown"
+        
+        for file in $MARKDOWN_FILES; do
+            if [ -f "$PROJECT_ROOT/$file" ]; then
+                # Vérification liens brisés (basique)
+                if grep -q "](http" "$PROJECT_ROOT/$file"; then
+                    log_info "Liens externes détectés dans: $file"
+                fi
+                log_success "Markdown validé: $file"
+            fi
+        done
+    fi
+    
+    # Validation PowerShell
+    if [ -n "$POWERSHELL_FILES" ]; then
+        log_info "💻 Validation fichiers PowerShell"
+        
+        for file in $POWERSHELL_FILES; do
+            if [ -f "$PROJECT_ROOT/$file" ]; then
+                # Validation syntaxe PowerShell (si pwsh disponible)
+                if command -v pwsh >/dev/null 2>&1; then
+                    if ! pwsh -Command "try { . '$PROJECT_ROOT/$file' } catch { exit 1 }" 2>/dev/null; then
+                        log_warning "Possible erreur syntaxe PowerShell: $file"
+                    else
+                        log_success "PowerShell syntaxe OK: $file"
+                    fi
+                else
+                    log_info "PowerShell non disponible, validation syntaxe ignorée: $file"
+                fi
+            fi
+        done
+    fi
+    
+    return $validation_errors
+}
+
+# 🎮 VALIDATION GPU RTX 3090 (si applicable)
+validate_gpu_changes() {
+    log_info "🎮 Vérification modifications GPU RTX 3090"
+    
+    # Vérifier si des fichiers GPU sont modifiés
+    GPU_FILES=$(git diff --cached --name-only | grep -E "(RTX3090|gpu|cuda)" || true)
+    
+    if [ -n "$GPU_FILES" ]; then
+        log_info "Modifications GPU détectées, validation recommandée"
+        
+        GPU_VALIDATOR="$PROJECT_ROOT/docs/RTX3090/VALIDATION_STANDARDS_RTX3090.py"
+        
+        if [ -f "$GPU_VALIDATOR" ]; then
+            log_info "Exécution validation GPU RTX 3090..."
+            
+            if python "$GPU_VALIDATOR" --quick 2>/dev/null; then
+                log_success "Validation GPU RTX 3090 réussie"
+            else
+                log_warning "Validation GPU RTX 3090 échouée ou non applicable"
+            fi
+        else
+            log_warning "Validateur GPU non trouvé: $GPU_VALIDATOR"
+        fi
+    fi
+}
+
+# 📚 VALIDATION DOCUMENTATION
+validate_documentation_impact() {
+    log_info "📚 Validation impact documentation"
+    
+    # Vérifier si CODE-SOURCE.md doit être mis à jour
+    SIGNIFICANT_CHANGES=$(git diff --cached --name-only | grep -E "(tools/|agents/|orchestrator/|memory_api/)" || true)
+    
+    if [ -n "$SIGNIFICANT_CHANGES" ]; then
+        log_info "Modifications infrastructure détectées"
+        
+        CODE_SOURCE="$PROJECT_ROOT/CODE-SOURCE.md"
+        
+        if [ -f "$CODE_SOURCE" ]; then
+            # Vérifier âge du fichier documentation
+            CODE_SOURCE_AGE=$(stat -c %Y "$CODE_SOURCE" 2>/dev/null || stat -f %m "$CODE_SOURCE" 2>/dev/null || echo 0)
+            CURRENT_TIME=$(date +%s)
+            AGE_HOURS=$(( (CURRENT_TIME - CODE_SOURCE_AGE) / 3600 ))
+            
+            if [ $AGE_HOURS -gt 24 ]; then
+                log_warning "CODE-SOURCE.md ancien (${AGE_HOURS}h), régénération recommandée"
+                log_info "💡 Conseil: cd tools/documentation_generator && python generate_bundle_nextgeneration.py"
+            else
+                log_success "Documentation récente (${AGE_HOURS}h)"
+            fi
+        else
+            log_warning "CODE-SOURCE.md manquant, génération recommandée"
+        fi
+    fi
+}
+
+# 🔧 VALIDATION OUTILS MATURES
+validate_tools_integrity() {
+    log_info "🔧 Validation intégrité outils matures"
+    
+    # Vérifier modifications sur outils critiques
+    TOOLS_CHANGES=$(git diff --cached --name-only | grep "^tools/" || true)
+    
+    if [ -n "$TOOLS_CHANGES" ]; then
+        log_info "Modifications outils détectées"
+        
+        # Validation générateur documentation si modifié
+        if echo "$TOOLS_CHANGES" | grep -q "documentation_generator"; then
+            log_info "Validation générateur documentation"
+            
+            DOC_GEN_PATH="$PROJECT_ROOT/tools/documentation_generator"
+            
+            if [ -f "$DOC_GEN_PATH/generate_bundle_nextgeneration.py" ]; then
+                cd "$DOC_GEN_PATH"
+                
+                if python generate_bundle_nextgeneration.py --mode validation 2>/dev/null; then
+                    log_success "Générateur documentation validé"
+                else
+                    log_error "Générateur documentation défaillant"
+                    return 1
+                fi
+                
+                cd "$PROJECT_ROOT"
+            fi
+        fi
+        
+        # Validation autres outils critiques
+        CRITICAL_TOOLS=("project_backup_system" "excel_vba_tools_launcher")
+        
+        for tool in "${CRITICAL_TOOLS[@]}"; do
+            if echo "$TOOLS_CHANGES" | grep -q "$tool"; then
+                log_info "Modification outil critique détectée: $tool"
+                
+                TOOL_PATH="$PROJECT_ROOT/tools/$tool"
+                
+                if [ -d "$TOOL_PATH" ]; then
+                    # Tests basiques de structure
+                    if [ -f "$TOOL_PATH/README.md" ]; then
+                        log_success "Structure $tool validée"
+                    else
+                        log_warning "README.md manquant pour $tool"
+                    fi
+                fi
+            fi
+        done
+    fi
+    
+    return 0
+}
+
+# 🚀 FONCTION PRINCIPALE
+main() {
+    log_info "🚀 DÉBUT PRE-COMMIT HOOK NEXTGENERATION"
+    
+    # Créer dossier logs si nécessaire
+    mkdir -p "$PROJECT_ROOT/logs/git_hooks"
+    
+    local exit_code=0
+    
+    # Phase 1: Validation fichiers modifiés
+    if ! validate_modified_files; then
+        log_error "Validation fichiers échouée"
+        exit_code=1
+    fi
+    
+    # Phase 2: Validation GPU (non bloquante)
+    validate_gpu_changes
+    
+    # Phase 3: Validation documentation (non bloquante)  
+    validate_documentation_impact
+    
+    # Phase 4: Validation outils (potentiellement bloquante)
+    if ! validate_tools_integrity; then
+        log_error "Validation outils échouée"
+        exit_code=1
+    fi
+    
+    # Résumé final
+    if [ $exit_code -eq 0 ]; then
+        log_success "✅ PRE-COMMIT VALIDATION RÉUSSIE"
+        log_info "Commit autorisé pour NextGeneration"
+    else
+        log_error "❌ PRE-COMMIT VALIDATION ÉCHOUÉE"
+        log_error "Corriger les erreurs avant commit"
+        log_info "💡 Bypass avec: git commit --no-verify (déconseillé)"
+    fi
+    
+    log_info "📋 Log détaillé: $LOG_FILE"
+    
+    exit $exit_code
+}
+
+# 🎯 POINT D'ENTRÉE
+main "$@" 
