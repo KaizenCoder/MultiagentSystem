@@ -13,6 +13,8 @@ import argparse
 import logging
 from pathlib import Path
 import datetime
+import json
+from typing import Dict, Any
 
 # --- Configuration ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -38,27 +40,50 @@ EXCLUDE_EXTENSIONS = {
 class CodeBundler:
     """Génère un bundle complet du code source du projet."""
 
-    def __init__(self, start_path: Path, output_file: Path, dry_run: bool = False):
-        self.start_path = start_path
-        self.output_file = output_file
+    def __init__(self, dry_run: bool = False):
+        """Initialise le CodeBundler."""
+        self.project_root = Path(__file__).parent.parent.parent
         self.dry_run = dry_run
+        
+        # Charger la configuration externe
+        self.config = self._charger_configuration()
+        
+        # Définir les constantes depuis la config
+        self.target_file_name = self.config.get("target_file_name", "CODE-SOURCE.md")
+        self.output_file = self.project_root / self.target_file_name
+        self.exclude_dirs = set(self.config.get("exclude_dirs", []))
+        self.exclude_files = set(self.config.get("exclude_files", []))
+        self.exclude_extensions = set(self.config.get("exclude_extensions", []))
+        self.include_extensions = set(self.config.get("include_extensions", []))
         self.file_count = 0
         self.total_lines = 0
 
+    def _charger_configuration(self) -> Dict[str, Any]:
+        """Charge la configuration depuis le fichier config.json."""
+        config_path = self.project_root / "tools" / "documentation_generator" / "config" / "config.json"
+        try:
+            with open(config_path, 'r', encoding='utf-8') as f:
+                config_data = json.load(f)
+            logger.info(f"✅ Configuration du bundler chargée depuis {config_path}")
+            return config_data.get("generate_bundle_nextgeneration", {})
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            logger.error(f"❌ Erreur chargement configuration bundler: {e}. Utilisation des valeurs par défaut.")
+            return {}
+
     def _should_exclude(self, path: Path) -> bool:
         """Vérifie si un fichier ou dossier doit être exclu."""
-        if any(d in path.parts for d in EXCLUDE_DIRS):
+        if any(d in path.parts for d in self.exclude_dirs):
             return True
-        if path.name in EXCLUDE_FILES:
+        if path.name in self.exclude_files:
             return True
-        if path.suffix in EXCLUDE_EXTENSIONS:
+        if path.suffix in self.exclude_extensions:
             return True
         return False
 
     def bundle_source_code(self):
         """Parcourt le projet et génère le fichier de synthèse."""
         logger.info(f"🚀 Démarrage de la génération du bundle de code source...")
-        logger.info(f"Répertoire analysé : {self.start_path}")
+        logger.info(f"Répertoire analysé : {self.project_root}")
         logger.info(f"Fichier de sortie : {self.output_file}")
 
         if self.dry_run:
@@ -66,7 +91,7 @@ class CodeBundler:
 
         content_parts = [self._generate_header()]
 
-        for root, _, files in os.walk(self.start_path):
+        for root, _, files in os.walk(self.project_root):
             root_path = Path(root)
             if self._should_exclude(root_path):
                 continue
@@ -80,7 +105,7 @@ class CodeBundler:
                     with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
                         file_content = f.read()
                     
-                    relative_path = file_path.relative_to(self.start_path)
+                    relative_path = file_path.relative_to(self.project_root)
                     
                     content_parts.append(f"\n---\n\n"
                                        f"## 📄 `{relative_path}`\n\n"
@@ -106,7 +131,7 @@ class CodeBundler:
         now = datetime.datetime.now()
         header = (f"# 📦 BUNDLE CODE SOURCE - NEXTGENERATION\n\n"
                   f"**Généré le** : {now.strftime('%Y-%m-%d %H:%M:%S')}\n"
-                  f"**Projet** : {self.start_path.name}\n"
+                  f"**Projet** : {self.project_root.name}\n"
                   f"**Total fichiers inclus** : [sera mis à jour]\n"
                   f"**Total lignes incluses** : [sera mis à jour]\n\n"
                   f"Ce document est une compilation automatisée de tous les fichiers sources pertinents du projet NextGeneration. "
@@ -145,12 +170,6 @@ def main():
     """Fonction principale pour exécuter le script depuis la ligne de commande."""
     parser = argparse.ArgumentParser(description="Générateur de Bundle de Code Source pour NextGeneration.")
     parser.add_argument(
-        "--output",
-        type=str,
-        default=str(DEFAULT_OUTPUT_FILE),
-        help=f"Chemin du fichier de sortie. Défaut : {DEFAULT_OUTPUT_FILE}"
-    )
-    parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Exécute le script en mode simulation sans écrire de fichier."
@@ -158,8 +177,6 @@ def main():
     args = parser.parse_args()
 
     bundler = CodeBundler(
-        start_path=PROJECT_ROOT,
-        output_file=Path(args.output),
         dry_run=args.dry_run
     )
     bundler.bundle_source_code()

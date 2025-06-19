@@ -1,0 +1,81 @@
+{
+  "agent_synthese_auto_update": {
+    "git_log_since_days": 14,
+    "commit_keywords": [
+      "mission",
+      "accompli",
+      "opérationnel",
+      "validé",
+      "feat",
+      "feature",
+      "implémenté",
+      "terminé",
+      "livré",
+      "déployé",
+      "fix",
+      "refactor"
+    ],
+    "scan_dirs": [
+      "tools",
+      "agent_factory_implementation/agents",
+      "scripts",
+      "docs/procedures",
+      "orchestrator"
+    ]
+  },
+  "generate_bundle_nextgeneration": {
+    "target_file_name": "CODE-SOURCE.md",
+    "exclude_dirs": [
+      ".git",
+      "__pycache__",
+      "node_modules",
+      "dist",
+      "build",
+      "logs",
+      "backups",
+      "chroma_db",
+      ".vscode",
+      ".idea",
+      "agent_factory_implementation/backups",
+      "agent_factory_implementation/logs",
+      "refactoring_workspace/results"
+    ],
+    "exclude_files": [
+      "CODE-SOURCE.md",
+      "CODE-SOURCE.md.backup",
+      ".gitignore"
+    ],
+    "exclude_extensions": [
+      ".pyc",
+      ".pyo",
+      ".pyd",
+      ".so",
+      ".dll",
+      ".exe",
+      ".db",
+      ".sqlite3",
+      ".env",
+      ".DS_Store",
+      ".tmp",
+      ".log",
+      ".bak",
+      ".swp",
+      ".tar.gz",
+      ".zip"
+    ],
+    "include_extensions": [
+      ".py",
+      ".md",
+      ".json",
+      ".yml",
+      ".yaml",
+      ".txt",
+      ".sh",
+      ".ps1",
+      ".cfg",
+      ".ini",
+      ".conf",
+      "Dockerfile"
+    ]
+  }
+} 

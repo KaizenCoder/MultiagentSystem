@@ -234,6 +234,32 @@ validate_tools_integrity() {
     return 0
 }
 
+# 📊 DÉCLENCHEMENT MISE À JOUR SYNTHÈSE
+trigger_synthese_update() {
+    log_info "📊 Vérification mise à jour synthèse automatique"
+    
+    # Vérifier si le hook synthèse existe
+    SYNTHESE_HOOK="$PROJECT_ROOT/scripts/hook_synthese_auto_update.ps1"
+    
+    if [ -f "$SYNTHESE_HOOK" ]; then
+        log_info "Hook synthèse trouvé, déclenchement..."
+        
+        # Vérifier si PowerShell est disponible
+        if command -v pwsh >/dev/null 2>&1; then
+            # Exécuter en mode git-hook, non bloquant
+            if pwsh -NoProfile -ExecutionPolicy Bypass -File "$SYNTHESE_HOOK" -Mode git-hook -TriggerEvent post-commit 2>/dev/null; then
+                log_success "Synthèse mise à jour automatiquement"
+            else
+                log_info "Mise à jour synthèse ignorée (pas de déclencheur)"
+            fi
+        else
+            log_warning "PowerShell non disponible, mise à jour synthèse manuelle requise"
+        fi
+    else
+        log_info "Hook synthèse non configuré (scripts/hook_synthese_auto_update.ps1)"
+    fi
+}
+
 # 🚀 FONCTION PRINCIPALE
 main() {
     log_info "🚀 DÉBUT PRE-COMMIT HOOK NEXTGENERATION"
@@ -259,6 +285,11 @@ main() {
     if ! validate_tools_integrity; then
         log_error "Validation outils échouée"
         exit_code=1
+    fi
+    
+    # Phase 5: Déclenchement mise à jour synthèse (post-validation)
+    if [ $exit_code -eq 0 ]; then
+        trigger_synthese_update
     fi
     
     # Résumé final

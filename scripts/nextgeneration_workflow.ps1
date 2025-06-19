@@ -3,16 +3,35 @@
 # Base: Extension scripts PowerShell excel_vba_tools_launcher
 # Infrastructure: NextGeneration mature (6 tools + 4 agents teams)
 
+<#
+.SYNOPSIS
+    🚀 WORKFLOW DE DÉVELOPPEMENT QUOTIDIEN - NEXTGENERATION
+    Ce script fournit des commandes rapides pour les tâches courantes de développement.
+
+.DESCRIPTION
+    Simplifie les actions comme le nettoyage, les tests et l'analyse statique.
+    Utilise les outils internes du projet pour une intégration parfaite.
+
+.EXAMPLE
+    .\scripts\nextgeneration_workflow.ps1 -Action clean
+    Nettoie les fichiers temporaires et les caches du projet.
+
+.EXAMPLE
+    .\scripts\nextgeneration_workflow.ps1 -Action test -Path "unit"
+    Lance les tests unitaires.
+
+.NOTES
+    Auteur: Agent Coordinateur NextGeneration
+    Version: 1.0.0
+#>
+
 param(
-    [Parameter(Mandatory=$false)]
-    [ValidateSet("documentation", "validation", "agents", "monitoring", "full", "status")]
-    [string]$Action = "status",
-    
-    [Parameter(Mandatory=$false)]
-    [switch]$Verbose = $false,
-    
-    [Parameter(Mandatory=$false)]
-    [switch]$Force = $false
+    [Parameter(Mandatory=$true, HelpMessage="Action à exécuter.")]
+    [ValidateSet("clean", "test", "lint", "docs")]
+    [string]$Action,
+
+    [Parameter(Mandatory=$false, HelpMessage="Chemin ou argument spécifique à l'action.")]
+    [string]$Path
 )
 
 # Configuration
@@ -288,17 +307,17 @@ Write-Host ""
 $Success = $true
 
 switch ($Action) {
-    "documentation" {
-        $Success = Invoke-Documentation
+    "clean" {
+        Invoke-Clean
     }
-    "validation" {
-        $Success = Invoke-Validation
+    "test" {
+        Invoke-Test -TestPath $Path
     }
-    "agents" {
-        $Success = Invoke-AgentActivation
+    "lint" {
+        Invoke-Lint
     }
-    "monitoring" {
-        $Success = Invoke-Monitoring
+    "docs" {
+        Invoke-Docs
     }
     "full" {
         Write-Log "🚀 Workflow complet NextGeneration"

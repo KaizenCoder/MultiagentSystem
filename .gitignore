@@ -14,4 +14,7 @@ env.example
 
 # Fichiers générés par l'automatisation
 CODE-SOURCE.md
-CODE-SOURCE.md.backup 
+CODE-SOURCE.md.backup
+
+# Dépôts imbriqués à ignorer
+agent_factory_implementation/versioning/ 

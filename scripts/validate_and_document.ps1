@@ -3,12 +3,35 @@
 # Version: 1.0 - Décembre 2024
 # Référence: Transposition SuperWhisper_V6 → NextGeneration
 
+<#
+.SYNOPSIS
+    ✅ VALIDATION & DOCUMENTATION COMPLÈTE - NEXTGENERATION
+    Ce script est le pilier de l'intégration continue (CI/CD).
+
+.DESCRIPTION
+    Exécute un pipeline complet pour garantir la qualité et la fraîcheur de la documentation avant chaque intégration majeure.
+    1. Nettoyage de l'espace de travail.
+    2. Analyse statique (linting) du code.
+    3. Exécution de TOUS les tests (unitaires, intégration).
+    4. Génération du bundle de code source (`CODE-SOURCE.md`).
+    5. Mise à jour des documents de synthèse (`SYNTHESE_EXECUTIVE.md`, `CHANGELOG.md`).
+
+.EXAMPLE
+    .\scripts\validate_and_document.ps1
+    Lance le pipeline complet.
+
+.EXAMPLE
+    .\scripts\validate_and_document.ps1 -SkipTests
+    Lance le pipeline en sautant l'étape des tests (non recommandé).
+
+.NOTES
+    Auteur: Agent Coordinateur NextGeneration
+    Version: 1.0.0
+#>
+[CmdletBinding()]
 param(
-    [string]$Mode = "full",           # full, validation, documentation, quick
-    [switch]$Verbose,                 # Mode verbeux
-    [switch]$SaveLogs,                # Sauvegarder logs
-    [switch]$Force,                   # Forcer même si erreurs
-    [string]$OutputDir = "reports"    # Dossier rapports
+    [Parameter(Mandatory=$false, HelpMessage="Ignore l'exécution des tests.")]
+    [switch]$SkipTests
 )
 
 # 🎯 CONFIGURATION
@@ -461,7 +484,7 @@ function Start-ValidationAndDocumentation {
         Write-Status "Rapport: $reportPath" "INFO"
         
         if ($results.GlobalSuccess) {
-            Write-Status "✅ NEXTGENERATION VALIDÉ ET PRÊT" "SUCCESS"
+            Write-Host "`n✅ Pipeline de validation et documentation terminé avec succès !" -ForegroundColor Green
             exit 0
         } else {
             Write-Status "⚠️ VALIDATION INCOMPLÈTE - ACTIONS REQUISES" "WARNING"
@@ -471,8 +494,9 @@ function Start-ValidationAndDocumentation {
         }
         
     } catch {
-        Write-Status "💥 ERREUR CRITIQUE: $($_.Exception.Message)" "ERROR"
-        exit 2
+        Write-Error "❌ Le pipeline a échoué."
+        Write-Error $_.Exception.Message
+        exit 1
     }
 }
 

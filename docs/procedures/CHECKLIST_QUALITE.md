@@ -1,4 +1,45 @@
 # ✅ CHECKLIST QUALITÉ - NEXTGENERATION
+
+## 1. 🎯 OBJECTIF
+
+Cette checklist a pour but de maintenir un haut niveau de qualité, de cohérence et de maintenabilité pour tous les composants développés au sein du projet NextGeneration.
+
+Elle doit être consultée par tout agent avant de finaliser et de livrer une mission.
+
+## 2. 📋 CHECKLIST GÉNÉRALE
+
+### **Code & Scripts (`.py`, `.ps1`, `.sh`)**
+
+-   [ ] **Linting & Formatage :** Le code est-il correctement formaté (ex: `black` pour Python) ?
+-   [ ] **Lisibilité :** Les noms de variables, fonctions et classes sont-ils clairs et explicites ?
+-   [ ] **Commentaires :** Le code complexe ou non évident est-il commenté ?
+-   [ ] **Configuration Externalisée :** Aucune valeur de configuration (chemin, mot-clé, URL) n'est codée en dur. Tout est dans un fichier `config.json` ou passé en argument.
+-   [ ] **Gestion des Erreurs :** Les erreurs potentielles sont-elles gérées proprement (blocs `try...except`, vérification des codes de retour) ?
+-   [ ] **Logs Pertinents :** Le script génère-t-il des logs clairs pour indiquer sa progression et les erreurs éventuelles ?
+
+### **Documentation (`.md`)**
+
+-   [ ] **Clarté et Simplicité :** Le document est-il facile à comprendre pour sa cible (humain ou IA) ?
+-   [ ] **Exhaustivité :** Le document couvre-t-il tous les aspects nécessaires du sujet ?
+-   [ ] **Mise en Forme :** Le Markdown est-il utilisé correctement pour structurer l'information (titres, listes, blocs de code) ?
+-   [ ] **Absence de Fautes :** Le document a-t-il été relu pour corriger les fautes de frappe et de grammaire ?
+-   [ ] **Liens à Jour :** Tous les chemins de fichiers et les liens sont-ils corrects et valides ?
+
+### **Sécurité**
+
+-   [ ] **Aucun Secret Commité :** Vérification finale qu'aucune clé d'API, mot de passe ou autre secret n'est présent dans le code ou les exemples.
+-   [ ] **Validation des Entrées :** Si le script accepte des entrées utilisateur, sont-elles validées pour éviter les injections ?
+
+## 3. 📦 CHECKLIST SPÉCIFIQUE NOUVEL OUTIL (`tools/`)
+
+-   [ ] **Structure Standard :** L'outil respecte-t-il la structure (`README.md`, `config/`, `logs/`) ?
+-   [ ] **`README.md` Complet :** Le `README` explique-t-il clairement l'objectif de l'outil, ses modes d'utilisation et ses dépendances ?
+-   [ ] **Indépendance :** L'outil est-il le plus autonome possible et a-t-il des dépendances minimales ?
+-   [ ] **Mode `dry-run` :** L'outil propose-t-il un mode de simulation pour tester son comportement sans rien modifier ?
+
+---
+*Document maintenu par l'Équipe Contenu & Standards.*
+
 ## Critères d'Acceptation Techniques et Fonctionnels
 
 ---
@@ -361,7 +402,6 @@ python test_monitoring_integration.py              # Monitoring/observabilité
 
 ### 🏆 **Délivrance Certification**
 
-```
 🏅 CERTIFICATION QUALITÉ NEXTGENERATION
 
 📋 Livrable: [NOM]

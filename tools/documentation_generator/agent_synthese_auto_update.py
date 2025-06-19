@@ -22,6 +22,7 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional
 import subprocess
 import re
+from datetime import timedelta
 
 # Configuration logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -30,40 +31,72 @@ logger = logging.getLogger(__name__)
 class AgentSyntheseAutoUpdate:
     """Agent automatisation mise à jour SYNTHESE_EXECUTIVE et CHANGELOG"""
     
-    def __init__(self, project_root: str = None):
-        self.project_root = Path(project_root) if project_root else Path.cwd()
+    def __init__(self, dry_run=False):
+        self.project_root = Path(__file__).parent.parent.parent
+        self.dry_run = dry_run
+        
+        # Charger la configuration depuis le fichier JSON
+        self.config = self._charger_configuration()
+        
+        # Chemins des fichiers cibles
         self.synthese_path = self.project_root / "docs" / "SYNTHESE_EXECUTIVE.md"
         self.changelog_path = self.project_root / "CHANGELOG.md"
+        
+        # Chemin des logs
         self.logs_dir = self.project_root / "tools" / "documentation_generator" / "logs"
         self.missions_log_path = self.logs_dir / "missions_detectees.json"
+        self.last_run_path = self.logs_dir / "last_auto_update.json"
         self.logs_dir.mkdir(parents=True, exist_ok=True)
         
+    def _charger_configuration(self) -> Dict[str, Any]:
+        """Charge la configuration depuis le fichier config.json."""
+        config_path = self.project_root / "tools" / "documentation_generator" / "config" / "config.json"
+        try:
+            with open(config_path, 'r', encoding='utf-8') as f:
+                config_data = json.load(f)
+            logger.info(f"✅ Configuration chargée depuis {config_path}")
+            return config_data.get("agent_synthese_auto_update", {})
+        except FileNotFoundError:
+            logger.error(f"❌ Fichier de configuration introuvable: {config_path}")
+            return {}
+        except json.JSONDecodeError:
+            logger.error(f"❌ Erreur de parsing du fichier de configuration JSON: {config_path}")
+            return {}
+    
     def detecter_nouvelles_missions(self) -> List[Dict[str, Any]]:
         """Détecte automatiquement les nouvelles missions accomplies"""
         logger.info("🔍 Détection des nouvelles missions accomplies...")
         
         missions = []
         
+        # Récupérer les paramètres depuis la configuration
+        since_days = self.config.get("git_log_since_days", 14)
+        keywords = self.config.get("commit_keywords", [])
+        
         # Scanner les modifications Git récentes
         try:
-            cmd = ["git", "log", "--since=2 weeks ago", "--pretty=format:%h %s"]
+            # Ne récupère que les messages de commit pour éviter le bruit des noms de fichiers.
+            cmd = ["git", "log", f"--since={since_days} days ago", "--pretty=format:%h %s"]
             result = subprocess.run(cmd, capture_output=True, text=True, cwd=self.project_root, encoding='utf-8', errors='ignore')
             
             if result.returncode == 0:
-                commits_recents = result.stdout.strip().split('\n')
+                commits_recents = result.stdout.strip().split('\\n')
                 
-                keywords = ['mission', 'accompli', 'opérationnel', 'validé', 'feat', 'sprint', 'refactor', 'implémenté']
-                
-                for commit in commits_recents:
-                    if any(keyword in commit.lower() for keyword in keywords):
+                for commit_msg in commits_recents:
+                    if any(keyword in commit_msg.lower() for keyword in keywords):
                         missions.append({
-                            'nom': self._extraire_nom_mission(commit),
-                            'date': datetime.datetime.now().strftime("%Y-%m-%d"),
-                            'commit': commit,
-                            'statut': "✅ DÉTECTÉ"
+                            "source": "git",
+                            "type": "commit",
+                            "description": commit_msg.split(' ', 1)[1],
+                            "date": datetime.now().strftime("%Y-%m-%d"),
+                            "reference": commit_msg.split(' ')[0]
                         })
+            else:
+                logger.warning(f"Git log a échoué: {result.stderr}")
+        except FileNotFoundError:
+            logger.warning("Git non trouvé. Le scan des commits est ignoré.")
         except Exception as e:
-            logger.warning(f"Erreur analyse Git: {e}")
+            logger.error(f"Erreur lors du scan des commits Git : {e}")
         
         # Scanner dossiers pour nouveaux outils/agents
         missions.extend(self._scanner_dossiers_nouveautes())
@@ -71,7 +104,7 @@ class AgentSyntheseAutoUpdate:
         # Sauvegarder les missions détectées pour analyse
         self._sauvegarder_missions_detectees(missions)
         
-        logger.info(f"✅ {len(missions)} nouvelles missions détectées")
+        logger.info(f"🔎 {len(missions)} mission(s) potentielle(s) détectée(s).")
         return missions
     
     def _extraire_nom_mission(self, commit_msg: str) -> str:
@@ -306,7 +339,17 @@ class AgentSyntheseAutoUpdate:
             logger.error(error_msg)
             resultats['erreurs'].append(error_msg)
         
+        self._sauvegarder_timestamp()
+        
         return resultats
+
+    def _sauvegarder_timestamp(self):
+        """Sauvegarde le timestamp de la dernière exécution."""
+        if not self.dry_run:
+            timestamp_data = {'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+            with open(self.last_run_path, 'w', encoding='utf-8') as f:
+                json.dump(timestamp_data, f)
+            logger.info(f"Timestamp de l'exécution sauvegardé dans {self.last_run_path}")
 
 def main():
     """Point d'entrée principal"""
@@ -319,7 +362,7 @@ def main():
     
     args = parser.parse_args()
     
-    agent = AgentSyntheseAutoUpdate()
+    agent = AgentSyntheseAutoUpdate(args.dry_run)
     
     print("🤖 AGENT SYNTHÈSE AUTO-UPDATE - NEXTGENERATION")
     print("=" * 50)

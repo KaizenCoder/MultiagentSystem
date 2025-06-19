@@ -1,0 +1,28 @@
+# 🚀 AGENT FACTORY - DÉPENDANCES AGENTS RÉELS
+# Sprint 4 - Agents Autonomes
+
+# === AGENTS CORE ===
+asyncio-mqtt>=0.16.0
+aiofiles>=24.1.0
+aiohttp>=3.9.0
+
+# === PERFORMANCE & MONITORING ===
+psutil>=5.9.0
+prometheus-client>=0.20.0
+zstandard>=0.22.0
+
+# === BACKUP & VERSIONING ===
+GitPython>=3.1.0
+watchdog>=4.0.0
+
+# === LOGGING & UTILS ===
+colorlog>=6.8.0
+python-dotenv>=1.0.0
+
+# === TESTING (optionnel) ===
+pytest>=8.0.0
+pytest-asyncio>=0.23.0
+
+# === DOCUMENTATION (optionnel) ===
+mkdocs>=1.5.0
+mkdocs-material>=9.5.0 
