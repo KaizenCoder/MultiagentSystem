@@ -3,9 +3,11 @@
 *Date : 19 June 2025*
 *Mise à jour automatique*
 
+> **🏭 INNOVATION PATTERN FACTORY :** Le système NextGeneration repose désormais sur un [Pattern Factory révolutionnaire](../agent_factory_implementation/documentation/GUIDE_PATTERN_FACTORY_FONCTIONNEMENT.md) qui transforme des templates JSON en agents Python fonctionnels automatiquement.
+
 ## 🎯 RÉSUMÉ EXÉCUTIF
 
-**NextGeneration** continue d'évoluer avec **21 nouvelles missions** accomplies récemment.
+**NextGeneration** continue d'évoluer avec **21 nouvelles missions** accomplies récemment, avec l'**innovation majeure du Pattern Factory** qui permet la création automatisée d'agents à partir de templates JSON.
 
 ### 🏆 MISSIONS RÉCENTES
 

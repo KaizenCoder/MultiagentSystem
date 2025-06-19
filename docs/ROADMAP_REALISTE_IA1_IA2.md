@@ -4,6 +4,8 @@
 **Objectif :** Rétablir progression méthodique et réaliste  
 **Statut :** 🔄 Correction en cours
 
+> **🏭 FONDATION PATTERN FACTORY :** La roadmap s'appuie sur le [Pattern Factory](../agent_factory_implementation/documentation/GUIDE_PATTERN_FACTORY_FONCTIONNEMENT.md) déjà opérationnel qui transforme des templates JSON en agents Python fonctionnels, constituant la base technologique de toute l'évolution future.
+
 ---
 
 ## 📊 **ÉTAT ACTUEL RÉEL**

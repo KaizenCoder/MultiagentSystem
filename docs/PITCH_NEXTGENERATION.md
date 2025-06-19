@@ -2,9 +2,12 @@
 
 ## 1. Présentation du Projet
 
-**Contexte:** Le projet NextGeneration vise à développer un orchestrateur d'agents IA hautement performant et modulaire. L'objectif est de créer un système capable de gérer des tâches complexes en coordonnant plusieurs agents spécialisés, tout en offrant une observabilité et une résilience de niveau entreprise. L'architecture est conçue comme un service universel, avec un backend robuste (accessible via API) et des clients légers, comme une extension pour l'IDE Cursor, permettant une intégration fluide dans le workflow des développeurs.
+> **🏭 INNOVATION PATTERN FACTORY :** NextGeneration repose sur un [Pattern Factory révolutionnaire](../agent_factory_implementation/documentation/GUIDE_PATTERN_FACTORY_FONCTIONNEMENT.md) qui transforme automatiquement des templates JSON en agents Python fonctionnels, révolutionnant la création d'agents IA.
+
+**Contexte:** Le projet NextGeneration vise à développer un orchestrateur d'agents IA hautement performant et modulaire basé sur un **Pattern Factory innovant**. L'objectif est de créer un système capable de gérer des tâches complexes en coordonnant plusieurs agents spécialisés créés dynamiquement à partir de templates JSON, tout en offrant une observabilité et une résilience de niveau entreprise. L'architecture est conçue comme un service universel, avec un backend robuste (accessible via API) et des clients légers, comme une extension pour l'IDE Cursor, permettant une intégration fluide dans le workflow des développeurs.
 
 **Fonctionnalités Clés:**
+- **🏭 Pattern Factory:** Création automatique d'agents Python à partir de templates JSON avec validation et sécurité intégrées.
 - **Orchestration Multi-Agents:** Coordination dynamique d'agents IA pour la résolution de problèmes complexes.
 - **Architecture Client-Serveur:** Un backend centralisé et des clients légers pour une utilisation flexible.
 - **Haute Performance & Scalabilité:** Optimisé pour les charges de travail importantes, avec des fonctionnalités de load balancing et d'auto-scaling.
