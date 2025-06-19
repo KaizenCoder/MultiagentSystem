@@ -1,0 +1,11 @@
+{
+  "backup_id": "backup_20250619_090054_incremental",
+  "timestamp": "2025-06-19 09:00:54.763524",
+  "backup_type": "incremental",
+  "file_count": 58,
+  "total_size_bytes": 1200968,
+  "checksum_sha256": "6851288ead23667883cf1efedf9bb73f6e6bea2db96f5f821adfb4f5d4172f82",
+  "retention_days": 30,
+  "git_commit_hash": "49f0e03f634efad8f8ce4b3077fb37f175e4351f",
+  "description": "Auto backup apr\u00e8s modification agent_07_expert_deploiement_k8s.py"
+}

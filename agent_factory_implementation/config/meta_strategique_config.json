@@ -1,0 +1,71 @@
+{
+  "version": "0.1.0-draft",
+  "status": "DRAFT/PROTOTYPE",
+  "warning": "⚠️ VERSION EXPÉRIMENTALE - NE PAS UTILISER EN PRODUCTION",
+  "agent_info": {
+    "name": "Agent Méta-Stratégique DRAFT",
+    "mission": "Auto-amélioration et optimisation continue du système (VERSION PROTOTYPE)",
+    "development_stage": "Prototype en test"
+  },
+  "execution_schedule": {
+    "daily_report": "09:00",
+    "weekly_deep_analysis": "MON:08:00",
+    "critical_monitoring": 30
+  },
+  "notifications": {
+    "email_enabled": false,
+    "email_recipients": [
+      "admin@nextgeneration.com",
+      "devops@nextgeneration.com"
+    ],
+    "email_from": "agent-meta@nextgeneration.com",
+    "smtp_server": "smtp.gmail.com",
+    "smtp_port": 587,
+    "webhook_url": null
+  },
+  "github_integration": {
+    "enabled": true,
+    "api_token": null,
+    "repo_owner": "nextgeneration",
+    "repo_name": "nextgeneration",
+    "branch": "new-main"
+  },
+  "analysis_settings": {
+    "retention_days": 30,
+    "critical_threshold": 0.8,
+    "archive_reports": true,
+    "performance_thresholds": {
+      "response_time_ms": 100,
+      "error_rate_percent": 5,
+      "cpu_usage_percent": 80,
+      "memory_usage_percent": 85,
+      "success_rate_percent": 95
+    }
+  },
+  "strategic_focus": {
+    "priority_agents": [
+      "agent_08_performance_optimizer",
+      "agent_06_specialiste_monitoring",
+      "agent_11_auditeur_qualite",
+      "agent_01_coordinateur_principal"
+    ],
+    "key_metrics": [
+      "response_time",
+      "error_rate",
+      "quality_score",
+      "progression_globale"
+    ],
+    "alert_conditions": {
+      "performance_degradation_threshold": 20,
+      "quality_drop_threshold": 8.0,
+      "error_spike_threshold": 10
+    }
+  },
+  "reporting": {
+    "executive_summary_enabled": true,
+    "detailed_metrics_enabled": true,
+    "trend_analysis_enabled": true,
+    "mission_generation_enabled": true,
+    "auto_backup_reports": true
+  }
+} 

@@ -1,0 +1,15 @@
+global:
+  evaluation_interval: 15s
+  scrape_interval: 15s
+scrape_configs:
+- job_name: agent-factory-agents
+  kubernetes_sd_configs:
+  - namespaces:
+      names:
+      - agent-factory
+    role: pod
+  relabel_configs:
+  - action: keep
+    regex: agent-factory-.*
+    source_labels:
+    - __meta_kubernetes_pod_label_app

@@ -1,0 +1,9 @@
+apiVersion: v2
+appVersion: 1.0.0
+description: Agent Factory Pattern - Production Deployment
+maintainers:
+- email: team@agent-factory.com
+  name: Agent Factory Team
+name: agent-factory
+type: application
+version: 1.0.0

@@ -33,8 +33,14 @@ import signal
 import sys
 
 # Configuration
-AGENT_ROOT = Path(__file__).parent
-PROJECT_ROOT = AGENT_ROOT.parent
+try:
+    AGENT_ROOT = Path(__file__).parent
+    PROJECT_ROOT = AGENT_ROOT.parent
+except NameError:
+    # Fallback si __file__ n'est pas défini
+    AGENT_ROOT = Path.cwd() / "agents"
+    PROJECT_ROOT = Path.cwd()
+
 BACKUPS_DIR = PROJECT_ROOT / "backups"
 LOGS_DIR = PROJECT_ROOT / "logs"
 VERSIONING_DIR = PROJECT_ROOT / "versioning"

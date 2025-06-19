@@ -19,6 +19,11 @@ watchdog>=4.0.0
 colorlog>=6.8.0
 python-dotenv>=1.0.0
 
+# === SÉCURITÉ AGENT 04 & 09 ===
+hvac>=2.1.0
+cryptography>=41.0.0
+requests>=2.31.0
+
 # === TESTING (optionnel) ===
 pytest>=8.0.0
 pytest-asyncio>=0.23.0

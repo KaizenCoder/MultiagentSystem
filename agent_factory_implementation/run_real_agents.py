@@ -64,6 +64,18 @@ class AgentManager:
         """Gestionnaire signaux pour arrêt propre"""
         self.logger.info(f"🛑 Signal {signum} reçu - Arrêt agents...")
         self.running = False
+        self.shutdown_event.set()
+        
+        # Sur Windows, déclencher l'arrêt asyncio
+        if sys.platform == 'win32':
+            try:
+                # Créer une tâche d'arrêt si on a une boucle active
+                loop = asyncio.get_running_loop()
+                if loop and not loop.is_closed():
+                    asyncio.create_task(self.shutdown_all())
+            except RuntimeError:
+                # Pas de boucle active, arrêt normal
+                pass
     
     async def start_agent(self, agent_class, agent_name: str):
         """Démarre un agent"""
@@ -183,20 +195,27 @@ async def main():
     print("🚀 DÉMARRAGE DU SYSTÈME D'AGENTS AUTONOMES 🚀")
     manager = AgentManager()
     
-    # Gestion des signaux d'arrêt
-    loop = asyncio.get_running_loop()
-    for sig in (signal.SIGINT, signal.SIGTERM):
-        loop.add_signal_handler(sig, lambda: asyncio.create_task(manager.shutdown_all()))
+    # Gestion des signaux d'arrêt - Compatible Windows
+    if sys.platform != 'win32':
+        # Unix/Linux - utiliser add_signal_handler
+        loop = asyncio.get_running_loop()
+        for sig in (signal.SIGINT, signal.SIGTERM):
+            loop.add_signal_handler(sig, lambda: asyncio.create_task(manager.shutdown_all()))
+    else:
+        # Windows - utiliser signal.signal (déjà configuré dans AgentManager.__init__)
+        print("🪟 Mode Windows détecté - Signal handlers configurés")
 
     try:
         await manager.start_agents()
         await manager.monitor_agents()
-    except asyncio.CancelledError:
-        logger.info("Tâche principale annulée.")
+    except (asyncio.CancelledError, KeyboardInterrupt):
+        manager.logger.info("🛑 Interruption détectée - Arrêt en cours...")
+        await manager.shutdown_all()
+    except Exception as e:
+        manager.logger.error(f"❌ Erreur inattendue: {e}")
+        await manager.shutdown_all()
     finally:
-        if not manager.shutdown_event.is_set():
-             await manager.shutdown_all()
-        logger.info("🏁 Système d'agents arrêté.")
+        manager.logger.info("🏁 Système d'agents arrêté.")
 
 if __name__ == "__main__":
     # Vérifier dépendances
@@ -205,9 +224,12 @@ if __name__ == "__main__":
         import zstandard
         import prometheus_client
         import aiofiles
+        import watchdog
+        import git
+        print("✅ Toutes les dépendances sont disponibles")
     except ImportError as e:
         print(f"❌ Dépendance manquante: {e}")
-        print("📦 Installer avec: pip install psutil zstandard prometheus-client aiofiles")
+        print("📦 Installer avec: pip install psutil zstandard prometheus-client aiofiles watchdog GitPython")
         sys.exit(1)
     
     asyncio.run(main()) 

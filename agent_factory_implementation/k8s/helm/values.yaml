@@ -1,0 +1,99 @@
+agents:
+  backup-manager:
+    enabled: true
+    env:
+      BACKUP_INTERVAL: '300'
+      GIT_AUTO_COMMIT: 'true'
+      RETENTION_DAYS: '365'
+    healthCheck:
+      initialDelaySeconds: 30
+      path: /health
+      periodSeconds: 10
+    image:
+      repository: agent-factory/agent-12-backup
+      tag: latest
+    port: 8012
+    replicas: 1
+    resources:
+      limits:
+        cpu: 200m
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        memory: 64Mi
+  monitoring-specialist:
+    enabled: true
+    env:
+      CPU_THRESHOLD: '80'
+      MEMORY_THRESHOLD: '80'
+      MONITORING_INTERVAL: '10'
+      REPORT_INTERVAL: '180'
+    healthCheck:
+      initialDelaySeconds: 30
+      path: /health
+      periodSeconds: 10
+    image:
+      repository: agent-factory/agent-06-monitoring
+      tag: latest
+    port: 8006
+    replicas: 1
+    resources:
+      limits:
+        cpu: 200m
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        memory: 64Mi
+  performance-optimizer:
+    enabled: true
+    env:
+      PROMETHEUS_PORT: '8008'
+      SLA_TARGET_MS: '50'
+      THREADPOOL_MAX: '40'
+      THREADPOOL_MIN: '10'
+    healthCheck:
+      initialDelaySeconds: 30
+      path: /health
+      periodSeconds: 10
+    image:
+      repository: agent-factory/agent-08-performance
+      tag: latest
+    port: 8008
+    replicas: 2
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+  testing-specialist:
+    enabled: true
+    env:
+      LOAD_TESTS: 'true'
+      SECURITY_TESTS: 'true'
+      SUCCESS_THRESHOLD: '80'
+      TEST_INTERVAL: '300'
+    healthCheck:
+      initialDelaySeconds: 30
+      path: /health
+      periodSeconds: 10
+    image:
+      repository: agent-factory/agent-15-testing
+      tag: latest
+    port: 8015
+    replicas: 1
+    resources:
+      limits:
+        cpu: 300m
+        memory: 384Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+global:
+  blueGreen:
+    enabled: true
+    strategy: blue-green
+  imagePullPolicy: Always
+  imageRegistry: agent-factory
+  namespace: agent-factory

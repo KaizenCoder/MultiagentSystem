@@ -1,0 +1,11 @@
+{
+  "backup_id": "backup_20250619_092459_incremental",
+  "timestamp": "2025-06-19 09:24:59.229232",
+  "backup_type": "incremental",
+  "file_count": 59,
+  "total_size_bytes": 1201888,
+  "checksum_sha256": "b9d85d446044da06f5bc3b44c83232b7fd52d306330591b0cc458a759b69bf4d",
+  "retention_days": 30,
+  "git_commit_hash": "63219d63fca85e368a16bcc5815402118c578d3a",
+  "description": "Auto backup apr\u00e8s modification enhanced_agent_templates.cpython-312.pyc"
+}

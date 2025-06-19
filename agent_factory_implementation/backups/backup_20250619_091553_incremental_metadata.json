@@ -1,0 +1,12 @@
+{
+  "backup_id": "backup_20250619_091553_incremental",
+  "timestamp": "2025-06-19 09:15:53.915938",
+  "backup_type": "incremental",
+  "file_count": 59,
+  "total_size_bytes": 1201888,
+  "checksum_sha256": "066da32c66d75ef27f57efddc6997cf91286de5083ccd165ae4c453eb571aa23",
+  "retention_days": 30,
+  "git_commit_hash": "0914eb908307a1707abd0f0514afdd37bf37d5d9",
+  "description": "Auto backup apr\u00e8s modification agent_03_integration_guide.md"
+}al.py"
+}

@@ -12,6 +12,7 @@ Mission: Agent autonome pour le monitoring de l'infrastructure et des agents.
 import asyncio
 import logging
 import signal
+import time
 from dataclasses import dataclass, asdict
 from datetime import datetime
 from pathlib import Path
@@ -112,7 +113,7 @@ class RealAgent06SpecialisteMonitoring:
                 if int(time.time()) % 60 == 0: # Log toutes les minutes
                     self.logger.info(f"📊 État Monitoring: CPU={state.cpu_usage:.1f}%, Mem={state.memory_usage:.1f}%, Agents={state.active_agents}, Santé={state.health_status}")
                 
-                if int(time.time()) % 300 == 0: # Rapport toutes les 5 minutes
+                if int(time.time()) % 180 == 0: # Rapport toutes les 3 minutes
                     await self.save_monitoring_report()
 
                 await asyncio.sleep(10)

@@ -12,6 +12,7 @@ import asyncio
 import logging
 import signal
 import random
+import time
 from dataclasses import dataclass, asdict
 from datetime import datetime
 from pathlib import Path
@@ -111,7 +112,7 @@ class RealAgent15TesteurSpecialise:
                     await self._simulate_test_run(test_type)
                     await asyncio.sleep(random.uniform(5, 15))
                 
-                if int(time.time()) % 900 == 0: # Rapport tous les 15 minutes
+                if int(time.time()) % 300 == 0: # Rapport toutes les 5 minutes
                     await self.save_testing_report()
 
             except Exception as e:

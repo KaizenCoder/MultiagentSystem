@@ -1,0 +1,11 @@
+{
+  "backup_id": "backup_20250619_091548_incremental",
+  "timestamp": "2025-06-19 09:15:48.769253",
+  "backup_type": "incremental",
+  "file_count": 59,
+  "total_size_bytes": 1201888,
+  "checksum_sha256": "06f6676a9be2b6fafddab9b9af2170515269adf7a298b8c01b3b068ad26ede34",
+  "retention_days": 30,
+  "git_commit_hash": "07bcef9037ae6fbe452bd8283c121600febcaac4",
+  "description": "Auto backup apr\u00e8s modification agent_03_specialiste_configuration.py"
+}

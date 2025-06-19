@@ -178,6 +178,7 @@ class Agent06AdvancedMonitoring:
         self.grafana_config = self._setup_grafana_dashboard()
         
         self.logger.info(f"📊 {self.agent_name} initialisé - Sprint 4")
+        global OPENTELEMETRY_AVAILABLE
         self.logger.info(f"OpenTelemetry: {'✅' if OPENTELEMETRY_AVAILABLE else '❌'}")
         
     def _setup_logging(self):
@@ -200,6 +201,7 @@ class Agent06AdvancedMonitoring:
         
     def _setup_opentelemetry(self):
         """Initialisation OpenTelemetry distribué"""
+        global OPENTELEMETRY_AVAILABLE
         if not OPENTELEMETRY_AVAILABLE:
             self.logger.warning("⚠️ OpenTelemetry non disponible - mode dégradé")
             return

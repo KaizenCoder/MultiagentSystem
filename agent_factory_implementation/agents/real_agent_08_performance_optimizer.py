@@ -32,8 +32,14 @@ import aiohttp
 from prometheus_client import Counter, Histogram, Gauge, start_http_server
 
 # Configuration
-AGENT_ROOT = Path(__file__).parent
-PROJECT_ROOT = AGENT_ROOT.parent
+try:
+    AGENT_ROOT = Path(__file__).parent
+    PROJECT_ROOT = AGENT_ROOT.parent
+except NameError:
+    # Fallback si __file__ n'est pas défini
+    AGENT_ROOT = Path.cwd() / "agents"
+    PROJECT_ROOT = Path.cwd()
+
 LOGS_DIR = PROJECT_ROOT / "logs"
 METRICS_DIR = PROJECT_ROOT / "metrics"
 TEMPLATES_DIR = PROJECT_ROOT / "templates"
@@ -380,35 +386,15 @@ class RealAgent08PerformanceOptimizer:
     
     async def monitoring_loop(self):
         """Boucle monitoring principal"""
-        self.logger.info("🔄 Démarrage boucle monitoring")
-        
+        self.logger.info("🔄 Démarrage de la boucle de monitoring de performance")
         while self.running:
             try:
-                # Collecte métriques
                 await self.collect_performance_metrics()
-                
-                # Auto-scaling (toutes les 30s)
-                if int(time.time()) % 30 == 0:
-                    await self.auto_scale_threadpool()
-                
-                # Sauvegarde rapport (toutes les 5 minutes)
-                if int(time.time()) % 300 == 0:
+                if int(time.time()) % 180 == 0:  # Sauvegarde toutes les 3 minutes
                     await self.save_performance_report()
-                
-                # Log état toutes les minutes
-                if int(time.time()) % 60 == 0 and self.current_state:
-                    self.logger.info(
-                        f"📊 État: CPU={self.current_state.cpu_usage:.1f}% "
-                        f"Workers={self.current_state.active_workers} "
-                        f"Response={self.current_state.avg_response_time:.1f}ms "
-                        f"SLA={self.current_state.sla_compliance:.1f}%"
-                    )
-                
-                await asyncio.sleep(1)  # Collecte chaque seconde
-                
+                await asyncio.sleep(10)
             except Exception as e:
-                self.logger.error(f"❌ Erreur boucle monitoring: {e}")
-                await asyncio.sleep(5)
+                self.logger.error(f"❌ Erreur dans la boucle de performance: {e}")
     
     async def template_processing_loop(self):
         """Boucle traitement templates"""

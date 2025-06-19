@@ -2,6 +2,8 @@
 
 **Système d'orchestration d'agents IA spécialisés pour le développement, diagnostic et résolution automatique de problématiques techniques complexes.**
 
+> **📖 COMPRENDRE LE PATTERN FACTORY :** Pour comprendre l'architecture et le fonctionnement du système d'agents, consultez le [Guide Pattern Factory](agent_factory_implementation/documentation/GUIDE_PATTERN_FACTORY_FONCTIONNEMENT.md) qui explique comment les agents sont créés et gérés.
+
 ## 🎯 Vue d'ensemble
 
 NextGeneration est un framework avancé d'agents IA autonomes capable de :
@@ -10,6 +12,7 @@ NextGeneration est un framework avancé d'agents IA autonomes capable de :
 - **Valider** les corrections par des tests approfondis
 - **Documenter** exhaustivement toutes les actions et résultats
 - **Coordonner** plusieurs agents pour résoudre des problématiques multi-facettes
+- **Créer des agents dynamiquement** via le Pattern Factory (Templates JSON → Agents Python)
 
 ## 🏆 Missions Accomplies ✅
 
@@ -69,6 +72,17 @@ NextGeneration est un framework avancé d'agents IA autonomes capable de :
 
 ```
 nextgeneration/
+├── agent_factory_implementation/   # 🏭 PATTERN FACTORY - CRÉATION DYNAMIQUE D'AGENTS
+│   ├── agents/                     # 🤖 17+ agents spécialisés
+│   ├── code_expert/               # 🧠 Système de templates et gestion
+│   │   ├── enhanced_agent_templates.py    # Templates JSON → Agents Python
+│   │   ├── optimized_template_manager.py  # Gestionnaire performance
+│   │   └── config/                # Configuration multi-environnement
+│   ├── documentation/             # 📖 Guides et documentation complète
+│   │   └── GUIDE_PATTERN_FACTORY_FONCTIONNEMENT.md  # 📋 Guide principal
+│   ├── templates/                 # 📄 Templates JSON des agents
+│   ├── tests/                     # 🧪 Tests > 90% couverture
+│   └── reports/                   # 📊 Rapports de sprints
 ├── tools/                       # 🛠️ OUTILS SPÉCIALISÉS NEXTGENERATION
 │   ├── tts_dependencies_installer/     # 📦 Installateur dépendances TTS
 │   ├── tts_performance_monitor/        # 📊 Surveillance performances TTS
@@ -173,6 +187,13 @@ docker exec postgres_final_utf8 psql -U postgres -d nextgen_db -c "SELECT versio
 ---
 
 ## 📋 Documentation Complète
+
+### 🏭 **Pattern Factory - Création Dynamique d'Agents**
+- **[Guide Pattern Factory](agent_factory_implementation/documentation/GUIDE_PATTERN_FACTORY_FONCTIONNEMENT.md)** - Comment ça marche (Templates → Agents)
+- **[Synthèse Finale](../SYNTHESE_FINALE_AGENT_FACTORY_PATTERN.md)** - Accomplissements et métriques
+- **[Rapports de Sprints](agent_factory_implementation/reports/)** - Progression par sprint
+- **[Code Expert](agent_factory_implementation/code_expert/)** - Système de templates avancé
+- **[Tests](agent_factory_implementation/tests/)** - Suite de validation > 90%
 
 ### 🗄️ **Système Backup Enterprise**
 - **[Guide d'utilisation](tools/project_backup_system/GUIDE_UTILISATION_BACKUP_NEXTGENERATION.md)** - Manuel complet production

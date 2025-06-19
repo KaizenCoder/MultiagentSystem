@@ -1,0 +1,11 @@
+{
+  "backup_id": "backup_20250619_024119_incremental",
+  "timestamp": "2025-06-19 02:41:19.859356",
+  "backup_type": "incremental",
+  "file_count": 47,
+  "total_size_bytes": 920121,
+  "checksum_sha256": "fd8e7f96d40fe1047ad8074bdd783c3a57695b4f40173596e5b03537e66f1d62",
+  "retention_days": 30,
+  "git_commit_hash": "999422cd8a3d91cbf13e92b01cfa46dace71d94a",
+  "description": "Auto backup apr\u00e8s modification real_agent_15_testeur_specialise.py"
+}

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """
 Code Expert NextGeneration - enhanced_agent_templates
 Adapt depuis scripts experts Claude Phase 2 (Production-Ready)
@@ -33,7 +35,6 @@ Cette version optimise ajoute :
     template.get_version() -> str
     template.inherit_from(parent_template) -> AgentTemplate
 """
-from __future__ import annotations
 
 import hashlib
 import json

@@ -1,0 +1,12 @@
+{
+  "backup_id": "backup_20250619_091552_incremental",
+  "timestamp": "2025-06-19 09:15:52.981755",
+  "backup_type": "incremental",
+  "file_count": 59,
+  "total_size_bytes": 1201888,
+  "checksum_sha256": "ec4e9cf37be795395e0b7d54089124c3adff15d324fc5593d7a369eb7f9ff0f1",
+  "retention_days": 30,
+  "git_commit_hash": "e9aaeaee80396b1f891e04611b37fe7f20198eda",
+  "description": "Auto backup apr\u00e8s modification nextgen_config.py"
+}nager.py"
+}
