@@ -1,0 +1,343 @@
+#!/usr/bin/env python3
+"""
+🤖 AGENT SYNTHÈSE AUTO-UPDATE - NEXTGENERATION
+Automatisation mise à jour SYNTHESE_EXECUTIVE.md et CHANGELOG.md
+
+Fonctionnalités:
+- Scan automatique des modifications projet
+- Mise à jour SYNTHESE_EXECUTIVE avec nouvelles missions
+- Génération CHANGELOG automatique
+- Intégration Git hooks et workflows
+
+Version: 1.0
+Auteur: Système NextGeneration
+"""
+
+import os
+import sys
+import json
+import datetime
+import logging
+from pathlib import Path
+from typing import Dict, List, Any, Optional
+import subprocess
+import re
+
+# Configuration logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+class AgentSyntheseAutoUpdate:
+    """Agent automatisation mise à jour SYNTHESE_EXECUTIVE et CHANGELOG"""
+    
+    def __init__(self, project_root: str = None):
+        self.project_root = Path(project_root) if project_root else Path.cwd()
+        self.synthese_path = self.project_root / "docs" / "SYNTHESE_EXECUTIVE.md"
+        self.changelog_path = self.project_root / "CHANGELOG.md"
+        self.logs_dir = self.project_root / "tools" / "documentation_generator" / "logs"
+        self.missions_log_path = self.logs_dir / "missions_detectees.json"
+        self.logs_dir.mkdir(parents=True, exist_ok=True)
+        
+    def detecter_nouvelles_missions(self) -> List[Dict[str, Any]]:
+        """Détecte automatiquement les nouvelles missions accomplies"""
+        logger.info("🔍 Détection des nouvelles missions accomplies...")
+        
+        missions = []
+        
+        # Scanner les modifications Git récentes
+        try:
+            cmd = ["git", "log", "--since=2 weeks ago", "--pretty=format:%h %s"]
+            result = subprocess.run(cmd, capture_output=True, text=True, cwd=self.project_root, encoding='utf-8', errors='ignore')
+            
+            if result.returncode == 0:
+                commits_recents = result.stdout.strip().split('\n')
+                
+                keywords = ['mission', 'accompli', 'opérationnel', 'validé', 'feat', 'sprint', 'refactor', 'implémenté']
+                
+                for commit in commits_recents:
+                    if any(keyword in commit.lower() for keyword in keywords):
+                        missions.append({
+                            'nom': self._extraire_nom_mission(commit),
+                            'date': datetime.datetime.now().strftime("%Y-%m-%d"),
+                            'commit': commit,
+                            'statut': "✅ DÉTECTÉ"
+                        })
+        except Exception as e:
+            logger.warning(f"Erreur analyse Git: {e}")
+        
+        # Scanner dossiers pour nouveaux outils/agents
+        missions.extend(self._scanner_dossiers_nouveautes())
+        
+        # Sauvegarder les missions détectées pour analyse
+        self._sauvegarder_missions_detectees(missions)
+        
+        logger.info(f"✅ {len(missions)} nouvelles missions détectées")
+        return missions
+    
+    def _extraire_nom_mission(self, commit_msg: str) -> str:
+        """Extrait le nom de mission du message commit"""
+        # Nettoyer le message (enlever hash)
+        msg = re.sub(r'^[a-f0-9]{7,}\s+', '', commit_msg).strip()
+        
+        # Patterns courants
+        patterns = [
+            r'mission ([^:]+)',
+            r'système ([^:]+)',
+            r'([A-Z][^:,]+) (?:accompli|opérationnel|validé)'
+        ]
+        
+        for pattern in patterns:
+            match = re.search(pattern, msg, re.IGNORECASE)
+            if match:
+                return match.group(1).strip().title()
+        
+        return "Mission Auto-Détectée"
+    
+    def _scanner_dossiers_nouveautes(self) -> List[Dict[str, Any]]:
+        """Scanner les dossiers pour détecter des nouveautés"""
+        missions = []
+        
+        # Scanner tools/ pour nouveaux outils
+        tools_dir = self.project_root / "tools"
+        if tools_dir.exists():
+            for subdir in tools_dir.iterdir():
+                if subdir.is_dir() and not subdir.name.startswith('.'):
+                    # Vérifier si c'est récent
+                    creation_time = datetime.datetime.fromtimestamp(subdir.stat().st_mtime)
+                    if (datetime.datetime.now() - creation_time).days <= 7:
+                        missions.append({
+                            'nom': f"Outil {subdir.name.replace('_', ' ').title()}",
+                            'date': creation_time.strftime("%Y-%m-%d"),
+                            'commit': f"Nouveau: {subdir.name}",
+                            'statut': "✅ OUTIL NOUVEAU"
+                        })
+        
+        return missions
+    
+    def _sauvegarder_missions_detectees(self, missions: List[Dict[str, Any]]):
+        """Sauvegarde la liste des missions détectées dans un fichier JSON."""
+        try:
+            with open(self.missions_log_path, 'w', encoding='utf-8') as f:
+                json.dump(missions, f, indent=2, ensure_ascii=False)
+            logger.info(f"💾 Missions détectées sauvegardées dans {self.missions_log_path}")
+        except Exception as e:
+            logger.error(f"❌ Erreur sauvegarde missions détectées: {e}")
+    
+    def mettre_a_jour_synthese_executive(self, missions: List[Dict[str, Any]]) -> bool:
+        """Met à jour le document SYNTHESE_EXECUTIVE.md"""
+        if not missions:
+            return True
+            
+        logger.info("📝 Mise à jour SYNTHESE_EXECUTIVE.md...")
+        
+        try:
+            # Backup
+            if self.synthese_path.exists():
+                backup_path = self.synthese_path.with_suffix('.md.backup')
+                self.synthese_path.rename(backup_path)
+            
+            # Générer nouveau contenu
+            contenu = self._generer_synthese_executive(missions)
+            self.synthese_path.write_text(contenu, encoding='utf-8')
+            
+            logger.info("✅ SYNTHESE_EXECUTIVE.md mis à jour")
+            return True
+            
+        except Exception as e:
+            logger.error(f"❌ Erreur mise à jour synthèse: {e}")
+            return False
+    
+    def _generer_synthese_executive(self, missions: List[Dict[str, Any]]) -> str:
+        """Génère le contenu de la synthèse exécutive"""
+        date_actuelle = datetime.datetime.now().strftime("%d %B %Y")
+        
+        contenu = f'''# 📈 SYNTHÈSE EXÉCUTIVE - NEXTGENERATION
+*Rapport de missions multiples : Système Multi-Agents IA Enterprise*
+*Date : {date_actuelle}*
+*Mise à jour automatique*
+
+## 🎯 RÉSUMÉ EXÉCUTIF
+
+**NextGeneration** continue d'évoluer avec **{len(missions)} nouvelles missions** accomplies récemment.
+
+### 🏆 MISSIONS RÉCENTES
+
+| Mission | Date | Statut | Description |
+|---------|------|--------|-------------|
+'''
+        
+        for mission in missions:
+            contenu += f"| **{mission['nom']}** | {mission['date']} | {mission['statut']} | {mission['commit']} |\n"
+        
+        contenu += f'''
+
+### 📊 MÉTRIQUES MISES À JOUR
+
+- **{len(missions)} nouvelles missions** détectées automatiquement
+- **Documentation** mise à jour en continu
+- **Infrastructure** en évolution constante
+- **Automatisation** des processus de reporting
+
+## 🤖 SYSTÈME D'AUTOMATISATION
+
+### 🔄 Mise à Jour Automatique
+- **Détection automatique** des nouvelles missions via Git
+- **Mise à jour continue** de la documentation
+- **Synchronisation** SYNTHESE_EXECUTIVE et CHANGELOG
+- **Intégration** dans les workflows existants
+
+### 🎯 Prochaines Évolutions
+- **Webhooks Git** pour mise à jour en temps réel
+- **Intégration** transmission coordinateur
+- **Dashboard** de suivi automatique
+
+---
+*Synthèse mise à jour automatiquement par Agent Synthèse Auto-Update*
+*Dernière génération : {date_actuelle}*
+'''
+        
+        return contenu
+    
+    def mettre_a_jour_changelog(self, missions: List[Dict[str, Any]]) -> bool:
+        """Met à jour le CHANGELOG.md"""
+        if not missions:
+            return True
+            
+        logger.info("📝 Mise à jour CHANGELOG.md...")
+        
+        try:
+            # Lire contenu actuel
+            contenu_actuel = ""
+            if self.changelog_path.exists():
+                contenu_actuel = self.changelog_path.read_text(encoding='utf-8')
+            
+            # Générer nouvelles entrées
+            nouvelles_entrees = self._generer_entrees_changelog(missions)
+            
+            # Backup
+            if self.changelog_path.exists():
+                backup_path = self.changelog_path.with_suffix('.md.backup')
+                self.changelog_path.rename(backup_path)
+            
+            # Insérer au début
+            nouveau_contenu = self._inserer_changelog(nouvelles_entrees, contenu_actuel)
+            self.changelog_path.write_text(nouveau_contenu, encoding='utf-8')
+            
+            logger.info("✅ CHANGELOG.md mis à jour")
+            return True
+            
+        except Exception as e:
+            logger.error(f"❌ Erreur mise à jour changelog: {e}")
+            return False
+    
+    def _generer_entrees_changelog(self, missions: List[Dict[str, Any]]) -> str:
+        """Génère les nouvelles entrées changelog"""
+        date_actuelle = datetime.datetime.now().strftime("%Y-%m-%d")
+        version = f"[AUTO-{datetime.datetime.now().strftime('%Y.%m.%d')}]"
+        
+        entrees = f'''## {version} - {date_actuelle} - MISE À JOUR AUTOMATIQUE 🤖
+
+### 🎉 NOUVELLES MISSIONS DÉTECTÉES
+'''
+        
+        for mission in missions:
+            entrees += f"- **{mission['nom']}** - {mission['statut']} ({mission['date']})\n"
+        
+        entrees += f'''
+### 🔄 AUTOMATISATION
+- **Agent Synthèse Auto-Update** déployé
+- **Détection automatique** des nouvelles missions
+- **Mise à jour continue** des documents stratégiques
+- **Intégration** dans l'infrastructure NextGeneration
+
+### 📊 MÉTRIQUES AUTO-UPDATE
+- **Missions détectées** : {len(missions)}
+- **Documents mis à jour** : SYNTHESE_EXECUTIVE.md, CHANGELOG.md
+- **Mode** : Automatique via Git scanning
+
+'''
+        
+        return entrees
+    
+    def _inserer_changelog(self, nouvelles_entrees: str, contenu_actuel: str) -> str:
+        """Insère les nouvelles entrées dans le changelog"""
+        nouveau_contenu = "# 📝 CHANGELOG - NEXTGENERATION\n\n"
+        nouveau_contenu += nouvelles_entrees
+        nouveau_contenu += "\n"
+        
+        # Ajouter ancien contenu (sans le titre)
+        if contenu_actuel:
+            lignes = contenu_actuel.split('\n')
+            if len(lignes) > 2:
+                ancien_contenu = '\n'.join(lignes[2:])
+                nouveau_contenu += ancien_contenu
+        
+        return nouveau_contenu
+    
+    def executer_mise_a_jour_complete(self) -> Dict[str, Any]:
+        """Exécute le processus de mise à jour de bout en bout."""
+        logger.info("🚀 Démarrage mise à jour complète...")
+        missions = self.detecter_nouvelles_missions()
+        
+        if not missions:
+            logger.info("ℹ️ Aucune nouvelle mission détectée. Aucune mise à jour nécessaire.")
+            return {"missions_detectees": 0, "synthese_ok": True, "changelog_ok": True, "erreurs": []}
+            
+        synthese_ok = self.mettre_a_jour_synthese_executive(missions)
+        changelog_ok = self.mettre_a_jour_changelog(missions)
+        
+        resultats = {
+            "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "missions_detectees": len(missions),
+            "synthese_ok": synthese_ok,
+            "changelog_ok": changelog_ok,
+            "erreurs": []
+        }
+        
+        try:
+            # Sauvegarder log
+            log_path = self.logs_dir / f"auto_update_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            log_path.write_text(json.dumps(resultats, indent=2), encoding='utf-8')
+            
+            logger.info("✅ Mise à jour complète terminée")
+            
+        except Exception as e:
+            error_msg = f"Erreur globale: {e}"
+            logger.error(error_msg)
+            resultats['erreurs'].append(error_msg)
+        
+        return resultats
+
+def main():
+    """Point d'entrée principal"""
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="Agent Synthèse Auto-Update")
+    parser.add_argument("--mode", choices=['detection', 'synthese', 'changelog', 'complet'], 
+                       default='complet', help="Mode d'exécution")
+    parser.add_argument("--dry-run", action='store_true', help="Mode simulation")
+    
+    args = parser.parse_args()
+    
+    agent = AgentSyntheseAutoUpdate()
+    
+    print("🤖 AGENT SYNTHÈSE AUTO-UPDATE - NEXTGENERATION")
+    print("=" * 50)
+    
+    if args.mode == 'detection':
+        missions = agent.detecter_nouvelles_missions()
+        print(f"✅ {len(missions)} missions détectées")
+        
+    elif args.mode == 'complet':
+        if args.dry_run:
+            print("🔍 MODE SIMULATION")
+            missions = agent.detecter_nouvelles_missions()
+            print(f"📊 {len(missions)} missions seraient traitées")
+        else:
+            resultats = agent.executer_mise_a_jour_complete()
+            print(f"📊 Missions: {resultats['missions_detectees']}")
+            print(f"📝 Synthèse: {resultats['synthese_ok']}")
+            print(f"📝 Changelog: {resultats['changelog_ok']}")
+
+if __name__ == "__main__":
+    main() 

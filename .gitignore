@@ -5,4 +5,13 @@ env.example
 
 # Fichiers de projet et d'éditeur
 .vscode/
-... (le reste du .gitignore est conservé) 
+... (le reste du .gitignore est conservé)
+
+# Fichiers de log et de base de données
+*.log
+*.db
+*.sqlite3
+
+# Fichiers générés par l'automatisation
+CODE-SOURCE.md
+CODE-SOURCE.md.backup 
