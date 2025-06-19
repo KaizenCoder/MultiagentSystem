@@ -1,32 +1,75 @@
 #!/usr/bin/env python3
 """
-Agent 1 - Analyseur de Structure (Claude Sonnet 4)
-Mission: Analyser la structure des outils dans SuperWhisper_V6/tools
+🔍 AGENT 1 - ANALYSEUR DE STRUCTURE (CLAUDE SONNET 4)
+Mission: Analyser la structure des outils avec Pattern Factory NextGeneration
 
-Responsabilits:
-- Scanner tous les fichiers Python dans le rpertoire source
+Architecture Pattern Factory:
+- Hérite de Agent de base  
+- Implémente méthodes abstraites obligatoires
+- Configuration NextGeneration intégrée
+- Logging Pattern Factory standardisé
+
+Responsabilités:
+- Scanner tous les fichiers Python dans le répertoire source
 - Analyser la structure AST de chaque fichier
 - Identifier les types d'outils (automation, monitoring, conversion, etc.)
-- Extraire les dpendances et mtadonnes
-- Classer les outils par utilit potentielle
+- Extraire les dépendances et métadonnées
+- Classer les outils par utilité potentielle
 """
 
 import os
 import ast
 import json
 import logging
+import asyncio
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 import importlib.util
 import re
 from datetime import datetime
+import sys
 
-class AgentAnalyseurStructure:
-    """Agent spcialis dans l'analyse de structure de code Python avec Claude Sonnet 4"""
+# Import Pattern Factory (OBLIGATOIRE selon guide)
+sys.path.insert(0, str(Path(__file__).parent.parent))
+try:
+    from core.agent_factory_architecture import Agent, Task, Result
+    PATTERN_FACTORY_AVAILABLE = True
+except ImportError as e:
+    print(f"⚠️ Pattern Factory non disponible: {e}")
+    # Fallback pour compatibilité
+    class Agent:
+        def __init__(self, agent_type: str, **config):
+            self.agent_id = f"agent_1_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            self.agent_type = agent_type
+            self.config = config
+            self.logger = logging.getLogger(f"Agent1_AnalyseurStructure")
+            
+        async def startup(self): pass
+        async def shutdown(self): pass
+        async def health_check(self): return {"status": "healthy"}
     
-    def __init__(self, source_path: str):
-        self.source_path = Path(source_path)
-        self.logger = logging.getLogger("Agent1_AnalyseurStructure")
+    class Task:
+        def __init__(self, task_id: str, description: str, **kwargs):
+            self.task_id = task_id
+            self.description = description
+            
+    class Result:
+        def __init__(self, success: bool, data: Any = None, error: str = None):
+            self.success = success
+            self.data = data
+            self.error = error
+    
+    PATTERN_FACTORY_AVAILABLE = False
+
+class AgentAnalyseurStructure(Agent):
+    """Agent spécialisé dans l'analyse de structure de code Python avec Claude Sonnet 4 - Pattern Factory NextGeneration"""
+    
+    def __init__(self, source_path: str = None, **config):
+        # Initialisation Pattern Factory
+        super().__init__("analyseur_structure", **config)
+        
+        # Configuration spécifique à l'agent
+        self.source_path = Path(source_path) if source_path else Path("tools")
         self.analysis_results = {
             "tools": [],
             "categories": {},
@@ -35,41 +78,90 @@ class AgentAnalyseurStructure:
             "analyzable_files": 0
         }
         
-    def analyze_tools_structure(self) -> Dict[str, Any]:
-        """Analyse complte de la structure des outils"""
-        self.logger.info(f"[SEARCH] Dmarrage analyse structure: {self.source_path}")
+        # Configuration logging Pattern Factory
+        self.logger.info(f"🔍 Agent 1 - Analyseur Structure initialisé - ID: {self.agent_id}")
+        
+    # Implémentation méthodes abstraites OBLIGATOIRES
+    async def startup(self):
+        """Démarrage agent analyseur structure"""
+        self.logger.info(f"🚀 Agent Analyseur Structure {self.agent_id} - DÉMARRAGE")
+        
+        # Vérifications de démarrage
+        if not self.source_path.exists():
+            self.logger.warning(f"⚠️ Répertoire source non trouvé: {self.source_path}")
+            # Créer le répertoire par défaut
+            self.source_path.mkdir(parents=True, exist_ok=True)
+            
+        self.logger.info(f"✅ Répertoire source configuré: {self.source_path}")
+        
+    async def shutdown(self):
+        """Arrêt agent analyseur structure"""
+        self.logger.info(f"🛑 Agent Analyseur Structure {self.agent_id} - ARRÊT")
+        
+        # Nettoyage des ressources
+        if hasattr(self, 'analysis_results'):
+            # Convertir les sets en listes pour la sérialisation
+            if 'dependencies' in self.analysis_results:
+                self.analysis_results['dependencies'] = list(self.analysis_results['dependencies'])
+                
+    async def health_check(self) -> Dict[str, Any]:
+        """Vérification santé agent analyseur structure"""
+        health_status = {
+            "agent_id": self.agent_id,
+            "agent_type": self.agent_type,
+            "status": "healthy",
+            "source_path_exists": self.source_path.exists() if hasattr(self, 'source_path') else False,
+            "analysis_ready": True,
+            "last_analysis_count": len(self.analysis_results.get("tools", [])),
+            "timestamp": datetime.now().isoformat()
+        }
+        
+        # Vérifications spécifiques
+        if not self.source_path.exists():
+            health_status["status"] = "warning"
+            health_status["issues"] = ["Répertoire source inexistant"]
+            
+        return health_status
+    
+    # Méthodes métier (logique existante adaptée)
+    async def analyze_tools_structure(self, source_path: str = None) -> Dict[str, Any]:
+        """Analyse complète de la structure des outils - Version Pattern Factory"""
+        if source_path:
+            self.source_path = Path(source_path)
+            
+        self.logger.info(f"🔍 [SEARCH] Démarrage analyse structure: {self.source_path}")
         
         if not self.source_path.exists():
-            raise FileNotFoundError(f"Rpertoire source introuvable: {self.source_path}")
+            raise FileNotFoundError(f"Répertoire source introuvable: {self.source_path}")
             
         # Scanner tous les fichiers Python
         python_files = list(self.source_path.rglob("*.py"))
         self.analysis_results["total_files"] = len(python_files)
         
-        self.logger.info(f"[FOLDER] {len(python_files)} fichiers Python trouvs")
+        self.logger.info(f"📁 [FOLDER] {len(python_files)} fichiers Python trouvés")
         
         # Analyser chaque fichier
         for py_file in python_files:
             try:
-                tool_info = self.analyze_single_file(py_file)
+                tool_info = await self.analyze_single_file(py_file)
                 if tool_info:
                     self.analysis_results["tools"].append(tool_info)
                     self.analysis_results["analyzable_files"] += 1
                     
             except Exception as e:
-                self.logger.warning(f" Erreur analyse {py_file.name}: {e}")
+                self.logger.warning(f"⚠️ Erreur analyse {py_file.name}: {e}")
                 
-        # Catgoriser les outils
-        self.categorize_tools()
+        # Catégoriser les outils
+        await self.categorize_tools()
         
         # Finaliser l'analyse
         self.analysis_results["dependencies"] = list(self.analysis_results["dependencies"])
         
-        self.logger.info(f"[CHECK] Analyse termine: {self.analysis_results['analyzable_files']} outils analyss")
+        self.logger.info(f"✅ [CHECK] Analyse terminée: {self.analysis_results['analyzable_files']} outils analysés")
         return self.analysis_results
         
-    def analyze_single_file(self, file_path: Path) -> Optional[Dict[str, Any]]:
-        """Analyse dtaille d'un fichier Python unique"""
+    async def analyze_single_file(self, file_path: Path) -> Optional[Dict[str, Any]]:
+        """Analyse détaillée d'un fichier Python unique"""
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
@@ -92,26 +184,26 @@ class AgentAnalyseurStructure:
                 "utility_indicators": []
             }
             
-            # Analyse AST dtaille
-            self.extract_ast_elements(tree, tool_info)
+            # Analyse AST détaillée
+            await self.extract_ast_elements(tree, tool_info)
             
             # Classification du type d'outil
-            tool_info["tool_type"] = self.classify_tool_type(tool_info, content)
+            tool_info["tool_type"] = await self.classify_tool_type(tool_info, content)
             
-            # Score de complexit
-            tool_info["complexity_score"] = self.calculate_complexity_score(tool_info)
+            # Score de complexité
+            tool_info["complexity_score"] = await self.calculate_complexity_score(tool_info)
             
-            # Indicateurs d'utilit
-            tool_info["utility_indicators"] = self.extract_utility_indicators(tool_info, content)
+            # Indicateurs d'utilité
+            tool_info["utility_indicators"] = await self.extract_utility_indicators(tool_info, content)
             
             return tool_info
             
         except Exception as e:
-            self.logger.error(f"[CROSS] Erreur analyse fichier {file_path}: {e}")
+            self.logger.error(f"❌ [CROSS] Erreur analyse fichier {file_path}: {e}")
             return None
             
-    def extract_ast_elements(self, tree: ast.AST, tool_info: Dict[str, Any]):
-        """Extraction des lments AST (fonctions, classes, imports)"""
+    async def extract_ast_elements(self, tree: ast.AST, tool_info: Dict[str, Any]):
+        """Extraction des éléments AST (fonctions, classes, imports)"""
         for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef):
                 func_info = {
@@ -147,10 +239,10 @@ class AgentAnalyseurStructure:
                         if module:
                             self.analysis_results["dependencies"].add(module)
                             
-    def classify_tool_type(self, tool_info: Dict[str, Any], content: str) -> str:
-        """Classification intelligente du type d'outil base sur l'analyse du code"""
+    async def classify_tool_type(self, tool_info: Dict[str, Any], content: str) -> str:
+        """Classification intelligente du type d'outil basée sur l'analyse du code"""
         
-        # Mots-cls pour chaque catgorie
+        # Mots-clés pour chaque catégorie
         categories_keywords = {
             "automation": ["schedule", "cron", "task", "job", "workflow", "pipeline", "automation"],
             "monitoring": ["monitor", "watch", "log", "metric", "alert", "health", "status"],
@@ -176,21 +268,21 @@ class AgentAnalyseurStructure:
         for category, keywords in categories_keywords.items():
             score = 0
             
-            # Score bas sur le nom de fichier (poids lev)
+            # Score basé sur le nom de fichier (poids élevé)
             for keyword in keywords:
                 if keyword in filename_lower:
                     score += 3
                     
-            # Score bas sur la docstring (poids moyen)
+            # Score basé sur la docstring (poids moyen)
             for keyword in keywords:
                 if keyword in docstring_lower:
                     score += 2
                     
-            # Score bas sur le contenu (poids faible)
+            # Score basé sur le contenu (poids faible)
             for keyword in keywords:
                 score += content_lower.count(keyword) * 0.5
                 
-            # Score bas sur les imports
+            # Score basé sur les imports
             for import_name in tool_info["imports"]:
                 for keyword in keywords:
                     if keyword in import_name.lower():
@@ -198,45 +290,45 @@ class AgentAnalyseurStructure:
                         
             category_scores[category] = score
             
-        # Retourner la catgorie avec le score le plus lev
+        # Retourner la catégorie avec le score le plus élevé
         if category_scores:
             best_category = max(category_scores.items(), key=lambda x: x[1])
             if best_category[1] > 0:
                 return best_category[0]
                 
-        return "utility"  # Catgorie par dfaut
+        return "utility"  # Catégorie par défaut
         
-    def calculate_complexity_score(self, tool_info: Dict[str, Any]) -> int:
-        """Calcul du score de complexit de l'outil"""
+    async def calculate_complexity_score(self, tool_info: Dict[str, Any]) -> int:
+        """Calcul du score de complexité de l'outil"""
         score = 0
         
-        # Complexit base sur le nombre de fonctions
+        # Complexité basée sur le nombre de fonctions
         score += len(tool_info["functions"]) * 2
         
-        # Complexit base sur le nombre de classes
+        # Complexité basée sur le nombre de classes
         score += len(tool_info["classes"]) * 5
         
-        # Complexit base sur les imports
+        # Complexité basée sur les imports
         score += len(tool_info["imports"])
         
-        # Complexit base sur la taille
+        # Complexité basée sur la taille
         score += tool_info["lines_count"] // 10
         
         # Bonus pour les fonctions async
         async_functions = sum(1 for f in tool_info["functions"] if f["is_async"])
         score += async_functions * 3
         
-        # Bonus pour les dcorateurs
+        # Bonus pour les décorateurs
         decorated_functions = sum(1 for f in tool_info["functions"] if f["decorators"])
         score += decorated_functions * 2
         
         return score
         
-    def extract_utility_indicators(self, tool_info: Dict[str, Any], content: str) -> List[str]:
-        """Extraction des indicateurs d'utilit de l'outil"""
+    async def extract_utility_indicators(self, tool_info: Dict[str, Any], content: str) -> List[str]:
+        """Extraction des indicateurs d'utilité de l'outil"""
         indicators = []
         
-        # Indicateurs bass sur la structure
+        # Indicateurs basés sur la structure
         if len(tool_info["functions"]) > 5:
             indicators.append("multi_functional")
             
@@ -246,13 +338,13 @@ class AgentAnalyseurStructure:
         if any(f["is_async"] for f in tool_info["functions"]):
             indicators.append("async_capable")
             
-        # Indicateurs bass sur les imports
+        # Indicateurs basés sur les imports
         important_libs = ["requests", "asyncio", "pathlib", "json", "yaml", "sqlite3", "pandas"]
         for lib in important_libs:
             if any(lib in imp for imp in tool_info["imports"]):
                 indicators.append(f"uses_{lib}")
                 
-        # Indicateurs bass sur le contenu
+        # Indicateurs basés sur le contenu
         if "if __name__ == '__main__':" in content:
             indicators.append("executable_script")
             
@@ -265,7 +357,7 @@ class AgentAnalyseurStructure:
         if "config" in content.lower():
             indicators.append("configurable")
             
-        # Indicateurs de qualit
+        # Indicateurs de qualité
         if tool_info["docstring"]:
             indicators.append("documented")
             
@@ -274,8 +366,8 @@ class AgentAnalyseurStructure:
             
         return indicators
         
-    def categorize_tools(self):
-        """Catgorisation finale des outils analyss"""
+    async def categorize_tools(self):
+        """Catégorisation finale des outils analysés"""
         categories = {}
         
         for tool in self.analysis_results["tools"]:
@@ -288,25 +380,18 @@ class AgentAnalyseurStructure:
         
         # Log des statistiques
         for category, tools in categories.items():
-            self.logger.info(f"[CHART] {category}: {len(tools)} outils")
+            self.logger.info(f"📊 [CHART] {category}: {len(tools)} outils")
     
-    def analyser_structure_apex(self, apex_tools_dir: str) -> Dict[str, Any]:
-        """
-        Analyse spcialise pour les outils Apex_VBA_FRAMEWORK
-        
-        Args:
-            apex_tools_dir: Rpertoire des outils Apex_VBA_FRAMEWORK
-            
-        Returns:
-            Dict contenant l'analyse complte des outils Apex
-        """
-        self.logger.info(f"[SEARCH] Analyse spcialise Apex_VBA_FRAMEWORK: {apex_tools_dir}")
+    # Méthodes spécialisées Apex (conservées)
+    async def analyser_structure_apex(self, apex_tools_dir: str) -> Dict[str, Any]:
+        """Analyse spécialisée pour les outils Apex_VBA_FRAMEWORK - Version Pattern Factory"""
+        self.logger.info(f"🔍 [SEARCH] Analyse spécialisée Apex_VBA_FRAMEWORK: {apex_tools_dir}")
         
         apex_path = Path(apex_tools_dir)
         if not apex_path.exists():
-            raise FileNotFoundError(f"Rpertoire Apex introuvable: {apex_tools_dir}")
+            raise FileNotFoundError(f"Répertoire Apex introuvable: {apex_tools_dir}")
         
-        # Analyse des diffrents types d'outils dans Apex
+        # Analyse des différents types d'outils dans Apex
         outils_apex = {
             "python_tools": [],
             "powershell_tools": [],
@@ -316,12 +401,12 @@ class AgentAnalyseurStructure:
             "directories": []
         }
         
-        # Scanner tous les fichiers et rpertoires
+        # Scanner tous les fichiers et répertoires
         for item in apex_path.rglob("*"):
             if item.is_file():
                 if item.suffix == ".py":
                     # Analyser les outils Python
-                    analyse = self.analyze_single_file(item)
+                    analyse = await self.analyze_single_file(item)
                     if analyse:
                         analyse["category"] = "python"
                         analyse["apex_subdir"] = item.parent.name
@@ -329,7 +414,7 @@ class AgentAnalyseurStructure:
                 
                 elif item.suffix == ".ps1":
                     # Analyser les scripts PowerShell
-                    analyse = self._analyser_fichier_powershell(item)
+                    analyse = await self._analyser_fichier_powershell(item)
                     if analyse:
                         analyse["category"] = "powershell"
                         analyse["apex_subdir"] = item.parent.name
@@ -337,7 +422,7 @@ class AgentAnalyseurStructure:
                 
                 elif item.suffix in [".bat", ".cmd"]:
                     # Analyser les scripts batch
-                    analyse = self._analyser_fichier_batch(item)
+                    analyse = await self._analyser_fichier_batch(item)
                     if analyse:
                         analyse["category"] = "batch"
                         analyse["apex_subdir"] = item.parent.name
@@ -348,7 +433,7 @@ class AgentAnalyseurStructure:
                       len(outils_apex["powershell_tools"]) + 
                       len(outils_apex["batch_tools"]))
         
-        # Classification par sous-rpertoire Apex
+        # Classification par sous-répertoire Apex
         categories_apex = {}
         for tool_type in ["python_tools", "powershell_tools", "batch_tools"]:
             for tool in outils_apex[tool_type]:
@@ -369,19 +454,19 @@ class AgentAnalyseurStructure:
             "tools_by_apex_category": categories_apex,
             "detailed_analysis": outils_apex,
             "analysis_timestamp": datetime.now().isoformat(),
-            "analyzer_model": "Claude Sonnet 4"
+            "analyzer_model": "Claude Sonnet 4 - Pattern Factory"
         }
         
-        self.logger.info(f"[CHECK] Analyse Apex termine: {total_tools} outils trouvs")
+        self.logger.info(f"✅ [CHECK] Analyse Apex terminée: {total_tools} outils trouvés")
         return resultats
     
-    def _analyser_fichier_powershell(self, filepath: Path) -> Optional[Dict[str, Any]]:
+    async def _analyser_fichier_powershell(self, filepath: Path) -> Optional[Dict[str, Any]]:
         """Analyse un fichier PowerShell"""
         try:
             with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
                 content = f.read()
             
-            # Dtection des fonctions PowerShell
+            # Détection des fonctions PowerShell
             functions = []
             for line in content.split('\n'):
                 if line.strip().startswith('function ') or line.strip().startswith('Function '):
@@ -398,16 +483,16 @@ class AgentAnalyseurStructure:
                 "complexity_score": len(functions) * 2 + len(content.split('\n')) // 10
             }
         except Exception as e:
-            self.logger.warning(f" Erreur analyse PowerShell {filepath}: {e}")
+            self.logger.warning(f"⚠️ Erreur analyse PowerShell {filepath}: {e}")
             return None
     
-    def _analyser_fichier_batch(self, filepath: Path) -> Optional[Dict[str, Any]]:
+    async def _analyser_fichier_batch(self, filepath: Path) -> Optional[Dict[str, Any]]:
         """Analyse un fichier batch"""
         try:
             with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
                 content = f.read()
             
-            # Dtection des commandes batch importantes
+            # Détection des commandes batch importantes
             commands = []
             for line in content.split('\n'):
                 line = line.strip().upper()
@@ -426,19 +511,86 @@ class AgentAnalyseurStructure:
                 "complexity_score": len(set(commands)) * 3 + len(content.split('\n')) // 5
             }
         except Exception as e:
-            self.logger.warning(f" Erreur analyse Batch {filepath}: {e}")
+            self.logger.warning(f"⚠️ Erreur analyse Batch {filepath}: {e}")
             return None
 
-# Test de l'agent si excut directement
-if __name__ == "__main__":
+# Fonction factory pour créer l'agent (Pattern Factory)
+def create_agent_analyseur_structure(source_path: str = None, **config) -> AgentAnalyseurStructure:
+    """Factory function pour créer un Agent Analyseur Structure conforme Pattern Factory"""
+    return AgentAnalyseurStructure(source_path=source_path, **config)
+
+# Test de l'agent si exécuté directement
+async def main():
+    """Test de l'agent Pattern Factory"""
     import sys
     
     if len(sys.argv) > 1:
         source_path = sys.argv[1]
     else:
-        source_path = r"C:\Dev\SuperWhisper_V6\tools"
+        source_path = "tools"
         
-    agent = AgentAnalyseurStructure(source_path)
-    results = agent.analyze_tools_structure()
+    # Créer l'agent via factory
+    agent = create_agent_analyseur_structure(source_path=source_path)
     
-    print(json.dumps(results, indent=2, ensure_ascii=False)) 
+    try:
+        # Démarrage Pattern Factory
+        await agent.startup()
+        
+        # Vérification santé
+        health = await agent.health_check()
+        print(f"🏥 Health Check: {health}")
+        
+        # Exécution mission
+        results = await agent.analyze_tools_structure()
+        print(json.dumps(results, indent=2, ensure_ascii=False))
+        
+        # Arrêt propre
+        await agent.shutdown()
+        
+    except Exception as e:
+        print(f"❌ Erreur execution agent: {e}")
+        await agent.shutdown()
+
+if __name__ == "__main__":
+    asyncio.run(main()) 
+
+# Fonction factory pour créer l'agent (Pattern Factory)
+def create_agent_1AnalyseurStructure(**config):
+    """Factory function pour créer un Agent 1AnalyseurStructure conforme Pattern Factory"""
+
+    async def execute_task(self, task: Any) -> Any:
+        """Exécution d'une tâche spécifique - Méthode abstraite obligatoire"""
+        try:
+            self.logger.info(f"📋 Exécution tâche: {task}")
+            # Logique métier à adapter
+            return {"success": True, "result": "Task executed"}
+        except Exception as e:
+            self.logger.error(f"❌ Erreur exécution tâche: {e}")
+            return {"error": str(e)}
+
+
+    def get_capabilities(self) -> List[str]:
+        """Retourne les capacités de l'agent - Méthode abstraite obligatoire"""
+        return ["basic_capability"]
+
+    return Agent1AnalyseurStructure(**config)
+
+# Fonction factory pour créer l'agent (Pattern Factory)
+def create_agent_1AnalyseurStructure(**config):
+    """Factory function pour créer un Agent 1AnalyseurStructure conforme Pattern Factory"""
+    return Agent1AnalyseurStructure(**config)
+
+# Fonction factory pour créer l'agent (Pattern Factory)
+def create_agent_1AnalyseurStructure(**config):
+    """Factory function pour créer un Agent 1AnalyseurStructure conforme Pattern Factory"""
+    return Agent1AnalyseurStructure(**config)
+
+# Fonction factory pour créer l'agent (Pattern Factory)
+def create_agent_1AnalyseurStructure(**config):
+    """Factory function pour créer un Agent 1AnalyseurStructure conforme Pattern Factory"""
+    return Agent1AnalyseurStructure(**config)
+
+# Fonction factory pour créer l'agent (Pattern Factory)
+def create_agent_1AnalyseurStructure(**config):
+    """Factory function pour créer un Agent 1AnalyseurStructure conforme Pattern Factory"""
+    return Agent1AnalyseurStructure(**config)

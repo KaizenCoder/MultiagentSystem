@@ -1,0 +1,18 @@
+{
+  "agent_id": "agent_21_security_supply_chain_enterprise",
+  "version": "1.0.0",
+  "phase": "ENTERPRISE_PHASE_1",
+  "metrics": {
+    "scan_start_time": "2025-06-19T14:48:25.317727",
+    "total_dependencies": 1,
+    "vulnerabilities_found": 2,
+    "critical_vulnerabilities": 1,
+    "compliance_score": 80.3,
+    "risk_score": 0.0,
+    "auto_fixes_applied": 0,
+    "manual_review_required": 0
+  },
+  "vulnerabilities_count": 0,
+  "compliance_frameworks": [],
+  "last_update": "2025-06-19T14:48:26.337278"
+}

@@ -1,0 +1,2454 @@
+{
+  "test_timestamp": "2025-06-19T16:34:11.795645",
+  "integration_mode": "production",
+  "test_results": {
+    "repair_needed_test": {
+      "success": true,
+      "repair_needed": true,
+      "repairs_executed": 9,
+      "repairs_failed": 0,
+      "total_processed": 10,
+      "success_rate": 90.0,
+      "agents_repaired": [
+        "C:\\Dev\\nextgeneration\\agent_1_analyseur_structure.py",
+        "C:\\Dev\\nextgeneration\\agent_2_evaluateur_utilite.py",
+        "C:\\Dev\\nextgeneration\\agent_3_adaptateur_code.py",
+        "C:\\Dev\\nextgeneration\\agent_4_testeur_integration.py",
+        "C:\\Dev\\nextgeneration\\agent_5_documenteur.py",
+        "C:\\Dev\\nextgeneration\\agent_6_validateur_final.py",
+        "C:\\Dev\\nextgeneration\\agent_adaptateur_documentation.py",
+        "C:\\Dev\\nextgeneration\\agent_analyseur_outils.py",
+        "C:\\Dev\\nextgeneration\\agent_coordinateur_refactorisation_simple.py"
+      ],
+      "timestamp": "2025-06-19T16:34:11.528885",
+      "mode": "production",
+      "backup_created": true,
+      "detailed_results": {
+        "timestamp": "2025-06-19T16:34:11.370110",
+        "total_agents": 10,
+        "repair_results": [
+          {
+            "agent_path": "C:\\Dev\\nextgeneration\\agent_1_analyseur_structure.py",
+            "timestamp": "2025-06-19T16:34:11.379114",
+            "backup_path": "C:\\Dev\\nextgeneration\\backups_docteur\\agent_1_analyseur_structure_20250619_163411.backup",
+            "issues_repaired": [
+              {
+                "type": "missing_factory_function",
+                "severity": "warning",
+                "message": "Fonction factory manquante",
+                "repair_action": "add_factory_function"
+              }
+            ],
+            "issues_remaining": [],
+            "repair_success": true,
+            "modifications_applied": [
+              "Fonction factory ajoutée"
+            ],
+            "post_repair_validation": {
+              "syntax_valid": true,
+              "remaining_issues": 1,
+              "severity": "warning",
+              "validation_success": false
+            }
+          },
+          {
+            "agent_path": "C:\\Dev\\nextgeneration\\agent_2_evaluateur_utilite.py",
+            "timestamp": "2025-06-19T16:34:11.402690",
+            "backup_path": "C:\\Dev\\nextgeneration\\backups_docteur\\agent_2_evaluateur_utilite_20250619_163411.backup",
+            "issues_repaired": [
+              {
+                "type": "missing_factory_function",
+                "severity": "warning",
+                "message": "Fonction factory manquante",
+                "repair_action": "add_factory_function"
+              }
+            ],
+            "issues_remaining": [],
+            "repair_success": true,
+            "modifications_applied": [
+              "Fonction factory ajoutée"
+            ],
+            "post_repair_validation": {
+              "syntax_valid": true,
+              "remaining_issues": 1,
+              "severity": "warning",
+              "validation_success": false
+            }
+          },
+          {
+            "agent_path": "C:\\Dev\\nextgeneration\\agent_3_adaptateur_code.py",
+            "timestamp": "2025-06-19T16:34:11.423211",
+            "backup_path": "C:\\Dev\\nextgeneration\\backups_docteur\\agent_3_adaptateur_code_20250619_163411.backup",
+            "issues_repaired": [
+              {
+                "type": "missing_factory_function",
+                "severity": "warning",
+                "message": "Fonction factory manquante",
+                "repair_action": "add_factory_function"
+              }
+            ],
+            "issues_remaining": [],
+            "repair_success": true,
+            "modifications_applied": [
+              "Fonction factory ajoutée"
+            ],
+            "post_repair_validation": {
+              "syntax_valid": true,
+              "remaining_issues": 1,
+              "severity": "warning",
+              "validation_success": false
+            }
+          },
+          {
+            "agent_path": "C:\\Dev\\nextgeneration\\agent_4_testeur_integration.py",
+            "timestamp": "2025-06-19T16:34:11.434212",
+            "backup_path": "C:\\Dev\\nextgeneration\\backups_docteur\\agent_4_testeur_integration_20250619_163411.backup",
+            "issues_repaired": [
+              {
+                "type": "missing_factory_function",
+                "severity": "warning",
+                "message": "Fonction factory manquante",
+                "repair_action": "add_factory_function"
+              }
+            ],
+            "issues_remaining": [],
+            "repair_success": true,
+            "modifications_applied": [
+              "Fonction factory ajoutée"
+            ],
+            "post_repair_validation": {
+              "syntax_valid": true,
+              "remaining_issues": 1,
+              "severity": "warning",
+              "validation_success": false
+            }
+          },
+          {
+            "agent_path": "C:\\Dev\\nextgeneration\\agent_5_documenteur.py",
+            "timestamp": "2025-06-19T16:34:11.447211",
+            "backup_path": "C:\\Dev\\nextgeneration\\backups_docteur\\agent_5_documenteur_20250619_163411.backup",
+            "issues_repaired": [
+              {
+                "type": "missing_factory_function",
+                "severity": "warning",
+                "message": "Fonction factory manquante",
+                "repair_action": "add_factory_function"
+              }
+            ],
+            "issues_remaining": [],
+            "repair_success": true,
+            "modifications_applied": [
+              "Fonction factory ajoutée"
+            ],
+            "post_repair_validation": {
+              "syntax_valid": true,
+              "remaining_issues": 1,
+              "severity": "warning",
+              "validation_success": false
+            }
+          },
+          {
+            "agent_path": "C:\\Dev\\nextgeneration\\agent_6_validateur_final.py",
+            "timestamp": "2025-06-19T16:34:11.461211",
+            "backup_path": "C:\\Dev\\nextgeneration\\backups_docteur\\agent_6_validateur_final_20250619_163411.backup",
+            "issues_repaired": [
+              {
+                "type": "missing_factory_function",
+                "severity": "warning",
+                "message": "Fonction factory manquante",
+                "repair_action": "add_factory_function"
+              }
+            ],
+            "issues_remaining": [],
+            "repair_success": true,
+            "modifications_applied": [
+              "Fonction factory ajoutée"
+            ],
+            "post_repair_validation": {
+              "syntax_valid": true,
+              "remaining_issues": 1,
+              "severity": "warning",
+              "validation_success": false
+            }
+          },
+          {
+            "agent_path": "C:\\Dev\\nextgeneration\\agent_adaptateur_documentation.py",
+            "timestamp": "2025-06-19T16:34:11.471217",
+            "backup_path": "C:\\Dev\\nextgeneration\\backups_docteur\\agent_adaptateur_documentation_20250619_163411.backup",
+            "issues_repaired": [
+              {
+                "type": "missing_factory_function",
+                "severity": "warning",
+                "message": "Fonction factory manquante",
+                "repair_action": "add_factory_function"
+              }
+            ],
+            "issues_remaining": [],
+            "repair_success": true,
+            "modifications_applied": [
+              "Fonction factory ajoutée"
+            ],
+            "post_repair_validation": {
+              "syntax_valid": true,
+              "remaining_issues": 1,
+              "severity": "warning",
+              "validation_success": false
+            }
+          },
+          {
+            "agent_path": "C:\\Dev\\nextgeneration\\agent_analyseur_outils.py",
+            "timestamp": "2025-06-19T16:34:11.496214",
+            "backup_path": "C:\\Dev\\nextgeneration\\backups_docteur\\agent_analyseur_outils_20250619_163411.backup",
+            "issues_repaired": [
+              {
+                "type": "missing_factory_function",
+                "severity": "warning",
+                "message": "Fonction factory manquante",
+                "repair_action": "add_factory_function"
+              }
+            ],
+            "issues_remaining": [],
+            "repair_success": true,
+            "modifications_applied": [
+              "Fonction factory ajoutée"
+            ],
+            "post_repair_validation": {
+              "syntax_valid": true,
+              "remaining_issues": 1,
+              "severity": "warning",
+              "validation_success": false
+            }
+          },
+          {
+            "agent_path": "C:\\Dev\\nextgeneration\\agent_coordinateur_refactorisation_pattern_factory.py",
+            "status": "healthy",
+            "repair_needed": false
+          },
+          {
+            "agent_path": "C:\\Dev\\nextgeneration\\agent_coordinateur_refactorisation_simple.py",
+            "timestamp": "2025-06-19T16:34:11.515378",
+            "backup_path": "C:\\Dev\\nextgeneration\\backups_docteur\\agent_coordinateur_refactorisation_simple_20250619_163411.backup",
+            "issues_repaired": [
+              {
+                "type": "missing_factory_function",
+                "severity": "warning",
+                "message": "Fonction factory manquante",
+                "repair_action": "add_factory_function"
+              },
+              {
+                "type": "missing_required_method",
+                "severity": "critical",
+                "method": "execute_task",
+                "message": "Méthode obligatoire 'execute_task' manquante",
+                "repair_action": "add_required_method"
+              },
+              {
+                "type": "missing_required_method",
+                "severity": "critical",
+                "method": "get_capabilities",
+                "message": "Méthode obligatoire 'get_capabilities' manquante",
+                "repair_action": "add_required_method"
+              }
+            ],
+            "issues_remaining": [
+              {
+                "type": "missing_agent_inheritance",
+                "severity": "critical",
+                "message": "Héritage Agent manquant",
+                "repair_action": "add_agent_inheritance"
+              }
+            ],
+            "repair_success": true,
+            "modifications_applied": [
+              "Fonction factory ajoutée",
+              "Méthode execute_task ajoutée",
+              "Méthode get_capabilities ajoutée"
+            ],
+            "post_repair_validation": {
+              "syntax_valid": true,
+              "remaining_issues": 4,
+              "severity": "critical",
+              "validation_success": false
+            }
+          }
+        ],
+        "summary": {
+          "repaired_successfully": 9,
+          "repair_failed": 0,
+          "total_processed": 10,
+          "success_rate": 90.0
+        }
+      }
+    },
+    "repair_not_needed_test": {
+      "success": true,
+      "repair_needed": false,
+      "message": "Aucune réparation nécessaire",
+      "timestamp": "2025-06-19T16:34:11.531886"
+    },
+    "post_refactoring_workflow": {
+      "phase": "post_refactoring",
+      "start_time": "2025-06-19T16:34:11.531886",
+      "steps": {
+        "validation_agents_testeur": {
+          "success": false,
+          "conformite_pattern_factory": false,
+          "agents_valides": 0,
+          "total_agents": 15,
+          "timestamp": "2025-06-19T16:34:11.567892",
+          "validation_details": {
+            "timestamp": "2025-06-19T16:34:11.532886",
+            "total_agents": 15,
+            "tests_results": [
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_1_analyseur_structure.py",
+                "timestamp": "2025-06-19T16:34:11.532886",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_EXCELLENT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": true,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 100.0,
+                    "score_recommande": 100.0,
+                    "score_global": 100.0,
+                    "recommendations": [],
+                    "message": "Conformité Pattern Factory: CONFORME_EXCELLENT (100.0%)"
+                  },
+                  "required_methods": {
+                    "success": true,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": true,
+                      "get_capabilities": true
+                    },
+                    "score": 100.0,
+                    "message": "Méthodes obligatoires: 100.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 24.69,
+                      "lines_count": 586,
+                      "code_lines": 410,
+                      "functions_count": 27,
+                      "classes_count": 4
+                    },
+                    "score": 75.0,
+                    "message": "Performance: 75.0/100"
+                  }
+                },
+                "score_global": 66.2,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_2_evaluateur_utilite.py",
+                "timestamp": "2025-06-19T16:34:11.536885",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_EXCELLENT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": true,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 100.0,
+                    "score_recommande": 100.0,
+                    "score_global": 100.0,
+                    "recommendations": [],
+                    "message": "Conformité Pattern Factory: CONFORME_EXCELLENT (100.0%)"
+                  },
+                  "required_methods": {
+                    "success": true,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": true,
+                      "get_capabilities": true
+                    },
+                    "score": 100.0,
+                    "message": "Méthodes obligatoires: 100.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 35.07,
+                      "lines_count": 862,
+                      "code_lines": 598,
+                      "functions_count": 41,
+                      "classes_count": 4
+                    },
+                    "score": 75.0,
+                    "message": "Performance: 75.0/100"
+                  }
+                },
+                "score_global": 66.2,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_3_adaptateur_code.py",
+                "timestamp": "2025-06-19T16:34:11.541887",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_STRICT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": false,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 80.0,
+                    "score_recommande": 100.0,
+                    "score_global": 84.0,
+                    "recommendations": [
+                      "CRITIQUE: Ajouter fonction factory avec nomenclature correcte"
+                    ],
+                    "message": "Conformité Pattern Factory: CONFORME_STRICT (84.0%)"
+                  },
+                  "required_methods": {
+                    "success": true,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": true,
+                      "get_capabilities": true
+                    },
+                    "score": 100.0,
+                    "message": "Méthodes obligatoires: 100.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 6.83,
+                      "lines_count": 183,
+                      "code_lines": 128,
+                      "functions_count": 19,
+                      "classes_count": 4
+                    },
+                    "score": 81.0,
+                    "message": "Performance: 81.0/100"
+                  }
+                },
+                "score_global": 67.2,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_4_testeur_integration.py",
+                "timestamp": "2025-06-19T16:34:11.542887",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_STRICT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": false,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 80.0,
+                    "score_recommande": 100.0,
+                    "score_global": 84.0,
+                    "recommendations": [
+                      "CRITIQUE: Ajouter fonction factory avec nomenclature correcte"
+                    ],
+                    "message": "Conformité Pattern Factory: CONFORME_STRICT (84.0%)"
+                  },
+                  "required_methods": {
+                    "success": true,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": true,
+                      "get_capabilities": true
+                    },
+                    "score": 100.0,
+                    "message": "Méthodes obligatoires: 100.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 6.93,
+                      "lines_count": 183,
+                      "code_lines": 128,
+                      "functions_count": 19,
+                      "classes_count": 4
+                    },
+                    "score": 81.0,
+                    "message": "Performance: 81.0/100"
+                  }
+                },
+                "score_global": 67.2,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_5_documenteur.py",
+                "timestamp": "2025-06-19T16:34:11.543887",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_STRICT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": false,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 80.0,
+                    "score_recommande": 100.0,
+                    "score_global": 84.0,
+                    "recommendations": [
+                      "CRITIQUE: Ajouter fonction factory avec nomenclature correcte"
+                    ],
+                    "message": "Conformité Pattern Factory: CONFORME_STRICT (84.0%)"
+                  },
+                  "required_methods": {
+                    "success": true,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": true,
+                      "get_capabilities": true
+                    },
+                    "score": 100.0,
+                    "message": "Méthodes obligatoires: 100.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 10.78,
+                      "lines_count": 296,
+                      "code_lines": 200,
+                      "functions_count": 21,
+                      "classes_count": 4
+                    },
+                    "score": 79.0,
+                    "message": "Performance: 79.0/100"
+                  }
+                },
+                "score_global": 66.8,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_6_validateur_final.py",
+                "timestamp": "2025-06-19T16:34:11.545887",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_STRICT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": false,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 80.0,
+                    "score_recommande": 100.0,
+                    "score_global": 84.0,
+                    "recommendations": [
+                      "CRITIQUE: Ajouter fonction factory avec nomenclature correcte"
+                    ],
+                    "message": "Conformité Pattern Factory: CONFORME_STRICT (84.0%)"
+                  },
+                  "required_methods": {
+                    "success": true,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": true,
+                      "get_capabilities": true
+                    },
+                    "score": 100.0,
+                    "message": "Méthodes obligatoires: 100.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 6.86,
+                      "lines_count": 183,
+                      "code_lines": 128,
+                      "functions_count": 19,
+                      "classes_count": 4
+                    },
+                    "score": 81.0,
+                    "message": "Performance: 81.0/100"
+                  }
+                },
+                "score_global": 67.2,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_adaptateur_documentation.py",
+                "timestamp": "2025-06-19T16:34:11.546887",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_EXCELLENT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": true,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 100.0,
+                    "score_recommande": 100.0,
+                    "score_global": 100.0,
+                    "recommendations": [],
+                    "message": "Conformité Pattern Factory: CONFORME_EXCELLENT (100.0%)"
+                  },
+                  "required_methods": {
+                    "success": true,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": true,
+                      "get_capabilities": true
+                    },
+                    "score": 100.0,
+                    "message": "Méthodes obligatoires: 100.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 7.04,
+                      "lines_count": 183,
+                      "code_lines": 128,
+                      "functions_count": 19,
+                      "classes_count": 4
+                    },
+                    "score": 81.0,
+                    "message": "Performance: 81.0/100"
+                  }
+                },
+                "score_global": 67.2,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_analyseur_outils.py",
+                "timestamp": "2025-06-19T16:34:11.547887",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_EXCELLENT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": true,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 100.0,
+                    "score_recommande": 100.0,
+                    "score_global": 100.0,
+                    "recommendations": [],
+                    "message": "Conformité Pattern Factory: CONFORME_EXCELLENT (100.0%)"
+                  },
+                  "required_methods": {
+                    "success": true,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": true,
+                      "get_capabilities": true
+                    },
+                    "score": 100.0,
+                    "message": "Méthodes obligatoires: 100.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 6.83,
+                      "lines_count": 183,
+                      "code_lines": 128,
+                      "functions_count": 19,
+                      "classes_count": 4
+                    },
+                    "score": 81.0,
+                    "message": "Performance: 81.0/100"
+                  }
+                },
+                "score_global": 67.2,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_coordinateur_refactorisation_pattern_factory.py",
+                "timestamp": "2025-06-19T16:34:11.548887",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_EXCELLENT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": true,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 100.0,
+                    "score_recommande": 100.0,
+                    "score_global": 100.0,
+                    "recommendations": [],
+                    "message": "Conformité Pattern Factory: CONFORME_EXCELLENT (100.0%)"
+                  },
+                  "required_methods": {
+                    "success": true,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": true,
+                      "get_capabilities": true
+                    },
+                    "score": 100.0,
+                    "message": "Méthodes obligatoires: 100.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 33.38,
+                      "lines_count": 792,
+                      "code_lines": 582,
+                      "functions_count": 53,
+                      "classes_count": 13
+                    },
+                    "score": 75.0,
+                    "message": "Performance: 75.0/100"
+                  }
+                },
+                "score_global": 66.2,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_coordinateur_refactorisation_simple.py",
+                "timestamp": "2025-06-19T16:34:11.554887",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": false,
+                    "conformite_level": "CONFORME_PARTIEL",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": false,
+                      "factory_function_naming": false,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 60.0,
+                    "score_recommande": 100.0,
+                    "score_global": 68.0,
+                    "recommendations": [
+                      "CRITIQUE: Corriger héritage strict de la classe Agent",
+                      "CRITIQUE: Ajouter fonction factory avec nomenclature correcte"
+                    ],
+                    "message": "Conformité Pattern Factory: CONFORME_PARTIEL (68.0%)"
+                  },
+                  "required_methods": {
+                    "success": false,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": false,
+                      "get_capabilities": false
+                    },
+                    "score": 60.0,
+                    "message": "Méthodes obligatoires: 60.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 22.12,
+                      "lines_count": 555,
+                      "code_lines": 407,
+                      "functions_count": 36,
+                      "classes_count": 8
+                    },
+                    "score": 75.0,
+                    "message": "Performance: 75.0/100"
+                  }
+                },
+                "score_global": 54.2,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_coordinateur_reorganisation_outils.py",
+                "timestamp": "2025-06-19T16:34:11.556886",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_STRICT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": false,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 80.0,
+                    "score_recommande": 100.0,
+                    "score_global": 84.0,
+                    "recommendations": [
+                      "CRITIQUE: Ajouter fonction factory avec nomenclature correcte"
+                    ],
+                    "message": "Conformité Pattern Factory: CONFORME_STRICT (84.0%)"
+                  },
+                  "required_methods": {
+                    "success": false,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": false,
+                      "get_capabilities": false
+                    },
+                    "score": 60.0,
+                    "message": "Méthodes obligatoires: 60.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 5.76,
+                      "lines_count": 151,
+                      "code_lines": 108,
+                      "functions_count": 14,
+                      "classes_count": 4
+                    },
+                    "score": 86.0,
+                    "message": "Performance: 86.0/100"
+                  }
+                },
+                "score_global": 55.9,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_docteur_reparation.py",
+                "timestamp": "2025-06-19T16:34:11.558886",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_EXCELLENT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": true,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 100.0,
+                    "score_recommande": 100.0,
+                    "score_global": 100.0,
+                    "recommendations": [],
+                    "message": "Conformité Pattern Factory: CONFORME_EXCELLENT (100.0%)"
+                  },
+                  "required_methods": {
+                    "success": true,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": true,
+                      "get_capabilities": true
+                    },
+                    "score": 100.0,
+                    "message": "Méthodes obligatoires: 100.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 45.11,
+                      "lines_count": 1099,
+                      "code_lines": 819,
+                      "functions_count": 57,
+                      "classes_count": 7
+                    },
+                    "score": 75.0,
+                    "message": "Performance: 75.0/100"
+                  }
+                },
+                "score_global": 66.2,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_meta_strategique.py",
+                "timestamp": "2025-06-19T16:34:11.563892",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_STRICT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": false,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 80.0,
+                    "score_recommande": 100.0,
+                    "score_global": 84.0,
+                    "recommendations": [
+                      "CRITIQUE: Ajouter fonction factory avec nomenclature correcte"
+                    ],
+                    "message": "Conformité Pattern Factory: CONFORME_STRICT (84.0%)"
+                  },
+                  "required_methods": {
+                    "success": false,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": false,
+                      "get_capabilities": false
+                    },
+                    "score": 60.0,
+                    "message": "Méthodes obligatoires: 60.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 5.49,
+                      "lines_count": 151,
+                      "code_lines": 108,
+                      "functions_count": 14,
+                      "classes_count": 4
+                    },
+                    "score": 86.0,
+                    "message": "Performance: 86.0/100"
+                  }
+                },
+                "score_global": 55.9,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_organisateur_structure.py",
+                "timestamp": "2025-06-19T16:34:11.565887",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_EXCELLENT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": true,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 100.0,
+                    "score_recommande": 100.0,
+                    "score_global": 100.0,
+                    "recommendations": [],
+                    "message": "Conformité Pattern Factory: CONFORME_EXCELLENT (100.0%)"
+                  },
+                  "required_methods": {
+                    "success": false,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": false,
+                      "get_capabilities": false
+                    },
+                    "score": 60.0,
+                    "message": "Méthodes obligatoires: 60.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 5.61,
+                      "lines_count": 151,
+                      "code_lines": 108,
+                      "functions_count": 14,
+                      "classes_count": 4
+                    },
+                    "score": 86.0,
+                    "message": "Performance: 86.0/100"
+                  }
+                },
+                "score_global": 55.9,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_rapport_final.py",
+                "timestamp": "2025-06-19T16:34:11.566887",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_EXCELLENT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": true,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 100.0,
+                    "score_recommande": 100.0,
+                    "score_global": 100.0,
+                    "recommendations": [],
+                    "message": "Conformité Pattern Factory: CONFORME_EXCELLENT (100.0%)"
+                  },
+                  "required_methods": {
+                    "success": false,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": false,
+                      "get_capabilities": false
+                    },
+                    "score": 60.0,
+                    "message": "Méthodes obligatoires: 60.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 5.46,
+                      "lines_count": 151,
+                      "code_lines": 108,
+                      "functions_count": 14,
+                      "classes_count": 4
+                    },
+                    "score": 86.0,
+                    "message": "Performance: 86.0/100"
+                  }
+                },
+                "score_global": 55.9,
+                "status": "warning"
+              }
+            ],
+            "summary": {
+              "success": 0,
+              "warning": 15,
+              "error": 0,
+              "success_rate": 0.0,
+              "average_score": 63.0,
+              "total_tested": 15
+            }
+          }
+        },
+        "reparation_docteur": {
+          "success": true,
+          "repair_needed": true,
+          "repairs_executed": 9,
+          "repairs_failed": 0,
+          "total_processed": 10,
+          "success_rate": 90.0,
+          "agents_repaired": [
+            "C:\\Dev\\nextgeneration\\agent_1_analyseur_structure.py",
+            "C:\\Dev\\nextgeneration\\agent_2_evaluateur_utilite.py",
+            "C:\\Dev\\nextgeneration\\agent_3_adaptateur_code.py",
+            "C:\\Dev\\nextgeneration\\agent_4_testeur_integration.py",
+            "C:\\Dev\\nextgeneration\\agent_5_documenteur.py",
+            "C:\\Dev\\nextgeneration\\agent_6_validateur_final.py",
+            "C:\\Dev\\nextgeneration\\agent_adaptateur_documentation.py",
+            "C:\\Dev\\nextgeneration\\agent_analyseur_outils.py",
+            "C:\\Dev\\nextgeneration\\agent_coordinateur_refactorisation_simple.py"
+          ],
+          "timestamp": "2025-06-19T16:34:11.753545",
+          "mode": "production",
+          "backup_created": true,
+          "detailed_results": {
+            "timestamp": "2025-06-19T16:34:11.575892",
+            "total_agents": 10,
+            "repair_results": [
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_1_analyseur_structure.py",
+                "timestamp": "2025-06-19T16:34:11.583408",
+                "backup_path": "C:\\Dev\\nextgeneration\\backups_docteur\\agent_1_analyseur_structure_20250619_163411.backup",
+                "issues_repaired": [
+                  {
+                    "type": "missing_factory_function",
+                    "severity": "warning",
+                    "message": "Fonction factory manquante",
+                    "repair_action": "add_factory_function"
+                  }
+                ],
+                "issues_remaining": [],
+                "repair_success": true,
+                "modifications_applied": [
+                  "Fonction factory ajoutée"
+                ],
+                "post_repair_validation": {
+                  "syntax_valid": true,
+                  "remaining_issues": 1,
+                  "severity": "warning",
+                  "validation_success": false
+                }
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_2_evaluateur_utilite.py",
+                "timestamp": "2025-06-19T16:34:11.609201",
+                "backup_path": "C:\\Dev\\nextgeneration\\backups_docteur\\agent_2_evaluateur_utilite_20250619_163411.backup",
+                "issues_repaired": [
+                  {
+                    "type": "missing_factory_function",
+                    "severity": "warning",
+                    "message": "Fonction factory manquante",
+                    "repair_action": "add_factory_function"
+                  }
+                ],
+                "issues_remaining": [],
+                "repair_success": true,
+                "modifications_applied": [
+                  "Fonction factory ajoutée"
+                ],
+                "post_repair_validation": {
+                  "syntax_valid": true,
+                  "remaining_issues": 1,
+                  "severity": "warning",
+                  "validation_success": false
+                }
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_3_adaptateur_code.py",
+                "timestamp": "2025-06-19T16:34:11.628711",
+                "backup_path": "C:\\Dev\\nextgeneration\\backups_docteur\\agent_3_adaptateur_code_20250619_163411.backup",
+                "issues_repaired": [
+                  {
+                    "type": "missing_factory_function",
+                    "severity": "warning",
+                    "message": "Fonction factory manquante",
+                    "repair_action": "add_factory_function"
+                  }
+                ],
+                "issues_remaining": [],
+                "repair_success": true,
+                "modifications_applied": [
+                  "Fonction factory ajoutée"
+                ],
+                "post_repair_validation": {
+                  "syntax_valid": true,
+                  "remaining_issues": 1,
+                  "severity": "warning",
+                  "validation_success": false
+                }
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_4_testeur_integration.py",
+                "timestamp": "2025-06-19T16:34:11.639718",
+                "backup_path": "C:\\Dev\\nextgeneration\\backups_docteur\\agent_4_testeur_integration_20250619_163411.backup",
+                "issues_repaired": [
+                  {
+                    "type": "missing_factory_function",
+                    "severity": "warning",
+                    "message": "Fonction factory manquante",
+                    "repair_action": "add_factory_function"
+                  }
+                ],
+                "issues_remaining": [],
+                "repair_success": true,
+                "modifications_applied": [
+                  "Fonction factory ajoutée"
+                ],
+                "post_repair_validation": {
+                  "syntax_valid": true,
+                  "remaining_issues": 1,
+                  "severity": "warning",
+                  "validation_success": false
+                }
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_5_documenteur.py",
+                "timestamp": "2025-06-19T16:34:11.650711",
+                "backup_path": "C:\\Dev\\nextgeneration\\backups_docteur\\agent_5_documenteur_20250619_163411.backup",
+                "issues_repaired": [
+                  {
+                    "type": "missing_factory_function",
+                    "severity": "warning",
+                    "message": "Fonction factory manquante",
+                    "repair_action": "add_factory_function"
+                  }
+                ],
+                "issues_remaining": [],
+                "repair_success": true,
+                "modifications_applied": [
+                  "Fonction factory ajoutée"
+                ],
+                "post_repair_validation": {
+                  "syntax_valid": true,
+                  "remaining_issues": 1,
+                  "severity": "warning",
+                  "validation_success": false
+                }
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_6_validateur_final.py",
+                "timestamp": "2025-06-19T16:34:11.662718",
+                "backup_path": "C:\\Dev\\nextgeneration\\backups_docteur\\agent_6_validateur_final_20250619_163411.backup",
+                "issues_repaired": [
+                  {
+                    "type": "missing_factory_function",
+                    "severity": "warning",
+                    "message": "Fonction factory manquante",
+                    "repair_action": "add_factory_function"
+                  }
+                ],
+                "issues_remaining": [],
+                "repair_success": true,
+                "modifications_applied": [
+                  "Fonction factory ajoutée"
+                ],
+                "post_repair_validation": {
+                  "syntax_valid": true,
+                  "remaining_issues": 1,
+                  "severity": "warning",
+                  "validation_success": false
+                }
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_adaptateur_documentation.py",
+                "timestamp": "2025-06-19T16:34:11.673711",
+                "backup_path": "C:\\Dev\\nextgeneration\\backups_docteur\\agent_adaptateur_documentation_20250619_163411.backup",
+                "issues_repaired": [
+                  {
+                    "type": "missing_factory_function",
+                    "severity": "warning",
+                    "message": "Fonction factory manquante",
+                    "repair_action": "add_factory_function"
+                  }
+                ],
+                "issues_remaining": [],
+                "repair_success": true,
+                "modifications_applied": [
+                  "Fonction factory ajoutée"
+                ],
+                "post_repair_validation": {
+                  "syntax_valid": true,
+                  "remaining_issues": 1,
+                  "severity": "warning",
+                  "validation_success": false
+                }
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_analyseur_outils.py",
+                "timestamp": "2025-06-19T16:34:11.698726",
+                "backup_path": "C:\\Dev\\nextgeneration\\backups_docteur\\agent_analyseur_outils_20250619_163411.backup",
+                "issues_repaired": [
+                  {
+                    "type": "missing_factory_function",
+                    "severity": "warning",
+                    "message": "Fonction factory manquante",
+                    "repair_action": "add_factory_function"
+                  }
+                ],
+                "issues_remaining": [],
+                "repair_success": true,
+                "modifications_applied": [
+                  "Fonction factory ajoutée"
+                ],
+                "post_repair_validation": {
+                  "syntax_valid": true,
+                  "remaining_issues": 1,
+                  "severity": "warning",
+                  "validation_success": false
+                }
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_coordinateur_refactorisation_pattern_factory.py",
+                "status": "healthy",
+                "repair_needed": false
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_coordinateur_refactorisation_simple.py",
+                "timestamp": "2025-06-19T16:34:11.717401",
+                "backup_path": "C:\\Dev\\nextgeneration\\backups_docteur\\agent_coordinateur_refactorisation_simple_20250619_163411.backup",
+                "issues_repaired": [
+                  {
+                    "type": "missing_factory_function",
+                    "severity": "warning",
+                    "message": "Fonction factory manquante",
+                    "repair_action": "add_factory_function"
+                  },
+                  {
+                    "type": "missing_required_method",
+                    "severity": "critical",
+                    "method": "execute_task",
+                    "message": "Méthode obligatoire 'execute_task' manquante",
+                    "repair_action": "add_required_method"
+                  },
+                  {
+                    "type": "missing_required_method",
+                    "severity": "critical",
+                    "method": "get_capabilities",
+                    "message": "Méthode obligatoire 'get_capabilities' manquante",
+                    "repair_action": "add_required_method"
+                  }
+                ],
+                "issues_remaining": [
+                  {
+                    "type": "missing_agent_inheritance",
+                    "severity": "critical",
+                    "message": "Héritage Agent manquant",
+                    "repair_action": "add_agent_inheritance"
+                  }
+                ],
+                "repair_success": true,
+                "modifications_applied": [
+                  "Fonction factory ajoutée",
+                  "Méthode execute_task ajoutée",
+                  "Méthode get_capabilities ajoutée"
+                ],
+                "post_repair_validation": {
+                  "syntax_valid": true,
+                  "remaining_issues": 4,
+                  "severity": "critical",
+                  "validation_success": false
+                }
+              }
+            ],
+            "summary": {
+              "repaired_successfully": 9,
+              "repair_failed": 0,
+              "total_processed": 10,
+              "success_rate": 90.0
+            }
+          }
+        },
+        "validation_finale": {
+          "success": false,
+          "conformite_finale": 0,
+          "agents_conformes_final": 0,
+          "total_agents_final": 15,
+          "amelioration_globale": true,
+          "timestamp": "2025-06-19T16:34:11.793647",
+          "final_details": {
+            "timestamp": "2025-06-19T16:34:11.754546",
+            "total_agents": 15,
+            "tests_results": [
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_1_analyseur_structure.py",
+                "timestamp": "2025-06-19T16:34:11.754546",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_EXCELLENT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": true,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 100.0,
+                    "score_recommande": 100.0,
+                    "score_global": 100.0,
+                    "recommendations": [],
+                    "message": "Conformité Pattern Factory: CONFORME_EXCELLENT (100.0%)"
+                  },
+                  "required_methods": {
+                    "success": true,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": true,
+                      "get_capabilities": true
+                    },
+                    "score": 100.0,
+                    "message": "Méthodes obligatoires: 100.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 24.93,
+                      "lines_count": 591,
+                      "code_lines": 413,
+                      "functions_count": 28,
+                      "classes_count": 4
+                    },
+                    "score": 75.0,
+                    "message": "Performance: 75.0/100"
+                  }
+                },
+                "score_global": 66.2,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_2_evaluateur_utilite.py",
+                "timestamp": "2025-06-19T16:34:11.759546",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_EXCELLENT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": true,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 100.0,
+                    "score_recommande": 100.0,
+                    "score_global": 100.0,
+                    "recommendations": [],
+                    "message": "Conformité Pattern Factory: CONFORME_EXCELLENT (100.0%)"
+                  },
+                  "required_methods": {
+                    "success": true,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": true,
+                      "get_capabilities": true
+                    },
+                    "score": 100.0,
+                    "message": "Méthodes obligatoires: 100.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 35.32,
+                      "lines_count": 867,
+                      "code_lines": 601,
+                      "functions_count": 42,
+                      "classes_count": 4
+                    },
+                    "score": 75.0,
+                    "message": "Performance: 75.0/100"
+                  }
+                },
+                "score_global": 66.2,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_3_adaptateur_code.py",
+                "timestamp": "2025-06-19T16:34:11.764544",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_STRICT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": false,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 80.0,
+                    "score_recommande": 100.0,
+                    "score_global": 84.0,
+                    "recommendations": [
+                      "CRITIQUE: Ajouter fonction factory avec nomenclature correcte"
+                    ],
+                    "message": "Conformité Pattern Factory: CONFORME_STRICT (84.0%)"
+                  },
+                  "required_methods": {
+                    "success": true,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": true,
+                      "get_capabilities": true
+                    },
+                    "score": 100.0,
+                    "message": "Méthodes obligatoires: 100.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 7.06,
+                      "lines_count": 188,
+                      "code_lines": 131,
+                      "functions_count": 20,
+                      "classes_count": 4
+                    },
+                    "score": 80.0,
+                    "message": "Performance: 80.0/100"
+                  }
+                },
+                "score_global": 67.0,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_4_testeur_integration.py",
+                "timestamp": "2025-06-19T16:34:11.766545",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_STRICT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": false,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 80.0,
+                    "score_recommande": 100.0,
+                    "score_global": 84.0,
+                    "recommendations": [
+                      "CRITIQUE: Ajouter fonction factory avec nomenclature correcte"
+                    ],
+                    "message": "Conformité Pattern Factory: CONFORME_STRICT (84.0%)"
+                  },
+                  "required_methods": {
+                    "success": true,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": true,
+                      "get_capabilities": true
+                    },
+                    "score": 100.0,
+                    "message": "Méthodes obligatoires: 100.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 7.18,
+                      "lines_count": 188,
+                      "code_lines": 131,
+                      "functions_count": 20,
+                      "classes_count": 4
+                    },
+                    "score": 80.0,
+                    "message": "Performance: 80.0/100"
+                  }
+                },
+                "score_global": 67.0,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_5_documenteur.py",
+                "timestamp": "2025-06-19T16:34:11.767554",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_STRICT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": false,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 80.0,
+                    "score_recommande": 100.0,
+                    "score_global": 84.0,
+                    "recommendations": [
+                      "CRITIQUE: Ajouter fonction factory avec nomenclature correcte"
+                    ],
+                    "message": "Conformité Pattern Factory: CONFORME_STRICT (84.0%)"
+                  },
+                  "required_methods": {
+                    "success": true,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": true,
+                      "get_capabilities": true
+                    },
+                    "score": 100.0,
+                    "message": "Méthodes obligatoires: 100.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 11.01,
+                      "lines_count": 301,
+                      "code_lines": 203,
+                      "functions_count": 22,
+                      "classes_count": 4
+                    },
+                    "score": 78.0,
+                    "message": "Performance: 78.0/100"
+                  }
+                },
+                "score_global": 66.7,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_6_validateur_final.py",
+                "timestamp": "2025-06-19T16:34:11.769545",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_STRICT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": false,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 80.0,
+                    "score_recommande": 100.0,
+                    "score_global": 84.0,
+                    "recommendations": [
+                      "CRITIQUE: Ajouter fonction factory avec nomenclature correcte"
+                    ],
+                    "message": "Conformité Pattern Factory: CONFORME_STRICT (84.0%)"
+                  },
+                  "required_methods": {
+                    "success": true,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": true,
+                      "get_capabilities": true
+                    },
+                    "score": 100.0,
+                    "message": "Méthodes obligatoires: 100.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 7.09,
+                      "lines_count": 188,
+                      "code_lines": 131,
+                      "functions_count": 20,
+                      "classes_count": 4
+                    },
+                    "score": 80.0,
+                    "message": "Performance: 80.0/100"
+                  }
+                },
+                "score_global": 67.0,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_adaptateur_documentation.py",
+                "timestamp": "2025-06-19T16:34:11.770545",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_EXCELLENT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": true,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 100.0,
+                    "score_recommande": 100.0,
+                    "score_global": 100.0,
+                    "recommendations": [],
+                    "message": "Conformité Pattern Factory: CONFORME_EXCELLENT (100.0%)"
+                  },
+                  "required_methods": {
+                    "success": true,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": true,
+                      "get_capabilities": true
+                    },
+                    "score": 100.0,
+                    "message": "Méthodes obligatoires: 100.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 7.29,
+                      "lines_count": 188,
+                      "code_lines": 131,
+                      "functions_count": 20,
+                      "classes_count": 4
+                    },
+                    "score": 80.0,
+                    "message": "Performance: 80.0/100"
+                  }
+                },
+                "score_global": 67.0,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_analyseur_outils.py",
+                "timestamp": "2025-06-19T16:34:11.772549",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_EXCELLENT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": true,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 100.0,
+                    "score_recommande": 100.0,
+                    "score_global": 100.0,
+                    "recommendations": [],
+                    "message": "Conformité Pattern Factory: CONFORME_EXCELLENT (100.0%)"
+                  },
+                  "required_methods": {
+                    "success": true,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": true,
+                      "get_capabilities": true
+                    },
+                    "score": 100.0,
+                    "message": "Méthodes obligatoires: 100.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 7.06,
+                      "lines_count": 188,
+                      "code_lines": 131,
+                      "functions_count": 20,
+                      "classes_count": 4
+                    },
+                    "score": 80.0,
+                    "message": "Performance: 80.0/100"
+                  }
+                },
+                "score_global": 67.0,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_coordinateur_refactorisation_pattern_factory.py",
+                "timestamp": "2025-06-19T16:34:11.773549",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_EXCELLENT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": true,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 100.0,
+                    "score_recommande": 100.0,
+                    "score_global": 100.0,
+                    "recommendations": [],
+                    "message": "Conformité Pattern Factory: CONFORME_EXCELLENT (100.0%)"
+                  },
+                  "required_methods": {
+                    "success": true,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": true,
+                      "get_capabilities": true
+                    },
+                    "score": 100.0,
+                    "message": "Méthodes obligatoires: 100.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 33.38,
+                      "lines_count": 792,
+                      "code_lines": 582,
+                      "functions_count": 53,
+                      "classes_count": 13
+                    },
+                    "score": 75.0,
+                    "message": "Performance: 75.0/100"
+                  }
+                },
+                "score_global": 66.2,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_coordinateur_refactorisation_simple.py",
+                "timestamp": "2025-06-19T16:34:11.779550",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": false,
+                    "conformite_level": "CONFORME_PARTIEL",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": false,
+                      "factory_function_naming": false,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 60.0,
+                    "score_recommande": 100.0,
+                    "score_global": 68.0,
+                    "recommendations": [
+                      "CRITIQUE: Corriger héritage strict de la classe Agent",
+                      "CRITIQUE: Ajouter fonction factory avec nomenclature correcte"
+                    ],
+                    "message": "Conformité Pattern Factory: CONFORME_PARTIEL (68.0%)"
+                  },
+                  "required_methods": {
+                    "success": false,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": false,
+                      "get_capabilities": false
+                    },
+                    "score": 60.0,
+                    "message": "Méthodes obligatoires: 60.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 22.41,
+                      "lines_count": 560,
+                      "code_lines": 410,
+                      "functions_count": 37,
+                      "classes_count": 8
+                    },
+                    "score": 75.0,
+                    "message": "Performance: 75.0/100"
+                  }
+                },
+                "score_global": 54.2,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_coordinateur_reorganisation_outils.py",
+                "timestamp": "2025-06-19T16:34:11.781549",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_STRICT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": false,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 80.0,
+                    "score_recommande": 100.0,
+                    "score_global": 84.0,
+                    "recommendations": [
+                      "CRITIQUE: Ajouter fonction factory avec nomenclature correcte"
+                    ],
+                    "message": "Conformité Pattern Factory: CONFORME_STRICT (84.0%)"
+                  },
+                  "required_methods": {
+                    "success": false,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": false,
+                      "get_capabilities": false
+                    },
+                    "score": 60.0,
+                    "message": "Méthodes obligatoires: 60.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 5.76,
+                      "lines_count": 151,
+                      "code_lines": 108,
+                      "functions_count": 14,
+                      "classes_count": 4
+                    },
+                    "score": 86.0,
+                    "message": "Performance: 86.0/100"
+                  }
+                },
+                "score_global": 55.9,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_docteur_reparation.py",
+                "timestamp": "2025-06-19T16:34:11.783550",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_EXCELLENT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": true,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 100.0,
+                    "score_recommande": 100.0,
+                    "score_global": 100.0,
+                    "recommendations": [],
+                    "message": "Conformité Pattern Factory: CONFORME_EXCELLENT (100.0%)"
+                  },
+                  "required_methods": {
+                    "success": true,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": true,
+                      "get_capabilities": true
+                    },
+                    "score": 100.0,
+                    "message": "Méthodes obligatoires: 100.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 45.11,
+                      "lines_count": 1099,
+                      "code_lines": 819,
+                      "functions_count": 57,
+                      "classes_count": 7
+                    },
+                    "score": 75.0,
+                    "message": "Performance: 75.0/100"
+                  }
+                },
+                "score_global": 66.2,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_meta_strategique.py",
+                "timestamp": "2025-06-19T16:34:11.790628",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_STRICT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": false,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 80.0,
+                    "score_recommande": 100.0,
+                    "score_global": 84.0,
+                    "recommendations": [
+                      "CRITIQUE: Ajouter fonction factory avec nomenclature correcte"
+                    ],
+                    "message": "Conformité Pattern Factory: CONFORME_STRICT (84.0%)"
+                  },
+                  "required_methods": {
+                    "success": false,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": false,
+                      "get_capabilities": false
+                    },
+                    "score": 60.0,
+                    "message": "Méthodes obligatoires: 60.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 5.49,
+                      "lines_count": 151,
+                      "code_lines": 108,
+                      "functions_count": 14,
+                      "classes_count": 4
+                    },
+                    "score": 86.0,
+                    "message": "Performance: 86.0/100"
+                  }
+                },
+                "score_global": 55.9,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_organisateur_structure.py",
+                "timestamp": "2025-06-19T16:34:11.791627",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_EXCELLENT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": true,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 100.0,
+                    "score_recommande": 100.0,
+                    "score_global": 100.0,
+                    "recommendations": [],
+                    "message": "Conformité Pattern Factory: CONFORME_EXCELLENT (100.0%)"
+                  },
+                  "required_methods": {
+                    "success": false,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": false,
+                      "get_capabilities": false
+                    },
+                    "score": 60.0,
+                    "message": "Méthodes obligatoires: 60.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 5.61,
+                      "lines_count": 151,
+                      "code_lines": 108,
+                      "functions_count": 14,
+                      "classes_count": 4
+                    },
+                    "score": 86.0,
+                    "message": "Performance: 86.0/100"
+                  }
+                },
+                "score_global": 55.9,
+                "status": "warning"
+              },
+              {
+                "agent_path": "C:\\Dev\\nextgeneration\\agent_rapport_final.py",
+                "timestamp": "2025-06-19T16:34:11.792645",
+                "tests": {
+                  "syntax": {
+                    "success": true,
+                    "message": "Syntaxe Python valide",
+                    "score": 100
+                  },
+                  "pattern_factory": {
+                    "success": true,
+                    "conformite_level": "CONFORME_EXCELLENT",
+                    "checks_obligatoires": {
+                      "pattern_factory_import_correct": true,
+                      "agent_inheritance_strict": true,
+                      "factory_function_naming": true,
+                      "fallback_implementation": true,
+                      "pattern_factory_docstring": true
+                    },
+                    "checks_recommandees": {
+                      "async_methods_present": true,
+                      "logging_pattern_factory": true,
+                      "configuration_pattern": true,
+                      "error_handling_pattern": true,
+                      "main_function_pattern": true
+                    },
+                    "score_obligatoire": 100.0,
+                    "score_recommande": 100.0,
+                    "score_global": 100.0,
+                    "recommendations": [],
+                    "message": "Conformité Pattern Factory: CONFORME_EXCELLENT (100.0%)"
+                  },
+                  "required_methods": {
+                    "success": false,
+                    "methodes_trouvees": {
+                      "startup": true,
+                      "shutdown": true,
+                      "health_check": true,
+                      "execute_task": false,
+                      "get_capabilities": false
+                    },
+                    "score": 60.0,
+                    "message": "Méthodes obligatoires: 60.0%"
+                  },
+                  "performance": {
+                    "success": true,
+                    "metrics": {
+                      "file_size_kb": 5.46,
+                      "lines_count": 151,
+                      "code_lines": 108,
+                      "functions_count": 14,
+                      "classes_count": 4
+                    },
+                    "score": 86.0,
+                    "message": "Performance: 86.0/100"
+                  }
+                },
+                "score_global": 55.9,
+                "status": "warning"
+              }
+            ],
+            "summary": {
+              "success": 0,
+              "warning": 15,
+              "error": 0,
+              "success_rate": 0.0,
+              "average_score": 63.0,
+              "total_tested": 15
+            }
+          }
+        }
+      },
+      "success": false,
+      "end_time": "2025-06-19T16:34:11.793647"
+    }
+  },
+  "backup_verification": {
+    "backup_dir_exists": true,
+    "backup_count": 31
+  },
+  "integration_success": true
+}

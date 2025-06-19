@@ -205,170 +205,186 @@ class TeamCoordination:
     timestamp: datetime
 
 class TestAgent(Agent):
-    """
-    🧪 Agent de test spécialisé pour Pattern Factory
-    """
+    """Agent de test Pattern Factory conforme"""
     
     def __init__(self, agent_type: str, **config):
         super().__init__(agent_type, **config)
-        self.test_types = config.get('test_types', [TestType.UNIT, TestType.INTEGRATION])
-        self.coverage_target = config.get('coverage_target', 90.0)
+        self.test_results = {}
         
+    # Implémentation méthodes abstraites OBLIGATOIRES
+    async def startup(self):
+        """Démarrage agent test"""
+        self.logger.info(f"Agent test {self.agent_id} - DÉMARRAGE")
+        
+    async def shutdown(self):
+        """Arrêt agent test"""
+        self.logger.info(f"Agent test {self.agent_id} - ARRÊT")
+        
+    async def health_check(self) -> Dict[str, Any]:
+        """Vérification santé agent test"""
+        return {
+            "status": "healthy",
+            "timestamp": datetime.now().isoformat(),
+            "agent_id": self.agent_id,
+            "test_results_count": len(self.test_results)
+        }
+
     async def execute_task(self, task: Task) -> Result:
-        """Exécute tests selon type demandé"""
-        start_time = time.time()
+        """🧪 Exécution tâche de test avec Pattern Factory"""
         
-        try:
-            if task.type == "run_test_suite":
-                # Exécution suite de tests
-                test_result = await self._run_test_suite(task.data)
-                
-                return Result(
-                    task_id=task.id,
-                    success=test_result['success'],
-                    data=test_result,
-                    execution_time=time.time() - start_time,
-                    metadata={'coverage': test_result.get('coverage', 0)}
-                )
-            
-            elif task.type == "integration_test":
-                # Test d'intégration
-                integration_result = await self._run_integration_test(task.data)
-                
-                return Result(
-                    task_id=task.id,
-                    success=integration_result['success'],
-                    data=integration_result,
-                    execution_time=time.time() - start_time
-                )
-            
-            elif task.type == "e2e_test":
-                # Test End-to-End
-                e2e_result = await self._run_e2e_test(task.data)
-                
-                return Result(
-                    task_id=task.id,
-                    success=e2e_result['success'],
-                    data=e2e_result,
-                    execution_time=time.time() - start_time
-                )
-            
-        except Exception as e:
+        if task.task_type == "run_tests":
+            test_results = await self._run_test_suite(task.data)
             return Result(
-                task_id=task.id,
-                success=False,
-                data={},
-                error_message=str(e),
-                execution_time=time.time() - start_time
+                task_id=task.task_id,
+                agent_id=self.agent_id,
+                status="completed",
+                data=test_results,
+                timestamp=datetime.now()
             )
-    
+        elif task.task_type == "integration_test":
+            integration_results = await self._run_integration_test(task.data)
+            return Result(
+                task_id=task.task_id,
+                agent_id=self.agent_id,
+                status="completed",
+                data=integration_results,
+                timestamp=datetime.now()
+            )
+        elif task.task_type == "e2e_test":
+            e2e_results = await self._run_e2e_test(task.data)
+            return Result(
+                task_id=task.task_id,
+                agent_id=self.agent_id,
+                status="completed",
+                data=e2e_results,
+                timestamp=datetime.now()
+            )
+        else:
+            return Result(
+                task_id=task.task_id,
+                agent_id=self.agent_id,
+                status="unsupported",
+                data={"error": f"Type de tâche non supporté: {task.task_type}"},
+                timestamp=datetime.now()
+            )
+
     async def _run_test_suite(self, test_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Exécution suite de tests complète"""
-        # Simulation tests complets
+        """Exécution suite tests complète"""
+        # Simulation exécution tests
+        await asyncio.sleep(0.1)  # Simulation latence
+        
         return {
-            'success': True,
-            'tests_run': test_data.get('tests_count', 50),
-            'tests_passed': test_data.get('tests_count', 50) - 2,  # 2 échecs simulés
-            'coverage': 94.5,  # > 90% target
-            'execution_time': 12.3,
-            'test_types': ['unit', 'integration', 'security'],
-            'pattern_factory_tested': True
+            "test_type": "unit_tests",
+            "tests_run": 25,
+            "tests_passed": 23,
+            "coverage": 92.5,
+            "execution_time": 0.85
         }
-    
+
     async def _run_integration_test(self, test_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Test d'intégration entre agents"""
+        """Exécution tests d'intégration"""
+        await asyncio.sleep(0.2)
+        
         return {
-            'success': True,
-            'agents_tested': test_data.get('agents', []),
-            'integration_score': 9.2,
-            'handovers_validated': True,
-            'pattern_factory_integration': True
+            "test_type": "integration",
+            "components_tested": ["Agent02", "Agent04", "Agent09"],
+            "integration_success": True,
+            "execution_time": 1.2
         }
-    
+
     async def _run_e2e_test(self, test_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Test End-to-End complet"""
+        """Exécution tests end-to-end"""
+        await asyncio.sleep(0.5)
+        
         return {
-            'success': True,
-            'e2e_scenarios': test_data.get('scenarios', 10),
-            'scenarios_passed': test_data.get('scenarios', 10) - 1,  # 1 échec simulé
-            'user_journeys_validated': True,
-            'pattern_factory_e2e': True
+            "test_type": "e2e",
+            "scenarios_tested": 8,
+            "scenarios_passed": 7,
+            "execution_time": 2.5
         }
-    
+
     def get_capabilities(self) -> List[str]:
-        """Capacités de l'agent de test"""
-        return ["run_test_suite", "integration_test", "e2e_test", "performance_test"]
+        return ["run_tests", "integration_test", "e2e_test", "coverage_report"]
 
 class CoordinationAgent(Agent):
-    """
-    🤝 Agent de coordination pour équipe
-    """
+    """Agent de coordination Pattern Factory conforme"""
     
     def __init__(self, agent_type: str, **config):
         super().__init__(agent_type, **config)
-        self.team_size = config.get('team_size', 5)
-        self.coordination_level = config.get('coordination_level', 'HIGH')
+        self.coordination_state = {}
         
-    async def execute_task(self, task: Task) -> Result:
-        """Exécute coordination équipe"""
-        start_time = time.time()
+    # Implémentation méthodes abstraites OBLIGATOIRES
+    async def startup(self):
+        """Démarrage agent coordination"""
+        self.logger.info(f"Agent coordination {self.agent_id} - DÉMARRAGE")
         
-        try:
-            if task.type == "coordinate_team":
-                # Coordination équipe complète
-                coordination_result = await self._coordinate_team(task.data)
-                
-                return Result(
-                    task_id=task.id,
-                    success=coordination_result['success'],
-                    data=coordination_result,
-                    execution_time=time.time() - start_time
-                )
-            
-            elif task.type == "validate_handovers":
-                # Validation handovers
-                handover_result = await self._validate_handovers(task.data)
-                
-                return Result(
-                    task_id=task.id,
-                    success=handover_result['success'],
-                    data=handover_result,
-                    execution_time=time.time() - start_time
-                )
-            
-        except Exception as e:
-            return Result(
-                task_id=task.id,
-                success=False,
-                data={},
-                error_message=str(e),
-                execution_time=time.time() - start_time
-            )
-    
-    async def _coordinate_team(self, coord_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Coordination équipe complète"""
+    async def shutdown(self):
+        """Arrêt agent coordination"""
+        self.logger.info(f"Agent coordination {self.agent_id} - ARRÊT")
+        
+    async def health_check(self) -> Dict[str, Any]:
+        """Vérification santé agent coordination"""
         return {
-            'success': True,
-            'agents_coordinated': coord_data.get('agents', []),
-            'handovers_completed': coord_data.get('handovers', []),
-            'deliverables_validated': True,
-            'team_efficiency': 95.2,
-            'pattern_factory_coordinated': True
+            "status": "healthy",
+            "timestamp": datetime.now().isoformat(),
+            "agent_id": self.agent_id,
+            "coordination_tasks": len(self.coordination_state)
         }
-    
+
+    async def execute_task(self, task: Task) -> Result:
+        """🤝 Exécution tâche coordination avec Pattern Factory"""
+        
+        if task.task_type == "coordinate_team":
+            coordination_results = await self._coordinate_team(task.data)
+            return Result(
+                task_id=task.task_id,
+                agent_id=self.agent_id,
+                status="completed",
+                data=coordination_results,
+                timestamp=datetime.now()
+            )
+        elif task.task_type == "validate_handovers":
+            handover_results = await self._validate_handovers(task.data)
+            return Result(
+                task_id=task.task_id,
+                agent_id=self.agent_id,
+                status="completed",
+                data=handover_results,
+                timestamp=datetime.now()
+            )
+        else:
+            return Result(
+                task_id=task.task_id,
+                agent_id=self.agent_id,
+                status="unsupported",
+                data={"error": f"Type de tâche non supporté: {task.task_type}"},
+                timestamp=datetime.now()
+            )
+
+    async def _coordinate_team(self, coord_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Coordination équipe agents"""
+        # Simulation coordination
+        await asyncio.sleep(0.1)
+        
+        return {
+            "coordination_type": "team_sync",
+            "agents_coordinated": ["Agent02", "Agent04", "Agent09", "Agent11"],
+            "sync_success": True,
+            "next_checkpoint": (datetime.now() + timedelta(hours=4)).isoformat()
+        }
+
     async def _validate_handovers(self, handover_data: Dict[str, Any]) -> Dict[str, Any]:
         """Validation handovers entre agents"""
+        await asyncio.sleep(0.05)
+        
         return {
-            'success': True,
-            'handovers_validated': len(handover_data.get('handovers', [])),
-            'knowledge_transfer_complete': True,
-            'documentation_complete': True,
-            'pattern_factory_handover': True
+            "handovers_validated": 3,
+            "handovers_pending": 1,
+            "validation_success": True
         }
-    
+
     def get_capabilities(self) -> List[str]:
-        """Capacités de l'agent de coordination"""
-        return ["coordinate_team", "validate_handovers", "manage_deliverables"]
+        return ["coordinate_team", "validate_handovers", "schedule_tasks", "monitor_progress"]
 
 class Agent01ChefProjet:
     """

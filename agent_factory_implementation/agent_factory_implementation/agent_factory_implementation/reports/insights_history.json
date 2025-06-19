@@ -1,0 +1,53 @@
+[
+  {
+    "type": "performance_degradation",
+    "severity": "CRITICAL",
+    "title": "Performance critique détectée",
+    "description": "Score de performance: 0.0/100",
+    "impact": "Risque de dégradation de l'expérience utilisateur",
+    "recommended_actions": [
+      "Analyser les métriques de performance détaillées",
+      "Optimiser les composants les plus lents",
+      "Implémenter des améliorations de performance"
+    ],
+    "data_sources": [
+      "performance_metrics"
+    ],
+    "confidence_score": 0.85,
+    "timestamp": "2025-06-19 15:14:32.934935"
+  },
+  {
+    "type": "performance_degradation",
+    "severity": "CRITICAL",
+    "title": "Performance critique détectée",
+    "description": "Score de performance: 0.0/100",
+    "impact": "Risque de dégradation de l'expérience utilisateur",
+    "recommended_actions": [
+      "Analyser les métriques de performance détaillées",
+      "Optimiser les composants les plus lents",
+      "Implémenter des améliorations de performance"
+    ],
+    "data_sources": [
+      "performance_metrics"
+    ],
+    "confidence_score": 0.85,
+    "timestamp": "2025-06-19 15:14:32.935460"
+  },
+  {
+    "type": "performance_degradation",
+    "severity": "CRITICAL",
+    "title": "Performance critique détectée",
+    "description": "Score de performance: 0.0/100",
+    "impact": "Risque de dégradation de l'expérience utilisateur",
+    "recommended_actions": [
+      "Analyser les métriques de performance détaillées",
+      "Optimiser les composants les plus lents",
+      "Implémenter des améliorations de performance"
+    ],
+    "data_sources": [
+      "performance_metrics"
+    ],
+    "confidence_score": 0.85,
+    "timestamp": "2025-06-19 15:14:32.935965"
+  }
+]

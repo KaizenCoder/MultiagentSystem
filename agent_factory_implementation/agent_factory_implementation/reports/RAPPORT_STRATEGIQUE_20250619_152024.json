@@ -1,0 +1,92 @@
+{
+  "report_type": "executive",
+  "generated_at": "2025-06-19T15:20:24.993570",
+  "executive_summary": "🟢 ÉTAT DU SYSTÈME: EXCELLENT (Score: 84.8/100)\n\nLe système NextGeneration présente un niveau de santé excellent.\n0 problèmes critiques identifiés nécessitant une attention immédiate.\n\nRecommandation: Surveillance continue recommandée",
+  "key_findings": [
+    "Score de performance global: 84.8/100",
+    "Anomalies détectées: 0",
+    "Insights stratégiques générés: 2"
+  ],
+  "recommendations": [
+    {
+      "priority": "MEDIUM",
+      "recommendation": "Continuer les optimisations préventives",
+      "order": 2
+    },
+    {
+      "priority": "MEDIUM",
+      "recommendation": "✅ Système stable - Maintenir la surveillance",
+      "order": 1
+    }
+  ],
+  "metrics_dashboard": {
+    "performance_metrics": [
+      {
+        "name": "response_time_ms",
+        "value": 92,
+        "unit": "",
+        "timestamp": "2025-06-19 15:07:36.660033",
+        "source": "performance_metrics.json",
+        "threshold": null,
+        "status": "normal"
+      },
+      {
+        "name": "error_rate_percent",
+        "value": 1.8,
+        "unit": "",
+        "timestamp": "2025-06-19 15:07:36.660033",
+        "source": "performance_metrics.json",
+        "threshold": null,
+        "status": "normal"
+      },
+      {
+        "name": "cpu_usage_percent",
+        "value": 58,
+        "unit": "",
+        "timestamp": "2025-06-19 15:07:36.660033",
+        "source": "performance_metrics.json",
+        "threshold": null,
+        "status": "normal"
+      },
+      {
+        "name": "memory_usage_percent",
+        "value": 69,
+        "unit": "",
+        "timestamp": "2025-06-19 15:07:36.660033",
+        "source": "performance_metrics.json",
+        "threshold": null,
+        "status": "normal"
+      },
+      {
+        "name": "success_rate_percent",
+        "value": 99.2,
+        "unit": "",
+        "timestamp": "2025-06-19 15:07:36.660033",
+        "source": "performance_metrics.json",
+        "threshold": null,
+        "status": "normal"
+      }
+    ],
+    "health_score": 84.79099264705881,
+    "anomalies_summary": {
+      "LOW": 0,
+      "MEDIUM": 0,
+      "HIGH": 0,
+      "CRITICAL": 0
+    },
+    "trends": {
+      "period_analyzed": "7_days",
+      "metrics_count": 27,
+      "trend_summary": "stable",
+      "notable_changes": []
+    }
+  },
+  "next_actions": [
+    {
+      "action": "Maintenir la surveillance continue du système",
+      "priority": "MEDIUM",
+      "timeline": "Continu",
+      "owner": "Agent Méta-Stratégique"
+    }
+  ]
+}

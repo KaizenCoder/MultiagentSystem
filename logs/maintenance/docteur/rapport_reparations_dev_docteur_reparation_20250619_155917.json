@@ -1,0 +1,145 @@
+{
+  "timestamp": "docteur_reparation_20250619_155917",
+  "repertoire_traite": "C:\\Dev\\agents",
+  "statistiques": {
+    "total_agents": 3,
+    "reparations_reussies": 0,
+    "taux_succes": 0.0
+  },
+  "resultats_detailles": {
+    "agent_23_fastapi_orchestration_enterprise_v2.py": {
+      "agent_path": "C:\\Dev\\agents\\agent_23_fastapi_orchestration_enterprise_v2.py",
+      "timestamp": "2025-06-19T15:59:17.409726",
+      "backup_path": "C:\\Dev\\nextgeneration\\backups_docteur\\agent_23_fastapi_orchestration_enterprise_v2_20250619_155917.backup",
+      "issues_repaired": [
+        {
+          "type": "missing_pattern_factory_import",
+          "severity": "warning",
+          "message": "Import Pattern Factory manquant",
+          "repair_action": "add_pattern_factory_import"
+        },
+        {
+          "type": "missing_factory_function",
+          "severity": "warning",
+          "message": "Fonction factory manquante",
+          "repair_action": "add_factory_function"
+        },
+        {
+          "type": "missing_required_method",
+          "severity": "critical",
+          "method": "startup",
+          "message": "Méthode obligatoire 'startup' manquante",
+          "repair_action": "add_required_method"
+        },
+        {
+          "type": "missing_required_method",
+          "severity": "critical",
+          "method": "shutdown",
+          "message": "Méthode obligatoire 'shutdown' manquante",
+          "repair_action": "add_required_method"
+        },
+        {
+          "type": "missing_required_method",
+          "severity": "critical",
+          "method": "health_check",
+          "message": "Méthode obligatoire 'health_check' manquante",
+          "repair_action": "add_required_method"
+        }
+      ],
+      "issues_remaining": [],
+      "repair_success": true,
+      "modifications_applied": [
+        "Pattern Factory import ajouté",
+        "Fonction factory ajoutée",
+        "Méthode startup ajoutée",
+        "Méthode shutdown ajoutée",
+        "Méthode health_check ajoutée"
+      ],
+      "post_repair_validation": {
+        "syntax_valid": true,
+        "remaining_issues": 1,
+        "severity": "warning",
+        "validation_success": false
+      }
+    },
+    "agent_25_production_monitoring_enterprise.py": {
+      "agent_path": "C:\\Dev\\agents\\agent_25_production_monitoring_enterprise.py",
+      "timestamp": "2025-06-19T15:59:17.425730",
+      "backup_path": "C:\\Dev\\nextgeneration\\backups_docteur\\agent_25_production_monitoring_enterprise_20250619_155917.backup",
+      "issues_repaired": [
+        {
+          "type": "missing_pattern_factory_import",
+          "severity": "warning",
+          "message": "Import Pattern Factory manquant",
+          "repair_action": "add_pattern_factory_import"
+        }
+      ],
+      "issues_remaining": [],
+      "repair_success": true,
+      "modifications_applied": [
+        "Pattern Factory import ajouté"
+      ],
+      "post_repair_validation": {
+        "syntax_valid": true,
+        "remaining_issues": 0,
+        "severity": "none",
+        "validation_success": true
+      }
+    },
+    "agent_25_production_monitoring_enterprise_v2.py": {
+      "agent_path": "C:\\Dev\\agents\\agent_25_production_monitoring_enterprise_v2.py",
+      "timestamp": "2025-06-19T15:59:17.440737",
+      "backup_path": "C:\\Dev\\nextgeneration\\backups_docteur\\agent_25_production_monitoring_enterprise_v2_20250619_155917.backup",
+      "issues_repaired": [
+        {
+          "type": "missing_pattern_factory_import",
+          "severity": "warning",
+          "message": "Import Pattern Factory manquant",
+          "repair_action": "add_pattern_factory_import"
+        },
+        {
+          "type": "missing_factory_function",
+          "severity": "warning",
+          "message": "Fonction factory manquante",
+          "repair_action": "add_factory_function"
+        },
+        {
+          "type": "missing_required_method",
+          "severity": "critical",
+          "method": "startup",
+          "message": "Méthode obligatoire 'startup' manquante",
+          "repair_action": "add_required_method"
+        },
+        {
+          "type": "missing_required_method",
+          "severity": "critical",
+          "method": "shutdown",
+          "message": "Méthode obligatoire 'shutdown' manquante",
+          "repair_action": "add_required_method"
+        },
+        {
+          "type": "missing_required_method",
+          "severity": "critical",
+          "method": "health_check",
+          "message": "Méthode obligatoire 'health_check' manquante",
+          "repair_action": "add_required_method"
+        }
+      ],
+      "issues_remaining": [],
+      "repair_success": true,
+      "modifications_applied": [
+        "Pattern Factory import ajouté",
+        "Fonction factory ajoutée",
+        "Méthode startup ajoutée",
+        "Méthode shutdown ajoutée",
+        "Méthode health_check ajoutée"
+      ],
+      "post_repair_validation": {
+        "syntax_valid": true,
+        "remaining_issues": 1,
+        "severity": "warning",
+        "validation_success": false
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "report_type": "executive",
+  "generated_at": "2025-06-19T15:15:37.038982",
+  "executive_summary": "🔴 ÉTAT DU SYSTÈME: CRITIQUE (Score: 0.0/100)\n\nLe système NextGeneration présente un niveau de santé critique.\n1 problèmes critiques identifiés nécessitant une attention immédiate.\n\nRecommandation: Action immédiate requise",
+  "key_findings": [
+    "Score de performance global: 0.0/100",
+    "Anomalies détectées: 1",
+    "Insights stratégiques générés: 1"
+  ],
+  "recommendations": [
+    {
+      "priority": "HIGH",
+      "recommendation": "🚨 Action immédiate requise - Système en état critique",
+      "order": 1
+    },
+    {
+      "priority": "MEDIUM",
+      "recommendation": "Mobiliser l'équipe technique pour résolution urgente",
+      "order": 2
+    }
+  ],
+  "metrics_dashboard": {
+    "performance_metrics": [],
+    "health_score": 0,
+    "anomalies_summary": {
+      "LOW": 0,
+      "MEDIUM": 1,
+      "HIGH": 0,
+      "CRITICAL": 0
+    },
+    "trends": {
+      "period_analyzed": "7_days",
+      "metrics_count": 0,
+      "trend_summary": "stable",
+      "notable_changes": []
+    }
+  },
+  "next_actions": [
+    {
+      "action": "Résoudre: Performance critique détectée",
+      "priority": "HIGH",
+      "timeline": "24-48h",
+      "owner": "Équipe technique"
+    },
+    {
+      "action": "Maintenir la surveillance continue du système",
+      "priority": "MEDIUM",
+      "timeline": "Continu",
+      "owner": "Agent Méta-Stratégique"
+    }
+  ]
+}

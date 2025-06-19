@@ -26,6 +26,18 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional
 import sys
 
+# Import configuration logs maintenance
+try:
+    from config.logs_maintenance_config import LogsMaintenanceConfig, get_maintenance_rapport_path
+except ImportError:
+    # Fallback si config non disponible
+    class LogsMaintenanceConfig:
+        @classmethod
+        def ensure_logs_structure(cls): pass
+        @classmethod
+        def get_rapport_path(cls, agent_type: str, rapport_type: str = "rapport"):
+            return Path(f"rapport_{rapport_type}_{agent_type}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
+
 # Imports Pattern Factory
 sys.path.insert(0, str(Path(__file__).parent))
 try:
@@ -500,7 +512,7 @@ class ChefEquipeMaintenanceOrchestrator(Agent):
     
     async def _generer_rapport_analyse(self, analyse_result: Dict, evaluation_result: Dict, target_path: str) -> Dict:
         """Génère rapport consolidé d'analyse"""
-        return {
+        rapport_data = {
             "type_rapport": "analyse_equipe",
             "target_path": target_path,
             "timestamp": datetime.now().isoformat(),
@@ -518,10 +530,26 @@ class ChefEquipeMaintenanceOrchestrator(Agent):
                 "Planifier réparations si nécessaire"
             ]
         }
+        
+        # Sauvegarde rapport dans structure organisée
+        try:
+            LogsMaintenanceConfig.ensure_logs_structure()
+            rapport_path = LogsMaintenanceConfig.get_rapport_path("orchestrateur", "analyse_equipe")
+            
+            with open(rapport_path, 'w', encoding='utf-8') as f:
+                json.dump(rapport_data, f, indent=2, ensure_ascii=False)
+                
+            self.logger.info(f"📄 Rapport analyse sauvegardé: {rapport_path}")
+            rapport_data["rapport_path"] = str(rapport_path)
+            
+        except Exception as e:
+            self.logger.error(f"❌ Erreur sauvegarde rapport analyse: {e}")
+            
+        return rapport_data
     
     async def _generer_rapport_maintenance_complete(self, workflow_result: Dict, target_path: str) -> Dict:
         """Génère rapport consolidé de maintenance complète"""
-        return {
+        rapport_data = {
             "type_rapport": "maintenance_complete",
             "target_path": target_path,
             "timestamp": datetime.now().isoformat(),
@@ -534,6 +562,22 @@ class ChefEquipeMaintenanceOrchestrator(Agent):
             "recommandations_finales": self._generer_recommandations_maintenance(workflow_result),
             "actions_suivantes": self._generer_actions_suivantes(workflow_result)
         }
+        
+        # Sauvegarde rapport dans structure organisée
+        try:
+            LogsMaintenanceConfig.ensure_logs_structure()
+            rapport_path = LogsMaintenanceConfig.get_rapport_path("orchestrateur", "maintenance_complete")
+            
+            with open(rapport_path, 'w', encoding='utf-8') as f:
+                json.dump(rapport_data, f, indent=2, ensure_ascii=False)
+                
+            self.logger.info(f"📄 Rapport maintenance sauvegardé: {rapport_path}")
+            rapport_data["rapport_path"] = str(rapport_path)
+            
+        except Exception as e:
+            self.logger.error(f"❌ Erreur sauvegarde rapport: {e}")
+            
+        return rapport_data
     
     def _generer_recommandations_analyse(self, analyse_result: Dict, evaluation_result: Dict) -> List[str]:
         """Génère recommandations basées sur analyse et évaluation"""

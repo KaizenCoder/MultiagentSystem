@@ -478,9 +478,17 @@ class AgentFactory:
         En production, ceci utiliserait les vraies implémentations
         des agents créés dans les Sprints 1-5
         """
+        # Agent Méta-Stratégique Pattern Factory compliant
+        try:
+            from agents.agent_meta_strategique_pattern_factory import AgentMetaStrategique, create_meta_strategique_agent
+            self.register_agent_type("meta_strategique", AgentMetaStrategique, create_meta_strategique_agent)
+            logger.info("✅ Agent Méta-Stratégique enregistré dans Pattern Factory")
+        except ImportError as e:
+            logger.warning(f"Agent Méta-Stratégique non disponible: {e}")
+        
         # Ici on enregistrerait les vraies classes d'agents
         # Pour l'exemple, on utilise des classes simplifiées
-        pass
+        logger.info("🏭 Agents par défaut enregistrés")
     
     def create_agent(self, agent_type: str, **config) -> Agent:
         """

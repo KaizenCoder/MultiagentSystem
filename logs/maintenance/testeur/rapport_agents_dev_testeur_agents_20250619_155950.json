@@ -1,0 +1,211 @@
+{
+  "timestamp": "",
+  "repertoire_teste": "C:\\Dev\\agents",
+  "statistiques": {
+    "total_agents": 3,
+    "agents_conformes": 3,
+    "taux_conformite": 100.0,
+    "score_moyen": 74.66666666666667,
+    "distribution_conformite": {
+      "CONFORME_EXCELLENT": 0,
+      "CONFORME_STRICT": 3,
+      "CONFORME_PARTIEL": 0,
+      "NON_CONFORME": 0
+    }
+  },
+  "resultats_detailles": {
+    "agent_23_fastapi_orchestration_enterprise_v2.py": {
+      "agent_path": "C:\\Dev\\agents\\agent_23_fastapi_orchestration_enterprise_v2.py",
+      "timestamp": "2025-06-19T15:59:50.975786",
+      "tests": {
+        "syntax": {
+          "success": true,
+          "message": "Syntaxe Python valide",
+          "score": 100
+        },
+        "pattern_factory": {
+          "success": true,
+          "conformite_level": "CONFORME_STRICT",
+          "checks_obligatoires": {
+            "pattern_factory_import_correct": true,
+            "agent_inheritance_strict": true,
+            "factory_function_naming": false,
+            "fallback_implementation": true,
+            "pattern_factory_docstring": true
+          },
+          "checks_recommandees": {
+            "async_methods_present": true,
+            "logging_pattern_factory": true,
+            "configuration_pattern": true,
+            "error_handling_pattern": false,
+            "main_function_pattern": false
+          },
+          "score_obligatoire": 80.0,
+          "score_recommande": 60.0,
+          "score_global": 76.0,
+          "recommendations": [
+            "CRITIQUE: Ajouter fonction factory avec nomenclature correcte",
+            "RECOMMANDÉ: Renforcer gestion d'erreurs",
+            "RECOMMANDÉ: Ajouter fonction main() conforme"
+          ],
+          "message": "Conformité Pattern Factory: CONFORME_STRICT (76.0%)"
+        },
+        "required_methods": {
+          "success": true,
+          "methodes_trouvees": {
+            "startup": true,
+            "shutdown": true,
+            "health_check": true,
+            "execute_task": true,
+            "get_capabilities": true
+          },
+          "score": 100.0,
+          "message": "Méthodes obligatoires: 100.0%"
+        },
+        "performance": {
+          "success": true,
+          "metrics": {
+            "file_size_kb": 9.39,
+            "lines_count": 259,
+            "code_lines": 191,
+            "functions_count": 19,
+            "classes_count": 10
+          },
+          "score": 81.0,
+          "message": "Performance: 81.0/100"
+        }
+      },
+      "score_global": 67.2,
+      "status": "warning"
+    },
+    "agent_25_production_monitoring_enterprise.py": {
+      "agent_path": "C:\\Dev\\agents\\agent_25_production_monitoring_enterprise.py",
+      "timestamp": "2025-06-19T15:59:50.977837",
+      "tests": {
+        "syntax": {
+          "success": true,
+          "message": "Syntaxe Python valide",
+          "score": 100
+        },
+        "pattern_factory": {
+          "success": true,
+          "conformite_level": "CONFORME_STRICT",
+          "checks_obligatoires": {
+            "pattern_factory_import_correct": true,
+            "agent_inheritance_strict": true,
+            "factory_function_naming": false,
+            "fallback_implementation": true,
+            "pattern_factory_docstring": true
+          },
+          "checks_recommandees": {
+            "async_methods_present": true,
+            "logging_pattern_factory": false,
+            "configuration_pattern": true,
+            "error_handling_pattern": false,
+            "main_function_pattern": false
+          },
+          "score_obligatoire": 80.0,
+          "score_recommande": 40.0,
+          "score_global": 72.0,
+          "recommendations": [
+            "CRITIQUE: Ajouter fonction factory avec nomenclature correcte",
+            "RECOMMANDÉ: Améliorer logging Pattern Factory standardisé",
+            "RECOMMANDÉ: Renforcer gestion d'erreurs",
+            "RECOMMANDÉ: Ajouter fonction main() conforme"
+          ],
+          "message": "Conformité Pattern Factory: CONFORME_STRICT (72.0%)"
+        },
+        "required_methods": {
+          "success": true,
+          "methodes_trouvees": {
+            "startup": true,
+            "shutdown": true,
+            "health_check": true,
+            "execute_task": true,
+            "get_capabilities": true
+          },
+          "score": 100.0,
+          "message": "Méthodes obligatoires: 100.0%"
+        },
+        "performance": {
+          "success": true,
+          "metrics": {
+            "file_size_kb": 17.96,
+            "lines_count": 481,
+            "code_lines": 383,
+            "functions_count": 31,
+            "classes_count": 11
+          },
+          "score": 75.0,
+          "message": "Performance: 75.0/100"
+        }
+      },
+      "score_global": 66.2,
+      "status": "warning"
+    },
+    "agent_25_production_monitoring_enterprise_v2.py": {
+      "agent_path": "C:\\Dev\\agents\\agent_25_production_monitoring_enterprise_v2.py",
+      "timestamp": "2025-06-19T15:59:50.981759",
+      "tests": {
+        "syntax": {
+          "success": true,
+          "message": "Syntaxe Python valide",
+          "score": 100
+        },
+        "pattern_factory": {
+          "success": true,
+          "conformite_level": "CONFORME_STRICT",
+          "checks_obligatoires": {
+            "pattern_factory_import_correct": true,
+            "agent_inheritance_strict": true,
+            "factory_function_naming": false,
+            "fallback_implementation": true,
+            "pattern_factory_docstring": true
+          },
+          "checks_recommandees": {
+            "async_methods_present": true,
+            "logging_pattern_factory": true,
+            "configuration_pattern": true,
+            "error_handling_pattern": false,
+            "main_function_pattern": false
+          },
+          "score_obligatoire": 80.0,
+          "score_recommande": 60.0,
+          "score_global": 76.0,
+          "recommendations": [
+            "CRITIQUE: Ajouter fonction factory avec nomenclature correcte",
+            "RECOMMANDÉ: Renforcer gestion d'erreurs",
+            "RECOMMANDÉ: Ajouter fonction main() conforme"
+          ],
+          "message": "Conformité Pattern Factory: CONFORME_STRICT (76.0%)"
+        },
+        "required_methods": {
+          "success": true,
+          "methodes_trouvees": {
+            "startup": true,
+            "shutdown": true,
+            "health_check": true,
+            "execute_task": true,
+            "get_capabilities": true
+          },
+          "score": 100.0,
+          "message": "Méthodes obligatoires: 100.0%"
+        },
+        "performance": {
+          "success": true,
+          "metrics": {
+            "file_size_kb": 9.81,
+            "lines_count": 264,
+            "code_lines": 196,
+            "functions_count": 19,
+            "classes_count": 11
+          },
+          "score": 81.0,
+          "message": "Performance: 81.0/100"
+        }
+      },
+      "score_global": 67.2,
+      "status": "warning"
+    }
+  }
+}

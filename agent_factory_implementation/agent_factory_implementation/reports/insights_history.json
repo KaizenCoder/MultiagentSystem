@@ -1,0 +1,461 @@
+[
+  {
+    "type": "performance_degradation",
+    "severity": "HIGH",
+    "title": "Dégradation de performance détectée",
+    "description": "Score de performance global: 0.0/100",
+    "impact": "Risque de dégradation de l'expérience utilisateur",
+    "recommended_actions": [
+      "Analyser les métriques de performance détaillées",
+      "Optimiser les composants les plus lents",
+      "Implémenter des améliorations de performance"
+    ],
+    "data_sources": [
+      "performance_metrics"
+    ],
+    "confidence_score": 0.85,
+    "timestamp": "2025-06-19 15:06:44.739363"
+  },
+  {
+    "type": "performance_degradation",
+    "severity": "HIGH",
+    "title": "Dégradation de performance détectée",
+    "description": "Score de performance global: 0.0/100",
+    "impact": "Risque de dégradation de l'expérience utilisateur",
+    "recommended_actions": [
+      "Analyser les métriques de performance détaillées",
+      "Optimiser les composants les plus lents",
+      "Implémenter des améliorations de performance"
+    ],
+    "data_sources": [
+      "performance_metrics"
+    ],
+    "confidence_score": 0.85,
+    "timestamp": "2025-06-19 15:06:44.740377"
+  },
+  {
+    "type": "performance_degradation",
+    "severity": "HIGH",
+    "title": "Dégradation de performance détectée",
+    "description": "Score de performance global: 0.0/100",
+    "impact": "Risque de dégradation de l'expérience utilisateur",
+    "recommended_actions": [
+      "Analyser les métriques de performance détaillées",
+      "Optimiser les composants les plus lents",
+      "Implémenter des améliorations de performance"
+    ],
+    "data_sources": [
+      "performance_metrics"
+    ],
+    "confidence_score": 0.85,
+    "timestamp": "2025-06-19 15:06:44.741369"
+  },
+  {
+    "type": "performance_degradation",
+    "severity": "HIGH",
+    "title": "Dégradation de performance détectée",
+    "description": "Score de performance global: 55.8/100",
+    "impact": "Risque de dégradation de l'expérience utilisateur",
+    "recommended_actions": [
+      "Analyser les métriques de performance détaillées",
+      "Optimiser les composants les plus lents",
+      "Implémenter des améliorations de performance"
+    ],
+    "data_sources": [
+      "performance_metrics"
+    ],
+    "confidence_score": 0.85,
+    "timestamp": "2025-06-19 15:07:44.136077"
+  },
+  {
+    "type": "system_stability",
+    "severity": "LOW",
+    "title": "Système stable et performant",
+    "description": "Aucune anomalie détectée, performances dans les normes",
+    "impact": "Maintien de la qualité de service",
+    "recommended_actions": [
+      "Maintenir la surveillance continue",
+      "Planifier les optimisations préventives",
+      "Documenter les bonnes pratiques"
+    ],
+    "data_sources": [
+      "all_metrics"
+    ],
+    "confidence_score": 0.95,
+    "timestamp": "2025-06-19 15:07:44.136077"
+  },
+  {
+    "type": "performance_degradation",
+    "severity": "HIGH",
+    "title": "Dégradation de performance détectée",
+    "description": "Score de performance global: 55.8/100",
+    "impact": "Risque de dégradation de l'expérience utilisateur",
+    "recommended_actions": [
+      "Analyser les métriques de performance détaillées",
+      "Optimiser les composants les plus lents",
+      "Implémenter des améliorations de performance"
+    ],
+    "data_sources": [
+      "performance_metrics"
+    ],
+    "confidence_score": 0.85,
+    "timestamp": "2025-06-19 15:07:44.139077"
+  },
+  {
+    "type": "system_stability",
+    "severity": "LOW",
+    "title": "Système stable et performant",
+    "description": "Aucune anomalie détectée, performances dans les normes",
+    "impact": "Maintien de la qualité de service",
+    "recommended_actions": [
+      "Maintenir la surveillance continue",
+      "Planifier les optimisations préventives",
+      "Documenter les bonnes pratiques"
+    ],
+    "data_sources": [
+      "all_metrics"
+    ],
+    "confidence_score": 0.95,
+    "timestamp": "2025-06-19 15:07:44.139077"
+  },
+  {
+    "type": "performance_degradation",
+    "severity": "HIGH",
+    "title": "Dégradation de performance détectée",
+    "description": "Score de performance global: 55.8/100",
+    "impact": "Risque de dégradation de l'expérience utilisateur",
+    "recommended_actions": [
+      "Analyser les métriques de performance détaillées",
+      "Optimiser les composants les plus lents",
+      "Implémenter des améliorations de performance"
+    ],
+    "data_sources": [
+      "performance_metrics"
+    ],
+    "confidence_score": 0.85,
+    "timestamp": "2025-06-19 15:07:44.141451"
+  },
+  {
+    "type": "system_stability",
+    "severity": "LOW",
+    "title": "Système stable et performant",
+    "description": "Aucune anomalie détectée, performances dans les normes",
+    "impact": "Maintien de la qualité de service",
+    "recommended_actions": [
+      "Maintenir la surveillance continue",
+      "Planifier les optimisations préventives",
+      "Documenter les bonnes pratiques"
+    ],
+    "data_sources": [
+      "all_metrics"
+    ],
+    "confidence_score": 0.95,
+    "timestamp": "2025-06-19 15:07:44.141451"
+  },
+  {
+    "type": "performance_degradation",
+    "severity": "MEDIUM",
+    "title": "Performance modérée détectée",
+    "description": "Score de performance: 84.8/100",
+    "impact": "Risque de dégradation de l'expérience utilisateur",
+    "recommended_actions": [
+      "Analyser les métriques de performance détaillées",
+      "Optimiser les composants les plus lents",
+      "Implémenter des améliorations de performance"
+    ],
+    "data_sources": [
+      "performance_metrics"
+    ],
+    "confidence_score": 0.85,
+    "timestamp": "2025-06-19 15:17:03.771939"
+  },
+  {
+    "type": "system_stability",
+    "severity": "LOW",
+    "title": "Système stable et performant",
+    "description": "Aucune anomalie détectée, performances dans les normes",
+    "impact": "Maintien de la qualité de service",
+    "recommended_actions": [
+      "Maintenir la surveillance continue",
+      "Planifier les optimisations préventives",
+      "Documenter les bonnes pratiques"
+    ],
+    "data_sources": [
+      "all_metrics"
+    ],
+    "confidence_score": 0.95,
+    "timestamp": "2025-06-19 15:17:03.771939"
+  },
+  {
+    "type": "performance_degradation",
+    "severity": "MEDIUM",
+    "title": "Performance modérée détectée",
+    "description": "Score de performance: 84.8/100",
+    "impact": "Risque de dégradation de l'expérience utilisateur",
+    "recommended_actions": [
+      "Analyser les métriques de performance détaillées",
+      "Optimiser les composants les plus lents",
+      "Implémenter des améliorations de performance"
+    ],
+    "data_sources": [
+      "performance_metrics"
+    ],
+    "confidence_score": 0.85,
+    "timestamp": "2025-06-19 15:17:03.774938"
+  },
+  {
+    "type": "system_stability",
+    "severity": "LOW",
+    "title": "Système stable et performant",
+    "description": "Aucune anomalie détectée, performances dans les normes",
+    "impact": "Maintien de la qualité de service",
+    "recommended_actions": [
+      "Maintenir la surveillance continue",
+      "Planifier les optimisations préventives",
+      "Documenter les bonnes pratiques"
+    ],
+    "data_sources": [
+      "all_metrics"
+    ],
+    "confidence_score": 0.95,
+    "timestamp": "2025-06-19 15:17:03.774938"
+  },
+  {
+    "type": "performance_degradation",
+    "severity": "MEDIUM",
+    "title": "Performance modérée détectée",
+    "description": "Score de performance: 84.8/100",
+    "impact": "Risque de dégradation de l'expérience utilisateur",
+    "recommended_actions": [
+      "Analyser les métriques de performance détaillées",
+      "Optimiser les composants les plus lents",
+      "Implémenter des améliorations de performance"
+    ],
+    "data_sources": [
+      "performance_metrics"
+    ],
+    "confidence_score": 0.85,
+    "timestamp": "2025-06-19 15:17:03.777035"
+  },
+  {
+    "type": "system_stability",
+    "severity": "LOW",
+    "title": "Système stable et performant",
+    "description": "Aucune anomalie détectée, performances dans les normes",
+    "impact": "Maintien de la qualité de service",
+    "recommended_actions": [
+      "Maintenir la surveillance continue",
+      "Planifier les optimisations préventives",
+      "Documenter les bonnes pratiques"
+    ],
+    "data_sources": [
+      "all_metrics"
+    ],
+    "confidence_score": 0.95,
+    "timestamp": "2025-06-19 15:17:03.777035"
+  },
+  {
+    "type": "system_performance",
+    "severity": "LOW",
+    "title": "Système performant et stable",
+    "description": "Score de performance excellent: 84.8/100",
+    "impact": "Maintien de la qualité de service optimale",
+    "recommended_actions": [
+      "Maintenir la surveillance continue",
+      "Documenter les bonnes pratiques actuelles",
+      "Planifier les optimisations préventives"
+    ],
+    "data_sources": [
+      "performance_metrics"
+    ],
+    "confidence_score": 0.95,
+    "timestamp": "2025-06-19 15:18:01.696808"
+  },
+  {
+    "type": "system_stability",
+    "severity": "LOW",
+    "title": "Système stable et performant",
+    "description": "Aucune anomalie détectée, performances dans les normes",
+    "impact": "Maintien de la qualité de service",
+    "recommended_actions": [
+      "Maintenir la surveillance continue",
+      "Planifier les optimisations préventives",
+      "Documenter les bonnes pratiques"
+    ],
+    "data_sources": [
+      "all_metrics"
+    ],
+    "confidence_score": 0.95,
+    "timestamp": "2025-06-19 15:18:01.696808"
+  },
+  {
+    "type": "system_performance",
+    "severity": "LOW",
+    "title": "Système performant et stable",
+    "description": "Score de performance excellent: 84.8/100",
+    "impact": "Maintien de la qualité de service optimale",
+    "recommended_actions": [
+      "Maintenir la surveillance continue",
+      "Documenter les bonnes pratiques actuelles",
+      "Planifier les optimisations préventives"
+    ],
+    "data_sources": [
+      "performance_metrics"
+    ],
+    "confidence_score": 0.95,
+    "timestamp": "2025-06-19 15:18:01.699806"
+  },
+  {
+    "type": "system_stability",
+    "severity": "LOW",
+    "title": "Système stable et performant",
+    "description": "Aucune anomalie détectée, performances dans les normes",
+    "impact": "Maintien de la qualité de service",
+    "recommended_actions": [
+      "Maintenir la surveillance continue",
+      "Planifier les optimisations préventives",
+      "Documenter les bonnes pratiques"
+    ],
+    "data_sources": [
+      "all_metrics"
+    ],
+    "confidence_score": 0.95,
+    "timestamp": "2025-06-19 15:18:01.699806"
+  },
+  {
+    "type": "system_performance",
+    "severity": "LOW",
+    "title": "Système performant et stable",
+    "description": "Score de performance excellent: 84.8/100",
+    "impact": "Maintien de la qualité de service optimale",
+    "recommended_actions": [
+      "Maintenir la surveillance continue",
+      "Documenter les bonnes pratiques actuelles",
+      "Planifier les optimisations préventives"
+    ],
+    "data_sources": [
+      "performance_metrics"
+    ],
+    "confidence_score": 0.95,
+    "timestamp": "2025-06-19 15:18:01.702808"
+  },
+  {
+    "type": "system_stability",
+    "severity": "LOW",
+    "title": "Système stable et performant",
+    "description": "Aucune anomalie détectée, performances dans les normes",
+    "impact": "Maintien de la qualité de service",
+    "recommended_actions": [
+      "Maintenir la surveillance continue",
+      "Planifier les optimisations préventives",
+      "Documenter les bonnes pratiques"
+    ],
+    "data_sources": [
+      "all_metrics"
+    ],
+    "confidence_score": 0.95,
+    "timestamp": "2025-06-19 15:18:01.702808"
+  },
+  {
+    "type": "system_performance",
+    "severity": "LOW",
+    "title": "Système performant et stable",
+    "description": "Score de performance excellent: 84.8/100",
+    "impact": "Maintien de la qualité de service optimale",
+    "recommended_actions": [
+      "Maintenir la surveillance continue",
+      "Documenter les bonnes pratiques actuelles",
+      "Planifier les optimisations préventives"
+    ],
+    "data_sources": [
+      "performance_metrics"
+    ],
+    "confidence_score": 0.95,
+    "timestamp": "2025-06-19 15:20:24.988572"
+  },
+  {
+    "type": "system_stability",
+    "severity": "LOW",
+    "title": "Système stable et performant",
+    "description": "Aucune anomalie détectée, performances dans les normes",
+    "impact": "Maintien de la qualité de service",
+    "recommended_actions": [
+      "Maintenir la surveillance continue",
+      "Planifier les optimisations préventives",
+      "Documenter les bonnes pratiques"
+    ],
+    "data_sources": [
+      "all_metrics"
+    ],
+    "confidence_score": 0.95,
+    "timestamp": "2025-06-19 15:20:24.988572"
+  },
+  {
+    "type": "system_performance",
+    "severity": "LOW",
+    "title": "Système performant et stable",
+    "description": "Score de performance excellent: 84.8/100",
+    "impact": "Maintien de la qualité de service optimale",
+    "recommended_actions": [
+      "Maintenir la surveillance continue",
+      "Documenter les bonnes pratiques actuelles",
+      "Planifier les optimisations préventives"
+    ],
+    "data_sources": [
+      "performance_metrics"
+    ],
+    "confidence_score": 0.95,
+    "timestamp": "2025-06-19 15:20:24.991571"
+  },
+  {
+    "type": "system_stability",
+    "severity": "LOW",
+    "title": "Système stable et performant",
+    "description": "Aucune anomalie détectée, performances dans les normes",
+    "impact": "Maintien de la qualité de service",
+    "recommended_actions": [
+      "Maintenir la surveillance continue",
+      "Planifier les optimisations préventives",
+      "Documenter les bonnes pratiques"
+    ],
+    "data_sources": [
+      "all_metrics"
+    ],
+    "confidence_score": 0.95,
+    "timestamp": "2025-06-19 15:20:24.991571"
+  },
+  {
+    "type": "system_performance",
+    "severity": "LOW",
+    "title": "Système performant et stable",
+    "description": "Score de performance excellent: 84.8/100",
+    "impact": "Maintien de la qualité de service optimale",
+    "recommended_actions": [
+      "Maintenir la surveillance continue",
+      "Documenter les bonnes pratiques actuelles",
+      "Planifier les optimisations préventives"
+    ],
+    "data_sources": [
+      "performance_metrics"
+    ],
+    "confidence_score": 0.95,
+    "timestamp": "2025-06-19 15:20:24.993570"
+  },
+  {
+    "type": "system_stability",
+    "severity": "LOW",
+    "title": "Système stable et performant",
+    "description": "Aucune anomalie détectée, performances dans les normes",
+    "impact": "Maintien de la qualité de service",
+    "recommended_actions": [
+      "Maintenir la surveillance continue",
+      "Planifier les optimisations préventives",
+      "Documenter les bonnes pratiques"
+    ],
+    "data_sources": [
+      "all_metrics"
+    ],
+    "confidence_score": 0.95,
+    "timestamp": "2025-06-19 15:20:24.993570"
+  }
+]
