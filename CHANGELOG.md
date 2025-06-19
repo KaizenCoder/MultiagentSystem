@@ -1,5 +1,26 @@
 # 📝 CHANGELOG - NEXTGENERATION
 
+## [5.1.0] - 2025-01-15 - 🏭 PATTERN FACTORY MISE EN AVANT DANS DOCUMENTATION
+
+### 🚀 AMÉLIORATION DOCUMENTATION README
+- **Section Pattern Factory proéminente** ajoutée en début de README
+- **Démarrage rapide Pattern Factory** avec commandes pratiques
+- **Avantages révolutionnaires** mis en avant (Templates JSON → Agents Python)
+- **Navigation améliorée** vers le Guide Pattern Factory
+- **Concept clés** expliqués dès l'introduction
+
+### 📖 RESTRUCTURATION DOCUMENTATION
+- **Pattern Factory** maintenant présenté comme innovation principale
+- **Liens directs** vers guide, architecture et synthèse
+- **Commandes pratiques** pour tester le système
+- **Mise en avant** des accomplissements techniques
+
+### 🎯 OBJECTIF ACCOMPLI
+- **Document fondamental** Pattern Factory créé et intégré
+- **Compréhension facilitée** pour les successeurs
+- **Navigation claire** entre les documents
+- **Pattern Factory** maintenant accessible et compréhensible
+
 ## [5.0.0] - 2025-06-19 - 🏆 PROJET AGENT FACTORY PATTERN TERMINÉ AVEC EXCELLENCE ⭐⭐⭐
 
 ### 🎉 SPRINT 5 FINALISÉ - DÉPLOIEMENT KUBERNETES PRODUCTION

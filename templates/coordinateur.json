@@ -1,0 +1,1 @@
+{"name": "coordinateur", "version": "1.0.0", "role": "coordinator", "domain": "project_management", "description": "Agent coordinateur template-based", "capabilities": ["task_coordination", "team_management"], "tools": ["jira", "slack"], "dependencies": []}
