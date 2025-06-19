@@ -1278,25 +1278,78 @@ class AgentTesteurAgents(Agent):
             return {"success": False, "error": str(e)}
     
     async def executer_reparation_docteur_si_necessaire(self, target_directory: str = None, validation_result: Dict = None) -> Dict[str, Any]:
-        """Exécution réparation docteur si nécessaire"""
+        """Exécution réparation docteur si nécessaire - MODE PRODUCTION"""
         try:
             # Vérifier si réparation nécessaire
             needs_repair = not validation_result.get("success", False) if validation_result else True
             
             if needs_repair:
-                self.logger.info("🩺 Réparation docteur nécessaire - Simulation")
-                # En production: appel agent docteur
-                # from agent_docteur_reparation import AgentDocteurReparation
-                # docteur = AgentDocteurReparation()
-                # repair_result = await docteur.reparer_agents_directory(target_directory)
+                self.logger.info("🩺 Réparation docteur nécessaire - PRODUCTION")
                 
-                repair_result = {
-                    "success": True,
-                    "repair_needed": True,
-                    "repairs_executed": 3,  # Simulation
-                    "agents_repaired": ["agent_1", "agent_2", "agent_3"],
-                    "timestamp": datetime.now().isoformat()
-                }
+                # MODE PRODUCTION: Appel réel de l'agent docteur
+                try:
+                    from agent_docteur_reparation import create_agent_docteur_reparation
+                    
+                    # Créer l'agent docteur avec backup automatique
+                    docteur = create_agent_docteur_reparation(
+                        backup_mode=True,
+                        auto_repair=True,
+                        max_repair_attempts=3
+                    )
+                    
+                    # Démarrage du docteur
+                    await docteur.startup()
+                    
+                    # Réparation de tous les agents dans le répertoire
+                    if target_directory:
+                        # Réparation ciblée sur le répertoire
+                        repair_task = {"type": "repair_all_agents", "target_directory": target_directory}
+                        repair_result = await docteur.execute_task(repair_task)
+                    else:
+                        # Réparation globale
+                        repair_result = await docteur.reparer_tous_agents()
+                    
+                    # Arrêt propre du docteur
+                    await docteur.shutdown()
+                    
+                    # Formatage des résultats
+                    summary = repair_result.get("summary", {})
+                    repair_result = {
+                        "success": summary.get("repaired_successfully", 0) > 0,
+                        "repair_needed": True,
+                        "repairs_executed": summary.get("repaired_successfully", 0),
+                        "repairs_failed": summary.get("repair_failed", 0),
+                        "total_processed": summary.get("total_processed", 0),
+                        "success_rate": summary.get("success_rate", 0),
+                        "agents_repaired": [r.get("agent_path", "") for r in repair_result.get("repair_results", []) 
+                                          if r.get("repair_success", False)],
+                        "timestamp": datetime.now().isoformat(),
+                        "mode": "production",
+                        "backup_created": True,
+                        "detailed_results": repair_result
+                    }
+                    
+                    self.logger.info(f"✅ Réparation docteur terminée: {repair_result['repairs_executed']} agents réparés")
+                    
+                except ImportError as e:
+                    self.logger.warning(f"⚠️ Agent docteur non disponible: {e}")
+                    # Fallback en mode simulation
+                    repair_result = {
+                        "success": False,
+                        "repair_needed": True,
+                        "error": "Agent docteur non disponible",
+                        "fallback_mode": "simulation",
+                        "timestamp": datetime.now().isoformat()
+                    }
+                    
+                except Exception as e:
+                    self.logger.error(f"❌ Erreur agent docteur: {e}")
+                    repair_result = {
+                        "success": False,
+                        "repair_needed": True,
+                        "error": str(e),
+                        "timestamp": datetime.now().isoformat()
+                    }
             else:
                 repair_result = {
                     "success": True,
@@ -1305,7 +1358,7 @@ class AgentTesteurAgents(Agent):
                     "timestamp": datetime.now().isoformat()
                 }
             
-            self.logger.info(f"🩺 Réparation docteur: {repair_result['repair_needed']}")
+            self.logger.info(f"🩺 Réparation docteur: {repair_result['repair_needed']} - Mode: {repair_result.get('mode', 'standard')}")
             return repair_result
             
         except Exception as e:
