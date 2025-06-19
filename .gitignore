@@ -12,6 +12,14 @@ env.example
 *.db
 *.sqlite3
 
+# Logs de maintenance (générés automatiquement)
+logs/maintenance/
+rapport_*.json
+cache_*.json
+historique_*.json
+backups_docteur/
+*_backup_*.json
+
 # Fichiers générés par l'automatisation
 CODE-SOURCE.md
 CODE-SOURCE.md.backup
