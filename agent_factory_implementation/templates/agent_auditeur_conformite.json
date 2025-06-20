@@ -1,0 +1,41 @@
+{
+  "name": "agent_auditeur_conformite",
+  "version": "1.0.0",
+  "role": "validator",
+  "domain": "compliance_audit",
+  "capabilities": [
+    "compliance_checking",
+    "standards_validation",
+    "policy_enforcement",
+    "documentation_audit",
+    "governance_assessment"
+  ],
+  "tools": [
+    "compliance_checker",
+    "standards_validator",
+    "policy_engine",
+    "documentation_scanner",
+    "governance_framework"
+  ],
+  "default_config": {
+    "timeout": 240,
+    "max_retries": 2,
+    "temperature": 0.1,
+    "model": "gpt-4",
+    "compliance_level": "strict",
+    "standards": ["ISO", "SOC2", "PCI-DSS"]
+  },
+  "supervisor_route": "audit/compliance",
+  "metadata": {
+    "author": "NextGeneration System",
+    "description": "Agent spécialisé dans l'audit de conformité et la validation des standards",
+    "tags": ["compliance", "standards", "governance", "policy", "audit"],
+    "created_at": "2025-06-20T16:00:00Z",
+    "updated_at": "2025-06-20T16:00:00Z"
+  },
+  "hooks": {
+    "pre_process": "load_compliance_rules",
+    "post_process": "generate_compliance_report",
+    "on_error": "log_compliance_audit_failure"
+  }
+} 

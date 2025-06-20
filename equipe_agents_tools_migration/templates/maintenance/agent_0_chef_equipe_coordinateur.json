@@ -1,0 +1,76 @@
+{
+  "name": "agent_0_chef_equipe_coordinateur",
+  "version": "1.0.0",
+  "role": "coordinator",
+  "domain": "maintenance_orchestration",
+  "model": "Claude Sonnet 4",
+  "description": "Agent 0 - Chef d'Équipe Coordinateur pour orchestration centrale de l'équipe de maintenance",
+  "capabilities": [
+    "coordination_equipe_agents",
+    "workflows_automatises", 
+    "rapports_consolides",
+    "maintenance_complete",
+    "validation_finale",
+    "health_monitoring",
+    "task_delegation",
+    "performance_tracking"
+  ],
+  "tools": [
+    "workflow_engine",
+    "report_generator",
+    "health_checker",
+    "task_scheduler",
+    "metrics_collector"
+  ],
+  "workflows": [
+    "analyser_equipe_complete",
+    "evaluer_utilite_equipe",
+    "adapter_code_agents", 
+    "tester_integration",
+    "documenter_equipe",
+    "validation_finale",
+    "maintenance_complete"
+  ],
+  "default_config": {
+    "timeout_default": 300,
+    "safe_mode": true,
+    "max_agents_parallel": 6,
+    "rapport_detaille": true,
+    "auto_shutdown": true,
+    "log_level": "INFO"
+  },
+  "interfaces": {
+    "startup": "async def startup(self)",
+    "shutdown": "async def shutdown(self)", 
+    "health_check": "async def health_check(self) -> Dict[str, Any]",
+    "get_capabilities": "def get_capabilities(self) -> List[str]",
+    "workflow_maintenance_complete": "async def workflow_maintenance_complete(self, config: Dict = None) -> Dict[str, Any]"
+  },
+  "dependencies": [
+    "asyncio",
+    "json", 
+    "logging",
+    "datetime",
+    "pathlib",
+    "typing"
+  ],
+  "team_coordination": {
+    "agents_managed": [
+      "agent_1_analyseur_structure",
+      "agent_2_evaluateur_utilite", 
+      "agent_3_adaptateur_code",
+      "agent_4_testeur_integration",
+      "agent_5_documenteur",
+      "agent_6_validateur_final"
+    ],
+    "coordination_strategy": "sequential_with_validation",
+    "error_handling": "graceful_degradation",
+    "reporting": "consolidated_json"
+  },
+  "performance": {
+    "cache_enabled": true,
+    "async_execution": true,
+    "batch_processing": true,
+    "monitoring": true
+  }
+} 

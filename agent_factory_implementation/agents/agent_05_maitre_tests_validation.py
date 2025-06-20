@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 """
+
+# 🔧 CONVERTI AUTOMATIQUEMENT SYNC → ASYNC
+# Date: 2025-06-19 19h35 - Correction architecture Pattern Factory
+# Raison: Harmonisation async/sync avec core/agent_factory_architecture.py
+
 🧪 Agent 05 - Maître Tests & Validation - Sprint 1
 Mission Critique : Tests complets et validation performance Agent Factory Pattern
 Utilisation OBLIGATOIRE du code expert Claude (enhanced-agent-templates.py + optimized-template-manager.py)
@@ -36,6 +41,43 @@ from locust import HttpUser, task, between
 from locust.env import Environment
 from locust.stats import stats_printer, stats_history
 from locust.log import setup_logging
+
+# Import Pattern Factory (OBLIGATOIRE selon guide)
+sys.path.insert(0, str(Path(__file__).parent))
+try:
+    from agent_factory_implementation.core.agent_factory_architecture import Agent, Task, Result
+    PATTERN_FACTORY_AVAILABLE = True
+except ImportError:
+    try:
+        from core.agent_factory_architecture import Agent, Task, Result
+        PATTERN_FACTORY_AVAILABLE = True
+    except ImportError as e:
+        print(f"⚠️ Pattern Factory non disponible: {e}")
+        # Fallback pour compatibilité
+        class Agent:
+            def __init__(self, agent_type: str, **config):
+                self.agent_id = f"agent_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+                self.agent_type = agent_type
+                self.config = config
+                self.logger = logging.getLogger(f"Agent_{agent_type}")
+                
+            async async def startup(self): pass
+            async async def shutdown(self): pass
+            async async def health_check(self): return {"status": "healthy"}
+        
+        class Task:
+            def __init__(self, task_id: str, description: str, **kwargs):
+                self.task_id = task_id
+                self.description = description
+                
+        class Result:
+            def __init__(self, success: bool, data: Any = None, error: str = None):
+                self.success = success
+                self.data = data
+                self.error = error
+        
+        PATTERN_FACTORY_AVAILABLE = False
+
 
 # Import du code expert Claude OBLIGATOIRE
 sys.path.append(str(Path(__file__).parent.parent / "code_expert"))
@@ -862,3 +904,8 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"❌ ERREUR AGENT 05: {e}")
         sys.exit(1) 
+
+# Fonction factory pour créer l'agent (Pattern Factory)
+def create_agent_05MaitreTestsValidation(**config):
+    """Factory function pour créer un Agent 05MaitreTestsValidation conforme Pattern Factory"""
+    return Agent05MaitreTestsValidation(**config)

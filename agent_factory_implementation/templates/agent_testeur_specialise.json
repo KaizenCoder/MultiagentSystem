@@ -1,0 +1,41 @@
+{
+  "name": "agent_testeur_specialise",
+  "version": "1.0.0",
+  "role": "specialist",
+  "domain": "specialized_testing",
+  "capabilities": [
+    "advanced_testing",
+    "test_automation",
+    "edge_case_detection",
+    "regression_testing",
+    "integration_testing"
+  ],
+  "tools": [
+    "test_framework",
+    "automation_suite",
+    "coverage_analyzer",
+    "mock_generator",
+    "test_data_factory"
+  ],
+  "default_config": {
+    "timeout": 600,
+    "max_retries": 3,
+    "temperature": 0.3,
+    "model": "gpt-4",
+    "coverage_threshold": 95,
+    "test_types": ["unit", "integration", "regression", "load"]
+  },
+  "supervisor_route": "testing/specialized",
+  "metadata": {
+    "author": "NextGeneration System",
+    "description": "Agent spécialisé dans les tests avancés et l'automatisation des suites de tests",
+    "tags": ["testing", "automation", "coverage", "regression", "integration"],
+    "created_at": "2025-06-20T16:00:00Z",
+    "updated_at": "2025-06-20T16:00:00Z"
+  },
+  "hooks": {
+    "pre_process": "setup_test_environment",
+    "post_process": "generate_test_report",
+    "on_error": "log_testing_failure"
+  }
+} 

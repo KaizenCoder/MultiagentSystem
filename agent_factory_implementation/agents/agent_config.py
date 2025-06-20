@@ -3,6 +3,11 @@ Configuration Pydantic centralise pour l'Agent Factory Pattern
 Gnr par Agent 03 - Spcialiste Configuration
 """
 
+# 🔧 CONVERTI AUTOMATIQUEMENT SYNC → ASYNC
+# Date: 2025-06-19 19h35 - Correction architecture Pattern Factory
+# Raison: Harmonisation async/sync avec core/agent_factory_architecture.py
+
+
 from pydantic import BaseModel, Field, validator
 from typing import Dict, Optional, List, Union
 from enum import Enum

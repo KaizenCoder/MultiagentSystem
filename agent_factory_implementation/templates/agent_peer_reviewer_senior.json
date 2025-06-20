@@ -1,0 +1,41 @@
+{
+  "name": "agent_peer_reviewer_senior",
+  "version": "1.0.0",
+  "role": "validator",
+  "domain": "code_review",
+  "capabilities": [
+    "senior_code_review",
+    "architecture_validation",
+    "best_practices_assessment",
+    "mentoring_guidance",
+    "quality_assurance"
+  ],
+  "tools": [
+    "code_analyzer",
+    "static_analysis",
+    "pattern_detector",
+    "documentation_checker",
+    "security_scanner"
+  ],
+  "default_config": {
+    "timeout": 300,
+    "max_retries": 2,
+    "temperature": 0.3,
+    "model": "gpt-4",
+    "review_depth": "comprehensive",
+    "min_score_threshold": 85
+  },
+  "supervisor_route": "review/senior",
+  "metadata": {
+    "author": "NextGeneration System",
+    "description": "Agent senior spécialisé dans la revue de code approfondie et l'évaluation de la qualité architecturale",
+    "tags": ["senior", "review", "quality", "architecture", "mentoring"],
+    "created_at": "2025-06-20T16:00:00Z",
+    "updated_at": "2025-06-20T16:00:00Z"
+  },
+  "hooks": {
+    "pre_process": "validate_code_structure",
+    "post_process": "generate_improvement_suggestions",
+    "on_error": "log_review_failure"
+  }
+} 

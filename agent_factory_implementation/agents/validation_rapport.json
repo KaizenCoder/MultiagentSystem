@@ -1,0 +1,53 @@
+{
+  "validation_results": {
+    "agent_01_analyseur_structure": {
+      "status": "WARNING",
+      "score": 50,
+      "capabilities": [
+        "ast_analysis_advanced",
+        "intelligent_classification",
+        "complexity_scoring",
+        "pattern_factory_compliance",
+        "code_transformation"
+      ],
+      "issues": []
+    },
+    "agent_02_evaluateur_utilite": {
+      "status": "ERROR",
+      "score": 40,
+      "capabilities": [
+        "complexity_scoring",
+        "weighted_evaluation",
+        "conflict_detection",
+        "pattern_factory_compliance"
+      ],
+      "issues": []
+    },
+    "agent_03_adaptateur_code": {
+      "status": "ERROR",
+      "score": 20,
+      "capabilities": [
+        "pattern_factory_compliance",
+        "code_transformation"
+      ],
+      "issues": []
+    },
+    "agent_04_testeur_anti_faux": {
+      "status": "ERROR",
+      "score": 30,
+      "capabilities": [
+        "ast_analysis_advanced",
+        "pattern_factory_compliance",
+        "fake_agent_detection"
+      ],
+      "issues": []
+    }
+  },
+  "summary": {
+    "average_score": 35.0,
+    "agents_ok": 0,
+    "agents_warning": 1,
+    "agents_error": 3
+  },
+  "timestamp": "2025-06-20T17:10:52.400083"
+}

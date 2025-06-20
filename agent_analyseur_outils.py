@@ -191,3 +191,8 @@ def create_agent_AnalyseurOutils(**config):
 def create_agent_AnalyseurOutils(**config):
     """Factory function pour créer un Agent AnalyseurOutils conforme Pattern Factory"""
     return AgentAnalyseurOutils(**config)
+
+# Fonction factory pour créer l'agent (Pattern Factory)
+def create_agent_AnalyseurOutils(**config):
+    """Factory function pour créer un Agent AnalyseurOutils conforme Pattern Factory"""
+    return AgentAnalyseurOutils(**config)

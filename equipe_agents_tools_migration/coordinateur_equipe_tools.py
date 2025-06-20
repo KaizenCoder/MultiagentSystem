@@ -29,10 +29,16 @@ import os
 class CoordinateurEquipeTools:
     """Coordinateur pour l'quipe de migration des outils"""
     
-    def __init__(self):
-        self.workspace_path = Path(__file__).parent
-        self.source_path = Path("C:/Dev/SuperWhisper_V6/tools")
-        self.target_path = Path(__file__).parent.parent / "tools"
+    def __init__(self, agent_id: str = None, agent_type: str = "coordinateur_tools", **config):
+        # Configuration TemplateManager
+        self.agent_id = agent_id or f"coordinateur_tools_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        self.agent_type = agent_type
+        self.config = config
+        
+        # Configuration spécifique
+        self.workspace_path = Path(config.get("workspace_path", Path(__file__).parent))
+        self.source_path = Path(config.get("source_path", "C:/Dev/SuperWhisper_V6/tools"))
+        self.target_path = Path(config.get("target_path", Path(__file__).parent.parent / "tools"))
         self.logs_path = self.workspace_path / "logs"
         self.reports_path = self.workspace_path / "reports"
         
@@ -58,6 +64,31 @@ class CoordinateurEquipeTools:
         self.tools_analyzed = 0
         self.tools_copied = 0
         self.tools_adapted = 0
+    
+    async def startup(self):
+        """Démarrage de l'agent - Interface TemplateManager"""
+        self.logger.info(f"🚀 Démarrage Coordinateur Équipe Tools (ID: {self.agent_id})")
+        return {"status": "started", "agent_id": self.agent_id}
+    
+    async def shutdown(self):
+        """Arrêt de l'agent - Interface TemplateManager"""
+        self.logger.info(f"🛑 Arrêt Coordinateur Équipe Tools (ID: {self.agent_id})")
+        return {"status": "stopped", "agent_id": self.agent_id}
+    
+    async def health_check(self) -> Dict[str, Any]:
+        """Vérification de santé - Interface TemplateManager"""
+        return {
+            "status": "healthy",
+            "agent_id": self.agent_id,
+            "agent_type": self.agent_type,
+            "source_path_exists": self.source_path.exists(),
+            "target_path_exists": self.target_path.exists(),
+            "workspace_path_exists": self.workspace_path.exists()
+        }
+    
+    async def execute_task(self, task_config: Dict = None) -> Dict[str, Any]:
+        """Exécuter la tâche principale - Interface TemplateManager"""
+        return await self.demarrer_mission()
         
     async def demarrer_mission(self):
         """Dmarrer la mission de migration des outils"""
@@ -105,7 +136,7 @@ class CoordinateurEquipeTools:
     
     async def _executer_agent_1_analyseur(self):
         """Agent 1: Analyseur de Structure (Claude Sonnet 4)"""
-        from .agent_1_analyseur_structure import Agent1AnalyseurStructure
+        from agent_1_analyseur_structure import Agent1AnalyseurStructure
         
         agent = Agent1AnalyseurStructure(
             source_path=self.source_path,
@@ -120,7 +151,7 @@ class CoordinateurEquipeTools:
     
     async def _executer_agent_2_evaluateur(self):
         """Agent 2: valuateur d'Utilit (GPT-4 Turbo)"""
-        from .agent_2_evaluateur_utilite import Agent2EvaluateurUtilite
+        from agent_2_evaluateur_utilite import Agent2EvaluateurUtilite
         
         agent = Agent2EvaluateurUtilite(
             analyse_structure=self.agents_results['agent_1'],
@@ -134,7 +165,7 @@ class CoordinateurEquipeTools:
     
     async def _executer_agent_3_adaptateur(self):
         """Agent 3: Adaptateur de Code (Claude Sonnet 4)"""
-        from .agent_3_adaptateur_code import Agent3AdaptateurCode
+        from agent_3_adaptateur_code import Agent3AdaptateurCode
         
         agent = Agent3AdaptateurCode(
             outils_selectionnes=self.agents_results['agent_2']['outils_utiles'],
@@ -152,7 +183,7 @@ class CoordinateurEquipeTools:
     
     async def _executer_agent_4_testeur(self):
         """Agent 4: Testeur d'Intgration (GPT-4 Turbo)"""
-        from .agent_4_testeur_integration import Agent4TesteurIntegration
+        from agent_4_testeur_integration import Agent4TesteurIntegration
         
         agent = Agent4TesteurIntegration(
             outils_adaptes=self.agents_results['agent_3']['outils_adaptes'],
@@ -167,7 +198,7 @@ class CoordinateurEquipeTools:
     
     async def _executer_agent_5_documenteur(self):
         """Agent 5: Documenteur (Gemini 2.0 Flash)"""
-        from .agent_5_documenteur import Agent5Documenteur
+        from agent_5_documenteur import Agent5Documenteur
         
         agent = Agent5Documenteur(
             outils_finalises=self.agents_results['agent_4']['outils_valides'],
@@ -182,7 +213,7 @@ class CoordinateurEquipeTools:
     
     async def _executer_agent_6_validateur(self):
         """Agent 6: Validateur Final (Claude Sonnet 4)"""
-        from .agent_6_validateur_final import Agent6ValidateurFinal
+        from agent_6_validateur_final import Agent6ValidateurFinal
         
         agent = Agent6ValidateurFinal(
             resultats_equipe=self.agents_results,
@@ -272,6 +303,11 @@ class CoordinateurEquipeTools:
             
         except subprocess.CalledProcessError as e:
             self.logger.error(f"[CROSS] Erreur commit/push: {e}")
+
+# Factory function pour compatibilité TemplateManager
+def create_coordinateurEquipeTools(**config):
+    """Factory function pour créer l'agent"""
+    return CoordinateurEquipeTools(**config)
 
 # Point d'entre
 if __name__ == "__main__":

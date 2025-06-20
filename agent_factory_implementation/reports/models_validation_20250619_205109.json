@@ -1,0 +1,96 @@
+{
+  "start_time": "2025-06-19T20:50:37.795140",
+  "config_validation": {
+    "error": "Sections manquantes: ['agent_models', 'model_providers']",
+    "file_exists": true
+  },
+  "ollama_validation": {
+    "connection_success": true,
+    "connection_time": 0.2752103805541992,
+    "total_models": 10,
+    "models_list": [
+      "mixtral:8x7b-instruct-v0.1-q3_k_m",
+      "nous-hermes-2-mistral-7b-dpo:latest",
+      "llama3:8b-instruct-q6_k",
+      "qwen2.5-coder:1.5b",
+      "starcoder2:3b",
+      "qwen-coder-32b:latest",
+      "code-stral:latest",
+      "deepseek-coder:33b",
+      "lux_model:latest",
+      "nomic-embed-text:latest"
+    ],
+    "required_models_available": 0,
+    "missing_required_models": [
+      "llama3.1:8b-instruct-q6_k",
+      "qwen-coder-32b",
+      "mixtral-8x7b"
+    ],
+    "generation_test": {
+      "success": true,
+      "model": "mixtral:8x7b-instruct-v0.1-q3_k_m",
+      "response_time": 30.24188995361328,
+      "tokens_per_sec": 2.9099715001359416,
+      "response_preview": "bonjour, je suis désolé, mais je suis un modele de langage et je ne peut répondre qu'avec les inform"
+    },
+    "gpu_monitoring": {
+      "gpu_device": "1",
+      "system_memory_percent": 70.4,
+      "available": true
+    }
+  },
+  "cloud_validation": {},
+  "fallback_validation": {},
+  "agent_test_results": {
+    "error": "Can't instantiate abstract class AgentTestModelsIntegration without an implementation for abstract method 'get_capabilities'"
+  },
+  "performance_metrics": {
+    "benchmark_tests": [
+      {
+        "test_type": "fast",
+        "prompt_length": 7,
+        "response_time": 0.0,
+        "expected_time": 10,
+        "within_expected": true,
+        "model_used": "gpt-3.5-turbo",
+        "provider": "openai",
+        "tokens": 100,
+        "tokens_per_sec": 0
+      },
+      {
+        "test_type": "general",
+        "prompt_length": 26,
+        "response_time": 0.0,
+        "expected_time": 20,
+        "within_expected": true,
+        "model_used": "claude-3-sonnet-20240229",
+        "provider": "anthropic",
+        "tokens": 100,
+        "tokens_per_sec": 0
+      },
+      {
+        "test_type": "code",
+        "prompt_length": 46,
+        "response_time": 0.0,
+        "expected_time": 30,
+        "within_expected": true,
+        "model_used": "claude-3-sonnet-20240229",
+        "provider": "anthropic",
+        "tokens": 100,
+        "tokens_per_sec": 0
+      }
+    ],
+    "total_tests": 3,
+    "successful_tests": 3,
+    "avg_response_time": 0.0,
+    "within_expected_count": 3,
+    "performance_score": 100.0
+  },
+  "recommendations": [
+    "⚠️ MOYEN - Problèmes à corriger avant production",
+    "📦 Télécharger modèles manquants: llama3.1:8b-instruct-q6_k, qwen-coder-32b, mixtral-8x7b"
+  ],
+  "final_score": 65,
+  "end_time": "2025-06-19T20:51:09.232510",
+  "total_duration": 31.43737
+}

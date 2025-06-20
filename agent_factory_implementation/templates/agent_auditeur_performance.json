@@ -1,0 +1,41 @@
+{
+  "name": "agent_auditeur_performance",
+  "version": "1.0.0",
+  "role": "specialist",
+  "domain": "performance_audit",
+  "capabilities": [
+    "performance_profiling",
+    "bottleneck_detection",
+    "resource_optimization",
+    "scalability_analysis",
+    "load_testing"
+  ],
+  "tools": [
+    "performance_profiler",
+    "memory_analyzer",
+    "cpu_monitor",
+    "network_analyzer",
+    "load_generator"
+  ],
+  "default_config": {
+    "timeout": 300,
+    "max_retries": 3,
+    "temperature": 0.2,
+    "model": "gpt-4",
+    "performance_baseline": 95,
+    "monitoring_duration": 300
+  },
+  "supervisor_route": "audit/performance",
+  "metadata": {
+    "author": "NextGeneration System",
+    "description": "Agent spécialisé dans l'audit de performance et l'optimisation des ressources",
+    "tags": ["performance", "optimization", "profiling", "scalability", "monitoring"],
+    "created_at": "2025-06-20T16:00:00Z",
+    "updated_at": "2025-06-20T16:00:00Z"
+  },
+  "hooks": {
+    "pre_process": "setup_performance_baseline",
+    "post_process": "generate_performance_report",
+    "on_error": "log_performance_audit_failure"
+  }
+} 

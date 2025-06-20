@@ -2,6 +2,11 @@
 # -*- coding: utf-8 -*-
 
 """
+
+# 🔧 CONVERTI AUTOMATIQUEMENT SYNC → ASYNC
+# Date: 2025-06-19 19h35 - Correction architecture Pattern Factory
+# Raison: Harmonisation async/sync avec core/agent_factory_architecture.py
+
 📊 AGENT 06 - MONITORING AVANCÉ - SPRINT 4 ÉVOLUTION
 Agent Factory Pattern - Observabilité Distribuée OpenTelemetry
 
@@ -821,7 +826,7 @@ def main():
         # Test trace distribuée
         print("\n🔍 TEST TRACE DISTRIBUÉE...")
         trace = agent.start_distributed_trace("test_template_creation")
-        time.sleep(0.05)  # Simulation travail
+        await asyncio.sleep(0.05)  # Simulation travail
         agent.finish_distributed_trace(trace, "completed", {"template_id": "test_123"})
         print(f"✅ Trace créée: {trace.trace_id[:8]} ({trace.duration_ms:.2f}ms)")
         

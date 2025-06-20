@@ -1,0 +1,25 @@
+# Dpendances pour les outils imports
+Orchestrator.master_handler_robust
+TTS.tts_manager
+TTS.utils_audio
+argparse
+asyncio
+collections
+config.security_config
+datetime
+numpy
+requests
+shutil
+sounddevice
+tempfile
+threading
+time
+torch
+traceback
+tts_handler
+typing
+urllib.parse
+utils.error_handler
+wave
+win32com.client
+yaml

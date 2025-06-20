@@ -179,7 +179,7 @@ Vous héritez d'un **projet en phase d'intégration avancée** :
 ### **🚀 OPPORTUNITÉS**
 - **Base solide** : MVP fonctionnel pour expérimentation
 - **Infrastructure ready** : K8s + monitoring pour déploiements
-- **Équipe experte** : 17 agents spécialisés disponibles
+- **Équipe experte** : 17 agents spécialisés disponibles (à faire distinction ceux crées par pattern factory de ceux crées avec l ancienne méthode)
 - **Standards élevés** : Qualité et performance validées
 
 ### **⚠️ POINTS D'ATTENTION**

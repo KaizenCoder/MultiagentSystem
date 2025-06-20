@@ -23,9 +23,25 @@ import re
 class Agent1AnalyseurStructure:
     """Agent spcialis dans l'analyse de structure des outils"""
     
-    def __init__(self, source_path: Path, workspace_path: Path):
-        self.source_path = source_path
-        self.workspace_path = workspace_path
+    def __init__(self, agent_id: str = None, agent_type: str = "analyzer", source_path=None, workspace_path=None, **config):
+        # Configuration TemplateManager
+        self.agent_id = agent_id or "agent_1_analyseur_structure"
+        self.agent_type = agent_type
+        self.config = config
+        
+        # Configuration spécifique - Rétrocompatibilité avec l'ancienne signature
+        if source_path is None:
+            source_path = config.get("source_path", ".")
+        if workspace_path is None:
+            workspace_path = config.get("workspace_path", ".")
+            
+        # Convertir en Path objects si nécessaire
+        self.source_path = Path(source_path) if not isinstance(source_path, Path) else source_path
+        self.workspace_path = Path(workspace_path) if not isinstance(workspace_path, Path) else workspace_path
+        self.timeout = config.get("timeout", 120)
+        self.max_depth = config.get("max_depth", 10)
+        
+        # Métadonnées agent
         self.agent_name = "Agent 1 - Analyseur Structure"
         self.model_name = "Claude Sonnet 4"
         self.start_time = None
@@ -35,6 +51,30 @@ class Agent1AnalyseurStructure:
         self.outils_detectes = []
         self.dependances_globales = set()
         self.metriques = {}
+        
+    async def startup(self):
+        """Démarrage de l'agent - Interface TemplateManager"""
+        print(f"🚀 Démarrage {self.agent_name} (ID: {self.agent_id})")
+        return {"status": "started", "agent_id": self.agent_id}
+    
+    async def shutdown(self):
+        """Arrêt de l'agent - Interface TemplateManager"""
+        print(f"🛑 Arrêt {self.agent_name} (ID: {self.agent_id})")
+        return {"status": "stopped", "agent_id": self.agent_id}
+    
+    async def health_check(self) -> Dict[str, Any]:
+        """Vérification de santé - Interface TemplateManager"""
+        return {
+            "status": "healthy",
+            "agent_id": self.agent_id,
+            "agent_type": self.agent_type,
+            "source_path_exists": self.source_path.exists(),
+            "workspace_path_exists": self.workspace_path.exists()
+        }
+    
+    async def execute_task(self, task_config: Dict = None) -> Dict[str, Any]:
+        """Exécuter la tâche principale - Interface TemplateManager"""
+        return await self.analyser_structure()
         
     async def analyser_structure(self) -> Dict[str, Any]:
         """Analyser la structure complte du rpertoire source"""
@@ -82,7 +122,10 @@ class Agent1AnalyseurStructure:
         
         for root, dirs, files in os.walk(self.source_path):
             root_path = Path(root)
-            relative_path = root_path.relative_to(self.source_path)
+            try:
+                relative_path = root_path.relative_to(self.source_path)
+            except ValueError:
+                continue
             
             # Analyser le rpertoire
             rep_info = {
@@ -139,6 +182,7 @@ class Agent1AnalyseurStructure:
                             contenu = f.read()
                         
                         # Analyser avec AST
+                        tree = None
                         try:
                             tree = ast.parse(contenu)
                             
@@ -161,7 +205,7 @@ class Agent1AnalyseurStructure:
                             "imports": imports,
                             "fonctions": fonctions,
                             "classes": classes,
-                            "docstring": self._extraire_docstring(tree),
+                            "docstring": self._extraire_docstring(tree) if tree else None,
                             "complexite": self._calculer_complexite(contenu),
                             "type_outil": self._detecter_type_outil(contenu, file)
                         }
@@ -432,6 +476,11 @@ class Agent1AnalyseurStructure:
         
         top_types = sorted(types_count.items(), key=lambda x: x[1], reverse=True)[:3]
         return ", ".join([f"{t}({c})" for t, c in top_types])
+
+# Factory function pour compatibilité TemplateManager
+def create_agent_1AnalyseurStructure(**config):
+    """Factory function pour créer l'agent"""
+    return Agent1AnalyseurStructure(**config)
 
 # Test autonome
 if __name__ == "__main__":

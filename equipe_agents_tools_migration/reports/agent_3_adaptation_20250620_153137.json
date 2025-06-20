@@ -1,0 +1,23 @@
+{
+  "agent": "Agent 3 - Adaptateur Code",
+  "model": "Claude Sonnet 4",
+  "timestamp": "2025-06-20T15:31:37.368770",
+  "duree_secondes": 0.002,
+  "status": "PARTIAL",
+  "statistiques": {
+    "outils_selectionnes": 1,
+    "outils_adaptes": 0,
+    "erreurs_adaptation": 1,
+    "fichiers_crees": 2,
+    "taux_succes": 0.0
+  },
+  "outils_adaptes": [],
+  "erreurs_adaptation": [
+    {
+      "outil": "test_tool.py",
+      "erreur": "[Errno 2] No such file or directory: 'C:\\\\Dev\\\\nextgeneration\\\\equipe_agents_tools_migration\\\\test_tool.py'"
+    }
+  ],
+  "tools_copied": 0,
+  "tools_adapted": 0
+}

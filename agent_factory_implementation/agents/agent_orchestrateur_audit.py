@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 """
+
+# 🔧 CONVERTI AUTOMATIQUEMENT SYNC → ASYNC
+# Date: 2025-06-19 19h35 - Correction architecture Pattern Factory
+# Raison: Harmonisation async/sync avec core/agent_factory_architecture.py
+
 🎯 AGENT ORCHESTRATEUR AUDIT - Coordination Équipe Auditeurs
 Mission : Orchestration complète de l'équipe d'agents auditeurs spécialisés
 

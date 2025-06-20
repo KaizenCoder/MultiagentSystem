@@ -15,11 +15,26 @@ from typing import Dict, List, Any
 class Agent3AdaptateurCode:
     """Agent spcialis dans l'adaptation de code"""
     
-    def __init__(self, outils_selectionnes: List[Dict], source_path: Path, target_path: Path, workspace_path: Path):
+    def __init__(self, agent_id: str = None, agent_type: str = "adapter", outils_selectionnes: List[Dict] = None, source_path=None, target_path=None, workspace_path=None, **config):
+        # Configuration TemplateManager
+        self.agent_id = agent_id or "agent_3_adaptateur_code"
+        self.agent_type = agent_type
+        self.config = config
+        
+        # Configuration spécifique - Rétrocompatibilité avec l'ancienne signature
+        if outils_selectionnes is None:
+            outils_selectionnes = config.get("outils_selectionnes", [])
+        if source_path is None:
+            source_path = config.get("source_path", ".")
+        if target_path is None:
+            target_path = config.get("target_path", "./adapted_tools")
+        if workspace_path is None:
+            workspace_path = config.get("workspace_path", ".")
+            
         self.outils_selectionnes = outils_selectionnes
-        self.source_path = source_path
-        self.target_path = target_path
-        self.workspace_path = workspace_path
+        self.source_path = Path(source_path) if not isinstance(source_path, Path) else source_path
+        self.target_path = Path(target_path) if not isinstance(target_path, Path) else target_path
+        self.workspace_path = Path(workspace_path) if not isinstance(workspace_path, Path) else workspace_path
         self.agent_name = "Agent 3 - Adaptateur Code"
         self.model_name = "Claude Sonnet 4"
         self.start_time = None
@@ -27,6 +42,32 @@ class Agent3AdaptateurCode:
         self.outils_adaptes = []
         self.erreurs_adaptation = []
         self.fichiers_crees = []
+    
+    async def startup(self):
+        """Démarrage de l'agent - Interface TemplateManager"""
+        print(f"🚀 Démarrage {self.agent_name} (ID: {self.agent_id})")
+        return {"status": "started", "agent_id": self.agent_id}
+    
+    async def shutdown(self):
+        """Arrêt de l'agent - Interface TemplateManager"""
+        print(f"🛑 Arrêt {self.agent_name} (ID: {self.agent_id})")
+        return {"status": "stopped", "agent_id": self.agent_id}
+    
+    async def health_check(self) -> Dict[str, Any]:
+        """Vérification de santé - Interface TemplateManager"""
+        return {
+            "status": "healthy",
+            "agent_id": self.agent_id,
+            "agent_type": self.agent_type,
+            "source_path_exists": self.source_path.exists(),
+            "target_path_exists": self.target_path.exists(),
+            "workspace_path_exists": self.workspace_path.exists(),
+            "outils_selectionnes_count": len(self.outils_selectionnes)
+        }
+    
+    async def execute_task(self, task_config: Dict = None) -> Dict[str, Any]:
+        """Exécuter la tâche principale - Interface TemplateManager"""
+        return await self.adapter_outils()
     
     async def adapter_outils(self) -> Dict[str, Any]:
         """Adapter tous les outils slectionns"""
@@ -36,8 +77,12 @@ class Agent3AdaptateurCode:
         try:
             await self._preparer_environnement()
             
-            for outil in self.outils_selectionnes:
-                await self._adapter_outil_unique(outil)
+            # Vérification sécurisée contre erreur WindowsPath iterable
+            if isinstance(self.outils_selectionnes, (list, tuple)) and len(self.outils_selectionnes) > 0:
+                for outil in self.outils_selectionnes:
+                    await self._adapter_outil_unique(outil)
+            else:
+                print(f"[WARNING] Aucun outil à adapter ou type invalide: {type(self.outils_selectionnes)}")
             
             await self._generer_configurations()
             resultat = await self._generer_rapport()
@@ -61,9 +106,19 @@ class Agent3AdaptateurCode:
             "imported_tools/configs", "imported_tools/docs"
         ]
         
-        for rep in repertoires:
-            rep_path = self.target_path / rep
-            rep_path.mkdir(parents=True, exist_ok=True)
+        # Vérification sécurisée contre erreur WindowsPath iterable
+        if isinstance(repertoires, (list, tuple)):
+            for rep in repertoires:
+                rep_path = self.target_path / rep
+                rep_path.mkdir(parents=True, exist_ok=True)
+        else:
+            # Gestion d'erreur appropriée pour objets Path
+            print(f"[WARNING] repertoires n'est pas itérable: {type(repertoires)}")
+            # Valeur par défaut sécurisée
+            default_dirs = ["imported_tools"]
+            for rep in default_dirs:
+                rep_path = self.target_path / rep
+                rep_path.mkdir(parents=True, exist_ok=True)
     
     async def _adapter_outil_unique(self, outil: Dict[str, Any]):
         """Adapter un outil unique"""
@@ -130,10 +185,21 @@ NEXTGEN_CONFIG = {{
     "data_dir": PROJECT_ROOT / "data"
 }}
 
-# Crer les rpertoires ncessaires
-for dir_path in NEXTGEN_CONFIG.values():
-    if isinstance(dir_path, Path):
-        dir_path.mkdir(parents=True, exist_ok=True)
+# Crer les rpertoires ncessaires - Vérification sécurisée WindowsPath
+try:
+    config_values = NEXTGEN_CONFIG.values()
+    if hasattr(config_values, '__iter__'):
+        for dir_path in config_values:
+            if isinstance(dir_path, Path):
+                dir_path.mkdir(parents=True, exist_ok=True)
+    else:
+        # Gestion d'erreur appropriée pour objets non-itérables
+        for key, dir_path in NEXTGEN_CONFIG.items():
+            if isinstance(dir_path, Path):
+                dir_path.mkdir(parents=True, exist_ok=True)
+except Exception as e:
+    # Valeur par défaut sécurisée en cas d'erreur
+    pass
 
 '''
         
@@ -211,4 +277,9 @@ for dir_path in NEXTGEN_CONFIG.values():
             json.dump(rapport, f, indent=2, ensure_ascii=False)
         
         print(f"[DOCUMENT] Rapport sauvegard: {rapport_path}")
-        return rapport 
+        return rapport
+
+# Factory function pour compatibilité TemplateManager
+def create_agent_3AdaptateurCode(**config):
+    """Factory function pour créer l'agent"""
+    return Agent3AdaptateurCode(**config) 

@@ -1,0 +1,17 @@
+{
+  "agent_id": "18",
+  "mission_status": "TERMINÉ",
+  "audits_effectués": 0,
+  "vulnérabilités_détectées": 0,
+  "niveau_sécurité_global": 0.0,
+  "conformité_owasp": {},
+  "recommandations_critiques": [],
+  "timestamp": "2025-06-20T16:39:07.953909",
+  "vulnérabilités_par_type": {},
+  "statistiques": {
+    "audits_réalisés": 0,
+    "fichiers_analysés": 0,
+    "score_sécurité_moyen": 0.0,
+    "vulnérabilités_critiques": 0
+  }
+}

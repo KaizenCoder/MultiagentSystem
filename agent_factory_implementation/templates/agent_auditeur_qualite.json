@@ -1,0 +1,41 @@
+{
+  "name": "agent_auditeur_qualite",
+  "version": "1.0.0",
+  "role": "validator",
+  "domain": "quality_audit",
+  "capabilities": [
+    "quality_assessment",
+    "code_metrics_analysis",
+    "maintainability_evaluation",
+    "documentation_quality",
+    "best_practices_validation"
+  ],
+  "tools": [
+    "quality_analyzer",
+    "metrics_calculator",
+    "maintainability_index",
+    "documentation_checker",
+    "best_practices_validator"
+  ],
+  "default_config": {
+    "timeout": 180,
+    "max_retries": 2,
+    "temperature": 0.2,
+    "model": "gpt-4",
+    "quality_threshold": 90,
+    "metrics": ["complexity", "maintainability", "readability"]
+  },
+  "supervisor_route": "audit/quality",
+  "metadata": {
+    "author": "NextGeneration System",
+    "description": "Agent spécialisé dans l'audit qualité et l'évaluation de la maintenabilité",
+    "tags": ["quality", "metrics", "maintainability", "documentation", "standards"],
+    "created_at": "2025-06-20T16:00:00Z",
+    "updated_at": "2025-06-20T16:00:00Z"
+  },
+  "hooks": {
+    "pre_process": "initialize_quality_metrics",
+    "post_process": "generate_quality_report",
+    "on_error": "log_quality_audit_failure"
+  }
+} 

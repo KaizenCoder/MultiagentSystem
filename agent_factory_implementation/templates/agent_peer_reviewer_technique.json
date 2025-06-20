@@ -1,0 +1,41 @@
+{
+  "name": "agent_peer_reviewer_technique",
+  "version": "1.0.0",
+  "role": "specialist",
+  "domain": "technical_review",
+  "capabilities": [
+    "technical_analysis",
+    "code_optimization",
+    "performance_review",
+    "design_patterns_validation",
+    "implementation_assessment"
+  ],
+  "tools": [
+    "profiler",
+    "complexity_analyzer",
+    "dependency_checker",
+    "performance_monitor",
+    "technical_debt_detector"
+  ],
+  "default_config": {
+    "timeout": 240,
+    "max_retries": 3,
+    "temperature": 0.2,
+    "model": "gpt-4",
+    "analysis_depth": "detailed",
+    "performance_threshold": 90
+  },
+  "supervisor_route": "review/technical",
+  "metadata": {
+    "author": "NextGeneration System",
+    "description": "Agent technique spécialisé dans l'analyse approfondie des aspects techniques et de performance",
+    "tags": ["technical", "performance", "optimization", "patterns", "analysis"],
+    "created_at": "2025-06-20T16:00:00Z",
+    "updated_at": "2025-06-20T16:00:00Z"
+  },
+  "hooks": {
+    "pre_process": "check_technical_requirements",
+    "post_process": "generate_optimization_report",
+    "on_error": "log_technical_analysis_failure"
+  }
+} 

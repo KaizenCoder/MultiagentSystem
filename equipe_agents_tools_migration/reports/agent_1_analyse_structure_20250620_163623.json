@@ -1,0 +1,2473 @@
+{
+  "agent": "Agent 1 - Analyseur Structure",
+  "model": "Claude Sonnet 4",
+  "timestamp": "2025-06-20T16:36:23.329182",
+  "duree_secondes": 0.072528,
+  "source_path": ".",
+  "status": "SUCCESS",
+  "structure_complete": {
+    "repertoires": {
+      ".": {
+        "path": ".",
+        "nombre_fichiers": 30,
+        "sous_repertoires": [
+          "adapted_tools",
+          "docs",
+          "logs",
+          "reports",
+          "templates",
+          "test_output_1",
+          "test_output_2",
+          "test_output_3",
+          "__pycache__"
+        ],
+        "fichiers": [
+          {
+            "nom": "agent_0_chef_equipe_coordinateur.py",
+            "extension": ".py",
+            "taille": 19296,
+            "modifie": "2025-06-20T15:33:02.260812"
+          },
+          {
+            "nom": "agent_1_analyseur_structure.py",
+            "extension": ".py",
+            "taille": 20962,
+            "modifie": "2025-06-20T14:44:02.939042"
+          },
+          {
+            "nom": "agent_2_evaluateur_utilite.py",
+            "extension": ".py",
+            "taille": 22622,
+            "modifie": "2025-06-20T15:21:30.796807"
+          },
+          {
+            "nom": "agent_3_adaptateur_code.py",
+            "extension": ".py",
+            "taille": 12113,
+            "modifie": "2025-06-20T15:30:52.992492"
+          },
+          {
+            "nom": "agent_4_testeur_integration.py",
+            "extension": ".py",
+            "taille": 12115,
+            "modifie": "2025-06-20T14:50:05.445716"
+          },
+          {
+            "nom": "agent_5_documenteur.py",
+            "extension": ".py",
+            "taille": 25810,
+            "modifie": "2025-06-20T14:54:36.841043"
+          },
+          {
+            "nom": "agent_6_validateur_final.py",
+            "extension": ".py",
+            "taille": 18195,
+            "modifie": "2025-06-20T14:53:21.551200"
+          },
+          {
+            "nom": "analyse_agents_enterprise.py",
+            "extension": ".py",
+            "taille": 2269,
+            "modifie": "2025-06-20T16:36:16.560127"
+          },
+          {
+            "nom": "application_recommandations_chef_equipe.py",
+            "extension": ".py",
+            "taille": 8823,
+            "modifie": "2025-06-20T15:15:47.508698"
+          },
+          {
+            "nom": "chef_equipe_pattern_factory.py",
+            "extension": ".py",
+            "taille": 23052,
+            "modifie": "2025-06-20T14:55:27.010777"
+          },
+          {
+            "nom": "coordinateur_equipe_tools.py",
+            "extension": ".py",
+            "taille": 13530,
+            "modifie": "2025-06-20T14:53:01.555568"
+          },
+          {
+            "nom": "correction_agent_2_delegation.py",
+            "extension": ".py",
+            "taille": 8083,
+            "modifie": "2025-06-20T15:17:39.652318"
+          },
+          {
+            "nom": "correction_agent_3_delegation.py",
+            "extension": ".py",
+            "taille": 5756,
+            "modifie": "2025-06-20T15:29:19.848045"
+          },
+          {
+            "nom": "DIAGNOSTIC_AGENT_AUDIT_COORDINATEUR.md",
+            "extension": ".md",
+            "taille": 9446,
+            "modifie": "2025-06-20T15:55:55.360415"
+          },
+          {
+            "nom": "DIAGNOSTIC_COMPLET_AGENTS_CDEV.md",
+            "extension": ".md",
+            "taille": 9591,
+            "modifie": "2025-06-20T16:20:13.968608"
+          },
+          {
+            "nom": "DIAGNOSTIC_COMPLET_AGENTS_CDEV_MISE_A_JOUR.md",
+            "extension": ".md",
+            "taille": 8455,
+            "modifie": "2025-06-20T16:23:47.895876"
+          },
+          {
+            "nom": "equipe_agents_tools_migration.zip",
+            "extension": ".zip",
+            "taille": 32885,
+            "modifie": "2025-06-20T14:10:32.281984"
+          },
+          {
+            "nom": "fix_pythonpath_all_agents.py",
+            "extension": ".py",
+            "taille": 3076,
+            "modifie": "2025-06-20T16:25:40.766653"
+          },
+          {
+            "nom": "maintenance_template_manager.py",
+            "extension": ".py",
+            "taille": 17796,
+            "modifie": "2025-06-20T14:42:51.079078"
+          },
+          {
+            "nom": "RAPPORT_ANALYSE_AGENT_FACTORY_IMPLEMENTATION.md",
+            "extension": ".md",
+            "taille": 7694,
+            "modifie": "2025-06-20T15:53:18.052296"
+          },
+          {
+            "nom": "rapport_validation_correction_agent_2.md",
+            "extension": ".md",
+            "taille": 3624,
+            "modifie": "2025-06-20T15:22:56.385058"
+          },
+          {
+            "nom": "relance_workflow_agents_cdev.py",
+            "extension": ".py",
+            "taille": 2125,
+            "modifie": "2025-06-20T16:14:53.079538"
+          },
+          {
+            "nom": "relance_workflow_agents_cdev_correct.py",
+            "extension": ".py",
+            "taille": 2849,
+            "modifie": "2025-06-20T16:17:37.050205"
+          },
+          {
+            "nom": "relance_workflow_agent_factory.py",
+            "extension": ".py",
+            "taille": 4334,
+            "modifie": "2025-06-20T15:50:08.566605"
+          },
+          {
+            "nom": "test_correction_agent_2.py",
+            "extension": ".py",
+            "taille": 5628,
+            "modifie": "2025-06-20T15:22:12.953291"
+          },
+          {
+            "nom": "test_correction_agent_3.py",
+            "extension": ".py",
+            "taille": 5274,
+            "modifie": "2025-06-20T15:31:29.358400"
+          },
+          {
+            "nom": "test_diagnostic_agents_factory.py",
+            "extension": ".py",
+            "taille": 18981,
+            "modifie": "2025-06-20T15:06:02.009783"
+          },
+          {
+            "nom": "test_diagnostic_delegation_chef_equipe.py",
+            "extension": ".py",
+            "taille": 7701,
+            "modifie": "2025-06-20T15:12:24.670851"
+          },
+          {
+            "nom": "test_equipe_maintenance_analysis.py",
+            "extension": ".py",
+            "taille": 11984,
+            "modifie": "2025-06-20T14:21:39.313404"
+          },
+          {
+            "nom": "test_maintenance_direct.py",
+            "extension": ".py",
+            "taille": 313,
+            "modifie": "2025-06-20T14:29:08.077281"
+          }
+        ]
+      },
+      "adapted_tools": {
+        "path": "adapted_tools",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [
+          "imported_tools"
+        ],
+        "fichiers": []
+      },
+      "adapted_tools\\imported_tools": {
+        "path": "adapted_tools\\imported_tools",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [
+          "automation",
+          "configs",
+          "conversion",
+          "docs",
+          "generation",
+          "monitoring",
+          "utilities"
+        ],
+        "fichiers": []
+      },
+      "adapted_tools\\imported_tools\\automation": {
+        "path": "adapted_tools\\imported_tools\\automation",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "adapted_tools\\imported_tools\\configs": {
+        "path": "adapted_tools\\imported_tools\\configs",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "adapted_tools\\imported_tools\\conversion": {
+        "path": "adapted_tools\\imported_tools\\conversion",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "adapted_tools\\imported_tools\\docs": {
+        "path": "adapted_tools\\imported_tools\\docs",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "adapted_tools\\imported_tools\\generation": {
+        "path": "adapted_tools\\imported_tools\\generation",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "adapted_tools\\imported_tools\\monitoring": {
+        "path": "adapted_tools\\imported_tools\\monitoring",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "adapted_tools\\imported_tools\\utilities": {
+        "path": "adapted_tools\\imported_tools\\utilities",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "docs": {
+        "path": "docs",
+        "nombre_fichiers": 2,
+        "sous_repertoires": [
+          "agents",
+          "guides",
+          "schemas"
+        ],
+        "fichiers": [
+          {
+            "nom": "INDEX.md",
+            "extension": ".md",
+            "taille": 3940,
+            "modifie": "2025-06-20T16:17:44.151612"
+          },
+          {
+            "nom": "README.md",
+            "extension": ".md",
+            "taille": 1674,
+            "modifie": "2025-06-20T16:17:44.150612"
+          }
+        ]
+      },
+      "docs\\agents": {
+        "path": "docs\\agents",
+        "nombre_fichiers": 36,
+        "sous_repertoires": [],
+        "fichiers": [
+          {
+            "nom": "agent_01_coordinateur_principal_documentation.md",
+            "extension": ".md",
+            "taille": 1424,
+            "modifie": "2025-06-20T16:17:44.121610"
+          },
+          {
+            "nom": "agent_02_architecte_code_expert_documentation.md",
+            "extension": ".md",
+            "taille": 1350,
+            "modifie": "2025-06-20T16:17:44.122608"
+          },
+          {
+            "nom": "agent_03_specialiste_configuration_documentation.md",
+            "extension": ".md",
+            "taille": 1541,
+            "modifie": "2025-06-20T16:17:44.123608"
+          },
+          {
+            "nom": "agent_04_expert_securite_crypto_documentation.md",
+            "extension": ".md",
+            "taille": 1290,
+            "modifie": "2025-06-20T16:17:44.124609"
+          },
+          {
+            "nom": "agent_05_maitre_tests_validation_documentation.md",
+            "extension": ".md",
+            "taille": 1364,
+            "modifie": "2025-06-20T16:17:44.125608"
+          },
+          {
+            "nom": "agent_06_specialiste_monitoring_sprint4_documentation.md",
+            "extension": ".md",
+            "taille": 1409,
+            "modifie": "2025-06-20T16:17:44.126609"
+          },
+          {
+            "nom": "agent_07_expert_deploiement_k8s_fixed_documentation.md",
+            "extension": ".md",
+            "taille": 1415,
+            "modifie": "2025-06-20T16:17:44.126609"
+          },
+          {
+            "nom": "agent_08_performance_optimizer_documentation.md",
+            "extension": ".md",
+            "taille": 1363,
+            "modifie": "2025-06-20T16:17:44.127608"
+          },
+          {
+            "nom": "agent_09_pattern_factory_version_documentation.md",
+            "extension": ".md",
+            "taille": 1314,
+            "modifie": "2025-06-20T16:17:44.128608"
+          },
+          {
+            "nom": "agent_09_specialiste_planes_documentation.md",
+            "extension": ".md",
+            "taille": 1565,
+            "modifie": "2025-06-20T16:17:44.129608"
+          },
+          {
+            "nom": "agent_10_documentaliste_expert_documentation.md",
+            "extension": ".md",
+            "taille": 1451,
+            "modifie": "2025-06-20T16:17:44.130609"
+          },
+          {
+            "nom": "agent_11_auditeur_qualite_documentation.md",
+            "extension": ".md",
+            "taille": 1451,
+            "modifie": "2025-06-20T16:17:44.130609"
+          },
+          {
+            "nom": "agent_11_auditeur_qualite_sprint3_documentation.md",
+            "extension": ".md",
+            "taille": 1350,
+            "modifie": "2025-06-20T16:17:44.131609"
+          },
+          {
+            "nom": "agent_12_backup_manager_documentation.md",
+            "extension": ".md",
+            "taille": 1333,
+            "modifie": "2025-06-20T16:17:44.132608"
+          },
+          {
+            "nom": "agent_13_specialiste_documentation_documentation.md",
+            "extension": ".md",
+            "taille": 1328,
+            "modifie": "2025-06-20T16:17:44.133608"
+          },
+          {
+            "nom": "agent_14_specialiste_workspace_documentation.md",
+            "extension": ".md",
+            "taille": 1231,
+            "modifie": "2025-06-20T16:17:44.133608"
+          },
+          {
+            "nom": "agent_15_testeur_specialise_documentation.md",
+            "extension": ".md",
+            "taille": 1265,
+            "modifie": "2025-06-20T16:17:44.134608"
+          },
+          {
+            "nom": "agent_16_peer_reviewer_senior_documentation.md",
+            "extension": ".md",
+            "taille": 1389,
+            "modifie": "2025-06-20T16:17:44.135609"
+          },
+          {
+            "nom": "agent_17_peer_reviewer_technique_documentation.md",
+            "extension": ".md",
+            "taille": 1378,
+            "modifie": "2025-06-20T16:17:44.136608"
+          },
+          {
+            "nom": "agent_18_auditeur_securite_documentation.md",
+            "extension": ".md",
+            "taille": 1385,
+            "modifie": "2025-06-20T16:17:44.136608"
+          },
+          {
+            "nom": "agent_19_auditeur_performance_documentation.md",
+            "extension": ".md",
+            "taille": 1337,
+            "modifie": "2025-06-20T16:17:44.137607"
+          },
+          {
+            "nom": "agent_20_auditeur_conformite_documentation.md",
+            "extension": ".md",
+            "taille": 1443,
+            "modifie": "2025-06-20T16:17:44.138609"
+          },
+          {
+            "nom": "agent_ARCHITECTURE_22_enterprise_consultant_documentation.md",
+            "extension": ".md",
+            "taille": 1552,
+            "modifie": "2025-06-20T16:17:44.138609"
+          },
+          {
+            "nom": "agent_config_documentation.md",
+            "extension": ".md",
+            "taille": 1425,
+            "modifie": "2025-06-20T16:17:44.139609"
+          },
+          {
+            "nom": "agent_FASTAPI_23_orchestration_enterprise_documentation.md",
+            "extension": ".md",
+            "taille": 1251,
+            "modifie": "2025-06-20T16:17:44.139609"
+          },
+          {
+            "nom": "agent_MAINTENANCE_01_analyseur_structure_documentation.md",
+            "extension": ".md",
+            "taille": 1273,
+            "modifie": "2025-06-20T16:17:44.140607"
+          },
+          {
+            "nom": "agent_MAINTENANCE_02_evaluateur_utilite_documentation.md",
+            "extension": ".md",
+            "taille": 1315,
+            "modifie": "2025-06-20T16:17:44.141608"
+          },
+          {
+            "nom": "agent_MAINTENANCE_03_adaptateur_code_documentation.md",
+            "extension": ".md",
+            "taille": 1309,
+            "modifie": "2025-06-20T16:17:44.142608"
+          },
+          {
+            "nom": "agent_MAINTENANCE_04_testeur_anti_faux_agents_documentation.md",
+            "extension": ".md",
+            "taille": 1328,
+            "modifie": "2025-06-20T16:17:44.143609"
+          },
+          {
+            "nom": "agent_meta_strategique_pattern_factory_documentation.md",
+            "extension": ".md",
+            "taille": 1364,
+            "modifie": "2025-06-20T16:17:44.143609"
+          },
+          {
+            "nom": "agent_meta_strategique_scheduler_documentation.md",
+            "extension": ".md",
+            "taille": 1360,
+            "modifie": "2025-06-20T16:17:44.144608"
+          },
+          {
+            "nom": "agent_MONITORING_25_production_enterprise_documentation.md",
+            "extension": ".md",
+            "taille": 1251,
+            "modifie": "2025-06-20T16:17:44.145608"
+          },
+          {
+            "nom": "agent_orchestrateur_audit_documentation.md",
+            "extension": ".md",
+            "taille": 1367,
+            "modifie": "2025-06-20T16:17:44.146611"
+          },
+          {
+            "nom": "agent_SECURITY_21_supply_chain_enterprise_documentation.md",
+            "extension": ".md",
+            "taille": 1528,
+            "modifie": "2025-06-20T16:17:44.146611"
+          },
+          {
+            "nom": "agent_STORAGE_24_enterprise_manager_documentation.md",
+            "extension": ".md",
+            "taille": 1511,
+            "modifie": "2025-06-20T16:17:44.147612"
+          },
+          {
+            "nom": "agent_test_models_integration_documentation.md",
+            "extension": ".md",
+            "taille": 1290,
+            "modifie": "2025-06-20T16:17:44.148613"
+          }
+        ]
+      },
+      "docs\\guides": {
+        "path": "docs\\guides",
+        "nombre_fichiers": 3,
+        "sous_repertoires": [],
+        "fichiers": [
+          {
+            "nom": "guide_demarrage.md",
+            "extension": ".md",
+            "taille": 1254,
+            "modifie": "2025-06-20T16:17:44.148613"
+          },
+          {
+            "nom": "guide_maintenance.md",
+            "extension": ".md",
+            "taille": 1242,
+            "modifie": "2025-06-20T16:17:44.149612"
+          },
+          {
+            "nom": "guide_troubleshooting.md",
+            "extension": ".md",
+            "taille": 1652,
+            "modifie": "2025-06-20T16:17:44.149612"
+          }
+        ]
+      },
+      "docs\\schemas": {
+        "path": "docs\\schemas",
+        "nombre_fichiers": 1,
+        "sous_repertoires": [],
+        "fichiers": [
+          {
+            "nom": "architecture.md",
+            "extension": ".md",
+            "taille": 1759,
+            "modifie": "2025-06-20T16:17:44.150612"
+          }
+        ]
+      },
+      "logs": {
+        "path": "logs",
+        "nombre_fichiers": 1,
+        "sous_repertoires": [],
+        "fichiers": [
+          {
+            "nom": "coordinateur_tools.log",
+            "extension": ".log",
+            "taille": 4953,
+            "modifie": "2025-06-19T20:33:11.915253"
+          }
+        ]
+      },
+      "reports": {
+        "path": "reports",
+        "nombre_fichiers": 65,
+        "sous_repertoires": [],
+        "fichiers": [
+          {
+            "nom": "agent_1_analyse_structure_20250619_202248.json",
+            "extension": ".json",
+            "taille": 77306,
+            "modifie": "2025-06-19T20:22:48.567850"
+          },
+          {
+            "nom": "agent_1_analyse_structure_20250619_202924.json",
+            "extension": ".json",
+            "taille": 77306,
+            "modifie": "2025-06-19T20:29:24.790444"
+          },
+          {
+            "nom": "agent_1_analyse_structure_20250619_203311.json",
+            "extension": ".json",
+            "taille": 77305,
+            "modifie": "2025-06-19T20:33:11.641108"
+          },
+          {
+            "nom": "agent_1_analyse_structure_20250619_205023.json",
+            "extension": ".json",
+            "taille": 133574,
+            "modifie": "2025-06-19T20:50:23.516009"
+          },
+          {
+            "nom": "agent_1_analyse_structure_20250619_205127.json",
+            "extension": ".json",
+            "taille": 133574,
+            "modifie": "2025-06-19T20:51:27.066483"
+          },
+          {
+            "nom": "agent_1_analyse_structure_20250619_205517.json",
+            "extension": ".json",
+            "taille": 133696,
+            "modifie": "2025-06-19T20:55:17.317623"
+          },
+          {
+            "nom": "agent_1_analyse_structure_20250620_150610.json",
+            "extension": ".json",
+            "taille": 39935,
+            "modifie": "2025-06-20T15:06:10.451981"
+          },
+          {
+            "nom": "agent_1_analyse_structure_20250620_151233.json",
+            "extension": ".json",
+            "taille": 51908,
+            "modifie": "2025-06-20T15:12:33.745796"
+          },
+          {
+            "nom": "agent_1_analyse_structure_20250620_151555.json",
+            "extension": ".json",
+            "taille": 54064,
+            "modifie": "2025-06-20T15:15:55.336192"
+          },
+          {
+            "nom": "agent_1_analyse_structure_20250620_151748.json",
+            "extension": ".json",
+            "taille": 56155,
+            "modifie": "2025-06-20T15:17:48.375597"
+          },
+          {
+            "nom": "agent_1_analyse_structure_20250620_152839.json",
+            "extension": ".json",
+            "taille": 57869,
+            "modifie": "2025-06-20T15:28:39.594473"
+          },
+          {
+            "nom": "agent_1_analyse_structure_20250620_153144.json",
+            "extension": ".json",
+            "taille": 69688,
+            "modifie": "2025-06-20T15:31:44.219403"
+          },
+          {
+            "nom": "agent_1_analyse_structure_20250620_153229.json",
+            "extension": ".json",
+            "taille": 70117,
+            "modifie": "2025-06-20T15:32:29.375679"
+          },
+          {
+            "nom": "agent_1_analyse_structure_20250620_153306.json",
+            "extension": ".json",
+            "taille": 70752,
+            "modifie": "2025-06-20T15:33:06.522445"
+          },
+          {
+            "nom": "agent_1_analyse_structure_20250620_155015.json",
+            "extension": ".json",
+            "taille": 72782,
+            "modifie": "2025-06-20T15:50:15.532230"
+          },
+          {
+            "nom": "agent_1_analyse_structure_20250620_161500.json",
+            "extension": ".json",
+            "taille": 75155,
+            "modifie": "2025-06-20T16:15:00.017263"
+          },
+          {
+            "nom": "agent_1_analyse_structure_20250620_161744.json",
+            "extension": ".json",
+            "taille": 77150,
+            "modifie": "2025-06-20T16:17:44.112608"
+          },
+          {
+            "nom": "agent_2_evaluation_utilite_20250619_202253.json",
+            "extension": ".json",
+            "taille": 3374,
+            "modifie": "2025-06-19T20:22:53.064005"
+          },
+          {
+            "nom": "agent_2_evaluation_utilite_20250619_202924.json",
+            "extension": ".json",
+            "taille": 66744,
+            "modifie": "2025-06-19T20:29:24.798451"
+          },
+          {
+            "nom": "agent_2_evaluation_utilite_20250619_203311.json",
+            "extension": ".json",
+            "taille": 66741,
+            "modifie": "2025-06-19T20:33:11.644116"
+          },
+          {
+            "nom": "agent_2_evaluation_utilite_20250619_205127.json",
+            "extension": ".json",
+            "taille": 94555,
+            "modifie": "2025-06-19T20:51:27.073483"
+          },
+          {
+            "nom": "agent_2_evaluation_utilite_20250619_205517.json",
+            "extension": ".json",
+            "taille": 94609,
+            "modifie": "2025-06-19T20:55:17.322481"
+          },
+          {
+            "nom": "agent_2_evaluation_utilite_20250620_150610.json",
+            "extension": ".json",
+            "taille": 843,
+            "modifie": "2025-06-20T15:06:10.455980"
+          },
+          {
+            "nom": "agent_2_evaluation_utilite_20250620_151233.json",
+            "extension": ".json",
+            "taille": 843,
+            "modifie": "2025-06-20T15:12:33.748797"
+          },
+          {
+            "nom": "agent_2_evaluation_utilite_20250620_151555.json",
+            "extension": ".json",
+            "taille": 843,
+            "modifie": "2025-06-20T15:15:55.338191"
+          },
+          {
+            "nom": "agent_2_evaluation_utilite_20250620_151748.json",
+            "extension": ".json",
+            "taille": 848,
+            "modifie": "2025-06-20T15:17:48.377591"
+          },
+          {
+            "nom": "agent_2_evaluation_utilite_20250620_152220.json",
+            "extension": ".json",
+            "taille": 6160,
+            "modifie": "2025-06-20T15:22:20.897535"
+          },
+          {
+            "nom": "agent_2_evaluation_utilite_20250620_152839.json",
+            "extension": ".json",
+            "taille": 848,
+            "modifie": "2025-06-20T15:28:39.596473"
+          },
+          {
+            "nom": "agent_2_evaluation_utilite_20250620_153144.json",
+            "extension": ".json",
+            "taille": 843,
+            "modifie": "2025-06-20T15:31:44.221404"
+          },
+          {
+            "nom": "agent_2_evaluation_utilite_20250620_153229.json",
+            "extension": ".json",
+            "taille": 848,
+            "modifie": "2025-06-20T15:32:29.377679"
+          },
+          {
+            "nom": "agent_2_evaluation_utilite_20250620_153306.json",
+            "extension": ".json",
+            "taille": 848,
+            "modifie": "2025-06-20T15:33:06.524437"
+          },
+          {
+            "nom": "agent_2_evaluation_utilite_20250620_155015.json",
+            "extension": ".json",
+            "taille": 848,
+            "modifie": "2025-06-20T15:50:15.539229"
+          },
+          {
+            "nom": "agent_2_evaluation_utilite_20250620_161500.json",
+            "extension": ".json",
+            "taille": 843,
+            "modifie": "2025-06-20T16:15:00.020263"
+          },
+          {
+            "nom": "agent_2_evaluation_utilite_20250620_161744.json",
+            "extension": ".json",
+            "taille": 843,
+            "modifie": "2025-06-20T16:17:44.114609"
+          },
+          {
+            "nom": "agent_3_adaptation_20250619_202924.json",
+            "extension": ".json",
+            "taille": 1509,
+            "modifie": "2025-06-19T20:29:24.807456"
+          },
+          {
+            "nom": "agent_3_adaptation_20250619_203311.json",
+            "extension": ".json",
+            "taille": 1509,
+            "modifie": "2025-06-19T20:33:11.650109"
+          },
+          {
+            "nom": "agent_3_adaptation_20250619_205517.json",
+            "extension": ".json",
+            "taille": 437,
+            "modifie": "2025-06-19T20:55:17.330482"
+          },
+          {
+            "nom": "agent_3_adaptation_20250620_153137.json",
+            "extension": ".json",
+            "taille": 621,
+            "modifie": "2025-06-20T15:31:37.370770"
+          },
+          {
+            "nom": "agent_3_adaptation_20250620_153229.json",
+            "extension": ".json",
+            "taille": 434,
+            "modifie": "2025-06-20T15:32:29.380681"
+          },
+          {
+            "nom": "agent_3_adaptation_20250620_153306.json",
+            "extension": ".json",
+            "taille": 437,
+            "modifie": "2025-06-20T15:33:06.527445"
+          },
+          {
+            "nom": "agent_3_adaptation_20250620_155015.json",
+            "extension": ".json",
+            "taille": 437,
+            "modifie": "2025-06-20T15:50:15.544229"
+          },
+          {
+            "nom": "agent_3_adaptation_20250620_161500.json",
+            "extension": ".json",
+            "taille": 437,
+            "modifie": "2025-06-20T16:15:00.026264"
+          },
+          {
+            "nom": "agent_3_adaptation_20250620_161744.json",
+            "extension": ".json",
+            "taille": 434,
+            "modifie": "2025-06-20T16:17:44.117608"
+          },
+          {
+            "nom": "agent_4_tests_20250619_202924.json",
+            "extension": ".json",
+            "taille": 610,
+            "modifie": "2025-06-19T20:29:24.810456"
+          },
+          {
+            "nom": "agent_4_tests_20250619_203311.json",
+            "extension": ".json",
+            "taille": 605,
+            "modifie": "2025-06-19T20:33:11.652109"
+          },
+          {
+            "nom": "agent_4_tests_20250619_205517.json",
+            "extension": ".json",
+            "taille": 610,
+            "modifie": "2025-06-19T20:55:17.332496"
+          },
+          {
+            "nom": "agent_4_tests_20250620_150610.json",
+            "extension": ".json",
+            "taille": 603,
+            "modifie": "2025-06-20T15:06:10.457980"
+          },
+          {
+            "nom": "agent_4_tests_20250620_153306.json",
+            "extension": ".json",
+            "taille": 605,
+            "modifie": "2025-06-20T15:33:06.530438"
+          },
+          {
+            "nom": "agent_4_tests_20250620_155015.json",
+            "extension": ".json",
+            "taille": 605,
+            "modifie": "2025-06-20T15:50:15.547229"
+          },
+          {
+            "nom": "agent_4_tests_20250620_161500.json",
+            "extension": ".json",
+            "taille": 610,
+            "modifie": "2025-06-20T16:15:00.028262"
+          },
+          {
+            "nom": "agent_4_tests_20250620_161744.json",
+            "extension": ".json",
+            "taille": 607,
+            "modifie": "2025-06-20T16:17:44.119609"
+          },
+          {
+            "nom": "agent_5_documentation_20250619_202924.json",
+            "extension": ".json",
+            "taille": 574,
+            "modifie": "2025-06-19T20:29:24.815190"
+          },
+          {
+            "nom": "agent_5_documentation_20250619_203311.json",
+            "extension": ".json",
+            "taille": 574,
+            "modifie": "2025-06-19T20:33:11.654109"
+          },
+          {
+            "nom": "agent_5_documentation_20250620_150610.json",
+            "extension": ".json",
+            "taille": 34484,
+            "modifie": "2025-06-20T15:06:10.500493"
+          },
+          {
+            "nom": "agent_5_documentation_20250620_153306.json",
+            "extension": ".json",
+            "taille": 5567,
+            "modifie": "2025-06-20T15:33:06.561949"
+          },
+          {
+            "nom": "agent_5_documentation_20250620_155015.json",
+            "extension": ".json",
+            "taille": 5580,
+            "modifie": "2025-06-20T15:50:15.580744"
+          },
+          {
+            "nom": "agent_5_documentation_20250620_161500.json",
+            "extension": ".json",
+            "taille": 5544,
+            "modifie": "2025-06-20T16:15:00.061263"
+          },
+          {
+            "nom": "agent_5_documentation_20250620_161744.json",
+            "extension": ".json",
+            "taille": 5544,
+            "modifie": "2025-06-20T16:17:44.152612"
+          },
+          {
+            "nom": "agent_6_validation_finale_20250619_203304.json",
+            "extension": ".json",
+            "taille": 1599,
+            "modifie": "2025-06-19T20:33:04.565866"
+          },
+          {
+            "nom": "agent_6_validation_finale_20250619_203311.json",
+            "extension": ".json",
+            "taille": 3813,
+            "modifie": "2025-06-19T20:33:11.910256"
+          },
+          {
+            "nom": "agent_6_validation_finale_20250619_205517.json",
+            "extension": ".json",
+            "taille": 3371,
+            "modifie": "2025-06-19T20:55:17.674684"
+          },
+          {
+            "nom": "agent_6_validation_finale_20250620_150613.json",
+            "extension": ".json",
+            "taille": 1309,
+            "modifie": "2025-06-20T15:06:13.477596"
+          },
+          {
+            "nom": "chef_equipe_maintenance_complete_20250619_205517.json",
+            "extension": ".json",
+            "taille": 270084,
+            "modifie": "2025-06-19T20:55:17.679683"
+          },
+          {
+            "nom": "diagnostic_agents_factory_20250620_150614.json",
+            "extension": ".json",
+            "taille": 185618,
+            "modifie": "2025-06-20T15:06:14.030194"
+          },
+          {
+            "nom": "rapport_mission_tools_20250619_203311.json",
+            "extension": ".json",
+            "taille": 169674,
+            "modifie": "2025-06-19T20:33:11.914262"
+          }
+        ]
+      },
+      "templates": {
+        "path": "templates",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [
+          "maintenance"
+        ],
+        "fichiers": []
+      },
+      "templates\\maintenance": {
+        "path": "templates\\maintenance",
+        "nombre_fichiers": 7,
+        "sous_repertoires": [],
+        "fichiers": [
+          {
+            "nom": "agent_0_chef_equipe_coordinateur.json",
+            "extension": ".json",
+            "taille": 2162,
+            "modifie": "2025-06-20T14:11:23.105860"
+          },
+          {
+            "nom": "agent_1_analyseur_structure.json",
+            "extension": ".json",
+            "taille": 2194,
+            "modifie": "2025-06-20T14:11:44.533637"
+          },
+          {
+            "nom": "agent_2_evaluateur_utilite.json",
+            "extension": ".json",
+            "taille": 2438,
+            "modifie": "2025-06-20T14:12:12.570035"
+          },
+          {
+            "nom": "agent_3_adaptateur_code.json",
+            "extension": ".json",
+            "taille": 2479,
+            "modifie": "2025-06-20T14:12:40.635966"
+          },
+          {
+            "nom": "agent_4_testeur_integration.json",
+            "extension": ".json",
+            "taille": 2617,
+            "modifie": "2025-06-20T14:13:11.820623"
+          },
+          {
+            "nom": "agent_5_documenteur.json",
+            "extension": ".json",
+            "taille": 2664,
+            "modifie": "2025-06-20T14:13:42.004357"
+          },
+          {
+            "nom": "agent_6_validateur_final.json",
+            "extension": ".json",
+            "taille": 3192,
+            "modifie": "2025-06-20T14:14:12.898712"
+          }
+        ]
+      },
+      "test_output_1": {
+        "path": "test_output_1",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [
+          "imported_tools"
+        ],
+        "fichiers": []
+      },
+      "test_output_1\\imported_tools": {
+        "path": "test_output_1\\imported_tools",
+        "nombre_fichiers": 1,
+        "sous_repertoires": [
+          "automation",
+          "configs",
+          "conversion",
+          "docs",
+          "generation",
+          "monitoring",
+          "utilities"
+        ],
+        "fichiers": [
+          {
+            "nom": "requirements.txt",
+            "extension": ".txt",
+            "taille": 38,
+            "modifie": "2025-06-20T15:31:37.363772"
+          }
+        ]
+      },
+      "test_output_1\\imported_tools\\automation": {
+        "path": "test_output_1\\imported_tools\\automation",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "test_output_1\\imported_tools\\configs": {
+        "path": "test_output_1\\imported_tools\\configs",
+        "nombre_fichiers": 1,
+        "sous_repertoires": [],
+        "fichiers": [
+          {
+            "nom": "config.json",
+            "extension": ".json",
+            "taille": 167,
+            "modifie": "2025-06-20T15:31:37.363772"
+          }
+        ]
+      },
+      "test_output_1\\imported_tools\\conversion": {
+        "path": "test_output_1\\imported_tools\\conversion",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "test_output_1\\imported_tools\\docs": {
+        "path": "test_output_1\\imported_tools\\docs",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "test_output_1\\imported_tools\\generation": {
+        "path": "test_output_1\\imported_tools\\generation",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "test_output_1\\imported_tools\\monitoring": {
+        "path": "test_output_1\\imported_tools\\monitoring",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "test_output_1\\imported_tools\\utilities": {
+        "path": "test_output_1\\imported_tools\\utilities",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "test_output_2": {
+        "path": "test_output_2",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [
+          "imported_tools"
+        ],
+        "fichiers": []
+      },
+      "test_output_2\\imported_tools": {
+        "path": "test_output_2\\imported_tools",
+        "nombre_fichiers": 1,
+        "sous_repertoires": [
+          "automation",
+          "configs",
+          "conversion",
+          "docs",
+          "generation",
+          "monitoring",
+          "utilities"
+        ],
+        "fichiers": [
+          {
+            "nom": "requirements.txt",
+            "extension": ".txt",
+            "taille": 38,
+            "modifie": "2025-06-20T15:31:37.367771"
+          }
+        ]
+      },
+      "test_output_2\\imported_tools\\automation": {
+        "path": "test_output_2\\imported_tools\\automation",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "test_output_2\\imported_tools\\configs": {
+        "path": "test_output_2\\imported_tools\\configs",
+        "nombre_fichiers": 1,
+        "sous_repertoires": [],
+        "fichiers": [
+          {
+            "nom": "config.json",
+            "extension": ".json",
+            "taille": 167,
+            "modifie": "2025-06-20T15:31:37.367771"
+          }
+        ]
+      },
+      "test_output_2\\imported_tools\\conversion": {
+        "path": "test_output_2\\imported_tools\\conversion",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "test_output_2\\imported_tools\\docs": {
+        "path": "test_output_2\\imported_tools\\docs",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "test_output_2\\imported_tools\\generation": {
+        "path": "test_output_2\\imported_tools\\generation",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "test_output_2\\imported_tools\\monitoring": {
+        "path": "test_output_2\\imported_tools\\monitoring",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "test_output_2\\imported_tools\\utilities": {
+        "path": "test_output_2\\imported_tools\\utilities",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "test_output_3": {
+        "path": "test_output_3",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [
+          "imported_tools"
+        ],
+        "fichiers": []
+      },
+      "test_output_3\\imported_tools": {
+        "path": "test_output_3\\imported_tools",
+        "nombre_fichiers": 1,
+        "sous_repertoires": [
+          "automation",
+          "configs",
+          "conversion",
+          "docs",
+          "generation",
+          "monitoring",
+          "utilities"
+        ],
+        "fichiers": [
+          {
+            "nom": "requirements.txt",
+            "extension": ".txt",
+            "taille": 38,
+            "modifie": "2025-06-20T15:31:37.370770"
+          }
+        ]
+      },
+      "test_output_3\\imported_tools\\automation": {
+        "path": "test_output_3\\imported_tools\\automation",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "test_output_3\\imported_tools\\configs": {
+        "path": "test_output_3\\imported_tools\\configs",
+        "nombre_fichiers": 1,
+        "sous_repertoires": [],
+        "fichiers": [
+          {
+            "nom": "config.json",
+            "extension": ".json",
+            "taille": 167,
+            "modifie": "2025-06-20T15:31:37.370770"
+          }
+        ]
+      },
+      "test_output_3\\imported_tools\\conversion": {
+        "path": "test_output_3\\imported_tools\\conversion",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "test_output_3\\imported_tools\\docs": {
+        "path": "test_output_3\\imported_tools\\docs",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "test_output_3\\imported_tools\\generation": {
+        "path": "test_output_3\\imported_tools\\generation",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "test_output_3\\imported_tools\\monitoring": {
+        "path": "test_output_3\\imported_tools\\monitoring",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "test_output_3\\imported_tools\\utilities": {
+        "path": "test_output_3\\imported_tools\\utilities",
+        "nombre_fichiers": 0,
+        "sous_repertoires": [],
+        "fichiers": []
+      },
+      "__pycache__": {
+        "path": "__pycache__",
+        "nombre_fichiers": 11,
+        "sous_repertoires": [],
+        "fichiers": [
+          {
+            "nom": "agent_0_chef_equipe_coordinateur.cpython-312.pyc",
+            "extension": ".pyc",
+            "taille": 22669,
+            "modifie": "2025-06-20T15:50:15.431718"
+          },
+          {
+            "nom": "agent_1_analyseur_structure.cpython-312.pyc",
+            "extension": ".pyc",
+            "taille": 27328,
+            "modifie": "2025-06-20T14:44:52.861032"
+          },
+          {
+            "nom": "agent_1_analyseur_structure_adapted.cpython-312.pyc",
+            "extension": ".pyc",
+            "taille": 22332,
+            "modifie": "2025-06-20T14:39:29.716514"
+          },
+          {
+            "nom": "agent_2_evaluateur_utilite.cpython-312.pyc",
+            "extension": ".pyc",
+            "taille": 25107,
+            "modifie": "2025-06-20T15:22:20.887534"
+          },
+          {
+            "nom": "agent_3_adaptateur_code.cpython-312.pyc",
+            "extension": ".pyc",
+            "taille": 14897,
+            "modifie": "2025-06-20T15:31:37.356772"
+          },
+          {
+            "nom": "agent_4_testeur_integration.cpython-312.pyc",
+            "extension": ".pyc",
+            "taille": 14202,
+            "modifie": "2025-06-20T14:53:48.306819"
+          },
+          {
+            "nom": "agent_5_documenteur.cpython-312.pyc",
+            "extension": ".pyc",
+            "taille": 33247,
+            "modifie": "2025-06-20T14:55:33.348405"
+          },
+          {
+            "nom": "agent_6_validateur_final.cpython-312.pyc",
+            "extension": ".pyc",
+            "taille": 21156,
+            "modifie": "2025-06-20T14:53:48.331328"
+          },
+          {
+            "nom": "chef_equipe_pattern_factory.cpython-312.pyc",
+            "extension": ".pyc",
+            "taille": 24753,
+            "modifie": "2025-06-20T14:55:33.359406"
+          },
+          {
+            "nom": "coordinateur_equipe_tools.cpython-312.pyc",
+            "extension": ".pyc",
+            "taille": 18411,
+            "modifie": "2025-06-20T14:53:48.355837"
+          },
+          {
+            "nom": "maintenance_template_manager.cpython-312.pyc",
+            "extension": ".pyc",
+            "taille": 22986,
+            "modifie": "2025-06-20T14:44:52.845013"
+          }
+        ]
+      }
+    },
+    "fichiers_par_type": {
+      ".py": 24,
+      ".md": 47,
+      ".zip": 1,
+      ".log": 1,
+      ".json": 75,
+      ".txt": 3,
+      ".pyc": 11
+    },
+    "taille_totale": 3050067,
+    "nombre_fichiers": 162
+  },
+  "fichiers_python": [
+    {
+      "path": "agent_0_chef_equipe_coordinateur.py",
+      "nom": "agent_0_chef_equipe_coordinateur.py",
+      "taille": 18568,
+      "lignes": 435,
+      "imports": [
+        "asyncio",
+        "json",
+        "logging",
+        "datetime",
+        "pathlib",
+        "typing",
+        "sys",
+        "agent_1_analyseur_structure",
+        "agent_2_evaluateur_utilite",
+        "agent_3_adaptateur_code",
+        "agent_4_testeur_integration",
+        "agent_5_documenteur",
+        "agent_6_validateur_final"
+      ],
+      "fonctions": [
+        "create_agent_0ChefEquipeCoordinateur",
+        "create_agent_0_chef_equipe_coordinateur",
+        "__init__",
+        "get_capabilities",
+        "_generer_recommandations_finales",
+        "_generer_actions_suivantes"
+      ],
+      "classes": [
+        "Agent0ChefEquipeCoordinateur"
+      ],
+      "docstring": "\n🎖️ Agent 0 - Chef d'Équipe Coordinateur\nModèle: Claude Sonnet 4 \nMission: Orchestration centrale de l'équipe de maintenance\nÉquipe: NextGeneration Tools Migration\n\nStandardisation Pattern Factory:\n- Nomenclature agent_0_chef_equipe_coordinateur.py\n- Coordination des agents 1-6\n- Interface unique pour toutes les tâches\n- Workflows automatisés et rapports consolidés\n",
+      "complexite": {
+        "lignes_totales": 435,
+        "lignes_code": 332,
+        "lignes_commentaires": 31,
+        "lignes_vides": 72,
+        "indentation_max": 20
+      },
+      "type_outil": "cli_tool"
+    },
+    {
+      "path": "agent_1_analyseur_structure.py",
+      "nom": "agent_1_analyseur_structure.py",
+      "taille": 20446,
+      "lignes": 495,
+      "imports": [
+        "asyncio",
+        "json",
+        "os",
+        "subprocess",
+        "datetime",
+        "pathlib",
+        "typing",
+        "ast",
+        "re"
+      ],
+      "fonctions": [
+        "create_agent_1AnalyseurStructure",
+        "__init__",
+        "_extraire_imports",
+        "_extraire_fonctions",
+        "_extraire_classes",
+        "_extraire_docstring",
+        "_calculer_complexite",
+        "_detecter_type_outil",
+        "_calculer_score_utilite",
+        "_est_dependance_connue",
+        "_get_top_tool_types"
+      ],
+      "classes": [
+        "Agent1AnalyseurStructure"
+      ],
+      "docstring": "\n[SEARCH] Agent 1: Analyseur de Structure - Claude Sonnet 4\nMission: Analyser la structure complte des outils SuperWhisper_V6\nResponsabilits:\n- Scanner tous les rpertoires et fichiers\n- Identifier les types d'outils\n- Analyser les dpendances\n- valuer la complexit\n- Gnrer une cartographie dtaille\n",
+      "complexite": {
+        "lignes_totales": 495,
+        "lignes_code": 375,
+        "lignes_commentaires": 32,
+        "lignes_vides": 88,
+        "indentation_max": 28
+      },
+      "type_outil": "web_api"
+    },
+    {
+      "path": "agent_2_evaluateur_utilite.py",
+      "nom": "agent_2_evaluateur_utilite.py",
+      "taille": 22055,
+      "lignes": 535,
+      "imports": [
+        "asyncio",
+        "json",
+        "datetime",
+        "pathlib",
+        "typing"
+      ],
+      "fonctions": [
+        "create_agent_2EvaluateurUtilite",
+        "__init__",
+        "_calculer_pertinence_technique",
+        "_calculer_compatibilite_architecture",
+        "_calculer_valeur_ajoutee",
+        "_calculer_facilite_integration",
+        "_calculer_score_maintenance",
+        "_generer_recommandation_outil",
+        "_generer_justification",
+        "_identifier_adaptations"
+      ],
+      "classes": [
+        "Agent2EvaluateurUtilite"
+      ],
+      "docstring": "\n[TARGET] Agent 2: valuateur d'Utilit - GPT-4 Turbo\nMission: valuer l'utilit des outils dtects pour le projet NextGeneration\nResponsabilits:\n- Analyser la pertinence de chaque outil\n- valuer la compatibilit avec NextGeneration\n- Prioriser les outils par valeur ajoute\n- Identifier les conflits potentiels\n- Gnrer une liste filtre d'outils utiles\n",
+      "complexite": {
+        "lignes_totales": 535,
+        "lignes_code": 383,
+        "lignes_commentaires": 53,
+        "lignes_vides": 99,
+        "indentation_max": 24
+      },
+      "type_outil": "web_api"
+    },
+    {
+      "path": "agent_3_adaptateur_code.py",
+      "nom": "agent_3_adaptateur_code.py",
+      "taille": 11790,
+      "lignes": 285,
+      "imports": [
+        "asyncio",
+        "json",
+        "shutil",
+        "re",
+        "datetime",
+        "pathlib",
+        "typing"
+      ],
+      "fonctions": [
+        "create_agent_3AdaptateurCode",
+        "__init__"
+      ],
+      "classes": [
+        "Agent3AdaptateurCode"
+      ],
+      "docstring": "\n[TOOL] Agent 3: Adaptateur de Code - Claude Sonnet 4\nMission: Adapter le code des outils slectionns pour NextGeneration\n",
+      "complexite": {
+        "lignes_totales": 285,
+        "lignes_code": 217,
+        "lignes_commentaires": 19,
+        "lignes_vides": 49,
+        "indentation_max": 20
+      },
+      "type_outil": "automation"
+    },
+    {
+      "path": "agent_4_testeur_integration.py",
+      "nom": "agent_4_testeur_integration.py",
+      "taille": 11813,
+      "lignes": 284,
+      "imports": [
+        "asyncio",
+        "json",
+        "subprocess",
+        "sys",
+        "datetime",
+        "pathlib",
+        "typing"
+      ],
+      "fonctions": [
+        "create_agent_4TesteurIntegration",
+        "__init__"
+      ],
+      "classes": [
+        "Agent4TesteurIntegration"
+      ],
+      "docstring": "\n Agent 4: Testeur d'Intgration - GPT-4 Turbo\nMission: Tester l'intgration des outils adapts dans NextGeneration\n",
+      "complexite": {
+        "lignes_totales": 284,
+        "lignes_code": 222,
+        "lignes_commentaires": 12,
+        "lignes_vides": 50,
+        "indentation_max": 31
+      },
+      "type_outil": "test_script"
+    },
+    {
+      "path": "agent_5_documenteur.py",
+      "nom": "agent_5_documenteur.py",
+      "taille": 24547,
+      "lignes": 781,
+      "imports": [
+        "asyncio",
+        "json",
+        "logging",
+        "datetime",
+        "pathlib",
+        "typing"
+      ],
+      "fonctions": [
+        "create_agent_5Documenteur",
+        "create_agent_5_documenteur",
+        "__init__",
+        "_extraire_info_agent",
+        "_generer_doc_agent",
+        "_creer_guide_demarrage",
+        "_creer_guide_maintenance",
+        "_creer_guide_troubleshooting"
+      ],
+      "classes": [
+        "Agent5Documenteur"
+      ],
+      "docstring": "\nAgent 5 - Documenteur\nModèle: Gemini 2.0 Flash\nMission: Documentation complète des outils et agents\nÉquipe: NextGeneration Tools Migration\n",
+      "complexite": {
+        "lignes_totales": 781,
+        "lignes_code": 473,
+        "lignes_commentaires": 119,
+        "lignes_vides": 189,
+        "indentation_max": 20
+      },
+      "type_outil": "utility"
+    },
+    {
+      "path": "agent_6_validateur_final.py",
+      "nom": "agent_6_validateur_final.py",
+      "taille": 17627,
+      "lignes": 401,
+      "imports": [
+        "asyncio",
+        "json",
+        "logging",
+        "datetime",
+        "pathlib",
+        "typing",
+        "subprocess"
+      ],
+      "fonctions": [
+        "create_agent_6ValidateurFinal",
+        "__init__",
+        "_resumer_resultats_equipe"
+      ],
+      "classes": [
+        "Agent6ValidateurFinal"
+      ],
+      "docstring": "\nAgent 6 - Validateur Final\nModèle: Claude Sonnet 4\nMission: Validation finale de la mission d'intégration des outils\nÉquipe: NextGeneration Tools Migration\n",
+      "complexite": {
+        "lignes_totales": 401,
+        "lignes_code": 296,
+        "lignes_commentaires": 31,
+        "lignes_vides": 74,
+        "indentation_max": 24
+      },
+      "type_outil": "test_script"
+    },
+    {
+      "path": "analyse_agents_enterprise.py",
+      "nom": "analyse_agents_enterprise.py",
+      "taille": 2160,
+      "lignes": 68,
+      "imports": [
+        "sys",
+        "time",
+        "asyncio",
+        "pathlib",
+        "agent_0_chef_equipe_coordinateur"
+      ],
+      "fonctions": [],
+      "classes": [],
+      "docstring": "\n🎖️ ANALYSE ÉQUIPE MAINTENANCE - AGENTS ENTERPRISE\nMission: Analyser les 4 agents enterprise sans les modifier\n",
+      "complexite": {
+        "lignes_totales": 68,
+        "lignes_code": 49,
+        "lignes_commentaires": 5,
+        "lignes_vides": 14,
+        "indentation_max": 8
+      },
+      "type_outil": "web_api"
+    },
+    {
+      "path": "application_recommandations_chef_equipe.py",
+      "nom": "application_recommandations_chef_equipe.py",
+      "taille": 8441,
+      "lignes": 194,
+      "imports": [
+        "asyncio",
+        "sys",
+        "pathlib",
+        "datetime",
+        "agent_0_chef_equipe_coordinateur"
+      ],
+      "fonctions": [
+        "__init__"
+      ],
+      "classes": [
+        "ApplicationRecommandations"
+      ],
+      "docstring": "\n🎯 APPLICATION DES RECOMMANDATIONS DU CHEF D'ÉQUIPE\nDélégation des actions correctives suite au diagnostic\nMODE DÉLÉGATION - Le chef d'équipe coordonne les corrections\n",
+      "complexite": {
+        "lignes_totales": 194,
+        "lignes_code": 158,
+        "lignes_commentaires": 9,
+        "lignes_vides": 27,
+        "indentation_max": 28
+      },
+      "type_outil": "utility"
+    },
+    {
+      "path": "chef_equipe_pattern_factory.py",
+      "nom": "chef_equipe_pattern_factory.py",
+      "taille": 22240,
+      "lignes": 494,
+      "imports": [
+        "asyncio",
+        "json",
+        "logging",
+        "datetime",
+        "pathlib",
+        "typing",
+        "sys",
+        "maintenance_template_manager"
+      ],
+      "fonctions": [
+        "create_chefEquipePatternFactory",
+        "create_chef_equipe_pattern_factory",
+        "__init__",
+        "_generer_recommandations_pattern_factory",
+        "_generer_actions_pattern_factory"
+      ],
+      "classes": [
+        "ChefEquipePatternFactory"
+      ],
+      "docstring": "\n🎖️ Chef d'Équipe Pattern Factory - NextGeneration Maintenance\nMission: Orchestration d'équipe via Pattern Factory\nArchitecture: Pattern Factory NextGeneration\n\nFonctionnalités:\n- Création d'agents via TemplateManager\n- Orchestration complète selon Pattern Factory\n- Workflows standardisés\n- Monitoring et métriques avancées\n",
+      "complexite": {
+        "lignes_totales": 494,
+        "lignes_code": 376,
+        "lignes_commentaires": 40,
+        "lignes_vides": 78,
+        "indentation_max": 20
+      },
+      "type_outil": "utility"
+    },
+    {
+      "path": "coordinateur_equipe_tools.py",
+      "nom": "coordinateur_equipe_tools.py",
+      "taille": 13194,
+      "lignes": 318,
+      "imports": [
+        "asyncio",
+        "json",
+        "logging",
+        "time",
+        "datetime",
+        "pathlib",
+        "typing",
+        "subprocess",
+        "shutil",
+        "os",
+        "agent_1_analyseur_structure",
+        "agent_2_evaluateur_utilite",
+        "agent_3_adaptateur_code",
+        "agent_4_testeur_integration",
+        "agent_5_documenteur",
+        "agent_6_validateur_final"
+      ],
+      "fonctions": [
+        "create_coordinateurEquipeTools",
+        "__init__",
+        "_mission_reussie",
+        "_generer_recommendations"
+      ],
+      "classes": [
+        "CoordinateurEquipeTools"
+      ],
+      "docstring": "\n[TARGET] Coordinateur quipe Tools Migration - NextGeneration\nMission: Analyser, copier et adapter les outils de SuperWhisper_V6 vers NextGeneration\n\nquipe d'agents spcialiss:\n- Agent 1: Analyseur de Structure (Claude Sonnet 4)\n- Agent 2: valuateur d'Utilit (GPT-4 Turbo)\n- Agent 3: Adaptateur de Code (Claude Sonnet 4)\n- Agent 4: Testeur d'Intgration (GPT-4 Turbo)\n- Agent 5: Documenteur (Gemini 2.0 Flash)\n- Agent 6: Validateur Final (Claude Sonnet 4)\n\nDate: 18 juin 2025\nModles: Cloud uniquement (Claude, GPT-4, Gemini)\n",
+      "complexite": {
+        "lignes_totales": 318,
+        "lignes_code": 232,
+        "lignes_commentaires": 20,
+        "lignes_vides": 66,
+        "indentation_max": 16
+      },
+      "type_outil": "utility"
+    },
+    {
+      "path": "correction_agent_2_delegation.py",
+      "nom": "correction_agent_2_delegation.py",
+      "taille": 7689,
+      "lignes": 174,
+      "imports": [
+        "asyncio",
+        "sys",
+        "pathlib",
+        "agent_0_chef_equipe_coordinateur"
+      ],
+      "fonctions": [
+        "__init__"
+      ],
+      "classes": [
+        "CorrectionAgent2"
+      ],
+      "docstring": "\n🔧 CORRECTION AGENT 2 - DÉLÉGATION AU CHEF D'ÉQUIPE\nMission spécifique : Corriger l'erreur \"division by zero\" dans l'Agent 2\nMODE DÉLÉGATION - Le chef d'équipe supervise la correction\n",
+      "complexite": {
+        "lignes_totales": 174,
+        "lignes_code": 137,
+        "lignes_commentaires": 8,
+        "lignes_vides": 29,
+        "indentation_max": 28
+      },
+      "type_outil": "utility"
+    },
+    {
+      "path": "correction_agent_3_delegation.py",
+      "nom": "correction_agent_3_delegation.py",
+      "taille": 5501,
+      "lignes": 139,
+      "imports": [
+        "asyncio",
+        "sys",
+        "pathlib",
+        "agent_0_chef_equipe_coordinateur"
+      ],
+      "fonctions": [],
+      "classes": [],
+      "docstring": "\nDélégation Correction Agent 3 - WindowsPath Error\nTransmission des instructions au chef d'équipe selon le pattern établi\n",
+      "complexite": {
+        "lignes_totales": 139,
+        "lignes_code": 111,
+        "lignes_commentaires": 6,
+        "lignes_vides": 22,
+        "indentation_max": 20
+      },
+      "type_outil": "utility"
+    },
+    {
+      "path": "fix_pythonpath_all_agents.py",
+      "nom": "fix_pythonpath_all_agents.py",
+      "taille": 2922,
+      "lignes": 93,
+      "imports": [
+        "os",
+        "sys",
+        "pathlib",
+        "re"
+      ],
+      "fonctions": [
+        "fix_pythonpath_in_agent",
+        "main"
+      ],
+      "classes": [],
+      "docstring": "\n🔧 CORRECTEUR AUTOMATIQUE - PYTHONPATH pour tous les agents\nMission: Corriger le PYTHONPATH dans tous les agents de C:\\Dev\u0007gents\n",
+      "complexite": {
+        "lignes_totales": 93,
+        "lignes_code": 67,
+        "lignes_commentaires": 7,
+        "lignes_vides": 19,
+        "indentation_max": 20
+      },
+      "type_outil": "utility"
+    },
+    {
+      "path": "maintenance_template_manager.py",
+      "nom": "maintenance_template_manager.py",
+      "taille": 17230,
+      "lignes": 425,
+      "imports": [
+        "asyncio",
+        "json",
+        "logging",
+        "datetime",
+        "pathlib",
+        "typing",
+        "importlib.util",
+        "dataclasses"
+      ],
+      "fonctions": [
+        "create_maintenance_template_manager",
+        "__init__",
+        "from_file",
+        "from_name",
+        "validate",
+        "create_agent_config",
+        "__init__",
+        "list_templates",
+        "get_template",
+        "get_metrics",
+        "health_check"
+      ],
+      "classes": [
+        "MaintenanceFactoryConfig",
+        "MaintenanceAgentTemplate",
+        "MaintenanceTemplateManager",
+        "TemplateError",
+        "TemplateNotFoundError",
+        "TemplateLoadError",
+        "TemplateValidationError",
+        "AgentCreationError"
+      ],
+      "docstring": "\n🏭 Maintenance Template Manager - Pattern Factory\nMission: Gestionnaire de templates pour l'équipe d'agents de maintenance\nArchitecture: Pattern Factory NextGeneration\n\nFonctionnalités:\n- Gestion des templates JSON de maintenance\n- Création d'agents via factory\n- Cache intelligent et performance\n- Validation et monitoring\n",
+      "complexite": {
+        "lignes_totales": 425,
+        "lignes_code": 319,
+        "lignes_commentaires": 30,
+        "lignes_vides": 76,
+        "indentation_max": 28
+      },
+      "type_outil": "utility"
+    },
+    {
+      "path": "relance_workflow_agents_cdev.py",
+      "nom": "relance_workflow_agents_cdev.py",
+      "taille": 2014,
+      "lignes": 63,
+      "imports": [
+        "asyncio",
+        "sys",
+        "pathlib",
+        "agent_0_chef_equipe_coordinateur",
+        "traceback"
+      ],
+      "fonctions": [],
+      "classes": [],
+      "docstring": "\n🎖️ Relance Workflow - Analyse C:\\Dev\u0007gents\nMission: Analyser tous les agents dans C:\\Dev\u0007gents\n",
+      "complexite": {
+        "lignes_totales": 63,
+        "lignes_code": 43,
+        "lignes_commentaires": 7,
+        "lignes_vides": 13,
+        "indentation_max": 8
+      },
+      "type_outil": "utility"
+    },
+    {
+      "path": "relance_workflow_agents_cdev_correct.py",
+      "nom": "relance_workflow_agents_cdev_correct.py",
+      "taille": 2686,
+      "lignes": 78,
+      "imports": [
+        "asyncio",
+        "sys",
+        "pathlib",
+        "agent_0_chef_equipe_coordinateur",
+        "traceback"
+      ],
+      "fonctions": [],
+      "classes": [],
+      "docstring": "\n🎖️ Relance Workflow - Analyse C:\\Dev\u0007gents (CORRIGÉ)\nMission: Analyser tous les 39 agents dans C:\\Dev\u0007gents\n",
+      "complexite": {
+        "lignes_totales": 78,
+        "lignes_code": 55,
+        "lignes_commentaires": 7,
+        "lignes_vides": 16,
+        "indentation_max": 16
+      },
+      "type_outil": "utility"
+    },
+    {
+      "path": "relance_workflow_agent_factory.py",
+      "nom": "relance_workflow_agent_factory.py",
+      "taille": 4100,
+      "lignes": 110,
+      "imports": [
+        "asyncio",
+        "sys",
+        "pathlib",
+        "agent_0_chef_equipe_coordinateur",
+        "traceback"
+      ],
+      "fonctions": [],
+      "classes": [],
+      "docstring": "\n🎖️ Relance Workflow - Analyse Agent Factory Implementation\nMission: Analyser les agents dans C:\\Dev\nextgeneration\u0007gent_factory_implementation\n",
+      "complexite": {
+        "lignes_totales": 110,
+        "lignes_code": 77,
+        "lignes_commentaires": 12,
+        "lignes_vides": 21,
+        "indentation_max": 16
+      },
+      "type_outil": "utility"
+    },
+    {
+      "path": "test_correction_agent_2.py",
+      "nom": "test_correction_agent_2.py",
+      "taille": 5343,
+      "lignes": 141,
+      "imports": [
+        "asyncio",
+        "sys",
+        "pathlib",
+        "agent_2_evaluateur_utilite"
+      ],
+      "fonctions": [],
+      "classes": [],
+      "docstring": "\nTest de validation de la correction Agent 2\nPhase Validation selon les instructions du chef d'équipe\n",
+      "complexite": {
+        "lignes_totales": 141,
+        "lignes_code": 117,
+        "lignes_commentaires": 7,
+        "lignes_vides": 17,
+        "indentation_max": 16
+      },
+      "type_outil": "test_script"
+    },
+    {
+      "path": "test_correction_agent_3.py",
+      "nom": "test_correction_agent_3.py",
+      "taille": 5016,
+      "lignes": 125,
+      "imports": [
+        "asyncio",
+        "sys",
+        "pathlib",
+        "agent_3_adaptateur_code"
+      ],
+      "fonctions": [],
+      "classes": [],
+      "docstring": "\nTest de validation de la correction Agent 3\nPhase Validation selon les instructions du chef d'équipe\n",
+      "complexite": {
+        "lignes_totales": 125,
+        "lignes_code": 103,
+        "lignes_commentaires": 7,
+        "lignes_vides": 15,
+        "indentation_max": 12
+      },
+      "type_outil": "test_script"
+    },
+    {
+      "path": "test_diagnostic_agents_factory.py",
+      "nom": "test_diagnostic_agents_factory.py",
+      "taille": 18259,
+      "lignes": 419,
+      "imports": [
+        "asyncio",
+        "sys",
+        "pathlib",
+        "datetime",
+        "json",
+        "maintenance_template_manager"
+      ],
+      "fonctions": [],
+      "classes": [],
+      "docstring": "\nTest de Diagnostic des Agents - Agent Factory Implementation\nAnalyse complète des agents présents dans C:\\Dev\nextgeneration\u0007gent_factory_implementation\nMODE DIAGNOSTIC UNIQUEMENT - AUCUNE MODIFICATION AUTORISÉE\n",
+      "complexite": {
+        "lignes_totales": 419,
+        "lignes_code": 311,
+        "lignes_commentaires": 32,
+        "lignes_vides": 76,
+        "indentation_max": 24
+      },
+      "type_outil": "test_script"
+    },
+    {
+      "path": "test_diagnostic_delegation_chef_equipe.py",
+      "nom": "test_diagnostic_delegation_chef_equipe.py",
+      "taille": 7358,
+      "lignes": 170,
+      "imports": [
+        "asyncio",
+        "sys",
+        "pathlib",
+        "datetime",
+        "agent_0_chef_equipe_coordinateur"
+      ],
+      "fonctions": [
+        "__init__"
+      ],
+      "classes": [
+        "DelegationDiagnostic"
+      ],
+      "docstring": "\n🎯 DÉLÉGATION DIAGNOSTIC AU CHEF D'ÉQUIPE DE MAINTENANCE\nInstructions de diagnostic pour le répertoire agent_factory_implementation\nMODE DÉLÉGATION - Le chef d'équipe coordonne l'analyse\n",
+      "complexite": {
+        "lignes_totales": 170,
+        "lignes_code": 136,
+        "lignes_commentaires": 10,
+        "lignes_vides": 24,
+        "indentation_max": 20
+      },
+      "type_outil": "utility"
+    },
+    {
+      "path": "test_equipe_maintenance_analysis.py",
+      "nom": "test_equipe_maintenance_analysis.py",
+      "taille": 11546,
+      "lignes": 258,
+      "imports": [
+        "asyncio",
+        "json",
+        "logging",
+        "datetime",
+        "pathlib",
+        "typing",
+        "sys",
+        "maintenance_template_manager",
+        "chef_equipe_pattern_factory"
+      ],
+      "fonctions": [
+        "__init__"
+      ],
+      "classes": [
+        "TestEquipeMaintenanceAnalysis"
+      ],
+      "docstring": "\n🧪 Test Équipe de Maintenance - Analyse Seule\nMission: Tester l'équipe de maintenance sur le répertoire agents\nMode: ANALYSE SEULE - Pas de corrections\n",
+      "complexite": {
+        "lignes_totales": 258,
+        "lignes_code": 194,
+        "lignes_commentaires": 19,
+        "lignes_vides": 45,
+        "indentation_max": 24
+      },
+      "type_outil": "cli_tool"
+    },
+    {
+      "path": "test_maintenance_direct.py",
+      "nom": "test_maintenance_direct.py",
+      "taille": 308,
+      "lignes": 9,
+      "imports": [
+        "sys",
+        "agent_MAINTENANCE_01_analyseur_structure"
+      ],
+      "fonctions": [],
+      "classes": [],
+      "docstring": null,
+      "complexite": {
+        "lignes_totales": 9,
+        "lignes_code": 7,
+        "lignes_commentaires": 0,
+        "lignes_vides": 2,
+        "indentation_max": 0
+      },
+      "type_outil": "utility"
+    }
+  ],
+  "outils_detectes": [
+    {
+      "nom": "maintenance_template_manager.py",
+      "path": "maintenance_template_manager.py",
+      "type": "utility",
+      "description": "\n🏭 Maintenance Template Manager - Pattern Factory\nMission: Gestionnaire de templates pour l'équipe d'agents de maintenance\nArchitecture: Pattern Factory NextGeneration\n\nFonctionnalités:\n- Gestion des templates JSON de maintenance\n- Création d'agents via factory\n- Cache intelligent et performance\n- Validation et monitoring\n",
+      "complexite": 319,
+      "dependances": [
+        "asyncio",
+        "json",
+        "logging",
+        "datetime",
+        "pathlib",
+        "typing",
+        "importlib.util",
+        "dataclasses"
+      ],
+      "fonctions_principales": [
+        "create_maintenance_template_manager",
+        "__init__",
+        "from_file",
+        "from_name",
+        "validate"
+      ],
+      "score_utilite": 45
+    },
+    {
+      "nom": "agent_0_chef_equipe_coordinateur.py",
+      "path": "agent_0_chef_equipe_coordinateur.py",
+      "type": "cli_tool",
+      "description": "\n🎖️ Agent 0 - Chef d'Équipe Coordinateur\nModèle: Claude Sonnet 4 \nMission: Orchestration centrale de l'équipe de maintenance\nÉquipe: NextGeneration Tools Migration\n\nStandardisation Pattern Factory:\n- Nomenclature agent_0_chef_equipe_coordinateur.py\n- Coordination des agents 1-6\n- Interface unique pour toutes les tâches\n- Workflows automatisés et rapports consolidés\n",
+      "complexite": 332,
+      "dependances": [
+        "asyncio",
+        "json",
+        "logging",
+        "datetime",
+        "pathlib",
+        "typing",
+        "sys",
+        "agent_1_analyseur_structure",
+        "agent_2_evaluateur_utilite",
+        "agent_3_adaptateur_code",
+        "agent_4_testeur_integration",
+        "agent_5_documenteur",
+        "agent_6_validateur_final"
+      ],
+      "fonctions_principales": [
+        "create_agent_0ChefEquipeCoordinateur",
+        "create_agent_0_chef_equipe_coordinateur",
+        "__init__",
+        "get_capabilities",
+        "_generer_recommandations_finales"
+      ],
+      "score_utilite": 42
+    },
+    {
+      "nom": "agent_1_analyseur_structure.py",
+      "path": "agent_1_analyseur_structure.py",
+      "type": "web_api",
+      "description": "\n[SEARCH] Agent 1: Analyseur de Structure - Claude Sonnet 4\nMission: Analyser la structure complte des outils SuperWhisper_V6\nResponsabilits:\n- Scanner tous les rpertoires et fichiers\n- Identifier les types d'outils\n- Analyser les dpendances\n- valuer la complexit\n- Gnrer une cartographie dtaille\n",
+      "complexite": 375,
+      "dependances": [
+        "asyncio",
+        "json",
+        "os",
+        "subprocess",
+        "datetime",
+        "pathlib",
+        "typing",
+        "ast",
+        "re"
+      ],
+      "fonctions_principales": [
+        "create_agent_1AnalyseurStructure",
+        "__init__",
+        "_extraire_imports",
+        "_extraire_fonctions",
+        "_extraire_classes"
+      ],
+      "score_utilite": 41
+    },
+    {
+      "nom": "agent_2_evaluateur_utilite.py",
+      "path": "agent_2_evaluateur_utilite.py",
+      "type": "web_api",
+      "description": "\n[TARGET] Agent 2: valuateur d'Utilit - GPT-4 Turbo\nMission: valuer l'utilit des outils dtects pour le projet NextGeneration\nResponsabilits:\n- Analyser la pertinence de chaque outil\n- valuer la compatibilit avec NextGeneration\n- Prioriser les outils par valeur ajoute\n- Identifier les conflits potentiels\n- Gnrer une liste filtre d'outils utiles\n",
+      "complexite": 383,
+      "dependances": [
+        "asyncio",
+        "json",
+        "datetime",
+        "pathlib",
+        "typing"
+      ],
+      "fonctions_principales": [
+        "create_agent_2EvaluateurUtilite",
+        "__init__",
+        "_calculer_pertinence_technique",
+        "_calculer_compatibilite_architecture",
+        "_calculer_valeur_ajoutee"
+      ],
+      "score_utilite": 41
+    },
+    {
+      "nom": "agent_5_documenteur.py",
+      "path": "agent_5_documenteur.py",
+      "type": "utility",
+      "description": "\nAgent 5 - Documenteur\nModèle: Gemini 2.0 Flash\nMission: Documentation complète des outils et agents\nÉquipe: NextGeneration Tools Migration\n",
+      "complexite": 473,
+      "dependances": [
+        "asyncio",
+        "json",
+        "logging",
+        "datetime",
+        "pathlib",
+        "typing"
+      ],
+      "fonctions_principales": [
+        "create_agent_5Documenteur",
+        "create_agent_5_documenteur",
+        "__init__",
+        "_extraire_info_agent",
+        "_generer_doc_agent"
+      ],
+      "score_utilite": 41
+    },
+    {
+      "nom": "chef_equipe_pattern_factory.py",
+      "path": "chef_equipe_pattern_factory.py",
+      "type": "utility",
+      "description": "\n🎖️ Chef d'Équipe Pattern Factory - NextGeneration Maintenance\nMission: Orchestration d'équipe via Pattern Factory\nArchitecture: Pattern Factory NextGeneration\n\nFonctionnalités:\n- Création d'agents via TemplateManager\n- Orchestration complète selon Pattern Factory\n- Workflows standardisés\n- Monitoring et métriques avancées\n",
+      "complexite": 376,
+      "dependances": [
+        "asyncio",
+        "json",
+        "logging",
+        "datetime",
+        "pathlib",
+        "typing",
+        "sys",
+        "maintenance_template_manager"
+      ],
+      "fonctions_principales": [
+        "create_chefEquipePatternFactory",
+        "create_chef_equipe_pattern_factory",
+        "__init__",
+        "_generer_recommandations_pattern_factory",
+        "_generer_actions_pattern_factory"
+      ],
+      "score_utilite": 35
+    },
+    {
+      "nom": "coordinateur_equipe_tools.py",
+      "path": "coordinateur_equipe_tools.py",
+      "type": "utility",
+      "description": "\n[TARGET] Coordinateur quipe Tools Migration - NextGeneration\nMission: Analyser, copier et adapter les outils de SuperWhisper_V6 vers NextGeneration\n\nquipe d'agents spcialiss:\n- Agent 1: Analyseur de Structure (Claude Sonnet 4)\n- Agent 2: valuateur d'Utilit (GPT-4 Turbo)\n- Agent 3: Adaptateur de Code (Claude Sonnet 4)\n- Agent 4: Testeur d'Intgration (GPT-4 Turbo)\n- Agent 5: Documenteur (Gemini 2.0 Flash)\n- Agent 6: Validateur Final (Claude Sonnet 4)\n\nDate: 18 juin 2025\nModles: Cloud uniquement (Claude, GPT-4, Gemini)\n",
+      "complexite": 232,
+      "dependances": [
+        "asyncio",
+        "json",
+        "logging",
+        "time",
+        "datetime",
+        "pathlib",
+        "typing",
+        "subprocess",
+        "shutil",
+        "os",
+        "agent_1_analyseur_structure",
+        "agent_2_evaluateur_utilite",
+        "agent_3_adaptateur_code",
+        "agent_4_testeur_integration",
+        "agent_5_documenteur",
+        "agent_6_validateur_final"
+      ],
+      "fonctions_principales": [
+        "create_coordinateurEquipeTools",
+        "__init__",
+        "_mission_reussie",
+        "_generer_recommendations"
+      ],
+      "score_utilite": 33
+    },
+    {
+      "nom": "test_equipe_maintenance_analysis.py",
+      "path": "test_equipe_maintenance_analysis.py",
+      "type": "cli_tool",
+      "description": "\n🧪 Test Équipe de Maintenance - Analyse Seule\nMission: Tester l'équipe de maintenance sur le répertoire agents\nMode: ANALYSE SEULE - Pas de corrections\n",
+      "complexite": 194,
+      "dependances": [
+        "asyncio",
+        "json",
+        "logging",
+        "datetime",
+        "pathlib",
+        "typing",
+        "sys",
+        "maintenance_template_manager",
+        "chef_equipe_pattern_factory"
+      ],
+      "fonctions_principales": [
+        "__init__"
+      ],
+      "score_utilite": 32
+    },
+    {
+      "nom": "agent_3_adaptateur_code.py",
+      "path": "agent_3_adaptateur_code.py",
+      "type": "automation",
+      "description": "\n[TOOL] Agent 3: Adaptateur de Code - Claude Sonnet 4\nMission: Adapter le code des outils slectionns pour NextGeneration\n",
+      "complexite": 217,
+      "dependances": [
+        "asyncio",
+        "json",
+        "shutil",
+        "re",
+        "datetime",
+        "pathlib",
+        "typing"
+      ],
+      "fonctions_principales": [
+        "create_agent_3AdaptateurCode",
+        "__init__"
+      ],
+      "score_utilite": 31
+    },
+    {
+      "nom": "fix_pythonpath_all_agents.py",
+      "path": "fix_pythonpath_all_agents.py",
+      "type": "utility",
+      "description": "\n🔧 CORRECTEUR AUTOMATIQUE - PYTHONPATH pour tous les agents\nMission: Corriger le PYTHONPATH dans tous les agents de C:\\Dev\u0007gents\n",
+      "complexite": 67,
+      "dependances": [
+        "os",
+        "sys",
+        "pathlib",
+        "re"
+      ],
+      "fonctions_principales": [
+        "fix_pythonpath_in_agent",
+        "main"
+      ],
+      "score_utilite": 29
+    },
+    {
+      "nom": "application_recommandations_chef_equipe.py",
+      "path": "application_recommandations_chef_equipe.py",
+      "type": "utility",
+      "description": "\n🎯 APPLICATION DES RECOMMANDATIONS DU CHEF D'ÉQUIPE\nDélégation des actions correctives suite au diagnostic\nMODE DÉLÉGATION - Le chef d'équipe coordonne les corrections\n",
+      "complexite": 158,
+      "dependances": [
+        "asyncio",
+        "sys",
+        "pathlib",
+        "datetime",
+        "agent_0_chef_equipe_coordinateur"
+      ],
+      "fonctions_principales": [
+        "__init__"
+      ],
+      "score_utilite": 27
+    },
+    {
+      "nom": "correction_agent_2_delegation.py",
+      "path": "correction_agent_2_delegation.py",
+      "type": "utility",
+      "description": "\n🔧 CORRECTION AGENT 2 - DÉLÉGATION AU CHEF D'ÉQUIPE\nMission spécifique : Corriger l'erreur \"division by zero\" dans l'Agent 2\nMODE DÉLÉGATION - Le chef d'équipe supervise la correction\n",
+      "complexite": 137,
+      "dependances": [
+        "asyncio",
+        "sys",
+        "pathlib",
+        "agent_0_chef_equipe_coordinateur"
+      ],
+      "fonctions_principales": [
+        "__init__"
+      ],
+      "score_utilite": 27
+    },
+    {
+      "nom": "test_diagnostic_delegation_chef_equipe.py",
+      "path": "test_diagnostic_delegation_chef_equipe.py",
+      "type": "utility",
+      "description": "\n🎯 DÉLÉGATION DIAGNOSTIC AU CHEF D'ÉQUIPE DE MAINTENANCE\nInstructions de diagnostic pour le répertoire agent_factory_implementation\nMODE DÉLÉGATION - Le chef d'équipe coordonne l'analyse\n",
+      "complexite": 136,
+      "dependances": [
+        "asyncio",
+        "sys",
+        "pathlib",
+        "datetime",
+        "agent_0_chef_equipe_coordinateur"
+      ],
+      "fonctions_principales": [
+        "__init__"
+      ],
+      "score_utilite": 27
+    },
+    {
+      "nom": "agent_6_validateur_final.py",
+      "path": "agent_6_validateur_final.py",
+      "type": "test_script",
+      "description": "\nAgent 6 - Validateur Final\nModèle: Claude Sonnet 4\nMission: Validation finale de la mission d'intégration des outils\nÉquipe: NextGeneration Tools Migration\n",
+      "complexite": 296,
+      "dependances": [
+        "asyncio",
+        "json",
+        "logging",
+        "datetime",
+        "pathlib",
+        "typing",
+        "subprocess"
+      ],
+      "fonctions_principales": [
+        "create_agent_6ValidateurFinal",
+        "__init__",
+        "_resumer_resultats_equipe"
+      ],
+      "score_utilite": 24
+    },
+    {
+      "nom": "agent_4_testeur_integration.py",
+      "path": "agent_4_testeur_integration.py",
+      "type": "test_script",
+      "description": "\n Agent 4: Testeur d'Intgration - GPT-4 Turbo\nMission: Tester l'intgration des outils adapts dans NextGeneration\n",
+      "complexite": 222,
+      "dependances": [
+        "asyncio",
+        "json",
+        "subprocess",
+        "sys",
+        "datetime",
+        "pathlib",
+        "typing"
+      ],
+      "fonctions_principales": [
+        "create_agent_4TesteurIntegration",
+        "__init__"
+      ],
+      "score_utilite": 22
+    }
+  ],
+  "metriques": {
+    "structure": {
+      "repertoires_total": 46,
+      "fichiers_total": 162,
+      "taille_totale_mb": 2.91,
+      "types_fichiers": 7
+    },
+    "python": {
+      "fichiers_python": 24,
+      "lignes_code_total": 4790,
+      "fonctions_total": 68,
+      "classes_total": 21
+    },
+    "outils": {
+      "outils_detectes": 15,
+      "types_outils": 5,
+      "score_utilite_moyen": 33.13
+    },
+    "dependances": {
+      "total": 26,
+      "standard": [
+        "os",
+        "time",
+        "re",
+        "asyncio",
+        "dataclasses",
+        "pathlib",
+        "subprocess",
+        "typing",
+        "logging",
+        "json",
+        "datetime",
+        "sys"
+      ],
+      "externes": [],
+      "inconnues": [
+        "agent_1_analyseur_structure",
+        "agent_4_testeur_integration",
+        "importlib.util",
+        "traceback",
+        "agent_MAINTENANCE_01_analyseur_structure",
+        "agent_2_evaluateur_utilite",
+        "chef_equipe_pattern_factory",
+        "maintenance_template_manager",
+        "agent_0_chef_equipe_coordinateur",
+        "agent_6_validateur_final",
+        "shutil",
+        "ast",
+        "agent_3_adaptateur_code",
+        "agent_5_documenteur"
+      ]
+    }
+  },
+  "tools_count": 15,
+  "recommendations": [
+    "Trouv 15 outils potentiels",
+    "Types d'outils les plus frquents: utility(8), cli_tool(2), web_api(2)",
+    "Dpendances externes  vrifier: 0",
+    "Prioriser les outils avec score_utilite > 15"
+  ]
+}

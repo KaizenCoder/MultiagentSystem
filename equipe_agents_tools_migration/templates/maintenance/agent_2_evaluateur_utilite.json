@@ -1,0 +1,86 @@
+{
+  "name": "agent_2_evaluateur_utilite",
+  "version": "1.0.0",
+  "role": "evaluator",
+  "domain": "utility_assessment",
+  "model": "GPT-4 Turbo",
+  "description": "Agent 2 - Évaluateur d'Utilité pour évaluer la pertinence des outils détectés pour le projet NextGeneration",
+  "capabilities": [
+    "utility_evaluation",
+    "compatibility_assessment",
+    "value_analysis",
+    "conflict_detection",
+    "prioritization",
+    "criteria_application",
+    "scoring_algorithms",
+    "recommendation_generation"
+  ],
+  "tools": [
+    "evaluation_engine",
+    "scoring_calculator",
+    "compatibility_checker",
+    "conflict_detector",
+    "priority_sorter"
+  ],
+  "evaluation_criteria": [
+    "pertinence_technique",
+    "compatibilite_architecture", 
+    "valeur_ajoutee",
+    "facilite_integration",
+    "maintenance"
+  ],
+  "default_config": {
+    "timeout": 180,
+    "min_score_threshold": 4.0,
+    "max_tools_selected": 50,
+    "enable_conflict_detection": true,
+    "detailed_justification": true
+  },
+  "scoring_weights": {
+    "pertinence_technique": 0.3,
+    "compatibilite_architecture": 0.25,
+    "valeur_ajoutee": 0.2,
+    "facilite_integration": 0.15,
+    "maintenance": 0.1
+  },
+  "nextgen_context": {
+    "architecture": ["FastAPI", "PostgreSQL", "Redis", "Docker", "Kubernetes"],
+    "patterns": ["Hexagonal", "CQRS", "DI", "Repository", "Service Layer"],
+    "technologies": ["Python", "AsyncIO", "Pydantic", "SQLAlchemy", "Prometheus"],
+    "domaines": ["orchestration", "agents", "monitoring", "performance", "security"]
+  },
+  "interfaces": {
+    "startup": "async def startup(self)",
+    "shutdown": "async def shutdown(self)",
+    "health_check": "async def health_check(self) -> Dict[str, Any]",
+    "evaluer_utilite": "async def evaluer_utilite(self) -> Dict[str, Any]"
+  },
+  "dependencies": [
+    "asyncio",
+    "json",
+    "datetime",
+    "pathlib",
+    "typing"
+  ],
+  "evaluation_process": {
+    "steps": [
+      "analyser_contexte_nextgen",
+      "evaluer_outils_individuels",
+      "detecter_conflits",
+      "prioriser_outils",
+      "generer_recommandations"
+    ],
+    "output_categories": [
+      "RECOMMAND",
+      "UTILE", 
+      "CONDITIONNEL",
+      "NON_RECOMMAND"
+    ]
+  },
+  "performance": {
+    "batch_evaluation": true,
+    "parallel_scoring": true,
+    "caching": false,
+    "optimization": "speed"
+  }
+} 

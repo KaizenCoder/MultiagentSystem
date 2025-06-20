@@ -1,0 +1,100 @@
+{
+  "start_time": "2025-06-19T20:53:51.534290",
+  "config_validation": {
+    "file_exists": true,
+    "json_valid": true,
+    "structure_complete": true,
+    "missing_sections": [],
+    "enterprise_agents_count": 5,
+    "missing_enterprise_agents": [],
+    "ollama_configured": true,
+    "ollama_enabled": true,
+    "total_agents": 9,
+    "config_version": "2.1.0"
+  },
+  "ollama_validation": {
+    "connection_success": true,
+    "connection_time": 0.2662210464477539,
+    "total_models": 10,
+    "models_list": [
+      "mixtral:8x7b-instruct-v0.1-q3_k_m",
+      "nous-hermes-2-mistral-7b-dpo:latest",
+      "llama3:8b-instruct-q6_k",
+      "qwen2.5-coder:1.5b",
+      "starcoder2:3b",
+      "qwen-coder-32b:latest",
+      "code-stral:latest",
+      "deepseek-coder:33b",
+      "lux_model:latest",
+      "nomic-embed-text:latest"
+    ],
+    "available_models_count": 10,
+    "missing_models_count": 0,
+    "missing_models": [],
+    "generation_test": {
+      "success": true,
+      "model": "mixtral:8x7b-instruct-v0.1-q3_k_m",
+      "response_time": 14.933679342269897,
+      "tokens_per_sec": 5.290056120799168,
+      "response_preview": "bonjour, je suis désolé, mais je suis un modèle de language et je ne peut pas s'engager dans une con"
+    },
+    "gpu_monitoring": {
+      "gpu_device": "1",
+      "system_memory_percent": 69.9,
+      "available": true
+    }
+  },
+  "cloud_validation": {},
+  "fallback_validation": {},
+  "agent_test_results": {
+    "error": "'AgentTestModelsIntegration' object has no attribute 'agent_id'"
+  },
+  "performance_metrics": {
+    "benchmark_tests": [
+      {
+        "test_type": "fast",
+        "prompt_length": 7,
+        "response_time": 0.0,
+        "expected_time": 10,
+        "within_expected": true,
+        "model_used": "gpt-3.5-turbo",
+        "provider": "openai",
+        "tokens": 100,
+        "tokens_per_sec": 0
+      },
+      {
+        "test_type": "general",
+        "prompt_length": 26,
+        "response_time": 0.0,
+        "expected_time": 20,
+        "within_expected": true,
+        "model_used": "claude-3-sonnet-20240229",
+        "provider": "anthropic",
+        "tokens": 100,
+        "tokens_per_sec": 0
+      },
+      {
+        "test_type": "code",
+        "prompt_length": 46,
+        "response_time": 0.0,
+        "expected_time": 30,
+        "within_expected": true,
+        "model_used": "claude-3-sonnet-20240229",
+        "provider": "anthropic",
+        "tokens": 100,
+        "tokens_per_sec": 0
+      }
+    ],
+    "total_tests": 3,
+    "successful_tests": 3,
+    "avg_response_time": 0.0,
+    "within_expected_count": 3,
+    "performance_score": 100.0
+  },
+  "recommendations": [
+    "✅ BON - Architecture fonctionnelle avec améliorations mineures"
+  ],
+  "final_score": 85,
+  "end_time": "2025-06-19T20:54:07.452635",
+  "total_duration": 15.918345
+}

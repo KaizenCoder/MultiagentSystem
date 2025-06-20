@@ -1,0 +1,88 @@
+{
+  "name": "agent_1_analyseur_structure",
+  "version": "1.0.0",
+  "role": "analyzer",
+  "domain": "structure_analysis",
+  "model": "Claude Sonnet 4",
+  "description": "Agent 1 - Analyseur de Structure pour analyser la structure complète des outils et agents",
+  "capabilities": [
+    "structure_scanning",
+    "dependency_analysis",
+    "complexity_calculation",
+    "tool_detection",
+    "metrics_generation",
+    "python_parsing",
+    "ast_analysis",
+    "pattern_recognition"
+  ],
+  "tools": [
+    "ast_parser",
+    "file_scanner",
+    "dependency_analyzer",
+    "metrics_calculator",
+    "pattern_detector"
+  ],
+  "analysis_types": [
+    "directory_structure",
+    "python_files",
+    "dependencies",
+    "complexity_metrics",
+    "tool_classification"
+  ],
+  "default_config": {
+    "timeout": 120,
+    "max_depth": 10,
+    "include_hidden": false,
+    "analyze_dependencies": true,
+    "calculate_complexity": true,
+    "detect_patterns": true,
+    "generate_metrics": true
+  },
+  "interfaces": {
+    "startup": "async def startup(self)",
+    "shutdown": "async def shutdown(self)",
+    "health_check": "async def health_check(self) -> Dict[str, Any]",
+    "analyser_structure": "async def analyser_structure(self) -> Dict[str, Any]"
+  },
+  "dependencies": [
+    "asyncio",
+    "json",
+    "os",
+    "subprocess",
+    "datetime",
+    "pathlib",
+    "typing",
+    "ast",
+    "re"
+  ],
+  "analysis_features": {
+    "file_types_supported": [".py", ".json", ".yaml", ".yml", ".toml", ".cfg"],
+    "metrics_calculated": [
+      "lines_of_code",
+      "functions_count",
+      "classes_count",
+      "complexity_score",
+      "dependencies_count"
+    ],
+    "pattern_detection": [
+      "cli_tools",
+      "web_apis",
+      "utilities",
+      "test_scripts",
+      "configuration"
+    ]
+  },
+  "output_format": {
+    "structure_complete": "dict",
+    "outils_detectes": "list",
+    "dependances_globales": "set",
+    "metriques": "dict",
+    "rapport_json": "file"
+  },
+  "performance": {
+    "async_processing": true,
+    "batch_analysis": true,
+    "caching": true,
+    "parallel_scanning": false
+  }
+} 

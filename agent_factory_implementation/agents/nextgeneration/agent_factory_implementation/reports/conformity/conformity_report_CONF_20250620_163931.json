@@ -1,0 +1,152 @@
+{
+  "audit_id": "CONF_20250620_163931",
+  "target": "nextgeneration/agent_factory_implementation",
+  "timestamp": "2025-06-20T16:39:31.927966",
+  "issues": [
+    {
+      "issue_id": "STRUCT_README.md",
+      "standard_type": "documentation",
+      "conformity_level": "problèmes_majeurs",
+      "title": "Fichier essentiel manquant : README.md",
+      "description": "Le fichier README.md est requis pour la conformité projet",
+      "location": "nextgeneration\\agent_factory_implementation",
+      "line_number": null,
+      "requirement": "Structure projet standard",
+      "remediation": "Créer le fichier README.md",
+      "priority": "haute"
+    },
+    {
+      "issue_id": "STRUCT_setup.py",
+      "standard_type": "documentation",
+      "conformity_level": "problèmes_majeurs",
+      "title": "Fichier essentiel manquant : setup.py",
+      "description": "Le fichier setup.py est requis pour la conformité projet",
+      "location": "nextgeneration\\agent_factory_implementation",
+      "line_number": null,
+      "requirement": "Structure projet standard",
+      "remediation": "Créer le fichier setup.py",
+      "priority": "haute"
+    },
+    {
+      "issue_id": "STRUCT_requirements.txt",
+      "standard_type": "documentation",
+      "conformity_level": "problèmes_majeurs",
+      "title": "Fichier essentiel manquant : requirements.txt",
+      "description": "Le fichier requirements.txt est requis pour la conformité projet",
+      "location": "nextgeneration\\agent_factory_implementation",
+      "line_number": null,
+      "requirement": "Structure projet standard",
+      "remediation": "Créer le fichier requirements.txt",
+      "priority": "haute"
+    },
+    {
+      "issue_id": "STRUCT_DIRS",
+      "standard_type": "assurance_qualité",
+      "conformity_level": "problèmes_mineurs",
+      "title": "Structure de dossiers non standard",
+      "description": "Aucun dossier standard détecté (src, lib, tests, docs)",
+      "location": "nextgeneration\\agent_factory_implementation",
+      "line_number": null,
+      "requirement": "Organisation standard du code",
+      "remediation": "Organiser le code dans des dossiers standards",
+      "priority": "moyenne"
+    },
+    {
+      "issue_id": "DOC_readme_file",
+      "standard_type": "documentation",
+      "conformity_level": "problèmes_majeurs",
+      "title": "Documentation manquante : readme_file",
+      "description": "Aucun fichier trouvé pour : README.md, README.rst, README.txt",
+      "location": "nextgeneration\\agent_factory_implementation",
+      "line_number": null,
+      "requirement": "Documentation projet complète",
+      "remediation": "Créer un des fichiers : README.md, README.rst, README.txt",
+      "priority": "haute"
+    },
+    {
+      "issue_id": "DOC_license_file",
+      "standard_type": "documentation",
+      "conformity_level": "problèmes_majeurs",
+      "title": "Documentation manquante : license_file",
+      "description": "Aucun fichier trouvé pour : LICENSE, LICENSE.txt, LICENSE.md",
+      "location": "nextgeneration\\agent_factory_implementation",
+      "line_number": null,
+      "requirement": "Documentation projet complète",
+      "remediation": "Créer un des fichiers : LICENSE, LICENSE.txt, LICENSE.md",
+      "priority": "haute"
+    },
+    {
+      "issue_id": "DOC_changelog",
+      "standard_type": "documentation",
+      "conformity_level": "problèmes_mineurs",
+      "title": "Documentation manquante : changelog",
+      "description": "Aucun fichier trouvé pour : CHANGELOG.md, CHANGELOG.txt, HISTORY.md",
+      "location": "nextgeneration\\agent_factory_implementation",
+      "line_number": null,
+      "requirement": "Documentation projet complète",
+      "remediation": "Créer un des fichiers : CHANGELOG.md, CHANGELOG.txt, HISTORY.md",
+      "priority": "moyenne"
+    },
+    {
+      "issue_id": "DOC_contributing",
+      "standard_type": "documentation",
+      "conformity_level": "problèmes_mineurs",
+      "title": "Documentation manquante : contributing",
+      "description": "Aucun fichier trouvé pour : CONTRIBUTING.md, CONTRIBUTING.txt",
+      "location": "nextgeneration\\agent_factory_implementation",
+      "line_number": null,
+      "requirement": "Documentation projet complète",
+      "remediation": "Créer un des fichiers : CONTRIBUTING.md, CONTRIBUTING.txt",
+      "priority": "moyenne"
+    },
+    {
+      "issue_id": "DOC_code_of_conduct",
+      "standard_type": "documentation",
+      "conformity_level": "problèmes_mineurs",
+      "title": "Documentation manquante : code_of_conduct",
+      "description": "Aucun fichier trouvé pour : CODE_OF_CONDUCT.md",
+      "location": "nextgeneration\\agent_factory_implementation",
+      "line_number": null,
+      "requirement": "Documentation projet complète",
+      "remediation": "Créer un des fichiers : CODE_OF_CONDUCT.md",
+      "priority": "moyenne"
+    },
+    {
+      "issue_id": "LIC_MISSING",
+      "standard_type": "licences",
+      "conformity_level": "problèmes_majeurs",
+      "title": "Fichier licence manquant",
+      "description": "Aucun fichier de licence trouvé",
+      "location": "nextgeneration\\agent_factory_implementation",
+      "line_number": null,
+      "requirement": "Licence obligatoire pour distribution",
+      "remediation": "Ajouter un fichier LICENSE avec une licence appropriée",
+      "priority": "haute"
+    }
+  ],
+  "conformity_score": 0.0,
+  "compliance_status": {
+    "standards_codage": true,
+    "documentation": true,
+    "licences": true,
+    "accessibilité": true,
+    "conformité_sécurité": true,
+    "rgpd": true,
+    "assurance_qualité": true
+  },
+  "recommendations": [
+    "🔍 Effectuer des audits de conformité réguliers",
+    "⚖️ Régulariser les licences et droits d'auteur",
+    "📚 Améliorer la documentation du projet",
+    "⚠️ Traiter les problèmes majeurs de conformité",
+    "📋 Mettre en place des vérifications automatiques"
+  ],
+  "summary": {
+    "total": 10,
+    "critique": 0,
+    "non_conforme": 0,
+    "problèmes_majeurs": 6,
+    "problèmes_mineurs": 4,
+    "conforme": 0
+  }
+}

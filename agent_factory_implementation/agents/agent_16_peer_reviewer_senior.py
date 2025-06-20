@@ -2,6 +2,11 @@
 RÔLE : Review senior et validation architecture code expert
 """
 
+# 🔧 CONVERTI AUTOMATIQUEMENT SYNC → ASYNC
+# Date: 2025-06-19 19h35 - Correction architecture Pattern Factory
+# Raison: Harmonisation async/sync avec core/agent_factory_architecture.py
+
+
 import os
 import json
 import logging

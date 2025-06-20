@@ -1,0 +1,49 @@
+{
+  "name": "agent_coordinateur_analyse_chatgpt",
+  "version": "1.0.0",
+  "role": "coordinator",
+  "domain": "solution_analysis",
+  "capabilities": [
+    "team_coordination",
+    "analysis_orchestration",
+    "report_consolidation",
+    "expert_agent_management",
+    "comprehensive_evaluation"
+  ],
+  "tools": [
+    "template_manager",
+    "agent_factory",
+    "report_aggregator",
+    "analysis_dashboard",
+    "coordination_engine"
+  ],
+  "default_config": {
+    "timeout": 900,
+    "max_retries": 2,
+    "temperature": 0.4,
+    "model": "gpt-4",
+    "analysis_target": "20250620_projet_logging_centralise/3_reponse_cursor",
+    "expert_agents": [
+      "agent_peer_reviewer_senior",
+      "agent_peer_reviewer_technique", 
+      "agent_auditeur_securite",
+      "agent_auditeur_performance",
+      "agent_auditeur_conformite",
+      "agent_testeur_specialise",
+      "agent_auditeur_qualite"
+    ]
+  },
+  "supervisor_route": "coordination/analysis",
+  "metadata": {
+    "author": "NextGeneration System",
+    "description": "Agent coordinateur pour l'analyse complète de la solution ChatGPT par une équipe d'experts",
+    "tags": ["coordination", "analysis", "chatgpt", "expert-team", "comprehensive"],
+    "created_at": "2025-06-20T16:00:00Z",
+    "updated_at": "2025-06-20T16:00:00Z"
+  },
+  "hooks": {
+    "pre_process": "initialize_expert_team",
+    "post_process": "consolidate_analysis_reports",
+    "on_error": "handle_coordination_failure"
+  }
+} 

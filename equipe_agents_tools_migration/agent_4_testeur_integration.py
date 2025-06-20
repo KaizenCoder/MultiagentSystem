@@ -15,10 +15,23 @@ from typing import Dict, List, Any
 class Agent4TesteurIntegration:
     """Agent spcialis dans les tests d'intgration"""
     
-    def __init__(self, outils_adaptes: List[Dict], target_path: Path, workspace_path: Path):
+    def __init__(self, agent_id: str = None, agent_type: str = "tester", outils_adaptes: List[Dict] = None, target_path=None, workspace_path=None, **config):
+        # Configuration TemplateManager
+        self.agent_id = agent_id or "agent_4_testeur_integration"
+        self.agent_type = agent_type
+        self.config = config
+        
+        # Configuration spécifique - Rétrocompatibilité avec l'ancienne signature
+        if outils_adaptes is None:
+            outils_adaptes = config.get("outils_adaptes", [])
+        if target_path is None:
+            target_path = config.get("target_path", "./adapted_tools")
+        if workspace_path is None:
+            workspace_path = config.get("workspace_path", ".")
+            
         self.outils_adaptes = outils_adaptes
-        self.target_path = target_path
-        self.workspace_path = workspace_path
+        self.target_path = Path(target_path) if not isinstance(target_path, Path) else target_path
+        self.workspace_path = Path(workspace_path) if not isinstance(workspace_path, Path) else workspace_path
         self.agent_name = "Agent 4 - Testeur Intgration"
         self.model_name = "GPT-4 Turbo"
         self.start_time = None
@@ -26,6 +39,31 @@ class Agent4TesteurIntegration:
         self.tests_results = []
         self.outils_valides = []
         self.erreurs_tests = []
+    
+    async def startup(self):
+        """Démarrage de l'agent - Interface TemplateManager"""
+        print(f"🚀 Démarrage {self.agent_name} (ID: {self.agent_id})")
+        return {"status": "started", "agent_id": self.agent_id}
+    
+    async def shutdown(self):
+        """Arrêt de l'agent - Interface TemplateManager"""
+        print(f"🛑 Arrêt {self.agent_name} (ID: {self.agent_id})")
+        return {"status": "stopped", "agent_id": self.agent_id}
+    
+    async def health_check(self) -> Dict[str, Any]:
+        """Vérification de santé - Interface TemplateManager"""
+        return {
+            "status": "healthy",
+            "agent_id": self.agent_id,
+            "agent_type": self.agent_type,
+            "target_path_exists": self.target_path.exists(),
+            "workspace_path_exists": self.workspace_path.exists(),
+            "outils_adaptes_count": len(self.outils_adaptes)
+        }
+    
+    async def execute_task(self, task_config: Dict = None) -> Dict[str, Any]:
+        """Exécuter la tâche principale - Interface TemplateManager"""
+        return await self.tester_integration()
     
     async def tester_integration(self) -> Dict[str, Any]:
         """Tester l'intgration de tous les outils"""
@@ -238,4 +276,9 @@ class Agent4TesteurIntegration:
         print(f"[DOCUMENT] Rapport sauvegard: {rapport_path}")
         print(f"[CHART] Tests: {tests_passed}/{total_tests} russis ({rapport['statistiques']['taux_succes']}%)")
         
-        return rapport 
+        return rapport
+
+# Factory function pour compatibilité TemplateManager
+def create_agent_4TesteurIntegration(**config):
+    """Factory function pour créer l'agent"""
+    return Agent4TesteurIntegration(**config) 

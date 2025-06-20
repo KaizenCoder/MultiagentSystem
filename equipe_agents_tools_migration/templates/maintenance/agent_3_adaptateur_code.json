@@ -1,0 +1,103 @@
+{
+  "name": "agent_3_adaptateur_code",
+  "version": "1.0.0",
+  "role": "adapter",
+  "domain": "code_adaptation",
+  "model": "Claude Sonnet 4",
+  "description": "Agent 3 - Adaptateur de Code pour adapter le code des outils sélectionnés pour NextGeneration",
+  "capabilities": [
+    "code_adaptation",
+    "path_modification",
+    "dependency_adjustment",
+    "configuration_generation",
+    "header_injection",
+    "environment_setup",
+    "file_organization",
+    "compatibility_fixes"
+  ],
+  "tools": [
+    "code_parser",
+    "path_resolver",
+    "dependency_manager",
+    "config_generator",
+    "file_organizer"
+  ],
+  "adaptation_types": [
+    "path_adaptation",
+    "dependency_fixes",
+    "configuration_externalization",
+    "environment_variables",
+    "nextgen_integration"
+  ],
+  "default_config": {
+    "timeout": 300,
+    "backup_original": true,
+    "preserve_functionality": true,
+    "add_headers": true,
+    "generate_configs": true,
+    "validate_syntax": true
+  },
+  "adaptation_patterns": {
+    "path_fixes": [
+      "absolute_to_relative",
+      "hardcoded_to_config",
+      "environment_variables",
+      "nextgen_paths"
+    ],
+    "dependency_handling": [
+      "missing_imports",
+      "version_conflicts", 
+      "compatibility_shims",
+      "requirements_generation"
+    ]
+  },
+  "target_structure": {
+    "base_dir": "imported_tools",
+    "categories": [
+      "automation",
+      "monitoring",
+      "conversion",
+      "generation", 
+      "utilities"
+    ],
+    "config_files": [
+      "requirements.txt",
+      "config.json",
+      "README.md"
+    ]
+  },
+  "interfaces": {
+    "startup": "async def startup(self)",
+    "shutdown": "async def shutdown(self)",
+    "health_check": "async def health_check(self) -> Dict[str, Any]",
+    "adapter_outils": "async def adapter_outils(self) -> Dict[str, Any]"
+  },
+  "dependencies": [
+    "asyncio",
+    "json",
+    "shutil",
+    "re",
+    "datetime",
+    "pathlib",
+    "typing"
+  ],
+  "adaptation_process": {
+    "steps": [
+      "preparer_environnement",
+      "adapter_outil_unique",
+      "adapter_contenu",
+      "generer_configurations"
+    ],
+    "validations": [
+      "syntax_check",
+      "import_validation",
+      "path_resolution"
+    ]
+  },
+  "performance": {
+    "batch_processing": true,
+    "parallel_adaptation": false,
+    "progress_tracking": true,
+    "error_recovery": true
+  }
+} 

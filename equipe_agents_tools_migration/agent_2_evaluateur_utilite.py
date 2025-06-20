@@ -19,9 +19,20 @@ from typing import Dict, List, Optional, Any
 class Agent2EvaluateurUtilite:
     """Agent spcialis dans l'valuation d'utilit des outils"""
     
-    def __init__(self, analyse_structure: Dict[str, Any], workspace_path: Path):
+    def __init__(self, agent_id: str = None, agent_type: str = "evaluator", analyse_structure: Dict[str, Any] = None, workspace_path=None, **config):
+        # Configuration TemplateManager
+        self.agent_id = agent_id or "agent_2_evaluateur_utilite"
+        self.agent_type = agent_type
+        self.config = config
+        
+        # Configuration spécifique - Rétrocompatibilité avec l'ancienne signature
+        if analyse_structure is None:
+            analyse_structure = config.get("analyse_structure", {})
+        if workspace_path is None:
+            workspace_path = config.get("workspace_path", ".")
+            
         self.analyse_structure = analyse_structure
-        self.workspace_path = workspace_path
+        self.workspace_path = Path(workspace_path) if not isinstance(workspace_path, Path) else workspace_path
         self.agent_name = "Agent 2 - valuateur Utilit"
         self.model_name = "GPT-4 Turbo"
         self.start_time = None
@@ -43,6 +54,30 @@ class Agent2EvaluateurUtilite:
             "facilite_integration": 0.15,
             "maintenance": 0.1
         }
+    
+    async def startup(self):
+        """Démarrage de l'agent - Interface TemplateManager"""
+        print(f"🚀 Démarrage {self.agent_name} (ID: {self.agent_id})")
+        return {"status": "started", "agent_id": self.agent_id}
+    
+    async def shutdown(self):
+        """Arrêt de l'agent - Interface TemplateManager"""
+        print(f"🛑 Arrêt {self.agent_name} (ID: {self.agent_id})")
+        return {"status": "stopped", "agent_id": self.agent_id}
+    
+    async def health_check(self) -> Dict[str, Any]:
+        """Vérification de santé - Interface TemplateManager"""
+        return {
+            "status": "healthy",
+            "agent_id": self.agent_id,
+            "agent_type": self.agent_type,
+            "workspace_path_exists": self.workspace_path.exists(),
+            "analyse_structure_loaded": bool(self.analyse_structure)
+        }
+    
+    async def execute_task(self, task_config: Dict = None) -> Dict[str, Any]:
+        """Exécuter la tâche principale - Interface TemplateManager"""
+        return await self.evaluer_utilite()
     
     async def evaluer_utilite(self) -> Dict[str, Any]:
         """valuer l'utilit des outils dtects"""
@@ -256,7 +291,11 @@ class Agent2EvaluateurUtilite:
         
         # Bonus pour dpendances standard Python
         deps_standard = ['os', 'sys', 'json', 'pathlib', 'subprocess', 'logging']
-        ratio_standard = len([d for d in dependances if d in deps_standard]) / max(len(dependances), 1)
+        # Vérification sécurisée contre division par zéro
+        if len(dependances) > 0:
+            ratio_standard = len([d for d in dependances if d in deps_standard]) / len(dependances)
+        else:
+            ratio_standard = 0.0  # Valeur par défaut sécurisée
         score += ratio_standard * 2.0
         
         # Malus pour dpendances externes nombreuses
@@ -455,9 +494,19 @@ class Agent2EvaluateurUtilite:
             json.dump(rapport, f, indent=2, ensure_ascii=False)
         
         print(f"[DOCUMENT] Rapport sauvegard: {rapport_path}")
-        print(f"[CHART] Rsultat: {nb_retenus}/{nb_total} outils retenus ({round(nb_retenus/nb_total*100, 1)}%)")
+        # Vérification sécurisée contre division par zéro
+        if nb_total > 0:
+            taux_pourcentage = round(nb_retenus/nb_total*100, 1)
+        else:
+            taux_pourcentage = 0.0  # Valeur par défaut sécurisée
+        print(f"[CHART] Rsultat: {nb_retenus}/{nb_total} outils retenus ({taux_pourcentage}%)")
         
         return rapport
+
+# Factory function pour compatibilité TemplateManager
+def create_agent_2EvaluateurUtilite(**config):
+    """Factory function pour créer l'agent"""
+    return Agent2EvaluateurUtilite(**config)
 
 # Test autonome
 if __name__ == "__main__":

@@ -1,612 +1,781 @@
 #!/usr/bin/env python3
 """
- Agent 5: Documenteur - Gemini 2.0 Flash
-Mission: Documenter les outils finaliss et crer la documentation utilisateur
+Agent 5 - Documenteur
+Modèle: Gemini 2.0 Flash
+Mission: Documentation complète des outils et agents
+Équipe: NextGeneration Tools Migration
 """
 
 import asyncio
 import json
+import logging
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
+
+# Configuration des logs
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 
 class Agent5Documenteur:
-    """Agent spcialis dans la documentation"""
+    """Agent 5 - Documenteur avec Gemini 2.0 Flash"""
     
-    def __init__(self, outils_finalises: List[Dict], target_path: Path, workspace_path: Path):
-        self.outils_finalises = outils_finalises
-        self.target_path = target_path
-        self.workspace_path = workspace_path
-        self.agent_name = "Agent 5 - Documenteur"
-        self.model_name = "Gemini 2.0 Flash"
-        self.start_time = None
+    def __init__(self, agent_id: str = None, agent_type: str = "documenteur", resultats_tests: Dict[str, Any] = None, target_path=None, workspace_path=None, **config):
+        # Configuration TemplateManager
+        self.agent_id = agent_id or f"agent_5_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        self.agent_type = agent_type
+        self.config = config
         
-        self.docs_created = 0
-        self.documentation_files = []
+        # Configuration spécifique - Rétrocompatibilité avec l'ancienne signature
+        if resultats_tests is None:
+            resultats_tests = config.get("resultats_tests", {})
+        if target_path is None:
+            target_path = config.get("target_path", "../agent_factory_implementation/agents")
+        if workspace_path is None:
+            workspace_path = config.get("workspace_path", ".")
+            
+        self.resultats_tests = resultats_tests
+        self.target_path = Path(target_path)
+        self.workspace_path = Path(workspace_path)
+        self.logger = logging.getLogger("Agent5Documenteur")
+        
+        # Statistiques
+        self.documents_generes = []
+        self.guides_crees = []
+        self.schemas_documentes = []
+        
+        self.logger.info(f"🔍 Agent 5 Documenteur initialisé - ID: {self.agent_id}")
+        
+    async def health_check(self) -> Dict[str, Any]:
+        """Vérification de santé - Interface TemplateManager"""
+        return {
+            "status": "healthy",
+            "agent_id": self.agent_id,
+            "agent_type": self.agent_type,
+            "target_path_exists": self.target_path.exists(),
+            "workspace_path_exists": self.workspace_path.exists(),
+            "resultats_tests_loaded": bool(self.resultats_tests)
+        }
     
-    async def documenter_outils(self) -> Dict[str, Any]:
-        """Documenter tous les outils finaliss"""
-        self.start_time = datetime.now()
-        print(f" {self.agent_name} - Dmarrage documentation")
+    async def execute_task(self, task_config: Dict = None) -> Dict[str, Any]:
+        """Exécuter la tâche principale - Interface TemplateManager"""
+        return await self.documenter_complete()
+        
+    async def startup(self):
+        """Démarrage Agent 5 Documenteur"""
+        self.logger.info(f"🚀 Agent 5 Documenteur {self.agent_id} - DÉMARRAGE")
+        
+        # Vérification des chemins
+        if not self.target_path.exists():
+            self.logger.warning(f"⚠️ Chemin cible non trouvé: {self.target_path}")
+            self.target_path.mkdir(parents=True, exist_ok=True)
+        
+        # Créer les répertoires de documentation
+        docs_dirs = [
+            self.workspace_path / "docs",
+            self.workspace_path / "docs" / "agents",
+            self.workspace_path / "docs" / "guides",
+            self.workspace_path / "docs" / "schemas"
+        ]
+        
+        for docs_dir in docs_dirs:
+            docs_dir.mkdir(parents=True, exist_ok=True)
+        
+        self.logger.info("✅ Agent 5 Documenteur prêt")
+        return {"status": "started", "agent_id": self.agent_id}
+        
+    async def shutdown(self):
+        """Arrêt Agent 5 Documenteur"""
+        self.logger.info(f"🛑 Agent 5 Documenteur {self.agent_id} - ARRÊT")
+        return {"status": "stopped", "agent_id": self.agent_id}
+        
+    async def documenter_complete(self) -> Dict[str, Any]:
+        """Documentation complète de la mission"""
+        self.logger.info("📚 AGENT 5 - Démarrage documentation complète")
+        
+        start_time = datetime.now()
+        resultats = {
+            "agent_id": self.agent_id,
+            "agent_type": self.agent_type,
+            "mission": "documentation_complete",
+            "timestamp_debut": start_time.isoformat(),
+            "target_path": str(self.target_path),
+            "workspace_path": str(self.workspace_path),
+            "documents_generes": [],
+            "guides_crees": [],
+            "schemas_documentes": [],
+            "status": "en_cours"
+        }
         
         try:
-            await self._creer_readme_principal()
-            await self._documenter_outils_individuels()
-            await self._creer_guide_utilisation()
-            await self._creer_guide_installation()
+            # 1. Documenter les agents analysés
+            await self._documenter_agents()
             
-            resultat = await self._generer_rapport()
+            # 2. Créer les guides d'utilisation
+            await self._creer_guides_utilisation()
             
-            duree = (datetime.now() - self.start_time).total_seconds()
-            print(f"[CHECK] {self.agent_name} - Termin en {duree:.2f}s")
+            # 3. Documenter les schémas et architectures
+            await self._documenter_schemas()
             
-            return resultat
+            # 4. Créer la documentation consolidée
+            await self._creer_documentation_consolidee()
+            
+            # 5. Générer l'index de documentation
+            await self._generer_index_documentation()
+            
+            # Finalisation
+            end_time = datetime.now()
+            duree = (end_time - start_time).total_seconds()
+            
+            resultats.update({
+                "status": "complete",
+                "timestamp_fin": end_time.isoformat(),
+                "duree_sec": duree,
+                "documents_generes": self.documents_generes,
+                "guides_crees": self.guides_crees,
+                "schemas_documentes": self.schemas_documentes,
+                "nombre_documents": len(self.documents_generes),
+                "statistiques": {
+                    "agents_documentes": len(self.schemas_documentes),
+                    "guides_crees": len(self.guides_crees),
+                    "documentation_consolidee": True
+                }
+            })
+            
+            # Sauvegarde rapport
+            await self._sauvegarder_rapport(resultats)
+            
+            self.logger.info(f"📚 AGENT 5 - Documentation terminée en {duree:.1f}s")
+            self.logger.info(f"   📄 Documents générés: {len(self.documents_generes)}")
+            self.logger.info(f"   📖 Guides créés: {len(self.guides_crees)}")
+            self.logger.info(f"   🏗️ Schémas documentés: {len(self.schemas_documentes)}")
+            
+            return resultats
             
         except Exception as e:
-            print(f"[CROSS] {self.agent_name} - Erreur: {e}")
-            raise
+            self.logger.error(f"❌ Erreur documentation: {e}")
+            resultats.update({
+                "status": "erreur",
+                "erreur": str(e),
+                "timestamp_erreur": datetime.now().isoformat()
+            })
+            return resultats
     
-    async def _creer_readme_principal(self):
-        """Crer le README principal"""
-        print("[DOCUMENT] Cration du README principal...")
+    async def _documenter_agents(self):
+        """Documenter tous les agents analysés"""
+        self.logger.info("📋 Documentation des agents...")
         
-        # Grouper les outils par catgorie
-        outils_par_categorie = {}
-        for outil_info in self.outils_finalises:
-            outil = outil_info['outil']
-            categorie = outil.get('type', 'utilities')
-            if categorie not in outils_par_categorie:
-                outils_par_categorie[categorie] = []
-            outils_par_categorie[categorie].append(outil)
+        # Scan des agents dans le répertoire cible
+        agents_trouves = []
+        if self.target_path.exists():
+            for agent_file in self.target_path.glob("agent_*.py"):
+                if agent_file.name not in ["__init__.py"]:
+                    agents_trouves.append(agent_file)
         
-        readme_content = f"""#  Outils Imports NextGeneration
-
-## Vue d'Ensemble
-
-Ce rpertoire contient les outils imports et adapts depuis SuperWhisper_V6 vers l'environnement NextGeneration.
-
-**Date d'importation :** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}  
-**Nombre d'outils :** {len(self.outils_finalises)}  
-**Agent responsable :** {self.agent_name}  
-
-## [FOLDER] Structure
-
-```
-imported_tools/
- automation/     # Outils d'automatisation
- monitoring/     # Outils de surveillance
- conversion/     # Outils de conversion
- generation/     # Outils de gnration
- utilities/      # Utilitaires divers
- configs/        # Fichiers de configuration
- docs/          # Documentation
-```
-
-## [ROCKET] Installation Rapide
-
-### 1. Installer les dpendances
-```bash
-pip install -r tools/imported_tools/requirements.txt
-```
-
-### 2. Vrifier l'installation
-```bash
-python tools/imported_tools/configs/test_installation.py
-```
-
-## [CLIPBOARD] Outils Disponibles
-
-"""
+        # Documentation de chaque agent
+        for agent_file in agents_trouves:
+            await self._documenter_agent_unique(agent_file)
         
-        # Ajouter chaque catgorie
-        for categorie, outils in outils_par_categorie.items():
-            readme_content += f"\n### [FOLDER] {categorie.upper()}\n\n"
-            for outil in outils:
-                description = outil.get('description', 'Outil import')
-                if len(description) > 100:
-                    description = description[:97] + "..."
-                readme_content += f"- **{outil['nom']}** - {description}\n"
+        self.logger.info(f"✅ {len(agents_trouves)} agents documentés")
         
-        readme_content += f"""
+    async def _documenter_agent_unique(self, agent_file: Path):
+        """Documenter un agent unique"""
+        try:
+            nom_agent = agent_file.stem
+            self.logger.info(f"📝 Documentation de {nom_agent}...")
+            
+            # Lire le fichier agent
+            with open(agent_file, 'r', encoding='utf-8') as f:
+                contenu = f.read()
+            
+            # Extraire les informations
+            info_agent = self._extraire_info_agent(contenu, nom_agent)
+            
+            # Créer la documentation
+            doc_content = self._generer_doc_agent(info_agent)
+            
+            # Sauvegarder
+            doc_path = self.workspace_path / "docs" / "agents" / f"{nom_agent}_documentation.md"
+            with open(doc_path, 'w', encoding='utf-8') as f:
+                f.write(doc_content)
+            
+            self.documents_generes.append(str(doc_path))
+            self.schemas_documentes.append(nom_agent)
+            
+        except Exception as e:
+            self.logger.error(f"❌ Erreur documentation {agent_file.name}: {e}")
+    
+    def _extraire_info_agent(self, contenu: str, nom_agent: str) -> Dict[str, Any]:
+        """Extraire les informations d'un agent"""
+        info = {
+            "nom": nom_agent,
+            "description": "Agent NextGeneration",
+            "modele": "Unknown",
+            "mission": "Mission non définie",
+            "classes": [],
+            "fonctions": [],
+            "imports": []
+        }
+        
+        # Extraction basique des informations
+        lignes = contenu.split('\n')
+        
+        for ligne in lignes:
+            ligne_clean = ligne.strip()
+            
+            # Extraire la mission depuis le docstring
+            if "Mission:" in ligne_clean:
+                info["mission"] = ligne_clean.split("Mission:")[-1].strip()
+            
+            # Extraire le modèle
+            if "Modèle:" in ligne_clean:
+                info["modele"] = ligne_clean.split("Modèle:")[-1].strip()
+            
+            # Extraire les classes
+            if ligne_clean.startswith("class "):
+                classe = ligne_clean.split("class ")[1].split("(")[0].split(":")[0]
+                info["classes"].append(classe)
+            
+            # Extraire les fonctions
+            if ligne_clean.startswith("def ") or ligne_clean.startswith("async def "):
+                fonction = ligne_clean.split("def ")[1].split("(")[0]
+                info["fonctions"].append(fonction)
+            
+            # Extraire les imports
+            if ligne_clean.startswith("import ") or ligne_clean.startswith("from "):
+                info["imports"].append(ligne_clean)
+        
+        return info
+    
+    def _generer_doc_agent(self, info: Dict[str, Any]) -> str:
+        """Générer la documentation d'un agent"""
+        doc = f"""# 📋 Documentation Agent: {info['nom']}
 
-##  Guides
+## 🎯 Informations Générales
 
-- [Guide d'Installation](docs/GUIDE_INSTALLATION.md)
-- [Guide d'Utilisation](docs/GUIDE_UTILISATION.md)
-- [Documentation Technique](docs/DOCUMENTATION_TECHNIQUE.md)
+- **Nom**: {info['nom']}
+- **Modèle**: {info['modele']}
+- **Mission**: {info['mission']}
+- **Type**: Agent NextGeneration
 
-## [TOOL] Utilisation
+## 🏗️ Architecture
 
-### Lister tous les outils
-```bash
-python tools/imported_tools/configs/list_tools.py
+### Classes Principales
+{chr(10).join(f"- `{classe}`" for classe in info['classes'])}
+
+### Fonctions Clés
+{chr(10).join(f"- `{fonction}()`" for fonction in info['fonctions'][:10])}
+
+## 📦 Dépendances
+
+### Imports
+```python
+{chr(10).join(info['imports'][:5])}
 ```
 
-### Excuter un outil
-```bash
-python tools/imported_tools/<categorie>/<nom_outil>.py
+## 🚀 Utilisation
+
+### Instanciation
+```python
+agent = {info['classes'][0] if info['classes'] else 'Agent'}()
 ```
 
-## [CHART] Statistiques
+### Exécution
+```python
+# Démarrage
+await agent.startup()
 
-- **Total d'outils :** {len(self.outils_finalises)}
-- **Catgories :** {len(outils_par_categorie)}
-- **Tests russis :** [CHECK] (voir rapports de tests)
+# Exécution mission
+resultats = await agent.mission_principale()
 
-##  Support
+# Arrêt
+await agent.shutdown()
+```
 
-En cas de problme :
-1. Vrifier les dpendances : `pip install -r requirements.txt`
-2. Consulter les logs dans le rpertoire `logs/`
-3. Vrifier la documentation technique
+## 📊 Métriques
 
-##  Changelog
+- **Classes définies**: {len(info['classes'])}
+- **Fonctions disponibles**: {len(info['fonctions'])}
+- **Modules importés**: {len(info['imports'])}
 
-### Version 1.0.0 ({datetime.now().strftime('%Y-%m-%d')})
-- Importation initiale depuis SuperWhisper_V6
-- Adaptation pour NextGeneration
-- Tests d'intgration russis
-- Documentation complte
+## 📝 Notes
+
+Cette documentation a été générée automatiquement par l'Agent 5 Documenteur.
 
 ---
-*Gnr automatiquement par {self.agent_name} - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*
+*Généré le {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} par Agent 5 Documenteur*
 """
-        
-        readme_path = self.target_path / "imported_tools" / "README.md"
-        with open(readme_path, 'w', encoding='utf-8') as f:
-            f.write(readme_content)
-        
-        self.documentation_files.append(str(readme_path))
-        self.docs_created += 1
-        print(f"[DOCUMENT] README principal cr: {readme_path}")
+        return doc
     
-    async def _documenter_outils_individuels(self):
-        """Crer la documentation pour chaque outil"""
-        print(" Documentation individuelle des outils...")
+    async def _creer_guides_utilisation(self):
+        """Créer les guides d'utilisation"""
+        self.logger.info("📖 Création des guides d'utilisation...")
         
-        for outil_info in self.outils_finalises:
-            outil = outil_info['outil']
-            
-            # Lire le fichier pour extraire plus d'informations
-            outil_path = Path(outil_info['target_path'])
-            
+        guides = [
+            ("guide_demarrage", self._creer_guide_demarrage),
+            ("guide_maintenance", self._creer_guide_maintenance),
+            ("guide_troubleshooting", self._creer_guide_troubleshooting)
+        ]
+        
+        for nom_guide, fonction_creation in guides:
             try:
-                with open(outil_path, 'r', encoding='utf-8') as f:
-                    contenu = f.read()
+                contenu_guide = fonction_creation()
+                guide_path = self.workspace_path / "docs" / "guides" / f"{nom_guide}.md"
                 
-                # Extraire les fonctions principales
-                fonctions = []
-                for ligne in contenu.split('\n'):
-                    if ligne.strip().startswith('def ') and not ligne.strip().startswith('def _'):
-                        nom_fonction = ligne.strip().split('(')[0].replace('def ', '')
-                        fonctions.append(nom_fonction)
+                with open(guide_path, 'w', encoding='utf-8') as f:
+                    f.write(contenu_guide)
                 
-                doc_content = f"""# {outil['nom']}
-
-## Description
-{outil.get('description', 'Outil import de SuperWhisper_V6')}
-
-## Informations
-- **Type :** {outil.get('type', 'utility')}
-- **Source :** SuperWhisper_V6
-- **Adapt le :** {datetime.now().strftime('%Y-%m-%d')}
-- **Chemin :** `{outil_info['target_path']}`
-
-## Fonctions principales
-"""
-                
-                for fonction in fonctions[:5]:  # Limiter  5 fonctions
-                    doc_content += f"- `{fonction}()`\n"
-                
-                doc_content += f"""
-
-## Utilisation
-
-### Excution basique
-```bash
-python {outil_info['target_path']}
-```
-
-### Avec aide
-```bash
-python {outil_info['target_path']} --help
-```
-
-## Dpendances
-"""
-                
-                dependances = outil.get('dependances', [])
-                if dependances:
-                    for dep in dependances[:10]:  # Limiter  10 dpendances
-                        doc_content += f"- {dep}\n"
-                else:
-                    doc_content += "- Aucune dpendance externe\n"
-                
-                doc_content += f"""
-
-## Notes d'adaptation
-- Chemins adapts pour NextGeneration
-- Configuration automatique de l'environnement
-- Compatible multi-plateforme
-
----
-*Documentation gnre par {self.agent_name}*
-"""
-                
-                # Sauvegarder la documentation
-                doc_filename = f"{outil['nom'].replace('.py', '')}.md"
-                doc_path = self.target_path / "imported_tools" / "docs" / "tools" / doc_filename
-                doc_path.parent.mkdir(exist_ok=True)
-                
-                with open(doc_path, 'w', encoding='utf-8') as f:
-                    f.write(doc_content)
-                
-                self.documentation_files.append(str(doc_path))
-                self.docs_created += 1
+                self.guides_crees.append(str(guide_path))
+                self.logger.info(f"✅ Guide créé: {nom_guide}")
                 
             except Exception as e:
-                print(f" Erreur documentation {outil['nom']}: {e}")
+                self.logger.error(f"❌ Erreur création guide {nom_guide}: {e}")
     
-    async def _creer_guide_utilisation(self):
-        """Crer le guide d'utilisation"""
-        print(" Cration du guide d'utilisation...")
-        
-        guide_content = f"""#  Guide d'Utilisation - Outils Imports
+    def _creer_guide_demarrage(self) -> str:
+        """Créer le guide de démarrage"""
+        return f"""# 🚀 Guide de Démarrage - Équipe Agents NextGeneration
 
-## Introduction
+## 🎯 Introduction
 
-Ce guide vous explique comment utiliser efficacement les outils imports dans NextGeneration.
+Bienvenue dans l'équipe d'agents NextGeneration ! Ce guide vous aide à démarrer rapidement.
 
-## [ROCKET] Dmarrage Rapide
+## 📋 Prérequis
 
-### 1. Vrification de l'installation
+- Python 3.8+
+- pip installé
+- Accès au répertoire du projet
+
+## ⚡ Démarrage Rapide
+
+### 1. Installation
 ```bash
-# Vrifier que Python est install
-python --version
-
-# Vrifier les dpendances
-pip list | grep -E "(requests|numpy|pandas)"
-```
-
-### 2. Premier test
-```bash
-# Lister tous les outils disponibles
-python tools/imported_tools/configs/list_tools.py
-
-# Tester un outil simple
-python tools/imported_tools/utilities/[nom_outil].py --help
-```
-
-## [FOLDER] Navigation dans les Outils
-
-### Par Catgorie
-
-#### [ROBOT] Automation
-Les outils d'automatisation vous permettent de :
-- Automatiser des tches rptitives
-- Crer des scripts de dploiement
-- Grer les processus en arrire-plan
-
-#### [CHART] Monitoring
-Les outils de surveillance pour :
-- Surveiller les performances systme
-- Collecter des mtriques
-- Gnrer des alertes
-
-####  Conversion
-Les outils de conversion pour :
-- Transformer des formats de donnes
-- Migrer des configurations
-- Convertir des fichiers
-
-#### [CONSTRUCTION] Generation
-Les outils de gnration pour :
-- Crer des templates
-- Gnrer du code
-- Produire des rapports
-
-####  Utilities
-Utilitaires divers pour :
-- Tches systme
-- Manipulation de fichiers
-- Outils de dveloppement
-
-## [BULB] Conseils d'Utilisation
-
-### Bonnes Pratiques
-1. **Toujours tester** avec `--help` avant d'utiliser un outil
-2. **Vrifier les dpendances** si un outil ne fonctionne pas
-3. **Consulter les logs** en cas de problme
-4. **Utiliser des chemins relatifs** quand possible
-
-### Rsolution de Problmes
-```bash
-# Si un outil ne dmarre pas
-python -c "import sys; print(sys.path)"
-
-# Si les imports chouent
-pip install -r tools/imported_tools/requirements.txt
-
-# Si les permissions sont refuses
-chmod +x tools/imported_tools/[categorie]/[outil].py
-```
-
-## [TOOL] Configuration Avance
-
-### Variables d'Environnement
-Les outils utilisent automatiquement la configuration NextGeneration :
-- `NEXTGEN_CONFIG["project_root"]` - Racine du projet
-- `NEXTGEN_CONFIG["data_dir"]` - Rpertoire de donnes
-- `NEXTGEN_CONFIG["logs_dir"]` - Rpertoire de logs
-
-### Personnalisation
-Vous pouvez modifier la configuration dans chaque outil en ditant la section :
-```python
-NEXTGEN_CONFIG = {{
-    "project_root": PROJECT_ROOT,
-    "tools_dir": PROJECT_ROOT / "tools",
-    # ... autres configurations
-}}
-```
-
-## [CHART] Exemples d'Utilisation
-
-### Exemple 1 : Outil de Monitoring
-```bash
-# Surveiller l'utilisation CPU
-python tools/imported_tools/monitoring/cpu_monitor.py --interval 5
-
-# Gnrer un rapport
-python tools/imported_tools/monitoring/cpu_monitor.py --report
-```
-
-### Exemple 2 : Outil de Conversion
-```bash
-# Convertir un fichier
-python tools/imported_tools/conversion/file_converter.py input.txt output.json
-
-# Conversion en lot
-python tools/imported_tools/conversion/file_converter.py --batch input_dir/ output_dir/
-```
-
-##  Aide et Support
-
-### Obtenir de l'aide
-```bash
-# Aide gnrale
-python tools/imported_tools/configs/help.py
-
-# Aide spcifique  un outil
-python tools/imported_tools/[categorie]/[outil].py --help
-
-# Version d'un outil
-python tools/imported_tools/[categorie]/[outil].py --version
-```
-
-### Logs et Dbogage
-- Les logs sont automatiquement crs dans `logs/`
-- Utiliser `--verbose` ou `-v` pour plus de dtails
-- Consulter `docs/DOCUMENTATION_TECHNIQUE.md` pour le dbogage avanc
-
----
-*Guide cr par {self.agent_name} - {datetime.now().strftime('%Y-%m-%d')}*
-"""
-        
-        guide_path = self.target_path / "imported_tools" / "docs" / "GUIDE_UTILISATION.md"
-        with open(guide_path, 'w', encoding='utf-8') as f:
-            f.write(guide_content)
-        
-        self.documentation_files.append(str(guide_path))
-        self.docs_created += 1
-        print(f" Guide d'utilisation cr: {guide_path}")
-    
-    async def _creer_guide_installation(self):
-        """Crer le guide d'installation"""
-        print(" Cration du guide d'installation...")
-        
-        installation_content = f"""#  Guide d'Installation - Outils Imports
-
-## Prrequis
-
-### Systme
-- Python 3.8 ou suprieur
-- pip (gestionnaire de packages Python)
-- Git (pour les mises  jour)
-
-### Vrification
-```bash
-python --version  # Doit afficher 3.8+
-pip --version     # Doit tre install
-```
-
-##  Installation
-
-### 1. Installation automatique (recommande)
-```bash
-# Depuis la racine du projet NextGeneration
-cd tools/imported_tools
+cd equipe_agents_tools_migration
 pip install -r requirements.txt
 ```
 
-### 2. Installation manuelle
+### 2. Lancement du Chef d'Équipe
 ```bash
-# Installer les dpendances une par une
-pip install requests
-pip install pathlib
-pip install json
-# ... autres dpendances selon les besoins
+python agent_0_chef_equipe_coordinateur.py
 ```
 
-### 3. Vrification de l'installation
+### 3. Lancement d'un Agent Individuel
 ```bash
-# Tester l'installation
-python configs/test_installation.py
-
-# Lister les outils disponibles
-python configs/list_tools.py
+python agent_1_analyseur_structure.py
+python agent_2_evaluateur_utilite.py
 ```
 
-## [TOOL] Configuration
+## 🛠️ Configuration
 
-### Configuration Automatique
-Les outils se configurent automatiquement au dmarrage :
-- Dtection du rpertoire NextGeneration
-- Cration des rpertoires ncessaires
-- Configuration des chemins
+### Variables d'Environnement
+- `NEXTGEN_DEBUG=true` : Mode debug
+- `NEXTGEN_LOG_LEVEL=INFO` : Niveau de logging
 
-### Configuration Manuelle (optionnelle)
-Si ncessaire, vous pouvez modifier la configuration :
+### Chemins Importants
+- **Agents source**: `../agent_factory_implementation/agents`
+- **Workspace**: `./`
+- **Rapports**: `./reports`
 
-1. **diter un outil spcifique :**
-```python
-# Dans le fichier de l'outil
-NEXTGEN_CONFIG = {{
-    "project_root": Path("/votre/chemin/nextgeneration"),
-    "data_dir": Path("/votre/chemin/data"),
-    # ...
-}}
-```
+## 📊 Commandes Utiles
 
-2. **Configuration globale :**
 ```bash
-# Modifier le fichier de configuration
-nano tools/imported_tools/configs/config.json
-```
+# Vérifier l'état de l'équipe
+python agent_0_chef_equipe_coordinateur.py --help
 
-##  Tests
+# Analyser la structure
+python agent_1_analyseur_structure.py --analyze
 
-### Tests Automatiques
-```bash
-# Tester tous les outils
-python configs/test_all_tools.py
-
-# Tester une catgorie
-python configs/test_category.py automation
-
-# Tester un outil spcifique
-python configs/test_tool.py nom_outil.py
-```
-
-### Tests Manuels
-```bash
-# Test basique d'un outil
-python utilities/exemple_outil.py --help
-
-# Test avec paramtres
-python utilities/exemple_outil.py --version
-```
-
-##  Rsolution de Problmes
-
-### Problmes Courants
-
-#### 1. ImportError
-```
-Erreur: ModuleNotFoundError: No module named 'requests'
-Solution: pip install requests
-```
-
-#### 2. Permission denied
-```
-Erreur: Permission denied
-Solution: chmod +x tools/imported_tools/[outil].py
-```
-
-#### 3. Chemin non trouv
-```
-Erreur: FileNotFoundError
-Solution: Vrifier que vous tes dans le bon rpertoire
-cd /chemin/vers/nextgeneration
-```
-
-### Diagnostic
-```bash
-# Vrifier l'environnement Python
-python -c "import sys; print('\\n'.join(sys.path))"
-
-# Vrifier les packages installs
-pip list
-
-# Vrifier la configuration NextGeneration
-python -c "from pathlib import Path; print(Path.cwd())"
-```
-
-##  Mise  Jour
-
-### Mise  jour des dpendances
-```bash
-pip install --upgrade -r requirements.txt
-```
-
-### Mise  jour des outils
-Les outils sont mis  jour avec le projet NextGeneration via Git.
-
-## [CHART] Validation de l'Installation
-
-### Checklist
-- [ ] Python 3.8+ install
-- [ ] Dpendances installes (`pip install -r requirements.txt`)
-- [ ] Tests de base russis (`python configs/test_installation.py`)
-- [ ] Au moins un outil fonctionne (`python utilities/[outil].py --help`)
-
-### Script de Validation
-```bash
-#!/bin/bash
-# Script de validation complte
-
-echo "[SEARCH] Validation de l'installation..."
-
-# Test Python
-python --version || {{ echo "[CROSS] Python non install"; exit 1; }}
-
-# Test dpendances
-pip install -r requirements.txt || {{ echo "[CROSS] Erreur dpendances"; exit 1; }}
-
-# Test configuration
-python configs/test_installation.py || {{ echo "[CROSS] Erreur configuration"; exit 1; }}
-
-echo "[CHECK] Installation valide avec succs!"
+# Évaluer l'utilité
+python agent_2_evaluateur_utilite.py --evaluate
 ```
 
 ---
-*Guide cr par {self.agent_name} - {datetime.now().strftime('%Y-%m-%d')}*
+*Créé par Agent 5 Documenteur - {datetime.now().strftime('%Y-%m-%d')}*
+"""
+    
+    def _creer_guide_maintenance(self) -> str:
+        """Créer le guide de maintenance"""
+        return f"""# 🔧 Guide de Maintenance - Équipe Agents
+
+## 🎯 Maintenance Préventive
+
+### Vérifications Quotidiennes
+- [ ] État des agents (health check)
+- [ ] Logs d'erreurs
+- [ ] Espace disque disponible
+
+### Vérifications Hebdomadaires
+- [ ] Performance des agents
+- [ ] Mise à jour des dépendances
+- [ ] Nettoyage des logs anciens
+
+## 🚨 Résolution de Problèmes
+
+### Problèmes Courants
+
+#### Agent ne démarre pas
+```bash
+# Vérifier les dépendances
+pip check
+
+# Vérifier les permissions
+ls -la agent_*.py
+
+# Réinstaller les dépendances
+pip install -r requirements.txt --force-reinstall
+```
+
+#### Erreurs d'import
+```bash
+# Vérifier PYTHONPATH
+echo $PYTHONPATH
+
+# Ajouter le répertoire courant
+export PYTHONPATH=$PYTHONPATH:.
+```
+
+### Logs et Diagnostic
+- **Logs**: `./logs/`
+- **Rapports**: `./reports/`
+- **Debug**: Utiliser `--debug` ou `NEXTGEN_DEBUG=true`
+
+## 🔄 Maintenance Automatisée
+
+### Scripts de Maintenance
+```bash
+# Maintenance complète
+python agent_0_chef_equipe_coordinateur.py --maintenance
+
+# Nettoyage
+python maintenance_scripts/cleanup.py
+
+# Sauvegarde
+python maintenance_scripts/backup.py
+```
+
+---
+*Créé par Agent 5 Documenteur - {datetime.now().strftime('%Y-%m-%d')}*
+"""
+    
+    def _creer_guide_troubleshooting(self) -> str:
+        """Créer le guide de troubleshooting"""
+        return f"""# 🔍 Guide de Troubleshooting - Agents NextGeneration
+
+## ❌ Erreurs Fréquentes
+
+### 1. ImportError: No module named 'agent_X'
+**Cause**: Module non trouvé
+**Solution**:
+```bash
+# Vérifier le répertoire
+ls -la agent_*.py
+
+# Vérifier PYTHONPATH
+export PYTHONPATH=$PYTHONPATH:.
+
+# Réinstaller
+pip install -r requirements.txt
+```
+
+### 2. AttributeError: 'Agent' object has no attribute 'startup'
+**Cause**: Interface agent incompatible
+**Solution**: Vérifier que l'agent implémente les bonnes méthodes
+
+### 3. FileNotFoundError: Target path not found
+**Cause**: Chemin cible incorrect
+**Solution**:
+```bash
+# Créer les répertoires
+mkdir -p ../agent_factory_implementation/agents
+mkdir -p reports
+```
+
+## 🔧 Commandes de Diagnostic
+
+### Test des Agents
+```bash
+# Test complet
+python agent_0_chef_equipe_coordinateur.py --test
+
+# Test individuel
+python agent_1_analyseur_structure.py --test
+```
+
+### Vérification des Chemins
+```bash
+# Vérifier la configuration
+python -c "from pathlib import Path; print(Path('../agent_factory_implementation/agents').exists())"
+```
+
+### Logs Détaillés
+```bash
+# Mode verbose
+python agent_0_chef_equipe_coordinateur.py --verbose
+
+# Logs en temps réel
+tail -f logs/*.log
+```
+
+## 📞 Support
+
+### Informations à Fournir
+1. Version Python: `python --version`
+2. Système: `uname -a` (Linux/Mac) ou `systeminfo` (Windows)
+3. Logs d'erreur complets
+4. Commande exacte exécutée
+
+### Contacts
+- Documentation: `docs/`
+- Issues: Repository GitHub
+- Logs: `logs/troubleshooting_*.log`
+
+---
+*Créé par Agent 5 Documenteur - {datetime.now().strftime('%Y-%m-%d')}*
+"""
+    
+    async def _documenter_schemas(self):
+        """Documenter les schémas et architectures"""
+        self.logger.info("🏗️ Documentation des schémas...")
+        
+        schema_doc = f"""# 🏗️ Architecture - Équipe Agents NextGeneration
+
+## 📋 Vue d'Ensemble
+
+L'équipe est composée de 7 agents spécialisés coordonnés par un chef d'équipe.
+
+```
+Agent 0 (Chef d'Équipe)
+├── Agent 1 (Analyseur Structure)
+├── Agent 2 (Évaluateur Utilité)
+├── Agent 3 (Adaptateur Code)
+├── Agent 4 (Testeur Intégration)
+├── Agent 5 (Documenteur)
+└── Agent 6 (Validateur Final)
+```
+
+## 🔄 Workflow de Mission
+
+1. **Agent 0** coordonne l'ensemble
+2. **Agent 1** analyse la structure des agents
+3. **Agent 2** évalue l'utilité des agents
+4. **Agent 3** adapte le code si nécessaire
+5. **Agent 4** teste l'intégration
+6. **Agent 5** génère la documentation
+7. **Agent 6** valide la mission
+
+## 📊 Interfaces et Protocoles
+
+### Interface Agent Standard
+```python
+class AgentInterface:
+    def __init__(self, target_path, workspace_path):
+        self.agent_id = str
+        self.agent_type = str
+        self.logger = Logger
+    
+    async def startup(self):
+        pass
+    
+    async def shutdown(self):
+        pass
+    
+    async def health_check(self) -> Dict:
+        pass
+```
+
+### Protocole de Communication
+- **Input**: Configuration et données d'entrée
+- **Processing**: Traitement asynchrone
+- **Output**: Résultats structurés en JSON
+- **Logging**: Logs détaillés pour monitoring
+
+## 🗄️ Structure des Données
+
+### Format des Résultats
+```json
+{{
+  "agent_id": "agent_X_timestamp",
+  "agent_type": "type_agent", 
+  "status": "complete|erreur|en_cours",
+  "resultats": {{}},
+  "timestamp_debut": "ISO_8601",
+  "timestamp_fin": "ISO_8601",
+  "duree_sec": float
+}}
+```
+
+---
+*Généré par Agent 5 Documenteur - {datetime.now().strftime('%Y-%m-%d')}*
 """
         
-        install_path = self.target_path / "imported_tools" / "docs" / "GUIDE_INSTALLATION.md"
-        with open(install_path, 'w', encoding='utf-8') as f:
-            f.write(installation_content)
+        schema_path = self.workspace_path / "docs" / "schemas" / "architecture.md"
+        with open(schema_path, 'w', encoding='utf-8') as f:
+            f.write(schema_doc)
         
-        self.documentation_files.append(str(install_path))
-        self.docs_created += 1
-        print(f" Guide d'installation cr: {install_path}")
+        self.documents_generes.append(str(schema_path))
+        self.logger.info("✅ Schéma d'architecture documenté")
     
-    async def _generer_rapport(self) -> Dict[str, Any]:
-        """Gnrer le rapport final de documentation"""
-        duree = (datetime.now() - self.start_time).total_seconds()
+    async def _creer_documentation_consolidee(self):
+        """Créer la documentation consolidée"""
+        self.logger.info("📚 Création documentation consolidée...")
         
-        rapport = {
-            "agent": self.agent_name,
-            "model": self.model_name,
-            "timestamp": self.start_time.isoformat(),
-            "duree_secondes": duree,
-            "status": "SUCCESS",
-            "statistiques": {
-                "outils_documentes": len(self.outils_finalises),
-                "docs_created": self.docs_created,
-                "fichiers_documentation": len(self.documentation_files)
-            },
-            "documentation_files": self.documentation_files,
-            "docs_created": self.docs_created
-        }
+        readme_content = f"""# 📚 Documentation Équipe Agents NextGeneration
+
+## 🎯 Vue d'Ensemble
+
+Cette équipe d'agents spécialisés assure la maintenance et l'optimisation des agents NextGeneration.
+
+## 📋 Agents Disponibles
+
+- **[Agent 0](agents/agent_0_chef_equipe_coordinateur_documentation.md)** - Chef d'Équipe Coordinateur
+- **[Agent 1](agents/agent_1_analyseur_structure_documentation.md)** - Analyseur Structure  
+- **[Agent 2](agents/agent_2_evaluateur_utilite_documentation.md)** - Évaluateur Utilité
+- **[Agent 3](agents/agent_3_adaptateur_code_documentation.md)** - Adaptateur Code
+- **[Agent 4](agents/agent_4_testeur_integration_documentation.md)** - Testeur Intégration
+- **[Agent 5](agents/agent_5_documenteur_documentation.md)** - Documenteur
+- **[Agent 6](agents/agent_6_validateur_final_documentation.md)** - Validateur Final
+
+## 📖 Guides
+
+- **[Guide de Démarrage](guides/guide_demarrage.md)** - Premiers pas
+- **[Guide de Maintenance](guides/guide_maintenance.md)** - Maintenance quotidienne
+- **[Guide de Troubleshooting](guides/guide_troubleshooting.md)** - Résolution de problèmes
+
+## 🏗️ Architecture
+
+- **[Schémas d'Architecture](schemas/architecture.md)** - Vue technique détaillée
+
+## 🚀 Démarrage Rapide
+
+```bash
+# Lancer le chef d'équipe
+python agent_0_chef_equipe_coordinateur.py
+
+# Workflow complet
+python agent_0_chef_equipe_coordinateur.py --workflow-complet
+```
+
+## 📊 Statistiques
+
+- **Agents**: {len([f for f in self.target_path.glob('agent_*.py') if f.name != '__init__.py'])} agents disponibles
+- **Documentation**: {len(self.documents_generes)} documents générés
+- **Guides**: {len(self.guides_crees)} guides créés
+
+---
+*Documentation générée automatiquement par Agent 5 Documenteur le {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*
+"""
         
-        # Sauvegarder le rapport
-        rapport_path = self.workspace_path / "reports" / f"agent_5_documentation_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-        rapport_path.parent.mkdir(exist_ok=True)
+        readme_path = self.workspace_path / "docs" / "README.md"
+        with open(readme_path, 'w', encoding='utf-8') as f:
+            f.write(readme_content)
         
-        with open(rapport_path, 'w', encoding='utf-8') as f:
-            json.dump(rapport, f, indent=2, ensure_ascii=False)
+        self.documents_generes.append(str(readme_path))
+        self.logger.info("✅ Documentation consolidée créée")
+    
+    async def _generer_index_documentation(self):
+        """Générer l'index de la documentation"""
+        self.logger.info("📇 Génération index documentation...")
         
-        print(f"[DOCUMENT] Rapport sauvegard: {rapport_path}")
-        print(f" Documentation: {self.docs_created} fichiers crs")
+        index_content = f"""# 📇 Index de la Documentation
+
+## 📊 Statistiques Générales
+
+- **Date de génération**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+- **Documents totaux**: {len(self.documents_generes)}
+- **Guides créés**: {len(self.guides_crees)}
+- **Schémas documentés**: {len(self.schemas_documentes)}
+
+## 📁 Structure des Fichiers
+
+### Documents Générés
+{chr(10).join(f"- `{Path(doc).name}`" for doc in self.documents_generes)}
+
+### Guides Créés  
+{chr(10).join(f"- `{Path(guide).name}`" for guide in self.guides_crees)}
+
+### Agents Documentés
+{chr(10).join(f"- {schema}" for schema in self.schemas_documentes)}
+
+## 🔗 Liens Rapides
+
+- **[Documentation Principale](README.md)**
+- **[Guides](guides/)**
+- **[Agents](agents/)**
+- **[Schémas](schemas/)**
+
+---
+*Index généré par Agent 5 Documenteur*
+"""
         
-        return rapport 
+        index_path = self.workspace_path / "docs" / "INDEX.md"
+        with open(index_path, 'w', encoding='utf-8') as f:
+            f.write(index_content)
+        
+        self.documents_generes.append(str(index_path))
+        self.logger.info("✅ Index documentation généré")
+    
+    async def _sauvegarder_rapport(self, resultats: Dict[str, Any]):
+        """Sauvegarder le rapport de documentation"""
+        try:
+            reports_dir = self.workspace_path / "reports"
+            reports_dir.mkdir(parents=True, exist_ok=True)
+            
+            rapport_path = reports_dir / f"agent_5_documentation_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            
+            with open(rapport_path, 'w', encoding='utf-8') as f:
+                json.dump(resultats, f, indent=2, ensure_ascii=False, default=str)
+            
+            self.logger.info(f"💾 Rapport sauvegardé: {rapport_path}")
+            
+        except Exception as e:
+            self.logger.error(f"❌ Erreur sauvegarde rapport: {e}")
+
+# Factory function pour compatibilité TemplateManager
+def create_agent_5Documenteur(**config):
+    """Factory function pour créer l'agent"""
+    return Agent5Documenteur(**config)
+
+# Fonction factory pour compatibilité
+def create_agent_5_documenteur(resultats_tests: Dict[str, Any], target_path: str, workspace_path: str):
+    """Factory pour créer Agent 5 Documenteur"""
+    return Agent5Documenteur(resultats_tests=resultats_tests, target_path=target_path, workspace_path=workspace_path)
+
+# Point d'entrée direct
+async def main():
+    """Point d'entrée principal Agent 5 Documenteur"""
+    print("📚 AGENT 5 - DOCUMENTEUR")
+    print("=" * 40)
+    
+    # Configuration par défaut
+    resultats_tests = {"tests_effectues": True, "resultats": "simulation"}
+    target_path = "../agent_factory_implementation/agents"
+    workspace_path = "."
+    
+    try:
+        # Création et exécution
+        documenteur = create_agent_5_documenteur(resultats_tests, target_path, workspace_path)
+        await documenteur.startup()
+        
+        # Lancement documentation
+        resultats = await documenteur.documenter_complete()
+        
+        # Affichage résultats
+        print(f"\n📊 RÉSULTATS:")
+        print(f"Status: {resultats['status']}")
+        if resultats['status'] == 'complete':
+            print(f"Documents générés: {resultats['nombre_documents']}")
+            print(f"Durée: {resultats['duree_sec']:.1f}s")
+        
+        await documenteur.shutdown()
+        print("✅ Agent 5 Documenteur terminé avec succès")
+        
+    except Exception as e:
+        print(f"❌ Erreur: {e}")
+        return 1
+    
+    return 0
+
+if __name__ == "__main__":
+    result = asyncio.run(main())
+    exit(result) 

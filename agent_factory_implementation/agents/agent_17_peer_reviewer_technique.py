@@ -2,9 +2,15 @@
 RÔLE : Review technique détaillée et validation code expert ligne par ligne
 """
 
+# 🔧 CONVERTI AUTOMATIQUEMENT SYNC → ASYNC
+# Date: 2025-06-19 19h35 - Correction architecture Pattern Factory
+# Raison: Harmonisation async/sync avec core/agent_factory_architecture.py
+
+
 import os
 import json
 import logging
+import asyncio
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any, Optional

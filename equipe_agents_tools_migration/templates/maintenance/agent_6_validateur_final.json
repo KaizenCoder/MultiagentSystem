@@ -1,0 +1,127 @@
+{
+  "name": "agent_6_validateur_final",
+  "version": "1.0.0",
+  "role": "validator",
+  "domain": "final_validation",
+  "model": "Claude Sonnet 4",
+  "description": "Agent 6 - Validateur Final pour validation finale de la mission d'intégration des outils",
+  "capabilities": [
+    "mission_validation",
+    "quality_assessment",
+    "integrity_checking",
+    "functionality_testing",
+    "documentation_validation",
+    "global_evaluation",
+    "report_generation",
+    "recommendation_creation"
+  ],
+  "tools": [
+    "validation_engine",
+    "quality_analyzer",
+    "integrity_checker",
+    "functionality_tester",
+    "report_generator"
+  ],
+  "validation_phases": [
+    "team_results_validation",
+    "tools_integrity_check",
+    "functionality_tests",
+    "documentation_validation",
+    "global_mission_evaluation",
+    "final_report_generation"
+  ],
+  "default_config": {
+    "timeout": 300,
+    "min_quality_score": 70.0,
+    "critical_issues_tolerance": 0,
+    "generate_recommendations": true,
+    "detailed_analysis": true,
+    "validation_strict": true
+  },
+  "quality_metrics": {
+    "base_score": 100.0,
+    "critical_issue_penalty": 20,
+    "warning_penalty": 5,
+    "success_bonus": 2,
+    "completeness_weight": 0.4,
+    "quality_weight": 0.6
+  },
+  "validation_criteria": {
+    "team_completion": {
+      "weight": 0.3,
+      "required_agents": 6,
+      "min_success_rate": 0.8
+    },
+    "tools_integrity": {
+      "weight": 0.25,
+      "syntax_validation": true,
+      "import_validation": true
+    },
+    "functionality": {
+      "weight": 0.25,
+      "basic_tests": true,
+      "integration_tests": true
+    },
+    "documentation": {
+      "weight": 0.2,
+      "completeness": true,
+      "quality": true
+    }
+  },
+  "mission_statuses": [
+    "SUCCESS",
+    "PARTIAL_SUCCESS",
+    "NEEDS_IMPROVEMENT",
+    "FAILED"
+  ],
+  "interfaces": {
+    "startup": "async def startup(self)",
+    "shutdown": "async def shutdown(self)",
+    "health_check": "async def health_check(self) -> Dict[str, Any]",
+    "valider_mission": "async def valider_mission(self) -> Dict[str, Any]"
+  },
+  "dependencies": [
+    "asyncio",
+    "json",
+    "logging",
+    "datetime",
+    "pathlib",
+    "typing",
+    "subprocess"
+  ],
+  "validation_process": {
+    "steps": [
+      "valider_resultats_equipe",
+      "valider_integrite_outils",
+      "executer_tests_fonctionnalite",
+      "valider_documentation",
+      "evaluer_mission_globale",
+      "generer_rapport_final"
+    ],
+    "error_handling": "comprehensive_logging",
+    "success_thresholds": {
+      "excellent": 90,
+      "good": 80,
+      "acceptable": 70,
+      "poor": 50
+    }
+  },
+  "reporting": {
+    "formats": ["json", "markdown"],
+    "sections": [
+      "mission_summary",
+      "quality_assessment",
+      "issues_analysis",
+      "recommendations",
+      "next_steps"
+    ],
+    "include_metrics": true,
+    "detailed_breakdown": true
+  },
+  "performance": {
+    "parallel_validation": false,
+    "comprehensive_analysis": true,
+    "detailed_reporting": true,
+    "optimization": "accuracy"
+  }
+} 

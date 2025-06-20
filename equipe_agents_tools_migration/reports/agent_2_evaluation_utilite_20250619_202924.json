@@ -1,0 +1,1790 @@
+{
+  "agent": "Agent 2 - valuateur Utilit",
+  "model": "GPT-4 Turbo",
+  "timestamp": "2025-06-19T20:29:24.795652",
+  "duree_secondes": 0.001721,
+  "status": "SUCCESS",
+  "statistiques": {
+    "outils_evalues": 29,
+    "outils_retenus": 5,
+    "outils_rejetes": 24,
+    "taux_retention": 17.2
+  },
+  "outils_utiles": [
+    {
+      "nom": "demo_security_sprint1.py",
+      "path": "demo\\demo_security_sprint1.py",
+      "type": "test_script",
+      "description": "\nDémonstration Sécurité LUXA SuperWhisper V6 - Sprint 1\nScript de test complet des fonctionnalités sécurisées\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+      "complexite": 272,
+      "dependances": [
+        "os",
+        "sys",
+        "pathlib",
+        "asyncio",
+        "requests",
+        "time",
+        "json",
+        "pathlib",
+        "config.security_config"
+      ],
+      "fonctions_principales": [
+        "_setup_portable_environment",
+        "print_section",
+        "print_test",
+        "test_api_endpoints",
+        "test_security_performance"
+      ],
+      "score_utilite": 30
+    },
+    {
+      "nom": "test_pipeline_voice_validation_real.py",
+      "path": "testing\\test_pipeline_voice_validation_real.py",
+      "type": "cli_tool",
+      "description": "\nTest de validation pipeline voix-à-voix SuperWhisper V6 - AVEC TTS RÉEL\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n\nUtilise le TTSHandler validé de la transmission du coordinateur (10/06/2025)\navec fallback intelligent si modèles non disponibles.\n\nTest interactif complet: STT → LLM → TTS → Audio avec validation humaine\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+      "complexite": 374,
+      "dependances": [
+        "os",
+        "sys",
+        "pathlib",
+        "time",
+        "json",
+        "asyncio",
+        "argparse",
+        "datetime",
+        "pathlib",
+        "typing",
+        "numpy",
+        "sounddevice",
+        "torch",
+        "tts_handler",
+        "tempfile",
+        "wave",
+        "subprocess",
+        "win32com.client",
+        "tempfile",
+        "wave",
+        "traceback"
+      ],
+      "fonctions_principales": [
+        "_setup_portable_environment",
+        "validate_rtx3090_configuration",
+        "_to_int16",
+        "_write_log",
+        "__init__"
+      ],
+      "score_utilite": 50
+    },
+    {
+      "nom": "demo_improvements.py",
+      "path": "demo\\demo_improvements.py",
+      "type": "utility",
+      "description": "\nScript de Validation Complète - Luxa SuperWhisper V6\n===================================================\n\nDémonstrateur des améliorations de sécurité, robustesse et performance.\nCe script illustre toutes les corrections apportées suite au peer review.\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+      "complexite": 319,
+      "dependances": [
+        "os",
+        "sys",
+        "pathlib",
+        "asyncio",
+        "numpy",
+        "time",
+        "json",
+        "logging",
+        "pathlib",
+        "sys",
+        "config.security_config",
+        "utils.error_handler",
+        "Orchestrator.master_handler_robust",
+        "shutil",
+        "traceback"
+      ],
+      "fonctions_principales": [
+        "_setup_portable_environment",
+        "format",
+        "__init__",
+        "demo_api_key_management",
+        "demo_input_validation"
+      ],
+      "score_utilite": 41
+    },
+    {
+      "nom": "download_tts_model.py",
+      "path": "download\\download_tts_model.py",
+      "type": "download",
+      "description": "\nScript de téléchargement du modèle TTS fr_FR-siwis-medium.onnx\nBasé sur la transmission du coordinateur du 10 juin 2025\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+      "complexite": 123,
+      "dependances": [
+        "os",
+        "sys",
+        "pathlib",
+        "requests",
+        "pathlib",
+        "urllib.parse",
+        "shutil",
+        "shutil",
+        "traceback"
+      ],
+      "fonctions_principales": [
+        "_setup_portable_environment",
+        "download_file",
+        "main"
+      ],
+      "score_utilite": 29
+    },
+    {
+      "nom": "monitor_phase3.py",
+      "path": "monitoring\\monitor_phase3.py",
+      "type": "interface_web",
+      "description": "\nMonitoring Phase 3 - SuperWhisper V6 TTS\nSurveillance en temps réel des métriques de performance\n🚀 Dashboard des optimisations Phase 3\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+      "complexite": 329,
+      "dependances": [
+        "os",
+        "sys",
+        "pathlib",
+        "asyncio",
+        "logging",
+        "time",
+        "json",
+        "pathlib",
+        "datetime",
+        "collections",
+        "threading",
+        "TTS.tts_manager",
+        "TTS.utils_audio",
+        "yaml"
+      ],
+      "fonctions_principales": [
+        "_setup_portable_environment",
+        "__init__",
+        "_estimate_backend_used",
+        "_print_live_metrics",
+        "_generate_monitoring_report"
+      ],
+      "score_utilite": 31
+    }
+  ],
+  "evaluations_detaillees": [
+    {
+      "outil": {
+        "nom": "generateur_aide_externe.py",
+        "path": "generation\\generateur_aide_externe.py",
+        "type": "cli_tool",
+        "description": "\nGénérateur d'aide externe SuperWhisper V6\nOutil pour créer des demandes d'aide avec code essentiel agrégé en .md\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 236,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "pathlib",
+          "datetime",
+          "typing",
+          "json",
+          "argparse"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "main",
+          "__init__",
+          "creer_aide_externe",
+          "_collecter_code_essentiel"
+        ],
+        "score_utilite": 50
+      },
+      "scores": {
+        "pertinence_technique": 7.1,
+        "compatibilite_architecture": 6.0,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 7.25,
+        "maintenance": 7.6,
+        "score_final": 7.48
+      },
+      "recommandation": "UTILE",
+      "justification": "Outil cli_tool 'generateur_aide_externe.py' utile avec quelques adaptations ncessaires",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: datetime, typing, argparse",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "make_scripts_portable.py",
+        "path": "portability\\make_scripts_portable.py",
+        "type": "cli_tool",
+        "description": "\n🚀 Utilitaire de Portabilité Scripts - SuperWhisper V6\n\nRend tous les scripts Python exécutables depuis n'importe quel répertoire\nen résolvant automatiquement les chemins et imports.\n\nUsage:\n    python tools/make_scripts_portable.py --scan-all\n    python tools/make_scripts_portable.py --fix-script path/to/script.py\n    python tools/make_scripts_portable.py --create-launcher script.py\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 356,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "shutil",
+          "argparse",
+          "re",
+          "typing"
+        ],
+        "fonctions_principales": [
+          "find_python_scripts",
+          "is_script_file",
+          "analyze_script_dependencies",
+          "has_portable_header",
+          "make_script_portable"
+        ],
+        "score_utilite": 50
+      },
+      "scores": {
+        "pertinence_technique": 6.7,
+        "compatibilite_architecture": 6.0,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 6.857142857142857,
+        "maintenance": 8.5,
+        "score_final": 7.39
+      },
+      "recommandation": "UTILE",
+      "justification": "Outil cli_tool 'make_scripts_portable.py' utile avec quelques adaptations ncessaires",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: shutil, argparse, re",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "run_complete_tests.py",
+        "path": "testing\\run_complete_tests.py",
+        "type": "cli_tool",
+        "description": "\nScript d'Exécution Complète des Tests TTS - SuperWhisper V6\nOrchestration de tous les tests : pytest, démonstration, monitoring\n🧪 Suite complète de validation Phase 3\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 302,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "subprocess",
+          "time",
+          "json",
+          "pathlib",
+          "datetime",
+          "torch",
+          "traceback"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "main",
+          "__init__",
+          "log",
+          "run_command"
+        ],
+        "score_utilite": 50
+      },
+      "scores": {
+        "pertinence_technique": 7.3,
+        "compatibilite_architecture": 6.0,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 7.2,
+        "maintenance": 7.6,
+        "score_final": 7.53
+      },
+      "recommandation": "RECOMMAND",
+      "justification": "Outil cli_tool 'run_complete_tests.py' trs pertinent pour NextGeneration, intgration recommande",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: time, datetime, torch",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "test_pipeline_voice_validation_real.py",
+        "path": "testing\\test_pipeline_voice_validation_real.py",
+        "type": "cli_tool",
+        "description": "\nTest de validation pipeline voix-à-voix SuperWhisper V6 - AVEC TTS RÉEL\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n\nUtilise le TTSHandler validé de la transmission du coordinateur (10/06/2025)\navec fallback intelligent si modèles non disponibles.\n\nTest interactif complet: STT → LLM → TTS → Audio avec validation humaine\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 374,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "time",
+          "json",
+          "asyncio",
+          "argparse",
+          "datetime",
+          "pathlib",
+          "typing",
+          "numpy",
+          "sounddevice",
+          "torch",
+          "tts_handler",
+          "tempfile",
+          "wave",
+          "subprocess",
+          "win32com.client",
+          "tempfile",
+          "wave",
+          "traceback"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "validate_rtx3090_configuration",
+          "_to_int16",
+          "_write_log",
+          "__init__"
+        ],
+        "score_utilite": 50
+      },
+      "scores": {
+        "pertinence_technique": 7.5,
+        "compatibilite_architecture": 7.5,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 5.071428571428571,
+        "maintenance": 7.3,
+        "score_final": 7.62
+      },
+      "recommandation": "RECOMMAND",
+      "justification": "Outil cli_tool 'test_pipeline_voice_validation_real.py' trs pertinent pour NextGeneration, intgration recommande",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: time, asyncio, argparse",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "test_pipeline_voice_validation_working.py",
+        "path": "testing\\test_pipeline_voice_validation_working.py",
+        "type": "cli_tool",
+        "description": "\nTest de validation pipeline voix-à-voix SuperWhisper V6 - VERSION FONCTIONNELLE\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n\nBasé sur:\n- Transmission coordinateur 10/06/2025 (TTS validé)\n- Journal développement Phase 3 TTS (performance exceptionnelle)\n- Architecture réelle du projet SuperWhisper V6\n\nTest interactif complet: STT → LLM → TTS → Audio avec validation humaine\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 282,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "time",
+          "json",
+          "asyncio",
+          "argparse",
+          "datetime",
+          "pathlib",
+          "typing",
+          "numpy",
+          "sounddevice",
+          "torch",
+          "win32com.client",
+          "tempfile",
+          "wave",
+          "traceback"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "validate_rtx3090_configuration",
+          "_to_int16",
+          "_write_log",
+          "__init__"
+        ],
+        "score_utilite": 50
+      },
+      "scores": {
+        "pertinence_technique": 7.3,
+        "compatibilite_architecture": 7.5,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 5.088235294117647,
+        "maintenance": 7.3,
+        "score_final": 7.56
+      },
+      "recommandation": "RECOMMAND",
+      "justification": "Outil cli_tool 'test_pipeline_voice_validation_working.py' trs pertinent pour NextGeneration, intgration recommande",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: time, asyncio, argparse",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "auto_fix_new_scripts.py",
+        "path": "automation\\auto_fix_new_scripts.py",
+        "type": "cli_tool",
+        "description": "\n🔄 Auto-Fix Nouveaux Scripts - SuperWhisper V6\n\nSurveille et rend automatiquement portables les nouveaux scripts Python\ncréés dans le projet, avec intégration Git hooks et surveillance continue.\n\nUsage:\n    python tools/auto_fix_new_scripts.py --watch          # Surveillance continue\n    python tools/auto_fix_new_scripts.py --git-hook       # Installation Git hook\n    python tools/auto_fix_new_scripts.py --fix-recent     # Fix scripts récents (24h)\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 196,
+        "dependances": [
+          "os",
+          "sys",
+          "time",
+          "pathlib",
+          "subprocess",
+          "argparse",
+          "json",
+          "datetime",
+          "typing",
+          "watchdog.observers",
+          "watchdog.events"
+        ],
+        "fonctions_principales": [
+          "watch_directory",
+          "install_git_hook",
+          "fix_recent_scripts",
+          "fix_staged_files",
+          "main"
+        ],
+        "score_utilite": 48
+      },
+      "scores": {
+        "pertinence_technique": 7.1,
+        "compatibilite_architecture": 6.0,
+        "valeur_ajoutee": 8.0,
+        "facilite_integration": 6.409090909090909,
+        "maintenance": 8.5,
+        "score_final": 7.04
+      },
+      "recommandation": "UTILE",
+      "justification": "Outil cli_tool 'auto_fix_new_scripts.py' utile avec quelques adaptations ncessaires",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: time, argparse, datetime",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "test_pipeline_voice_validation_final.py",
+        "path": "testing\\test_pipeline_voice_validation_final.py",
+        "type": "cli_tool",
+        "description": "\nTest de validation pipeline voix-à-voix SuperWhisper V6 - AVEC TTS RÉEL VALIDÉ\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n\nUtilise le modèle TTS validé fr_FR-siwis-medium.onnx disponible dans D:\\TTS_Voices\\piper\nBasé sur la transmission du coordinateur du 10/06/2025 - TTS déjà validé\n\nTest interactif complet: STT → LLM → TTS → Audio avec validation humaine\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 347,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "time",
+          "json",
+          "asyncio",
+          "argparse",
+          "datetime",
+          "pathlib",
+          "typing",
+          "numpy",
+          "sounddevice",
+          "torch",
+          "tempfile",
+          "wave",
+          "subprocess",
+          "uuid",
+          "traceback",
+          "traceback",
+          "time"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "validate_rtx3090_configuration",
+          "_to_int16",
+          "_write_log",
+          "__init__"
+        ],
+        "score_utilite": 48
+      },
+      "scores": {
+        "pertinence_technique": 7.5,
+        "compatibilite_architecture": 7.5,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 5.1,
+        "maintenance": 7.3,
+        "score_final": 7.62
+      },
+      "recommandation": "RECOMMAND",
+      "justification": "Outil cli_tool 'test_pipeline_voice_validation_final.py' trs pertinent pour NextGeneration, intgration recommande",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: time, asyncio, argparse",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "promote_test.py",
+        "path": "promotion\\promote_test.py",
+        "type": "cli_tool",
+        "description": "\n🚀 Script de Promotion de Tests - SuperWhisper V6\n\nUtilitaire pour promouvoir des tests depuis répertoires temporaires\nvers répertoires stables (unit/ ou integration/).\n\nUsage:\n    python tools/promote_test.py .cursor-tmp/scratch_test.py tests/unit/\n    python tools/promote_test.py tests/sandbox/experiment.py tests/integration/\n    python tools/promote_test.py .cursor-tmp/temp_stt.py tests/unit/ --rename=test_stt_optimized.py\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 214,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "shutil",
+          "pathlib",
+          "argparse",
+          "datetime"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "validate_source_file",
+          "validate_target_dir",
+          "generate_target_filename",
+          "update_test_header"
+        ],
+        "score_utilite": 44
+      },
+      "scores": {
+        "pertinence_technique": 6.9,
+        "compatibilite_architecture": 6.0,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 7.142857142857142,
+        "maintenance": 8.2,
+        "score_final": 7.46
+      },
+      "recommandation": "UTILE",
+      "justification": "Outil cli_tool 'promote_test.py' utile avec quelques adaptations ncessaires",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: shutil, argparse, datetime",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "clean_sandbox.py",
+        "path": "sandbox\\clean_sandbox.py",
+        "type": "cli_tool",
+        "description": "\n🧹 Script de Purge Automatique - Tests Sandbox SuperWhisper V6\n\nSupprime automatiquement les tests exploratoires vieux de plus de 7 jours\ndans les répertoires sandbox pour maintenir la propreté du dépôt.\n\nUsage:\n    python tools/clean_sandbox.py              # Purge automatique\n    python tools/clean_sandbox.py --dry-run    # Simulation sans suppression\n    python tools/clean_sandbox.py --days=14    # Seuil personnalisé (14 jours)\n    python tools/clean_sandbox.py --force      # Purge tout sans confirmation\n\nRépertoires surveillés:\n    - tests/sandbox/\n    - PIPELINE/tests/sandbox/\n    - .cursor-tmp/\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 194,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "time",
+          "pathlib",
+          "shutil",
+          "argparse",
+          "datetime",
+          "typing"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "get_file_age_days",
+          "find_old_files",
+          "clean_pycache",
+          "clean_sandbox_directory"
+        ],
+        "score_utilite": 42
+      },
+      "scores": {
+        "pertinence_technique": 6.9,
+        "compatibilite_architecture": 6.0,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 7.888888888888889,
+        "maintenance": 8.2,
+        "score_final": 7.57
+      },
+      "recommandation": "RECOMMAND",
+      "justification": "Outil cli_tool 'clean_sandbox.py' trs pertinent pour NextGeneration, intgration recommande",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: time, shutil, argparse",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "demo_improvements.py",
+        "path": "demo\\demo_improvements.py",
+        "type": "utility",
+        "description": "\nScript de Validation Complète - Luxa SuperWhisper V6\n===================================================\n\nDémonstrateur des améliorations de sécurité, robustesse et performance.\nCe script illustre toutes les corrections apportées suite au peer review.\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 319,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "asyncio",
+          "numpy",
+          "time",
+          "json",
+          "logging",
+          "pathlib",
+          "sys",
+          "config.security_config",
+          "utils.error_handler",
+          "Orchestrator.master_handler_robust",
+          "shutil",
+          "traceback"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "format",
+          "__init__",
+          "demo_api_key_management",
+          "demo_input_validation"
+        ],
+        "score_utilite": 41
+      },
+      "scores": {
+        "pertinence_technique": 7.0,
+        "compatibilite_architecture": 7.5,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 5.433333333333334,
+        "maintenance": 7.9,
+        "score_final": 7.58
+      },
+      "recommandation": "RECOMMAND",
+      "justification": "Outil utility 'demo_improvements.py' trs pertinent pour NextGeneration, intgration recommande",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: asyncio, numpy, time",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "memory_leak_v4.py",
+        "path": "memory\\memory_leak_v4.py",
+        "type": "cli_tool",
+        "description": "Outil cli_tool",
+        "complexite": 523,
+        "dependances": [
+          "os",
+          "sys",
+          "torch",
+          "gc",
+          "threading",
+          "contextlib",
+          "functools",
+          "signal",
+          "typing",
+          "time",
+          "traceback",
+          "platform",
+          "json",
+          "datetime",
+          "multiprocessing",
+          "multiprocessing",
+          "tempfile",
+          "pathlib",
+          "errno",
+          "fcntl",
+          "sys"
+        ],
+        "fonctions_principales": [
+          "get_process_manager",
+          "gpu_test_cleanup",
+          "gpu_memory_monitor",
+          "validate_no_memory_leak",
+          "emergency_gpu_reset"
+        ],
+        "score_utilite": 40
+      },
+      "scores": {
+        "pertinence_technique": 6.9,
+        "compatibilite_architecture": 6.0,
+        "valeur_ajoutee": 3.0,
+        "facilite_integration": 3.9761904761904763,
+        "maintenance": 6.5,
+        "score_final": 5.42
+      },
+      "recommandation": "CONDITIONNEL",
+      "justification": "Outil cli_tool 'memory_leak_v4.py' potentiellement utile mais ncessite valuation approfondie",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: torch, gc, threading",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "install_phase3_dependencies.py",
+        "path": "installation\\install_phase3_dependencies.py",
+        "type": "test_script",
+        "description": "\nInstallation des Dépendances Phase 3 - SuperWhisper V6 TTS\nInstallation automatique du binding Python Piper et autres optimisations\n🚀 Prérequis pour les optimisations de performance\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 261,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "subprocess",
+          "logging",
+          "pathlib",
+          "pip",
+          "torch",
+          "piper",
+          "TTS.utils_audio"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "main",
+          "__init__",
+          "run_installation",
+          "_check_environment"
+        ],
+        "score_utilite": 38
+      },
+      "scores": {
+        "pertinence_technique": 6.3,
+        "compatibilite_architecture": 6.0,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 7.2,
+        "maintenance": 7.6,
+        "score_final": 7.23
+      },
+      "recommandation": "UTILE",
+      "justification": "Outil test_script 'install_phase3_dependencies.py' utile avec quelques adaptations ncessaires",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: pip, torch, piper",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "solution_memory_leak_gpu_v3_stable.py",
+        "path": "solutions\\solution_memory_leak_gpu_v3_stable.py",
+        "type": "test_script",
+        "description": "\nSOLUTION MEMORY LEAK GPU V3 - SuperWhisper V6 [STABLE WINDOWS]\n🚨 CONFIGURATION: RTX 3090 CUDA:1 - Version simplifiée sans blocages\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 208,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "torch",
+          "gc",
+          "threading",
+          "contextlib",
+          "functools",
+          "typing",
+          "time",
+          "traceback"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "gpu_test_cleanup",
+          "validate_no_memory_leak",
+          "emergency_gpu_reset",
+          "test_simple_model"
+        ],
+        "score_utilite": 38
+      },
+      "scores": {
+        "pertinence_technique": 5.7,
+        "compatibilite_architecture": 6.0,
+        "valeur_ajoutee": 4.0,
+        "facilite_integration": 5.045454545454545,
+        "maintenance": 8.2,
+        "score_final": 5.59
+      },
+      "recommandation": "CONDITIONNEL",
+      "justification": "Outil test_script 'solution_memory_leak_gpu_v3_stable.py' potentiellement utile mais ncessite valuation approfondie",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: torch, gc, threading",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "validate_gpu_config.py",
+        "path": "validation\\validate_gpu_config.py",
+        "type": "test_script",
+        "description": "\nValidateur de Configuration GPU - Luxa SuperWhisper V6 [VERSION RENFORCÉE]\n==========================================================================\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n\nValide que tous les scripts du projet respectent les règles GPU obligatoires.\nBasé sur les leçons du triple contrôle de sécurité GPU.\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 392,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "re",
+          "json",
+          "yaml",
+          "pathlib",
+          "typing",
+          "torch"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "validate_rtx3090_configuration",
+          "main",
+          "__init__",
+          "validate_project"
+        ],
+        "score_utilite": 38
+      },
+      "scores": {
+        "pertinence_technique": 6.1,
+        "compatibilite_architecture": 6.0,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 7.111111111111111,
+        "maintenance": 7.9,
+        "score_final": 7.19
+      },
+      "recommandation": "UTILE",
+      "justification": "Outil test_script 'validate_gpu_config.py' utile avec quelques adaptations ncessaires",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: re, yaml, typing",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "run_assistant.py",
+        "path": "testing\\run_assistant.py",
+        "type": "cli_tool",
+        "description": "\nLuxa - SuperWhisper_V6 Assistant v1.1\n======================================\n\nAssistant vocal intelligent avec pipeline STT → LLM → TTS\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 230,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "argparse",
+          "asyncio",
+          "os",
+          "sys",
+          "time",
+          "logging",
+          "pathlib",
+          "yaml",
+          "STT.stt_manager_robust",
+          "STT.vad_manager",
+          "LLM.llm_manager_enhanced",
+          "TTS.tts_handler",
+          "Orchestrator.master_handler_robust",
+          "numpy"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "parse_arguments",
+          "print_banner"
+        ],
+        "score_utilite": 36
+      },
+      "scores": {
+        "pertinence_technique": 7.3,
+        "compatibilite_architecture": 7.5,
+        "valeur_ajoutee": 4.0,
+        "facilite_integration": 5.323529411764706,
+        "maintenance": 7.6,
+        "score_final": 6.42
+      },
+      "recommandation": "UTILE",
+      "justification": "Outil cli_tool 'run_assistant.py' utile avec quelques adaptations ncessaires",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: argparse, asyncio, time",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "test_stt_validation_transmission.py",
+        "path": "testing\\stt\\test_stt_validation_transmission.py",
+        "type": "test_script",
+        "description": "\nTest de validation STT basé sur la transmission du coordinateur du 10 juin 2025\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n\nSpécifications STT de la transmission:\n- Moteur principal: insanely-fast-whisper\n- Fallback: faster-whisper  \n- VAD: Silero VAD avec fallback WebRTC\n- Objectif latence: < 500ms\n- Précision: > 95%\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 325,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "time",
+          "json",
+          "asyncio",
+          "datetime",
+          "pathlib",
+          "typing",
+          "numpy",
+          "sounddevice",
+          "torch"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "validate_rtx3090_configuration",
+          "__init__",
+          "validate_gpu_configuration",
+          "validate_audio_devices"
+        ],
+        "score_utilite": 36
+      },
+      "scores": {
+        "pertinence_technique": 6.3,
+        "compatibilite_architecture": 7.5,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 5.333333333333333,
+        "maintenance": 7.9,
+        "score_final": 7.35
+      },
+      "recommandation": "UTILE",
+      "justification": "Outil test_script 'test_stt_validation_transmission.py' utile avec quelques adaptations ncessaires",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: time, asyncio, datetime",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "test_stt_validation_individual.py",
+        "path": "testing\\stt\\test_stt_validation_individual.py",
+        "type": "test_script",
+        "description": "\nTest de validation STT individuelle SuperWhisper V6\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n\nObjectif: Sélectionner et valider le modèle STT à retenir pour production\nBasé sur Phase 4 STT validée (journal développement 12/06/2025)\n\nTest des modèles STT disponibles avec validation humaine\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 283,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "time",
+          "json",
+          "asyncio",
+          "datetime",
+          "pathlib",
+          "typing",
+          "numpy",
+          "sounddevice",
+          "torch",
+          "STT.unified_stt_manager",
+          "STT.backends.prism_stt_backend"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "main",
+          "__init__",
+          "validate_rtx3090",
+          "test_audio_devices"
+        ],
+        "score_utilite": 34
+      },
+      "scores": {
+        "pertinence_technique": 6.3,
+        "compatibilite_architecture": 7.5,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 5.214285714285714,
+        "maintenance": 7.9,
+        "score_final": 7.34
+      },
+      "recommandation": "UTILE",
+      "justification": "Outil test_script 'test_stt_validation_individual.py' utile avec quelques adaptations ncessaires",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: time, asyncio, datetime",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "monitor_phase3.py",
+        "path": "monitoring\\monitor_phase3.py",
+        "type": "interface_web",
+        "description": "\nMonitoring Phase 3 - SuperWhisper V6 TTS\nSurveillance en temps réel des métriques de performance\n🚀 Dashboard des optimisations Phase 3\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 329,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "asyncio",
+          "logging",
+          "time",
+          "json",
+          "pathlib",
+          "datetime",
+          "collections",
+          "threading",
+          "TTS.tts_manager",
+          "TTS.utils_audio",
+          "yaml"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "__init__",
+          "_estimate_backend_used",
+          "_print_live_metrics",
+          "_generate_monitoring_report"
+        ],
+        "score_utilite": 31
+      },
+      "scores": {
+        "pertinence_technique": 6.2,
+        "compatibilite_architecture": 7.5,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 5.357142857142857,
+        "maintenance": 7.0,
+        "score_final": 7.24
+      },
+      "recommandation": "UTILE",
+      "justification": "Outil interface_web 'monitor_phase3.py' utile avec quelques adaptations ncessaires",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: asyncio, time, datetime",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "demo_security_sprint1.py",
+        "path": "demo\\demo_security_sprint1.py",
+        "type": "test_script",
+        "description": "\nDémonstration Sécurité LUXA SuperWhisper V6 - Sprint 1\nScript de test complet des fonctionnalités sécurisées\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 272,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "asyncio",
+          "requests",
+          "time",
+          "json",
+          "pathlib",
+          "config.security_config"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "print_section",
+          "print_test",
+          "test_api_endpoints",
+          "test_security_performance"
+        ],
+        "score_utilite": 30
+      },
+      "scores": {
+        "pertinence_technique": 6.3,
+        "compatibilite_architecture": 7.5,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 7.111111111111111,
+        "maintenance": 8.2,
+        "score_final": 7.65
+      },
+      "recommandation": "RECOMMAND",
+      "justification": "Outil test_script 'demo_security_sprint1.py' trs pertinent pour NextGeneration, intgration recommande",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: asyncio, requests, time",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "download_tts_model.py",
+        "path": "download\\download_tts_model.py",
+        "type": "download",
+        "description": "\nScript de téléchargement du modèle TTS fr_FR-siwis-medium.onnx\nBasé sur la transmission du coordinateur du 10 juin 2025\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 123,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "requests",
+          "pathlib",
+          "urllib.parse",
+          "shutil",
+          "shutil",
+          "traceback"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "download_file",
+          "main"
+        ],
+        "score_utilite": 29
+      },
+      "scores": {
+        "pertinence_technique": 6.2,
+        "compatibilite_architecture": 6.0,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 7.888888888888889,
+        "maintenance": 7.6,
+        "score_final": 7.3
+      },
+      "recommandation": "UTILE",
+      "justification": "Outil download 'download_tts_model.py' utile avec quelques adaptations ncessaires",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: requests, urllib.parse, shutil",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "run_assistant_simple.py",
+        "path": "testing\\run_assistant_simple.py",
+        "type": "utility",
+        "description": "\nScript Portable - run_assistant_simple.py\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 84,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "yaml",
+          "os",
+          "sys",
+          "asyncio",
+          "STT.stt_handler",
+          "LLM.llm_manager_enhanced",
+          "TTS.tts_handler"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment"
+        ],
+        "score_utilite": 27
+      },
+      "scores": {
+        "pertinence_technique": 6.4,
+        "compatibilite_architecture": 6.5,
+        "valeur_ajoutee": 4.0,
+        "facilite_integration": 8.0,
+        "maintenance": 7.0,
+        "score_final": 6.25
+      },
+      "recommandation": "UTILE",
+      "justification": "Outil utility 'run_assistant_simple.py' utile avec quelques adaptations ncessaires",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: yaml, asyncio, STT.stt_handler",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "convertir_fichiers_pcm_wav.py",
+        "path": "conversion\\convertir_fichiers_pcm_wav.py",
+        "type": "test_script",
+        "description": "\nConversion fichiers PCM → WAV - SuperWhisper V6 TTS\nConvertit tous les fichiers audio invalides en format WAV standard\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 223,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "pathlib",
+          "shutil",
+          "TTS.utils_audio"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "convertir_fichiers_pcm_wav",
+          "tester_fichiers_convertis",
+          "convertir_fichier_principal"
+        ],
+        "score_utilite": 26
+      },
+      "scores": {
+        "pertinence_technique": 5.9,
+        "compatibilite_architecture": 6.0,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 7.333333333333333,
+        "maintenance": 7.9,
+        "score_final": 7.16
+      },
+      "recommandation": "UTILE",
+      "justification": "Outil test_script 'convertir_fichiers_pcm_wav.py' utile avec quelques adaptations ncessaires",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: shutil, TTS.utils_audio",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "test_tts_validation_transmission.py",
+        "path": "testing\\stt\\test_tts_validation_transmission.py",
+        "type": "test_script",
+        "description": "\nTest de validation TTS basé sur la transmission du coordinateur du 10 juin 2025\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 149,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "pathlib",
+          "yaml",
+          "json",
+          "TTS.tts_handler",
+          "torch",
+          "traceback"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "validate_rtx3090_configuration",
+          "test_tts_transmission_validation",
+          "main"
+        ],
+        "score_utilite": 26
+      },
+      "scores": {
+        "pertinence_technique": 6.1,
+        "compatibilite_architecture": 6.0,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 8.11111111111111,
+        "maintenance": 7.9,
+        "score_final": 7.34
+      },
+      "recommandation": "UTILE",
+      "justification": "Outil test_script 'test_tts_validation_transmission.py' utile avec quelques adaptations ncessaires",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: yaml, TTS.tts_handler, torch",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "explore_piper_api.py",
+        "path": "exploration\\explore_piper_api.py",
+        "type": "test_script",
+        "description": "\nExploration de l'API Piper pour découvrir la bonne utilisation\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 110,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "importlib",
+          "pkgutil",
+          "subprocess",
+          "os",
+          "piper",
+          "os",
+          "traceback"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "explore_piper",
+          "test_piper_cli"
+        ],
+        "score_utilite": 24
+      },
+      "scores": {
+        "pertinence_technique": 5.9,
+        "compatibilite_architecture": 6.0,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 8.2,
+        "maintenance": 7.6,
+        "score_final": 7.26
+      },
+      "recommandation": "UTILE",
+      "justification": "Outil test_script 'explore_piper_api.py' utile avec quelques adaptations ncessaires",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: importlib, pkgutil, piper",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "resume_tests_validation_complexes.py",
+        "path": "resume\\resume_tests_validation_complexes.py",
+        "type": "test_script",
+        "description": "\nRésumé final des tests validation complexes - SuperWhisper V6 TTS\nAnalyse et présente tous les fichiers générés avec leurs caractéristiques\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 143,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "pathlib",
+          "TTS.utils_audio"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "analyser_fichiers_validation"
+        ],
+        "score_utilite": 22
+      },
+      "scores": {
+        "pertinence_technique": 5.9,
+        "compatibilite_architecture": 5.0,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 8.6,
+        "maintenance": 7.3,
+        "score_final": 7.04
+      },
+      "recommandation": "UTILE",
+      "justification": "Outil test_script 'resume_tests_validation_complexes.py' utile avec quelques adaptations ncessaires",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: TTS.utils_audio",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "generer_fichier_complet_optimise.py",
+        "path": "generation\\generer_fichier_complet_optimise.py",
+        "type": "test_script",
+        "description": "\nGénération fichier complet optimisé - SuperWhisper V6 TTS\nContourne la limitation de 1000 caractères en utilisant SAPI directement\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 101,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "asyncio",
+          "yaml",
+          "time",
+          "pathlib",
+          "TTS.tts_manager",
+          "TTS.utils_audio"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment"
+        ],
+        "score_utilite": 20
+      },
+      "scores": {
+        "pertinence_technique": 6.1,
+        "compatibilite_architecture": 6.5,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 7.888888888888889,
+        "maintenance": 7.0,
+        "score_final": 7.34
+      },
+      "recommandation": "UTILE",
+      "justification": "Outil test_script 'generer_fichier_complet_optimise.py' utile avec quelques adaptations ncessaires",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: asyncio, yaml, time",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "generer_tests_validation_complexes.py",
+        "path": "generation\\generer_tests_validation_complexes.py",
+        "type": "test_script",
+        "description": "\nGénération tests validation complexes - SuperWhisper V6 TTS\nGénère des fichiers audio avec textes de validation de complexité croissante\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 233,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "asyncio",
+          "yaml",
+          "time",
+          "pathlib",
+          "TTS.tts_manager",
+          "TTS.utils_audio",
+          "TTS.tts_manager"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment"
+        ],
+        "score_utilite": 20
+      },
+      "scores": {
+        "pertinence_technique": 6.1,
+        "compatibilite_architecture": 6.5,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 5.3,
+        "maintenance": 7.0,
+        "score_final": 6.95
+      },
+      "recommandation": "UTILE",
+      "justification": "Outil test_script 'generer_tests_validation_complexes.py' utile avec quelques adaptations ncessaires",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: asyncio, yaml, time",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "monitor_phase3_demo.py",
+        "path": "monitoring\\monitor_phase3_demo.py",
+        "type": "test_script",
+        "description": "\nMonitoring Phase 3 DEMO - SuperWhisper V6 TTS\nDémonstration courte (1 minute) du monitoring en temps réel\n🚀 Validation rapide des optimisations Phase 3\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 164,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "asyncio",
+          "logging",
+          "time",
+          "json",
+          "pathlib",
+          "datetime",
+          "collections",
+          "TTS.tts_manager",
+          "yaml"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment"
+        ],
+        "score_utilite": 20
+      },
+      "scores": {
+        "pertinence_technique": 6.5,
+        "compatibilite_architecture": 6.5,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 6.5,
+        "maintenance": 7.0,
+        "score_final": 7.25
+      },
+      "recommandation": "UTILE",
+      "justification": "Outil test_script 'monitor_phase3_demo.py' utile avec quelques adaptations ncessaires",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: asyncio, time, datetime",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "run_assistant_coqui.py",
+        "path": "testing\\run_assistant_coqui.py",
+        "type": "test_script",
+        "description": "\nScript Portable - run_assistant_coqui.py\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 82,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "yaml",
+          "os",
+          "sys",
+          "asyncio",
+          "STT.stt_handler",
+          "LLM.llm_manager_enhanced",
+          "LUXA_TTS.tts_handler_coqui"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment"
+        ],
+        "score_utilite": 20
+      },
+      "scores": {
+        "pertinence_technique": 5.9,
+        "compatibilite_architecture": 6.5,
+        "valeur_ajoutee": 4.0,
+        "facilite_integration": 8.0,
+        "maintenance": 7.0,
+        "score_final": 6.1
+      },
+      "recommandation": "UTILE",
+      "justification": "Outil test_script 'run_assistant_coqui.py' utile avec quelques adaptations ncessaires",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: yaml, asyncio, STT.stt_handler",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    }
+  ],
+  "conflits_detectes": [
+    {
+      "type": "doublon",
+      "domaine": "cli_tool",
+      "meilleur_outil": "test_pipeline_voice_validation_real.py",
+      "doublons": [
+        "test_pipeline_voice_validation_final.py",
+        "clean_sandbox.py",
+        "test_pipeline_voice_validation_working.py",
+        "run_complete_tests.py",
+        "generateur_aide_externe.py",
+        "promote_test.py",
+        "make_scripts_portable.py",
+        "auto_fix_new_scripts.py",
+        "run_assistant.py",
+        "memory_leak_v4.py"
+      ],
+      "recommandation": "Garder 'test_pipeline_voice_validation_real.py' (score: 7.62)"
+    },
+    {
+      "type": "doublon",
+      "domaine": "utility",
+      "meilleur_outil": "demo_improvements.py",
+      "doublons": [
+        "run_assistant_simple.py"
+      ],
+      "recommandation": "Garder 'demo_improvements.py' (score: 7.58)"
+    },
+    {
+      "type": "doublon",
+      "domaine": "test_script",
+      "meilleur_outil": "demo_security_sprint1.py",
+      "doublons": [
+        "test_stt_validation_transmission.py",
+        "test_stt_validation_individual.py",
+        "test_tts_validation_transmission.py",
+        "generer_fichier_complet_optimise.py",
+        "explore_piper_api.py",
+        "monitor_phase3_demo.py",
+        "install_phase3_dependencies.py",
+        "validate_gpu_config.py",
+        "convertir_fichiers_pcm_wav.py",
+        "resume_tests_validation_complexes.py",
+        "generer_tests_validation_complexes.py",
+        "run_assistant_coqui.py",
+        "solution_memory_leak_gpu_v3_stable.py"
+      ],
+      "recommandation": "Garder 'demo_security_sprint1.py' (score: 7.65)"
+    }
+  ],
+  "top_recommandations": [
+    {
+      "outil": {
+        "nom": "demo_security_sprint1.py",
+        "path": "demo\\demo_security_sprint1.py",
+        "type": "test_script",
+        "description": "\nDémonstration Sécurité LUXA SuperWhisper V6 - Sprint 1\nScript de test complet des fonctionnalités sécurisées\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 272,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "asyncio",
+          "requests",
+          "time",
+          "json",
+          "pathlib",
+          "config.security_config"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "print_section",
+          "print_test",
+          "test_api_endpoints",
+          "test_security_performance"
+        ],
+        "score_utilite": 30
+      },
+      "scores": {
+        "pertinence_technique": 6.3,
+        "compatibilite_architecture": 7.5,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 7.111111111111111,
+        "maintenance": 8.2,
+        "score_final": 7.65
+      },
+      "recommandation": "RECOMMAND",
+      "justification": "Outil test_script 'demo_security_sprint1.py' trs pertinent pour NextGeneration, intgration recommande",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: asyncio, requests, time",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "test_pipeline_voice_validation_real.py",
+        "path": "testing\\test_pipeline_voice_validation_real.py",
+        "type": "cli_tool",
+        "description": "\nTest de validation pipeline voix-à-voix SuperWhisper V6 - AVEC TTS RÉEL\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n\nUtilise le TTSHandler validé de la transmission du coordinateur (10/06/2025)\navec fallback intelligent si modèles non disponibles.\n\nTest interactif complet: STT → LLM → TTS → Audio avec validation humaine\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 374,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "time",
+          "json",
+          "asyncio",
+          "argparse",
+          "datetime",
+          "pathlib",
+          "typing",
+          "numpy",
+          "sounddevice",
+          "torch",
+          "tts_handler",
+          "tempfile",
+          "wave",
+          "subprocess",
+          "win32com.client",
+          "tempfile",
+          "wave",
+          "traceback"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "validate_rtx3090_configuration",
+          "_to_int16",
+          "_write_log",
+          "__init__"
+        ],
+        "score_utilite": 50
+      },
+      "scores": {
+        "pertinence_technique": 7.5,
+        "compatibilite_architecture": 7.5,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 5.071428571428571,
+        "maintenance": 7.3,
+        "score_final": 7.62
+      },
+      "recommandation": "RECOMMAND",
+      "justification": "Outil cli_tool 'test_pipeline_voice_validation_real.py' trs pertinent pour NextGeneration, intgration recommande",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: time, asyncio, argparse",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "demo_improvements.py",
+        "path": "demo\\demo_improvements.py",
+        "type": "utility",
+        "description": "\nScript de Validation Complète - Luxa SuperWhisper V6\n===================================================\n\nDémonstrateur des améliorations de sécurité, robustesse et performance.\nCe script illustre toutes les corrections apportées suite au peer review.\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 319,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "asyncio",
+          "numpy",
+          "time",
+          "json",
+          "logging",
+          "pathlib",
+          "sys",
+          "config.security_config",
+          "utils.error_handler",
+          "Orchestrator.master_handler_robust",
+          "shutil",
+          "traceback"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "format",
+          "__init__",
+          "demo_api_key_management",
+          "demo_input_validation"
+        ],
+        "score_utilite": 41
+      },
+      "scores": {
+        "pertinence_technique": 7.0,
+        "compatibilite_architecture": 7.5,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 5.433333333333334,
+        "maintenance": 7.9,
+        "score_final": 7.58
+      },
+      "recommandation": "RECOMMAND",
+      "justification": "Outil utility 'demo_improvements.py' trs pertinent pour NextGeneration, intgration recommande",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: asyncio, numpy, time",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "download_tts_model.py",
+        "path": "download\\download_tts_model.py",
+        "type": "download",
+        "description": "\nScript de téléchargement du modèle TTS fr_FR-siwis-medium.onnx\nBasé sur la transmission du coordinateur du 10 juin 2025\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 123,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "requests",
+          "pathlib",
+          "urllib.parse",
+          "shutil",
+          "shutil",
+          "traceback"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "download_file",
+          "main"
+        ],
+        "score_utilite": 29
+      },
+      "scores": {
+        "pertinence_technique": 6.2,
+        "compatibilite_architecture": 6.0,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 7.888888888888889,
+        "maintenance": 7.6,
+        "score_final": 7.3
+      },
+      "recommandation": "UTILE",
+      "justification": "Outil download 'download_tts_model.py' utile avec quelques adaptations ncessaires",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: requests, urllib.parse, shutil",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    },
+    {
+      "outil": {
+        "nom": "monitor_phase3.py",
+        "path": "monitoring\\monitor_phase3.py",
+        "type": "interface_web",
+        "description": "\nMonitoring Phase 3 - SuperWhisper V6 TTS\nSurveillance en temps réel des métriques de performance\n🚀 Dashboard des optimisations Phase 3\n\n🚨 CONFIGURATION GPU: RTX 3090 (CUDA:1) OBLIGATOIRE\n",
+        "complexite": 329,
+        "dependances": [
+          "os",
+          "sys",
+          "pathlib",
+          "asyncio",
+          "logging",
+          "time",
+          "json",
+          "pathlib",
+          "datetime",
+          "collections",
+          "threading",
+          "TTS.tts_manager",
+          "TTS.utils_audio",
+          "yaml"
+        ],
+        "fonctions_principales": [
+          "_setup_portable_environment",
+          "__init__",
+          "_estimate_backend_used",
+          "_print_live_metrics",
+          "_generate_monitoring_report"
+        ],
+        "score_utilite": 31
+      },
+      "scores": {
+        "pertinence_technique": 6.2,
+        "compatibilite_architecture": 7.5,
+        "valeur_ajoutee": 10,
+        "facilite_integration": 5.357142857142857,
+        "maintenance": 7.0,
+        "score_final": 7.24
+      },
+      "recommandation": "UTILE",
+      "justification": "Outil interface_web 'monitor_phase3.py' utile avec quelques adaptations ncessaires",
+      "adaptations_necessaires": [
+        "Adapter les chemins pour fonctionner depuis n'importe quel rpertoire",
+        "Vrifier/installer les dpendances: asyncio, time, datetime",
+        "Adapter la configuration pour l'environnement NextGeneration",
+        "Ajouter la documentation et les tests"
+      ]
+    }
+  ],
+  "criteres_evaluation": {
+    "pertinence_technique": 0.3,
+    "compatibilite_architecture": 0.25,
+    "valeur_ajoutee": 0.2,
+    "facilite_integration": 0.15,
+    "maintenance": 0.1
+  },
+  "recommendations_globales": [
+    "Retenir 5 outils sur 29 analyss",
+    "Prioriser les 5 premiers outils (scores > 7.0)",
+    "Traiter 3 conflits dtects",
+    "Adapter tous les outils pour l'environnement NextGeneration"
+  ]
+}

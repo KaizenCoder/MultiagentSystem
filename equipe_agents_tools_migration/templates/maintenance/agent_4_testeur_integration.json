@@ -1,0 +1,112 @@
+{
+  "name": "agent_4_testeur_integration",
+  "version": "1.0.0",
+  "role": "tester",
+  "domain": "integration_testing",
+  "model": "GPT-4 Turbo",
+  "description": "Agent 4 - Testeur d'Intégration pour tester l'intégration des outils adaptés dans NextGeneration",
+  "capabilities": [
+    "syntax_testing",
+    "import_validation",
+    "execution_testing",
+    "configuration_validation",
+    "compatibility_testing",
+    "error_detection",
+    "performance_testing",
+    "integration_validation"
+  ],
+  "tools": [
+    "syntax_validator",
+    "import_checker",
+    "execution_tester",
+    "config_validator",
+    "performance_monitor"
+  ],
+  "test_types": [
+    "syntax_check",
+    "import_validation",
+    "basic_execution",
+    "configuration_test",
+    "compatibility_test"
+  ],
+  "default_config": {
+    "timeout": 240,
+    "max_test_duration": 10,
+    "continue_on_failure": true,
+    "generate_reports": true,
+    "detailed_logging": true,
+    "parallel_testing": false
+  },
+  "test_commands": [
+    "--help",
+    "-h",
+    "--version",
+    "-v",
+    "--test",
+    "--check"
+  ],
+  "validation_criteria": {
+    "syntax": {
+      "weight": 0.4,
+      "critical": true
+    },
+    "imports": {
+      "weight": 0.3,
+      "critical": true
+    },
+    "execution": {
+      "weight": 0.2,
+      "critical": false
+    },
+    "configuration": {
+      "weight": 0.1,
+      "critical": false
+    }
+  },
+  "interfaces": {
+    "startup": "async def startup(self)",
+    "shutdown": "async def shutdown(self)",
+    "health_check": "async def health_check(self) -> Dict[str, Any]",
+    "tester_integration": "async def tester_integration(self) -> Dict[str, Any]"
+  },
+  "dependencies": [
+    "asyncio",
+    "json",
+    "subprocess",
+    "sys",
+    "datetime",
+    "pathlib",
+    "typing"
+  ],
+  "testing_process": {
+    "phases": [
+      "tester_syntaxe",
+      "tester_imports",
+      "tester_execution_basique",
+      "valider_configuration"
+    ],
+    "error_handling": "continue_with_logging",
+    "success_criteria": {
+      "min_syntax_pass_rate": 0.9,
+      "min_import_pass_rate": 0.8,
+      "min_overall_pass_rate": 0.7
+    }
+  },
+  "reporting": {
+    "formats": ["json", "summary"],
+    "include_details": true,
+    "metrics": [
+      "total_tests",
+      "tests_passed",
+      "tests_failed",
+      "success_rate",
+      "execution_time"
+    ]
+  },
+  "performance": {
+    "concurrent_tests": 1,
+    "timeout_handling": "graceful",
+    "resource_monitoring": true,
+    "optimization": "reliability"
+  }
+} 

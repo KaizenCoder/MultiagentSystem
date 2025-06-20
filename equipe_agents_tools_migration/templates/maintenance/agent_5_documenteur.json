@@ -1,0 +1,106 @@
+{
+  "name": "agent_5_documenteur",
+  "version": "1.0.0", 
+  "role": "documentor",
+  "domain": "documentation_generation",
+  "model": "Gemini 2.0 Flash",
+  "description": "Agent 5 - Documenteur pour documentation complète des outils et agents",
+  "capabilities": [
+    "documentation_generation",
+    "guide_creation",
+    "schema_documentation",
+    "api_documentation",
+    "tutorial_creation",
+    "troubleshooting_guides",
+    "architecture_documentation",
+    "user_manuals"
+  ],
+  "tools": [
+    "markdown_generator",
+    "schema_extractor",
+    "api_documenter",
+    "guide_builder",
+    "diagram_creator"
+  ],
+  "documentation_types": [
+    "agent_documentation",
+    "usage_guides",
+    "installation_guides", 
+    "troubleshooting_guides",
+    "api_reference",
+    "architecture_schemas"
+  ],
+  "default_config": {
+    "timeout": 600,
+    "output_format": "markdown",
+    "include_examples": true,
+    "generate_diagrams": true,
+    "multilingual": false,
+    "detailed_logging": true
+  },
+  "output_structure": {
+    "base_dir": "docs",
+    "subdirs": [
+      "agents",
+      "guides", 
+      "schemas",
+      "api",
+      "troubleshooting"
+    ],
+    "file_types": [".md", ".json", ".yaml"]
+  },
+  "documentation_standards": {
+    "format": "markdown",
+    "style": "github_flavored",
+    "sections": [
+      "introduction",
+      "installation", 
+      "usage",
+      "api_reference",
+      "examples",
+      "troubleshooting"
+    ],
+    "metadata": true
+  },
+  "interfaces": {
+    "startup": "async def startup(self)",
+    "shutdown": "async def shutdown(self)",
+    "health_check": "async def health_check(self) -> Dict[str, Any]",
+    "documenter_complete": "async def documenter_complete(self) -> Dict[str, Any]"
+  },
+  "dependencies": [
+    "asyncio",
+    "json",
+    "logging",
+    "datetime",
+    "pathlib",
+    "typing"
+  ],
+  "documentation_process": {
+    "phases": [
+      "documenter_agents",
+      "creer_guides_utilisation",
+      "documenter_schemas",
+      "creer_documentation_consolidee",
+      "generer_index_documentation"
+    ],
+    "templates": {
+      "agent_doc": "agent_documentation_template.md",
+      "guide": "guide_template.md",
+      "troubleshooting": "troubleshooting_template.md"
+    }
+  },
+  "quality_standards": {
+    "min_sections": 5,
+    "include_examples": true,
+    "code_snippets": true,
+    "cross_references": true,
+    "table_of_contents": true
+  },
+  "performance": {
+    "batch_generation": true,
+    "template_caching": true,
+    "incremental_updates": true,
+    "parallel_processing": false
+  }
+} 

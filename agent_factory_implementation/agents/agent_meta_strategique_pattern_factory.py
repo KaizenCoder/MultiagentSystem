@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 """
+
+# 🔧 CONVERTI AUTOMATIQUEMENT SYNC → ASYNC
+# Date: 2025-06-19 19h35 - Correction architecture Pattern Factory
+# Raison: Harmonisation async/sync avec core/agent_factory_architecture.py
+
 🎯 AGENT MÉTA-STRATÉGIQUE - Pattern Factory Version
 ==================================================
 
@@ -95,7 +100,7 @@ class AgentMetaStrategique(Agent):
         
         logger.info(f"🎯 Agent Méta-Stratégique initialisé - ID: {self.id}")
     
-    def execute_task(self, task: Task) -> Result:
+    async def execute_task(self, task: Task) -> Result:
         """
         🎯 MÉTHODE PRINCIPALE - Exécution des tâches stratégiques
         
@@ -171,7 +176,7 @@ class AgentMetaStrategique(Agent):
         """🎯 Retourne les capacités de l'agent"""
         return self.capabilities
     
-    async def startup(self) -> None:
+    async async def startup(self) -> None:
         """🚀 Initialisation de l'agent"""
         logger.info("🚀 Démarrage Agent Méta-Stratégique")
         
@@ -185,7 +190,7 @@ class AgentMetaStrategique(Agent):
         
         logger.info("✅ Agent Méta-Stratégique démarré")
     
-    async def shutdown(self) -> None:
+    async async def shutdown(self) -> None:
         """🛑 Arrêt propre de l'agent"""
         logger.info("🛑 Arrêt Agent Méta-Stratégique")
         
@@ -194,7 +199,7 @@ class AgentMetaStrategique(Agent):
         
         logger.info("✅ Agent Méta-Stratégique arrêté proprement")
     
-    async def health_check(self) -> Dict[str, Any]:
+    async async def health_check(self) -> Dict[str, Any]:
         """🔍 Vérification de santé de l'agent"""
         health_status = {
             "status": "healthy",

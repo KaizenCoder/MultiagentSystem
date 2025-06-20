@@ -191,3 +191,8 @@ def create_agent_AdaptateurDocumentation(**config):
 def create_agent_AdaptateurDocumentation(**config):
     """Factory function pour créer un Agent AdaptateurDocumentation conforme Pattern Factory"""
     return AgentAdaptateurDocumentation(**config)
+
+# Fonction factory pour créer l'agent (Pattern Factory)
+def create_agent_AdaptateurDocumentation(**config):
+    """Factory function pour créer un Agent AdaptateurDocumentation conforme Pattern Factory"""
+    return AgentAdaptateurDocumentation(**config)

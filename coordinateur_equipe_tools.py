@@ -22,10 +22,18 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional
 import logging
 
-# Configuration des chemins
-SOURCE_PATH = r"C:\Dev\SuperWhisper_V6\tools"
+# Configuration des chemins CORRIGÉS
+SOURCE_PATH = r"../agent_factory_implementation/agents"  # Chemin vers les agents à analyser
 TARGET_PATH = "tools/imported_tools"
 PROJECT_ROOT = Path(__file__).parent.absolute()
+
+# Configuration NextGeneration adaptée
+NEXTGEN_CONFIG = {
+    "agents_source": Path(__file__).parent / "../agent_factory_implementation/agents",
+    "tools_target": Path(__file__).parent / "tools/imported_tools", 
+    "workspace": Path(__file__).parent,
+    "reports": Path(__file__).parent / "reports"
+}
 
 class CoordinateurEquipeTools:
     """Coordinateur principal pour la mission d'intgration des outils SuperWhisper"""

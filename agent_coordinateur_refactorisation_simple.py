@@ -563,3 +563,8 @@ def create_agent_CoordinateurRefactorisationSimple(**config):
 def create_agent_CoordinateurRefactorisationSimple(**config):
     """Factory function pour créer un Agent CoordinateurRefactorisationSimple conforme Pattern Factory"""
     return AgentCoordinateurRefactorisationSimple(**config)
+
+# Fonction factory pour créer l'agent (Pattern Factory)
+def create_agent_CoordinateurRefactorisationSimple(**config):
+    """Factory function pour créer un Agent CoordinateurRefactorisationSimple conforme Pattern Factory"""
+    return AgentCoordinateurRefactorisationSimple(**config)
