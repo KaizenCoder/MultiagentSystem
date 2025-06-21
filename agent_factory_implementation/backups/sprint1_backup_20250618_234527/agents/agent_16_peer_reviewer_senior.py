@@ -4,14 +4,21 @@ RÔLE : Review senior et validation architecture code expert
 
 import os
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 
 # Configuration logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger("Agent16_PeerReviewerSenior")
+# LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="Agent16PeerReviewerSenior",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
 
 class Agent16PeerReviewerSenior:
     """

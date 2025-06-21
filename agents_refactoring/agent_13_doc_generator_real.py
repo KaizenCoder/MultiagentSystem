@@ -8,7 +8,7 @@ Travaille sur: refactoring_workspace/new_architecture/
 import os
 import sys
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import time
 import ast
 from datetime import datetime
@@ -49,7 +49,14 @@ class RealDocumentationGeneratorAgent:
                 logging.StreamHandler()
             ]
         )
-        self.logger = logging.getLogger(self.agent_id)
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="RealDocumentationGeneratorAgent",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
         
     def analyze_architecture_structure(self) -> Dict[str, Any]:
         """[TARGET] Analyse structure architecture relle"""

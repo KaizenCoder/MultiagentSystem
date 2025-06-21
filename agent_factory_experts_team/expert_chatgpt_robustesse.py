@@ -6,7 +6,7 @@ Modle: GPT-4 (analyse critique, scurit, enterprise-grade solutions)
 """
 
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, List, Optional
@@ -83,7 +83,14 @@ class ExpertChatGPTRobustesse:
                 logging.StreamHandler()
             ]
         )
-        self.logger = logging.getLogger("expert_chatgpt_robustesse")
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="from",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
     
     def analyser_vulnerabilites_securite(self) -> List[SecurityVulnerability]:
         """ Analyse scurit - Identification vulnrabilits critiques"""

@@ -16,7 +16,7 @@ RESPONSABILITÉS SPRINT 1 :
 import os
 import sys
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import time
 import asyncio
 from datetime import datetime
@@ -82,7 +82,14 @@ class Agent15TesteurSpecialise:
                 logging.StreamHandler()
             ]
         )
-        self.logger = logging.getLogger(self.agent_id)
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="class",
+            role="ai_processor",
+            domain="testing",
+            async_enabled=True
+        )
     
     def _initialize_expert_code(self):
         """Initialisation code expert Claude"""

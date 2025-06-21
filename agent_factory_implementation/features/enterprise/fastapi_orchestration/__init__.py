@@ -12,13 +12,20 @@ Created: 2024-12-19
 """
 
 from typing import Dict, List, Any, Optional
-import logging
+from logging_manager_optimized import LoggingManager
 import json
 import time
 from dataclasses import dataclass
 from core.agent_factory_architecture import Task, Result
 
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="from",
+            role="ai_processor",
+            domain="orchestration",
+            async_enabled=True
+        )
 
 
 class BaseFastAPIFeature:

@@ -6,7 +6,7 @@ IA-2 Architecture & Production - Sprint 2.2
 """
 
 import asyncio
-import logging
+from logging_manager_optimized import LoggingManager
 import yaml
 from typing import Dict, List, Optional, Any, Union
 from dataclasses import dataclass, field
@@ -18,7 +18,15 @@ from kubernetes_asyncio.client.exceptions import ApiException
 # Monitoring integration
 from ..observability.monitoring import get_monitoring
 
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Tool/Utility
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "ScalingType",
+            "log_level": "INFO",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": True
+        })
 
 class ScalingType(Enum):
     """Types of scaling supported"""

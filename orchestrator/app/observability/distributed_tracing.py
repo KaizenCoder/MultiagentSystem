@@ -6,7 +6,7 @@ Advanced observability with OpenTelemetry and Jaeger integration
 for production-grade monitoring and performance analysis.
 """
 
-import logging
+from logging_manager_optimized import LoggingManager
 import time
 from typing import Dict, Optional, Any, List
 from contextlib import asynccontextmanager
@@ -25,7 +25,15 @@ from opentelemetry.propagators.jaeger import JaegerPropagator
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.semconv.resource import ResourceAttributes
 
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Tool/Utility
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "class",
+            "log_level": "INFO",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": True
+        })
 
 @dataclass
 class TraceMetrics:

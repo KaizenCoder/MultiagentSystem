@@ -7,7 +7,7 @@ Mission: Organisation et maintenance de la propret du rpertoire de travail des a
 import os
 import sys
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import shutil
 from datetime import datetime
 from pathlib import Path
@@ -30,7 +30,14 @@ class WorkspaceOrganizerAgent:
                 logging.StreamHandler()
             ]
         )
-        self.logger = logging.getLogger(self.agent_id)
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="WorkspaceOrganizerAgent",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
         
     def analyser_structure_workspace(self):
         """Analyse la structure actuelle du workspace des agents"""

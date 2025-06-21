@@ -35,12 +35,20 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 # Configuration logging NextGeneration
-import logging
+from logging_manager_optimized import LoggingManager
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
-logger = logging.getLogger("NextGen.install_phase3_dependencies")
+# LoggingManager NextGeneration - Tool/Utility
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "Phase3DependencyInstaller",
+            "log_level": "INFO",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": True
+        })
 
 # === Fin Configuration NextGeneration ===
 
@@ -93,7 +101,7 @@ _PROJECT_ROOT = _setup_portable_environment()
 # Maintenant imports normaux...
 
 import subprocess
-import logging
+from logging_manager_optimized import LoggingManager
 from pathlib import Path
 
 # =============================================================================

@@ -8,7 +8,7 @@ import os
 import sys
 import subprocess
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime
 from pathlib import Path
 
@@ -30,7 +30,14 @@ class WindowsPostgreSQLAgent:
                 logging.StreamHandler()
             ]
         )
-        self.logger = logging.getLogger(self.agent_id)
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="WindowsPostgreSQLAgent",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
         
     def diagnostic_environnement_windows(self):
         """Diagnostic complet de l'environnement Windows pour PostgreSQL"""

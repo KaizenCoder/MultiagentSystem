@@ -1,0 +1,607 @@
+{
+  "metadata": {
+    "generated_at": "2025-06-21T02:12:49.351051",
+    "version": "1.0.0",
+    "logging_system": "NextGeneration",
+    "target_agents": [
+      "agent_01_coordinateur_principal",
+      "agent_11_auditeur_qualite",
+      "agent_15_testeur_specialise",
+      "agent_16_peer_reviewer_senior",
+      "agent_17_peer_reviewer_technique",
+      "agent_18_auditeur_securite",
+      "agent_19_auditeur_performance",
+      "agent_20_auditeur_conformite"
+    ]
+  },
+  "global_settings": {
+    "logging_manager_path": "./logging_manager_optimized.py",
+    "reports_directory": "C:\\Dev\\nextgeneration\\20250620_projet_logging_centralise\\3_reponse_cursor\\reports_equipe_agents",
+    "logs_directory": "./logs",
+    "backup_enabled": true,
+    "compression_enabled": true,
+    "retention_days": 30
+  },
+  "agents_configurations": {
+    "agent_01_coordinateur_principal": {
+      "agent_id": "agent_01_coordinateur_principal",
+      "logging": {
+        "logger_name": "nextgen.agent.agent_01_coordinateur_principal",
+        "level": "INFO",
+        "handlers": {
+          "console": {
+            "enabled": true,
+            "level": "INFO",
+            "format": "detailed"
+          },
+          "file": {
+            "enabled": true,
+            "path": "./logs/agent_01_coordinateur_principal_20250621_021249.log",
+            "level": "INFO",
+            "rotation": "daily",
+            "compression": true
+          },
+          "elasticsearch": {
+            "enabled": true,
+            "index": "agents-agent_01_coordinateur_principal",
+            "level": "INFO",
+            "buffer_size": 100
+          }
+        },
+        "metrics": {
+          "enabled": true,
+          "collection_interval": 60,
+          "specialized_metrics": [
+            "coordination",
+            "team_management"
+          ]
+        },
+        "security": {
+          "level": "high",
+          "encryption_enabled": true,
+          "audit_trail": true
+        }
+      },
+      "reports": {
+        "format": "coordination_rapport",
+        "output_directory": "C:\\Dev\\nextgeneration\\20250620_projet_logging_centralise\\3_reponse_cursor\\reports_equipe_agents\\agent_01_coordinateur_principal",
+        "structure": {
+          "sections": [
+            "coordination_status",
+            "team_metrics",
+            "sprint_progress",
+            "blockers"
+          ],
+          "format": "markdown",
+          "charts_enabled": true
+        },
+        "auto_generation": true,
+        "versioning": true,
+        "backup": true
+      },
+      "specialized": {
+        "coordination_metrics": [
+          "team_velocity",
+          "sprint_progress",
+          "blockers_count"
+        ],
+        "team_monitoring": true,
+        "dashboard_generation": true,
+        "stakeholder_reports": true
+      },
+      "integration": {
+        "logging_manager_import": "from logging_manager_optimized import LoggingManager",
+        "initialization_code": "self.logger = LoggingManager().get_agent_logger('agent_01_coordinateur_principal')",
+        "report_method": "self.logger.log_structured_report(report_data, 'coordination_rapport')"
+      }
+    },
+    "agent_11_auditeur_qualite": {
+      "agent_id": "agent_11_auditeur_qualite",
+      "logging": {
+        "logger_name": "nextgen.agent.agent_11_auditeur_qualite",
+        "level": "DEBUG",
+        "handlers": {
+          "console": {
+            "enabled": true,
+            "level": "INFO",
+            "format": "detailed"
+          },
+          "file": {
+            "enabled": true,
+            "path": "./logs/agent_11_auditeur_qualite_20250621_021249.log",
+            "level": "DEBUG",
+            "rotation": "daily",
+            "compression": true
+          },
+          "elasticsearch": {
+            "enabled": true,
+            "index": "agents-agent_11_auditeur_qualite",
+            "level": "INFO",
+            "buffer_size": 100
+          }
+        },
+        "metrics": {
+          "enabled": true,
+          "collection_interval": 60,
+          "specialized_metrics": [
+            "quality_audit",
+            "code_analysis"
+          ]
+        },
+        "security": {
+          "level": "high",
+          "encryption_enabled": true,
+          "audit_trail": true
+        }
+      },
+      "reports": {
+        "format": "audit_qualite_rapport",
+        "output_directory": "C:\\Dev\\nextgeneration\\20250620_projet_logging_centralise\\3_reponse_cursor\\reports_equipe_agents\\agent_11_auditeur_qualite",
+        "structure": {
+          "sections": [
+            "quality_metrics",
+            "code_coverage",
+            "technical_debt",
+            "recommendations"
+          ],
+          "format": "json_detailed",
+          "scoring_enabled": true
+        },
+        "auto_generation": true,
+        "versioning": true,
+        "backup": true
+      },
+      "specialized": {
+        "quality_metrics": [
+          "code_coverage",
+          "technical_debt",
+          "complexity_score"
+        ],
+        "automated_analysis": true,
+        "quality_gates": true,
+        "trend_analysis": true
+      },
+      "integration": {
+        "logging_manager_import": "from logging_manager_optimized import LoggingManager",
+        "initialization_code": "self.logger = LoggingManager().get_agent_logger('agent_11_auditeur_qualite')",
+        "report_method": "self.logger.log_structured_report(report_data, 'audit_qualite_rapport')"
+      }
+    },
+    "agent_15_testeur_specialise": {
+      "agent_id": "agent_15_testeur_specialise",
+      "logging": {
+        "logger_name": "nextgen.agent.agent_15_testeur_specialise",
+        "level": "DEBUG",
+        "handlers": {
+          "console": {
+            "enabled": true,
+            "level": "INFO",
+            "format": "detailed"
+          },
+          "file": {
+            "enabled": true,
+            "path": "./logs/agent_15_testeur_specialise_20250621_021249.log",
+            "level": "DEBUG",
+            "rotation": "daily",
+            "compression": true
+          },
+          "elasticsearch": {
+            "enabled": true,
+            "index": "agents-agent_15_testeur_specialise",
+            "level": "INFO",
+            "buffer_size": 100
+          }
+        },
+        "metrics": {
+          "enabled": true,
+          "collection_interval": 60,
+          "specialized_metrics": [
+            "testing",
+            "performance_testing"
+          ]
+        },
+        "security": {
+          "level": "medium",
+          "encryption_enabled": false,
+          "audit_trail": true
+        }
+      },
+      "reports": {
+        "format": "tests_specialises_rapport",
+        "output_directory": "C:\\Dev\\nextgeneration\\20250620_projet_logging_centralise\\3_reponse_cursor\\reports_equipe_agents\\agent_15_testeur_specialise",
+        "structure": {
+          "sections": [
+            "test_results",
+            "performance_metrics",
+            "coverage_analysis",
+            "failures"
+          ],
+          "format": "junit_xml",
+          "real_time_reporting": true
+        },
+        "auto_generation": true,
+        "versioning": true,
+        "backup": true
+      },
+      "specialized": {
+        "test_metrics": [
+          "pass_rate",
+          "coverage",
+          "execution_time"
+        ],
+        "automated_reporting": true,
+        "failure_analysis": true,
+        "performance_tracking": true
+      },
+      "integration": {
+        "logging_manager_import": "from logging_manager_optimized import LoggingManager",
+        "initialization_code": "self.logger = LoggingManager().get_agent_logger('agent_15_testeur_specialise')",
+        "report_method": "self.logger.log_structured_report(report_data, 'tests_specialises_rapport')"
+      }
+    },
+    "agent_16_peer_reviewer_senior": {
+      "agent_id": "agent_16_peer_reviewer_senior",
+      "logging": {
+        "logger_name": "nextgen.agent.agent_16_peer_reviewer_senior",
+        "level": "INFO",
+        "handlers": {
+          "console": {
+            "enabled": true,
+            "level": "INFO",
+            "format": "detailed"
+          },
+          "file": {
+            "enabled": true,
+            "path": "./logs/agent_16_peer_reviewer_senior_20250621_021249.log",
+            "level": "INFO",
+            "rotation": "daily",
+            "compression": true
+          },
+          "elasticsearch": {
+            "enabled": true,
+            "index": "agents-agent_16_peer_reviewer_senior",
+            "level": "INFO",
+            "buffer_size": 100
+          }
+        },
+        "metrics": {
+          "enabled": true,
+          "collection_interval": 60,
+          "specialized_metrics": [
+            "peer_review",
+            "senior_analysis"
+          ]
+        },
+        "security": {
+          "level": "high",
+          "encryption_enabled": true,
+          "audit_trail": true
+        }
+      },
+      "reports": {
+        "format": "peer_review_senior_rapport",
+        "output_directory": "C:\\Dev\\nextgeneration\\20250620_projet_logging_centralise\\3_reponse_cursor\\reports_equipe_agents\\agent_16_peer_reviewer_senior",
+        "structure": {
+          "sections": [
+            "review_summary",
+            "architecture_feedback",
+            "best_practices",
+            "mentoring_notes"
+          ],
+          "format": "structured_markdown",
+          "approval_workflow": true
+        },
+        "auto_generation": true,
+        "versioning": true,
+        "backup": true
+      },
+      "specialized": {
+        "review_metrics": [
+          "review_time",
+          "feedback_quality",
+          "approval_rate"
+        ],
+        "collaboration_tracking": true,
+        "knowledge_sharing": true,
+        "mentoring_metrics": true
+      },
+      "integration": {
+        "logging_manager_import": "from logging_manager_optimized import LoggingManager",
+        "initialization_code": "self.logger = LoggingManager().get_agent_logger('agent_16_peer_reviewer_senior')",
+        "report_method": "self.logger.log_structured_report(report_data, 'peer_review_senior_rapport')"
+      }
+    },
+    "agent_17_peer_reviewer_technique": {
+      "agent_id": "agent_17_peer_reviewer_technique",
+      "logging": {
+        "logger_name": "nextgen.agent.agent_17_peer_reviewer_technique",
+        "level": "DEBUG",
+        "handlers": {
+          "console": {
+            "enabled": true,
+            "level": "INFO",
+            "format": "detailed"
+          },
+          "file": {
+            "enabled": true,
+            "path": "./logs/agent_17_peer_reviewer_technique_20250621_021249.log",
+            "level": "DEBUG",
+            "rotation": "daily",
+            "compression": true
+          },
+          "elasticsearch": {
+            "enabled": true,
+            "index": "agents-agent_17_peer_reviewer_technique",
+            "level": "INFO",
+            "buffer_size": 100
+          }
+        },
+        "metrics": {
+          "enabled": true,
+          "collection_interval": 60,
+          "specialized_metrics": [
+            "technical_review",
+            "code_analysis"
+          ]
+        },
+        "security": {
+          "level": "high",
+          "encryption_enabled": true,
+          "audit_trail": true
+        }
+      },
+      "reports": {
+        "format": "peer_review_technique_rapport",
+        "output_directory": "C:\\Dev\\nextgeneration\\20250620_projet_logging_centralise\\3_reponse_cursor\\reports_equipe_agents\\agent_17_peer_reviewer_technique",
+        "structure": {
+          "sections": [
+            "technical_analysis",
+            "code_quality",
+            "security_review",
+            "performance_impact"
+          ],
+          "format": "technical_json",
+          "code_snippets_enabled": true
+        },
+        "auto_generation": true,
+        "versioning": true,
+        "backup": true
+      },
+      "specialized": {
+        "review_metrics": [
+          "review_time",
+          "feedback_quality",
+          "approval_rate"
+        ],
+        "collaboration_tracking": true,
+        "knowledge_sharing": true,
+        "mentoring_metrics": false
+      },
+      "integration": {
+        "logging_manager_import": "from logging_manager_optimized import LoggingManager",
+        "initialization_code": "self.logger = LoggingManager().get_agent_logger('agent_17_peer_reviewer_technique')",
+        "report_method": "self.logger.log_structured_report(report_data, 'peer_review_technique_rapport')"
+      }
+    },
+    "agent_18_auditeur_securite": {
+      "agent_id": "agent_18_auditeur_securite",
+      "logging": {
+        "logger_name": "nextgen.agent.agent_18_auditeur_securite",
+        "level": "INFO",
+        "handlers": {
+          "console": {
+            "enabled": true,
+            "level": "INFO",
+            "format": "detailed"
+          },
+          "file": {
+            "enabled": true,
+            "path": "./logs/agent_18_auditeur_securite_20250621_021249.log",
+            "level": "INFO",
+            "rotation": "daily",
+            "compression": true
+          },
+          "elasticsearch": {
+            "enabled": true,
+            "index": "agents-agent_18_auditeur_securite",
+            "level": "INFO",
+            "buffer_size": 100
+          }
+        },
+        "metrics": {
+          "enabled": true,
+          "collection_interval": 60,
+          "specialized_metrics": [
+            "security_audit",
+            "vulnerability_scan"
+          ]
+        },
+        "security": {
+          "level": "critical",
+          "encryption_enabled": true,
+          "audit_trail": true
+        }
+      },
+      "reports": {
+        "format": "audit_securite_rapport",
+        "output_directory": "C:\\Dev\\nextgeneration\\20250620_projet_logging_centralise\\3_reponse_cursor\\reports_equipe_agents\\agent_18_auditeur_securite",
+        "structure": {
+          "sections": [
+            "security_status",
+            "vulnerabilities",
+            "compliance_check",
+            "remediation_plan"
+          ],
+          "format": "security_json",
+          "encryption_required": true,
+          "confidentiality": "restricted"
+        },
+        "auto_generation": true,
+        "versioning": true,
+        "backup": true
+      },
+      "specialized": {
+        "security_metrics": [
+          "vulnerability_count",
+          "risk_score",
+          "compliance_rate"
+        ],
+        "threat_monitoring": true,
+        "incident_tracking": true,
+        "compliance_reporting": true,
+        "confidentiality_level": "restricted"
+      },
+      "integration": {
+        "logging_manager_import": "from logging_manager_optimized import LoggingManager",
+        "initialization_code": "self.logger = LoggingManager().get_agent_logger('agent_18_auditeur_securite')",
+        "report_method": "self.logger.log_structured_report(report_data, 'audit_securite_rapport')"
+      }
+    },
+    "agent_19_auditeur_performance": {
+      "agent_id": "agent_19_auditeur_performance",
+      "logging": {
+        "logger_name": "nextgen.agent.agent_19_auditeur_performance",
+        "level": "DEBUG",
+        "handlers": {
+          "console": {
+            "enabled": true,
+            "level": "INFO",
+            "format": "detailed"
+          },
+          "file": {
+            "enabled": true,
+            "path": "./logs/agent_19_auditeur_performance_20250621_021249.log",
+            "level": "DEBUG",
+            "rotation": "daily",
+            "compression": true
+          },
+          "elasticsearch": {
+            "enabled": true,
+            "index": "agents-agent_19_auditeur_performance",
+            "level": "INFO",
+            "buffer_size": 100
+          }
+        },
+        "metrics": {
+          "enabled": true,
+          "collection_interval": 60,
+          "specialized_metrics": [
+            "performance_audit",
+            "profiling"
+          ]
+        },
+        "security": {
+          "level": "medium",
+          "encryption_enabled": false,
+          "audit_trail": true
+        }
+      },
+      "reports": {
+        "format": "audit_performance_rapport",
+        "output_directory": "C:\\Dev\\nextgeneration\\20250620_projet_logging_centralise\\3_reponse_cursor\\reports_equipe_agents\\agent_19_auditeur_performance",
+        "structure": {
+          "sections": [
+            "performance_metrics",
+            "bottlenecks",
+            "optimization_opportunities",
+            "benchmarks"
+          ],
+          "format": "performance_json",
+          "real_time_metrics": true,
+          "charts_enabled": true
+        },
+        "auto_generation": true,
+        "versioning": true,
+        "backup": true
+      },
+      "specialized": {
+        "performance_metrics": [
+          "response_time",
+          "throughput",
+          "resource_usage"
+        ],
+        "bottleneck_detection": true,
+        "optimization_tracking": true,
+        "benchmark_comparison": true
+      },
+      "integration": {
+        "logging_manager_import": "from logging_manager_optimized import LoggingManager",
+        "initialization_code": "self.logger = LoggingManager().get_agent_logger('agent_19_auditeur_performance')",
+        "report_method": "self.logger.log_structured_report(report_data, 'audit_performance_rapport')"
+      }
+    },
+    "agent_20_auditeur_conformite": {
+      "agent_id": "agent_20_auditeur_conformite",
+      "logging": {
+        "logger_name": "nextgen.agent.agent_20_auditeur_conformite",
+        "level": "INFO",
+        "handlers": {
+          "console": {
+            "enabled": true,
+            "level": "INFO",
+            "format": "detailed"
+          },
+          "file": {
+            "enabled": true,
+            "path": "./logs/agent_20_auditeur_conformite_20250621_021249.log",
+            "level": "INFO",
+            "rotation": "daily",
+            "compression": true
+          },
+          "elasticsearch": {
+            "enabled": true,
+            "index": "agents-agent_20_auditeur_conformite",
+            "level": "INFO",
+            "buffer_size": 100
+          }
+        },
+        "metrics": {
+          "enabled": true,
+          "collection_interval": 60,
+          "specialized_metrics": [
+            "compliance_audit",
+            "standards_check"
+          ]
+        },
+        "security": {
+          "level": "high",
+          "encryption_enabled": true,
+          "audit_trail": true
+        }
+      },
+      "reports": {
+        "format": "audit_conformite_rapport",
+        "output_directory": "C:\\Dev\\nextgeneration\\20250620_projet_logging_centralise\\3_reponse_cursor\\reports_equipe_agents\\agent_20_auditeur_conformite",
+        "structure": {
+          "sections": [
+            "compliance_status",
+            "standards_adherence",
+            "gaps_analysis",
+            "action_plan"
+          ],
+          "format": "compliance_json",
+          "regulatory_tracking": true,
+          "audit_trail": true
+        },
+        "auto_generation": true,
+        "versioning": true,
+        "backup": true
+      },
+      "specialized": {
+        "compliance_metrics": [
+          "standards_adherence",
+          "gap_count",
+          "action_items"
+        ],
+        "regulatory_tracking": true,
+        "audit_trail": true,
+        "certification_status": true
+      },
+      "integration": {
+        "logging_manager_import": "from logging_manager_optimized import LoggingManager",
+        "initialization_code": "self.logger = LoggingManager().get_agent_logger('agent_20_auditeur_conformite')",
+        "report_method": "self.logger.log_structured_report(report_data, 'audit_conformite_rapport')"
+      }
+    }
+  }
+}

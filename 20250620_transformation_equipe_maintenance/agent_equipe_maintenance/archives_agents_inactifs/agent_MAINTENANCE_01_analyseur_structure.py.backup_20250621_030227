@@ -1,0 +1,1154 @@
+#!/usr/bin/env python3
+"""
+🔍 AGENT 1 - ANALYSEUR DE STRUCTURE (CLAUDE SONNET 4)
+Mission: Analyser la structure des outils avec Pattern Factory NextGeneration
+
+Architecture Pattern Factory:
+- Hérite de Agent de base  
+- Implémente méthodes abstraites obligatoires
+- Configuration NextGeneration intégrée
+- Logging Pattern Factory standardisé
+
+Responsabilités:
+- Scanner tous les fichiers Python dans le répertoire source
+- Analyser la structure AST de chaque fichier
+- Identifier les types d'outils (automation, monitoring, conversion, etc.)
+- Extraire les dépendances et métadonnées
+- Classer les outils par utilité potentielle
+"""
+
+import os
+import ast
+import json
+import logging
+import asyncio
+from pathlib import Path
+from typing import Dict, List, Any, Optional
+import importlib.util
+import re
+from datetime import datetime
+import sys
+
+# Import Pattern Factory (OBLIGATOIRE selon guide)
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+try:
+    from agent_factory_implementation.core.agent_factory_architecture import Agent, Task, Result
+    PATTERN_FACTORY_AVAILABLE = True
+except ImportError:
+    try:
+        from core.agent_factory_architecture import Agent, Task, Result
+        PATTERN_FACTORY_AVAILABLE = True
+    except ImportError as e:
+        print(f"⚠️ Pattern Factory non disponible: {e}")
+        # Fallback pour compatibilité
+    class Agent:
+        def __init__(self, agent_type: str, **config):
+            self.agent_type = agent_type
+            self.config = config
+            self.agent_id = f"agent_1_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            self.logger = logging.getLogger(f"Agent1_AnalyseurStructure_{self.agent_id}")
+            
+        async def startup(self): pass
+        async def shutdown(self): pass
+        async def health_check(self): return {"status": "healthy"}
+        def get_capabilities(self): return []
+    
+    class Task:
+        def __init__(self, task_id: str, description: str, **kwargs):
+            self.task_id = task_id
+            self.description = description
+            
+    class Result:
+        def __init__(self, success: bool, data: Any = None, error: str = None):
+            self.success = success
+            self.data = data
+            self.error = error
+    
+    PATTERN_FACTORY_AVAILABLE = False
+
+class AgentAnalyseurStructure(Agent):
+    """Agent spécialisé dans l'analyse de structure de code Python avec Claude Sonnet 4 - Pattern Factory NextGeneration"""
+    
+    def __init__(self, source_path: str = None, **config):
+        # Initialisation Pattern Factory OBLIGATOIRE EN PREMIER
+        super().__init__("analyseur_structure", **config)
+        
+        # Logger déjà configuré par le fallback Agent  
+        self.logger = logging.getLogger(f"Agent1_AnalyseurStructure_{self.agent_id}")
+        
+        # Configuration spécifique à l'agent
+        self.source_path = Path(source_path) if source_path else Path("tools")
+        self.analysis_results = {
+            "tools": [],
+            "categories": {},
+            "dependencies": set(),
+            "total_files": 0,
+            "analyzable_files": 0
+        }
+        
+        # Assurer que les attributs existent toujours
+        if not hasattr(self, 'agent_id'):
+            self.agent_id = f"agent_1_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        if not hasattr(self, 'agent_type'):
+            self.agent_type = "analyseur_structure"
+        
+        # Assurer compatibilité Pattern Factory
+        if not hasattr(self, 'agent_id') or self.agent_id is None:
+            self.agent_id = f"agent_1_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            
+        if hasattr(self, 'logger'):
+            self.logger.info(f"🔍 Agent 1 - Analyseur Structure initialisé - ID: {self.agent_id}")
+        else:
+            print(f"🔍 Agent 1 - Analyseur Structure initialisé - ID: {self.agent_id}")
+        
+    # Implémentation méthodes abstraites OBLIGATOIRES
+    async def startup(self):
+        """Démarrage agent analyseur structure"""
+        if hasattr(self, 'logger'):
+            self.logger.info(f"🚀 Agent Analyseur Structure {self.agent_id} - DÉMARRAGE")
+        else:
+            print(f"🚀 Agent Analyseur Structure {self.agent_id} - DÉMARRAGE")
+        
+        # Vérifications de démarrage
+        if not self.source_path.exists():
+            if hasattr(self, 'logger'):
+                self.logger.warning(f"⚠️ Répertoire source non trouvé: {self.source_path}")
+            else:
+                print(f"⚠️ Répertoire source non trouvé: {self.source_path}")
+            # Créer le répertoire par défaut
+            self.source_path.mkdir(parents=True, exist_ok=True)
+            
+        if hasattr(self, 'logger'):
+            self.logger.info(f"✅ Répertoire source configuré: {self.source_path}")
+        else:
+            print(f"✅ Répertoire source configuré: {self.source_path}")
+        
+    async def shutdown(self):
+        """Arrêt agent analyseur structure"""
+        if hasattr(self, 'logger'):
+            self.logger.info(f"🛑 Agent Analyseur Structure {self.agent_id} - ARRÊT")
+        else:
+            print(f"🛑 Agent Analyseur Structure {self.agent_id} - ARRÊT")
+        
+        # Nettoyage des ressources
+        if hasattr(self, 'analysis_results'):
+            # Convertir les sets en listes pour la sérialisation
+            if 'dependencies' in self.analysis_results:
+                self.analysis_results['dependencies'] = list(self.analysis_results['dependencies'])
+                
+    async def health_check(self) -> Dict[str, Any]:
+        """Vérification santé agent analyseur structure"""
+        health_status = {
+            "agent_id": self.agent_id,
+            "agent_type": self.agent_type,
+            "status": "healthy",
+            "source_path_exists": self.source_path.exists() if hasattr(self, 'source_path') else False,
+            "analysis_ready": True,
+            "last_analysis_count": len(self.analysis_results.get("tools", [])),
+            "timestamp": datetime.now().isoformat()
+        }
+        
+        # Vérifications spécifiques
+        if not self.source_path.exists():
+            health_status["status"] = "warning"
+            health_status["issues"] = ["Répertoire source inexistant"]
+            
+        return health_status
+    
+    async def execute_task(self, task: Task) -> Result:
+        """Exécution des tâches d'analyse de structure - Pattern Factory OBLIGATOIRE"""
+        try:
+            self.logger.info(f"🎯 Exécution tâche: {task.task_id}")
+            
+            if task.task_id == "analyze_structure":
+                # Tâche d'analyse de structure
+                source_path = getattr(task, 'source_path', None)
+                results = await self.analyze_tools_structure(source_path)
+                
+                return Result(
+                    success=True,
+                    data={
+                        "analysis_results": results,
+                        "agent_id": self.agent_id,
+                        "task_id": task.task_id
+                    }
+                )
+                
+            elif task.task_id == "analyze_single_file":
+                # Tâche d'analyse de fichier unique
+                file_path = getattr(task, 'file_path', None)
+                if not file_path:
+                    return Result(success=False, error="file_path requis pour analyze_single_file")
+                    
+                file_info = await self.analyze_single_file(Path(file_path))
+                return Result(success=True, data=file_info)
+                
+            else:
+                return Result(
+                    success=False, 
+                    error=f"Tâche non reconnue: {task.task_id}"
+                )
+                
+        except Exception as e:
+            self.logger.error(f"❌ Erreur exécution tâche {task.task_id}: {e}")
+            return Result(success=False, error=str(e))
+    
+    def get_capabilities(self) -> List[str]:
+        """Retourne les capacités de l'agent analyseur structure"""
+        return [
+            "analyze_structure",
+            "analyze_single_file", 
+            "extract_ast_elements",
+            "classify_tool_type",
+            "calculate_complexity",
+            "categorize_tools",
+            # 🆕 NOUVELLES CAPACITÉS AVANCÉES
+            "advanced_ast_analysis",
+            "intelligent_classification",
+            "dependency_graph_analysis", 
+            "code_quality_metrics",
+            "security_analysis",
+            "performance_analysis",
+            "maintainability_scoring",
+            "architectural_patterns_detection",
+            "design_patterns_recognition",
+            "code_smell_detection",
+            "refactoring_opportunities_identification",
+            "enterprise_readiness_assessment"
+        ]
+    
+    # Méthodes métier (logique existante adaptée)
+    async def analyze_tools_structure(self, source_path: str = None) -> Dict[str, Any]:
+        """Analyse complète de la structure des outils - Version Pattern Factory"""
+        if source_path:
+            self.source_path = Path(source_path)
+            
+        self.logger.info(f"🔍 [SEARCH] Démarrage analyse structure: {self.source_path}")
+        
+        if not self.source_path.exists():
+            raise FileNotFoundError(f"Répertoire source introuvable: {self.source_path}")
+            
+        # Scanner tous les fichiers Python
+        python_files = list(self.source_path.rglob("*.py"))
+        self.analysis_results["total_files"] = len(python_files)
+        
+        self.logger.info(f"📁 [FOLDER] {len(python_files)} fichiers Python trouvés")
+        
+        # Analyser chaque fichier
+        for py_file in python_files:
+            try:
+                tool_info = await self.analyze_single_file(py_file)
+                if tool_info:
+                    self.analysis_results["tools"].append(tool_info)
+                    self.analysis_results["analyzable_files"] += 1
+                    
+            except Exception as e:
+                self.logger.warning(f"⚠️ Erreur analyse {py_file.name}: {e}")
+                
+        # Catégoriser les outils
+        await self.categorize_tools()
+        
+        # Finaliser l'analyse
+        self.analysis_results["dependencies"] = list(self.analysis_results["dependencies"])
+        
+        self.logger.info(f"✅ [CHECK] Analyse terminée: {self.analysis_results['analyzable_files']} outils analysés")
+        return self.analysis_results
+        
+    async def analyze_single_file(self, file_path: Path) -> Optional[Dict[str, Any]]:
+        """Analyse détaillée d'un fichier Python unique"""
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+                
+            # Parse AST
+            tree = ast.parse(content)
+            
+            # Extraction des informations
+            tool_info = {
+                "name": file_path.stem,
+                "path": str(file_path.relative_to(self.source_path)),
+                "size_bytes": file_path.stat().st_size,
+                "lines_count": len(content.splitlines()),
+                "functions": [],
+                "classes": [],
+                "imports": [],
+                "docstring": ast.get_docstring(tree),
+                "complexity_score": 0,
+                "tool_type": "unknown",
+                "utility_indicators": []
+            }
+            
+            # Analyse AST détaillée
+            await self.extract_ast_elements(tree, tool_info)
+            
+            # Classification du type d'outil
+            tool_info["tool_type"] = await self.classify_tool_type(tool_info, content)
+            
+            # Score de complexité
+            tool_info["complexity_score"] = await self.calculate_complexity_score(tool_info)
+            
+            # Indicateurs d'utilité
+            tool_info["utility_indicators"] = await self.extract_utility_indicators(tool_info, content)
+            
+            return tool_info
+            
+        except Exception as e:
+            self.logger.error(f"❌ [CROSS] Erreur analyse fichier {file_path}: {e}")
+            return None
+            
+    async def extract_ast_elements(self, tree: ast.AST, tool_info: Dict[str, Any]):
+        """Extraction des éléments AST (fonctions, classes, imports)"""
+        for node in ast.walk(tree):
+            if isinstance(node, ast.FunctionDef):
+                func_info = {
+                    "name": node.name,
+                    "args_count": len(node.args.args),
+                    "is_async": isinstance(node, ast.AsyncFunctionDef),
+                    "decorators": [ast.unparse(d) for d in node.decorator_list],
+                    "docstring": ast.get_docstring(node)
+                }
+                tool_info["functions"].append(func_info)
+                
+            elif isinstance(node, ast.ClassDef):
+                class_info = {
+                    "name": node.name,
+                    "methods_count": len([n for n in node.body if isinstance(n, ast.FunctionDef)]),
+                    "bases": [ast.unparse(base) for base in node.bases],
+                    "docstring": ast.get_docstring(node)
+                }
+                tool_info["classes"].append(class_info)
+                
+            elif isinstance(node, (ast.Import, ast.ImportFrom)):
+                if isinstance(node, ast.Import):
+                    for alias in node.names:
+                        import_name = alias.name
+                        tool_info["imports"].append(import_name)
+                        self.analysis_results["dependencies"].add(import_name)
+                        
+                elif isinstance(node, ast.ImportFrom):
+                    module = node.module or ""
+                    for alias in node.names:
+                        import_name = f"{module}.{alias.name}" if module else alias.name
+                        tool_info["imports"].append(import_name)
+                        if module:
+                            self.analysis_results["dependencies"].add(module)
+                            
+    async def classify_tool_type(self, tool_info: Dict[str, Any], content: str) -> str:
+        """Classification intelligente du type d'outil basée sur l'analyse du code"""
+        
+        # Mots-clés pour chaque catégorie
+        categories_keywords = {
+            "automation": ["schedule", "cron", "task", "job", "workflow", "pipeline", "automation"],
+            "monitoring": ["monitor", "watch", "log", "metric", "alert", "health", "status"],
+            "conversion": ["convert", "transform", "parse", "format", "encode", "decode"],
+            "generation": ["generate", "create", "build", "make", "produce", "template"],
+            "utility": ["util", "helper", "tool", "common", "shared", "base"],
+            "api": ["request", "response", "endpoint", "route", "server", "client"],
+            "data": ["database", "db", "sql", "query", "data", "storage"],
+            "file": ["file", "directory", "path", "folder", "io", "read", "write"],
+            "network": ["http", "https", "socket", "network", "connection", "url"],
+            "security": ["auth", "token", "encrypt", "decrypt", "hash", "security"]
+        }
+        
+        # Analyse du nom de fichier
+        filename_lower = tool_info["name"].lower()
+        
+        # Analyse du contenu (docstring + code)
+        content_lower = content.lower()
+        docstring_lower = (tool_info["docstring"] or "").lower()
+        
+        category_scores = {}
+        
+        for category, keywords in categories_keywords.items():
+            score = 0
+            
+            # Score basé sur le nom de fichier (poids élevé)
+            for keyword in keywords:
+                if keyword in filename_lower:
+                    score += 3
+                    
+            # Score basé sur la docstring (poids moyen)
+            for keyword in keywords:
+                if keyword in docstring_lower:
+                    score += 2
+                    
+            # Score basé sur le contenu (poids faible)
+            for keyword in keywords:
+                score += content_lower.count(keyword) * 0.5
+                
+            # Score basé sur les imports
+            for import_name in tool_info["imports"]:
+                for keyword in keywords:
+                    if keyword in import_name.lower():
+                        score += 1
+                        
+            category_scores[category] = score
+            
+        # Retourner la catégorie avec le score le plus élevé
+        if category_scores:
+            best_category = max(category_scores.items(), key=lambda x: x[1])
+            if best_category[1] > 0:
+                return best_category[0]
+                
+        return "utility"  # Catégorie par défaut
+        
+    async def calculate_complexity_score(self, tool_info: Dict[str, Any]) -> int:
+        """Calcul du score de complexité de l'outil"""
+        score = 0
+        
+        # Complexité basée sur le nombre de fonctions
+        score += len(tool_info["functions"]) * 2
+        
+        # Complexité basée sur le nombre de classes
+        score += len(tool_info["classes"]) * 5
+        
+        # Complexité basée sur les imports
+        score += len(tool_info["imports"])
+        
+        # Complexité basée sur la taille
+        score += tool_info["lines_count"] // 10
+        
+        # Bonus pour les fonctions async
+        async_functions = sum(1 for f in tool_info["functions"] if f["is_async"])
+        score += async_functions * 3
+        
+        # Bonus pour les décorateurs
+        decorated_functions = sum(1 for f in tool_info["functions"] if f["decorators"])
+        score += decorated_functions * 2
+        
+        return score
+        
+    async def extract_utility_indicators(self, tool_info: Dict[str, Any], content: str) -> List[str]:
+        """Extraction des indicateurs d'utilité de l'outil"""
+        indicators = []
+        
+        # Indicateurs basés sur la structure
+        if len(tool_info["functions"]) > 5:
+            indicators.append("multi_functional")
+            
+        if len(tool_info["classes"]) > 0:
+            indicators.append("object_oriented")
+            
+        if any(f["is_async"] for f in tool_info["functions"]):
+            indicators.append("async_capable")
+            
+        # Indicateurs basés sur les imports
+        important_libs = ["requests", "asyncio", "pathlib", "json", "yaml", "sqlite3", "pandas"]
+        for lib in important_libs:
+            if any(lib in imp for imp in tool_info["imports"]):
+                indicators.append(f"uses_{lib}")
+                
+        # Indicateurs basés sur le contenu
+        if "if __name__ == '__main__':" in content:
+            indicators.append("executable_script")
+            
+        if "argparse" in content or "click" in content:
+            indicators.append("cli_interface")
+            
+        if "logging" in content:
+            indicators.append("has_logging")
+            
+        if "config" in content.lower():
+            indicators.append("configurable")
+            
+        # Indicateurs de qualité
+        if tool_info["docstring"]:
+            indicators.append("documented")
+            
+        if any(f["docstring"] for f in tool_info["functions"]):
+            indicators.append("functions_documented")
+            
+        return indicators
+        
+    async def categorize_tools(self):
+        """Catégorisation finale des outils analysés"""
+        categories = {}
+        
+        for tool in self.analysis_results["tools"]:
+            tool_type = tool["tool_type"]
+            if tool_type not in categories:
+                categories[tool_type] = []
+            categories[tool_type].append(tool["name"])
+            
+        self.analysis_results["categories"] = categories
+        
+        # Log des statistiques
+        for category, tools in categories.items():
+            self.logger.info(f"📊 [CHART] {category}: {len(tools)} outils")
+    
+    # Méthodes spécialisées Apex (conservées)
+    async def analyser_structure_apex(self, apex_tools_dir: str) -> Dict[str, Any]:
+        """Analyse spécialisée pour les outils Apex_VBA_FRAMEWORK - Version Pattern Factory"""
+        self.logger.info(f"🔍 [SEARCH] Analyse spécialisée Apex_VBA_FRAMEWORK: {apex_tools_dir}")
+        
+        apex_path = Path(apex_tools_dir)
+        if not apex_path.exists():
+            raise FileNotFoundError(f"Répertoire Apex introuvable: {apex_tools_dir}")
+        
+        # Analyse des différents types d'outils dans Apex
+        outils_apex = {
+            "python_tools": [],
+            "powershell_tools": [],
+            "batch_tools": [],
+            "vba_tools": [],
+            "config_tools": [],
+            "directories": []
+        }
+        
+        # Scanner tous les fichiers et répertoires
+        for item in apex_path.rglob("*"):
+            if item.is_file():
+                if item.suffix == ".py":
+                    # Analyser les outils Python
+                    analyse = await self.analyze_single_file(item)
+                    if analyse:
+                        analyse["category"] = "python"
+                        analyse["apex_subdir"] = item.parent.name
+                        outils_apex["python_tools"].append(analyse)
+                
+                elif item.suffix == ".ps1":
+                    # Analyser les scripts PowerShell
+                    analyse = await self._analyser_fichier_powershell(item)
+                    if analyse:
+                        analyse["category"] = "powershell"
+                        analyse["apex_subdir"] = item.parent.name
+                        outils_apex["powershell_tools"].append(analyse)
+                
+                elif item.suffix in [".bat", ".cmd"]:
+                    # Analyser les scripts batch
+                    analyse = await self._analyser_fichier_batch(item)
+                    if analyse:
+                        analyse["category"] = "batch"
+                        analyse["apex_subdir"] = item.parent.name
+                        outils_apex["batch_tools"].append(analyse)
+        
+        # Statistiques globales
+        total_tools = (len(outils_apex["python_tools"]) + 
+                      len(outils_apex["powershell_tools"]) + 
+                      len(outils_apex["batch_tools"]))
+        
+        # Classification par sous-répertoire Apex
+        categories_apex = {}
+        for tool_type in ["python_tools", "powershell_tools", "batch_tools"]:
+            for tool in outils_apex[tool_type]:
+                subdir = tool.get("apex_subdir", "root")
+                if subdir not in categories_apex:
+                    categories_apex[subdir] = 0
+                categories_apex[subdir] += 1
+        
+        resultats = {
+            "source_directory": apex_tools_dir,
+            "total_tools": total_tools,
+            "tools_by_type": {
+                "python": len(outils_apex["python_tools"]),
+                "powershell": len(outils_apex["powershell_tools"]),
+                "batch": len(outils_apex["batch_tools"])
+            },
+            "apex_directories": outils_apex["directories"],
+            "tools_by_apex_category": categories_apex,
+            "detailed_analysis": outils_apex,
+            "analysis_timestamp": datetime.now().isoformat(),
+            "analyzer_model": "Claude Sonnet 4 - Pattern Factory"
+        }
+        
+        self.logger.info(f"✅ [CHECK] Analyse Apex terminée: {total_tools} outils trouvés")
+        return resultats
+    
+    async def _analyser_fichier_powershell(self, filepath: Path) -> Optional[Dict[str, Any]]:
+        """Analyse un fichier PowerShell"""
+        try:
+            with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.read()
+            
+            # Détection des fonctions PowerShell
+            functions = []
+            for line in content.split('\n'):
+                if line.strip().startswith('function ') or line.strip().startswith('Function '):
+                    func_name = line.split()[1].split('(')[0] if len(line.split()) > 1 else "unknown"
+                    functions.append(func_name)
+            
+            return {
+                "name": filepath.stem,
+                "path": str(filepath),
+                "size": filepath.stat().st_size,
+                "functions": functions,
+                "lines_count": len(content.split('\n')),
+                "tool_type": "powershell_script",
+                "complexity_score": len(functions) * 2 + len(content.split('\n')) // 10
+            }
+        except Exception as e:
+            self.logger.warning(f"⚠️ Erreur analyse PowerShell {filepath}: {e}")
+            return None
+    
+    async def _analyser_fichier_batch(self, filepath: Path) -> Optional[Dict[str, Any]]:
+        """Analyse un fichier batch"""
+        try:
+            with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.read()
+            
+            # Détection des commandes batch importantes
+            commands = []
+            for line in content.split('\n'):
+                line = line.strip().upper()
+                if line and not line.startswith('::') and not line.startswith('REM'):
+                    for cmd in ['ECHO', 'SET', 'IF', 'FOR', 'CALL', 'GOTO', 'XCOPY', 'ROBOCOPY']:
+                        if line.startswith(cmd):
+                            commands.append(cmd)
+            
+            return {
+                "name": filepath.stem,
+                "path": str(filepath),
+                "size": filepath.stat().st_size,
+                "commands": list(set(commands)),
+                "lines_count": len(content.split('\n')),
+                "tool_type": "batch_script",
+                "complexity_score": len(set(commands)) * 3 + len(content.split('\n')) // 5
+            }
+        except Exception as e:
+            self.logger.warning(f"⚠️ Erreur analyse Batch {filepath}: {e}")
+            return None
+
+# Fonction factory pour créer l'agent (Pattern Factory)
+def create_agent_analyseur_structure(source_path: str = None, **config) -> AgentAnalyseurStructure:
+    """Factory function pour créer un Agent Analyseur Structure conforme Pattern Factory"""
+    return AgentAnalyseurStructure(source_path=source_path, **config)
+
+# Test de l'agent si exécuté directement
+async def main():
+    """Test de l'agent Pattern Factory"""
+    import sys
+    
+    if len(sys.argv) > 1:
+        source_path = sys.argv[1]
+    else:
+        source_path = "tools"
+        
+    # Créer l'agent via factory
+    agent = create_agent_analyseur_structure(source_path=source_path)
+    
+    try:
+        # Démarrage Pattern Factory
+        await agent.startup()
+        
+        # Vérification santé
+        health = await agent.health_check()
+        print(f"🏥 Health Check: {health}")
+        
+        # Exécution mission
+        results = await agent.analyze_tools_structure()
+        print(json.dumps(results, indent=2, ensure_ascii=False))
+        
+        # Arrêt propre
+        await agent.shutdown()
+        
+    except Exception as e:
+        print(f"❌ Erreur execution agent: {e}")
+        await agent.shutdown()
+
+if __name__ == "__main__":
+    asyncio.run(main()) 
+
+    # 🆕 NOUVELLES MÉTHODES AVANCÉES
+    
+    async def advanced_ast_analysis(self, file_path: Path) -> Dict[str, Any]:
+        """Analyse AST avancée avec détection de patterns complexes"""
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                source_code = f.read()
+                
+            tree = ast.parse(source_code)
+            
+            analysis = {
+                "complexity_metrics": self._calculate_advanced_complexity(tree),
+                "design_patterns": self._detect_design_patterns(tree),
+                "architectural_patterns": self._detect_architectural_patterns(tree),
+                "code_smells": self._detect_code_smells(tree, source_code),
+                "maintainability_score": self._calculate_maintainability(tree),
+                "refactoring_opportunities": self._identify_refactoring_opportunities(tree)
+            }
+            
+            return analysis
+            
+        except Exception as e:
+            self.logger.error(f"Erreur analyse AST avancée: {e}")
+            return {"error": str(e)}
+    
+    async def intelligent_classification(self, tool_info: Dict[str, Any]) -> Dict[str, Any]:
+        """Classification intelligente avec scoring pondéré"""
+        classification = {
+            "primary_category": "unknown",
+            "secondary_categories": [],
+            "confidence_score": 0.0,
+            "classification_reasoning": [],
+            "enterprise_readiness": "unknown"
+        }
+        
+        # Scoring basé sur les indicateurs
+        category_scores = {}
+        
+        # Analyse des imports pour classification
+        imports = tool_info.get('imports', [])
+        for imp in imports:
+            if any(web in imp for web in ['flask', 'fastapi', 'django', 'requests']):
+                category_scores['web_api'] = category_scores.get('web_api', 0) + 15
+            elif any(data in imp for data in ['pandas', 'numpy', 'sqlite3', 'psycopg2']):
+                category_scores['data_processing'] = category_scores.get('data_processing', 0) + 12
+            elif any(auto in imp for auto in ['selenium', 'pyautogui', 'subprocess']):
+                category_scores['automation'] = category_scores.get('automation', 0) + 10
+            elif any(monitor in imp for monitor in ['psutil', 'logging', 'prometheus']):
+                category_scores['monitoring'] = category_scores.get('monitoring', 0) + 8
+        
+        # Analyse des fonctions
+        functions = tool_info.get('functions', [])
+        for func in functions:
+            if any(keyword in func.lower() for keyword in ['convert', 'transform', 'parse']):
+                category_scores['conversion'] = category_scores.get('conversion', 0) + 5
+            elif any(keyword in func.lower() for keyword in ['test', 'validate', 'check']):
+                category_scores['testing'] = category_scores.get('testing', 0) + 4
+            elif any(keyword in func.lower() for keyword in ['deploy', 'install', 'setup']):
+                category_scores['deployment'] = category_scores.get('deployment', 0) + 6
+        
+        # Déterminer la catégorie principale
+        if category_scores:
+            primary_cat = max(category_scores, key=category_scores.get)
+            classification["primary_category"] = primary_cat
+            classification["confidence_score"] = min(100.0, category_scores[primary_cat] / 20 * 100)
+            
+            # Catégories secondaires (score > 30% du principal)
+            threshold = category_scores[primary_cat] * 0.3
+            classification["secondary_categories"] = [
+                cat for cat, score in category_scores.items() 
+                if cat != primary_cat and score >= threshold
+            ]
+        
+        return classification
+    
+    async def dependency_graph_analysis(self, tools_list: List[Dict]) -> Dict[str, Any]:
+        """Analyse des dépendances avec graphe de relations"""
+        dependency_graph = {
+            "nodes": [],
+            "edges": [],
+            "clusters": [],
+            "critical_dependencies": [],
+            "circular_dependencies": []
+        }
+        
+        # Construction des nœuds
+        for tool in tools_list:
+            node = {
+                "id": tool.get('name', 'unknown'),
+                "type": tool.get('tool_type', 'unknown'),
+                "imports": tool.get('imports', []),
+                "complexity": tool.get('complexity_score', 0)
+            }
+            dependency_graph["nodes"].append(node)
+        
+        # Construction des arêtes (relations)
+        for i, tool1 in enumerate(tools_list):
+            for j, tool2 in enumerate(tools_list):
+                if i != j:
+                    # Vérifier si tool1 dépend de tool2
+                    tool1_imports = tool1.get('imports', [])
+                    tool2_name = tool2.get('name', '')
+                    
+                    if any(tool2_name in imp for imp in tool1_imports):
+                        edge = {
+                            "from": tool1.get('name'),
+                            "to": tool2.get('name'),
+                            "type": "dependency",
+                            "strength": 1
+                        }
+                        dependency_graph["edges"].append(edge)
+        
+        return dependency_graph
+    
+    async def code_quality_metrics(self, file_path: Path) -> Dict[str, Any]:
+        """Métriques de qualité de code avancées"""
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                source_code = f.read()
+            
+            tree = ast.parse(source_code)
+            lines = source_code.split('\n')
+            
+            metrics = {
+                "lines_of_code": len([line for line in lines if line.strip()]),
+                "comment_ratio": self._calculate_comment_ratio(lines),
+                "function_length_avg": self._calculate_avg_function_length(tree),
+                "class_cohesion": self._calculate_class_cohesion(tree),
+                "coupling_score": self._calculate_coupling_score(tree),
+                "duplication_score": self._calculate_duplication_score(source_code),
+                "test_coverage_estimate": self._estimate_test_coverage(tree),
+                "documentation_score": self._calculate_documentation_score(tree, source_code)
+            }
+            
+            # Score global de qualité
+            quality_score = (
+                (100 - metrics["coupling_score"]) * 0.2 +
+                metrics["comment_ratio"] * 0.15 +
+                (100 - metrics["duplication_score"]) * 0.2 +
+                metrics["test_coverage_estimate"] * 0.15 +
+                metrics["documentation_score"] * 0.15 +
+                min(100, 100 - abs(metrics["function_length_avg"] - 15) * 2) * 0.15
+            )
+            
+            metrics["overall_quality_score"] = round(quality_score, 2)
+            
+            return metrics
+            
+        except Exception as e:
+            return {"error": f"Erreur calcul métriques qualité: {e}"}
+    
+    async def security_analysis(self, file_path: Path) -> Dict[str, Any]:
+        """Analyse de sécurité du code"""
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                source_code = f.read()
+            
+            security_issues = []
+            risk_level = "LOW"
+            
+            # Patterns de sécurité à risque
+            security_patterns = {
+                "sql_injection": r'["\'].*%s.*["\']|f["\'].*\{.*\}.*["\'].*sql',
+                "command_injection": r'os\.system|subprocess\.call.*shell=True',
+                "hardcoded_secrets": r'(password|secret|key|token)\s*=\s*["\'][^"\']+["\']',
+                "unsafe_deserialization": r'pickle\.loads|eval\s*\(|exec\s*\(',
+                "path_traversal": r'\.\.\/|\.\.\\',
+                "weak_crypto": r'md5|sha1(?!256|512)',
+                "debug_code": r'print\s*\(.*password|pdb\.set_trace|breakpoint\(\)'
+            }
+            
+            for issue_type, pattern in security_patterns.items():
+                matches = re.findall(pattern, source_code, re.IGNORECASE)
+                if matches:
+                    security_issues.append({
+                        "type": issue_type,
+                        "occurrences": len(matches),
+                        "severity": self._get_security_severity(issue_type)
+                    })
+            
+            # Déterminer le niveau de risque global
+            if any(issue["severity"] == "HIGH" for issue in security_issues):
+                risk_level = "HIGH"
+            elif any(issue["severity"] == "MEDIUM" for issue in security_issues):
+                risk_level = "MEDIUM"
+            
+            return {
+                "security_issues": security_issues,
+                "risk_level": risk_level,
+                "security_score": max(0, 100 - len(security_issues) * 15),
+                "recommendations": self._generate_security_recommendations(security_issues)
+            }
+            
+        except Exception as e:
+            return {"error": f"Erreur analyse sécurité: {e}"}
+    
+    async def enterprise_readiness_assessment(self, tool_info: Dict[str, Any]) -> Dict[str, Any]:
+        """Évaluation de la préparation enterprise"""
+        readiness_score = 0
+        criteria_scores = {}
+        
+        # Critères d'évaluation enterprise
+        criteria = {
+            "documentation": 20,  # Documentation complète
+            "error_handling": 15,  # Gestion d'erreurs robuste
+            "logging": 15,        # Logging approprié
+            "configuration": 10,  # Configuration externalisée
+            "testing": 15,        # Tests unitaires
+            "security": 15,       # Sécurité
+            "scalability": 10     # Scalabilité
+        }
+        
+        # Évaluation documentation
+        doc_indicators = ['docstring', 'comment', 'readme', 'help']
+        doc_score = sum(5 for indicator in doc_indicators 
+                       if any(indicator in str(tool_info).lower()))
+        criteria_scores["documentation"] = min(20, doc_score)
+        
+        # Évaluation gestion d'erreurs
+        error_indicators = ['try', 'except', 'raise', 'assert']
+        error_score = sum(4 for indicator in error_indicators 
+                         if indicator in str(tool_info).lower())
+        criteria_scores["error_handling"] = min(15, error_score)
+        
+        # Évaluation logging
+        log_indicators = ['logging', 'logger', 'log', 'debug']
+        log_score = sum(4 for indicator in log_indicators 
+                       if indicator in str(tool_info).lower())
+        criteria_scores["logging"] = min(15, log_score)
+        
+        # Score total
+        total_score = sum(criteria_scores.values())
+        readiness_percentage = (total_score / sum(criteria.values())) * 100
+        
+        # Niveau de préparation
+        if readiness_percentage >= 80:
+            readiness_level = "ENTERPRISE_READY"
+        elif readiness_percentage >= 60:
+            readiness_level = "BUSINESS_READY"
+        elif readiness_percentage >= 40:
+            readiness_level = "DEVELOPMENT_READY"
+        else:
+            readiness_level = "PROTOTYPE_LEVEL"
+        
+        return {
+            "readiness_score": round(readiness_percentage, 2),
+            "readiness_level": readiness_level,
+            "criteria_scores": criteria_scores,
+            "recommendations": self._generate_enterprise_recommendations(criteria_scores, criteria)
+        }
+    
+    # Méthodes utilitaires pour les nouvelles fonctionnalités
+    
+    def _calculate_advanced_complexity(self, tree: ast.AST) -> Dict[str, int]:
+        """Calcule la complexité cyclomatique avancée"""
+        complexity = {"cyclomatic": 1, "cognitive": 0, "nesting_depth": 0}
+        
+        for node in ast.walk(tree):
+            if isinstance(node, (ast.If, ast.While, ast.For, ast.Try)):
+                complexity["cyclomatic"] += 1
+                complexity["cognitive"] += 1
+            elif isinstance(node, ast.BoolOp):
+                complexity["cyclomatic"] += len(node.values) - 1
+                complexity["cognitive"] += len(node.values) - 1
+        
+        return complexity
+    
+    def _detect_design_patterns(self, tree: ast.AST) -> List[str]:
+        """Détecte les design patterns dans le code"""
+        patterns = []
+        
+        # Recherche de patterns communs
+        classes = [node for node in ast.walk(tree) if isinstance(node, ast.ClassDef)]
+        
+        for cls in classes:
+            if any(method.name == '__call__' for method in cls.body if isinstance(method, ast.FunctionDef)):
+                patterns.append("Callable Pattern")
+            if any(method.name.startswith('create_') for method in cls.body if isinstance(method, ast.FunctionDef)):
+                patterns.append("Factory Pattern")
+            if 'Singleton' in cls.name:
+                patterns.append("Singleton Pattern")
+        
+        return list(set(patterns))
+    
+    def _detect_architectural_patterns(self, tree: ast.AST) -> List[str]:
+        """Détecte les patterns architecturaux"""
+        patterns = []
+        
+        # Analyse des imports pour détecter les patterns
+        imports = [node.names[0].name for node in ast.walk(tree) 
+                  if isinstance(node, ast.Import)]
+        from_imports = [node.module for node in ast.walk(tree) 
+                       if isinstance(node, ast.ImportFrom) and node.module]
+        
+        all_imports = imports + from_imports
+        
+        if any('mvc' in imp.lower() for imp in all_imports):
+            patterns.append("MVC Pattern")
+        if any(imp in ['flask', 'fastapi', 'django'] for imp in all_imports):
+            patterns.append("REST API Pattern")
+        if any('observer' in imp.lower() for imp in all_imports):
+            patterns.append("Observer Pattern")
+        
+        return patterns
+    
+    def _detect_code_smells(self, tree: ast.AST, source_code: str) -> List[str]:
+        """Détecte les code smells"""
+        smells = []
+        
+        # Long Parameter List
+        for node in ast.walk(tree):
+            if isinstance(node, ast.FunctionDef) and len(node.args.args) > 5:
+                smells.append(f"Long Parameter List: {node.name}")
+        
+        # Large Class
+        classes = [node for node in ast.walk(tree) if isinstance(node, ast.ClassDef)]
+        for cls in classes:
+            methods = [n for n in cls.body if isinstance(n, ast.FunctionDef)]
+            if len(methods) > 20:
+                smells.append(f"Large Class: {cls.name}")
+        
+        # Duplicate Code (simple check)
+        lines = source_code.split('\n')
+        line_counts = {}
+        for line in lines:
+            stripped = line.strip()
+            if stripped and not stripped.startswith('#'):
+                line_counts[stripped] = line_counts.get(stripped, 0) + 1
+        
+        duplicates = [line for line, count in line_counts.items() if count > 2]
+        if duplicates:
+            smells.append(f"Duplicate Code: {len(duplicates)} duplicated lines")
+        
+        return smells
+    
+    def _calculate_maintainability(self, tree: ast.AST) -> float:
+        """Calcule un score de maintenabilité"""
+        score = 100.0
+        
+        # Pénalités pour complexité
+        functions = [node for node in ast.walk(tree) if isinstance(node, ast.FunctionDef)]
+        avg_complexity = sum(len([n for n in ast.walk(func) if isinstance(n, ast.If)]) 
+                           for func in functions) / max(len(functions), 1)
+        
+        if avg_complexity > 10:
+            score -= (avg_complexity - 10) * 5
+        
+        # Bonus pour documentation
+        docstrings = [node for node in ast.walk(tree) 
+                     if isinstance(node, ast.Expr) and isinstance(node.value, ast.Str)]
+        if docstrings:
+            score += min(20, len(docstrings) * 2)
+        
+        return max(0, min(100, score))
+    
+    def _identify_refactoring_opportunities(self, tree: ast.AST) -> List[str]:
+        """Identifie les opportunités de refactoring"""
+        opportunities = []
+        
+        # Fonctions trop longues
+        for node in ast.walk(tree):
+            if isinstance(node, ast.FunctionDef):
+                lines_count = node.end_lineno - node.lineno if hasattr(node, 'end_lineno') else 0
+                if lines_count > 50:
+                    opportunities.append(f"Extract Method: {node.name} is too long ({lines_count} lines)")
+        
+        # Classes avec trop de responsabilités
+        classes = [node for node in ast.walk(tree) if isinstance(node, ast.ClassDef)]
+        for cls in classes:
+            methods = [n for n in cls.body if isinstance(n, ast.FunctionDef)]
+            if len(methods) > 15:
+                opportunities.append(f"Split Class: {cls.name} has too many methods ({len(methods)})")
+        
+        return opportunities
+    
+    def _calculate_comment_ratio(self, lines: List[str]) -> float:
+        """Calcule le ratio de commentaires"""
+        comment_lines = len([line for line in lines if line.strip().startswith('#')])
+        total_lines = len([line for line in lines if line.strip()])
+        return (comment_lines / max(total_lines, 1)) * 100
+    
+    def _calculate_avg_function_length(self, tree: ast.AST) -> float:
+        """Calcule la longueur moyenne des fonctions"""
+        functions = [node for node in ast.walk(tree) if isinstance(node, ast.FunctionDef)]
+        if not functions:
+            return 0
+        
+        total_length = sum(getattr(func, 'end_lineno', func.lineno + 10) - func.lineno 
+                          for func in functions)
+        return total_length / len(functions)
+    
+    def _calculate_class_cohesion(self, tree: ast.AST) -> float:
+        """Calcule la cohésion des classes (simplifié)"""
+        classes = [node for node in ast.walk(tree) if isinstance(node, ast.ClassDef)]
+        if not classes:
+            return 100.0
+        
+        # Mesure simplifiée basée sur l'utilisation des attributs
+        cohesion_scores = []
+        for cls in classes:
+            methods = [n for n in cls.body if isinstance(n, ast.FunctionDef)]
+            if methods:
+                # Score basé sur le nombre de méthodes utilisant les attributs de classe
+                cohesion_scores.append(min(100, len(methods) * 10))
+        
+        return sum(cohesion_scores) / len(cohesion_scores) if cohesion_scores else 100.0
+    
+    def _calculate_coupling_score(self, tree: ast.AST) -> float:
+        """Calcule le score de couplage"""
+        imports = len([node for node in ast.walk(tree) 
+                      if isinstance(node, (ast.Import, ast.ImportFrom))])
+        # Score inversement proportionnel au nombre d'imports
+        return min(100, imports * 5)
+    
+    def _calculate_duplication_score(self, source_code: str) -> float:
+        """Calcule le score de duplication"""
+        lines = [line.strip() for line in source_code.split('\n') 
+                if line.strip() and not line.strip().startswith('#')]
+        
+        if not lines:
+            return 0
+        
+        unique_lines = len(set(lines))
+        total_lines = len(lines)
+        duplication_ratio = (total_lines - unique_lines) / total_lines
+        
+        return duplication_ratio * 100
+    
+    def _estimate_test_coverage(self, tree: ast.AST) -> float:
+        """Estime la couverture de tests"""
+        test_functions = [node for node in ast.walk(tree) 
+                         if isinstance(node, ast.FunctionDef) and 
+                         node.name.startswith('test_')]
+        
+        all_functions = [node for node in ast.walk(tree) 
+                        if isinstance(node, ast.FunctionDef)]
+        
+        if not all_functions:
+            return 0
+        
+        return (len(test_functions) / len(all_functions)) * 100
+    
+    def _calculate_documentation_score(self, tree: ast.AST, source_code: str) -> float:
+        """Calcule le score de documentation"""
+        docstrings = len([node for node in ast.walk(tree) 
+                         if isinstance(node, ast.Expr) and 
+                         isinstance(node.value, ast.Str)])
+        
+        functions_and_classes = len([node for node in ast.walk(tree) 
+                                   if isinstance(node, (ast.FunctionDef, ast.ClassDef))])
+        
+        if not functions_and_classes:
+            return 100
+        
+        # Score basé sur le ratio docstrings/fonctions+classes
+        doc_ratio = docstrings / functions_and_classes
+        return min(100, doc_ratio * 100)
+    
+    def _get_security_severity(self, issue_type: str) -> str:
+        """Détermine la sévérité d'un problème de sécurité"""
+        high_severity = ["sql_injection", "command_injection", "unsafe_deserialization"]
+        medium_severity = ["hardcoded_secrets", "weak_crypto"]
+        
+        if issue_type in high_severity:
+            return "HIGH"
+        elif issue_type in medium_severity:
+            return "MEDIUM"
+        else:
+            return "LOW"
+    
+    def _generate_security_recommendations(self, security_issues: List[Dict]) -> List[str]:
+        """Génère des recommandations de sécurité"""
+        recommendations = []
+        
+        for issue in security_issues:
+            issue_type = issue["type"]
+            if issue_type == "sql_injection":
+                recommendations.append("Utiliser des requêtes préparées ou un ORM")
+            elif issue_type == "command_injection":
+                recommendations.append("Éviter shell=True, valider les entrées")
+            elif issue_type == "hardcoded_secrets":
+                recommendations.append("Utiliser des variables d'environnement")
+            elif issue_type == "weak_crypto":
+                recommendations.append("Utiliser SHA-256 ou des algorithmes plus forts")
+        
+        return recommendations
+    
+    def _generate_enterprise_recommendations(self, scores: Dict, criteria: Dict) -> List[str]:
+        """Génère des recommandations pour l'enterprise readiness"""
+        recommendations = []
+        
+        for criterion, max_score in criteria.items():
+            current_score = scores.get(criterion, 0)
+            if current_score < max_score * 0.7:  # Moins de 70% du score max
+                if criterion == "documentation":
+                    recommendations.append("Améliorer la documentation (docstrings, README)")
+                elif criterion == "error_handling":
+                    recommendations.append("Ajouter une gestion d'erreurs robuste")
+                elif criterion == "logging":
+                    recommendations.append("Implémenter un système de logging approprié")
+                elif criterion == "testing":
+                    recommendations.append("Ajouter des tests unitaires et d'intégration")
+        
+        return recommendations

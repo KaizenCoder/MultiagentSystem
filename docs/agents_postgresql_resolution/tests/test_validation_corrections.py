@@ -7,13 +7,22 @@ Test avec la configuration Docker correcte
 import sys
 import os
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime
 import time
 
 # Configuration logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Tests
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "test_validation_corrections",
+            "log_level": "DEBUG",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": False,  # Tests synchrones
+            "console_output": True
+        })
 
 def test_sqlalchemy_corrections():
     """Test spcifique des corrections SQLAlchemy"""

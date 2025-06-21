@@ -17,7 +17,7 @@ Stratégie d'efficacité:
 """
 
 import asyncio
-import logging
+from logging_manager_optimized import LoggingManager
 import json
 from datetime import datetime
 from typing import Dict, List, Any, Optional
@@ -36,7 +36,17 @@ class CoordinateurRefactorisation:
     """Coordinateur Principal pour la refactorisation Pattern Factory"""
     
     def __init__(self):
-        self.logger = logging.getLogger("CoordinateurRefactorisation")
+        # LoggingManager NextGeneration - Orchestrateur
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "CoordinateurRefactorisation",
+            "log_level": "INFO",
+            "elasticsearch_enabled": True,
+            "encryption_enabled": True,
+            "async_enabled": True,
+            "alerting_enabled": True,
+            "high_throughput": True
+        })
         self.workspace = Path.cwd()
         self.timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         self.rapport_path = self.workspace / f"rapport_refactorisation_{self.timestamp}.json"
@@ -224,7 +234,7 @@ Responsabilités:
 """
 
 import asyncio
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 from pathlib import Path

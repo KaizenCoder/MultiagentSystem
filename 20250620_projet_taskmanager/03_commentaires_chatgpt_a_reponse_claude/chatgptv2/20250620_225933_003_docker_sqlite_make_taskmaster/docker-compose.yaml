@@ -1,0 +1,10 @@
+version: "3.9"
+
+services:
+  taskmaster-supervisor:
+    build: .
+    ports:
+      - "8001:8001"
+    volumes:
+      - .:/app
+    restart: unless-stopped

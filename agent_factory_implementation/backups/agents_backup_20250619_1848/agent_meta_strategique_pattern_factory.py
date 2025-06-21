@@ -12,7 +12,7 @@ Architecture : Pattern Factory compliant avec interface Agent standard
 
 import asyncio
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, Any, List, Optional
@@ -23,7 +23,14 @@ import sys
 sys.path.append(str(Path(__file__).parent.parent))
 from core.agent_factory_architecture import Agent, Task, Result, TaskStatus, Priority
 
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="class",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
 
 @dataclass
 class StrategicInsight:

@@ -4,7 +4,7 @@ Handles PostgreSQL connection pooling, read replicas, backup automation, and per
 """
 
 import asyncio
-import logging
+from logging_manager_optimized import LoggingManager
 import time
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any, Union
@@ -23,7 +23,15 @@ from ..config import config
 from ..observability.monitoring import monitoring_manager
 
 
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Tool/Utility
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "from",
+            "log_level": "INFO",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": True
+        })
 
 
 class DatabaseRole(Enum):

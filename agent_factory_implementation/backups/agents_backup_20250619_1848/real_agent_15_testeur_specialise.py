@@ -9,7 +9,7 @@ Mission: Exécuter des tests spécialisés de manière continue.
 """
 
 import asyncio
-import logging
+from logging_manager_optimized import LoggingManager
 import signal
 import random
 import time
@@ -69,7 +69,14 @@ class RealAgent15TesteurSpecialise:
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
             handlers=[logging.FileHandler(log_file), logging.StreamHandler()]
         )
-        self.logger = logging.getLogger(self.agent_id)
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="class",
+            role="ai_processor",
+            domain="testing",
+            async_enabled=True
+        )
 
     def _signal_handler(self, signum, frame):
         """Gestionnaire de signaux pour un arrêt propre."""

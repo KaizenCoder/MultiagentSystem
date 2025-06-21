@@ -1,0 +1,241 @@
+#!/usr/bin/env python3
+"""
+🚀 TEST WORKFLOW COMPLET - ÉQUIPE DE MAINTENANCE
+================================================================================
+Test du workflow de coordination complète avec le Chef d'Équipe orchestrant
+tous les agents de maintenance dans un scénario réel.
+"""
+
+import asyncio
+import json
+from logging_manager_optimized import LoggingManager
+from datetime import datetime
+from pathlib import Path
+import sys
+
+# Configuration des logs
+# LoggingManager NextGeneration - Tests
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "test_workflow_complet_equipe",
+            "log_level": "DEBUG",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": False,  # Tests synchrones
+            "console_output": True
+        })s - %(levelname)s - %(message)s')
+
+# Import des agents
+sys.path.insert(0, str(Path(__file__).parent))
+from agent_equipe_maintenance.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
+
+async def test_workflow_complet():
+    """Test du workflow complet de l'équipe de maintenance"""
+    print("🚀 TEST WORKFLOW COMPLET - ÉQUIPE DE MAINTENANCE")
+    print("=" * 80)
+    print(f"📅 Timestamp: {datetime.now().isoformat()}")
+    print("🎯 Objectif: Tester coordination complète sur mission réelle")
+    print()
+    
+    # Configuration de la mission test
+    mission_test = {
+        "type": "maintenance_complete",
+        "source_directory": "./tools",  # Répertoire à analyser
+        "target_agents": ["01", "02", "03", "04", "05", "06"],  # Tous les agents
+        "coordination_mode": "sequential",  # Mode de coordination
+        "reporting": True,
+        "validation": True
+    }
+    
+    resultats = {
+        "workflow_id": f"workflow_complet_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+        "timestamp_debut": datetime.now().isoformat(),
+        "mission": mission_test,
+        "etapes": {},
+        "status": "en_cours",
+        "erreurs": []
+    }
+    
+    try:
+        print("🎖️ ÉTAPE 1: CRÉATION DU CHEF D'ÉQUIPE COORDINATEUR")
+        print("-" * 60)
+        
+        # Création du chef d'équipe
+        chef_equipe = create_agent_0_chef_equipe_coordinateur(
+            target_path="./tools",
+            workspace_path=".",
+            safe_mode=True
+        )
+        
+        print("✅ Chef d'équipe créé et opérationnel")
+        resultats["etapes"]["creation_chef"] = {"status": "success", "timestamp": datetime.now().isoformat()}
+        
+        print()
+        print("🎖️ ÉTAPE 2: DÉMARRAGE CHEF D'ÉQUIPE")
+        print("-" * 60)
+        
+        # Démarrage du chef d'équipe
+        await chef_equipe.startup()
+        print("✅ Chef d'équipe démarré")
+        
+        # Vérification santé
+        health = await chef_equipe.health_check()
+        print(f"🏥 Health Check: {health}")
+        resultats["etapes"]["startup_chef"] = {"status": "success", "health": health, "timestamp": datetime.now().isoformat()}
+        
+        print()
+        print("🎖️ ÉTAPE 3: MONITORING ÉQUIPE TEMPS RÉEL")
+        print("-" * 60)
+        
+        # Test monitoring temps réel
+        if hasattr(chef_equipe, 'real_time_team_monitoring'):
+            monitoring = await chef_equipe.real_time_team_monitoring()
+            print(f"📊 Monitoring actif: {monitoring}")
+            resultats["etapes"]["monitoring"] = {"status": "success", "data": monitoring, "timestamp": datetime.now().isoformat()}
+        else:
+            print("⚠️ Monitoring temps réel non disponible")
+            resultats["etapes"]["monitoring"] = {"status": "not_available", "timestamp": datetime.now().isoformat()}
+            
+        print()
+        print("🎖️ ÉTAPE 4: COORDINATION AVANCÉE DE L'ÉQUIPE")
+        print("-" * 60)
+        
+        # Coordination avancée
+        if hasattr(chef_equipe, 'coordinate_team_advanced'):
+            print("🚀 Lancement coordination avancée...")
+            coordination = await chef_equipe.coordinate_team_advanced()
+            print(f"✅ Coordination terminée: {coordination}")
+            resultats["etapes"]["coordination_avancee"] = {"status": "success", "resultat": coordination, "timestamp": datetime.now().isoformat()}
+        else:
+            print("⚠️ Coordination avancée non disponible, utilisation workflow standard...")
+            coordination = await chef_equipe.workflow_maintenance_complete()
+            print(f"✅ Workflow maintenance terminé: {coordination}")
+            resultats["etapes"]["coordination_standard"] = {"status": "success", "resultat": coordination, "timestamp": datetime.now().isoformat()}
+        
+        print()
+        print("🎖️ ÉTAPE 5: ANALYTICS PRÉDICTIFS DE L'ÉQUIPE")
+        print("-" * 60)
+        
+        # Analytics prédictifs
+        if hasattr(chef_equipe, 'predictive_team_analytics'):
+            analytics = await chef_equipe.predictive_team_analytics()
+            print(f"📈 Analytics: {analytics}")
+            resultats["etapes"]["analytics"] = {"status": "success", "data": analytics, "timestamp": datetime.now().isoformat()}
+        else:
+            print("⚠️ Analytics prédictifs non disponibles")
+            resultats["etapes"]["analytics"] = {"status": "not_available", "timestamp": datetime.now().isoformat()}
+        
+        print()
+        print("🎖️ ÉTAPE 6: ARRÊT PROPRE DU CHEF D'ÉQUIPE")
+        print("-" * 60)
+        
+        # Arrêt propre
+        await chef_equipe.shutdown()
+        print("✅ Chef d'équipe arrêté proprement")
+        resultats["etapes"]["shutdown"] = {"status": "success", "timestamp": datetime.now().isoformat()}
+        
+        # Finalisation
+        resultats["status"] = "success"
+        resultats["timestamp_fin"] = datetime.now().isoformat()
+        
+        print()
+        print("🎉 WORKFLOW COMPLET RÉUSSI!")
+        print("=" * 80)
+        
+        return resultats
+        
+    except Exception as e:
+        print(f"❌ Erreur workflow: {e}")
+        import traceback
+        traceback.print_exc()
+        
+        resultats["status"] = "error"
+        resultats["erreur"] = str(e)
+        resultats["timestamp_erreur"] = datetime.now().isoformat()
+        
+        return resultats
+
+def test_workflow_synchrone():
+    """Test synchrone du workflow pour comparaison"""
+    print()
+    print("🔄 TEST WORKFLOW SYNCHRONE DE COMPARAISON")
+    print("=" * 80)
+    
+    try:
+        # Création du chef d'équipe
+        chef_equipe = create_agent_0_chef_equipe_coordinateur(
+            target_path="./tools",
+            workspace_path=".",
+            safe_mode=True
+        )
+        
+        print("✅ Chef d'équipe créé (mode synchrone)")
+        
+        # Test des capacités disponibles
+        if hasattr(chef_equipe, 'get_capabilities'):
+            capacites = chef_equipe.get_capabilities()
+            print(f"📋 Capacités disponibles: {len(capacites)}")
+            for cap in capacites[:5]:  # Afficher les 5 premières
+                print(f"   ✅ {cap}")
+            
+        # Test health check synchrone
+        health = chef_equipe.health_check()
+        print(f"🏥 Health (synchrone): {health}")
+        
+        return {"status": "success", "synchrone": True}
+        
+    except Exception as e:
+        print(f"❌ Erreur workflow synchrone: {e}")
+        return {"status": "error", "erreur": str(e)}
+
+async def main():
+    """Fonction principale de test"""
+    print("🎯 SUITE DE TESTS - WORKFLOW ÉQUIPE DE MAINTENANCE")
+    print("=" * 80)
+    print()
+    
+    # Test workflow complet asynchrone
+    resultats_async = await test_workflow_complet()
+    
+    # Test workflow synchrone
+    resultats_sync = test_workflow_synchrone()
+    
+    # Consolidation des résultats
+    rapport_final = {
+        "suite_tests": "workflow_equipe_maintenance",
+        "timestamp": datetime.now().isoformat(),
+        "tests": {
+            "workflow_asynchrone": resultats_async,
+            "workflow_synchrone": resultats_sync
+        },
+        "synthese": {
+            "async_success": resultats_async.get("status") == "success",
+            "sync_success": resultats_sync.get("status") == "success",
+            "etapes_completees": len([e for e in resultats_async.get("etapes", {}).values() if e.get("status") == "success"])
+        }
+    }
+    
+    # Sauvegarde du rapport
+    fichier_rapport = f"rapport_workflow_complet_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    with open(fichier_rapport, 'w', encoding='utf-8') as f:
+        json.dump(rapport_final, f, indent=2, ensure_ascii=False)
+    
+    print()
+    print("📊 RÉSULTATS FINAUX - WORKFLOW ÉQUIPE")
+    print("=" * 80)
+    print(f"✅ Workflow Asynchrone: {'SUCCESS' if rapport_final['synthese']['async_success'] else 'FAILED'}")
+    print(f"✅ Workflow Synchrone: {'SUCCESS' if rapport_final['synthese']['sync_success'] else 'FAILED'}")
+    print(f"📋 Étapes completées: {rapport_final['synthese']['etapes_completees']}")
+    print(f"📄 Rapport sauvegardé: {fichier_rapport}")
+    
+    return rapport_final
+
+if __name__ == "__main__":
+    # Lancement du test complet
+    resultat = asyncio.run(main())
+    print()
+    if resultat['synthese']['async_success'] and resultat['synthese']['sync_success']:
+        print("🎉 WORKFLOW ÉQUIPE DE MAINTENANCE VALIDÉ!")
+        print("🚀 L'équipe est prête pour toutes les missions de production!")
+    else:
+        print("⚠️ Workflow partiellement validé - Optimisations possibles") 

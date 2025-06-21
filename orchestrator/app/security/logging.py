@@ -7,7 +7,7 @@ Ce module contient les utilitaires pour :
 - Masquage automatique des donnes sensibles
 """
 
-import logging
+from logging_manager_optimized import LoggingManager
 import json
 from datetime import datetime, timezone
 from enum import Enum
@@ -34,7 +34,15 @@ class SecurityLogger:
     """Logger scuris qui masque les informations sensibles."""
     
     def __init__(self):
-        self.logger = logging.getLogger("security")
+        # LoggingManager NextGeneration - Tool/Utility
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "AuditEventType",
+            "log_level": "INFO",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": True
+        })
     
     @staticmethod
     def _mask_sensitive_data(message: str) -> str:

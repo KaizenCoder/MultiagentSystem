@@ -29,7 +29,7 @@ DELIVERABLES :
 """
 
 import os
-import logging
+from logging_manager_optimized import LoggingManager
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any
@@ -46,7 +46,14 @@ class Agent14SpecialisteWorkspace:
         
         # Configuration du logging
         logging.basicConfig(level=logging.INFO)
-        self.logger = logging.getLogger(self.__class__.__name__)
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="Agent14SpecialisteWorkspace",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
         
         # Mtriques
         self.metrics = {

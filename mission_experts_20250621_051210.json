@@ -1,0 +1,15 @@
+{
+  "timestamp": "2025-06-21T05:12:10.791135",
+  "type": "maintenance_agents_experts",
+  "cible": "C:\\Dev\\nextgeneration\\agent_factory_experts_team",
+  "agents": [
+    "coordinateur_equipe_experts.py",
+    "expert_chatgpt_robustesse.py",
+    "expert_claude_architecture.py",
+    "expert_gemini_innovation.py",
+    "expert_performance_optimizer.py",
+    "expert_superviseur_synthese.py",
+    "expert_templates_specialist.py"
+  ],
+  "status": "READY_FOR_TRANSMISSION"
+}

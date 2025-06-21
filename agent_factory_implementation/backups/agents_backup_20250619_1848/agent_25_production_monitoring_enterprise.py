@@ -21,7 +21,7 @@ __compliance_score__ = "90%"
 __optimization_gain__ = "+20.0 points"
 __claude_recommendations__ = "100% implemented"
 
-import logging
+from logging_manager_optimized import LoggingManager
 import time
 from typing import Dict, List, Any
 from core.agent_factory_architecture import Agent, Task, Result, AgentType
@@ -35,7 +35,14 @@ from features.enterprise.production_monitoring import (
 )
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="Agent25ProductionMonitoringEnterprise",
+            role="ai_processor",
+            domain="monitoring",
+            async_enabled=True
+        )
 
 
 class Agent25ProductionMonitoringEnterprise(Agent):

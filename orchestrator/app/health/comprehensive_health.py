@@ -13,10 +13,18 @@ from enum import Enum
 from dataclasses import dataclass, asdict
 from datetime import datetime, timezone
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 from abc import ABC, abstractmethod
 
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Tool/Utility
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "HealthStatus",
+            "log_level": "INFO",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": True
+        })
 
 
 class HealthStatus(Enum):

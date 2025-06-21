@@ -39,7 +39,7 @@ FINALISATION : Sprint 3 complet avec Pattern Factory validé
 """
 
 import asyncio
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any, Tuple
 from pathlib import Path
@@ -494,7 +494,14 @@ class Agent01ChefProjet:
         handler.setFormatter(logging.Formatter(
             '%(asctime)s - Agent01ChefProjet - %(levelname)s - %(message)s'
         ))
-        self.logger = logging.getLogger(f"Agent{self.agent_id}")
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="AgentTemplate",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
         self.logger.addHandler(handler)
         self.logger.setLevel(logging.INFO)
         self.logger.info(f"Agent {self.agent_id} - {self.specialite} - Sprint {self.sprint} DÉMARRÉ")

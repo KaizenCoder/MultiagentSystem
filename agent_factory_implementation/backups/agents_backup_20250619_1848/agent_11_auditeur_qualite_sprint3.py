@@ -11,7 +11,7 @@ Spécifications :
 """
 
 import asyncio
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime
 from typing import Dict, List, Optional, Any
 from pathlib import Path
@@ -105,7 +105,14 @@ class Agent11AuditeurQualiteSprint3:
         self.sprint = "Sprint 3"
         
         # Setup logging
-        self.logger = logging.getLogger("Agent11AuditeurQualite")
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="from",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
         self.setup_logging()
         
         # Pattern Factory setup

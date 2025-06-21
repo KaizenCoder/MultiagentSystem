@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 from contextvars import ContextVar
 from typing import Dict, Any, Optional, List
 from enum import Enum
-import logging
+from logging_manager_optimized import LoggingManager
 import traceback
 import os
 

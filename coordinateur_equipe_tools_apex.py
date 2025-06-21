@@ -10,7 +10,7 @@ quipe: 6 agents spcialiss avec modles cloud (Claude, GPT-4, Gemini)
 import os
 import sys
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import argparse
 from pathlib import Path
 from typing import Dict, List, Any, Optional
@@ -47,7 +47,15 @@ class CoordinateurEquipeToolsApex:
         self.logs_dir.mkdir(parents=True, exist_ok=True)
         self.reports_dir.mkdir(parents=True, exist_ok=True)
         
-        self.logger = logging.getLogger("CoordinateurEquipeToolsApex")
+        # LoggingManager NextGeneration - Tool/Utility
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "CoordinateurEquipeToolsApex",
+            "log_level": "INFO",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": True
+        })
         self.mission_id = f"APEX_INTEGRATION_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
         
         # Mtriques de mission

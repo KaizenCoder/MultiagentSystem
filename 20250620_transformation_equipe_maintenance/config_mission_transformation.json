@@ -1,0 +1,73 @@
+{
+  "mission_transformation_pattern_factory": {
+    "mission_id": "TRANSFORMATION_PATTERN_FACTORY_2025",
+    "description": "Mission de transformation complète des agents vers Pattern Factory",
+    "date_creation": "2025-01-20",
+    "statut": "PREPARATION",
+    
+    "configuration_backup": {
+      "repertoire_backup": "../agent_factory_implementation/backups",
+      "format_nom_backup": "{nom_agent}_backup_{timestamp}.py",
+      "verification_integrite": true,
+      "backup_obligatoire": true,
+      "horodatage_unique": true
+    },
+    
+    "repertoires_cibles": {
+      "agents_source": "../agent_factory_implementation/agents",
+      "reviews_destination": "../agent_factory_implementation/agents/reviews",
+      "logs_mission": "logs",
+      "reports_mission": "reports"
+    },
+    
+    "parametres_securite": {
+      "validation_syntaxe_python": true,
+      "rollback_automatique_erreur": true,
+      "verification_pre_transformation": true,
+      "validation_post_transformation": true,
+      "sauvegarde_logs_detailles": true
+    },
+    
+    "agents_equipe_maintenance": {
+      "chef_equipe": "agent_MAINTENANCE_00_chef_equipe_coordinateur.py",
+      "analyseur": "agent_MAINTENANCE_01_analyseur_structure.py",
+      "evaluateur": "agent_MAINTENANCE_02_evaluateur_utilite_UPGRADED.py",
+      "adaptateur": "agent_MAINTENANCE_03_adaptateur_code_UPGRADED.py",
+      "testeur": "agent_MAINTENANCE_04_testeur_anti_faux_agents_UPGRADED.py",
+      "documenteur": "agent_MAINTENANCE_05_documenteur.py",
+      "validateur": "agent_MAINTENANCE_06_validateur_final.py"
+    },
+    
+    "workflow_transformation": {
+      "phase_1": "Analyse préalable complète (Agent 04)",
+      "phase_2": "Backup automatique obligatoire (Agent 03)",
+      "phase_3": "Transformation Pattern Factory (Agent 03)",
+      "phase_4": "Validation post-transformation (Agent 04)",
+      "phase_5": "Documentation mise à jour (Agent 05)",
+      "phase_6": "Validation finale mission (Agent 06)"
+    },
+    
+    "criteres_transformation": {
+      "score_conformite_minimum": 90,
+      "corrections_critiques_obligatoires": [
+        "async async def",
+        "import_pattern_factory",
+        "heritage_agent_class"
+      ],
+      "validations_requises": [
+        "syntaxe_python_valide",
+        "imports_complets",
+        "methodes_pattern_factory",
+        "fonction_factory_presente"
+      ]
+    },
+    
+    "statistiques_cibles": {
+      "agents_total_detectes": 33,
+      "agents_conformes_actuels": 9,
+      "agents_non_conformes": 24,
+      "objectif_conformite": "100%",
+      "score_conformite_cible": 95
+    }
+  }
+} 

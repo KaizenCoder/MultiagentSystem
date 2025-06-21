@@ -5,7 +5,7 @@ RÔLE : Tests complets et validation finale Sprint 0
 import os
 import sys
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import unittest
 import asyncio
 import time
@@ -32,7 +32,14 @@ except ImportError:
                 self.agent_id = f"agent_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
                 self.agent_type = agent_type
                 self.config = config
-                self.logger = logging.getLogger(f"Agent_{agent_type}")
+                # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="Agent",
+            role="ai_processor",
+            domain="testing",
+            async_enabled=True
+        )
                 
             async def startup(self): pass
             async def shutdown(self): pass

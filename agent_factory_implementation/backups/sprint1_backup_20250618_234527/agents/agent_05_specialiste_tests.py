@@ -5,7 +5,7 @@ RÔLE : Tests complets et validation finale Sprint 0
 import os
 import sys
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import unittest
 import asyncio
 import time
@@ -17,7 +17,14 @@ import tempfile
 
 # Configuration logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger("Agent05_SpecialisteTests")
+# LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="Agent05SpecialisteTests",
+            role="ai_processor",
+            domain="testing",
+            async_enabled=True
+        )
 
 class Agent05SpecialisteTests:
     """

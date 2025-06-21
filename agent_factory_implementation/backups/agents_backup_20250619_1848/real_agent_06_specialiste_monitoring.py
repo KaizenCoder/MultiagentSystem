@@ -10,7 +10,7 @@ Mission: Agent autonome pour le monitoring de l'infrastructure et des agents.
 """
 
 import asyncio
-import logging
+from logging_manager_optimized import LoggingManager
 import signal
 import time
 from dataclasses import dataclass, asdict
@@ -70,7 +70,14 @@ class RealAgent06SpecialisteMonitoring:
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
             handlers=[logging.FileHandler(log_file), logging.StreamHandler()]
         )
-        self.logger = logging.getLogger(self.agent_id)
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="class",
+            role="ai_processor",
+            domain="monitoring",
+            async_enabled=True
+        )
 
     def _signal_handler(self, signum, frame):
         """Gestionnaire de signaux pour un arrêt propre"""

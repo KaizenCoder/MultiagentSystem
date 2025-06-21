@@ -13,11 +13,18 @@ from abc import ABC, abstractmethod
 from typing import Dict, Any, List, Optional
 from datetime import datetime
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import asyncio
 import psutil
 
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="Task",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
 
 # ==========================================
 # 1. INTERFACES DE BASE (Pattern Factory)

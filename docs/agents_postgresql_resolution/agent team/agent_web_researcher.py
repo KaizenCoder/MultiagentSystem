@@ -7,7 +7,7 @@ Mission: Recherche de solutions PostgreSQL et SQLAlchemy en ligne
 import os
 import sys
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import requests
 import time
 from datetime import datetime
@@ -32,7 +32,14 @@ class WebResearchAgent:
                 logging.StreamHandler()
             ]
         )
-        self.logger = logging.getLogger(self.agent_id)
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="WebResearchAgent",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
         
         # Sources de recherche
         self.sources_recherche = {

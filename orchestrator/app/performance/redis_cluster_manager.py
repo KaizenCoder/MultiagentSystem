@@ -5,7 +5,7 @@ Handles Redis clustering, cache warming, eviction policies, and cluster monitori
 
 import asyncio
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import time
 import hashlib
 from datetime import datetime, timedelta
@@ -22,7 +22,15 @@ from ..config import config
 from ..observability.monitoring import monitoring_manager
 
 
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Tool/Utility
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "CacheStrategy",
+            "log_level": "INFO",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": True
+        })
 
 
 class CacheStrategy(Enum):

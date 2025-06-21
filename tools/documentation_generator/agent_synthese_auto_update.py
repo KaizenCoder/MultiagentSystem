@@ -17,7 +17,7 @@ import os
 import sys
 import json
 import datetime
-import logging
+from logging_manager_optimized import LoggingManager
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 import subprocess
@@ -26,7 +26,14 @@ from datetime import timedelta
 
 # Configuration logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="AgentSyntheseAutoUpdate",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
 
 class AgentSyntheseAutoUpdate:
     """Agent automatisation mise à jour SYNTHESE_EXECUTIVE et CHANGELOG"""

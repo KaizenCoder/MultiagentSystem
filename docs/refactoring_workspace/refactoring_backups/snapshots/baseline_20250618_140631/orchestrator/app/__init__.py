@@ -1,1 +1,0 @@
-# Module app - Application FastAPI 

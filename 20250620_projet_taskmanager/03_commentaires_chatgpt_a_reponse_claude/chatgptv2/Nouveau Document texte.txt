@@ -1,0 +1,63 @@
+ Création des nouveaux fichiers demandés dans le dossier existant
+makefile_path = "/mnt/data/taskmaster_pool_docs/Makefile"
+sqlite_file_path = "/mnt/data/taskmaster_pool_docs/taskmaster_registry.db"
+docker_compose_path = "/mnt/data/taskmaster_pool_docs/docker-compose.yaml"
+dockerfile_path = "/mnt/data/taskmaster_pool_docs/Dockerfile"
+
+# 1. Makefile
+makefile_content = """start:
+\tuvicorn taskmaster_pool_supervisor:app --host 0.0.0.0 --port 8001 --reload
+
+spawn:
+\tpython spawn_worker.py
+
+test:
+\tpython dashboard_console.py && python session_validator.py
+"""
+
+with open(makefile_path, "w") as f:
+    f.write(makefile_content)
+
+# 2. Dockerfile minimaliste
+dockerfile_content = """FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY . /app
+
+RUN pip install --no-cache-dir fastapi uvicorn pydantic
+
+CMD ["uvicorn", "taskmaster_pool_supervisor:app", "--host", "0.0.0.0", "--port", "8001"]
+"""
+
+with open(dockerfile_path, "w") as f:
+    f.write(dockerfile_content)
+
+# 3. docker-compose.yaml
+docker_compose_content = """version: "3.9"
+
+services:
+  taskmaster-supervisor:
+    build: .
+    ports:
+      - "8001:8001"
+    volumes:
+      - .:/app
+    restart: unless-stopped
+"""
+
+with open(docker_compose_path, "w") as f:
+    f.write(docker_compose_content)
+
+# 4. Base SQLite (vide pour le moment)
+with open(sqlite_file_path, "wb") as f:
+    pass  # fichier créé pour montrer l’intention de persistance locale
+
+# Zip tout
+final_zip_path = f"/mnt/data/{datetime.now().strftime('%Y%m%d_%H%M%S')}_003_docker_sqlite_make_taskmaster.zip"
+with zipfile.ZipFile(final_zip_path, "w") as zipf:
+    for fname in os.listdir("/mnt/data/taskmaster_pool_docs"):
+        full_path = os.path.join("/mnt/data/taskmaster_pool_docs", fname)
+        zipf.write(full_path, arcname=fname)
+
+final_zip_path

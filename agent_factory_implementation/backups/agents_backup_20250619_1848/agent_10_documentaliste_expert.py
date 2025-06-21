@@ -35,7 +35,7 @@ Updated: 2024-12-28
 
 import asyncio
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import os
 import sys
 from dataclasses import dataclass, asdict
@@ -75,7 +75,14 @@ logging.basicConfig(
         logging.StreamHandler()
     ]
 )
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="class",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
 
 # ===== STRUCTURES DE DONNÉES DOCUMENTATION =====
 

@@ -16,10 +16,10 @@ def get_database_url():
     postgres_password = os.getenv("POSTGRES_PASSWORD", "postgres")
     postgres_host = os.getenv("POSTGRES_HOST", "localhost")
     postgres_port = os.getenv("POSTGRES_PORT", "5432")
-    postgres_db = os.getenv("POSTGRES_DB", "agent_memory")
+    postgres_db = os.getenv("POSTGRES_DB", "nextgeneration")
     
-    # URL PostgreSQL
-    postgresql_url = f"postgresql://{postgres_user}:{postgres_password}@{postgres_host}:{postgres_port}/{postgres_db}"
+    # URL PostgreSQL avec paramètres d'encodage
+    postgresql_url = f"postgresql://{postgres_user}:{postgres_password}@{postgres_host}:{postgres_port}/{postgres_db}?client_encoding=utf8"
     
     # Fallback SQLite pour dveloppement
     fallback_url = "sqlite:///./memory.db"
@@ -47,12 +47,11 @@ if DATABASE_URL.startswith("postgresql"):
         echo=False,                 # SQL logging (True pour debug)
         echo_pool=False,           # Pool logging
         
-        # Connection args pour PostgreSQL
+        # Connection args pour PostgreSQL avec gestion encodage Windows
         connect_args={
             "application_name": "NextGeneration_MemoryAPI",
-            "options": "-c default_transaction_isolation=read_committed -c timezone=UTC",
             "connect_timeout": 10,
-            "command_timeout": 30,
+            "client_encoding": "utf8",
         },
         
         # Execution options
@@ -102,13 +101,28 @@ async def get_async_db():
     finally:
         db.close()
 
+def warn_if_bad_locale(db):
+    """Vérification lc_messages pour éviter les erreurs UTF-8"""
+    try:
+        from sqlalchemy import text
+        result = db.execute(text("SHOW lc_messages"))
+        locale = result.scalar()
+        if locale != "C":
+            logger.warning(f"⚠️ PostgreSQL locale 'lc_messages' = {locale} ≠ 'C' → risque UnicodeDecodeError.")
+            logger.warning("💡 Solution: Modifier postgresql.conf avec lc_messages = 'C' et redémarrer le service")
+        else:
+            logger.info(f"✅ PostgreSQL lc_messages = 'C' (UTF-8 compatible)")
+    except Exception as e:
+        logger.error(f"Erreur vérification lc_messages: {e}")
+
 def test_connection():
     """Test de connexion  la base de donnes avec diagnostics avancs"""
     try:
         db = SessionLocal()
         
         # Test de base
-        result = db.execute("SELECT 1 as test_value")
+        from sqlalchemy import text
+        result = db.execute(text("SELECT 1 as test_value"))
         test_value = result.scalar()
         
         if test_value != 1:
@@ -116,20 +130,23 @@ def test_connection():
             
         # Test PostgreSQL spcifique si applicable
         if DATABASE_URL.startswith("postgresql"):
+            # Vérification critique lc_messages pour UTF-8
+            warn_if_bad_locale(db)
+            
             # Test version PostgreSQL
-            version_result = db.execute("SELECT version()")
+            version_result = db.execute(text("SELECT version()"))
             pg_version = version_result.scalar()
             logger.info(f"PostgreSQL version: {pg_version.split(' ')[1]}")
             
             # Test extensions disponibles
-            extensions_result = db.execute("SELECT extname FROM pg_extension ORDER BY extname")
+            extensions_result = db.execute(text("SELECT extname FROM pg_extension ORDER BY extname"))
             extensions = [row[0] for row in extensions_result]
             logger.info(f"Available extensions: {', '.join(extensions)}")
             
             # Test performance
             import time
             start_time = time.time()
-            db.execute("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public'")
+            db.execute(text("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public'"))
             query_time = (time.time() - start_time) * 1000
             logger.info(f"Query performance: {query_time:.2f}ms")
         
@@ -166,7 +183,7 @@ def get_database_stats():
             ORDER BY n_live_tup DESC
             """
             
-            result = db.execute(stats_query)
+            result = db.execute(text(stats_query))
             table_stats = []
             for row in result:
                 table_stats.append({
@@ -183,7 +200,7 @@ def get_database_stats():
             
             # Connection stats
             conn_query = "SELECT count(*) as active_connections FROM pg_stat_activity WHERE state = 'active'"
-            conn_result = db.execute(conn_query)
+            conn_result = db.execute(text(conn_query))
             stats["active_connections"] = conn_result.scalar()
             
         db.close()

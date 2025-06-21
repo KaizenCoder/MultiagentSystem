@@ -17,7 +17,7 @@ Référence: SuperWhisper_V6 generate_bundle_coordinateur.py
 
 import asyncio
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import time
 from datetime import datetime
 from pathlib import Path
@@ -80,7 +80,15 @@ class CoordinateurTranspositionSuperWhisper:
                 logging.StreamHandler()
             ]
         )
-        self.logger = logging.getLogger(f"coordinateur_{self.mission_name}")
+        # LoggingManager NextGeneration - Tool/Utility
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "CoordinateurTranspositionSuperWhisper",
+            "log_level": "INFO",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": True
+        })
         
     async def demarrer_mission_complete(self):
         """🚀 Démarrer la mission complète de transposition SuperWhisper_V6"""

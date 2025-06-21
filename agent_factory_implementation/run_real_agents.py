@@ -11,7 +11,7 @@ import signal
 import sys
 from pathlib import Path
 from typing import List, Dict, Any, Union
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime
 import json
 
@@ -50,9 +50,14 @@ class AgentManager:
     
     def _setup_logging(self):
         """Configuration logging"""
-        logging.basicConfig(
-            level=logging.INFO,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="AgentManager",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )s - %(name)s - %(levelname)s - %(message)s',
             handlers=[
                 logging.StreamHandler(),
                 logging.FileHandler(f"agent_manager_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")

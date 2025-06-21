@@ -40,10 +40,10 @@ class EnvironmentConfig(BaseModel):
     @validator('thread_pool_size')
     def validate_thread_pool(cls, v):
         """Valider la taille du pool de threads"""
-        cpu_count = os.cpu_count() or 4
-        if v > cpu_count * 2:
-            return cpu_count * 2
-        return v
+    cpu_count = os.cpu_count() or 4
+    if v > cpu_count * 2:
+    return cpu_count * 2
+    return v
 
 class CacheConfig(BaseModel):
     """Configuration du cache LRU"""
@@ -87,37 +87,37 @@ class AgentFactoryConfig(BaseModel):
     @validator('environments')
     def validate_environments(cls, v):
         """Valider que tous les environnements sont configurs"""
-        required_envs = {Environment.DEVELOPMENT, Environment.STAGING, Environment.PRODUCTION}
-        configured_envs = set(v.keys())
+    required_envs = {Environment.DEVELOPMENT, Environment.STAGING, Environment.PRODUCTION}
+    configured_envs = set(v.keys())
         
-        if not required_envs.issubset(configured_envs):
-            missing = required_envs - configured_envs
-            raise ValueError(f"Environnements manquants: {missing}")
+    if not required_envs.issubset(configured_envs):
+    missing = required_envs - configured_envs
+    raise ValueError(f"Environnements manquants: {missing}")
         
-        return v
+    return v
     
     def get_environment_config(self, env: Optional[str] = None) -> EnvironmentConfig:
         """Obtenir la configuration pour un environnement spcifique"""
-        if env is None:
-            env = os.getenv('ENVIRONMENT', 'development')
+    if env is None:
+    env = os.getenv('ENVIRONMENT', 'development')
         
-        env_enum = Environment(env.lower())
-        return self.environments[env_enum]
+    env_enum = Environment(env.lower())
+    return self.environments[env_enum]
     
     def is_production(self) -> bool:
         """Vrifier si on est en production"""
-        current_env = os.getenv('ENVIRONMENT', 'development').lower()
-        return current_env == Environment.PRODUCTION.value
+    current_env = os.getenv('ENVIRONMENT', 'development').lower()
+    return current_env == Environment.PRODUCTION.value
     
     def get_cache_ttl(self) -> int:
         """Obtenir le TTL pour l'environnement actuel"""
-        env_config = self.get_environment_config()
-        return env_config.ttl_seconds
+    env_config = self.get_environment_config()
+    return env_config.ttl_seconds
     
     def get_thread_pool_size(self) -> int:
         """Obtenir la taille du pool de threads"""
-        env_config = self.get_environment_config()
-        return env_config.thread_pool_size
+    env_config = self.get_environment_config()
+    return env_config.thread_pool_size
 
 class ConfigurationManager:
     """Gestionnaire de configuration thread-safe"""
@@ -126,22 +126,22 @@ class ConfigurationManager:
     _config = None
     
     def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
+    if cls._instance is None:
+    cls._instance = super().__new__(cls)
+    return cls._instance
     
     def load_config(self, config_dict: Dict) -> AgentFactoryConfig:
         """Charger la configuration depuis un dictionnaire"""
-        self._config = AgentFactoryConfig(**config_dict)
-        return self._config
+    self._config = AgentFactoryConfig(**config_dict)
+    return self._config
     
     def get_config(self) -> Optional[AgentFactoryConfig]:
         """Obtenir la configuration actuelle"""
-        return self._config
+    return self._config
     
     def is_configured(self) -> bool:
         """Vrifier si la configuration est charge"""
-        return self._config is not None
+    return self._config is not None
 
 # Instance singleton globale
 config_manager = ConfigurationManager()

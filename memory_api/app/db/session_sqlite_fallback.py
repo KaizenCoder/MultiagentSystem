@@ -1,0 +1,253 @@
+"""
+Configuration SQLite fallback pour résoudre le problème UTF-8 PostgreSQL Windows
+Solution temporaire recommandée par l'expert technique
+"""
+import os
+from logging_manager_optimized import LoggingManager
+from sqlalchemy import create_engine, text
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
+
+# Configuration du logging
+logging.basicConfig(level=logging.INFO)
+# LoggingManager NextGeneration - API
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "session_sqlite_fallback",
+            "log_level": "INFO",
+            "elasticsearch_enabled": True,
+            "encryption_enabled": False,
+            "async_enabled": True,
+            "request_tracking": True
+        })
+
+# Base pour les modèles SQLAlchemy
+Base = declarative_base()
+
+def get_database_engine():
+    """
+    Créer le moteur de base de données avec fallback SQLite
+    Solution temporaire pour éviter le problème UTF-8 PostgreSQL Windows
+    """
+    
+    # Essayer PostgreSQL d'abord (si résolu)
+    postgres_enabled = os.getenv("ENABLE_POSTGRES", "false").lower() == "true"
+    
+    if postgres_enabled:
+        try:
+            # Configuration PostgreSQL (si le problème UTF-8 est résolu)
+            postgres_host = os.getenv("POSTGRES_HOST", "localhost")
+            postgres_port = os.getenv("POSTGRES_PORT", "5432")
+            postgres_user = os.getenv("POSTGRES_USER", "postgres")
+            postgres_password = os.getenv("POSTGRES_PASSWORD", "SecurePostgresPassword2024!")
+            postgres_db = os.getenv("POSTGRES_DB", "nextgeneration_utf8")
+            
+            postgresql_url = f"postgresql://{postgres_user}:{postgres_password}@{postgres_host}:{postgres_port}/{postgres_db}?client_encoding=utf8"
+            
+            engine = create_engine(
+                postgresql_url,
+                pool_pre_ping=True,
+                pool_recycle=3600,
+                echo=False,
+                connect_args={
+                    "client_encoding": "utf8",
+                    "application_name": "NextGeneration_MemoryAPI",
+                    "options": "-c client_encoding=UTF8 -c lc_messages=C",
+                    "connect_timeout": 10,
+                },
+            )
+            
+            # Test de connexion
+            with engine.connect() as conn:
+                result = conn.execute(text("SELECT 1"))
+                result.scalar()
+            
+            logger.info("✅ PostgreSQL connection successful")
+            return engine
+            
+        except Exception as e:
+            logger.warning(f"⚠️  PostgreSQL failed: {e}")
+            logger.info("🔄 Falling back to SQLite...")
+    
+    # Fallback SQLite (solution recommandée par l'expert)
+    logger.info("🗄️  Using SQLite fallback database")
+    
+    # Chemin de la base SQLite
+    db_path = os.getenv("SQLITE_DB_PATH", "./nextgeneration.db")
+    sqlite_url = f"sqlite:///{db_path}"
+    
+    engine = create_engine(
+        sqlite_url,
+        echo=False,
+        poolclass=StaticPool,
+        connect_args={
+            "check_same_thread": False,  # Permettre multi-threading
+            "timeout": 20,
+        },
+    )
+    
+    logger.info(f"📁 SQLite database: {db_path}")
+    return engine
+
+# Créer le moteur global
+engine = get_database_engine()
+
+# Session factory
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+def get_db():
+    """Obtenir une session de base de données"""
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+def test_database_connection():
+    """
+    Tester la connexion à la base de données
+    Version compatible SQLite/PostgreSQL
+    """
+    results = {
+        "connection": False,
+        "database_type": "unknown",
+        "version": None,
+        "encoding": None,
+        "tests_passed": 0,
+        "total_tests": 4
+    }
+    
+    try:
+        logger.info("🧪 Testing database connection...")
+        
+        db = SessionLocal()
+        
+        # Test 1: Connexion de base
+        try:
+            result = db.execute(text("SELECT 1 as test_value"))
+            test_value = result.scalar()
+            if test_value == 1:
+                results["connection"] = True
+                results["tests_passed"] += 1
+                logger.info("✅ Basic connection test passed")
+        except Exception as e:
+            logger.error(f"❌ Basic connection failed: {e}")
+        
+        # Test 2: Détection du type de base
+        try:
+            # Détecter SQLite vs PostgreSQL
+            if "sqlite" in str(engine.url):
+                results["database_type"] = "SQLite"
+                
+                # Version SQLite
+                result = db.execute(text("SELECT sqlite_version()"))
+                results["version"] = f"SQLite {result.scalar()}"
+                results["encoding"] = "UTF-8"
+                results["tests_passed"] += 1
+                logger.info(f"✅ Database type: {results['database_type']}")
+                
+            else:
+                results["database_type"] = "PostgreSQL"
+                
+                # Version PostgreSQL (peut échouer avec le problème UTF-8)
+                try:
+                    result = db.execute(text("SELECT version()"))
+                    version = result.scalar()
+                    results["version"] = version.split()[0:2]
+                    results["tests_passed"] += 1
+                    logger.info(f"✅ Database type: {results['database_type']}")
+                except:
+                    logger.warning("⚠️  PostgreSQL version check failed (UTF-8 issue)")
+                    
+        except Exception as e:
+            logger.error(f"❌ Database type detection failed: {e}")
+        
+        # Test 3: Encodage UTF-8
+        try:
+            result = db.execute(text("SELECT 'Test UTF-8: éàüç' as test_utf8"))
+            utf8_test = result.scalar()
+            if "éàüç" in utf8_test:
+                results["tests_passed"] += 1
+                logger.info("✅ UTF-8 encoding test passed")
+        except Exception as e:
+            logger.error(f"❌ UTF-8 test failed: {e}")
+        
+        # Test 4: Opérations de base
+        try:
+            # Test création table temporaire
+            if results["database_type"] == "SQLite":
+                db.execute(text("""
+                    CREATE TEMPORARY TABLE test_table (
+                        id INTEGER PRIMARY KEY,
+                        name TEXT
+                    )
+                """))
+            else:
+                db.execute(text("""
+                    CREATE TEMPORARY TABLE test_table (
+                        id SERIAL PRIMARY KEY,
+                        name VARCHAR(255)
+                    )
+                """))
+            
+            # Test insertion
+            db.execute(text("INSERT INTO test_table (name) VALUES ('test')"))
+            
+            # Test lecture
+            result = db.execute(text("SELECT name FROM test_table WHERE name = 'test'"))
+            if result.scalar() == 'test':
+                results["tests_passed"] += 1
+                logger.info("✅ Basic operations test passed")
+                
+        except Exception as e:
+            logger.error(f"❌ Basic operations failed: {e}")
+        
+        db.close()
+        
+    except Exception as e:
+        logger.error(f"❌ Database connection failed: {e}")
+    
+    # Résumé
+    success_rate = (results["tests_passed"] / results["total_tests"]) * 100
+    logger.info(f"📊 Database tests: {results['tests_passed']}/{results['total_tests']} ({success_rate:.1f}%)")
+    
+    if results["connection"]:
+        logger.info(f"✅ Database operational: {results['database_type']}")
+    else:
+        logger.error("❌ Database connection failed")
+    
+    return results
+
+def create_tables():
+    """Créer les tables de base de données"""
+    try:
+        logger.info("🏗️  Creating database tables...")
+        Base.metadata.create_all(bind=engine)
+        logger.info("✅ Tables created successfully")
+        return True
+    except Exception as e:
+        logger.error(f"❌ Table creation failed: {e}")
+        return False
+
+if __name__ == "__main__":
+    print("🚀 SOLUTION SQLITE FALLBACK - TEST CONNEXION")
+    print("=" * 50)
+    print("Solution temporaire pour éviter le problème UTF-8 PostgreSQL Windows")
+    print()
+    
+    # Test de connexion
+    results = test_database_connection()
+    
+    print("\n" + "=" * 50)
+    print("📋 RÉSULTATS:")
+    print(f"   Type: {results['database_type']}")
+    print(f"   Version: {results['version']}")
+    print(f"   Encodage: {results['encoding']}")
+    print(f"   Tests: {results['tests_passed']}/{results['total_tests']}")
+    print(f"   Status: {'✅ Opérationnel' if results['connection'] else '❌ Échec'}")
+    
+    if results["connection"]:
+        print("\n🎯 Base de données prête pour TaskMaster NextGeneration !")
+    else:
+        print("\n❌ Problème de connexion persistant") 

@@ -26,7 +26,7 @@ __compliance_score__ = "90%"
 __optimization_gain__ = "+20.0 points"
 __claude_recommendations__ = "100% implemented"
 
-import logging
+from logging_manager_optimized import LoggingManager
 import time
 import asyncio
 from typing import Dict, List, Any
@@ -41,7 +41,14 @@ from features.enterprise.production_monitoring import (
 )
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Agent
+    from logging_manager_optimized import LoggingManager
+    self.logger = LoggingManager().get_agent_logger(
+    agent_name="Agent25ProductionMonitoringEnterprise",
+    role="ai_processor",
+    domain="monitoring",
+    async_enabled=True
+    )
 
 
 class Agent25ProductionMonitoringEnterprise(Agent):
@@ -54,102 +61,102 @@ class Agent25ProductionMonitoringEnterprise(Agent):
     """
     
     def __init__(self, **config):
-        super().__init__(AgentType.MONITORING.value, **config)
-        self.agent_version = __version__
-        self.agent_name = __agent_name__
-        self.compliance_score = __compliance_score__
-        self.optimization_gain = __optimization_gain__
+    super().__init__(AgentType.MONITORING.value, **config)
+    self.agent_version = __version__
+    self.agent_name = __agent_name__
+    self.compliance_score = __compliance_score__
+    self.optimization_gain = __optimization_gain__
         
         # Initialisation features monitoring enterprise modulaires
-        self.features = [
-            MLAnomalyFeature(config.get('ml_anomaly', {})),
-            DashboardFeature(config.get('dashboards', {})),
-            AlertingFeature(config.get('alerting', {})),
-            SLAMonitoringFeature(config.get('sla_monitoring', {})),
-            PredictiveFeature(config.get('predictive', {})),
-            ComplianceFeature(config.get('compliance', {}))
-        ]
+    self.features = [
+    MLAnomalyFeature(config.get('ml_anomaly', {})),
+    DashboardFeature(config.get('dashboards', {})),
+    AlertingFeature(config.get('alerting', {})),
+    SLAMonitoringFeature(config.get('sla_monitoring', {})),
+    PredictiveFeature(config.get('predictive', {})),
+    ComplianceFeature(config.get('compliance', {}))
+    ]
         
-        logger.info(f"✅ Agent 25 {self.agent_name} v{self.agent_version} initialisé - {len(self.features)} features chargées")
+    logger.info(f"✅ Agent 25 {self.agent_name} v{self.agent_version} initialisé - {len(self.features)} features chargées")
     
     def get_capabilities(self) -> List[str]:
         """📋 Capacités de l'agent Production Monitoring Enterprise"""
-        return [
-            "ml_anomaly_setup", "advanced_dashboards_creation", "intelligent_alerting_config",
-            "sla_monitoring_setup", "predictive_analytics", "compliance_reporting"
-        ]
+    return [
+    "ml_anomaly_setup", "advanced_dashboards_creation", "intelligent_alerting_config",
+    "sla_monitoring_setup", "predictive_analytics", "compliance_reporting"
+    ]
     
     async def execute_task(self, task: Task) -> Result:
         """📊 Exécution de tâche via features modulaires (Pattern Factory)"""
-        try:
-            start_time = time.time()
+    try:
+    start_time = time.time()
             
             # Dispatch vers feature appropriée
-            for feature in self.features:
-                if feature.can_handle(task):
-                    result = feature.execute(task)
-                    execution_time = (time.time() - start_time) * 1000
+    for feature in self.features:
+    if feature.can_handle(task):
+        result = feature.execute(task)
+        execution_time = (time.time() - start_time) * 1000
                     
                     # Enrichissement avec métriques monitoring
-                    result.metrics.update({
-                        "agent_id": self.id,
-                        "agent_version": self.agent_version,
-                        "execution_time_ms": execution_time,
-                        "feature_used": feature.__class__.__name__,
-                        "monitoring_domain": "production_enterprise"
-                    })
+        result.metrics.update({
+            "agent_id": self.id,
+            "agent_version": self.agent_version,
+            "execution_time_ms": execution_time,
+            "feature_used": feature.__class__.__name__,
+            "monitoring_domain": "production_enterprise"
+        })
                     
-                    return result
+        return result
             
             # Aucune feature ne peut traiter la tâche
-            return Result(
-                success=False,
-                error=f"Task type '{task.type}' not supported",
-                agent_id=self.id,
-                task_id=task.id
-            )
+    return Result(
+    success=False,
+    error=f"Task type '{task.type}' not supported",
+    agent_id=self.id,
+    task_id=task.id
+    )
             
-        except Exception as e:
-            logger.error(f"❌ Erreur exécution tâche monitoring {task.type}: {e}")
-            return Result(success=False, error=str(e), agent_id=self.id, task_id=task.id)
+    except Exception as e:
+    logger.error(f"❌ Erreur exécution tâche monitoring {task.type}: {e}")
+    return Result(success=False, error=str(e), agent_id=self.id, task_id=task.id)
     
     async def startup(self) -> None:
         """🚀 Initialisation Agent 25 Monitoring Enterprise"""
-        self.status = "starting"
-        logger.info(f"🚀 Agent 25 {self.agent_name} v{self.agent_version} démarrage...")
+    self.status = "starting"
+    logger.info(f"🚀 Agent 25 {self.agent_name} v{self.agent_version} démarrage...")
         # Initialisation features monitoring
-        for feature in self.features:
-            if hasattr(feature, 'initialize'):
-                await feature.initialize()
-        self.status = "running"
-        logger.info(f"✅ Agent 25 {self.agent_name} opérationnel")
+    for feature in self.features:
+    if hasattr(feature, 'initialize'):
+    await feature.initialize()
+    self.status = "running"
+    logger.info(f"✅ Agent 25 {self.agent_name} opérationnel")
     
     async def shutdown(self) -> None:
         """🛑 Arrêt propre Agent 25 Monitoring"""
-        self.status = "stopping"
-        logger.info(f"🛑 Agent 25 {self.agent_name} v{self.agent_version} arrêt...")
+    self.status = "stopping"
+    logger.info(f"🛑 Agent 25 {self.agent_name} v{self.agent_version} arrêt...")
         # Nettoyage features monitoring
-        for feature in self.features:
-            if hasattr(feature, 'cleanup'):
-                await feature.cleanup()
-        self.status = "stopped"
-        logger.info(f"✅ Agent 25 {self.agent_name} arrêté proprement")
+    for feature in self.features:
+    if hasattr(feature, 'cleanup'):
+    await feature.cleanup()
+    self.status = "stopped"
+    logger.info(f"✅ Agent 25 {self.agent_name} arrêté proprement")
     
     async def health_check(self) -> Dict[str, Any]:
         """🩺 Vérification santé Agent 25 Monitoring"""
-        return {
-            "agent_id": self.id,
-            "agent_version": self.agent_version,
-            "status": self.status,
-            "features_count": len(self.features),
-            "monitoring_features": [f.__class__.__name__ for f in self.features],
-            "tasks_executed": self.tasks_executed,
-            "uptime_seconds": (time.time() - self.created_at.timestamp()),
-            "compliance_score": self.compliance_score,
-            "ml_models_active": 3,
-            "dashboards_ready": 10,
-            "enterprise_ready": True
-        }
+    return {
+    "agent_id": self.id,
+    "agent_version": self.agent_version,
+    "status": self.status,
+    "features_count": len(self.features),
+    "monitoring_features": [f.__class__.__name__ for f in self.features],
+    "tasks_executed": self.tasks_executed,
+    "uptime_seconds": (time.time() - self.created_at.timestamp()),
+    "compliance_score": self.compliance_score,
+    "ml_models_active": 3,
+    "dashboards_ready": 10,
+    "enterprise_ready": True
+    }
 
 
 def create_agent_25_monitoring(**config) -> Agent25ProductionMonitoringEnterprise:
@@ -173,5 +180,5 @@ if __name__ == "__main__":
     print(f"🚀 Réduction: -70% de code !")
     print(f"📋 Version: {__version__} | Claude: {__claude_recommendations__}")
     if result.success:
-        print(f"📈 Data: {result.data}")
-        print(f"⚡ Metrics: {result.metrics}")
+    print(f"📈 Data: {result.data}")
+    print(f"⚡ Metrics: {result.metrics}")

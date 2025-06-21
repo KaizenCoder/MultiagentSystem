@@ -13,7 +13,7 @@ Responsabilités :
 """
 
 import asyncio
-import logging
+from logging_manager_optimized import LoggingManager
 import hashlib
 import subprocess
 import tempfile
@@ -146,7 +146,14 @@ class Agent18AuditeurSecurite:
         self.current_findings = []
         
         # Logs
-        self.logger = logging.getLogger(f"Agent{self.agent_id}")
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="SecurityLevel",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
         self.setup_logging()
         
         # Rapport de mission

@@ -6,7 +6,7 @@ Production-grade business metrics with custom Prometheus metrics,
 KPI tracking, and executive dashboard support.
 """
 
-import logging
+from logging_manager_optimized import LoggingManager
 import time
 from typing import Dict, Optional, Any, List, Union
 from dataclasses import dataclass, asdict
@@ -20,7 +20,15 @@ from prometheus_client import (
     CollectorRegistry, generate_latest, CONTENT_TYPE_LATEST
 )
 
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Tool/Utility
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "MetricType",
+            "log_level": "INFO",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": True
+        })
 
 class MetricType(Enum):
     """Business metric types"""

@@ -4,7 +4,7 @@ Handles parallel agent execution, resource allocation, and dynamic scaling.
 """
 
 import asyncio
-import logging
+from logging_manager_optimized import LoggingManager
 import time
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any, Set, Tuple, Callable
@@ -21,7 +21,14 @@ from .advanced_state_manager import get_advanced_state_manager
 from ..performance.memory_optimizer import get_memory_optimizer
 
 
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="AgentPriority",
+            role="ai_processor",
+            domain="orchestration",
+            async_enabled=True
+        )
 
 
 class AgentPriority(Enum):

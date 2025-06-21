@@ -10,7 +10,7 @@ Inspiré par SuperWhisper_V6 et adapté à l'écosystème NextGeneration.
 import os
 import sys
 import argparse
-import logging
+from logging_manager_optimized import LoggingManager
 from pathlib import Path
 import datetime
 import json
@@ -18,7 +18,15 @@ from typing import Dict, Any
 
 # --- Configuration ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Tool/Utility
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "CodeBundler",
+            "log_level": "INFO",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": True
+        })
 
 # --- Constantes ---
 PROJECT_ROOT = Path(__file__).parent.parent.parent

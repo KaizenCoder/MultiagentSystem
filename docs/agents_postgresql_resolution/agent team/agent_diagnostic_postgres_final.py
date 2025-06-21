@@ -9,7 +9,7 @@ import json
 import os
 import sys
 import time
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime
 from pathlib import Path
 
@@ -33,7 +33,14 @@ class AgentDiagnosticPostgreSQL:
                 logging.StreamHandler(sys.stdout)
             ]
         )
-        self.logger = logging.getLogger("diagnostic_postgres")
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="AgentDiagnosticPostgreSQL",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
         
         self.rapport_data = {
             "agent": self.name,

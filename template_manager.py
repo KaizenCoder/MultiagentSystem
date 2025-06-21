@@ -4,7 +4,7 @@ Gestionnaire des templates JSON pour la création d'agents
 """
 
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 from typing import Dict, List, Any, Optional
 from pathlib import Path
 import os
@@ -26,7 +26,16 @@ class TemplateManager:
             templates_dir: Répertoire contenant les templates JSON
         """
         self.templates_dir = Path(templates_dir)
-        self.logger = logging.getLogger("TemplateManager")
+        # LoggingManager NextGeneration - Template Manager
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "TemplateManager",
+            "log_level": "INFO",
+            "elasticsearch_enabled": True,
+            "encryption_enabled": False,
+            "async_enabled": True,
+            "structured_logging": True
+        })
         self.loaded_templates = {}
         self.active_agents = {}
         

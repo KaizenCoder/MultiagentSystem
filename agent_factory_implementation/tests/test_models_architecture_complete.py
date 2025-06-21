@@ -22,7 +22,7 @@ Créé: 19 juin 2025 - 18h00
 
 import asyncio
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import pytest
 import sys
 import time
@@ -45,7 +45,16 @@ except ImportError as e:
 
 # Configuration logging pour tests
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("TestModelsArchitecture")
+# LoggingManager NextGeneration - Tests
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "TestModelsConfiguration",
+            "log_level": "DEBUG",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": False,  # Tests synchrones
+            "console_output": True
+        })
 
 class TestModelsConfiguration:
     """Tests de configuration des modèles"""

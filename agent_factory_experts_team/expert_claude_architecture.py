@@ -6,7 +6,7 @@ Modle: Claude Sonnet 4.0 (architecture, patterns, extensibilit)
 """
 
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, List, Optional
@@ -71,7 +71,14 @@ class ExpertClaudeArchitecture:
                 logging.StreamHandler()
             ]
         )
-        self.logger = logging.getLogger("expert_claude_architecture")
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="class",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
     
     def analyser_architecture_claude_v1(self) -> FactoryArchitectureAnalysis:
         """[TARGET] Analyse architecture Factory propose par Claude v1"""

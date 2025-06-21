@@ -6,7 +6,7 @@
 """
 
 import sys
-import logging
+from logging_manager_optimized import LoggingManager
 import torch
 
 # --- Configuration Logging ---
@@ -15,7 +15,15 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s',
     stream=sys.stdout
 )
-logger = logging.getLogger("GPU_Validator")
+# LoggingManager NextGeneration - Tool/Utility
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "VALIDATION_AUTOMATIQUE",
+            "log_level": "INFO",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": True
+        })
 
 def validate_gpu_environment():
     """

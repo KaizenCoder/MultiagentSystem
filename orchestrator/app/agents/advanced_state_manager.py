@@ -5,7 +5,7 @@ Optimized state persistence, compression, and efficient transitions.
 
 import asyncio
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import pickle
 import zlib
 from datetime import datetime, timedelta
@@ -24,7 +24,14 @@ from ..security.logging import security_logger
 from ..performance.redis_cache import get_cache, CacheType
 
 
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="StateCompressionType",
+            role="ai_processor",
+            domain="orchestration",
+            async_enabled=True
+        )
 
 
 class StateCompressionType(Enum):

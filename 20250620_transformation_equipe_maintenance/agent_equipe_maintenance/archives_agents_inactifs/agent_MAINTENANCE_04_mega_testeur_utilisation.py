@@ -1,0 +1,817 @@
+#!/usr/bin/env python3
+"""
+🚀 AGENT 04 MEGA-TESTEUR - TESTS UTILISATION RÉELLE
+Enrichi avec les capacités des agents experts pour tests complets
+
+Fonctionnalités intégrées :
+- Tests Performance (Agent 05) : Benchmarks, cache, thread-safety
+- Audit Sécurité (Agent 18) : Vulnérabilités, patterns malicieux
+- Audit Performance (Agent 19) : Anti-patterns, goulots
+- Audit Conformité (Agent 20) : Standards, documentation
+- Tests Utilisation Réelle : Instanciation et exécution
+"""
+
+import asyncio
+from logging_manager_optimized import LoggingManager
+import time
+import psutil
+import threading
+import importlib.util
+import ast
+import re
+import json
+import hashlib
+from datetime import datetime
+from typing import Dict, List, Any, Optional, Tuple
+from pathlib import Path
+from dataclasses import dataclass
+from enum import Enum
+import sys
+import tempfile
+import subprocess
+
+class TestLevel(Enum):
+    """Niveaux de test"""
+    EXCELLENT = "excellent"
+    GOOD = "bon"
+    AVERAGE = "moyen"
+    POOR = "faible"
+    CRITICAL = "critique"
+
+@dataclass
+class TestMetrics:
+    """Métriques de test détaillées (inspiré Agent 05)"""
+    test_name: str
+    duration_ms: float
+    status: str  # SUCCESS, FAILED, SKIPPED
+    performance_score: float  # 0-100
+    memory_usage_mb: float
+    cpu_usage_percent: float
+    details: Dict[str, Any]
+    timestamp: datetime
+
+@dataclass
+class SecurityFinding:
+    """Résultat audit sécurité (inspiré Agent 18)"""
+    finding_id: str
+    vulnerability_type: str
+    security_level: str
+    title: str
+    description: str
+    location: str
+    line_number: Optional[int]
+    remediation: str
+    evidence: str
+
+@dataclass
+class PerformanceIssue:
+    """Issue performance (inspiré Agent 19)"""
+    issue_id: str
+    issue_type: str
+    severity: str
+    location: str
+    description: str
+    recommendation: str
+
+@dataclass
+class ConformityIssue:
+    """Issue conformité (inspiré Agent 20)"""
+    issue_id: str
+    standard_type: str
+    severity: str
+    title: str
+    description: str
+    location: str
+    remediation: str
+
+class Agent04MegaTesteurUtilisation:
+    """🚀 Agent 04 MEGA-TESTEUR - Tests Utilisation Réelle Complète"""
+    
+    def __init__(self):
+        self.agent_id = "04_mega_testeur"
+        self.specialite = "Tests Utilisation Réelle Complète"
+        
+        # Métriques globales
+        self.test_metrics: List[TestMetrics] = []
+        self.security_findings: List[SecurityFinding] = []
+        self.performance_issues: List[PerformanceIssue] = []
+        self.conformity_issues: List[ConformityIssue] = []
+        
+        # Patterns sécurité (Agent 18)
+        self.security_patterns = {
+            'sql_injection': [
+                r'\.execute\([^)]*\+',
+                r'f".*{.*}.*".*execute',
+                r'cursor\.execute.*%',
+            ],
+            'hardcoded_secrets': [
+                r'password\s*=\s*["\'][^"\']+["\']',
+                r'api_key\s*=\s*["\'][^"\']+["\']',
+                r'secret\s*=\s*["\'][^"\']+["\']',
+            ],
+            'code_injection': [
+                r'eval\(',
+                r'exec\(',
+                r'compile\(',
+            ]
+        }
+        
+        # Anti-patterns performance (Agent 19)
+        self.antipatterns = {
+            'nested_loops': r'for\s+\w+.*:\s*\n\s*for\s+\w+',
+            'inefficient_concat': r'\+\s*=\s*["\']',
+            'blocking_calls': r'time\.sleep\(|requests\.',
+        }
+        
+        self.logger = self._setup_logging()
+        
+    def _setup_logging(self):
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="from",
+            role="ai_processor",
+            domain="testing",
+            async_enabled=True
+        )
+        log_dir = Path("logs")
+        log_dir.mkdir(exist_ok=True)
+        
+        handler = logging.FileHandler(
+            log_dir / f"agent_{self.agent_id}_mega_testeur_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+        )
+        handler.setFormatter(logging.Formatter(
+            '%(asctime)s - Agent04_MegaTesteur - %(levelname)s - %(message)s'
+        ))
+        logger.addHandler(handler)
+        logger.setLevel(logging.INFO)
+        return logger
+
+    async def tester_agent_transforme_utilisation_complete(self, agent_path: str) -> Dict[str, Any]:
+        """🎯 TEST COMPLET EN UTILISATION RÉELLE d'un agent transformé"""
+        self.logger.info(f"🚀 DÉBUT TEST UTILISATION COMPLÈTE : {agent_path}")
+        
+        start_time = time.time()
+        
+        # Réinitialiser métriques
+        self.test_metrics = []
+        self.security_findings = []
+        self.performance_issues = []
+        self.conformity_issues = []
+        
+        try:
+            # 1. Tests syntaxe et structure (base)
+            syntax_results = await self._test_syntax_structure(agent_path)
+            
+            # 2. Audit sécurité complet (Agent 18)
+            security_results = await self._audit_security_complete(agent_path)
+            
+            # 3. Audit performance (Agent 19)
+            performance_results = await self._audit_performance(agent_path)
+            
+            # 4. Audit conformité (Agent 20)
+            conformity_results = await self._audit_conformity(agent_path)
+            
+            # 5. **TESTS UTILISATION RÉELLE** (NOUVEAU !)
+            utilisation_results = await self._test_utilisation_reelle(agent_path)
+            
+            # 6. Tests performance en utilisation (Agent 05)
+            perf_utilisation_results = await self._test_performance_utilisation(agent_path)
+            
+            # 7. Tests thread-safety en utilisation (Agent 05)
+            thread_safety_results = await self._test_thread_safety_utilisation(agent_path)
+            
+            execution_time = time.time() - start_time
+            
+            # Compilation rapport final
+            rapport_final = {
+                'test_id': f"MEGA_TEST_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+                'agent_tested': agent_path,
+                'execution_time': execution_time,
+                'tests_results': {
+                    'syntax_structure': syntax_results,
+                    'security_audit': security_results,
+                    'performance_audit': performance_results,
+                    'conformity_audit': conformity_results,
+                    'utilisation_reelle': utilisation_results,
+                    'performance_utilisation': perf_utilisation_results,
+                    'thread_safety_utilisation': thread_safety_results
+                },
+                'global_scores': self._calculate_global_scores(),
+                'recommendations': self._generate_mega_recommendations(),
+                'certification': self._determine_certification()
+            }
+            
+            await self._save_mega_test_report(rapport_final)
+            
+            self.logger.info(f"✅ TEST UTILISATION COMPLÈTE TERMINÉ - Score: {rapport_final['global_scores']['overall']}/10")
+            return rapport_final
+            
+        except Exception as e:
+            self.logger.error(f"❌ Erreur test utilisation complète: {e}")
+            return {
+                'test_id': f"ERROR_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+                'agent_tested': agent_path,
+                'status': 'ERREUR',
+                'error': str(e)
+            }
+
+    async def _test_syntax_structure(self, agent_path: str) -> Dict[str, Any]:
+        """Test syntaxe et structure de base"""
+        start_time = time.time()
+        
+        try:
+            agent_file = Path(agent_path)
+            if not agent_file.exists():
+                return {'status': 'FAILED', 'error': 'Fichier inexistant'}
+            
+            content = agent_file.read_text(encoding='utf-8')
+            
+            # Parse AST
+            try:
+                tree = ast.parse(content)
+                syntax_valid = True
+            except SyntaxError as e:
+                syntax_valid = False
+                syntax_error = str(e)
+            
+            # Vérifications structure
+            has_class = bool(re.search(r'class\s+\w+', content))
+            has_init = '__init__' in content
+            has_async_methods = 'async def' in content
+            
+            duration = (time.time() - start_time) * 1000
+            
+            self.test_metrics.append(TestMetrics(
+                test_name="syntax_structure",
+                duration_ms=duration,
+                status="SUCCESS" if syntax_valid else "FAILED",
+                performance_score=100.0 if syntax_valid else 0.0,
+                memory_usage_mb=0.0,
+                cpu_usage_percent=0.0,
+                details={
+                    'syntax_valid': syntax_valid,
+                    'has_class': has_class,
+                    'has_init': has_init,
+                    'has_async': has_async_methods
+                },
+                timestamp=datetime.now()
+            ))
+            
+            return {
+                'status': 'SUCCESS' if syntax_valid else 'FAILED',
+                'syntax_valid': syntax_valid,
+                'structure_score': sum([has_class, has_init, has_async_methods]),
+                'duration_ms': duration
+            }
+            
+        except Exception as e:
+            return {'status': 'ERROR', 'error': str(e)}
+
+    async def _audit_security_complete(self, agent_path: str) -> Dict[str, Any]:
+        """Audit sécurité complet (inspiré Agent 18)"""
+        try:
+            content = Path(agent_path).read_text(encoding='utf-8')
+            findings = []
+            
+            # Scan patterns sécurité
+            for vuln_type, patterns in self.security_patterns.items():
+                for pattern in patterns:
+                    matches = re.finditer(pattern, content, re.IGNORECASE | re.MULTILINE)
+                    for match in matches:
+                        line_num = content[:match.start()].count('\n') + 1
+                        finding = SecurityFinding(
+                            finding_id=f"SEC_{hashlib.md5(f'{agent_path}_{line_num}_{match.group()}'.encode()).hexdigest()[:8]}",
+                            vulnerability_type=vuln_type,
+                            security_level="HIGH" if vuln_type in ['sql_injection', 'code_injection'] else "MEDIUM",
+                            title=f"Vulnérabilité {vuln_type} détectée",
+                            description=f"Pattern suspect : {match.group()}",
+                            location=agent_path,
+                            line_number=line_num,
+                            remediation=self._get_security_remediation(vuln_type),
+                            evidence=match.group()
+                        )
+                        findings.append(finding)
+            
+            self.security_findings.extend(findings)
+            
+            # Score sécurité
+            critical_count = sum(1 for f in findings if f.security_level == "HIGH")
+            security_score = max(0, 10 - (critical_count * 3) - (len(findings) * 0.5))
+            
+            return {
+                'status': 'SUCCESS',
+                'findings_count': len(findings),
+                'critical_count': critical_count,
+                'security_score': round(security_score, 1),
+                'findings': [f.__dict__ for f in findings[:5]]  # Top 5 pour rapport
+            }
+            
+        except Exception as e:
+            return {'status': 'ERROR', 'error': str(e)}
+
+    async def _audit_performance(self, agent_path: str) -> Dict[str, Any]:
+        """Audit performance (inspiré Agent 19)"""
+        try:
+            content = Path(agent_path).read_text(encoding='utf-8')
+            issues = []
+            
+            # Scan anti-patterns
+            for pattern_name, pattern in self.antipatterns.items():
+                matches = len(re.findall(pattern, content, re.MULTILINE))
+                if matches > 0:
+                    issue = PerformanceIssue(
+                        issue_id=f"PERF_{pattern_name}_{hash(agent_path)}",
+                        issue_type="antipattern",
+                        severity="HIGH" if matches > 3 else "MEDIUM",
+                        location=agent_path,
+                        description=f"Anti-pattern {pattern_name} détecté {matches} fois",
+                        recommendation=self._get_performance_recommendation(pattern_name)
+                    )
+                    issues.append(issue)
+            
+            self.performance_issues.extend(issues)
+            
+            # Score performance
+            high_issues = sum(1 for i in issues if i.severity == "HIGH")
+            perf_score = max(0, 10 - (high_issues * 2) - (len(issues) * 0.5))
+            
+            return {
+                'status': 'SUCCESS',
+                'issues_count': len(issues),
+                'high_issues': high_issues,
+                'performance_score': round(perf_score, 1),
+                'issues': [i.__dict__ for i in issues[:3]]
+            }
+            
+        except Exception as e:
+            return {'status': 'ERROR', 'error': str(e)}
+
+    async def _audit_conformity(self, agent_path: str) -> Dict[str, Any]:
+        """Audit conformité (inspiré Agent 20)"""
+        try:
+            content = Path(agent_path).read_text(encoding='utf-8')
+            issues = []
+            lines = content.splitlines()
+            
+            # Vérifications PEP 8 basiques
+            for i, line in enumerate(lines, 1):
+                # Ligne trop longue
+                if len(line) > 79:
+                    issue = ConformityIssue(
+                        issue_id=f"PEP8_LINE_{i}",
+                        standard_type="PEP8",
+                        severity="LOW",
+                        title="Ligne trop longue",
+                        description=f"Ligne {i} : {len(line)} caractères (max 79)",
+                        location=f"{agent_path}:{i}",
+                        remediation="Diviser la ligne"
+                    )
+                    issues.append(issue)
+                    
+                # Espaces en fin de ligne
+                if line.endswith(' ') or line.endswith('\t'):
+                    issue = ConformityIssue(
+                        issue_id=f"PEP8_TRAIL_{i}",
+                        standard_type="PEP8",
+                        severity="LOW",
+                        title="Espaces superflus",
+                        description=f"Ligne {i} contient des espaces en fin",
+                        location=f"{agent_path}:{i}",
+                        remediation="Supprimer espaces superflus"
+                    )
+                    issues.append(issue)
+            
+            # Vérification docstrings
+            if 'def ' in content and '"""' not in content:
+                issue = ConformityIssue(
+                    issue_id="DOC_MISSING",
+                    standard_type="DOCUMENTATION",
+                    severity="MEDIUM",
+                    title="Documentation manquante",
+                    description="Pas de docstrings détectées",
+                    location=agent_path,
+                    remediation="Ajouter docstrings aux fonctions"
+                )
+                issues.append(issue)
+            
+            self.conformity_issues.extend(issues)
+            
+            # Score conformité
+            medium_issues = sum(1 for i in issues if i.severity == "MEDIUM")
+            conf_score = max(0, 10 - (medium_issues * 1) - (len(issues) * 0.1))
+            
+            return {
+                'status': 'SUCCESS',
+                'issues_count': len(issues),
+                'medium_issues': medium_issues,
+                'conformity_score': round(conf_score, 1),
+                'issues': [i.__dict__ for i in issues[:5]]
+            }
+            
+        except Exception as e:
+            return {'status': 'ERROR', 'error': str(e)}
+
+    async def _test_utilisation_reelle(self, agent_path: str) -> Dict[str, Any]:
+        """🎯 TESTS UTILISATION RÉELLE - Instanciation et exécution"""
+        self.logger.info("🎯 DÉBUT TESTS UTILISATION RÉELLE")
+        
+        start_time = time.time()
+        results = {
+            'status': 'SUCCESS',
+            'tests_executed': 0,
+            'tests_passed': 0,
+            'details': {}
+        }
+        
+        try:
+            # 1. Test d'importation dynamique
+            import_result = await self._test_dynamic_import(agent_path)
+            results['details']['import'] = import_result
+            results['tests_executed'] += 1
+            if import_result['status'] == 'SUCCESS':
+                results['tests_passed'] += 1
+            
+            # 2. Test d'instanciation
+            if import_result['status'] == 'SUCCESS':
+                instance_result = await self._test_agent_instantiation(import_result['module'])
+                results['details']['instantiation'] = instance_result
+                results['tests_executed'] += 1
+                if instance_result['status'] == 'SUCCESS':
+                    results['tests_passed'] += 1
+                
+                # 3. Test des méthodes Pattern Factory
+                if instance_result['status'] == 'SUCCESS':
+                    methods_result = await self._test_pattern_factory_methods(instance_result['agent_instance'])
+                    results['details']['pattern_factory_methods'] = methods_result
+                    results['tests_executed'] += 1
+                    if methods_result['status'] == 'SUCCESS':
+                        results['tests_passed'] += 1
+                
+                # 4. Test des capacités métier
+                if instance_result['status'] == 'SUCCESS':
+                    capabilities_result = await self._test_agent_capabilities(instance_result['agent_instance'])
+                    results['details']['capabilities'] = capabilities_result
+                    results['tests_executed'] += 1
+                    if capabilities_result['status'] == 'SUCCESS':
+                        results['tests_passed'] += 1
+            
+            duration = (time.time() - start_time) * 1000
+            
+            # Enregistrer métriques
+            self.test_metrics.append(TestMetrics(
+                test_name="utilisation_reelle",
+                duration_ms=duration,
+                status="SUCCESS" if results['tests_passed'] == results['tests_executed'] else "PARTIAL",
+                performance_score=(results['tests_passed'] / results['tests_executed']) * 100 if results['tests_executed'] > 0 else 0,
+                memory_usage_mb=psutil.Process().memory_info().rss / 1024 / 1024,
+                cpu_usage_percent=psutil.cpu_percent(),
+                details=results['details'],
+                timestamp=datetime.now()
+            ))
+            
+            self.logger.info(f"✅ TESTS UTILISATION RÉELLE TERMINÉS - {results['tests_passed']}/{results['tests_executed']} passés")
+            return results
+            
+        except Exception as e:
+            self.logger.error(f"❌ Erreur tests utilisation réelle: {e}")
+            results['status'] = 'ERROR'
+            results['error'] = str(e)
+            return results
+
+    async def _test_dynamic_import(self, agent_path: str) -> Dict[str, Any]:
+        """Test d'importation dynamique de l'agent"""
+        try:
+            agent_file = Path(agent_path)
+            module_name = agent_file.stem
+            
+            spec = importlib.util.spec_from_file_location(module_name, agent_path)
+            if spec is None or spec.loader is None:
+                return {'status': 'FAILED', 'error': 'Impossible de créer spec module'}
+            
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            
+            return {
+                'status': 'SUCCESS',
+                'module': module,
+                'module_name': module_name,
+                'attributes': [attr for attr in dir(module) if not attr.startswith('_')]
+            }
+            
+        except Exception as e:
+            return {'status': 'FAILED', 'error': str(e)}
+
+    async def _test_agent_instantiation(self, module) -> Dict[str, Any]:
+        """Test d'instanciation de l'agent"""
+        try:
+            # Chercher la classe agent principale
+            agent_classes = [
+                attr for attr in dir(module) 
+                if isinstance(getattr(module, attr), type) 
+                and not attr.startswith('_')
+                and 'agent' in attr.lower()
+            ]
+            
+            if not agent_classes:
+                return {'status': 'FAILED', 'error': 'Aucune classe agent trouvée'}
+            
+            # Prendre la première classe agent trouvée
+            agent_class = getattr(module, agent_classes[0])
+            
+            # Tenter instanciation
+            agent_instance = agent_class()
+            
+            return {
+                'status': 'SUCCESS',
+                'agent_instance': agent_instance,
+                'agent_class': agent_classes[0],
+                'instance_type': type(agent_instance).__name__
+            }
+            
+        except Exception as e:
+            return {'status': 'FAILED', 'error': str(e)}
+
+    async def _test_pattern_factory_methods(self, agent_instance) -> Dict[str, Any]:
+        """Test des méthodes Pattern Factory obligatoires"""
+        required_methods = ['startup', 'shutdown', 'health_check', 'get_capabilities']
+        results = {}
+        
+        for method_name in required_methods:
+            try:
+                if hasattr(agent_instance, method_name):
+                    method = getattr(agent_instance, method_name)
+                    
+                    # Test exécution méthode
+                    if asyncio.iscoroutinefunction(method):
+                        result = await method()
+                    else:
+                        result = method()
+                    
+                    results[method_name] = {
+                        'status': 'SUCCESS',
+                        'result_type': type(result).__name__,
+                        'result_preview': str(result)[:100] if result else None
+                    }
+                else:
+                    results[method_name] = {
+                        'status': 'MISSING',
+                        'error': f'Méthode {method_name} non trouvée'
+                    }
+                    
+            except Exception as e:
+                results[method_name] = {
+                    'status': 'FAILED',
+                    'error': str(e)
+                }
+        
+        success_count = sum(1 for r in results.values() if r['status'] == 'SUCCESS')
+        
+        return {
+            'status': 'SUCCESS' if success_count == len(required_methods) else 'PARTIAL',
+            'methods_tested': len(required_methods),
+            'methods_passed': success_count,
+            'details': results
+        }
+
+    async def _test_agent_capabilities(self, agent_instance) -> Dict[str, Any]:
+        """Test des capacités spécifiques de l'agent"""
+        try:
+            capabilities = []
+            
+            # Test get_capabilities si disponible
+            if hasattr(agent_instance, 'get_capabilities'):
+                caps = agent_instance.get_capabilities()
+                if isinstance(caps, list):
+                    capabilities = caps
+            
+            # Test autres méthodes métier
+            business_methods = [
+                attr for attr in dir(agent_instance)
+                if callable(getattr(agent_instance, attr))
+                and not attr.startswith('_')
+                and attr not in ['startup', 'shutdown', 'health_check', 'get_capabilities']
+            ]
+            
+            return {
+                'status': 'SUCCESS',
+                'capabilities': capabilities,
+                'business_methods': business_methods,
+                'total_methods': len(business_methods)
+            }
+            
+        except Exception as e:
+            return {'status': 'FAILED', 'error': str(e)}
+
+    async def _test_performance_utilisation(self, agent_path: str) -> Dict[str, Any]:
+        """Tests performance en utilisation (inspiré Agent 05)"""
+        try:
+            # Mesurer temps d'importation
+            start_time = time.time()
+            import_result = await self._test_dynamic_import(agent_path)
+            import_time = (time.time() - start_time) * 1000
+            
+            if import_result['status'] != 'SUCCESS':
+                return {'status': 'FAILED', 'error': 'Import failed'}
+            
+            # Mesurer temps d'instanciation
+            start_time = time.time()
+            instance_result = await self._test_agent_instantiation(import_result['module'])
+            instantiation_time = (time.time() - start_time) * 1000
+            
+            # Mesurer utilisation mémoire
+            memory_before = psutil.Process().memory_info().rss / 1024 / 1024
+            
+            # Exécuter quelques opérations
+            if instance_result['status'] == 'SUCCESS':
+                agent = instance_result['agent_instance']
+                if hasattr(agent, 'health_check'):
+                    if asyncio.iscoroutinefunction(agent.health_check):
+                        await agent.health_check()
+                    else:
+                        agent.health_check()
+            
+            memory_after = psutil.Process().memory_info().rss / 1024 / 1024
+            memory_usage = memory_after - memory_before
+            
+            return {
+                'status': 'SUCCESS',
+                'import_time_ms': import_time,
+                'instantiation_time_ms': instantiation_time,
+                'memory_usage_mb': memory_usage,
+                'performance_grade': 'A' if import_time < 100 and instantiation_time < 50 else 'B'
+            }
+            
+        except Exception as e:
+            return {'status': 'ERROR', 'error': str(e)}
+
+    async def _test_thread_safety_utilisation(self, agent_path: str) -> Dict[str, Any]:
+        """Tests thread-safety en utilisation (inspiré Agent 05)"""
+        try:
+            import_result = await self._test_dynamic_import(agent_path)
+            if import_result['status'] != 'SUCCESS':
+                return {'status': 'FAILED', 'error': 'Import failed'}
+            
+            # Test création multiple instances en parallèle
+            def create_instance():
+                try:
+                    instance_result = asyncio.run(self._test_agent_instantiation(import_result['module']))
+                    return instance_result['status'] == 'SUCCESS'
+                except:
+                    return False
+            
+            threads = []
+            results = []
+            
+            for _ in range(5):
+                thread = threading.Thread(target=lambda: results.append(create_instance()))
+                threads.append(thread)
+                thread.start()
+            
+            for thread in threads:
+                thread.join()
+            
+            success_rate = sum(results) / len(results) if results else 0
+            
+            return {
+                'status': 'SUCCESS' if success_rate > 0.8 else 'PARTIAL',
+                'parallel_creations': len(results),
+                'success_rate': success_rate,
+                'thread_safe': success_rate == 1.0
+            }
+            
+        except Exception as e:
+            return {'status': 'ERROR', 'error': str(e)}
+
+    def _get_security_remediation(self, vuln_type: str) -> str:
+        """Recommandations sécurité par type"""
+        remediations = {
+            'sql_injection': "Utiliser requêtes préparées et validation entrées",
+            'hardcoded_secrets': "Déplacer vers variables d'environnement",
+            'code_injection': "Éviter eval/exec, utiliser alternatives sûres"
+        }
+        return remediations.get(vuln_type, "Consulter documentation sécurité")
+
+    def _get_performance_recommendation(self, pattern_name: str) -> str:
+        """Recommandations performance par anti-pattern"""
+        recommendations = {
+            'nested_loops': "Optimiser algorithmes, utiliser structures données efficaces",
+            'inefficient_concat': "Utiliser join() ou f-strings",
+            'blocking_calls': "Utiliser opérations asynchrones"
+        }
+        return recommendations.get(pattern_name, "Optimiser le code")
+
+    def _calculate_global_scores(self) -> Dict[str, float]:
+        """Calcul scores globaux"""
+        scores = {}
+        
+        # Score performance des tests
+        if self.test_metrics:
+            perf_scores = [m.performance_score for m in self.test_metrics]
+            scores['performance'] = sum(perf_scores) / len(perf_scores)
+        else:
+            scores['performance'] = 0.0
+        
+        # Score sécurité
+        critical_security = sum(1 for f in self.security_findings if f.security_level == "HIGH")
+        scores['security'] = max(0, 10 - (critical_security * 3) - (len(self.security_findings) * 0.5))
+        
+        # Score conformité
+        medium_conformity = sum(1 for i in self.conformity_issues if i.severity == "MEDIUM")
+        scores['conformity'] = max(0, 10 - (medium_conformity * 1) - (len(self.conformity_issues) * 0.1))
+        
+        # Score global
+        scores['overall'] = (scores['performance'] + scores['security'] + scores['conformity']) / 3
+        
+        return {k: round(v, 1) for k, v in scores.items()}
+
+    def _generate_mega_recommendations(self) -> List[str]:
+        """Génération recommandations consolidées"""
+        recommendations = []
+        
+        # Recommandations sécurité
+        if len(self.security_findings) > 0:
+            recommendations.append(f"🔒 Corriger {len(self.security_findings)} vulnérabilités sécurité détectées")
+        
+        # Recommandations performance
+        if len(self.performance_issues) > 0:
+            recommendations.append(f"⚡ Optimiser {len(self.performance_issues)} anti-patterns performance")
+        
+        # Recommandations conformité
+        if len(self.conformity_issues) > 5:
+            recommendations.append(f"📏 Améliorer conformité standards ({len(self.conformity_issues)} issues)")
+        
+        # Recommandations utilisation
+        utilisation_tests = [m for m in self.test_metrics if m.test_name == "utilisation_reelle"]
+        if utilisation_tests and utilisation_tests[0].performance_score < 80:
+            recommendations.append("🎯 Améliorer fonctionnement en utilisation réelle")
+        
+        if not recommendations:
+            recommendations.append("✅ Agent transformé fonctionne parfaitement !")
+        
+        return recommendations
+
+    def _determine_certification(self) -> str:
+        """Détermination certification finale"""
+        scores = self._calculate_global_scores()
+        overall = scores['overall']
+        
+        if overall >= 9.0:
+            return "🏆 CERTIFICATION EXCELLENTE - Production Ready"
+        elif overall >= 7.0:
+            return "✅ CERTIFICATION BONNE - Corrections mineures"
+        elif overall >= 5.0:
+            return "⚠️ CERTIFICATION CONDITIONNELLE - Corrections requises"
+        else:
+            return "❌ CERTIFICATION REFUSÉE - Corrections majeures requises"
+
+    async def _save_mega_test_report(self, rapport: Dict[str, Any]):
+        """Sauvegarde rapport mega test"""
+        try:
+            reports_dir = Path("reports")
+            reports_dir.mkdir(exist_ok=True)
+            
+            report_file = reports_dir / f"mega_test_report_{rapport['test_id']}.json"
+            
+            # Sérialiser les objets datetime et dataclasses
+            def serialize_obj(obj):
+                if isinstance(obj, datetime):
+                    return obj.isoformat()
+                elif hasattr(obj, '__dict__'):
+                    return obj.__dict__
+                return str(obj)
+            
+            with open(report_file, 'w', encoding='utf-8') as f:
+                json.dump(rapport, f, indent=2, ensure_ascii=False, default=serialize_obj)
+            
+            self.logger.info(f"📄 Rapport mega test sauvegardé : {report_file}")
+            
+        except Exception as e:
+            self.logger.error(f"❌ Erreur sauvegarde rapport : {e}")
+
+# Test de l'agent si exécuté directement
+async def main():
+    """Test du mega testeur"""
+    print("🚀 Agent 04 MEGA-TESTEUR - Tests Utilisation Réelle")
+    
+    mega_testeur = Agent04MegaTesteurUtilisation()
+    
+    # Test sur un agent transformé
+    agent_test = "agent_equipe_maintenance/agent_MAINTENANCE_03_adaptateur_code_UPGRADED.py"
+    if Path(agent_test).exists():
+        print(f"\n🎯 Test utilisation complète : {agent_test}")
+        
+        rapport = await mega_testeur.tester_agent_transforme_utilisation_complete(agent_test)
+        
+        print(f"\n📊 RÉSULTATS MEGA TEST")
+        print(f"Scores globaux : {rapport.get('global_scores', {})}")
+        print(f"Certification : {rapport.get('certification', 'N/A')}")
+        
+        if 'tests_results' in rapport and 'utilisation_reelle' in rapport['tests_results']:
+            util = rapport['tests_results']['utilisation_reelle']
+            print(f"Tests utilisation : {util.get('tests_passed', 0)}/{util.get('tests_executed', 0)} passés")
+    else:
+        print(f"❌ Agent test non trouvé : {agent_test}")
+
+if __name__ == "__main__":
+    asyncio.run(main()) 

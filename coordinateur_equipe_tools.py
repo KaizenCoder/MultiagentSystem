@@ -20,7 +20,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Any, Optional
-import logging
+from logging_manager_optimized import LoggingManager
 
 # Configuration des chemins CORRIGÉS
 SOURCE_PATH = r"../agent_factory_implementation/agents"  # Chemin vers les agents à analyser
@@ -72,7 +72,15 @@ class CoordinateurEquipeTools:
                 logging.StreamHandler(sys.stdout)
             ]
         )
-        self.logger = logging.getLogger("CoordinateurEquipeTools")
+        # LoggingManager NextGeneration - Tool/Utility
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "CoordinateurEquipeTools",
+            "log_level": "INFO",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": True
+        })
         
     def verify_prerequisites(self):
         """Vrification des prrequis de la mission"""

@@ -16,7 +16,7 @@ Fonctionnalités avancées:
 
 import os
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import asyncio
 from datetime import datetime
 from pathlib import Path
@@ -43,7 +43,14 @@ class AgentGenerateurDocumentation:
         self.config_file = self.workspace_path / "config" / "documentation_config.json"
         
         # Logging
-        self.logger = logging.getLogger("agent_generateur_documentation")
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="AgentGenerateurDocumentation",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
         
         # Métriques de génération
         self.generation_stats = {

@@ -1,0 +1,195 @@
+{
+  "mission_id": "analyse_factory_agents_20250120",
+  "mission_name": "Analyse Conformité Pattern Factory - Agents Factory",
+  "date_creation": "2025-01-20",
+  "version": "1.0.0",
+  
+  "configuration": {
+    "chef_equipe": {
+      "agent_type": "chef_equipe_coordinateur",
+      "mode_operation": "diagnostic_only",
+      "safe_mode": true,
+      "rapport_detaille": true,
+      "timeout_par_agent": 600,
+      "max_agents_parallel": 4
+    },
+    
+    "cibles": {
+      "repertoire_source": "../agent_factory_implementation/agents",
+      "repertoire_rapports": "../agent_factory_implementation/agents/reviews",
+      "pattern_fichiers": "agent_*.py",
+      "exclusions": [
+        "__pycache__",
+        "*.pyc",
+        "test_*",
+        "*_backup*"
+      ]
+    },
+    
+    "equipe_maintenance": {
+      "agent_01_analyseur_structure": {
+        "actif": true,
+        "mission": "Analyse structure et architecture",
+        "criteres": [
+          "imports_pattern_factory",
+          "heritage_classe_agent",
+          "methodes_obligatoires",
+          "syntaxe_python",
+          "architecture_generale"
+        ],
+        "output_format": "json_detaille"
+      },
+      
+      "agent_02_evaluateur_utilite": {
+        "actif": true,
+        "mission": "Évaluation conformité et utilité",
+        "criteres": [
+          "score_conformite_pattern_factory",
+          "qualite_code",
+          "bonnes_pratiques",
+          "fonctionnalites_implementees",
+          "niveau_maturite"
+        ],
+        "scoring": {
+          "min_score": 0,
+          "max_score": 100,
+          "seuil_conforme": 90,
+          "seuil_partiellement_conforme": 50
+        }
+      },
+      
+      "agent_03_adaptateur_code": {
+        "actif": true,
+        "mission": "Analyse besoins adaptation (SANS MODIFICATION)",
+        "criteres": [
+          "recommandations_migration",
+          "problemes_identifies",
+          "solutions_proposees",
+          "priorites_correction",
+          "effort_estime"
+        ],
+        "mode": "read_only_analysis"
+      },
+      
+      "agent_04_testeur_anti_faux": {
+        "actif": true,
+        "mission": "Test et validation conformité",
+        "criteres": [
+          "detection_faux_agents",
+          "problemes_conformite",
+          "erreurs_critiques",
+          "tests_fonctionnement",
+          "validation_pattern_factory"
+        ],
+        "nouvelles_fonctionnalites": true
+      },
+      
+      "agent_05_documenteur": {
+        "actif": true,
+        "mission": "Documentation analyses et résultats",
+        "criteres": [
+          "documentation_agents_analyses",
+          "guides_utilisation",
+          "schemas_architecture",
+          "documentation_consolidee",
+          "index_documentation"
+        ],
+        "formats_output": ["markdown", "html", "json"]
+      },
+      
+      "agent_06_validateur_final": {
+        "actif": true,
+        "mission": "Validation finale mission analyse",
+        "criteres": [
+          "validation_globale_resultats",
+          "controle_qualite_rapports",
+          "tests_integrite",
+          "evaluation_mission_globale",
+          "certification_finale"
+        ],
+        "scoring_final": true
+      }
+    }
+  },
+  
+  "deliverables": {
+    "rapports_individuels": {
+      "format": ["json", "markdown"],
+      "nomenclature": "agent_{nom}_analysis_{timestamp}",
+      "localisation": "../agent_factory_implementation/agents/reviews/individual/"
+    },
+    
+    "rapport_consolide": {
+      "nom": "rapport_global_equipe_maintenance_{timestamp}",
+      "format": ["json", "markdown", "html"],
+      "localisation": "../agent_factory_implementation/agents/reviews/",
+      "sections": [
+        "resume_executif",
+        "statistiques_globales",
+        "agents_conformes",
+        "agents_non_conformes",
+        "erreurs_critiques",
+        "recommandations_prioritaires",
+        "plan_action_propose"
+      ]
+    },
+    
+    "dashboard": {
+      "generer": true,
+      "format": "html",
+      "nom": "dashboard_conformite_pattern_factory_{timestamp}.html",
+      "elements": [
+        "graphiques_conformite",
+        "tableau_agents",
+        "alertes_critiques",
+        "tendances"
+      ]
+    }
+  },
+  
+  "contraintes_operationnelles": {
+    "mode_lecture_seule": true,
+    "pas_de_modification_code": true,
+    "sauvegarde_automatique": true,
+    "logs_detailles": true,
+    "gestion_erreurs": "continue_on_error",
+    "backup_rapports": true,
+    "notification_fin_mission": true
+  },
+  
+  "criteres_qualite": {
+    "pattern_factory": {
+      "import_correct": 10,
+      "heritage_agent": 15,
+      "methodes_async": 20,
+      "super_init": 10,
+      "pas_de_fallback": 15,
+      "syntaxe_correcte": 30
+    },
+    
+    "seuils_alerte": {
+      "erreurs_syntaxe": 0,
+      "agents_non_conformes_pct": 20,
+      "agents_critiques": 5
+    }
+  },
+  
+  "planning": {
+    "duree_estimee": "2-4 heures",
+    "phases": [
+      "initialisation_equipe",
+      "scan_repertoire_agents",
+      "analyse_parallele_agents",
+      "consolidation_rapports",
+      "generation_dashboard",
+      "sauvegarde_resultats"
+    ]
+  },
+  
+  "post_mission": {
+    "archivage": true,
+    "notification_stakeholders": true,
+    "preparation_phase_correction": true,
+    "mise_a_jour_documentation": true
+  }
+} 

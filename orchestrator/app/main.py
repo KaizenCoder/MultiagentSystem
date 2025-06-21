@@ -17,35 +17,35 @@ from slowapi.util import get_remote_address
 from prometheus_fastapi_instrumentator import Instrumentator
 from pydantic import BaseModel, Field, validator
 
-from orchestrator.app.agents.supervisor import supervisor
-from orchestrator.app.agents.workers import worker_node_wrapper
-from orchestrator.app.agents.tools import close_http_client
-from orchestrator.app.checkpoint.api_checkpointer import ApiCheckpointer
-from orchestrator.app.config import settings
-from orchestrator.app.graph.state import AgentState, Feedback
-from orchestrator.app.security.validators import InputSanitizer
-from orchestrator.app.security.logging import security_logger, AuditLogger, AuditEventType, setup_secure_logging
-from orchestrator.app.security.secrets_manager import get_secrets_manager
-from orchestrator.app.performance.redis_cache import get_cache, CacheType
-from orchestrator.app.observability.monitoring import get_monitoring, track_request_metrics
-from orchestrator.app.security.network_security import get_network_security
-from orchestrator.app.performance.database_optimizer import get_database_manager
-from orchestrator.app.performance.redis_cluster_manager import get_redis_cluster_manager
-from orchestrator.app.performance.load_tester import get_load_tester
+from .agents.supervisor import supervisor
+from .agents.workers import worker_node_wrapper
+from .agents.tools import close_http_client
+from .checkpoint.api_checkpointer import ApiCheckpointer
+from .config import settings
+from .graph.state import AgentState, Feedback
+from .security.validators import InputSanitizer
+from .security.logging import security_logger, AuditLogger, AuditEventType, setup_secure_logging
+from .security.secrets_manager import get_secrets_manager
+from .performance.redis_cache import get_cache, CacheType
+from .observability.monitoring import get_monitoring, track_request_metrics
+from .security.network_security import get_network_security
+from .performance.database_optimizer import get_database_manager
+from .performance.redis_cluster_manager import get_redis_cluster_manager
+from .performance.load_tester import get_load_tester
 
 # Sprint 1.3 - Advanced Observability & Scalability
-from orchestrator.app.observability.distributed_tracing import get_tracer, initialize_tracing
-from orchestrator.app.performance.circuit_breaker import get_circuit_manager, CircuitBreakerConfig
-from orchestrator.app.observability.business_metrics import get_business_metrics, initialize_business_metrics
+from .observability.distributed_tracing import get_tracer, initialize_tracing
+from .performance.circuit_breaker import get_circuit_manager, CircuitBreakerConfig
+from .observability.business_metrics import get_business_metrics, initialize_business_metrics
 
 # Sprint 2.1 - Advanced Architecture & Performance
-from orchestrator.app.performance.memory_optimizer import get_memory_optimizer
-from orchestrator.app.agents.advanced_state_manager import get_advanced_state_manager
-from orchestrator.app.agents.advanced_coordination import get_advanced_coordination, AgentTask, AgentPriority, ResourceType
+from .performance.memory_optimizer import get_memory_optimizer
+from .agents.advanced_state_manager import get_advanced_state_manager
+from .agents.advanced_coordination import get_advanced_coordination, AgentTask, AgentPriority, ResourceType
 
 # Sprint 2.2 - Load Balancing & Auto-Scaling Enterprise
-from orchestrator.app.performance.load_balancer import get_load_balancer, BackendServer, LoadBalancingAlgorithm, HealthCheckConfig
-from orchestrator.app.performance.auto_scaler import get_auto_scaler, setup_production_scaling, ScalingRule, ScalingMetric
+from .performance.load_balancer import get_load_balancer, BackendServer, LoadBalancingAlgorithm, HealthCheckConfig
+from .performance.auto_scaler import get_auto_scaler, setup_production_scaling, ScalingRule, ScalingMetric
 
 # --- State & Config ---
 workflow_app = None

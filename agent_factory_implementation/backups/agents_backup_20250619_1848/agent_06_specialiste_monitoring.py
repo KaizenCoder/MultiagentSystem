@@ -36,7 +36,7 @@ Updated: 2024-12-28
 
 import asyncio
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, asdict
@@ -66,7 +66,14 @@ except ImportError:
                 self.agent_id = f"agent_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
                 self.agent_type = agent_type
                 self.config = config
-                self.logger = logging.getLogger(f"Agent_{agent_type}")
+                # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="Agent",
+            role="ai_processor",
+            domain="monitoring",
+            async_enabled=True
+        )
                 
             async def startup(self): pass
             async def shutdown(self): pass

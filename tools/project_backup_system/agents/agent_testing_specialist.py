@@ -8,7 +8,7 @@ Modle: Claude Sonnet 4.0 (implmentation code)
 import os
 import sys
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import unittest
 import tempfile
 import shutil
@@ -77,7 +77,14 @@ class TestingSpecialistAgent:
                 logging.StreamHandler()
             ]
         )
-        self.logger = logging.getLogger(self.agent_id)
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="import",
+            role="ai_processor",
+            domain="testing",
+            async_enabled=True
+        )
     
     def ensure_test_structure(self):
         """Assure structure tests"""

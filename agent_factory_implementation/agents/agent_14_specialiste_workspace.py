@@ -34,7 +34,7 @@ DELIVERABLES :
 """
 
 import os
-import logging
+from logging_manager_optimized import LoggingManager
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any
@@ -44,158 +44,165 @@ class Agent14SpecialisteWorkspace:
     """Agent 14 - Spcialiste Workspace pour Agent Factory Implementation"""
     
     def __init__(self):
-        self.name = "Agent 14 - Spcialiste Workspace"
-        self.role = "specialist"
-        self.domain = "workspace_organization"
-        self.base_path = Path("nextgeneration/agent_factory_implementation")
+    self.name = "Agent 14 - Spcialiste Workspace"
+    self.role = "specialist"
+    self.domain = "workspace_organization"
+    self.base_path = Path("nextgeneration/agent_factory_implementation")
         
         # Configuration du logging
-        logging.basicConfig(level=logging.INFO)
-        self.logger = logging.getLogger(self.__class__.__name__)
+    logging.basicConfig(level=logging.INFO)
+        # LoggingManager NextGeneration - Agent
+    from logging_manager_optimized import LoggingManager
+    self.logger = LoggingManager().get_agent_logger(
+    agent_name="Agent14SpecialisteWorkspace",
+    role="ai_processor",
+    domain="general",
+    async_enabled=True
+    )
         
         # Mtriques
-        self.metrics = {
-            "directories_created": 0,
-            "files_created": 0,
-            "standards_established": 0,
-            "workflow_optimizations": 0
-        }
+    self.metrics = {
+    "directories_created": 0,
+    "files_created": 0,
+    "standards_established": 0,
+    "workflow_optimizations": 0
+    }
         
     def create_workspace_structure(self) -> Dict[str, Any]:
         """Cre la structure workspace complte selon contraintes strictes"""
         
-        self.logger.info(f"[ROCKET] {self.name} - Cration structure workspace Agent Factory")
+    self.logger.info(f"[ROCKET] {self.name} - Cration structure workspace Agent Factory")
         
         # Structure complte selon prompt parfait
-        workspace_structure = {
-            "agents": "quipe d'agents (17 agents spcialiss)",
-            "documentation": "Documentation complte",
-            "reports": "Rapports dtaills agents + coordinateur", 
-            "backups": "Sauvegardes avant modifications",
-            "tracking": "Suivi progression temps rel",
-            "tests": "Tests validation",
-            "logs": "Logs dtaills",
-            "workspace": "Organisation workspace",
-            "reviews": "Peer reviews",
-            "code_expert": "Scripts experts Claude/ChatGPT/Gemini",
-            "deliverables": "Livrables finaux"
-        }
+    workspace_structure = {
+    "agents": "quipe d'agents (17 agents spcialiss)",
+    "documentation": "Documentation complte",
+    "reports": "Rapports dtaills agents + coordinateur", 
+    "backups": "Sauvegardes avant modifications",
+    "tracking": "Suivi progression temps rel",
+    "tests": "Tests validation",
+    "logs": "Logs dtaills",
+    "workspace": "Organisation workspace",
+    "reviews": "Peer reviews",
+    "code_expert": "Scripts experts Claude/ChatGPT/Gemini",
+    "deliverables": "Livrables finaux"
+    }
         
-        created_dirs = []
+    created_dirs = []
         
-        try:
+    try:
             # Cration rpertoire base
-            self.base_path.mkdir(parents=True, exist_ok=True)
-            self.logger.info(f"[CHECK] Rpertoire base cr : {self.base_path}")
+    self.base_path.mkdir(parents=True, exist_ok=True)
+    self.logger.info(f"[CHECK] Rpertoire base cr : {self.base_path}")
             
             # Cration sous-rpertoires
-            for dir_name, description in workspace_structure.items():
-                dir_path = self.base_path / dir_name
-                dir_path.mkdir(exist_ok=True)
-                created_dirs.append(str(dir_path))
-                self.metrics["directories_created"] += 1
-                self.logger.info(f"[CHECK] Cr : {dir_path} - {description}")
+    for dir_name, description in workspace_structure.items():
+    dir_path = self.base_path / dir_name
+    dir_path.mkdir(exist_ok=True)
+    created_dirs.append(str(dir_path))
+    self.metrics["directories_created"] += 1
+    self.logger.info(f"[CHECK] Cr : {dir_path} - {description}")
                 
             # Cration sous-structure agents
-            agents_dir = self.base_path / "agents"
-            agent_files = [
-                "agent_01_coordinateur_principal.py",
-                "agent_02_architecte_code_expert.py", 
-                "agent_03_specialiste_configuration.py",
-                "agent_04_expert_securite_crypto.py",
-                "agent_05_maitre_tests_validation.py",
-                "agent_06_specialiste_monitoring.py",
-                "agent_07_expert_deploiement_k8s.py",
-                "agent_08_optimiseur_performance.py",
-                "agent_09_specialiste_planes.py",
-                "agent_10_documentaliste_expert.py",
-                "agent_11_auditeur_qualite.py",
-                "agent_12_gestionnaire_backups.py",
-                "agent_13_specialiste_documentation.py",
-                "agent_14_specialiste_workspace.py",
-                "agent_15_testeur_specialise.py",
-                "agent_16_peer_reviewer_senior.py",
-                "agent_17_peer_reviewer_technique.py"
-            ]
+    agents_dir = self.base_path / "agents"
+    agent_files = [
+    "agent_01_coordinateur_principal.py",
+    "agent_02_architecte_code_expert.py", 
+    "agent_03_specialiste_configuration.py",
+    "agent_04_expert_securite_crypto.py",
+    "agent_05_maitre_tests_validation.py",
+    "agent_06_specialiste_monitoring.py",
+    "agent_07_expert_deploiement_k8s.py",
+    "agent_08_optimiseur_performance.py",
+    "agent_09_specialiste_planes.py",
+    "agent_10_documentaliste_expert.py",
+    "agent_11_auditeur_qualite.py",
+    "agent_12_gestionnaire_backups.py",
+    "agent_13_specialiste_documentation.py",
+    "agent_14_specialiste_workspace.py",
+    "agent_15_testeur_specialise.py",
+    "agent_16_peer_reviewer_senior.py",
+    "agent_17_peer_reviewer_technique.py"
+    ]
             
             # Cration fichiers agents (templates)
-            for agent_file in agent_files:
-                (agents_dir / agent_file).touch()
-                self.metrics["files_created"] += 1
+    for agent_file in agent_files:
+    (agents_dir / agent_file).touch()
+    self.metrics["files_created"] += 1
                 
             # Cration structure code_expert
-            code_expert_dir = self.base_path / "code_expert"
-            expert_files = [
-                "enhanced-agent-templates.py",
-                "optimized-template-manager.py", 
-                "expert_integration_guide.md"
-            ]
+    code_expert_dir = self.base_path / "code_expert"
+    expert_files = [
+    "enhanced-agent-templates.py",
+    "optimized-template-manager.py", 
+    "expert_integration_guide.md"
+    ]
             
-            for expert_file in expert_files:
-                (code_expert_dir / expert_file).touch()
-                self.metrics["files_created"] += 1
+    for expert_file in expert_files:
+    (code_expert_dir / expert_file).touch()
+    self.metrics["files_created"] += 1
                 
-            self.logger.info(f"[CHECK] Structure workspace complte cre avec {len(created_dirs)} rpertoires")
+    self.logger.info(f"[CHECK] Structure workspace complte cre avec {len(created_dirs)} rpertoires")
             
-            return {
-                "status": "success",
-                "message": "Workspace structure cre avec succs",
-                "directories_created": created_dirs,
-                "metrics": self.metrics,
-                "timestamp": datetime.now().isoformat()
-            }
+    return {
+    "status": "success",
+    "message": "Workspace structure cre avec succs",
+    "directories_created": created_dirs,
+    "metrics": self.metrics,
+    "timestamp": datetime.now().isoformat()
+    }
             
-        except Exception as e:
-            self.logger.error(f"[CROSS] Erreur cration workspace : {str(e)}")
-            return {
-                "status": "error",
-                "message": f"Erreur cration workspace : {str(e)}",
-                "timestamp": datetime.now().isoformat()
-            }
+    except Exception as e:
+    self.logger.error(f"[CROSS] Erreur cration workspace : {str(e)}")
+    return {
+    "status": "error",
+    "message": f"Erreur cration workspace : {str(e)}",
+    "timestamp": datetime.now().isoformat()
+    }
     
     def establish_naming_standards(self) -> Dict[str, Any]:
         """tablit les standards de nommage selon prompt"""
         
-        standards = {
-            "agents": {
-                "pattern": "agent_XX_specialite.py",
-                "description": "Format agent avec numro et spcialit",
-                "examples": ["agent_01_coordinateur_principal.py", "agent_02_architecte_code_expert.py"]
-            },
-            "reports": {
-                "pattern": "agent_XX_rapport_sprint_N_YYYY-MM-DD.md",
-                "description": "Rapports agents avec sprint et date",
-                "examples": ["agent_01_rapport_sprint_0_2024-12-19.md"]
-            },
-            "reviews": {
-                "pattern": "peer_review_agent_XX_sprint_N_YYYY-MM-DD.md", 
-                "description": "Peer reviews avec agent, sprint et date",
-                "examples": ["peer_review_agent_02_sprint_0_2024-12-19.md"]
-            },
-            "documentation": {
-                "pattern": "README.md, GUIDE_*.md, RAPPORT_*.md",
-                "description": "Documentation en majuscules avec prfixes clairs"
-            }
-        }
+    standards = {
+    "agents": {
+    "pattern": "agent_XX_specialite.py",
+    "description": "Format agent avec numro et spcialit",
+    "examples": ["agent_01_coordinateur_principal.py", "agent_02_architecte_code_expert.py"]
+    },
+    "reports": {
+    "pattern": "agent_XX_rapport_sprint_N_YYYY-MM-DD.md",
+    "description": "Rapports agents avec sprint et date",
+    "examples": ["agent_01_rapport_sprint_0_2024-12-19.md"]
+    },
+    "reviews": {
+    "pattern": "peer_review_agent_XX_sprint_N_YYYY-MM-DD.md", 
+    "description": "Peer reviews avec agent, sprint et date",
+    "examples": ["peer_review_agent_02_sprint_0_2024-12-19.md"]
+    },
+    "documentation": {
+    "pattern": "README.md, GUIDE_*.md, RAPPORT_*.md",
+    "description": "Documentation en majuscules avec prfixes clairs"
+    }
+    }
         
         # Sauvegarde des standards
-        standards_file = self.base_path / "workspace" / "naming_standards.json"
-        with open(standards_file, 'w', encoding='utf-8') as f:
-            json.dump(standards, f, indent=2, ensure_ascii=False)
+    standards_file = self.base_path / "workspace" / "naming_standards.json"
+    with open(standards_file, 'w', encoding='utf-8') as f:
+    json.dump(standards, f, indent=2, ensure_ascii=False)
             
-        self.metrics["standards_established"] += 1
-        self.logger.info("[CHECK] Standards de nommage tablis et sauvegards")
+    self.metrics["standards_established"] += 1
+    self.logger.info("[CHECK] Standards de nommage tablis et sauvegards")
         
-        return {
-            "status": "success",
-            "standards": standards,
-            "file_location": str(standards_file)
-        }
+    return {
+    "status": "success",
+    "standards": standards,
+    "file_location": str(standards_file)
+    }
     
     def create_workflow_documentation(self) -> Dict[str, Any]:
         """Cre la documentation du workflow quipe"""
         
-        workflow_content = """# [CONSTRUCTION] WORKFLOW QUIPE AGENT FACTORY IMPLEMENTATION
+    workflow_content = """# [CONSTRUCTION] WORKFLOW QUIPE AGENT FACTORY IMPLEMENTATION
 
 ## Organisation des 17 Agents Spcialiss
 
@@ -241,22 +248,22 @@ class Agent14SpecialisteWorkspace:
 - **Agent 11** : Audit qualit et conformit
 """
         
-        workflow_file = self.base_path / "workspace" / "WORKFLOW_EQUIPE.md"
-        with open(workflow_file, 'w', encoding='utf-8') as f:
-            f.write(workflow_content)
+    workflow_file = self.base_path / "workspace" / "WORKFLOW_EQUIPE.md"
+    with open(workflow_file, 'w', encoding='utf-8') as f:
+    f.write(workflow_content)
             
-        self.metrics["workflow_optimizations"] += 1 
-        self.logger.info("[CHECK] Documentation workflow quipe cre")
+    self.metrics["workflow_optimizations"] += 1 
+    self.logger.info("[CHECK] Documentation workflow quipe cre")
         
-        return {
-            "status": "success", 
-            "file_location": str(workflow_file)
-        }
+    return {
+    "status": "success", 
+    "file_location": str(workflow_file)
+    }
     
     def generate_agent_14_report(self) -> Dict[str, Any]:
         """Gnre le rapport Agent 14 selon template prompt"""
         
-        report_content = f"""# reports/agent_14_rapport_sprint_0_{datetime.now().strftime('%Y-%m-%d')}.md
+    report_content = f"""# reports/agent_14_rapport_sprint_0_{datetime.now().strftime('%Y-%m-%d')}.md
 
 ## Agent 14 - Spcialiste Workspace - Sprint 0
 
@@ -324,17 +331,17 @@ class Agent14SpecialisteWorkspace:
 - **CONFORMIT** : 100% respect contraintes et spcifications
 """
         
-        report_file = self.base_path / "reports" / f"agent_14_rapport_sprint_0_{datetime.now().strftime('%Y-%m-%d')}.md"
-        with open(report_file, 'w', encoding='utf-8') as f:
-            f.write(report_content)
+    report_file = self.base_path / "reports" / f"agent_14_rapport_sprint_0_{datetime.now().strftime('%Y-%m-%d')}.md"
+    with open(report_file, 'w', encoding='utf-8') as f:
+    f.write(report_content)
             
-        self.logger.info("[CHECK] Rapport Agent 14 Sprint 0 gnr")
+    self.logger.info("[CHECK] Rapport Agent 14 Sprint 0 gnr")
         
-        return {
-            "status": "success",
-            "report_location": str(report_file),
-            "metrics": self.metrics
-        }
+    return {
+    "status": "success",
+    "report_location": str(report_file),
+    "metrics": self.metrics
+    }
 
 # Excution automatique Agent 14
 if __name__ == "__main__":
@@ -347,29 +354,29 @@ if __name__ == "__main__":
     print("\n[FOLDER] tape 1 : Cration structure workspace...")
     result_structure = agent_14.create_workspace_structure()
     if result_structure["status"] == "success":
-        print(f"[CHECK] Succs : {result_structure['message']}")
-        print(f"[CHART] Mtriques : {result_structure['metrics']}")
+    print(f"[CHECK] Succs : {result_structure['message']}")
+    print(f"[CHART] Mtriques : {result_structure['metrics']}")
     else:
-        print(f"[CROSS] Erreur : {result_structure['message']}")
-        exit(1)
+    print(f"[CROSS] Erreur : {result_structure['message']}")
+    exit(1)
     
     # tape 2 : Standards nommage
     print("\n[CLIPBOARD] tape 2 : tablissement standards...")
     result_standards = agent_14.establish_naming_standards()
     if result_standards["status"] == "success":
-        print("[CHECK] Standards de nommage tablis")
+    print("[CHECK] Standards de nommage tablis")
     
     # tape 3 : Workflow documentation
     print("\n tape 3 : Documentation workflow...")
     result_workflow = agent_14.create_workflow_documentation()
     if result_workflow["status"] == "success":
-        print("[CHECK] Workflow quipe document")
+    print("[CHECK] Workflow quipe document")
     
     # tape 4 : Rapport Agent 14
     print("\n[DOCUMENT] tape 4 : Gnration rapport Sprint 0...")
     result_report = agent_14.generate_agent_14_report()
     if result_report["status"] == "success":
-        print("[CHECK] Rapport Agent 14 gnr")
+    print("[CHECK] Rapport Agent 14 gnr")
     
     print("\n[TARGET] AGENT 14 - MISSION WORKSPACE ACCOMPLIE")
     print("[CHECK] Workspace Agent Factory Implementation oprationnel")

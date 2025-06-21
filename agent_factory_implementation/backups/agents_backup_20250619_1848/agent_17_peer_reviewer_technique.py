@@ -4,7 +4,7 @@ RÔLE : Review technique détaillée et validation code expert ligne par ligne
 
 import os
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any, Optional
@@ -13,7 +13,14 @@ import re
 
 # Configuration logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger("Agent17_PeerReviewerTechnique")
+# LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="Agent17PeerReviewerTechnique",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
 
 class Agent17PeerReviewerTechnique:
     """

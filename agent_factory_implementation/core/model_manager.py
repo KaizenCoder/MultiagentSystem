@@ -16,7 +16,7 @@ Fonctionnalités :
 
 import json
 import os
-import logging
+from logging_manager_optimized import LoggingManager
 import asyncio
 import httpx
 import psutil
@@ -26,7 +26,14 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
 
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="from",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
 
 class ModelProvider(Enum):
     """Providers de modèles IA supportés"""

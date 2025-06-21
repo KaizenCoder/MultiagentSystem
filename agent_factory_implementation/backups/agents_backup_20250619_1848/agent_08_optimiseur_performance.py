@@ -15,7 +15,7 @@ Version : 1.0.0
 
 import asyncio
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import time
 import zstandard as zstd
 import psutil
@@ -183,7 +183,14 @@ class Agent08PerformanceOptimizer:
             ]
         )
         
-        self.logger = logging.getLogger(f"{self.agent_id}_performance")
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="class",
+            role="ai_processor",
+            domain="performance",
+            async_enabled=True
+        )
         
     def _setup_compression(self):
         """Initialisation compression Zstandard"""

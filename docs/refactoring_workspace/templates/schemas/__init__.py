@@ -1,1 +1,0 @@
-"""Module schemas - Refactoring NextGeneration"""

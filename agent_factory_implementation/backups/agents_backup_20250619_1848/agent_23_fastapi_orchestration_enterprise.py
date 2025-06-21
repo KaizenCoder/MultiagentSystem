@@ -21,7 +21,7 @@ __compliance_score__ = "85%"
 __optimization_gain__ = "+8.8 points"
 __claude_recommendations__ = "100% implemented"
 
-import logging
+from logging_manager_optimized import LoggingManager
 import time
 from typing import Dict, List, Any
 from core.agent_factory_architecture import Agent, Task, Result, AgentType
@@ -34,7 +34,17 @@ from features.enterprise.fastapi_orchestration import (
 )
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Orchestrateur
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "Agent23FastAPIOrchestrationEnterprise",
+            "log_level": "INFO",
+            "elasticsearch_enabled": True,
+            "encryption_enabled": True,
+            "async_enabled": True,
+            "alerting_enabled": True,
+            "high_throughput": True
+        })
 
 
 class Agent23FastAPIOrchestrationEnterprise(Agent):

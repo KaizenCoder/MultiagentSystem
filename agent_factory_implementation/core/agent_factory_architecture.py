@@ -19,7 +19,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 from pathlib import Path
 import threading
 import uuid
@@ -28,6 +28,9 @@ import uuid
 import sys
 sys.path.append(str(Path(__file__).parent.parent))
 
+# LoggingManager NextGeneration - Configuration globale
+import logging
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # ==========================================

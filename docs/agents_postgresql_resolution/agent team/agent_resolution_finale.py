@@ -9,7 +9,7 @@ import json
 import os
 import sys
 import time
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime
 from pathlib import Path
 
@@ -26,7 +26,14 @@ class AgentResolutionFinale:
             level=logging.INFO,
             format='%(asctime)s - %(levelname)s - %(message)s'
         )
-        self.logger = logging.getLogger("resolution_finale")
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="AgentResolutionFinale",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
         
         self.solutions_testees = []
     

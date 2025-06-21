@@ -10,7 +10,7 @@ Pattern Factory : Utilisation complète architecture Sprint 6
 """
 
 import asyncio
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime
 from typing import Dict, List, Optional, Any
 from pathlib import Path
@@ -209,7 +209,14 @@ class Agent09PatternFactory:
         self.orchestrator = AgentOrchestrator(self.agent_factory)
         
         # Logs
-        self.logger = logging.getLogger(f"Agent{self.agent_id}PatternFactory")
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="from",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
         self.setup_logging()
         
         # Enregistrement des agents dans le registry (après logger)

@@ -19,7 +19,7 @@ Responsabilités:
 """
 
 import asyncio
-import logging
+from logging_manager_optimized import LoggingManager
 import json
 import re
 import shutil
@@ -45,7 +45,14 @@ except ImportError:
                 self.agent_id = f"docteur_reparation_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
                 self.agent_type = agent_type
                 self.config = config
-                self.logger = logging.getLogger("AgentDocteurReparation")
+                # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="Agent",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
                 
             async def startup(self): pass
             async def shutdown(self): pass

@@ -9,7 +9,7 @@ Ce fichier teste tous les composants du systme de logging scuris :
 """
 
 import pytest
-import logging
+from logging_manager_optimized import LoggingManager
 from unittest.mock import Mock, patch, MagicMock
 from datetime import datetime
 from typing import Dict, Any

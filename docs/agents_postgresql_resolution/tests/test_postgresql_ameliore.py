@@ -5,7 +5,7 @@ Agent Testing Specialist - Rsolution problmatiques
 """
 
 import asyncio
-import logging
+from logging_manager_optimized import LoggingManager
 import sys
 import time
 import json
@@ -18,7 +18,16 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 class PostgreSQLTestSuite:
     def __init__(self):
-        self.logger = logging.getLogger("postgresql_test_suite")
+        # LoggingManager NextGeneration - Tests
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "PostgreSQLTestSuite",
+            "log_level": "DEBUG",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": False,  # Tests synchrones
+            "console_output": True
+        })
         self.resultats = {
             "timestamp": datetime.now().isoformat(),
             "tests_executes": [],

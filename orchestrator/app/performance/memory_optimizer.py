@@ -5,7 +5,7 @@ Handles memory leak detection, garbage collection optimization, and intelligent 
 
 import asyncio
 import gc
-import logging
+from logging_manager_optimized import LoggingManager
 import psutil
 import sys
 import time
@@ -21,7 +21,15 @@ from ..observability.monitoring import get_monitoring
 from ..security.logging import security_logger
 
 
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Tool/Utility
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "class",
+            "log_level": "INFO",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": True
+        })
 
 
 @dataclass

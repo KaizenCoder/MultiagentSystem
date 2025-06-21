@@ -10,7 +10,7 @@ Coordination : Agent 04 (Sécurité) + Agent 02 (Architecte)
 """
 
 import asyncio
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime
 from typing import Dict, List, Optional, Any, Tuple
 from pathlib import Path
@@ -136,7 +136,14 @@ class Agent09SpecialistePlanes:
         self.performance_cache = {}
         
         # Logs
-        self.logger = logging.getLogger(f"Agent{self.agent_id}")
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="AgentTemplate",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
         self.setup_logging()
         
         # Rapport Sprint 3

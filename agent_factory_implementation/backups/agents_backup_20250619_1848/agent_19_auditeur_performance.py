@@ -11,7 +11,7 @@ Responsabilités :
 """
 
 import asyncio
-import logging
+from logging_manager_optimized import LoggingManager
 import time
 import psutil
 from datetime import datetime
@@ -65,7 +65,14 @@ class Agent19AuditeurPerformance:
         self.logger = self._setup_logging()
 
     def _setup_logging(self):
-        logger = logging.getLogger(f"Agent{self.agent_id}")
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="from",
+            role="ai_processor",
+            domain="performance",
+            async_enabled=True
+        )
         log_dir = Path("nextgeneration/agent_factory_implementation/logs")
         log_dir.mkdir(parents=True, exist_ok=True)
         

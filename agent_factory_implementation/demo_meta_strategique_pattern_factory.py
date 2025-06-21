@@ -15,7 +15,7 @@ Ce script montre :
 
 import asyncio
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime
 from pathlib import Path
 import sys
@@ -30,7 +30,14 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="AgentMetaStrategique",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
 
 async def demo_pattern_factory_meta_strategique():
     """

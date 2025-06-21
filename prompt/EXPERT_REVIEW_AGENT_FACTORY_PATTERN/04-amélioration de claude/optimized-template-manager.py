@@ -21,7 +21,7 @@ from __future__ import annotations
 
 import asyncio
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import time
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
@@ -41,7 +41,14 @@ from .agent_templates import AgentTemplate, TemplateValidationError
 from .base_agent import BaseAgent
 from ..config.agent_config import AgentFactoryConfig
 
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="class",
+            role="ai_processor",
+            domain="template_management",
+            async_enabled=True
+        )
 
 
 @dataclass

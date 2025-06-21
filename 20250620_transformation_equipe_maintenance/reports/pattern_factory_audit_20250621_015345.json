@@ -1,0 +1,596 @@
+{
+  "audit_date": "2025-06-21 01:53:44",
+  "directory_scanned": "..\\agent_factory_implementation\\agents",
+  "agents_found": 33,
+  "agents_analyzed": 33,
+  "conformity_summary": {
+    "compliant": 9,
+    "partially_compliant": 0,
+    "non_compliant": 24,
+    "critical_errors": 5
+  },
+  "detailed_results": [
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_01_coordinateur_principal.py",
+      "pattern_factory_available": true,
+      "inherits_from_agent": false,
+      "uses_fallback": true,
+      "syntax_errors": [
+        "CRITIQUE ligne 46: 'async async def' - Syntaxe Python invalide",
+        "CRITIQUE ligne 47: 'async async def' - Syntaxe Python invalide",
+        "CRITIQUE ligne 48: 'async async def' - Syntaxe Python invalide",
+        "CRITIQUE: Erreur syntaxe Python - invalid syntax (<unknown>, line 46)"
+      ],
+      "import_errors": [
+        "Pattern Factory non disponible - Fallback utilisé",
+        "Échec import Pattern Factory explicite"
+      ],
+      "architecture_issues": [
+        "MAJEUR: Classe Agent définie localement - Pas d'utilisation du Pattern Factory",
+        "MAJEUR: Import conditionnel sans héritage réel",
+        "CRITIQUE: Méthodes avec syntaxe invalide - Code non-fonctionnel"
+      ],
+      "compliance_score": 0.0,
+      "recommendation": "🚨 URGENT: Corriger erreurs syntaxe Python | 🔧 Migrer du fallback vers Pattern Factory réel | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": [],
+      "error": "Erreur analyse AST: invalid syntax (<unknown>, line 46)"
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_02_architecte_code_expert.py",
+      "pattern_factory_available": true,
+      "inherits_from_agent": false,
+      "uses_fallback": true,
+      "syntax_errors": [
+        "CRITIQUE ligne 68: 'async async def' - Syntaxe Python invalide",
+        "CRITIQUE ligne 69: 'async async def' - Syntaxe Python invalide",
+        "CRITIQUE ligne 70: 'async async def' - Syntaxe Python invalide",
+        "CRITIQUE: Erreur syntaxe Python - invalid syntax (<unknown>, line 68)"
+      ],
+      "import_errors": [
+        "Pattern Factory non disponible - Fallback utilisé",
+        "Échec import Pattern Factory explicite"
+      ],
+      "architecture_issues": [
+        "MAJEUR: Classe Agent définie localement - Pas d'utilisation du Pattern Factory",
+        "MAJEUR: Import conditionnel sans héritage réel",
+        "CRITIQUE: Méthodes avec syntaxe invalide - Code non-fonctionnel"
+      ],
+      "compliance_score": 0.0,
+      "recommendation": "🚨 URGENT: Corriger erreurs syntaxe Python | 🔧 Migrer du fallback vers Pattern Factory réel | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": [],
+      "error": "Erreur analyse AST: invalid syntax (<unknown>, line 68)"
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_03_specialiste_configuration.py",
+      "pattern_factory_available": true,
+      "inherits_from_agent": false,
+      "uses_fallback": true,
+      "syntax_errors": [],
+      "import_errors": [
+        "Pattern Factory non disponible - Fallback utilisé",
+        "Échec import Pattern Factory explicite"
+      ],
+      "architecture_issues": [
+        "MAJEUR: Classe Agent définie localement - Pas d'utilisation du Pattern Factory"
+      ],
+      "compliance_score": 30.0,
+      "recommendation": "🔧 Migrer du fallback vers Pattern Factory réel | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": []
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_04_expert_securite_crypto.py",
+      "pattern_factory_available": true,
+      "inherits_from_agent": false,
+      "uses_fallback": true,
+      "syntax_errors": [
+        "CRITIQUE ligne 69: 'async async def' - Syntaxe Python invalide",
+        "CRITIQUE ligne 70: 'async async def' - Syntaxe Python invalide",
+        "CRITIQUE ligne 71: 'async async def' - Syntaxe Python invalide",
+        "CRITIQUE: Erreur syntaxe Python - invalid syntax (<unknown>, line 69)"
+      ],
+      "import_errors": [
+        "Pattern Factory non disponible - Fallback utilisé",
+        "Échec import Pattern Factory explicite"
+      ],
+      "architecture_issues": [
+        "MAJEUR: Classe Agent définie localement - Pas d'utilisation du Pattern Factory",
+        "MAJEUR: Import conditionnel sans héritage réel",
+        "CRITIQUE: Méthodes avec syntaxe invalide - Code non-fonctionnel"
+      ],
+      "compliance_score": 0.0,
+      "recommendation": "🚨 URGENT: Corriger erreurs syntaxe Python | 🔧 Migrer du fallback vers Pattern Factory réel | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": [],
+      "error": "Erreur analyse AST: invalid syntax (<unknown>, line 69)"
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_05_maitre_tests_validation.py",
+      "pattern_factory_available": true,
+      "inherits_from_agent": false,
+      "uses_fallback": true,
+      "syntax_errors": [
+        "CRITIQUE ligne 64: 'async async def' - Syntaxe Python invalide",
+        "CRITIQUE ligne 65: 'async async def' - Syntaxe Python invalide",
+        "CRITIQUE ligne 66: 'async async def' - Syntaxe Python invalide",
+        "CRITIQUE: Erreur syntaxe Python - invalid syntax (<unknown>, line 64)"
+      ],
+      "import_errors": [
+        "Pattern Factory non disponible - Fallback utilisé",
+        "Échec import Pattern Factory explicite"
+      ],
+      "architecture_issues": [
+        "MAJEUR: Classe Agent définie localement - Pas d'utilisation du Pattern Factory",
+        "MAJEUR: Import conditionnel sans héritage réel",
+        "CRITIQUE: Méthodes avec syntaxe invalide - Code non-fonctionnel"
+      ],
+      "compliance_score": 0.0,
+      "recommendation": "🚨 URGENT: Corriger erreurs syntaxe Python | 🔧 Migrer du fallback vers Pattern Factory réel | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": [],
+      "error": "Erreur analyse AST: invalid syntax (<unknown>, line 64)"
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_06_specialiste_monitoring_sprint4.py",
+      "pattern_factory_available": false,
+      "inherits_from_agent": false,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [
+        "MAJEUR: Import conditionnel sans héritage réel"
+      ],
+      "compliance_score": 25.0,
+      "recommendation": "📦 Installer/Configurer Pattern Factory | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": []
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_07_expert_deploiement_k8s_fixed.py",
+      "pattern_factory_available": true,
+      "inherits_from_agent": true,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [],
+      "compliance_score": 100.0,
+      "recommendation": "✅ Agent conforme au Pattern Factory",
+      "critical_issues": [],
+      "uses_super_init": true,
+      "agent_classes": [
+        "KubernetesAgent"
+      ]
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_08_performance_optimizer.py",
+      "pattern_factory_available": false,
+      "inherits_from_agent": false,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [],
+      "compliance_score": 35.0,
+      "recommendation": "📦 Installer/Configurer Pattern Factory | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": []
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_09_pattern_factory_version.py",
+      "pattern_factory_available": true,
+      "inherits_from_agent": true,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [],
+      "compliance_score": 100.0,
+      "recommendation": "✅ Agent conforme au Pattern Factory",
+      "critical_issues": [],
+      "uses_super_init": true,
+      "agent_classes": [
+        "WASIAgent",
+        "SecurityAgent"
+      ]
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_09_specialiste_planes.py",
+      "pattern_factory_available": true,
+      "inherits_from_agent": true,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [],
+      "compliance_score": 100.0,
+      "recommendation": "✅ Agent conforme au Pattern Factory",
+      "critical_issues": [],
+      "uses_super_init": true,
+      "agent_classes": [
+        "SecurityAgent",
+        "WASIAgent"
+      ]
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_10_documentaliste_expert.py",
+      "pattern_factory_available": false,
+      "inherits_from_agent": false,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [
+        "MAJEUR: Import conditionnel sans héritage réel"
+      ],
+      "compliance_score": 25.0,
+      "recommendation": "📦 Installer/Configurer Pattern Factory | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": []
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_11_auditeur_qualite.py",
+      "pattern_factory_available": false,
+      "inherits_from_agent": false,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [],
+      "compliance_score": 35.0,
+      "recommendation": "📦 Installer/Configurer Pattern Factory | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": []
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_11_auditeur_qualite_sprint3.py",
+      "pattern_factory_available": true,
+      "inherits_from_agent": true,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [],
+      "compliance_score": 100.0,
+      "recommendation": "✅ Agent conforme au Pattern Factory",
+      "critical_issues": [],
+      "uses_super_init": true,
+      "agent_classes": [
+        "AuditAgent"
+      ]
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_12_backup_manager.py",
+      "pattern_factory_available": false,
+      "inherits_from_agent": false,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [],
+      "compliance_score": 35.0,
+      "recommendation": "📦 Installer/Configurer Pattern Factory | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": []
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_13_specialiste_documentation.py",
+      "pattern_factory_available": false,
+      "inherits_from_agent": false,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [],
+      "compliance_score": 35.0,
+      "recommendation": "📦 Installer/Configurer Pattern Factory | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": []
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_14_specialiste_workspace.py",
+      "pattern_factory_available": false,
+      "inherits_from_agent": false,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [],
+      "compliance_score": 35.0,
+      "recommendation": "📦 Installer/Configurer Pattern Factory | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": []
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_15_testeur_specialise.py",
+      "pattern_factory_available": false,
+      "inherits_from_agent": false,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [],
+      "compliance_score": 35.0,
+      "recommendation": "📦 Installer/Configurer Pattern Factory | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": []
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_16_peer_reviewer_senior.py",
+      "pattern_factory_available": false,
+      "inherits_from_agent": false,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [],
+      "compliance_score": 35.0,
+      "recommendation": "📦 Installer/Configurer Pattern Factory | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": []
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_17_peer_reviewer_technique.py",
+      "pattern_factory_available": false,
+      "inherits_from_agent": false,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [],
+      "compliance_score": 35.0,
+      "recommendation": "📦 Installer/Configurer Pattern Factory | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": []
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_18_auditeur_securite.py",
+      "pattern_factory_available": false,
+      "inherits_from_agent": false,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [],
+      "compliance_score": 35.0,
+      "recommendation": "📦 Installer/Configurer Pattern Factory | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": []
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_19_auditeur_performance.py",
+      "pattern_factory_available": false,
+      "inherits_from_agent": false,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [],
+      "compliance_score": 35.0,
+      "recommendation": "📦 Installer/Configurer Pattern Factory | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": []
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_20_auditeur_conformite.py",
+      "pattern_factory_available": false,
+      "inherits_from_agent": false,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [],
+      "compliance_score": 35.0,
+      "recommendation": "📦 Installer/Configurer Pattern Factory | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": []
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_analyse_solution_chatgpt.py",
+      "pattern_factory_available": false,
+      "inherits_from_agent": false,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [],
+      "compliance_score": 35.0,
+      "recommendation": "📦 Installer/Configurer Pattern Factory | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": []
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_ARCHITECTURE_22_enterprise_consultant.py",
+      "pattern_factory_available": true,
+      "inherits_from_agent": true,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [],
+      "compliance_score": 100.0,
+      "recommendation": "✅ Agent conforme au Pattern Factory",
+      "critical_issues": [],
+      "uses_super_init": true,
+      "agent_classes": [
+        "Agent22ArchitectureEnterprise"
+      ]
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_config.py",
+      "pattern_factory_available": false,
+      "inherits_from_agent": false,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [],
+      "compliance_score": 35.0,
+      "recommendation": "📦 Installer/Configurer Pattern Factory | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": []
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_FASTAPI_23_orchestration_enterprise.py",
+      "pattern_factory_available": true,
+      "inherits_from_agent": true,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [],
+      "compliance_score": 100.0,
+      "recommendation": "✅ Agent conforme au Pattern Factory",
+      "critical_issues": [],
+      "uses_super_init": true,
+      "agent_classes": [
+        "Agent23FastAPIOrchestrationEnterprise"
+      ]
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_meta_strategique_pattern_factory.py",
+      "pattern_factory_available": true,
+      "inherits_from_agent": false,
+      "uses_fallback": false,
+      "syntax_errors": [
+        "CRITIQUE ligne 179: 'async async def' - Syntaxe Python invalide",
+        "CRITIQUE ligne 193: 'async async def' - Syntaxe Python invalide",
+        "CRITIQUE ligne 202: 'async async def' - Syntaxe Python invalide",
+        "CRITIQUE: Erreur syntaxe Python - invalid syntax (<unknown>, line 179)"
+      ],
+      "import_errors": [],
+      "architecture_issues": [
+        "CRITIQUE: Méthodes avec syntaxe invalide - Code non-fonctionnel"
+      ],
+      "compliance_score": 5.0,
+      "recommendation": "🚨 URGENT: Corriger erreurs syntaxe Python | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": [],
+      "error": "Erreur analyse AST: invalid syntax (<unknown>, line 179)"
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_meta_strategique_scheduler.py",
+      "pattern_factory_available": false,
+      "inherits_from_agent": false,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [],
+      "compliance_score": 35.0,
+      "recommendation": "📦 Installer/Configurer Pattern Factory | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": []
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_MONITORING_25_production_enterprise.py",
+      "pattern_factory_available": true,
+      "inherits_from_agent": true,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [],
+      "compliance_score": 100.0,
+      "recommendation": "✅ Agent conforme au Pattern Factory",
+      "critical_issues": [],
+      "uses_super_init": true,
+      "agent_classes": [
+        "Agent25ProductionMonitoringEnterprise"
+      ]
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_orchestrateur_audit.py",
+      "pattern_factory_available": false,
+      "inherits_from_agent": false,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [
+        "MAJEUR: Import conditionnel sans héritage réel"
+      ],
+      "compliance_score": 25.0,
+      "recommendation": "📦 Installer/Configurer Pattern Factory | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": []
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_SECURITY_21_supply_chain_enterprise.py",
+      "pattern_factory_available": true,
+      "inherits_from_agent": true,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [],
+      "compliance_score": 100.0,
+      "recommendation": "✅ Agent conforme au Pattern Factory",
+      "critical_issues": [],
+      "uses_super_init": true,
+      "agent_classes": [
+        "Agent21SecurityEnterprise"
+      ]
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_STORAGE_24_enterprise_manager.py",
+      "pattern_factory_available": true,
+      "inherits_from_agent": true,
+      "uses_fallback": false,
+      "syntax_errors": [],
+      "import_errors": [],
+      "architecture_issues": [],
+      "compliance_score": 100.0,
+      "recommendation": "✅ Agent conforme au Pattern Factory",
+      "critical_issues": [],
+      "uses_super_init": true,
+      "agent_classes": [
+        "Agent24StorageEnterprise"
+      ]
+    },
+    {
+      "agent_file": "..\\agent_factory_implementation\\agents\\agent_test_models_integration.py",
+      "pattern_factory_available": false,
+      "inherits_from_agent": false,
+      "uses_fallback": true,
+      "syntax_errors": [],
+      "import_errors": [
+        "Pattern Factory non disponible - Fallback utilisé",
+        "Échec import Pattern Factory explicite"
+      ],
+      "architecture_issues": [],
+      "compliance_score": 10.0,
+      "recommendation": "📦 Installer/Configurer Pattern Factory | 🔧 Migrer du fallback vers Pattern Factory réel | 🏗️ Implémenter héritage classe Agent | ⚡ Ajouter super().__init__() dans constructeur",
+      "critical_issues": [],
+      "uses_super_init": false,
+      "agent_classes": []
+    }
+  ],
+  "critical_issues": [
+    "CRITIQUE ligne 46: 'async async def' - Syntaxe Python invalide",
+    "CRITIQUE ligne 47: 'async async def' - Syntaxe Python invalide",
+    "CRITIQUE ligne 48: 'async async def' - Syntaxe Python invalide",
+    "CRITIQUE: Erreur syntaxe Python - invalid syntax (<unknown>, line 46)",
+    "CRITIQUE ligne 68: 'async async def' - Syntaxe Python invalide",
+    "CRITIQUE ligne 69: 'async async def' - Syntaxe Python invalide",
+    "CRITIQUE ligne 70: 'async async def' - Syntaxe Python invalide",
+    "CRITIQUE: Erreur syntaxe Python - invalid syntax (<unknown>, line 68)",
+    "CRITIQUE ligne 69: 'async async def' - Syntaxe Python invalide",
+    "CRITIQUE ligne 70: 'async async def' - Syntaxe Python invalide",
+    "CRITIQUE ligne 71: 'async async def' - Syntaxe Python invalide",
+    "CRITIQUE: Erreur syntaxe Python - invalid syntax (<unknown>, line 69)",
+    "CRITIQUE ligne 64: 'async async def' - Syntaxe Python invalide",
+    "CRITIQUE ligne 65: 'async async def' - Syntaxe Python invalide",
+    "CRITIQUE ligne 66: 'async async def' - Syntaxe Python invalide",
+    "CRITIQUE: Erreur syntaxe Python - invalid syntax (<unknown>, line 64)",
+    "CRITIQUE ligne 179: 'async async def' - Syntaxe Python invalide",
+    "CRITIQUE ligne 193: 'async async def' - Syntaxe Python invalide",
+    "CRITIQUE ligne 202: 'async async def' - Syntaxe Python invalide",
+    "CRITIQUE: Erreur syntaxe Python - invalid syntax (<unknown>, line 179)"
+  ],
+  "recommendations": [
+    "🚨 URGENT: 5 agents avec erreurs critiques",
+    "🔧 24 agents non-conformes nécessitent migration"
+  ]
+}

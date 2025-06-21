@@ -15,9 +15,17 @@ from typing import Dict, List, Set, Optional, Tuple
 from contextlib import contextmanager
 import uuid
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Tool/Utility
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "SecurityError",
+            "log_level": "INFO",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": True
+        })
 
 
 class SecurityError(Exception):

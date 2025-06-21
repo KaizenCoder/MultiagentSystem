@@ -1,0 +1,223 @@
+Voici le deuxième livrable contenant les trois éléments demandés pour la supervision avancée de TaskMaster :
+
+📦 Fichier ZIP : 20250620_225606_002_docs_taskmaster_pool.zip
+
+Contenu du package :
+README_TaskMasterPool.md
+→ Documentation technique complète du système de supervision TaskMaster.
+
+spawn_worker.py
+→ Script de lancement parallèle d’agents TaskMaster via multiprocessing.
+
+PLAN_TEST_QUALITE_TaskMasterPool.md
+→ Plan de tests rigoureux (unitaires, fonctionnels, robustesse, audit).
+
+Souhaitez-vous que je vous livre maintenant :
+
+un script make start pour démarrage unifié ?
+
+une base SQLite intégrée pour rendre le pool persistant à chaud ?
+
+une version compatible Docker + docker-compose.yaml ? 
+
+
+
+
+
+
+Vous avez dit :
+oui
+
+
+ChatGPT a dit :
+
+Analysé
+python
+Toujours afficher les détails
+
+Copier
+# Création des nouveaux fichiers demandés dans le dossier existant
+makefile_path = "/mnt/data/taskmaster_pool_docs/Makefile"
+sqlite_file_path = "/mnt/data/taskmaster_pool_docs/taskmaster_registry.db"
+docker_compose_path = "/mnt/data/taskmaster_pool_docs/docker-compose.yaml"
+dockerfile_path = "/mnt/data/taskmaster_pool_docs/Dockerfile"
+
+# 1. Makefile
+makefile_content = """start:
+\tuvicorn taskmaster_pool_supervisor:app --host 0.0.0.0 --port 8001 --reload
+
+spawn:
+\tpython spawn_worker.py
+
+test:
+\tpython dashboard_console.py && python session_validator.py
+"""
+
+with open(makefile_path, "w") as f:
+    f.write(makefile_content)
+
+# 2. Dockerfile minimaliste
+dockerfile_content = """FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY . /app
+
+RUN pip install --no-cache-dir fastapi uvicorn pydantic
+
+CMD ["uvicorn", "taskmaster_pool_supervisor:app", "--host", "0.0.0.0", "--port", "8001"]
+"""
+
+with open(dockerfile_path, "w") as f:
+    f.write(dockerfile_content)
+
+# 3. docker-compose.yaml
+docker_compose_content = """version: "3.9"
+
+services:
+  taskmaster-supervisor:
+    build: .
+    ports:
+      - "8001:8001"
+    volumes:
+      - .:/app
+    restart: unless-stopped
+"""
+
+with open(docker_compose_path, "w") as f:
+    f.write(docker_compose_content)
+
+# 4. Base SQLite (vide pour le moment)
+with open(sqlite_file_path, "wb") as f:
+    pass  # fichier créé pour montrer l’intention de persistance locale
+
+# Zip tout
+final_zip_path = f"/mnt/data/{datetime.now().strftime('%Y%m%d_%H%M%S')}_003_docker_sqlite_make_taskmaster.zip"
+with zipfile.ZipFile(final_zip_path, "w") as zipf:
+    for fname in os.listdir("/mnt/data/taskmaster_pool_docs"):
+        full_path = os.path.join("/mnt/data/taskmaster_pool_docs", fname)
+        zipf.write(full_path, arcname=fname)
+
+final_zip_path
+Résultat
+'/mnt/data/20250620_225933_003_docker_sqlite_make_taskmaster.zip'
+✅ Voici le troisième livrable contenant tous les éléments d’exécution et de déploiement local du système TaskMaster supervisé :
+
+📦 Fichier ZIP : 20250620_225933_003_docker_sqlite_make_taskmaster.zip
+
+Contenu :
+Fichier	Rôle
+Makefile	Commandes : make start, make spawn, make test
+Dockerfile	Conteneur minimal FastAPI avec supervisor intégré
+docker-compose.yaml	Exposition REST locale sur localhost:8001
+taskmaster_registry.db	Base SQLite vide (future persistance de sessions)
+
+Souhaitez-vous que je :
+
+génère le code Python d’intégration avec SQLite pour rendre le registre TaskMasterRegistry persistant ?
+
+connecte taskmaster_pool_supervisor.py directement à cette base SQLite ?
+
+Cela permettrait de rebooter le système sans perte d’agents enregistrés. 
+
+
+
+
+
+
+Vous avez dit :
+oui pour les 2
+
+
+ChatGPT a dit :
+Taskmaster Pool Supervisor
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+# taskmaster_pool_supervisor.py
+"""
+TaskMasterSupervisor - Gestionnaire d'instances TaskMaster parallèles pour NextGeneration
+Version avec persistance SQLite intégrée
+"""
+
+import asyncio
+import logging
+import sqlite3
+from uuid import uuid4
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import Dict, Optional
+
+from template_manager_integrated import AgentTaskMasterNextGeneration
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("supervisor")
+
+DB_PATH = "taskmaster_registry.db"
+
+# --- Gestion SQLite ---
+def init_db():
+    with sqlite3.connect(DB_PATH) as conn:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS taskmasters (
+                agent_id TEXT PRIMARY KEY,
+                mission TEXT
+            )
+        """)
+
+init_db()
+
+# --- Registre persistant SQLite ---
+class TaskMasterRegistry:
+    instances: Dict[str, AgentTaskMasterNextGeneration] = {}
+Modification
+
+Répondre plutôt dans le chat
+✅ Le fichier taskmaster_pool_supervisor.py a été modifié pour intégrer une base SQLite persistante et restaurer automatiquement les agents TaskMaster au redémarrage.
+
+🔧 Modifications clés apportées :
+Connexion SQLite intégrée (taskmaster_registry.db)
+
+Table taskmasters(agent_id, mission) créée automatiquement
+
+Méthode register() → enregistre dans la base
+
+Méthode load_from_db() → restaure tous les agents avec leurs missions
+
+Startup FastAPI → relance les instances au reboot
+
+Suppression synchronisée entre RAM et SQLite

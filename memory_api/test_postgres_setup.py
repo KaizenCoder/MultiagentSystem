@@ -4,7 +4,7 @@ Script de test et validation de l'infrastructure PostgreSQL NextGeneration
 Valide la configuration, performance et fonctionnalits enterprise
 """
 import asyncio
-import logging
+from logging_manager_optimized import LoggingManager
 import sys
 import time
 import json
@@ -14,7 +14,16 @@ import uuid
 
 # Configuration logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Tests
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "in",
+            "log_level": "DEBUG",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": False,  # Tests synchrones
+            "console_output": True
+        })
 
 def test_imports():
     """Test des imports ncessaires"""
@@ -218,9 +227,10 @@ def test_enterprise_features():
         from app.db.session import SessionLocal, get_database_stats
         
         # Test 1: Extensions PostgreSQL
+        from sqlalchemy import text
         db = SessionLocal()
         extensions_query = "SELECT extname FROM pg_extension WHERE extname IN ('pg_trgm', 'btree_gin')"
-        result = db.execute(extensions_query)
+        result = db.execute(text(extensions_query))
         extensions = [row[0] for row in result]
         
         if 'pg_trgm' in extensions:
@@ -241,7 +251,7 @@ def test_enterprise_features():
         AND indexname LIKE 'idx_%'
         ORDER BY indexname
         """
-        result = db.execute(index_query)
+        result = db.execute(text(index_query))
         indexes = [row[0] for row in result]
         logger.info(f"[CHECK] Index customiss trouvs: {len(indexes)}")
         

@@ -14,7 +14,7 @@ Version : 1.0.0
 """
 
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import re
 from dataclasses import dataclass, asdict
 from datetime import datetime
@@ -115,7 +115,14 @@ class Agent13DocumentationSpecialist:
             ]
         )
         
-        self.logger = logging.getLogger(f"{self.agent_id}_docs")
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="class",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
         
     def create_production_guide(self) -> Dict[str, Any]:
         """Guide production opérateur complet"""

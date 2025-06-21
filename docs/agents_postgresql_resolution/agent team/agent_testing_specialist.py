@@ -8,7 +8,7 @@ import os
 import sys
 import subprocess
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import time
 import uuid
 from datetime import datetime
@@ -32,7 +32,14 @@ class TestingSpecialistAgent:
                 logging.StreamHandler()
             ]
         )
-        self.logger = logging.getLogger(self.agent_id)
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="TestingSpecialistAgent",
+            role="ai_processor",
+            domain="testing",
+            async_enabled=True
+        )
         
     def analyser_tests_existants(self):
         """Analyse les tests PostgreSQL existants dans le projet"""
@@ -142,7 +149,7 @@ Agent Testing Specialist - Rsolution problmatiques
 """
 
 import asyncio
-import logging
+from logging_manager_optimized import LoggingManager
 import sys
 import time
 import json

@@ -11,7 +11,7 @@ Usage: python start_meta_strategique.py [options]
 """
 
 import argparse
-import logging
+from logging_manager_optimized import LoggingManager
 import sys
 from pathlib import Path
 
@@ -26,9 +26,15 @@ def setup_logging(log_level: str = "INFO"):
     """Configuration du logging"""
     level = getattr(logging, log_level.upper(), logging.INFO)
     
-    logging.basicConfig(
-        level=level,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    # LoggingManager NextGeneration - Tool/Utility
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "start_meta_strategique",
+            "log_level": "INFO",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": True
+        })s - %(name)s - %(levelname)s - %(message)s',
         handlers=[
             logging.FileHandler('logs/agent_meta_strategique.log'),
             logging.StreamHandler()

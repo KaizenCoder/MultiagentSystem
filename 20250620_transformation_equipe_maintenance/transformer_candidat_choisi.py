@@ -1,0 +1,307 @@
+#!/usr/bin/env python3
+"""
+🎯 TRANSFORMATION CANDIDAT CHOISI - AGENT 11 AUDITEUR QUALITÉ
+Transformation complète avec toutes les sécurités automatiques
+"""
+import asyncio
+import sys
+from pathlib import Path
+from datetime import datetime
+from logging_manager_optimized import LoggingManager
+
+# Configuration
+CANDIDAT_CHOISI = "agent_11_auditeur_qualite.py"
+AGENTS_DIR = Path("C:/Dev/nextgeneration/agent_factory_implementation/agents")
+BACKUPS_DIR = Path("C:/Dev/nextgeneration/agent_factory_implementation/backups")
+REPORTS_DIR = Path("C:/Dev/nextgeneration/agent_factory_implementation/agents/reviews")
+
+class TransformationCandidatChoisi:
+    def __init__(self):
+        self.setup_logging()
+        
+    def setup_logging(self):
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(asctime)s - %(levelname)s - %(message)s',
+            handlers=[
+                logging.FileHandler(f'logs/transformation_candidat_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log'),
+                logging.StreamHandler(sys.stdout)
+            ]
+        )
+        # LoggingManager NextGeneration - Tool/Utility
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "TransformationCandidatChoisi",
+            "log_level": "INFO",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": True
+        })
+
+    async def lancer_transformation_complete(self):
+        """Lance la transformation complète du candidat choisi"""
+        print("🎯 TRANSFORMATION CANDIDAT CHOISI - AGENT 11 AUDITEUR QUALITÉ")
+        print("=" * 70)
+        print(f"📁 Candidat: {CANDIDAT_CHOISI}")
+        print(f"🎯 Répertoire: {AGENTS_DIR}")
+        print(f"💾 Backups: {BACKUPS_DIR}")
+        print("🛡️ TOUTES LES SÉCURITÉS ACTIVÉES")
+        print("=" * 70)
+        
+        try:
+            # 1. Vérifications préliminaires
+            print("\n🔍 PHASE 1: VÉRIFICATIONS PRÉLIMINAIRES")
+            agent_path = AGENTS_DIR / CANDIDAT_CHOISI
+            
+            if not agent_path.exists():
+                raise Exception(f"❌ Agent non trouvé: {agent_path}")
+            
+            print(f"✅ Agent trouvé: {agent_path}")
+            print(f"📏 Taille: {agent_path.stat().st_size:,} caractères")
+            
+            # Vérifier répertoires de sécurité
+            BACKUPS_DIR.mkdir(exist_ok=True)
+            REPORTS_DIR.mkdir(exist_ok=True)
+            print(f"✅ Répertoires de sécurité vérifiés")
+            
+            # 2. Initialiser Agent 03 Upgraded
+            print("\n🚀 PHASE 2: INITIALISATION AGENT 03 UPGRADED")
+            agent03 = await self.initialiser_agent03_upgraded()
+            
+            # 3. Analyse pré-transformation
+            print("\n🔍 PHASE 3: ANALYSE PRÉ-TRANSFORMATION")
+            analyse_pre = await self.analyser_pre_transformation(agent03, agent_path)
+            
+            # 4. Confirmation utilisateur
+            print("\n⚠️ PHASE 4: CONFIRMATION TRANSFORMATION")
+            self.afficher_resume_transformation(analyse_pre)
+            
+            confirmation = input("\n🎯 Confirmer la transformation ? (oui/non): ").lower().strip()
+            if confirmation not in ['oui', 'o', 'yes', 'y']:
+                print("❌ Transformation annulée par l'utilisateur")
+                return False
+            
+            # 5. Transformation avec sécurités maximales
+            print("\n🔧 PHASE 5: TRANSFORMATION AVEC SÉCURITÉS MAXIMALES")
+            resultat_transformation = await agent03.transform_single_agent(agent_path, force_backup=True)
+            
+            # 6. Validation post-transformation
+            print("\n✅ PHASE 6: VALIDATION POST-TRANSFORMATION")
+            validation = await self.valider_post_transformation(agent03, agent_path, resultat_transformation)
+            
+            # 7. Rapport final
+            print("\n📊 PHASE 7: GÉNÉRATION RAPPORT FINAL")
+            rapport_final = await self.generer_rapport_final(resultat_transformation, validation)
+            
+            # 8. Arrêt propre
+            await agent03.shutdown()
+            
+            return rapport_final
+            
+        except Exception as e:
+            self.logger.error(f"❌ Erreur transformation: {e}")
+            print(f"\n💥 ERREUR FATALE: {e}")
+            return False
+
+    async def initialiser_agent03_upgraded(self):
+        """Initialise l'Agent 03 Upgraded"""
+        try:
+            sys.path.append("agent_equipe_maintenance")
+            from agent_MAINTENANCE_03_adaptateur_code_UPGRADED import AdaptateurCodeUpgraded
+            
+            agent03 = AdaptateurCodeUpgraded()
+            await agent03.startup()
+            
+            print(f"✅ Agent 03 Upgraded initialisé: {agent03.agent_id}")
+            print(f"📋 Capacités: {len(agent03.get_capabilities())}")
+            
+            return agent03
+            
+        except Exception as e:
+            raise Exception(f"Erreur initialisation Agent 03: {e}")
+
+    async def analyser_pre_transformation(self, agent03, agent_path):
+        """Analyse pré-transformation détaillée"""
+        try:
+            # Lire le fichier
+            with open(agent_path, 'r', encoding='utf-8') as f:
+                contenu = f.read()
+            
+            # Analyser structure
+            structure = agent03._analyze_current_structure(contenu)
+            
+            # Détecter problèmes
+            problemes = []
+            if "async async def" in contenu:
+                problemes.append("Erreur syntaxe 'async async def'")
+            if not structure.get('import_pattern_factory', False):
+                problemes.append("Import Pattern Factory manquant")
+            if not structure.get('inherits_from_agent', False):
+                problemes.append("N'hérite pas de la classe Agent")
+            
+            analyse = {
+                "fichier": agent_path.name,
+                "taille": len(contenu),
+                "lignes": len(contenu.splitlines()),
+                "structure": structure,
+                "problemes_detectes": problemes,
+                "score_conformite": self.calculer_score_conformite(structure),
+                "timestamp": datetime.now().isoformat()
+            }
+            
+            print(f"📊 Problèmes détectés: {len(problemes)}")
+            for probleme in problemes:
+                print(f"   🚨 {probleme}")
+            
+            print(f"📈 Score conformité: {analyse['score_conformite']:.1f}%")
+            
+            return analyse
+            
+        except Exception as e:
+            raise Exception(f"Erreur analyse pré-transformation: {e}")
+
+    def calculer_score_conformite(self, structure):
+        """Calcule le score de conformité Pattern Factory"""
+        criteres = [
+            structure.get('has_main_class', False),
+            structure.get('inherits_from_agent', False),
+            structure.get('has_startup_method', False),
+            structure.get('has_shutdown_method', False),
+            structure.get('has_health_check_method', False),
+            structure.get('has_execute_task_method', False),
+            structure.get('import_pattern_factory', False)
+        ]
+        
+        return (sum(criteres) / len(criteres)) * 100
+
+    def afficher_resume_transformation(self, analyse):
+        """Affiche le résumé avant transformation"""
+        print("\n" + "="*50)
+        print("📋 RÉSUMÉ TRANSFORMATION")
+        print("="*50)
+        print(f"📁 Fichier: {analyse['fichier']}")
+        print(f"📏 Taille: {analyse['taille']:,} caractères")
+        print(f"📄 Lignes: {analyse['lignes']:,}")
+        print(f"📊 Score conformité actuel: {analyse['score_conformite']:.1f}%")
+        print(f"🚨 Problèmes à corriger: {len(analyse['problemes_detectes'])}")
+        
+        for i, probleme in enumerate(analyse['problemes_detectes'], 1):
+            print(f"   {i}. {probleme}")
+        
+        print("\n🛡️ SÉCURITÉS ACTIVÉES:")
+        print("   ✅ Backup automatique obligatoire")
+        print("   ✅ Validation AST Python")
+        print("   ✅ Rollback automatique en cas d'erreur")
+        print("   ✅ Logging complet des opérations")
+        print("   ✅ Rapport de transformation détaillé")
+
+    async def valider_post_transformation(self, agent03, agent_path, resultat_transformation):
+        """Validation post-transformation"""
+        try:
+            print("🔍 Validation du résultat de transformation...")
+            
+            # Lire le fichier transformé
+            with open(agent_path, 'r', encoding='utf-8') as f:
+                contenu_transforme = f.read()
+            
+            # Analyser nouvelle structure
+            nouvelle_structure = agent03._analyze_current_structure(contenu_transforme)
+            nouveau_score = self.calculer_score_conformite(nouvelle_structure)
+            
+            # Vérifier syntaxe Python
+            try:
+                compile(contenu_transforme, str(agent_path), 'exec')
+                syntaxe_valide = True
+            except SyntaxError as e:
+                syntaxe_valide = False
+                print(f"⚠️ Erreur syntaxe détectée: {e}")
+            
+            validation = {
+                "transformation_reussie": resultat_transformation.get("success", False),
+                "nouveau_score_conformite": nouveau_score,
+                "syntaxe_python_valide": syntaxe_valide,
+                "backups_crees": resultat_transformation.get("backup_path") is not None,
+                "corrections_appliquees": resultat_transformation.get("corrections_applied", 0),
+                "timestamp": datetime.now().isoformat()
+            }
+            
+            print(f"✅ Transformation réussie: {validation['transformation_reussie']}")
+            print(f"📈 Nouveau score: {validation['nouveau_score_conformite']:.1f}%")
+            print(f"🐍 Syntaxe Python: {'✅ Valide' if validation['syntaxe_python_valide'] else '❌ Erreur'}")
+            print(f"💾 Backups créés: {'✅ Oui' if validation['backups_crees'] else '❌ Non'}")
+            print(f"🔧 Corrections: {validation['corrections_appliquees']}")
+            
+            return validation
+            
+        except Exception as e:
+            print(f"❌ Erreur validation: {e}")
+            return {"erreur": str(e)}
+
+    async def generer_rapport_final(self, resultat_transformation, validation):
+        """Génère le rapport final de transformation"""
+        rapport = {
+            "mission_id": f"transformation_candidat_1_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+            "candidat_choisi": CANDIDAT_CHOISI,
+            "timestamp_debut": datetime.now().isoformat(),
+            "resultat_transformation": resultat_transformation,
+            "validation_post_transformation": validation,
+            "statut_final": "SUCCÈS" if validation.get("transformation_reussie", False) else "ÉCHEC",
+            "recommandations": []
+        }
+        
+        # Générer recommandations
+        if validation.get("transformation_reussie", False):
+            rapport["recommandations"].append("✅ Transformation réussie - Agent conforme Pattern Factory")
+            if validation.get("nouveau_score_conformite", 0) >= 90:
+                rapport["recommandations"].append("🎯 Score excellent - Prêt pour production")
+            else:
+                rapport["recommandations"].append("⚠️ Score moyen - Vérifications supplémentaires recommandées")
+        else:
+            rapport["recommandations"].append("❌ Transformation échouée - Vérifier les logs")
+            rapport["recommandations"].append("🔄 Rollback automatique effectué si nécessaire")
+        
+        # Sauvegarder rapport
+        rapport_file = REPORTS_DIR / f"transformation_candidat_1_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        import json
+        with open(rapport_file, 'w', encoding='utf-8') as f:
+            json.dump(rapport, f, indent=2, ensure_ascii=False)
+        
+        print(f"📊 Rapport final sauvé: {rapport_file.name}")
+        
+        # Afficher résumé final
+        self.afficher_resume_final(rapport)
+        
+        return rapport
+
+    def afficher_resume_final(self, rapport):
+        """Affiche le résumé final"""
+        print("\n" + "="*70)
+        print("🎉 RÉSUMÉ FINAL TRANSFORMATION")
+        print("="*70)
+        print(f"📁 Agent transformé: {rapport['candidat_choisi']}")
+        print(f"📊 Statut final: {rapport['statut_final']}")
+        
+        validation = rapport.get('validation_post_transformation', {})
+        if validation:
+            print(f"📈 Score final: {validation.get('nouveau_score_conformite', 0):.1f}%")
+            print(f"🔧 Corrections appliquées: {validation.get('corrections_appliquees', 0)}")
+            print(f"💾 Sécurité backup: {'✅' if validation.get('backups_crees') else '❌'}")
+        
+        print("\n📋 Recommandations:")
+        for rec in rapport.get('recommandations', []):
+            print(f"   {rec}")
+
+async def main():
+    """Point d'entrée principal"""
+    try:
+        transformation = TransformationCandidatChoisi()
+        resultat = await transformation.lancer_transformation_complete()
+        
+        return 0 if resultat else 1
+        
+    except Exception as e:
+        print(f"💥 Erreur fatale: {e}")
+        return 1
+
+if __name__ == "__main__":
+    sys.exit(asyncio.run(main())) 

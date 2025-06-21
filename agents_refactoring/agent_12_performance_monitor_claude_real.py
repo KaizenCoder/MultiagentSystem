@@ -9,7 +9,7 @@ import os
 import sys
 import json
 import yaml
-import logging
+from logging_manager_optimized import LoggingManager
 import time
 from datetime import datetime
 from pathlib import Path
@@ -50,7 +50,14 @@ class RealPerformanceMonitorAgent:
                 logging.StreamHandler()
             ]
         )
-        self.logger = logging.getLogger(self.agent_id)
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="RealPerformanceMonitorAgent",
+            role="ai_processor",
+            domain="performance",
+            async_enabled=True
+        )
         
     def analyze_architecture_performance(self) -> Dict[str, Any]:
         """[TARGET] Analyse performance architecture relle"""

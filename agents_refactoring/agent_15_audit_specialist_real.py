@@ -8,7 +8,7 @@ Travaille sur: refactoring_workspace/new_architecture/
 import os
 import sys
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import time
 import ast
 import re
@@ -59,7 +59,14 @@ class RealAuditSpecialistAgent:
                 logging.StreamHandler()
             ]
         )
-        self.logger = logging.getLogger(self.agent_id)
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="RealAuditSpecialistAgent",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
         
     def audit_architecture_patterns(self) -> Dict[str, Any]:
         """[TARGET] Audit patterns architecturaux rels"""

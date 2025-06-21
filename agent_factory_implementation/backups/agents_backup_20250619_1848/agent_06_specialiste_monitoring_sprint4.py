@@ -15,7 +15,7 @@ Version : 2.0.0 (Sprint 4 Evolution)
 
 import asyncio
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
@@ -197,7 +197,14 @@ class Agent06AdvancedMonitoring:
             ]
         )
         
-        self.logger = logging.getLogger(f"{self.agent_id}_advanced")
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="class",
+            role="ai_processor",
+            domain="monitoring",
+            async_enabled=True
+        )
         
     def _setup_opentelemetry(self):
         """Initialisation OpenTelemetry distribué"""

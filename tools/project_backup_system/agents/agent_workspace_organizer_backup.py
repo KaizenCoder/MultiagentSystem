@@ -8,7 +8,7 @@ Inspir de: agent_workspace_organizer.py
 import os
 import sys
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import shutil
 from datetime import datetime
 from pathlib import Path
@@ -55,7 +55,14 @@ class BackupWorkspaceOrganizerAgent:
                 logging.StreamHandler()
             ]
         )
-        self.logger = logging.getLogger(self.agent_id)
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="BackupWorkspaceOrganizerAgent",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
         
     def enforcer_workspace_constraint(self) -> Dict[str, Any]:
         """Force travail uniquement dans rpertoire autoris"""

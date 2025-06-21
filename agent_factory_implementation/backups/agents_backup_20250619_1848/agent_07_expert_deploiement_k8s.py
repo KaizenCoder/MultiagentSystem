@@ -9,7 +9,7 @@ Objectif: Production-ready avec SLA < 100ms p95
 """
 
 import asyncio
-import logging
+from logging_manager_optimized import LoggingManager
 import signal
 import sys
 import yaml
@@ -105,7 +105,14 @@ class Agent07ExpertDeploiementK8s:
 
     def _setup_logging(self) -> logging.Logger:
         """Configuration du logging"""
-        logger = logging.getLogger(f"Agent{self.agent_id}")
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="class",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
         logger.setLevel(logging.INFO)
         
         if not logger.handlers:

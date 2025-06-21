@@ -13,7 +13,7 @@ Fonctionnalités :
 """
 
 import asyncio
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any
 from pathlib import Path
@@ -338,7 +338,14 @@ class Agent07ExpertDeploiementK8s:
         self.mission = "Déploiement production avec fallbacks intelligents"
         
         # Setup logging
-        self.logger = logging.getLogger("Agent07DeploiementK8s")
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="AgentFactoryConfig",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
         self.setup_logging()
         
         # Pattern Factory

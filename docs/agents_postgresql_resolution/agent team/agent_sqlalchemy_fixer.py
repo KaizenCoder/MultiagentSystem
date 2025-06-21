@@ -7,7 +7,7 @@ Mission: Correction spcialise des erreurs SQLAlchemy et modles ORM
 import os
 import sys
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import ast
 import re
 from datetime import datetime
@@ -32,7 +32,14 @@ class SQLAlchemyFixerAgent:
                 logging.StreamHandler()
             ]
         )
-        self.logger = logging.getLogger(self.agent_id)
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="SQLAlchemyFixerAgent",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
         
         # Patterns de problmes SQLAlchemy
         self.patterns_problemes = {

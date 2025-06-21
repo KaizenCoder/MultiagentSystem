@@ -8,7 +8,7 @@ Modle: Claude Sonnet 4.0 (implmentation code)
 import os
 import sys
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import hashlib
 import hmac
 import secrets
@@ -78,7 +78,14 @@ class SecuritySpecialistAgent:
                 logging.StreamHandler()
             ]
         )
-        self.logger = logging.getLogger(self.agent_id)
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="import",
+            role="ai_processor",
+            domain="security",
+            async_enabled=True
+        )
     
     def ensure_security_structure(self):
         """Assure structure scurit"""

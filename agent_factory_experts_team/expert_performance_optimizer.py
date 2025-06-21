@@ -6,7 +6,7 @@ Modle: Claude-3.5-Sonnet (performance, scalabilit, optimisation)
 """
 
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, List, Optional
@@ -70,7 +70,14 @@ class ExpertPerformanceOptimizer:
                 logging.StreamHandler()
             ]
         )
-        self.logger = logging.getLogger("expert_performance_optimizer")
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="from",
+            role="ai_processor",
+            domain="performance",
+            async_enabled=True
+        )
     
     def analyser_metriques_performance_cles(self) -> List[PerformanceMetric]:
         """[LIGHTNING] Analyse mtriques performance cls"""

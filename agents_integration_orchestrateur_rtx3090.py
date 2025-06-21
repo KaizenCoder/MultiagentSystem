@@ -14,7 +14,7 @@ Responsabilités:
 """
 
 import asyncio
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 from pathlib import Path
@@ -38,7 +38,17 @@ except ImportError:
                 self.agent_id = f"agents_integration_orchestrateur_rtx3090_20250619_151323"
                 self.agent_type = agent_type
                 self.config = config
-                self.logger = logging.getLogger(f"BaseIntegrationAgent")
+                # LoggingManager NextGeneration - Orchestrateur
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "Agent",
+            "log_level": "INFO",
+            "elasticsearch_enabled": True,
+            "encryption_enabled": True,
+            "async_enabled": True,
+            "alerting_enabled": True,
+            "high_throughput": True
+        })
                 
             async def startup(self): pass
             async def shutdown(self): pass

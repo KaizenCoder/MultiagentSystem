@@ -13,7 +13,7 @@ Responsabilités :
 """
 
 import asyncio
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime
 from typing import Dict, List, Optional, Any
 from pathlib import Path
@@ -119,7 +119,17 @@ class AgentOrchestrateur:
 
     def _setup_logging(self):
         """Configuration logging orchestrateur"""
-        logger = logging.getLogger("Orchestrateur")
+        # LoggingManager NextGeneration - Orchestrateur
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "from",
+            "log_level": "INFO",
+            "elasticsearch_enabled": True,
+            "encryption_enabled": True,
+            "async_enabled": True,
+            "alerting_enabled": True,
+            "high_throughput": True
+        })
         log_dir = Path("nextgeneration/agent_factory_implementation/logs")
         log_dir.mkdir(parents=True, exist_ok=True)
         

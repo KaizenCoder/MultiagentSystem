@@ -15,7 +15,7 @@ from typing import Dict, Optional, Any, List
 from enum import Enum
 from dataclasses import dataclass
 from contextlib import contextmanager
-import logging
+from logging_manager_optimized import LoggingManager
 from abc import ABC, abstractmethod
 
 # Azure KeyVault support
@@ -33,7 +33,15 @@ try:
 except ImportError:
     VAULT_AVAILABLE = False
 
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Tool/Utility
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "from",
+            "log_level": "INFO",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": True
+        })
 
 
 class SecretType(Enum):

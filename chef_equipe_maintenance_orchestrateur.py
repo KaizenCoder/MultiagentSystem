@@ -20,7 +20,7 @@ Mission: Simplifier la maintenance d'équipes d'agents via interface unique
 
 import asyncio
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Any, Optional
@@ -50,7 +50,17 @@ except ImportError:
             self.agent_id = f"chef_maintenance_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
             self.agent_type = agent_type
             self.config = config
-            self.logger = logging.getLogger("ChefEquipeMaintenance")
+            # LoggingManager NextGeneration - Orchestrateur
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "LogsMaintenanceConfig",
+            "log_level": "INFO",
+            "elasticsearch_enabled": True,
+            "encryption_enabled": True,
+            "async_enabled": True,
+            "alerting_enabled": True,
+            "high_throughput": True
+        })
     
     class Task:
         def __init__(self, task_id: str, description: str, **kwargs):

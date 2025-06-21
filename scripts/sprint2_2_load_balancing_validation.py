@@ -13,7 +13,7 @@ Valide l'infrastructure sous charge relle :
 import asyncio
 import time
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime, timedelta
 from typing import Dict, List, Any, Optional
 import sys
@@ -33,7 +33,15 @@ except ImportError:
     print(" Kubernetes API non disponible - mode simulation")
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Tool/Utility
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "Sprint22LoadBalancingValidator",
+            "log_level": "INFO",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": True
+        })
 
 class Sprint22LoadBalancingValidator:
     """Validateur Sprint 2.2 - Load Balancing & Auto-Scaling"""

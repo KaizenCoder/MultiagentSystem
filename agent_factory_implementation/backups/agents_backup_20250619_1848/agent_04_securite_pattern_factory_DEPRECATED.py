@@ -41,7 +41,7 @@ Spécialités :
 """
 
 import asyncio
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 import hashlib
@@ -65,7 +65,14 @@ except ImportError:
                 self.agent_id = f"agent_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
                 self.agent_type = agent_type
                 self.config = config
-                self.logger = logging.getLogger(f"Agent_{agent_type}")
+                # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="Agent",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
                 
             async def startup(self): pass
             async def shutdown(self): pass

@@ -14,13 +14,21 @@ from dataclasses import dataclass, field
 from enum import Enum
 from datetime import datetime, timedelta
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 from collections import defaultdict, deque
 
 # Monitoring integration
 from ..observability.monitoring import get_monitoring
 
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Tool/Utility
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "BackendHealth",
+            "log_level": "INFO",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": True
+        })
 
 class BackendHealth(Enum):
     """Backend health status enumeration"""

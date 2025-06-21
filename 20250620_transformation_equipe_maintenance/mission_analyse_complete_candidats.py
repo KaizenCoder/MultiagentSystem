@@ -1,0 +1,398 @@
+#!/usr/bin/env python3
+"""
+🎯 MISSION ANALYSE COMPLÈTE - SÉLECTION 3 CANDIDATS
+Lancement de l'équipe maintenance complète pour analyser tous les agents
+et proposer 3 candidats optimaux pour transformation
+"""
+import asyncio
+import json
+import sys
+from pathlib import Path
+from datetime import datetime
+from logging_manager_optimized import LoggingManager
+
+# Configuration des chemins
+AGENTS_DIR = Path("C:/Dev/nextgeneration/agent_factory_implementation/agents")
+REPORTS_DIR = Path("C:/Dev/nextgeneration/agent_factory_implementation/agents/reviews")
+CONFIG_FILE = Path("config_mission_transformation.json")
+
+# Équipe complète
+EQUIPE_AGENTS = [
+    "agent_MAINTENANCE_00_chef_equipe_coordinateur.py",
+    "agent_MAINTENANCE_01_analyseur_structure.py", 
+    "agent_MAINTENANCE_02_evaluateur_utilite_UPGRADED.py",
+    "agent_MAINTENANCE_03_adaptateur_code_UPGRADED.py",
+    "agent_MAINTENANCE_04_testeur_anti_faux_agents_UPGRADED.py",
+    "agent_MAINTENANCE_05_documenteur.py",
+    "agent_MAINTENANCE_06_validateur_final.py"
+]
+
+class MissionAnalyseComplete:
+    def __init__(self):
+        self.setup_logging()
+        self.candidats_proposes = []
+        
+    def setup_logging(self):
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(asctime)s - %(levelname)s - %(message)s',
+            handlers=[
+                logging.FileHandler(f'logs/mission_analyse_candidats_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log'),
+                logging.StreamHandler(sys.stdout)
+            ]
+        )
+        # LoggingManager NextGeneration - Tool/Utility
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "MissionAnalyseComplete",
+            "log_level": "INFO",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": True
+        })
+
+    async def lancer_mission_complete(self):
+        """Lance l'équipe complète pour analyser et sélectionner candidats"""
+        print("🚀 LANCEMENT MISSION ANALYSE COMPLÈTE - SÉLECTION CANDIDATS")
+        print("=" * 70)
+        
+        try:
+            # 1. Vérification répertoires
+            print(f"📁 Vérification répertoire agents: {AGENTS_DIR}")
+            if not AGENTS_DIR.exists():
+                raise Exception(f"Répertoire agents non trouvé: {AGENTS_DIR}")
+            
+            print(f"📁 Vérification répertoire rapports: {REPORTS_DIR}")
+            REPORTS_DIR.mkdir(exist_ok=True)
+            
+            # 2. Charger configuration
+            config = self.charger_configuration()
+            
+            # 3. Lancer le chef d'équipe coordinateur
+            print("\n🎯 PHASE 1: LANCEMENT CHEF D'ÉQUIPE")
+            chef_result = await self.lancer_chef_equipe(config)
+            
+            # 4. Analyser tous les agents
+            print("\n🔍 PHASE 2: ANALYSE COMPLÈTE AGENTS")
+            analyse_result = await self.analyser_tous_agents()
+            
+            # 5. Sélectionner 3 candidats optimaux
+            print("\n🎯 PHASE 3: SÉLECTION 3 CANDIDATS OPTIMAUX")
+            candidats = await self.selectionner_candidats_optimaux(analyse_result)
+            
+            # 6. Générer rapport final
+            print("\n📊 PHASE 4: GÉNÉRATION RAPPORT CANDIDATS")
+            rapport = await self.generer_rapport_candidats(candidats)
+            
+            return candidats, rapport
+            
+        except Exception as e:
+            self.logger.error(f"❌ Erreur mission: {e}")
+            raise
+
+    def charger_configuration(self):
+        """Charge la configuration de mission"""
+        if CONFIG_FILE.exists():
+            with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
+                config = json.load(f)
+        else:
+            # Configuration par défaut
+            config = {
+                "mission_type": "analyse_candidats_transformation",
+                "target_directory": str(AGENTS_DIR),
+                "reports_directory": str(REPORTS_DIR),
+                "analyse_mode": "diagnostic_only",
+                "candidats_requis": 3,
+                "criteres_selection": [
+                    "facilite_transformation",
+                    "impact_minimal",
+                    "representativite_problemes",
+                    "taille_raisonnable"
+                ]
+            }
+            
+        return config
+
+    async def lancer_chef_equipe(self, config):
+        """Lance le chef d'équipe coordinateur"""
+        try:
+            # Import du chef d'équipe
+            sys.path.append("agent_equipe_maintenance")
+            from agent_MAINTENANCE_00_chef_equipe_coordinateur import ChefEquipeCoordinateur
+            
+            chef = ChefEquipeCoordinateur()
+            await chef.startup()
+            
+            # Configuration mission
+            mission_config = {
+                "mission_id": f"analyse_candidats_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+                "target_directory": config["target_directory"],
+                "reports_directory": config["reports_directory"],
+                "mode": "diagnostic_only",
+                "equipe_agents": EQUIPE_AGENTS,
+                "objectif": "Identifier 3 candidats optimaux pour transformation"
+            }
+            
+            self.logger.info(f"🎯 Configuration mission chef: {mission_config['mission_id']}")
+            
+            # Démarrer mission
+            result = await chef.coordonner_equipe_complete(mission_config)
+            
+            await chef.shutdown()
+            return result
+            
+        except Exception as e:
+            self.logger.error(f"❌ Erreur chef équipe: {e}")
+            return {"success": False, "error": str(e)}
+
+    async def analyser_tous_agents(self):
+        """Analyse tous les agents avec l'équipe complète"""
+        try:
+            # Lister tous les agents Python
+            agents_files = list(AGENTS_DIR.glob("*.py"))
+            self.logger.info(f"📊 {len(agents_files)} agents trouvés pour analyse")
+            
+            # Lancer Agent 04 (audit Pattern Factory)
+            audit_results = await self.lancer_audit_pattern_factory(agents_files)
+            
+            # Lancer Agent 01 (analyse structure)
+            structure_results = await self.lancer_analyse_structure(agents_files)
+            
+            # Lancer Agent 02 (évaluation utilité)
+            utilite_results = await self.lancer_evaluation_utilite(agents_files)
+            
+            return {
+                "total_agents": len(agents_files),
+                "audit_pattern_factory": audit_results,
+                "analyse_structure": structure_results,
+                "evaluation_utilite": utilite_results,
+                "timestamp": datetime.now().isoformat()
+            }
+            
+        except Exception as e:
+            self.logger.error(f"❌ Erreur analyse complète: {e}")
+            return {"success": False, "error": str(e)}
+
+    async def lancer_audit_pattern_factory(self, agents_files):
+        """Lance l'Agent 04 pour audit Pattern Factory"""
+        try:
+            sys.path.append("agent_equipe_maintenance")
+            from agent_MAINTENANCE_04_testeur_anti_faux_agents_UPGRADED import TesteurAntiFauxAgentsUpgraded
+            
+            agent04 = TesteurAntiFauxAgentsUpgraded()
+            await agent04.startup()
+            
+            # Audit complet
+            audit_result = await agent04.run_pattern_factory_audit(str(AGENTS_DIR))
+            
+            await agent04.shutdown()
+            return audit_result
+            
+        except Exception as e:
+            self.logger.error(f"❌ Erreur Agent 04: {e}")
+            return {"success": False, "error": str(e)}
+
+    async def lancer_analyse_structure(self, agents_files):
+        """Lance l'Agent 01 pour analyse structure"""
+        try:
+            sys.path.append("agent_equipe_maintenance")
+            from agent_MAINTENANCE_01_analyseur_structure import AnalyseurStructure
+            
+            agent01 = AnalyseurStructure()
+            await agent01.startup()
+            
+            # Analyser chaque agent
+            analyses = {}
+            for agent_file in agents_files[:10]:  # Limiter pour test
+                try:
+                    result = await agent01.analyser_structure_agent(str(agent_file))
+                    analyses[agent_file.name] = result
+                except Exception as e:
+                    analyses[agent_file.name] = {"error": str(e)}
+            
+            await agent01.shutdown()
+            return analyses
+            
+        except Exception as e:
+            self.logger.error(f"❌ Erreur Agent 01: {e}")
+            return {"success": False, "error": str(e)}
+
+    async def lancer_evaluation_utilite(self, agents_files):
+        """Lance l'Agent 02 pour évaluation utilité"""
+        try:
+            sys.path.append("agent_equipe_maintenance")
+            from agent_MAINTENANCE_02_evaluateur_utilite_UPGRADED import EvaluateurUtiliteUpgraded
+            
+            agent02 = EvaluateurUtiliteUpgraded()
+            await agent02.startup()
+            
+            # Évaluer utilité globale
+            result = await agent02.evaluer_utilite_globale(str(AGENTS_DIR))
+            
+            await agent02.shutdown()
+            return result
+            
+        except Exception as e:
+            self.logger.error(f"❌ Erreur Agent 02: {e}")
+            return {"success": False, "error": str(e)}
+
+    async def selectionner_candidats_optimaux(self, analyse_result):
+        """Sélectionne 3 candidats optimaux pour transformation"""
+        try:
+            # Récupérer les résultats d'audit
+            audit_data = analyse_result.get("audit_pattern_factory", {})
+            agents_analysis = audit_data.get("agents_analysis", {})
+            
+            # Critères de sélection
+            candidats_potentiels = []
+            
+            for agent_file, analysis in agents_analysis.items():
+                if isinstance(analysis, dict):
+                    conformity_status = analysis.get("conformity_status", "unknown")
+                    critical_issues = analysis.get("critical_issues", [])
+                    file_size = analysis.get("file_info", {}).get("size", 0)
+                    
+                    # Score de candidature (plus bas = meilleur candidat)
+                    score_candidature = 0
+                    
+                    # Facilité de transformation
+                    if conformity_status == "critical_errors":
+                        score_candidature += 10  # Problèmes critiques = plus facile à identifier
+                    elif conformity_status == "non_compliant":
+                        score_candidature += 20  # Non conforme mais sans erreurs
+                    
+                    # Nombre d'erreurs (moins = mieux)
+                    score_candidature += len(critical_issues) * 5
+                    
+                    # Taille raisonnable (ni trop petit ni trop gros)
+                    if 10000 < file_size < 50000:  # Taille idéale
+                        score_candidature -= 10
+                    elif file_size > 100000:  # Trop gros
+                        score_candidature += 30
+                    elif file_size < 5000:  # Trop petit
+                        score_candidature += 20
+                    
+                    candidats_potentiels.append({
+                        "agent_file": agent_file,
+                        "score_candidature": score_candidature,
+                        "conformity_status": conformity_status,
+                        "critical_issues": critical_issues,
+                        "file_size": file_size,
+                        "raisons_selection": []
+                    })
+            
+            # Trier par score (meilleurs candidats en premier)
+            candidats_potentiels.sort(key=lambda x: x["score_candidature"])
+            
+            # Sélectionner top 3 avec diversité
+            candidats_finaux = []
+            statuts_selectionnes = set()
+            
+            for candidat in candidats_potentiels:
+                if len(candidats_finaux) >= 3:
+                    break
+                
+                status = candidat["conformity_status"]
+                
+                # Assurer la diversité des types de problèmes
+                if status not in statuts_selectionnes or len(candidats_finaux) < 2:
+                    candidat["raisons_selection"] = self.generer_raisons_selection(candidat)
+                    candidats_finaux.append(candidat)
+                    statuts_selectionnes.add(status)
+            
+            self.candidats_proposes = candidats_finaux
+            return candidats_finaux
+            
+        except Exception as e:
+            self.logger.error(f"❌ Erreur sélection candidats: {e}")
+            return []
+
+    def generer_raisons_selection(self, candidat):
+        """Génère les raisons de sélection d'un candidat"""
+        raisons = []
+        
+        if candidat["conformity_status"] == "critical_errors":
+            raisons.append("Erreurs critiques faciles à identifier et corriger")
+        
+        if 10000 < candidat["file_size"] < 50000:
+            raisons.append("Taille optimale pour transformation test")
+        
+        if len(candidat["critical_issues"]) <= 5:
+            raisons.append("Nombre raisonnable de problèmes à corriger")
+        
+        if candidat["score_candidature"] < 30:
+            raisons.append("Score de facilité de transformation élevé")
+        
+        return raisons
+
+    async def generer_rapport_candidats(self, candidats):
+        """Génère le rapport final des candidats sélectionnés"""
+        rapport = {
+            "mission_id": f"selection_candidats_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+            "timestamp": datetime.now().isoformat(),
+            "candidats_selectionnes": candidats,
+            "total_candidats": len(candidats),
+            "criteres_utilises": [
+                "Facilité de transformation",
+                "Impact minimal sur le système",
+                "Représentativité des problèmes",
+                "Taille raisonnable du fichier"
+            ],
+            "recommandations": []
+        }
+        
+        # Générer recommandations
+        for i, candidat in enumerate(candidats, 1):
+            recommandation = {
+                "rang": i,
+                "agent": candidat["agent_file"],
+                "priorite": "HAUTE" if i == 1 else "MOYENNE" if i == 2 else "NORMALE",
+                "justification": " | ".join(candidat["raisons_selection"])
+            }
+            rapport["recommandations"].append(recommandation)
+        
+        # Sauvegarder rapport
+        rapport_file = REPORTS_DIR / f"rapport_candidats_transformation_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        with open(rapport_file, 'w', encoding='utf-8') as f:
+            json.dump(rapport, f, indent=2, ensure_ascii=False)
+        
+        self.logger.info(f"📊 Rapport candidats sauvé: {rapport_file}")
+        return rapport
+
+    def afficher_candidats(self, candidats):
+        """Affiche les 3 candidats sélectionnés"""
+        print("\n🎯 TOP 3 CANDIDATS POUR TRANSFORMATION")
+        print("=" * 60)
+        
+        for i, candidat in enumerate(candidats, 1):
+            print(f"\n🏆 CANDIDAT #{i} - {candidat['agent_file']}")
+            print(f"   📊 Score: {candidat['score_candidature']}")
+            print(f"   📋 Status: {candidat['conformity_status']}")
+            print(f"   📏 Taille: {candidat['file_size']:,} caractères")
+            print(f"   🚨 Problèmes: {len(candidat['critical_issues'])}")
+            print(f"   ✅ Raisons sélection:")
+            for raison in candidat['raisons_selection']:
+                print(f"      • {raison}")
+        
+        print(f"\n🎯 Sélectionnez le candidat à transformer (1-{len(candidats)}) :")
+
+async def main():
+    """Point d'entrée principal"""
+    try:
+        mission = MissionAnalyseComplete()
+        candidats, rapport = await mission.lancer_mission_complete()
+        
+        if candidats:
+            mission.afficher_candidats(candidats)
+            print(f"\n📊 Rapport complet sauvé dans: {REPORTS_DIR}")
+        else:
+            print("❌ Aucun candidat sélectionné")
+            
+    except Exception as e:
+        print(f"💥 Erreur fatale: {e}")
+        return 1
+    
+    return 0
+
+if __name__ == "__main__":
+    asyncio.run(main()) 

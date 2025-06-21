@@ -545,7 +545,15 @@ def log_capture():
     ch = logging.StreamHandler(log_capture_string)
     
     # Configuration du logger de test
-    test_logger = logging.getLogger('test_logger')
+    test_# LoggingManager NextGeneration - Tool/Utility
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "from",
+            "log_level": "INFO",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": True
+        })
     test_logger.setLevel(logging.DEBUG)
     test_logger.addHandler(ch)
     

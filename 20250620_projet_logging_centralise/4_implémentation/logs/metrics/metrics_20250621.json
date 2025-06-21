@@ -1,0 +1,56 @@
+[
+  {
+    "core_metrics": {
+      "total_logs": 0,
+      "logs_per_level": {
+        "DEBUG": 0,
+        "INFO": 0,
+        "WARNING": 0,
+        "ERROR": 0,
+        "CRITICAL": 0
+      },
+      "logs_per_category": {
+        "agents": 0,
+        "tools": 0,
+        "system": 0,
+        "errors": 0,
+        "audit": 0,
+        "performance": 0
+      },
+      "average_log_size": 0.0,
+      "compression_ratio": 0.0,
+      "errors_count": 0,
+      "last_error": null,
+      "active_loggers": 0,
+      "async_handlers": 0,
+      "performance_stats": {}
+    },
+    "chatgpt_features": {
+      "elasticsearch": {
+        "docs_sent": 0,
+        "errors": 0,
+        "enabled_loggers": 0
+      },
+      "encryption": {
+        "encrypted_logs": 0,
+        "enabled_loggers": 0
+      },
+      "alerting": {
+        "alerts_sent": 0,
+        "enabled_loggers": 0
+      },
+      "compression": {
+        "savings_bytes": 0,
+        "ratio_percent": "0.00%"
+      },
+      "async_performance": {}
+    },
+    "system_health": {
+      "memory_usage_mb": 36.10546875,
+      "uptime_seconds": 0.001006,
+      "configs_loaded": 9,
+      "handlers_active": 0
+    },
+    "timestamp": "2025-06-21T03:59:07.801145"
+  }
+]

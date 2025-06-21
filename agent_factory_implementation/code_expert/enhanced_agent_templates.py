@@ -38,7 +38,7 @@ Cette version optimise ajoute :
 
 import hashlib
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime
 from functools import cached_property, lru_cache
 from pathlib import Path
@@ -49,7 +49,14 @@ from jsonschema import Draft7Validator
 
 from ..agents.base_agent import BaseAgent
 
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="TemplateValidationError",
+            role="ai_processor",
+            domain="template_management",
+            async_enabled=True
+        )
 
 # Dossier contenant les fichiers JSON de templates
 TEMPLATES_DIR = Path(__file__).resolve().parent.parent / "templates"

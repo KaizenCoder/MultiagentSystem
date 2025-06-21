@@ -20,7 +20,7 @@ OBLIGATOIRE : Ce factory est le cur du systme de gnration d'agents
 """
 
 from typing import Dict, List, Any, Optional, Type
-import logging
+from logging_manager_optimized import LoggingManager
 import importlib
 import inspect
 from pathlib import Path
@@ -28,7 +28,14 @@ from pathlib import Path
 from .base_agent import BaseAgent, AgentMetadata
 from .agent_templates import TemplateManager, AgentTemplate
 
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="AgentFactory",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
 
 class AgentFactory:
     """

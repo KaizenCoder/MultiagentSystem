@@ -6,7 +6,7 @@ Rle: Chef d'quipe technique, synthse analyses, solution finale
 """
 
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import asyncio
 from datetime import datetime
 from pathlib import Path
@@ -92,7 +92,14 @@ class CoordinateurEquipeExperts:
                 logging.StreamHandler()
             ]
         )
-        self.logger = logging.getLogger("coordinateur_equipe_experts")
+        # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="import",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
     
     def analyser_propositions_existantes(self) -> Dict[str, PropositionAnalysee]:
         """[CLIPBOARD] Analyse des propositions existantes dans EXPERT_REVIEW_AGENT_FACTORY_PATTERN"""
@@ -233,7 +240,7 @@ Mission: Analyser Agent Factory Pattern pour NextGeneration
 """
 
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime
 from pathlib import Path
 

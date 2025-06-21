@@ -5,7 +5,7 @@ Comprehensive load testing setup for performance validation and benchmarking.
 
 import asyncio
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 import subprocess
 import tempfile
 from datetime import datetime
@@ -17,7 +17,15 @@ from ..config import config
 from ..observability.monitoring import monitoring_manager
 
 
-logger = logging.getLogger(__name__)
+# LoggingManager NextGeneration - Tool/Utility
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "class",
+            "log_level": "INFO",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": True
+        })
 
 
 @dataclass

@@ -7,7 +7,7 @@ Validation des corrections SQLAlchemy sans dpendre de la connexion PostgreSQL
 import sys
 import os
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime
 
 def validation_finale_sans_postgres():

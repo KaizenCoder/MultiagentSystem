@@ -1,0 +1,205 @@
+oici le troisième livrable contenant tous les éléments d’exécution et de déploiement local du système TaskMaster supervisé :
+
+📦 Fichier ZIP : 20250620_225933_003_docker_sqlite_make_taskmaster.zip
+
+Contenu :
+Fichier	Rôle
+Makefile	Commandes : make start, make spawn, make test
+Dockerfile	Conteneur minimal FastAPI avec supervisor intégré
+docker-compose.yaml	Exposition REST locale sur localhost:8001
+taskmaster_registry.db	Base SQLite vide (future persistance de sessions)
+
+Souhaitez-vous que je :
+
+génère le code Python d’intégration avec SQLite pour rendre le registre TaskMasterRegistry persistant ?
+
+connecte taskmaster_pool_supervisor.py directement à cette base SQLite ?
+
+Cela permettrait de rebooter le système sans perte d’agents enregistrés. 
+
+
+
+
+
+
+
+Vous avez dit :
+oui pour les 2
+
+
+ChatGPT a dit :
+Taskmaster Pool Supervisor
+
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+# taskmaster_pool_supervisor.py
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS taskmasters (
+                agent_id TEXT PRIMARY KEY,
+                mission TEXT
+            )
+        """)
+
+init_db()
+
+# --- Registre persistant SQLite ---
+class TaskMasterRegistry:
+    instances: Dict[str, AgentTaskMasterNextGeneration] = {}
+
+    @classmethod
+    def register(cls, agent_id: str, instance: AgentTaskMasterNextGeneration, mission: str):
+        cls.instances[agent_id] = instance
+        with sqlite3.connect(DB_PATH) as conn:
+            conn.execute("INSERT OR REPLACE INTO taskmasters (agent_id, mission) VALUES (?, ?)", (agent_id, mission))
+        logger.info(f"TaskMaster instance registered: {agent_id}")
+
+    @classmethod
+    def get(cls, agent_id: str) -> Optional[AgentTaskMasterNextGeneration]:
+        return cls.instances.get(agent_id)
+
+    @classmethod
+    def list_instances(cls):
+        return list(cls.instances.keys())
+
+    @classmethod
+    def remove(cls, agent_id: str):
+        if agent_id in cls.instances:
+            del cls.instances[agent_id]
+        with sqlite3.connect(DB_PATH) as conn:
+            conn.execute("DELETE FROM taskmasters WHERE agent_id = ?", (agent_id,))
+        logger.info(f"TaskMaster instance removed: {agent_id}")
+
+    @classmethod
+    def load_from_db(cls):
+        with sqlite3.connect(DB_PATH) as conn:
+            for agent_id, mission in conn.execute("SELECT agent_id, mission FROM taskmasters"):
+                instance = AgentTaskMasterNextGeneration(agent_id=agent_id)
+                cls.instances[agent_id] = instance
+                asyncio.create_task(instance.create_task_from_natural_language(mission))
+                logger.info(f"Restored TaskMaster: {agent_id}")
+
+# --- API REST supervisée ---
+app = FastAPI(title="TaskMaster Supervisor API")
+
+class LaunchRequest(BaseModel):
+    mission: str
+    agent_id: Optional[str] = None
+
+@app.on_event("startup")
+async def restore_instances():
+    TaskMasterRegistry.load_from_db()
+
+@app.post("/launch")
+async def launch_taskmaster(req: LaunchRequest):
+    agent_id = req.agent_id or f"tm_{uuid4().hex[:6]}"
+    instance = AgentTaskMasterNextGeneration(agent_id=agent_id)
+    TaskMasterRegistry.register(agent_id, instance, req.mission)
+    asyncio.create_task(instance.create_task_from_natural_language(req.mission))
+    return {"status": "launched", "agent_id": agent_id}
+
+@app.get("/instances")
+Modification
+
+Répondre plutôt dans le chat
+✅ Le fichier taskmaster_pool_supervisor.py a été modifié pour intégrer une base SQLite persistante et restaurer automatiquement les agents TaskMaster au redémarrage.
+
+🔧 Modifications clés apportées :
+Connexion SQLite intégrée (taskmaster_registry.db)
+
+Table taskmasters(agent_id, mission) créée automatiquement
+
+Méthode register() → enregistre dans la base
+
+Méthode load_from_db() → restaure tous les agents avec leurs missions
+
+Startup FastAPI → relance les instances au reboot
+
+Suppression synchronisée entre RAM et SQLite
+
+🚀 Comportement attendu :
+Vous pouvez killer le serveur et relancer : les agents précédemment lancés seront automatiquement restaurés.
+
+L’état des missions est persisté localement, 100% offline.
+
+Souhaitez-vous maintenant :
+
+Un outil de purge manuelle (reset_registry.py) ?
+
+Un export JSON des agents actifs depuis la DB (dump_registry.py) ?
+
+L’intégration de healthcheck par agent dans /instances/{agent_id} ?
+
+
+
+
+
+
+
+
+
+Outils
+
+

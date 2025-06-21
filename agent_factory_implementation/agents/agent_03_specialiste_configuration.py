@@ -32,34 +32,41 @@ try:
     PATTERN_FACTORY_AVAILABLE = True
 except ImportError:
     try:
-        from core.agent_factory_architecture import Agent, Task, Result
-        PATTERN_FACTORY_AVAILABLE = True
+    from core.agent_factory_architecture import Agent, Task, Result
+    PATTERN_FACTORY_AVAILABLE = True
     except ImportError as e:
-        print(f"⚠️ Pattern Factory non disponible: {e}")
+    print(f"⚠️ Pattern Factory non disponible: {e}")
         # Fallback pour compatibilité
-        class Agent:
-            def __init__(self, agent_type: str, **config):
-                self.agent_id = f"agent_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-                self.agent_type = agent_type
-                self.config = config
-                self.logger = logging.getLogger(f"Agent_{agent_type}")
+    class Agent:
+    def __init__(self, agent_type: str, **config):
+    self.agent_id = f"agent_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    self.agent_type = agent_type
+    self.config = config
+                # LoggingManager NextGeneration - Agent
+    from logging_manager_optimized import LoggingManager
+    self.logger = LoggingManager().get_agent_logger(
+    agent_name="Agent",
+    role="ai_processor",
+    domain="general",
+    async_enabled=True
+    )
                 
-            async def startup(self): pass
-            async def shutdown(self): pass
-            async def health_check(self): return {"status": "healthy"}
+    async def startup(self): pass
+    async def shutdown(self): pass
+    async def health_check(self): return {"status": "healthy"}
         
         class Task:
             def __init__(self, task_id: str, description: str, **kwargs):
-                self.task_id = task_id
-                self.description = description
+    self.task_id = task_id
+    self.description = description
                 
-        class Result:
-            def __init__(self, success: bool, data: Any = None, error: str = None):
-                self.success = success
-                self.data = data
-                self.error = error
+    class Result:
+    def __init__(self, success: bool, data: Any = None, error: str = None):
+    self.success = success
+    self.data = data
+    self.error = error
         
-        PATTERN_FACTORY_AVAILABLE = False
+    PATTERN_FACTORY_AVAILABLE = False
 
 
 # Ajouter le chemin de l'Agent Factory pour importer les modules
@@ -74,123 +81,123 @@ class Agent03SpecialisteConfiguration:
     """
     
     def __init__(self):
-        self.agent_id = "03"
-        self.agent_name = "Spcialiste Configuration"
-        self.version = "1.0.0"
-        self.workspace_root = Path(__file__).parent.parent
-        self.reports_dir = self.workspace_root / "reports"
-        self.code_expert_dir = self.workspace_root / "code_expert"
-        self.configuration_dir = self.workspace_root / "agents"
+    self.agent_id = "03"
+    self.agent_name = "Spcialiste Configuration"
+    self.version = "1.0.0"
+    self.workspace_root = Path(__file__).parent.parent
+    self.reports_dir = self.workspace_root / "reports"
+    self.code_expert_dir = self.workspace_root / "code_expert"
+    self.configuration_dir = self.workspace_root / "agents"
         
         # Mtriques de performance
-        self.metrics = {
-            "configurations_created": 0,
-            "environments_configured": 0,
-            "validations_passed": 0,
-            "security_features_implemented": 0,
-            "performance_optimizations": 0
-        }
+    self.metrics = {
+    "configurations_created": 0,
+    "environments_configured": 0,
+    "validations_passed": 0,
+    "security_features_implemented": 0,
+    "performance_optimizations": 0
+    }
         
         # tat de la mission
-        self.mission_status = "INITIALISATION"
-        self.start_time = datetime.now()
+    self.mission_status = "INITIALISATION"
+    self.start_time = datetime.now()
         
-        print(f"[TOOL] Agent {self.agent_id} - {self.agent_name} initialis")
-        print(f"[FOLDER] Workspace: {self.workspace_root}")
-        print(f"[TARGET] Mission: Configuration Pydantic centralise production-ready")
+    print(f"[TOOL] Agent {self.agent_id} - {self.agent_name} initialis")
+    print(f"[FOLDER] Workspace: {self.workspace_root}")
+    print(f"[TARGET] Mission: Configuration Pydantic centralise production-ready")
     
     def validate_dependencies(self) -> bool:
         """Valider que les dpendances sont satisfaites"""
-        print("[SEARCH] Validation des dpendances Agent 03...")
+    print("[SEARCH] Validation des dpendances Agent 03...")
         
         # Vrifier que le workspace existe (Agent 14)
-        if not self.workspace_root.exists():
-            print("[CROSS] Workspace non trouv - dpendance Agent 14 manquante")
-            return False
+    if not self.workspace_root.exists():
+    print("[CROSS] Workspace non trouv - dpendance Agent 14 manquante")
+    return False
         
         # Vrifier structure de base
-        required_dirs = ["agents", "documentation", "reports", "code_expert"]
-        for dir_name in required_dirs:
-            if not (self.workspace_root / dir_name).exists():
-                print(f"[CROSS] Rpertoire {dir_name} manquant")
-                return False
+    required_dirs = ["agents", "documentation", "reports", "code_expert"]
+    for dir_name in required_dirs:
+    if not (self.workspace_root / dir_name).exists():
+    print(f"[CROSS] Rpertoire {dir_name} manquant")
+    return False
         
-        print("[CHECK] Toutes les dpendances satisfaites")
-        self.mission_status = "DPENDANCES_VALIDES"
-        return True
+    print("[CHECK] Toutes les dpendances satisfaites")
+    self.mission_status = "DPENDANCES_VALIDES"
+    return True
     
     def create_base_configuration(self) -> Dict[str, Any]:
         """Crer la configuration de base Pydantic"""
-        print(" Cration configuration de base Pydantic...")
+    print(" Cration configuration de base Pydantic...")
         
-        base_config = {
-            "name": "agent_factory_config",
-            "version": "1.0.0",
-            "description": "Configuration centralise Agent Factory Pattern",
-            "created_at": datetime.now().isoformat(),
-            "agent_creator": f"Agent {self.agent_id}",
+    base_config = {
+    "name": "agent_factory_config",
+    "version": "1.0.0",
+    "description": "Configuration centralise Agent Factory Pattern",
+    "created_at": datetime.now().isoformat(),
+    "agent_creator": f"Agent {self.agent_id}",
             
             # Configuration environnements
-            "environments": {
-                "development": {
-                    "ttl_seconds": 60,
-                    "cache_max_size": 100,
-                    "thread_pool_size": 2,
-                    "hot_reload": True,
-                    "debug": True,
-                    "log_level": "DEBUG"
-                },
-                "staging": {
-                    "ttl_seconds": 300,
-                    "cache_max_size": 500,
-                    "thread_pool_size": 4,
-                    "hot_reload": True,
-                    "debug": False,
-                    "log_level": "INFO"
-                },
-                "production": {
-                    "ttl_seconds": 600,
-                    "cache_max_size": 1000,
-                    "thread_pool_size": 8,
-                    "hot_reload": False,
-                    "debug": False,
-                    "log_level": "WARNING"
-                }
-            },
+    "environments": {
+    "development": {
+        "ttl_seconds": 60,
+        "cache_max_size": 100,
+        "thread_pool_size": 2,
+        "hot_reload": True,
+        "debug": True,
+        "log_level": "DEBUG"
+    },
+    "staging": {
+        "ttl_seconds": 300,
+        "cache_max_size": 500,
+        "thread_pool_size": 4,
+        "hot_reload": True,
+        "debug": False,
+        "log_level": "INFO"
+    },
+    "production": {
+        "ttl_seconds": 600,
+        "cache_max_size": 1000,
+        "thread_pool_size": 8,
+        "hot_reload": False,
+        "debug": False,
+        "log_level": "WARNING"
+    }
+    },
             
             # Configuration cache LRU
-            "cache": {
-                "lru_enabled": True,
-                "max_memory_mb": 256,
-                "cleanup_interval": 300,
-                "compression_enabled": True
-            },
+    "cache": {
+    "lru_enabled": True,
+    "max_memory_mb": 256,
+    "cleanup_interval": 300,
+    "compression_enabled": True
+    },
             
             # Configuration scurit
-            "security": {
-                "signature_required": True,
-                "validation_strict": True,
-                "encryption_enabled": True,
-                "audit_enabled": True
-            },
+    "security": {
+    "signature_required": True,
+    "validation_strict": True,
+    "encryption_enabled": True,
+    "audit_enabled": True
+    },
             
             # Configuration monitoring
-            "monitoring": {
-                "metrics_enabled": True,
-                "tracing_enabled": True,
-                "health_check_enabled": True,
-                "prometheus_port": 8080
-            }
-        }
+    "monitoring": {
+    "metrics_enabled": True,
+    "tracing_enabled": True,
+    "health_check_enabled": True,
+    "prometheus_port": 8080
+    }
+    }
         
-        self.metrics["configurations_created"] += 1
-        return base_config
+    self.metrics["configurations_created"] += 1
+    return base_config
     
     def create_pydantic_models(self) -> str:
         """Crer les modles Pydantic pour la configuration"""
-        print("[CLIPBOARD] Cration modles Pydantic...")
+    print("[CLIPBOARD] Cration modles Pydantic...")
         
-        pydantic_code = '''"""
+    pydantic_code = '''"""
 Configuration Pydantic centralise pour l'Agent Factory Pattern
 Gnr par Agent 03 - Spcialiste Configuration
 """
@@ -227,10 +234,10 @@ class EnvironmentConfig(BaseModel):
     @validator('thread_pool_size')
     def validate_thread_pool(cls, v):
         """Valider la taille du pool de threads"""
-        cpu_count = os.cpu_count() or 4
-        if v > cpu_count * 2:
-            return cpu_count * 2
-        return v
+    cpu_count = os.cpu_count() or 4
+    if v > cpu_count * 2:
+    return cpu_count * 2
+    return v
 
 class CacheConfig(BaseModel):
     """Configuration du cache LRU"""
@@ -274,37 +281,37 @@ class AgentFactoryConfig(BaseModel):
     @validator('environments')
     def validate_environments(cls, v):
         """Valider que tous les environnements sont configurs"""
-        required_envs = {Environment.DEVELOPMENT, Environment.STAGING, Environment.PRODUCTION}
-        configured_envs = set(v.keys())
+    required_envs = {Environment.DEVELOPMENT, Environment.STAGING, Environment.PRODUCTION}
+    configured_envs = set(v.keys())
         
-        if not required_envs.issubset(configured_envs):
-            missing = required_envs - configured_envs
-            raise ValueError(f"Environnements manquants: {missing}")
+    if not required_envs.issubset(configured_envs):
+    missing = required_envs - configured_envs
+    raise ValueError(f"Environnements manquants: {missing}")
         
-        return v
+    return v
     
     def get_environment_config(self, env: Optional[str] = None) -> EnvironmentConfig:
         """Obtenir la configuration pour un environnement spcifique"""
-        if env is None:
-            env = os.getenv('ENVIRONMENT', 'development')
+    if env is None:
+    env = os.getenv('ENVIRONMENT', 'development')
         
-        env_enum = Environment(env.lower())
-        return self.environments[env_enum]
+    env_enum = Environment(env.lower())
+    return self.environments[env_enum]
     
     def is_production(self) -> bool:
         """Vrifier si on est en production"""
-        current_env = os.getenv('ENVIRONMENT', 'development').lower()
-        return current_env == Environment.PRODUCTION.value
+    current_env = os.getenv('ENVIRONMENT', 'development').lower()
+    return current_env == Environment.PRODUCTION.value
     
     def get_cache_ttl(self) -> int:
         """Obtenir le TTL pour l'environnement actuel"""
-        env_config = self.get_environment_config()
-        return env_config.ttl_seconds
+    env_config = self.get_environment_config()
+    return env_config.ttl_seconds
     
     def get_thread_pool_size(self) -> int:
         """Obtenir la taille du pool de threads"""
-        env_config = self.get_environment_config()
-        return env_config.thread_pool_size
+    env_config = self.get_environment_config()
+    return env_config.thread_pool_size
 
 class ConfigurationManager:
     """Gestionnaire de configuration thread-safe"""
@@ -313,38 +320,38 @@ class ConfigurationManager:
     _config = None
     
     def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
+    if cls._instance is None:
+    cls._instance = super().__new__(cls)
+    return cls._instance
     
     def load_config(self, config_dict: Dict) -> AgentFactoryConfig:
         """Charger la configuration depuis un dictionnaire"""
-        self._config = AgentFactoryConfig(**config_dict)
-        return self._config
+    self._config = AgentFactoryConfig(**config_dict)
+    return self._config
     
     def get_config(self) -> Optional[AgentFactoryConfig]:
         """Obtenir la configuration actuelle"""
-        return self._config
+    return self._config
     
     def is_configured(self) -> bool:
         """Vrifier si la configuration est charge"""
-        return self._config is not None
+    return self._config is not None
 
 # Instance singleton globale
 config_manager = ConfigurationManager()
 '''
         
-        self.metrics["configurations_created"] += 1
-        return pydantic_code
+    self.metrics["configurations_created"] += 1
+    return pydantic_code
     
     def create_environment_files(self) -> Dict[str, str]:
         """Crer les fichiers d'environnement scuriss"""
-        print(" Cration fichiers environnement scuriss...")
+    print(" Cration fichiers environnement scuriss...")
         
-        env_files = {}
+    env_files = {}
         
         # Fichier .env de dveloppement
-        env_files[".env.development"] = '''# Configuration dveloppement Agent Factory
+    env_files[".env.development"] = '''# Configuration dveloppement Agent Factory
 ENVIRONMENT=development
 LOG_LEVEL=DEBUG
 DEBUG=true
@@ -369,7 +376,7 @@ METRICS_ENABLED=true
 '''
         
         # Fichier .env de staging
-        env_files[".env.staging"] = '''# Configuration staging Agent Factory
+    env_files[".env.staging"] = '''# Configuration staging Agent Factory
 ENVIRONMENT=staging
 LOG_LEVEL=INFO
 DEBUG=false
@@ -394,7 +401,7 @@ METRICS_ENABLED=true
 '''
         
         # Fichier .env de production
-        env_files[".env.production"] = '''# Configuration production Agent Factory
+    env_files[".env.production"] = '''# Configuration production Agent Factory
 ENVIRONMENT=production
 LOG_LEVEL=WARNING
 DEBUG=false
@@ -424,14 +431,14 @@ ENCRYPTION_ENABLED=true
 AUDIT_ENABLED=true
 '''
         
-        self.metrics["environments_configured"] = len(env_files)
-        return env_files
+    self.metrics["environments_configured"] = len(env_files)
+    return env_files
     
     def create_configuration_tests(self) -> str:
         """Crer les tests pour la configuration"""
-        print(" Cration tests configuration...")
+    print(" Cration tests configuration...")
         
-        test_code = '''"""
+    test_code = '''"""
 Tests pour la configuration Pydantic Agent Factory
 Gnr par Agent 03 - Spcialiste Configuration
 """
@@ -459,247 +466,247 @@ class TestAgentFactoryConfig:
     
     def setup_method(self):
         """Setup pour chaque test"""
-        self.config_manager = ConfigurationManager()
+    self.config_manager = ConfigurationManager()
     
     def test_environment_config_validation(self):
         """Test validation configuration environnement"""
         # Configuration valide
-        env_config = EnvironmentConfig(
-            ttl_seconds=300,
-            cache_max_size=500,
-            thread_pool_size=4,
-            hot_reload=True,
-            debug=False,
-            log_level=LogLevel.INFO
-        )
-        assert env_config.ttl_seconds == 300
-        assert env_config.log_level == LogLevel.INFO
+    env_config = EnvironmentConfig(
+    ttl_seconds=300,
+    cache_max_size=500,
+    thread_pool_size=4,
+    hot_reload=True,
+    debug=False,
+    log_level=LogLevel.INFO
+    )
+    assert env_config.ttl_seconds == 300
+    assert env_config.log_level == LogLevel.INFO
     
     def test_thread_pool_size_validation(self):
         """Test validation taille pool threads"""
-        with patch('os.cpu_count', return_value=4):
+    with patch('os.cpu_count', return_value=4):
             # Taille valide
-            env_config = EnvironmentConfig(
-                ttl_seconds=300,
-                cache_max_size=500,
-                thread_pool_size=6,
-                hot_reload=True,
-                debug=False,
-                log_level=LogLevel.INFO
-            )
-            assert env_config.thread_pool_size == 6
+    env_config = EnvironmentConfig(
+    ttl_seconds=300,
+    cache_max_size=500,
+    thread_pool_size=6,
+    hot_reload=True,
+    debug=False,
+    log_level=LogLevel.INFO
+    )
+    assert env_config.thread_pool_size == 6
             
             # Taille trop leve (doit tre ajuste)
-            env_config = EnvironmentConfig(
-                ttl_seconds=300,
-                cache_max_size=500,
-                thread_pool_size=20,
-                hot_reload=True,
-                debug=False,
-                log_level=LogLevel.INFO
-            )
-            assert env_config.thread_pool_size == 8  # CPU * 2
+    env_config = EnvironmentConfig(
+    ttl_seconds=300,
+    cache_max_size=500,
+    thread_pool_size=20,
+    hot_reload=True,
+    debug=False,
+    log_level=LogLevel.INFO
+    )
+    assert env_config.thread_pool_size == 8  # CPU * 2
     
     def test_cache_config_validation(self):
         """Test validation configuration cache"""
-        cache_config = CacheConfig(
-            lru_enabled=True,
-            max_memory_mb=256,
-            cleanup_interval=300,
-            compression_enabled=True
-        )
-        assert cache_config.lru_enabled is True
-        assert cache_config.max_memory_mb == 256
+    cache_config = CacheConfig(
+    lru_enabled=True,
+    max_memory_mb=256,
+    cleanup_interval=300,
+    compression_enabled=True
+    )
+    assert cache_config.lru_enabled is True
+    assert cache_config.max_memory_mb == 256
     
     def test_security_config_defaults(self):
         """Test configuration scurit par dfaut"""
-        security_config = SecurityConfig()
-        assert security_config.signature_required is True
-        assert security_config.rsa_key_size == 2048
-        assert security_config.hash_algorithm == "SHA-256"
+    security_config = SecurityConfig()
+    assert security_config.signature_required is True
+    assert security_config.rsa_key_size == 2048
+    assert security_config.hash_algorithm == "SHA-256"
     
     def test_full_config_validation(self):
         """Test validation configuration complte"""
-        config_dict = {
-            "name": "test_config",
-            "version": "1.0.0",
-            "description": "Test configuration",
-            "created_at": "2024-12-19T14:00:00",
-            "agent_creator": "Agent 03",
-            "environments": {
-                Environment.DEVELOPMENT: {
-                    "ttl_seconds": 60,
-                    "cache_max_size": 100,
-                    "thread_pool_size": 2,
-                    "hot_reload": True,
-                    "debug": True,
-                    "log_level": LogLevel.DEBUG
-                },
-                Environment.STAGING: {
-                    "ttl_seconds": 300,
-                    "cache_max_size": 500,
-                    "thread_pool_size": 4,
-                    "hot_reload": True,
-                    "debug": False,
-                    "log_level": LogLevel.INFO
-                },
-                Environment.PRODUCTION: {
-                    "ttl_seconds": 600,
-                    "cache_max_size": 1000,
-                    "thread_pool_size": 8,
-                    "hot_reload": False,
-                    "debug": False,
-                    "log_level": LogLevel.WARNING
-                }
-            },
-            "cache": {
-                "lru_enabled": True,
-                "max_memory_mb": 256,
-                "cleanup_interval": 300,
-                "compression_enabled": True
-            },
-            "security": {},
-            "monitoring": {}
-        }
+    config_dict = {
+    "name": "test_config",
+    "version": "1.0.0",
+    "description": "Test configuration",
+    "created_at": "2024-12-19T14:00:00",
+    "agent_creator": "Agent 03",
+    "environments": {
+    Environment.DEVELOPMENT: {
+        "ttl_seconds": 60,
+        "cache_max_size": 100,
+        "thread_pool_size": 2,
+        "hot_reload": True,
+        "debug": True,
+        "log_level": LogLevel.DEBUG
+    },
+    Environment.STAGING: {
+        "ttl_seconds": 300,
+        "cache_max_size": 500,
+        "thread_pool_size": 4,
+        "hot_reload": True,
+        "debug": False,
+        "log_level": LogLevel.INFO
+    },
+    Environment.PRODUCTION: {
+        "ttl_seconds": 600,
+        "cache_max_size": 1000,
+        "thread_pool_size": 8,
+        "hot_reload": False,
+        "debug": False,
+        "log_level": LogLevel.WARNING
+    }
+    },
+    "cache": {
+    "lru_enabled": True,
+    "max_memory_mb": 256,
+    "cleanup_interval": 300,
+    "compression_enabled": True
+    },
+    "security": {},
+    "monitoring": {}
+    }
         
-        config = AgentFactoryConfig(**config_dict)
-        assert config.name == "test_config"
-        assert len(config.environments) == 3
+    config = AgentFactoryConfig(**config_dict)
+    assert config.name == "test_config"
+    assert len(config.environments) == 3
     
     @patch.dict(os.environ, {'ENVIRONMENT': 'production'})
     def test_get_environment_config(self):
         """Test rcupration configuration environnement"""
-        config_dict = self._get_test_config_dict()
-        config = AgentFactoryConfig(**config_dict)
+    config_dict = self._get_test_config_dict()
+    config = AgentFactoryConfig(**config_dict)
         
-        env_config = config.get_environment_config()
-        assert env_config.ttl_seconds == 600  # Production TTL
-        assert env_config.debug is False
+    env_config = config.get_environment_config()
+    assert env_config.ttl_seconds == 600  # Production TTL
+    assert env_config.debug is False
     
     @patch.dict(os.environ, {'ENVIRONMENT': 'development'})
     def test_get_cache_ttl(self):
         """Test rcupration TTL cache"""
-        config_dict = self._get_test_config_dict()
-        config = AgentFactoryConfig(**config_dict)
+    config_dict = self._get_test_config_dict()
+    config = AgentFactoryConfig(**config_dict)
         
-        ttl = config.get_cache_ttl()
-        assert ttl == 60  # Development TTL
+    ttl = config.get_cache_ttl()
+    assert ttl == 60  # Development TTL
     
     def test_configuration_manager_singleton(self):
         """Test pattern singleton ConfigurationManager"""
-        manager1 = ConfigurationManager()
-        manager2 = ConfigurationManager()
-        assert manager1 is manager2
+    manager1 = ConfigurationManager()
+    manager2 = ConfigurationManager()
+    assert manager1 is manager2
     
     def test_configuration_manager_load_config(self):
         """Test chargement configuration"""
-        config_dict = self._get_test_config_dict()
-        manager = ConfigurationManager()
+    config_dict = self._get_test_config_dict()
+    manager = ConfigurationManager()
         
-        config = manager.load_config(config_dict)
-        assert config is not None
-        assert manager.is_configured() is True
+    config = manager.load_config(config_dict)
+    assert config is not None
+    assert manager.is_configured() is True
         
-        retrieved_config = manager.get_config()
-        assert retrieved_config is config
+    retrieved_config = manager.get_config()
+    assert retrieved_config is config
     
     def _get_test_config_dict(self):
         """Configuration de test standard"""
-        return {
-            "name": "test_config",
-            "version": "1.0.0",
-            "description": "Test configuration",
-            "created_at": "2024-12-19T14:00:00",
-            "agent_creator": "Agent 03",
-            "environments": {
-                Environment.DEVELOPMENT: {
-                    "ttl_seconds": 60,
-                    "cache_max_size": 100,
-                    "thread_pool_size": 2,
-                    "hot_reload": True,
-                    "debug": True,
-                    "log_level": LogLevel.DEBUG
-                },
-                Environment.STAGING: {
-                    "ttl_seconds": 300,
-                    "cache_max_size": 500,
-                    "thread_pool_size": 4,
-                    "hot_reload": True,
-                    "debug": False,
-                    "log_level": LogLevel.INFO
-                },
-                Environment.PRODUCTION: {
-                    "ttl_seconds": 600,
-                    "cache_max_size": 1000,
-                    "thread_pool_size": 8,
-                    "hot_reload": False,
-                    "debug": False,
-                    "log_level": LogLevel.WARNING
-                }
-            },
-            "cache": {
-                "lru_enabled": True,
-                "max_memory_mb": 256,
-                "cleanup_interval": 300,
-                "compression_enabled": True
-            },
-            "security": {},
-            "monitoring": {}
-        }
+    return {
+    "name": "test_config",
+    "version": "1.0.0",
+    "description": "Test configuration",
+    "created_at": "2024-12-19T14:00:00",
+    "agent_creator": "Agent 03",
+    "environments": {
+    Environment.DEVELOPMENT: {
+        "ttl_seconds": 60,
+        "cache_max_size": 100,
+        "thread_pool_size": 2,
+        "hot_reload": True,
+        "debug": True,
+        "log_level": LogLevel.DEBUG
+    },
+    Environment.STAGING: {
+        "ttl_seconds": 300,
+        "cache_max_size": 500,
+        "thread_pool_size": 4,
+        "hot_reload": True,
+        "debug": False,
+        "log_level": LogLevel.INFO
+    },
+    Environment.PRODUCTION: {
+        "ttl_seconds": 600,
+        "cache_max_size": 1000,
+        "thread_pool_size": 8,
+        "hot_reload": False,
+        "debug": False,
+        "log_level": LogLevel.WARNING
+    }
+    },
+    "cache": {
+    "lru_enabled": True,
+    "max_memory_mb": 256,
+    "cleanup_interval": 300,
+    "compression_enabled": True
+    },
+    "security": {},
+    "monitoring": {}
+    }
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
 '''
         
-        self.metrics["validations_passed"] += 1
-        return test_code
+    self.metrics["validations_passed"] += 1
+    return test_code
     
     def save_configuration_files(self) -> bool:
         """Sauvegarder tous les fichiers de configuration"""
-        print(" Sauvegarde fichiers configuration...")
+    print(" Sauvegarde fichiers configuration...")
         
-        try:
+    try:
             # Crer la configuration de base
-            base_config = self.create_base_configuration()
+    base_config = self.create_base_configuration()
             
             # Sauvegarder la configuration JSON
-            config_file = self.configuration_dir / "agent_config.json"
-            with open(config_file, 'w', encoding='utf-8') as f:
-                json.dump(base_config, f, indent=2, ensure_ascii=False)
+    config_file = self.configuration_dir / "agent_config.json"
+    with open(config_file, 'w', encoding='utf-8') as f:
+    json.dump(base_config, f, indent=2, ensure_ascii=False)
             
             # Crer et sauvegarder le code Pydantic
-            pydantic_code = self.create_pydantic_models()
-            pydantic_file = self.configuration_dir / "agent_config.py"
-            with open(pydantic_file, 'w', encoding='utf-8') as f:
-                f.write(pydantic_code)
+    pydantic_code = self.create_pydantic_models()
+    pydantic_file = self.configuration_dir / "agent_config.py"
+    with open(pydantic_file, 'w', encoding='utf-8') as f:
+    f.write(pydantic_code)
             
             # Crer et sauvegarder les fichiers environnement
-            env_files = self.create_environment_files()
-            for filename, content in env_files.items():
-                env_file = self.workspace_root / filename
-                with open(env_file, 'w', encoding='utf-8') as f:
-                    f.write(content)
+    env_files = self.create_environment_files()
+    for filename, content in env_files.items():
+    env_file = self.workspace_root / filename
+    with open(env_file, 'w', encoding='utf-8') as f:
+        f.write(content)
             
             # Crer et sauvegarder les tests
-            test_code = self.create_configuration_tests()
-            test_file = self.workspace_root / "tests" / "test_agent_config.py"
-            test_file.parent.mkdir(exist_ok=True)
-            with open(test_file, 'w', encoding='utf-8') as f:
-                f.write(test_code)
+    test_code = self.create_configuration_tests()
+    test_file = self.workspace_root / "tests" / "test_agent_config.py"
+    test_file.parent.mkdir(exist_ok=True)
+    with open(test_file, 'w', encoding='utf-8') as f:
+    f.write(test_code)
             
-            print("[CHECK] Tous les fichiers de configuration sauvegards")
-            self.metrics["configurations_created"] += 4
-            return True
+    print("[CHECK] Tous les fichiers de configuration sauvegards")
+    self.metrics["configurations_created"] += 4
+    return True
             
-        except Exception as e:
-            print(f"[CROSS] Erreur lors de la sauvegarde: {e}")
-            return False
+    except Exception as e:
+    print(f"[CROSS] Erreur lors de la sauvegarde: {e}")
+    return False
     
     def create_integration_guide(self) -> str:
         """Crer le guide d'intgration de la configuration"""
-        print(" Cration guide d'intgration configuration...")
+    print(" Cration guide d'intgration configuration...")
         
-        guide = f'''# Guide d'Intgration Configuration Agent Factory
+    guide = f'''# Guide d'Intgration Configuration Agent Factory
 
 ## [TARGET] Objectif
 Configuration Pydantic centralise pour l'Agent Factory Pattern avec support multi-environnement et validation stricte.
@@ -873,16 +880,16 @@ env_config = EnvironmentConfig(
 **Date:** {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 '''
         
-        return guide
+    return guide
     
     def generate_agent_03_report(self) -> str:
         """Gnrer le rapport dtaill Agent 03"""
-        print("[CHART] Gnration rapport Agent 03...")
+    print("[CHART] Gnration rapport Agent 03...")
         
-        end_time = datetime.now()
-        duration = end_time - self.start_time
+    end_time = datetime.now()
+    duration = end_time - self.start_time
         
-        report = f'''# [TOOL] RAPPORT AGENT 03 - SPCIALISTE CONFIGURATION
+    report = f'''# [TOOL] RAPPORT AGENT 03 - SPCIALISTE CONFIGURATION
 
 ## [CLIPBOARD] Informations Agent
 - **Agent ID:** {self.agent_id}
@@ -1059,57 +1066,57 @@ threads = config.get_thread_pool_size()
 **Prt pour coordination avec autres agents**
 '''
         
-        return report
+    return report
     
     def execute_mission(self) -> bool:
         """Excuter la mission complte Agent 03"""
-        print(f"[ROCKET] DMARRAGE MISSION AGENT 03 - {self.agent_name}")
-        print("="*80)
+    print(f"[ROCKET] DMARRAGE MISSION AGENT 03 - {self.agent_name}")
+    print("="*80)
         
-        try:
+    try:
             # Phase 1: Validation dpendances
-            if not self.validate_dependencies():
-                print("[CROSS] chec validation dpendances")
-                return False
+    if not self.validate_dependencies():
+    print("[CROSS] chec validation dpendances")
+    return False
             
             # Phase 2: Cration et sauvegarde configuration
-            self.mission_status = "CRATION_CONFIGURATION"
-            if not self.save_configuration_files():
-                print("[CROSS] chec sauvegarde configuration")
-                return False
+    self.mission_status = "CRATION_CONFIGURATION"
+    if not self.save_configuration_files():
+    print("[CROSS] chec sauvegarde configuration")
+    return False
             
             # Phase 3: Cration guide intgration
-            self.mission_status = "DOCUMENTATION"
-            guide = self.create_integration_guide()
-            guide_file = self.workspace_root / "documentation" / "agent_03_integration_guide.md"
-            with open(guide_file, 'w', encoding='utf-8') as f:
-                f.write(guide)
+    self.mission_status = "DOCUMENTATION"
+    guide = self.create_integration_guide()
+    guide_file = self.workspace_root / "documentation" / "agent_03_integration_guide.md"
+    with open(guide_file, 'w', encoding='utf-8') as f:
+    f.write(guide)
             
             # Phase 4: Gnration rapport
-            self.mission_status = "RAPPORT_FINAL"
-            report = self.generate_agent_03_report()
-            report_file = self.reports_dir / f"agent_03_rapport_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
-            with open(report_file, 'w', encoding='utf-8') as f:
-                f.write(report)
+    self.mission_status = "RAPPORT_FINAL"
+    report = self.generate_agent_03_report()
+    report_file = self.reports_dir / f"agent_03_rapport_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+    with open(report_file, 'w', encoding='utf-8') as f:
+    f.write(report)
             
             # Mission accomplie
-            self.mission_status = "MISSION_ACCOMPLIE"
+    self.mission_status = "MISSION_ACCOMPLIE"
             
-            print("="*80)
-            print("[TARGET] MISSION AGENT 03 ACCOMPLIE AVEC SUCCS !")
-            print(f"[CHART] Configurations cres: {self.metrics['configurations_created']}")
-            print(f" Environnements: {self.metrics['environments_configured']}")
-            print(f"[CHECK] Validations: {self.metrics['validations_passed']}")
-            print(f" Rapport: {report_file}")
-            print("[TOOL] Configuration Pydantic centralise OPRATIONNELLE")
-            print("="*80)
+    print("="*80)
+    print("[TARGET] MISSION AGENT 03 ACCOMPLIE AVEC SUCCS !")
+    print(f"[CHART] Configurations cres: {self.metrics['configurations_created']}")
+    print(f" Environnements: {self.metrics['environments_configured']}")
+    print(f"[CHECK] Validations: {self.metrics['validations_passed']}")
+    print(f" Rapport: {report_file}")
+    print("[TOOL] Configuration Pydantic centralise OPRATIONNELLE")
+    print("="*80)
             
-            return True
+    return True
             
-        except Exception as e:
-            print(f"[CROSS] ERREUR MISSION AGENT 03: {e}")
-            self.mission_status = "ERREUR"
-            return False
+    except Exception as e:
+    print(f"[CROSS] ERREUR MISSION AGENT 03: {e}")
+    self.mission_status = "ERREUR"
+    return False
 
 def main():
     """Point d'entre principal Agent 03"""
@@ -1117,11 +1124,11 @@ def main():
     success = agent.execute_mission()
     
     if success:
-        print("[CHECK] Agent 03 - Mission Configuration Pydantic termine avec succs")
-        return 0
+    print("[CHECK] Agent 03 - Mission Configuration Pydantic termine avec succs")
+    return 0
     else:
-        print("[CROSS] Agent 03 - chec mission")
-        return 1
+    print("[CROSS] Agent 03 - chec mission")
+    return 1
 
 if __name__ == "__main__":
     exit(main()) 
@@ -1132,37 +1139,37 @@ def create_agent_03SpecialisteConfiguration(**config):
 
     async def startup(self):
         """Démarrage agent"""
-        self.logger.info(f"🚀 Agent {self.agent_id} - DÉMARRAGE")
+    self.logger.info(f"🚀 Agent {self.agent_id} - DÉMARRAGE")
 
 
     async def shutdown(self):
         """Arrêt agent"""
-        self.logger.info(f"🛑 Agent {self.agent_id} - ARRÊT")
+    self.logger.info(f"🛑 Agent {self.agent_id} - ARRÊT")
 
 
     async def health_check(self) -> Dict[str, Any]:
         """Vérification santé agent"""
-        return {
-            "agent_id": self.agent_id,
-            "agent_type": self.agent_type,
-            "status": "healthy",
-            "timestamp": datetime.now().isoformat()
-        }
+    return {
+    "agent_id": self.agent_id,
+    "agent_type": self.agent_type,
+    "status": "healthy",
+    "timestamp": datetime.now().isoformat()
+    }
 
 
     async def execute_task(self, task: Any) -> Any:
         """Exécution d'une tâche spécifique - Méthode abstraite obligatoire"""
-        try:
-            self.logger.info(f"📋 Exécution tâche: {task}")
+    try:
+    self.logger.info(f"📋 Exécution tâche: {task}")
             # Logique métier à adapter
-            return {"success": True, "result": "Task executed"}
-        except Exception as e:
-            self.logger.error(f"❌ Erreur exécution tâche: {e}")
-            return {"error": str(e)}
+    return {"success": True, "result": "Task executed"}
+    except Exception as e:
+    self.logger.error(f"❌ Erreur exécution tâche: {e}")
+    return {"error": str(e)}
 
 
     def get_capabilities(self) -> List[str]:
         """Retourne les capacités de l'agent - Méthode abstraite obligatoire"""
-        return ["basic_capability"]
+    return ["basic_capability"]
 
     return Agent03SpecialisteConfiguration(**config)

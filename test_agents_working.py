@@ -6,11 +6,20 @@ Vérifie que les agents créés à partir des templates JSON fonctionnent correc
 
 import sys
 import json
-import logging
+from logging_manager_optimized import LoggingManager
 from pathlib import Path
 
 # Configuration du logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# LoggingManager NextGeneration - Tests
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_logger(custom_config={
+            "logger_name": "test_agents_working",
+            "log_level": "DEBUG",
+            "elasticsearch_enabled": False,
+            "encryption_enabled": False,
+            "async_enabled": False,  # Tests synchrones
+            "console_output": True
+        })s - %(name)s - %(levelname)s - %(message)s')
 
 def test_template_manager():
     """Teste le TemplateManager"""

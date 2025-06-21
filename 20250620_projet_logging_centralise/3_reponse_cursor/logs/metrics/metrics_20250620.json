@@ -592,5 +592,437 @@
       "handlers_active": 0
     },
     "timestamp": "2025-06-20T22:14:08.405541"
+  },
+  {
+    "core_metrics": {
+      "total_logs": 20,
+      "logs_per_level": {
+        "DEBUG": 0,
+        "INFO": 10,
+        "WARNING": 10,
+        "ERROR": 0,
+        "CRITICAL": 0
+      },
+      "logs_per_category": {
+        "agents": 0,
+        "tools": 0,
+        "system": 0,
+        "errors": 0,
+        "audit": 0,
+        "performance": 0
+      },
+      "average_log_size": 0.0,
+      "compression_ratio": 0.0,
+      "errors_count": 0,
+      "last_error": null,
+      "active_loggers": 2,
+      "async_handlers": 0,
+      "performance_stats": {}
+    },
+    "chatgpt_features": {
+      "elasticsearch": {
+        "docs_sent": 0,
+        "errors": 0,
+        "enabled_loggers": 0
+      },
+      "encryption": {
+        "encrypted_logs": 0,
+        "enabled_loggers": 0
+      },
+      "alerting": {
+        "alerts_sent": 0,
+        "enabled_loggers": 0
+      },
+      "compression": {
+        "savings_bytes": 0,
+        "ratio_percent": "0.00%"
+      },
+      "async_performance": {}
+    },
+    "system_health": {
+      "memory_usage_mb": 35.8125,
+      "uptime_seconds": 0.007249,
+      "configs_loaded": 9,
+      "handlers_active": 0
+    },
+    "timestamp": "2025-06-20T22:14:28.481709"
+  },
+  {
+    "core_metrics": {
+      "total_logs": 0,
+      "logs_per_level": {
+        "DEBUG": 0,
+        "INFO": 0,
+        "WARNING": 0,
+        "ERROR": 0,
+        "CRITICAL": 0
+      },
+      "logs_per_category": {
+        "agents": 0,
+        "tools": 0,
+        "system": 0,
+        "errors": 0,
+        "audit": 0,
+        "performance": 0
+      },
+      "average_log_size": 0.0,
+      "compression_ratio": 0.0,
+      "errors_count": 0,
+      "last_error": null,
+      "active_loggers": 0,
+      "async_handlers": 0,
+      "performance_stats": {}
+    },
+    "chatgpt_features": {
+      "elasticsearch": {
+        "docs_sent": 0,
+        "errors": 0,
+        "enabled_loggers": 0
+      },
+      "encryption": {
+        "encrypted_logs": 0,
+        "enabled_loggers": 0
+      },
+      "alerting": {
+        "alerts_sent": 0,
+        "enabled_loggers": 0
+      },
+      "compression": {
+        "savings_bytes": 0,
+        "ratio_percent": "0.00%"
+      },
+      "async_performance": {}
+    },
+    "system_health": {
+      "memory_usage_mb": 35.78515625,
+      "uptime_seconds": 0.006,
+      "configs_loaded": 9,
+      "handlers_active": 0
+    },
+    "timestamp": "2025-06-20T22:16:24.637399"
+  },
+  {
+    "core_metrics": {
+      "total_logs": 20,
+      "logs_per_level": {
+        "DEBUG": 0,
+        "INFO": 10,
+        "WARNING": 10,
+        "ERROR": 0,
+        "CRITICAL": 0
+      },
+      "logs_per_category": {
+        "agents": 0,
+        "tools": 0,
+        "system": 0,
+        "errors": 0,
+        "audit": 0,
+        "performance": 0
+      },
+      "average_log_size": 0.0,
+      "compression_ratio": 0.0,
+      "errors_count": 0,
+      "last_error": null,
+      "active_loggers": 2,
+      "async_handlers": 0,
+      "performance_stats": {}
+    },
+    "chatgpt_features": {
+      "elasticsearch": {
+        "docs_sent": 0,
+        "errors": 0,
+        "enabled_loggers": 0
+      },
+      "encryption": {
+        "encrypted_logs": 0,
+        "enabled_loggers": 0
+      },
+      "alerting": {
+        "alerts_sent": 0,
+        "enabled_loggers": 0
+      },
+      "compression": {
+        "savings_bytes": 0,
+        "ratio_percent": "0.00%"
+      },
+      "async_performance": {}
+    },
+    "system_health": {
+      "memory_usage_mb": 35.8203125,
+      "uptime_seconds": 0.005068,
+      "configs_loaded": 9,
+      "handlers_active": 0
+    },
+    "timestamp": "2025-06-20T22:16:24.967948"
+  },
+  {
+    "core_metrics": {
+      "total_logs": 0,
+      "logs_per_level": {
+        "DEBUG": 0,
+        "INFO": 0,
+        "WARNING": 0,
+        "ERROR": 0,
+        "CRITICAL": 0
+      },
+      "logs_per_category": {
+        "agents": 0,
+        "tools": 0,
+        "system": 0,
+        "errors": 0,
+        "audit": 0,
+        "performance": 0
+      },
+      "average_log_size": 0.0,
+      "compression_ratio": 0.0,
+      "errors_count": 0,
+      "last_error": null,
+      "active_loggers": 1,
+      "async_handlers": 0,
+      "performance_stats": {}
+    },
+    "chatgpt_features": {
+      "elasticsearch": {
+        "docs_sent": 0,
+        "errors": 0,
+        "enabled_loggers": 0
+      },
+      "encryption": {
+        "encrypted_logs": 1,
+        "enabled_loggers": 0
+      },
+      "alerting": {
+        "alerts_sent": 0,
+        "enabled_loggers": 0
+      },
+      "compression": {
+        "savings_bytes": 0,
+        "ratio_percent": "0.00%"
+      },
+      "async_performance": {}
+    },
+    "system_health": {
+      "memory_usage_mb": 39.94140625,
+      "uptime_seconds": 0.050751,
+      "configs_loaded": 9,
+      "handlers_active": 0
+    },
+    "timestamp": "2025-06-20T23:44:29.260959"
+  },
+  {
+    "core_metrics": {
+      "total_logs": 0,
+      "logs_per_level": {
+        "DEBUG": 0,
+        "INFO": 0,
+        "WARNING": 0,
+        "ERROR": 0,
+        "CRITICAL": 0
+      },
+      "logs_per_category": {
+        "agents": 0,
+        "tools": 0,
+        "system": 0,
+        "errors": 0,
+        "audit": 0,
+        "performance": 0
+      },
+      "average_log_size": 0.0,
+      "compression_ratio": 0.0,
+      "errors_count": 0,
+      "last_error": null,
+      "active_loggers": 1,
+      "async_handlers": 0,
+      "performance_stats": {}
+    },
+    "chatgpt_features": {
+      "elasticsearch": {
+        "docs_sent": 0,
+        "errors": 0,
+        "enabled_loggers": 0
+      },
+      "encryption": {
+        "encrypted_logs": 1,
+        "enabled_loggers": 0
+      },
+      "alerting": {
+        "alerts_sent": 0,
+        "enabled_loggers": 0
+      },
+      "compression": {
+        "savings_bytes": 0,
+        "ratio_percent": "0.00%"
+      },
+      "async_performance": {}
+    },
+    "system_health": {
+      "memory_usage_mb": 39.4921875,
+      "uptime_seconds": 0.049083,
+      "configs_loaded": 9,
+      "handlers_active": 0
+    },
+    "timestamp": "2025-06-20T23:45:08.307056"
+  },
+  {
+    "core_metrics": {
+      "total_logs": 0,
+      "logs_per_level": {
+        "DEBUG": 0,
+        "INFO": 0,
+        "WARNING": 0,
+        "ERROR": 0,
+        "CRITICAL": 0
+      },
+      "logs_per_category": {
+        "agents": 0,
+        "tools": 0,
+        "system": 0,
+        "errors": 0,
+        "audit": 0,
+        "performance": 0
+      },
+      "average_log_size": 0.0,
+      "compression_ratio": 0.0,
+      "errors_count": 0,
+      "last_error": null,
+      "active_loggers": 1,
+      "async_handlers": 0,
+      "performance_stats": {}
+    },
+    "chatgpt_features": {
+      "elasticsearch": {
+        "docs_sent": 0,
+        "errors": 0,
+        "enabled_loggers": 0
+      },
+      "encryption": {
+        "encrypted_logs": 1,
+        "enabled_loggers": 0
+      },
+      "alerting": {
+        "alerts_sent": 0,
+        "enabled_loggers": 0
+      },
+      "compression": {
+        "savings_bytes": 0,
+        "ratio_percent": "0.00%"
+      },
+      "async_performance": {}
+    },
+    "system_health": {
+      "memory_usage_mb": 39.71875,
+      "uptime_seconds": 0.54206,
+      "configs_loaded": 9,
+      "handlers_active": 0
+    },
+    "timestamp": "2025-06-20T23:45:50.877833"
+  },
+  {
+    "core_metrics": {
+      "total_logs": 0,
+      "logs_per_level": {
+        "DEBUG": 0,
+        "INFO": 0,
+        "WARNING": 0,
+        "ERROR": 0,
+        "CRITICAL": 0
+      },
+      "logs_per_category": {
+        "agents": 0,
+        "tools": 0,
+        "system": 0,
+        "errors": 0,
+        "audit": 0,
+        "performance": 0
+      },
+      "average_log_size": 0.0,
+      "compression_ratio": 0.0,
+      "errors_count": 0,
+      "last_error": null,
+      "active_loggers": 0,
+      "async_handlers": 0,
+      "performance_stats": {}
+    },
+    "chatgpt_features": {
+      "elasticsearch": {
+        "docs_sent": 0,
+        "errors": 0,
+        "enabled_loggers": 0
+      },
+      "encryption": {
+        "encrypted_logs": 0,
+        "enabled_loggers": 0
+      },
+      "alerting": {
+        "alerts_sent": 0,
+        "enabled_loggers": 0
+      },
+      "compression": {
+        "savings_bytes": 0,
+        "ratio_percent": "0.00%"
+      },
+      "async_performance": {}
+    },
+    "system_health": {
+      "memory_usage_mb": 35.69921875,
+      "uptime_seconds": 0.009107,
+      "configs_loaded": 9,
+      "handlers_active": 0
+    },
+    "timestamp": "2025-06-20T23:45:59.084182"
+  },
+  {
+    "core_metrics": {
+      "total_logs": 20,
+      "logs_per_level": {
+        "DEBUG": 0,
+        "INFO": 10,
+        "WARNING": 10,
+        "ERROR": 0,
+        "CRITICAL": 0
+      },
+      "logs_per_category": {
+        "agents": 0,
+        "tools": 0,
+        "system": 0,
+        "errors": 0,
+        "audit": 0,
+        "performance": 0
+      },
+      "average_log_size": 0.0,
+      "compression_ratio": 0.0,
+      "errors_count": 0,
+      "last_error": null,
+      "active_loggers": 2,
+      "async_handlers": 0,
+      "performance_stats": {}
+    },
+    "chatgpt_features": {
+      "elasticsearch": {
+        "docs_sent": 0,
+        "errors": 0,
+        "enabled_loggers": 0
+      },
+      "encryption": {
+        "encrypted_logs": 0,
+        "enabled_loggers": 0
+      },
+      "alerting": {
+        "alerts_sent": 0,
+        "enabled_loggers": 0
+      },
+      "compression": {
+        "savings_bytes": 0,
+        "ratio_percent": "0.00%"
+      },
+      "async_performance": {}
+    },
+    "system_health": {
+      "memory_usage_mb": 35.88671875,
+      "uptime_seconds": 0.010032,
+      "configs_loaded": 9,
+      "handlers_active": 0
+    },
+    "timestamp": "2025-06-20T23:45:59.420234"
   }
 ]

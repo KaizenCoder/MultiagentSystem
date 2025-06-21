@@ -14,7 +14,7 @@ Responsabilités:
 """
 
 import asyncio
-import logging
+from logging_manager_optimized import LoggingManager
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 from pathlib import Path
@@ -38,7 +38,14 @@ except ImportError:
                 self.agent_id = f"agent_5_documenteur_20250619_151323"
                 self.agent_type = agent_type
                 self.config = config
-                self.logger = logging.getLogger(f"AgentDocumenteur")
+                # LoggingManager NextGeneration - Agent
+        from logging_manager_optimized import LoggingManager
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="Agent",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
                 
             async def startup(self): pass
             async def shutdown(self): pass

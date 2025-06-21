@@ -6,7 +6,7 @@ from collections import defaultdict
 import time
 import random
 from abc import ABC, abstractmethod
-import logging
+from logging_manager_optimized import LoggingManager
 
 # === Agent Pool Management ===
 
