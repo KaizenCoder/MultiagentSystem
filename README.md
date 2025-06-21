@@ -59,8 +59,9 @@ lc_messages = 'C'       # Messages système en anglais/UTF-8
 | **RTX3090 GPU** | 10/10 | ✅ | Accélération GPU active |
 | **Memory API** | 10/10 | ✅ | Port 8001, endpoints fonctionnels |
 | **LM Studio** | 10/10 | ✅ | Interface IA locale |
+| **🛠️ Équipe Maintenance** | 10/10 | ✅ | 6 agents, 419+ lignes corrigées |
 
-**TOTAL : 70/70 (100%)** 🎯
+**TOTAL : 80/80 (100%)** 🎯
 
 ---
 
@@ -99,9 +100,14 @@ nextgeneration/
 ├── 📊 ANALYSE_GAP_100_POURCENT.md          # ✅ Mission accomplie
 ├── 📋 ANALYSE_RETOURS_EXPERTS_TASKMASTER.md # ✅ Solutions expertes
 ├── 🔧 GUIDE_RESOLUTION_POSTGRESQL_UTF8.md   # ✅ Guide résolution
+├── 🛠️ DOCUMENTATION_EQUIPE_MAINTENANCE_NEXTGENERATION.md # ✅ Équipe maintenance
 ├── memory_api/                              # ✅ API mémoire
 │   ├── app/db/session.py                   # ✅ PostgreSQL + SQLite
 │   └── app/db/session_sqlite_fallback.py   # ✅ Fallback robuste
+├── 20250620_transformation_equipe_maintenance/ # 🤖 Équipe maintenance
+│   ├── agent_equipe_maintenance/          # ✅ 6 agents spécialisés
+│   ├── mission_maintenance_complete_repertoire.py # ✅ Mission principale
+│   └── mission_correction_agents_critiques.py    # ✅ Mission ciblée
 ├── 20250620_projet_taskmanager/             # 📋 Documentation
 │   ├── PROMPT_POSTGRESQL_EXPERT_HELP_2025.md
 │   └── 20250621_010311_004_postgresql_utf8_patchkit/
@@ -157,6 +163,18 @@ FALLBACK_URL = "sqlite:///./nextgeneration.db"
 export CUDA_VISIBLE_DEVICES=0
 ollama serve
 ollama run llama3:8b-instruct-q6_k
+```
+
+### **🛠️ Équipe de Maintenance NextGeneration**
+```bash
+# Maintenance automatique complète
+python mission_maintenance_complete_repertoire.py
+
+# Correction agents critiques
+python mission_correction_agents_critiques.py
+
+# Test workflow équipe
+python test_workflow_complet_equipe.py
 ```
 
 ### **APIs Endpoints**
