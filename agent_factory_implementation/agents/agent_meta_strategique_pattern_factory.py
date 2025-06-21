@@ -17,7 +17,9 @@ Architecture : Pattern Factory compliant avec interface Agent standard
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, Any, List, Optional
@@ -29,7 +31,9 @@ sys.path.append(str(Path(__file__).parent.parent))
 from core.agent_factory_architecture import Agent, Task, Result, TaskStatus, Priority
 
 # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_agent_logger(
     agent_name="class",
     role="ai_processor",
@@ -139,11 +143,11 @@ class AgentMetaStrategique(Agent):
     result_data = self._monitor_system(task.params)
     else:
     return Result(
-        success=False,
-        error=f"Tâche non supportée: {task.type}",
-        error_code="UNSUPPORTED_TASK",
-        agent_id=self.id,
-        task_id=task.id
+    success=False,
+    error=f"Tâche non supportée: {task.type}",
+    error_code="UNSUPPORTED_TASK",
+    agent_id=self.id,
+    task_id=task.id
     )
             
             # Calcul des métriques d'exécution
@@ -156,11 +160,11 @@ class AgentMetaStrategique(Agent):
     success=True,
     data=result_data,
     metrics={
-        "execution_time_seconds": execution_time,
-        "task_type": task.type,
-        "insights_generated": len(result_data.get("insights", [])),
-        "metrics_analyzed": len(result_data.get("metrics", [])),
-        "performance_score": result_data.get("performance_score", 0)
+    "execution_time_seconds": execution_time,
+    "task_type": task.type,
+    "insights_generated": len(result_data.get("insights", [])),
+    "metrics_analyzed": len(result_data.get("metrics", [])),
+    "performance_score": result_data.get("performance_score", 0)
     },
     agent_id=self.id,
     task_id=task.id
@@ -413,25 +417,25 @@ class AgentMetaStrategique(Agent):
             
     for metric_file in metric_files:
     try:
-        logger.info(f"🔍 Lecture fichier: {metric_file}")
-        with open(metric_file, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-            logger.info(f"🔍 Données lues: {data}")
+    logger.info(f"🔍 Lecture fichier: {metric_file}")
+    with open(metric_file, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+        logger.info(f"🔍 Données lues: {data}")
                         
                         # Conversion en PerformanceMetric
-            for key, value in data.items():
-                if isinstance(value, (int, float)):
-                    metric = PerformanceMetric(
-                        name=key,
-                        value=value,
-                        unit="",
-                        timestamp=datetime.fromtimestamp(metric_file.stat().st_mtime),
-                        source=metric_file.name
-                    )
-                    metrics.append(metric)
-                    logger.info(f"🔍 Métrique ajoutée: {key}={value}")
+        for key, value in data.items():
+            if isinstance(value, (int, float)):
+                metric = PerformanceMetric(
+                    name=key,
+                    value=value,
+                    unit="",
+                    timestamp=datetime.fromtimestamp(metric_file.stat().st_mtime),
+                    source=metric_file.name
+                )
+                metrics.append(metric)
+                logger.info(f"🔍 Métrique ajoutée: {key}={value}")
     except Exception as e:
-        logger.warning(f"Erreur lecture métrique {metric_file}: {e}")
+    logger.warning(f"Erreur lecture métrique {metric_file}: {e}")
     else:
     logger.warning(f"❌ Répertoire métriques non trouvé: {self.metrics_path}")
         
@@ -453,19 +457,19 @@ class AgentMetaStrategique(Agent):
     metrics_by_name = {}
     for metric in metrics:
     if metric.name not in metrics_by_name:
-        metrics_by_name[metric.name] = []
+    metrics_by_name[metric.name] = []
     metrics_by_name[metric.name].append(metric)
             
             # Analyser chaque métrique
     for name, metric_list in metrics_by_name.items():
     if len(metric_list) > 1:
-        values = [m.value for m in sorted(metric_list, key=lambda x: x.timestamp)]
-        if values[-1] > values[0] * 1.2:  # Augmentation de 20%+
-            trends["notable_changes"].append({
-                "metric": name,
-                "change": "increase",
-                "magnitude": ((values[-1] - values[0]) / values[0]) * 100
-            })
+    values = [m.value for m in sorted(metric_list, key=lambda x: x.timestamp)]
+    if values[-1] > values[0] * 1.2:  # Augmentation de 20%+
+        trends["notable_changes"].append({
+            "metric": name,
+            "change": "increase",
+            "magnitude": ((values[-1] - values[0]) / values[0]) * 100
+        })
         
     return trends
     
@@ -485,24 +489,24 @@ class AgentMetaStrategique(Agent):
     threshold = self.performance_thresholds.get(metric.name, 100)
     if metric.value <= threshold:
                     # Excellent si sous le seuil
-        score = 100 - (metric.value / threshold * 30)  # Max 70 points de pénalité
+    score = 100 - (metric.value / threshold * 30)  # Max 70 points de pénalité
     else:
                     # Pénalité progressive si au-dessus
-        score = max(0, 70 - ((metric.value - threshold) / threshold * 70))
+    score = max(0, 70 - ((metric.value - threshold) / threshold * 70))
                     
     elif metric.name == "error_rate_percent":
     threshold = self.performance_thresholds.get(metric.name, 5)
     if metric.value <= threshold:
-        score = 100 - (metric.value / threshold * 20)  # Max 20 points de pénalité
+    score = 100 - (metric.value / threshold * 20)  # Max 20 points de pénalité
     else:
-        score = max(0, 80 - ((metric.value - threshold) / threshold * 80))
+    score = max(0, 80 - ((metric.value - threshold) / threshold * 80))
                     
     elif metric.name in ["cpu_usage_percent", "memory_usage_percent"]:
     threshold = self.performance_thresholds.get(metric.name, 80)
     if metric.value <= threshold:
-        score = 100 - (metric.value / threshold * 25)  # Max 25 points de pénalité
+    score = 100 - (metric.value / threshold * 25)  # Max 25 points de pénalité
     else:
-        score = max(0, 75 - ((metric.value - threshold) / threshold * 75))
+    score = max(0, 75 - ((metric.value - threshold) / threshold * 75))
                     
             # Métriques où plus haut = mieux
     elif metric.name == "success_rate_percent":
@@ -532,25 +536,25 @@ class AgentMetaStrategique(Agent):
     threshold = self.performance_thresholds.get(metric.name)
     if threshold:
     if metric.name in ["response_time_ms", "error_rate_percent", "cpu_usage_percent", "memory_usage_percent"]:
-        if metric.value > threshold:
-            anomalies.append({
-                "type": "threshold_exceeded",
-                "metric": metric.name,
-                "value": metric.value,
-                "threshold": threshold,
-                "severity": "HIGH" if metric.value > threshold * 1.5 else "MEDIUM",
-                "timestamp": metric.timestamp.isoformat()
-            })
+    if metric.value > threshold:
+        anomalies.append({
+            "type": "threshold_exceeded",
+            "metric": metric.name,
+            "value": metric.value,
+            "threshold": threshold,
+            "severity": "HIGH" if metric.value > threshold * 1.5 else "MEDIUM",
+            "timestamp": metric.timestamp.isoformat()
+        })
     elif metric.name in ["success_rate_percent"]:
-        if metric.value < threshold:
-            anomalies.append({
-                "type": "threshold_below",
-                "metric": metric.name,
-                "value": metric.value,
-                "threshold": threshold,
-                "severity": "HIGH",
-                "timestamp": metric.timestamp.isoformat()
-            })
+    if metric.value < threshold:
+        anomalies.append({
+            "type": "threshold_below",
+            "metric": metric.name,
+            "value": metric.value,
+            "threshold": threshold,
+            "severity": "HIGH",
+            "timestamp": metric.timestamp.isoformat()
+        })
         
     return anomalies
     
@@ -583,31 +587,31 @@ class AgentMetaStrategique(Agent):
     if self.logs_path.exists():
     for log_file in self.logs_path.glob("*.log"):
     try:
-        with open(log_file, 'r', encoding='utf-8') as f:
-            content = f.read()
+    with open(log_file, 'r', encoding='utf-8') as f:
+        content = f.read()
                         
                         # Comptage des erreurs
-            error_count = content.count("ERROR")
-            warning_count = content.count("WARNING")
+        error_count = content.count("ERROR")
+        warning_count = content.count("WARNING")
                         
-            if error_count > 10:
-                anomalies.append({
-                    "type": "high_error_rate",
-                    "source": log_file.name,
-                    "error_count": error_count,
-                    "severity": "HIGH"
-                })
+        if error_count > 10:
+            anomalies.append({
+                "type": "high_error_rate",
+                "source": log_file.name,
+                "error_count": error_count,
+                "severity": "HIGH"
+            })
                         
-            if warning_count > 50:
-                anomalies.append({
-                    "type": "high_warning_rate",
-                    "source": log_file.name,
-                    "warning_count": warning_count,
-                    "severity": "MEDIUM"
-                })
+        if warning_count > 50:
+            anomalies.append({
+                "type": "high_warning_rate",
+                "source": log_file.name,
+                "warning_count": warning_count,
+                "severity": "MEDIUM"
+            })
                             
     except Exception as e:
-        logger.warning(f"Erreur analyse log {log_file}: {e}")
+    logger.warning(f"Erreur analyse log {log_file}: {e}")
         
     return anomalies
     
@@ -624,9 +628,9 @@ class AgentMetaStrategique(Agent):
     recent_reports = list(self.reports_path.glob("*.json"))
     if len(recent_reports) == 0:
     anomalies.append({
-        "type": "missing_reports",
-        "message": "Aucun rapport récent trouvé",
-        "severity": "MEDIUM"
+    "type": "missing_reports",
+    "message": "Aucun rapport récent trouvé",
+    "severity": "MEDIUM"
     })
         
     return anomalies
@@ -667,9 +671,9 @@ class AgentMetaStrategique(Agent):
     description=f"Score de performance excellent: {performance_score:.1f}/100",
     impact="Maintien de la qualité de service optimale",
     recommended_actions=[
-        "Maintenir la surveillance continue",
-        "Documenter les bonnes pratiques actuelles",
-        "Planifier les optimisations préventives"
+    "Maintenir la surveillance continue",
+    "Documenter les bonnes pratiques actuelles",
+    "Planifier les optimisations préventives"
     ],
     data_sources=["performance_metrics"],
     confidence_score=0.95
@@ -708,9 +712,9 @@ class AgentMetaStrategique(Agent):
     description="Anomalies système nécessitant une attention immédiate",
     impact="Risque de dysfonctionnement du système",
     recommended_actions=[
-        "Analyser les anomalies critiques en priorité",
-        "Implémenter des corrections immédiates",
-        "Renforcer la surveillance"
+    "Analyser les anomalies critiques en priorité",
+    "Implémenter des corrections immédiates",
+    "Renforcer la surveillance"
     ],
     data_sources=["system_logs", "metrics"],
     confidence_score=0.90
@@ -732,9 +736,9 @@ class AgentMetaStrategique(Agent):
     description="Aucune anomalie détectée, performances dans les normes",
     impact="Maintien de la qualité de service",
     recommended_actions=[
-        "Maintenir la surveillance continue",
-        "Planifier les optimisations préventives",
-        "Documenter les bonnes pratiques"
+    "Maintenir la surveillance continue",
+    "Planifier les optimisations préventives",
+    "Documenter les bonnes pratiques"
     ],
     data_sources=["all_metrics"],
     confidence_score=0.95
@@ -758,7 +762,7 @@ class AgentMetaStrategique(Agent):
     performance_score = performance_data.get("performance_score", 0)
     anomaly_count = anomaly_data.get("anomalies_found", 0)
     critical_insights = len([i for i in insights_data.get("insights", []) 
-                   if i.get("severity") == "CRITICAL"])
+               if i.get("severity") == "CRITICAL"])
         
         # Score basé sur la performance et pénalisé par les anomalies
     health_score = performance_score
@@ -913,9 +917,9 @@ Recommandation: {"Action immédiate requise" if health_score < 60 else "Surveill
     recent_metrics = list(self.metrics_path.glob("*.json"))
     if not recent_metrics:
     alerts.append({
-        "type": "no_recent_metrics",
-        "severity": "MEDIUM",
-        "message": "Aucune métrique récente disponible"
+    "type": "no_recent_metrics",
+    "severity": "MEDIUM",
+    "message": "Aucune métrique récente disponible"
     })
         
     return alerts
@@ -945,11 +949,11 @@ Recommandation: {"Action immédiate requise" if health_score < 60 else "Surveill
     if insights_file.exists():
     try:
     with open(insights_file, 'r', encoding='utf-8') as f:
-        data = json.load(f)
+    data = json.load(f)
                     # Reconstruction des insights depuis JSON
-        for insight_data in data:
-            insight = StrategicInsight(**insight_data)
-            self.insights_history.append(insight)
+    for insight_data in data:
+        insight = StrategicInsight(**insight_data)
+        self.insights_history.append(insight)
     logger.info(f"📚 {len(self.insights_history)} insights historiques chargés")
     except Exception as e:
     logger.warning(f"Erreur chargement historique insights: {e}")

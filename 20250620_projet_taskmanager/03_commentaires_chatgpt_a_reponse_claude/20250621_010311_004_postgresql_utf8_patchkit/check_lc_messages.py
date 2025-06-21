@@ -10,3 +10,7 @@ def warn_if_bad_locale(conn):
     locale = cur.fetchone()[0]
     if locale != "C":
         logger.warning(f"⚠️ PostgreSQL locale 'lc_messages' = {locale} ≠ 'C' → risque UnicodeDecodeError.")
+
+
+
+

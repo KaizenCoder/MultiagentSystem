@@ -15,7 +15,6 @@ import time
 import random
 import json
 import statistics
-from logging_manager_optimized import LoggingManager
 from typing import Dict, List, Any, Optional
 from datetime import datetime, timedelta
 from dataclasses import dataclass, asdict
@@ -23,24 +22,19 @@ from concurrent.futures import ThreadPoolExecutor
 import sys
 import os
 
-# Import infrastructure IA-2
-sys.path.append(os.path.join(os.path.dirname(__file__), "../.."))
-from orchestrator.app.performance.redis_cache_production import get_production_cache, CacheStrategy
+# Golden Source Logging
+from core import logging_manager
 
-# Configuration logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-# LoggingManager NextGeneration - Tool/Utility
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
-            "logger_name": "class",
-            "log_level": "INFO",
-            "elasticsearch_enabled": False,
-            "encryption_enabled": False,
-            "async_enabled": True
-        })
+# Configuration du logging
+logger = logging_manager.get_logger('load_test', custom_config={
+    "logger_name": "LoadTest",
+    "log_level": "INFO",
+    "elasticsearch_enabled": False, # Important pour l'analyse des résultats, mais désactivé pour les tests locaux sans ES.
+    "async_enabled": True,
+})
+
+# Import infrastructure IA-2
+from orchestrator.app.performance.redis_cache_production import get_production_cache, CacheStrategy
 
 @dataclass
 class LoadTestConfig:
@@ -431,32 +425,31 @@ class LoadTestOrchestrator:
         
     async def run_load_test(self) -> LoadTestResults:
         """Excute test de charge complet"""
-        logger.info(f"[ROCKET] Dmarrage test de charge : {self.config.max_concurrent_users} users")
-        
+        logger.info(f"🚀 Dmarrage du test de charge avec {self.config.max_concurrent_users} utilisateurs sur {self.config.test_duration}s...")
         start_time = datetime.now()
         
         # Phase 1: Ramp-up
-        logger.info(f" Phase ramp-up : {self.config.ramp_up_duration}s")
         await self._ramp_up_phase()
         
-        # Phase 2: Plateau (charge max)
-        logger.info(f" Phase plateau : {self.config.test_duration}s")
+        # Phase 2: Plateau
         plateau_results = await self._plateau_phase()
+        self.all_results.extend(plateau_results)
         
-        # Phase 3: Ramp-down  
-        logger.info(f" Phase ramp-down : {self.config.ramp_down_duration}s")
+        # Phase 3: Ramp-down
         await self._ramp_down_phase()
         
         end_time = datetime.now()
+        logger.info("🏁 Test de charge termin.")
         
         # Analyse rsultats
-        results = self._analyze_results(plateau_results, start_time, end_time)
+        logger.info("📊 Analyse des rsultats...")
+        results = self._analyze_results(self.all_results, start_time, end_time)
         
-        logger.info(f"[CHECK] Test termin - Success: {results.overall_success}")
         return results
     
     async def _ramp_up_phase(self):
         """Phase monte en charge progressive"""
+        logger.info(f"📈 Phase de Ramp-up: 0 -> {self.config.max_concurrent_users} utilisateurs en {self.config.ramp_up_duration}s")
         ramp_step_duration = self.config.ramp_up_duration / 10
         users_per_step = self.config.max_concurrent_users // 10
         
@@ -479,6 +472,7 @@ class LoadTestOrchestrator:
     
     async def _plateau_phase(self) -> List[RequestResult]:
         """Phase charge maximale (phase critique)"""
+        logger.info(f"⛰️  Phase de Plateau: {self.config.max_concurrent_users} utilisateurs pendant {self.config.test_duration}s")
         tasks = []
         
         # Lancer tous les utilisateurs simultans
@@ -509,10 +503,12 @@ class LoadTestOrchestrator:
             elif isinstance(user_results, Exception):
                 logger.error(f"Erreur utilisateur : {user_results}")
         
+        logger.info(f"✅ Plateau termin. {len(plateau_results)} requtes gnres.")
         return plateau_results
     
     async def _ramp_down_phase(self):
         """Phase descente de charge"""
+        logger.info(f"📉 Phase de Ramp-down: {self.config.max_concurrent_users} -> 0 utilisateurs en {self.config.ramp_down_duration}s")
         # Simulation progressive reduction (pour stats)
         await asyncio.sleep(self.config.ramp_down_duration)
         logger.info(" Ramp-down termin")
@@ -643,48 +639,45 @@ class LoadTestOrchestrator:
     
     def print_detailed_report(self, results: LoadTestResults):
         """Affiche rapport dtaill"""
-        print("\n" + "="*80)
-        print("[ROCKET] RAPPORT LOAD TESTING 1000+ USERS - PHASE 4 IA-1+IA-2")
-        print("="*80)
+        logger.info("\n" + "="*80)
+        logger.info(" DETAILED LOAD TEST REPORT")
+        logger.info("="*80)
         
-        print(f"\n[CHART] CONFIGURATION TEST")
-        print(f"   Users simultans : {results.config.max_concurrent_users}")
-        print(f"   Dure test : {results.config.test_duration}s")
-        print(f"   Priode : {results.start_time}  {results.end_time}")
+        logger.info("\n[CONFIG]")
+        for key, value in asdict(results.config).items():
+            logger.info(f"  {key:<25}: {value}")
         
-        print(f"\n MTRIQUES VOLUME")
-        print(f"   Total requtes : {results.total_requests:,}")
-        print(f"   Requtes russies : {results.successful_requests:,}")
-        print(f"   Requtes choues : {results.failed_requests:,}")
-        print(f"   Taux d'erreur : {results.error_rate_percent:.2f}%")
+        logger.info("\n[OVERALL RESULTS]")
+        logger.info(f"  Duration: {(results.end_time - results.start_time).total_seconds():.2f}s")
+        logger.info(f"  Total Requests: {results.total_requests}")
+        logger.info(f"  Successful Requests: {results.successful_requests}")
+        logger.info(f"  Failed Requests: {results.failed_requests}")
+        logger.info(f"  Error Rate: {results.error_rate_percent:.2f}%")
         
-        print(f"\n[LIGHTNING] MTRIQUES PERFORMANCE")
-        print(f"   Latence moyenne : {results.avg_response_time_ms:.1f}ms")
-        print(f"   Latence P50 : {results.p50_response_time_ms:.1f}ms")
-        print(f"   Latence P95 : {results.p95_response_time_ms:.1f}ms")
-        print(f"   Latence P99 : {results.p99_response_time_ms:.1f}ms")
+        logger.info("\n[PERFORMANCE]")
+        logger.info(f"  Avg Response Time: {results.avg_response_time_ms:.2f}ms")
+        logger.info(f"  P50 Response Time: {results.p50_response_time_ms:.2f}ms")
+        logger.info(f"  P95 Response Time: {results.p95_response_time_ms:.2f}ms")
+        logger.info(f"  P99 Response Time: {results.p99_response_time_ms:.2f}ms")
         
-        print(f"\n[TARGET] MTRIQUES THROUGHPUT")
-        print(f"   Throughput moyen : {results.requests_per_second:.1f} req/s")
-        print(f"   Pic throughput : {results.peak_throughput_rps:.1f} req/s")
+        logger.info("\n[THROUGHPUT]")
+        logger.info(f"  Avg Throughput: {results.requests_per_second:.2f} rps")
+        logger.info(f"  Peak Throughput: {results.peak_throughput_rps:.2f} rps")
         
-        print(f"\n[CHECK] VALIDATION SLA")
-        sla_latency = "[CHECK] PASS" if results.meets_latency_sla else "[CROSS] FAIL"
-        sla_throughput = "[CHECK] PASS" if results.meets_throughput_sla else "[CROSS] FAIL"
-        sla_errors = "[CHECK] PASS" if results.meets_error_rate_sla else "[CROSS] FAIL"
+        logger.info("\n[SLA VALIDATION]")
+        logger.info(f"  Latency SLA (P95 < {results.config.target_latency_p95_ms}ms): {'✅ PASS' if results.meets_latency_sla else '❌ FAIL'}")
+        logger.info(f"  Throughput SLA (> {results.config.target_throughput_rps} rps): {'✅ PASS' if results.meets_throughput_sla else '❌ FAIL'}")
+        logger.info(f"  Error Rate SLA (< {results.config.max_error_rate_percent}%): {'✅ PASS' if results.meets_error_rate_sla else '❌ FAIL'}")
         
-        print(f"   Latence P95 < {results.config.target_latency_p95_ms}ms : {sla_latency}")
-        print(f"   Throughput > {results.config.target_throughput_rps} req/s : {sla_throughput}")
-        print(f"   Erreurs < {results.config.max_error_rate_percent}% : {sla_errors}")
-        
-        overall_status = "[CHECK] SUCCESS" if results.overall_success else "[CROSS] FAILURE"
-        print(f"\n RSULTAT GLOBAL : {overall_status}")
+        logger.info("\n[CONCLUSION]")
+        logger.info(f"  Overall Result: {'✅✅✅ SUCCESS ✅✅✅' if results.overall_success else '❌❌❌ FAILURE ❌❌❌'}")
         
         if results.error_types:
-            print(f"\n[CROSS] TOP ERREURS")
-            for error, count in sorted(results.error_types.items(), 
-                                     key=lambda x: x[1], reverse=True)[:5]:
-                print(f"   {error} : {count} occurrences")
+            logger.warning("\n[ERROR DETAILS]")
+            for error, count in results.error_types.items():
+                logger.warning(f"  - {error}: {count} occurrences")
+        
+        logger.info("\n" + "="*80)
 
 # Tests unitaires et fonctions utilitaires
 async def run_quick_load_test(users: int = 100, duration: int = 60) -> LoadTestResults:
@@ -711,31 +704,33 @@ async def run_full_load_test() -> LoadTestResults:
     orchestrator = LoadTestOrchestrator(config)
     return await orchestrator.run_load_test()
 
-if __name__ == "__main__":
-    # Excution test de charge
-    async def main():
-        print("[ROCKET] LOAD TESTING 1000+ USERS - DMARRAGE")
-        print("Validation infrastructure IA-2 + tests IA-1")
-        print("="*60)
-        
-        # Test rapide d'abord
-        print("\n Test rapide (100 users, 60s)...")
-        quick_results = await run_quick_load_test()
-        
-        if quick_results.overall_success:
-            print("[CHECK] Test rapide russi - Lancement test complet")
-            
-            # Test complet
-            print("\n[ROCKET] Test complet (1000 users, 5min)...")
-            full_results = await run_full_load_test()
-            
-            orchestrator = LoadTestOrchestrator(full_results.config)
-            orchestrator.print_detailed_report(full_results)
-            
-        else:
-            print("[CROSS] Test rapide chou - Infrastructure non prte")
-            orchestrator = LoadTestOrchestrator(quick_results.config)
-            orchestrator.print_detailed_report(quick_results)
+async def main():
+    """Point d'entre principal pour les tests"""
     
-    # Excution
-    asyncio.run(main()) 
+    config = LoadTestConfig(
+        max_concurrent_users=1000,
+        test_duration=300,
+        ramp_up_duration=30,
+        ramp_down_duration=15
+    )
+    
+    orchestrator = LoadTestOrchestrator(config)
+    results = await orchestrator.run_load_test()
+    
+    orchestrator.print_detailed_report(results)
+    
+    # Dclencher une alerte si le test choue
+    if not results.overall_success:
+        logger.critical("LOAD TEST FAILED - PERFORMANCE REGRESSION DETECTED")
+        # Ici, on pourrait intgrer un systme d'alerte (PagerDuty, Slack, etc.)
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        logger.warning("Test de charge interrompu par l'utilisateur.")
+    except Exception as e:
+        logger.critical(f"Erreur inattendue durant le test de charge: {e}", exc_info=True) 
+
+
+

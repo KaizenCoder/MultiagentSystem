@@ -13,7 +13,9 @@ Fonctionnalités:
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Any, Optional
@@ -43,8 +45,10 @@ class ChefEquipePatternFactory:
         self.chef_id = self.agent_id
         self.chef_type = self.agent_type
         # LoggingManager NextGeneration - Core System
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "ChefEquipePatternFactory",
             "log_level": "INFO",
             "elasticsearch_enabled": True,
@@ -502,3 +506,6 @@ async def main():
 if __name__ == "__main__":
     result = asyncio.run(main())
     sys.exit(result) 
+
+
+

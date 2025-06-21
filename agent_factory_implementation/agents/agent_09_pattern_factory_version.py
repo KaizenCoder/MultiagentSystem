@@ -10,7 +10,9 @@ Pattern Factory : Utilisation complète architecture Sprint 6
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime
 from typing import Dict, List, Optional, Any
 from pathlib import Path
@@ -128,11 +130,11 @@ class SecurityAgent(Agent):
     task_id=task.id,
     success=True,
     data={
-        'security_validation': validation_result,
-        'security_score': 8.7,
-        'rsa_validated': True,
-        'opa_policies_checked': True,
-        'vault_keys_rotated': True
+    'security_validation': validation_result,
+    'security_score': 8.7,
+    'rsa_validated': True,
+    'opa_policies_checked': True,
+    'vault_keys_rotated': True
     },
     execution_time_seconds=time.time() - start_time
     )
@@ -210,7 +212,9 @@ class Agent09PatternFactory:
         
         # Logs
         # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_agent_logger(
     agent_name="from",
     role="ai_processor",
@@ -290,9 +294,9 @@ class Agent09PatternFactory:
     wasi_agents = []
     for i in range(3):
     wasi_agent = self.agent_factory.create_agent(
-        "wasi_agent",
-        wasi_binary=f"test_binary_{i}".encode(),
-        security_validated=True
+    "wasi_agent",
+    wasi_binary=f"test_binary_{i}".encode(),
+    security_validated=True
     )
     wasi_agents.append(wasi_agent)
             
@@ -312,9 +316,9 @@ class Agent09PatternFactory:
     data_results = []
     for i, agent in enumerate(wasi_agents):
     task = Task(
-        type="wasi_execution",
-        params={"operation": f"test_operation_{i}", "sandbox_type": "WASI"},
-        priority=Priority.MEDIUM
+    type="wasi_execution",
+    params={"operation": f"test_operation_{i}", "sandbox_type": "WASI"},
+    priority=Priority.MEDIUM
     )
     data_tasks.append(task)
     result = await agent.execute_task(task)
@@ -329,36 +333,36 @@ class Agent09PatternFactory:
     'status': 'SUCCESS',
     'pattern_factory_integration': True,
     'agents_created': {
-        'security_agents': 1,
-        'wasi_agents': len(wasi_agents),
-        'total': 1 + len(wasi_agents)
+    'security_agents': 1,
+    'wasi_agents': len(wasi_agents),
+    'total': 1 + len(wasi_agents)
     },
     'control_plane': {
-        'security_validation': control_result.success,
-        'compliance_score': control_result.data.get('compliance_score', 0) if control_result.success else 0
+    'security_validation': control_result.success,
+    'compliance_score': control_result.data.get('compliance_score', 0) if control_result.success else 0
     },
     'data_plane': {
-        'wasi_executions': len(data_tasks),
-        'success_rate': success_rate,
-        'average_overhead': 0.15  # 15% (< 20% target)
+    'wasi_executions': len(data_tasks),
+    'success_rate': success_rate,
+    'average_overhead': 0.15  # 15% (< 20% target)
     },
     'orchestration': {
-        'pipeline_executed': True,
-        'total_time': 2.5,
-        'steps_completed': 5
+    'pipeline_executed': True,
+    'total_time': 2.5,
+    'steps_completed': 5
     },
     'performance': {
-        'control_plane_latency': 8.5,  # ms
-        'data_plane_throughput': 1250,  # req/s
-        'wasi_overhead': 0.15,  # 15%
-        'factory_creation_time': 85  # ms
+    'control_plane_latency': 8.5,  # ms
+    'data_plane_throughput': 1250,  # req/s
+    'wasi_overhead': 0.15,  # 15%
+    'factory_creation_time': 85  # ms
     },
     'security': {
-        'agent04_compliance': True,
-        'rsa_validation': True,
-        'vault_integration': True,
-        'opa_policies': True,
-        'security_score': 8.7
+    'agent04_compliance': True,
+    'rsa_validation': True,
+    'vault_integration': True,
+    'opa_policies': True,
+    'security_score': 8.7
     }
     }
             

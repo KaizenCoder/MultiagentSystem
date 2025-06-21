@@ -8,7 +8,9 @@ Inspir de: agent_workspace_organizer.py
 import os
 import sys
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import shutil
 from datetime import datetime
 from pathlib import Path
@@ -56,7 +58,9 @@ class BackupWorkspaceOrganizerAgent:
             ]
         )
         # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="BackupWorkspaceOrganizerAgent",
             role="ai_processor",
@@ -425,3 +429,6 @@ if __name__ == "__main__":
         print(f"[CHECK] {resultat['message']}")
     else:
         print(f"[CROSS] Erreur: {resultat['erreur']}") 
+
+
+

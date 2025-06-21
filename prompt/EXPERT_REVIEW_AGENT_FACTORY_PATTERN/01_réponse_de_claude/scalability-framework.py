@@ -6,7 +6,9 @@ from collections import defaultdict
 import time
 import random
 from abc import ABC, abstractmethod
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 
 # === Agent Pool Management ===
 
@@ -908,3 +910,6 @@ async def scalability_example():
 
 if __name__ == "__main__":
     asyncio.run(scalability_example())
+
+
+

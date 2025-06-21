@@ -337,3 +337,6 @@ class TestConfigurationLogic:
         
         # Test au-dessus de la limite
         assert check_rate_limit(150, 100) is False 
+
+
+

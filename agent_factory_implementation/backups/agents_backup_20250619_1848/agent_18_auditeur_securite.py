@@ -13,7 +13,9 @@ Responsabilités :
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import hashlib
 import subprocess
 import tempfile
@@ -147,7 +149,9 @@ class Agent18AuditeurSecurite:
         
         # Logs
         # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="SecurityLevel",
             role="ai_processor",
@@ -796,3 +800,6 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main()) 
+
+
+

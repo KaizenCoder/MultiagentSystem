@@ -9,7 +9,9 @@ Mission: Exécuter des tests spécialisés de manière continue.
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import signal
 import random
 import time
@@ -70,7 +72,9 @@ class RealAgent15TesteurSpecialise:
     handlers=[logging.FileHandler(log_file), logging.StreamHandler()]
     )
         # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_agent_logger(
     agent_name="class",
     role="ai_processor",
@@ -115,12 +119,12 @@ class RealAgent15TesteurSpecialise:
     random.shuffle(test_types)
                 
     for test_type in test_types:
-        if not self.running: break
-        await self._simulate_test_run(test_type)
-        await asyncio.sleep(random.uniform(5, 15))
+    if not self.running: break
+    await self._simulate_test_run(test_type)
+    await asyncio.sleep(random.uniform(5, 15))
                 
     if int(time.time()) % 300 == 0: # Rapport toutes les 5 minutes
-        await self.save_testing_report()
+    await self.save_testing_report()
 
     except Exception as e:
     self.logger.error(f"❌ Erreur dans la boucle de tests: {e}")

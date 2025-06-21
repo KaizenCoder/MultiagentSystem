@@ -502,3 +502,7 @@ async def get_cached_session_data(session_id: str) -> Optional[Dict[str, Any]]:
     """Rcupre des donnes de session caches"""
     cache = await get_cache()
     return await cache.get(session_id, CacheType.SESSION_DATA)
+
+
+
+

@@ -11,10 +11,10 @@ from pathlib import Path
 import sys
 
 # Import des agents transformés
-from agent_equipe_maintenance.agent_MAINTENANCE_01_analyseur_structure import create_agent_analyseur_structure
-from agent_equipe_maintenance.agent_MAINTENANCE_02_evaluateur_utilite import create_agent_evaluateur_utilite  
-from agent_equipe_maintenance.agent_MAINTENANCE_03_adaptateur_code import create_agent_3_adaptateur_code
-from agent_equipe_maintenance.agent_MAINTENANCE_04_testeur_anti_faux_agents import create_agent_testeur_anti_faux
+from agent_factory_implementation.agents.agent_MAINTENANCE_01_analyseur_structure import create_agent_analyseur_structure
+from agent_factory_implementation.agents.agent_MAINTENANCE_02_evaluateur_utilite import create_agent_evaluateur_utilite  
+from agent_factory_implementation.agents.agent_MAINTENANCE_03_adaptateur_code import create_agent_3_adaptateur_code
+from agent_factory_implementation.agents.agent_MAINTENANCE_04_testeur_anti_faux_agents import create_agent_testeur_anti_faux
 
 async def test_agent_01_transforme():
     """Test de l'Agent 01 - Analyseur Structure transformé"""
@@ -357,3 +357,6 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main()) 
+
+
+

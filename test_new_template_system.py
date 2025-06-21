@@ -70,3 +70,6 @@ if __name__ == "__main__":
         print("\n🎯 Migration template-based validée!")
     else:
         print("\n🔧 Problème détecté dans la migration") 
+
+
+

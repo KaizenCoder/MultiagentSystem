@@ -11,7 +11,7 @@ import os
 import json
 from datetime import datetime
 from pathlib import Path
-from agent_equipe_maintenance.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
+from agent_factory_implementation.agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
 
 async def analyse_pattern_factory_critique():
     """Analyse critique de la conformité Pattern Factory des agents"""
@@ -365,3 +365,6 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
+
+

@@ -19,3 +19,7 @@ config = {
 chef = ChefEquipeCoordinateur(**config)
 resultats = chef.execute_task()
 print("Maintenance terminée:", resultats)
+
+
+
+

@@ -5,7 +5,9 @@ RÔLE : Tests complets et validation finale Sprint 0
 import os
 import sys
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import unittest
 import asyncio
 import time
@@ -33,7 +35,9 @@ except ImportError:
                 self.agent_type = agent_type
                 self.config = config
                 # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="Agent",
             role="ai_processor",
@@ -884,3 +888,6 @@ if __name__ == "__main__":
 def create_agent_05SpecialisteTests(**config):
     """Factory function pour créer un Agent 05SpecialisteTests conforme Pattern Factory"""
     return Agent05SpecialisteTests(**config)
+
+
+

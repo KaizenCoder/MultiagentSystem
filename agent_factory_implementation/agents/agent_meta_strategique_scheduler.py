@@ -23,7 +23,9 @@ Fonctionnalités:
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import schedule
 import time
 from datetime import datetime, timedelta
@@ -44,7 +46,9 @@ class AgentMetaStrategiqueScheduler:
     def __init__(self, config_path: str = "config/meta_strategique_config.json"):
     self.config_path = Path(config_path)
         # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_agent_logger(
     agent_name="AgentMetaStrategiqueScheduler",
     role="ai_processor",
@@ -88,11 +92,11 @@ class AgentMetaStrategiqueScheduler:
     if self.config_path.exists():
     try:
     with open(self.config_path, 'r', encoding='utf-8') as f:
-        config = json.load(f)
+    config = json.load(f)
                     # Fusion avec la config par défaut
-        merged_config = self.default_config.copy()
-        merged_config.update(config)
-        return merged_config
+    merged_config = self.default_config.copy()
+    merged_config.update(config)
+    return merged_config
     except Exception as e:
     self.logger.error(f"Erreur chargement config: {e}")
         
@@ -160,7 +164,7 @@ class AgentMetaStrategiqueScheduler:
             
             # Vérification des insights critiques
     critical_insights = [i for i in results["strategic_insights"] 
-                   if i["severity"] in ["HIGH", "CRITICAL"]]
+               if i["severity"] in ["HIGH", "CRITICAL"]]
             
     if critical_insights:
     self.handle_critical_insights(critical_insights)
@@ -210,7 +214,7 @@ class AgentMetaStrategiqueScheduler:
                 
                 # Notification immédiate si configurée
     if self.config["notifications"]["email_enabled"]:
-        self.send_critical_alert(critical_metrics["alerts"])
+    self.send_critical_alert(critical_metrics["alerts"])
                 
                 # Exécution d'une analyse d'urgence
     self.execute_emergency_analysis(critical_metrics)
@@ -227,18 +231,18 @@ class AgentMetaStrategiqueScheduler:
     for log_file in recent_logs[-5:]:  # 5 derniers logs
     if log_file.stat().st_size > 1024 * 1024:  # > 1MB
     try:
-        with open(log_file, 'r', encoding='utf-8') as f:
-            content = f.read()
-            error_count = content.count("ERROR")
-            if error_count > 10:
-                alerts.append({
-                    "type": "high_error_rate",
-                    "source": log_file.name,
-                    "error_count": error_count,
-                    "severity": "CRITICAL"
-                })
+    with open(log_file, 'r', encoding='utf-8') as f:
+        content = f.read()
+        error_count = content.count("ERROR")
+        if error_count > 10:
+            alerts.append({
+                "type": "high_error_rate",
+                "source": log_file.name,
+                "error_count": error_count,
+                "severity": "CRITICAL"
+            })
     except Exception:
-        continue
+    continue
         
         # Vérification des métriques de performance récentes
     recent_metrics = list(self.agent.metrics_path.glob("*.json"))
@@ -246,9 +250,9 @@ class AgentMetaStrategiqueScheduler:
     latest_metric = max(recent_metrics, key=lambda x: x.stat().st_mtime)
     if datetime.now() - datetime.fromtimestamp(latest_metric.stat().st_mtime) > timedelta(hours=2):
     alerts.append({
-        "type": "stale_metrics",
-        "message": "Aucune métrique récente détectée",
-        "severity": "HIGH"
+    "type": "stale_metrics",
+    "message": "Aucune métrique récente détectée",
+    "severity": "HIGH"
     })
         
     return {"alerts": alerts, "timestamp": datetime.now().isoformat()}
@@ -339,9 +343,9 @@ Alerte générée automatiquement par l'Agent Méta-Stratégique
     file_time = datetime.fromtimestamp(report_file.stat().st_mtime)
     if file_time >= week_ago:
     weekly_reports.append({
-        "file": report_file.name,
-        "timestamp": file_time,
-        "size": report_file.stat().st_size
+    "file": report_file.name,
+    "timestamp": file_time,
+    "size": report_file.stat().st_size
     })
         
     return {
@@ -402,11 +406,11 @@ Alerte générée automatiquement par l'Agent Méta-Stratégique
     if file_time < cutoff_date:
     if self.config["analysis_settings"]["archive_reports"]:
                     # Archiver au lieu de supprimer
-        archive_path = self.agent.reports_path / "archive"
-        archive_path.mkdir(exist_ok=True)
-        report_file.rename(archive_path / report_file.name)
+    archive_path = self.agent.reports_path / "archive"
+    archive_path.mkdir(exist_ok=True)
+    report_file.rename(archive_path / report_file.name)
     else:
-        report_file.unlink()
+    report_file.unlink()
     cleaned_count += 1
         
     if cleaned_count > 0:

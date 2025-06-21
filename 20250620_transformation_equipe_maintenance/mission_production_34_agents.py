@@ -12,7 +12,7 @@ import os
 import json
 from datetime import datetime
 from pathlib import Path
-from agent_equipe_maintenance.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
+from agent_factory_implementation.agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
 
 async def mission_analyse_34_agents_production():
     """Mission d'analyse des 34 agents de production - AUCUNE MODIFICATION"""
@@ -370,3 +370,6 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
+
+

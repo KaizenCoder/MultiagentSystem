@@ -7,7 +7,9 @@ Mode: ANALYSE SEULE - Pas de corrections
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime
 from pathlib import Path
 from typing import Dict
@@ -29,8 +31,10 @@ class TestEquipeMaintenanceAnalysis:
         self.target_agents_path = Path(target_agents_path)
         self.workspace_path = Path(".")
         # LoggingManager NextGeneration - Tests
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "TestEquipeMaintenanceAnalysis",
             "log_level": "DEBUG",
             "elasticsearch_enabled": False,
@@ -265,3 +269,6 @@ Fonctionnalités testées:
 if __name__ == "__main__":
     result = asyncio.run(main())
     sys.exit(result) 
+
+
+

@@ -26,7 +26,9 @@ Créé: 19 juin 2025 - 18h15
 import argparse
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import os
 import sys
 import time
@@ -40,7 +42,9 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="ModelsArchitectureValidator",
             role="ai_processor",
@@ -653,3 +657,6 @@ async def main():
 if __name__ == "__main__":
     exit_code = asyncio.run(main())
     sys.exit(exit_code) 
+
+
+

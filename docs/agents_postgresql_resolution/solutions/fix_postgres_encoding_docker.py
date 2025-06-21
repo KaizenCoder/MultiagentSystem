@@ -222,3 +222,7 @@ networks:
 
 if __name__ == "__main__":
     resultat = fix_postgres_encoding_docker()
+
+
+
+

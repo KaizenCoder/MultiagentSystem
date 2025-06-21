@@ -26,7 +26,9 @@ __compliance_score__ = "85%"
 __optimization_gain__ = "+8.8 points"
 __claude_recommendations__ = "100% implemented"
 
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import time
 import asyncio
 from typing import Dict, List, Any
@@ -41,7 +43,9 @@ from features.enterprise.fastapi_orchestration import (
 
 logging.basicConfig(level=logging.INFO)
 # LoggingManager NextGeneration - Orchestrateur
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_logger(custom_config={
     "logger_name": "Agent23FastAPIOrchestrationEnterprise",
     "log_level": "INFO",
@@ -95,18 +99,18 @@ class Agent23FastAPIOrchestrationEnterprise(Agent):
             # Dispatch vers feature appropriée
     for feature in self.features:
     if feature.can_handle(task):
-        result = feature.execute(task)
-        execution_time = (time.time() - start_time) * 1000
+    result = feature.execute(task)
+    execution_time = (time.time() - start_time) * 1000
                     
                     # Enrichissement avec métriques agent
-        result.metrics.update({
-            "agent_id": self.id,
-            "agent_version": self.agent_version,
-            "execution_time_ms": execution_time,
-            "feature_used": feature.__class__.__name__
-        })
+    result.metrics.update({
+        "agent_id": self.id,
+        "agent_version": self.agent_version,
+        "execution_time_ms": execution_time,
+        "feature_used": feature.__class__.__name__
+    })
                     
-        return result
+    return result
             
             # Aucune feature ne peut traiter la tâche
     return Result(

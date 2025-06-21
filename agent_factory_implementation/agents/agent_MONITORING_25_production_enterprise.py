@@ -26,7 +26,9 @@ __compliance_score__ = "90%"
 __optimization_gain__ = "+20.0 points"
 __claude_recommendations__ = "100% implemented"
 
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import time
 import asyncio
 from typing import Dict, List, Any
@@ -42,7 +44,9 @@ from features.enterprise.production_monitoring import (
 
 logging.basicConfig(level=logging.INFO)
 # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_agent_logger(
     agent_name="Agent25ProductionMonitoringEnterprise",
     role="ai_processor",
@@ -94,19 +98,19 @@ class Agent25ProductionMonitoringEnterprise(Agent):
             # Dispatch vers feature appropriée
     for feature in self.features:
     if feature.can_handle(task):
-        result = feature.execute(task)
-        execution_time = (time.time() - start_time) * 1000
+    result = feature.execute(task)
+    execution_time = (time.time() - start_time) * 1000
                     
                     # Enrichissement avec métriques monitoring
-        result.metrics.update({
-            "agent_id": self.id,
-            "agent_version": self.agent_version,
-            "execution_time_ms": execution_time,
-            "feature_used": feature.__class__.__name__,
-            "monitoring_domain": "production_enterprise"
-        })
+    result.metrics.update({
+        "agent_id": self.id,
+        "agent_version": self.agent_version,
+        "execution_time_ms": execution_time,
+        "feature_used": feature.__class__.__name__,
+        "monitoring_domain": "production_enterprise"
+    })
                     
-        return result
+    return result
             
             # Aucune feature ne peut traiter la tâche
     return Result(

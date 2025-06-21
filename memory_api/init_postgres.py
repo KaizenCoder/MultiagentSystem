@@ -4,7 +4,9 @@ Script d'initialisation de la base PostgreSQL NextGeneration
 Cre les tables et donnes de base ncessaires
 """
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from sqlalchemy import text
 from app.db.session import engine, SessionLocal, test_connection
 from app.db.models import Base, AgentSession, MemoryItem, StateItem, AgentCommunication, AgentMetrics, KnowledgeBase
@@ -14,8 +16,10 @@ import os
 # Configuration logging
 logging.basicConfig(level=logging.INFO)
 # LoggingManager NextGeneration - API
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "init_postgres",
             "log_level": "INFO",
             "elasticsearch_enabled": True,
@@ -269,3 +273,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+

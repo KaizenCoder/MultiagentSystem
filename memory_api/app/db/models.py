@@ -196,3 +196,7 @@ class KnowledgeBase(Base):
         Index('idx_knowledge_quality_usage', 'quality_score', 'usage_count'),
         Index('idx_knowledge_title_trgm', 'title', postgresql_using='gin', postgresql_ops={'title': 'gin_trgm_ops'}),  # Full-text search
     )
+
+
+
+

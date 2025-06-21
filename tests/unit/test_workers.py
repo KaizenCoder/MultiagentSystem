@@ -523,3 +523,6 @@ class TestWorkersLogic:
         assert isinstance(result["results"], dict)
         assert isinstance(result["errors"], list)
         assert result["next"] in ["supervisor", "finish"] 
+
+
+

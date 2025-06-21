@@ -43,7 +43,9 @@ except ImportError:
     self.agent_type = agent_type
     self.config = config
                 # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_agent_logger(
     agent_name="Agent",
     role="ai_processor",
@@ -140,28 +142,28 @@ class Agent03SpecialisteConfiguration:
             # Configuration environnements
     "environments": {
     "development": {
-        "ttl_seconds": 60,
-        "cache_max_size": 100,
-        "thread_pool_size": 2,
-        "hot_reload": True,
-        "debug": True,
-        "log_level": "DEBUG"
+    "ttl_seconds": 60,
+    "cache_max_size": 100,
+    "thread_pool_size": 2,
+    "hot_reload": True,
+    "debug": True,
+    "log_level": "DEBUG"
     },
     "staging": {
-        "ttl_seconds": 300,
-        "cache_max_size": 500,
-        "thread_pool_size": 4,
-        "hot_reload": True,
-        "debug": False,
-        "log_level": "INFO"
+    "ttl_seconds": 300,
+    "cache_max_size": 500,
+    "thread_pool_size": 4,
+    "hot_reload": True,
+    "debug": False,
+    "log_level": "INFO"
     },
     "production": {
-        "ttl_seconds": 600,
-        "cache_max_size": 1000,
-        "thread_pool_size": 8,
-        "hot_reload": False,
-        "debug": False,
-        "log_level": "WARNING"
+    "ttl_seconds": 600,
+    "cache_max_size": 1000,
+    "thread_pool_size": 8,
+    "hot_reload": False,
+    "debug": False,
+    "log_level": "WARNING"
     }
     },
             
@@ -535,28 +537,28 @@ class TestAgentFactoryConfig:
     "agent_creator": "Agent 03",
     "environments": {
     Environment.DEVELOPMENT: {
-        "ttl_seconds": 60,
-        "cache_max_size": 100,
-        "thread_pool_size": 2,
-        "hot_reload": True,
-        "debug": True,
-        "log_level": LogLevel.DEBUG
+    "ttl_seconds": 60,
+    "cache_max_size": 100,
+    "thread_pool_size": 2,
+    "hot_reload": True,
+    "debug": True,
+    "log_level": LogLevel.DEBUG
     },
     Environment.STAGING: {
-        "ttl_seconds": 300,
-        "cache_max_size": 500,
-        "thread_pool_size": 4,
-        "hot_reload": True,
-        "debug": False,
-        "log_level": LogLevel.INFO
+    "ttl_seconds": 300,
+    "cache_max_size": 500,
+    "thread_pool_size": 4,
+    "hot_reload": True,
+    "debug": False,
+    "log_level": LogLevel.INFO
     },
     Environment.PRODUCTION: {
-        "ttl_seconds": 600,
-        "cache_max_size": 1000,
-        "thread_pool_size": 8,
-        "hot_reload": False,
-        "debug": False,
-        "log_level": LogLevel.WARNING
+    "ttl_seconds": 600,
+    "cache_max_size": 1000,
+    "thread_pool_size": 8,
+    "hot_reload": False,
+    "debug": False,
+    "log_level": LogLevel.WARNING
     }
     },
     "cache": {
@@ -620,28 +622,28 @@ class TestAgentFactoryConfig:
     "agent_creator": "Agent 03",
     "environments": {
     Environment.DEVELOPMENT: {
-        "ttl_seconds": 60,
-        "cache_max_size": 100,
-        "thread_pool_size": 2,
-        "hot_reload": True,
-        "debug": True,
-        "log_level": LogLevel.DEBUG
+    "ttl_seconds": 60,
+    "cache_max_size": 100,
+    "thread_pool_size": 2,
+    "hot_reload": True,
+    "debug": True,
+    "log_level": LogLevel.DEBUG
     },
     Environment.STAGING: {
-        "ttl_seconds": 300,
-        "cache_max_size": 500,
-        "thread_pool_size": 4,
-        "hot_reload": True,
-        "debug": False,
-        "log_level": LogLevel.INFO
+    "ttl_seconds": 300,
+    "cache_max_size": 500,
+    "thread_pool_size": 4,
+    "hot_reload": True,
+    "debug": False,
+    "log_level": LogLevel.INFO
     },
     Environment.PRODUCTION: {
-        "ttl_seconds": 600,
-        "cache_max_size": 1000,
-        "thread_pool_size": 8,
-        "hot_reload": False,
-        "debug": False,
-        "log_level": LogLevel.WARNING
+    "ttl_seconds": 600,
+    "cache_max_size": 1000,
+    "thread_pool_size": 8,
+    "hot_reload": False,
+    "debug": False,
+    "log_level": LogLevel.WARNING
     }
     },
     "cache": {
@@ -685,7 +687,7 @@ if __name__ == "__main__":
     for filename, content in env_files.items():
     env_file = self.workspace_root / filename
     with open(env_file, 'w', encoding='utf-8') as f:
-        f.write(content)
+    f.write(content)
             
             # Crer et sauvegarder les tests
     test_code = self.create_configuration_tests()

@@ -8,7 +8,9 @@ Objectif: Finaliser Sprint 5 et optimiser SLA < 100ms
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import subprocess
 import json
 import time
@@ -37,7 +39,9 @@ class Agent07LocalRunner:
     def _setup_logging(self) -> logging.Logger:
         """Configuration du logging"""
         # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="Agent07LocalRunner",
             role="ai_processor",
@@ -353,3 +357,6 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main()) 
+
+
+

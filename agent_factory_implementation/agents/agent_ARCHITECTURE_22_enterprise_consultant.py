@@ -126,20 +126,20 @@ class Agent22ArchitectureEnterprise(Agent):
             # Dispatch vers feature appropriée
     for feature in self.features:
     if feature.can_handle(task):
-        result = await feature.execute(task)
-        execution_time = (time.time() - start_time) * 1000
+    result = await feature.execute(task)
+    execution_time = (time.time() - start_time) * 1000
                     
                     # Enrichissement avec métriques architecture
-        result.metrics.update({
-            "agent_id": self.id,
-            "agent_version": self.agent_version,
-            "execution_time_ms": execution_time,
-            "feature_used": feature.__class__.__name__,
-            "architecture_compliance": self.compliance_target,
-            "advanced_patterns_active": True
-        })
+    result.metrics.update({
+        "agent_id": self.id,
+        "agent_version": self.agent_version,
+        "execution_time_ms": execution_time,
+        "feature_used": feature.__class__.__name__,
+        "architecture_compliance": self.compliance_target,
+        "advanced_patterns_active": True
+    })
                     
-        return result
+    return result
             
             # Fallback: tâche générique architecture
     return await self._handle_generic_architecture_task(task)

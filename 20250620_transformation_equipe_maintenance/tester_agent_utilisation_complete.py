@@ -13,7 +13,9 @@ import asyncio
 import sys
 from pathlib import Path
 from datetime import datetime
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 
 # Ajouter le chemin vers notre équipe
 sys.path.append("agent_equipe_maintenance")
@@ -35,7 +37,9 @@ class TesteurUtilisationComplete:
             ]
         )
         # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="TesteurUtilisationComplete",
             role="ai_processor",
@@ -267,3 +271,6 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main()) 
+
+
+

@@ -54,7 +54,9 @@ class SimulatedAgent:
         
         # Import et initialisation du système de logging
         try:
-            from logging_manager_optimized import LoggingManager
+            import sys
+from pathlib import Path
+from core import logging_manager
             
             # Déterminer role et domain selon l'agent
             role, domain = self._get_agent_role_domain(agent_id)
@@ -729,3 +731,6 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main()) 
+
+
+

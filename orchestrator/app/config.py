@@ -52,3 +52,7 @@ class Settings(BaseSettings):
 
 settings = Settings()
 config = settings  # Alias pour la compatibilit
+
+
+
+

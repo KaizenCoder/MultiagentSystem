@@ -18,7 +18,9 @@ Responsabilités :
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import hashlib
 import subprocess
 import tempfile
@@ -152,7 +154,9 @@ class Agent18AuditeurSecurite:
         
         # Logs
         # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_agent_logger(
     agent_name="SecurityLevel",
     role="ai_processor",
@@ -249,18 +253,18 @@ class Agent18AuditeurSecurite:
             # Vérification patterns de vulnérabilités
     for vuln_type, patterns in self.security_patterns.items():
     for pattern in patterns:
-        matches = re.finditer(pattern, content, re.IGNORECASE | re.MULTILINE)
-        for match in matches:
-            line_num = content[:match.start()].count('\n') + 1
-            finding = await self._create_security_finding(
-                vuln_type,
-                f"Vulnérabilité potentielle {vuln_type}",
-                f"Pattern suspect détecté : {match.group()}",
-                str(file_path_obj),
-                line_num,
-                match.group()
-            )
-            findings.append(finding)
+    matches = re.finditer(pattern, content, re.IGNORECASE | re.MULTILINE)
+    for match in matches:
+        line_num = content[:match.start()].count('\n') + 1
+        finding = await self._create_security_finding(
+            vuln_type,
+            f"Vulnérabilité potentielle {vuln_type}",
+            f"Pattern suspect détecté : {match.group()}",
+            str(file_path_obj),
+            line_num,
+            match.group()
+        )
+        findings.append(finding)
             
             # Vérifications spécifiques Python
     if file_path.endswith('.py'):
@@ -284,12 +288,12 @@ class Agent18AuditeurSecurite:
     for imp in dangerous_imports:
     if re.search(rf'\bimport\s+{imp}\b', content):
     findings.append(await self._create_security_finding(
-        'vulnerable_components',
-        f"Import potentiellement dangereux : {imp}",
-        f"L'import {imp} peut présenter des risques de sécurité",
-        file_path,
-        None,
-        f"import {imp}"
+    'vulnerable_components',
+    f"Import potentiellement dangereux : {imp}",
+    f"L'import {imp} peut présenter des risques de sécurité",
+    file_path,
+    None,
+    f"import {imp}"
     ))
         
         # Vérification désérialisation unsafe
@@ -297,12 +301,12 @@ class Agent18AuditeurSecurite:
     for method in unsafe_deserial:
     if method in content:
     findings.append(await self._create_security_finding(
-        'insecure_deserialization',
-        f"Désérialisation non sécurisée : {method}",
-        f"Utilisation de {method} sans validation peut permettre l'exécution de code arbitraire",
-        file_path,
-        None,
-        method
+    'insecure_deserialization',
+    f"Désérialisation non sécurisée : {method}",
+    f"Utilisation de {method} sans validation peut permettre l'exécution de code arbitraire",
+    file_path,
+    None,
+    method
     ))
         
     return findings
@@ -323,12 +327,12 @@ class Agent18AuditeurSecurite:
     matches = re.finditer(pattern, content, re.IGNORECASE)
     for match in matches:
     findings.append(await self._create_security_finding(
-        'sensitive_data',
-        "Secret hardcodé détecté",
-        "Secrets ne doivent pas être stockés en dur dans le code",
-        file_path,
-        None,
-        match.group()
+    'sensitive_data',
+    "Secret hardcodé détecté",
+    "Secrets ne doivent pas être stockés en dur dans le code",
+    file_path,
+    None,
+    match.group()
     ))
         
     return findings
@@ -373,12 +377,12 @@ class Agent18AuditeurSecurite:
             # Vérification permissions trop permissives
     if int(permissions) > 755:
     findings.append(await self._create_security_finding(
-        'misconfiguration',
-        "Permissions de répertoire trop permissives",
-        f"Le répertoire {dir_path} a des permissions {permissions} trop ouvertes",
-        dir_path,
-        None,
-        f"permissions: {permissions}"
+    'misconfiguration',
+    "Permissions de répertoire trop permissives",
+    f"Le répertoire {dir_path} a des permissions {permissions} trop ouvertes",
+    dir_path,
+    None,
+    f"permissions: {permissions}"
     ))
     except Exception as e:
     self.logger.warning(f"⚠️ Impossible de vérifier permissions {dir_path}: {e}")
@@ -610,20 +614,20 @@ class Agent18AuditeurSecurite:
     'recommendations': report.recommendations,
     'summary': report.summary,
     'findings': [
-        {
-            'finding_id': f.finding_id,
-            'vulnerability_type': f.vulnerability_type.value,
-            'security_level': f.security_level.value,
-            'title': f.title,
-            'description': f.description,
-            'location': f.location,
-            'line_number': f.line_number,
-            'cwe_id': f.cwe_id,
-            'cvss_score': f.cvss_score,
-            'remediation': f.remediation,
-            'evidence': f.evidence
-        }
-        for f in report.findings
+    {
+        'finding_id': f.finding_id,
+        'vulnerability_type': f.vulnerability_type.value,
+        'security_level': f.security_level.value,
+        'title': f.title,
+        'description': f.description,
+        'location': f.location,
+        'line_number': f.line_number,
+        'cwe_id': f.cwe_id,
+        'cvss_score': f.cvss_score,
+        'remediation': f.remediation,
+        'evidence': f.evidence
+    }
+    for f in report.findings
     ]
     }
             
@@ -678,8 +682,8 @@ class Agent18AuditeurSecurite:
     'fichiers_analysés': sum(1 for r in self.security_reports.values()),
     'score_sécurité_moyen': round(avg_security_score, 1),
     'vulnérabilités_critiques': sum(
-        1 for f in all_findings 
-        if f.security_level == SecurityLevel.CRITICAL
+    1 for f in all_findings 
+    if f.security_level == SecurityLevel.CRITICAL
     )
     }
     })
@@ -703,8 +707,8 @@ class Agent18AuditeurSecurite:
     if critical_findings:
     critical_recommendations.add("🚨 Corriger immédiatement les vulnérabilités critiques détectées")
     critical_recommendations.update(
-        f"🔴 {f.title}: {f.remediation}" 
-        for f in critical_findings[:3]  # Top 3
+    f"🔴 {f.title}: {f.remediation}" 
+    for f in critical_findings[:3]  # Top 3
     )
         
     return list(critical_recommendations)
@@ -719,7 +723,7 @@ class Agent18AuditeurSecurite:
     for report in self.security_reports.values():
     for category, compliant in report.compliance_status.items():
     if category not in global_compliance:
-        global_compliance[category] = []
+    global_compliance[category] = []
     global_compliance[category].append(compliant)
         
         # Calcul pourcentage conformité
@@ -772,13 +776,13 @@ async def main():
                 
                 # Affichage vulnérabilités critiques
     critical_findings = [
-        f for f in report.findings 
-        if f.security_level == SecurityLevel.CRITICAL
+    f for f in report.findings 
+    if f.security_level == SecurityLevel.CRITICAL
     ]
     if critical_findings:
-        print(f"🚨 {len(critical_findings)} vulnérabilité(s) critique(s) détectée(s) !")
-        for finding in critical_findings[:3]:  # Top 3
-            print(f"   - {finding.title} ({finding.location})")
+    print(f"🚨 {len(critical_findings)} vulnérabilité(s) critique(s) détectée(s) !")
+    for finding in critical_findings[:3]:  # Top 3
+        print(f"   - {finding.title} ({finding.location})")
                 
     except Exception as e:
     print(f"❌ Erreur audit {target}: {e}")

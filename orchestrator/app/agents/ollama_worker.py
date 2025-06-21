@@ -140,3 +140,7 @@ class OllamaLocalWorkerRTX3090:
 
 # Instance globale
 ollama_worker_rtx3090 = OllamaLocalWorkerRTX3090()
+
+
+
+

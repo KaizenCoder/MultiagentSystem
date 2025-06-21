@@ -80,15 +80,15 @@ class AgentAnalyseSolutionChatGPT:
     analysis['fichiers_detectes'].append(fichier)
                 
     try:
-        content = filepath.read_text(encoding='utf-8')
-        analysis['tailles'][fichier] = len(content)
-        analysis['lignes_code'][fichier] = len(content.splitlines())
+    content = filepath.read_text(encoding='utf-8')
+    analysis['tailles'][fichier] = len(content)
+    analysis['lignes_code'][fichier] = len(content.splitlines())
                     
                     # Détection features ChatGPT
-        analysis['features_detectees'][fichier] = self._detecter_features_chatgpt(content)
+    analysis['features_detectees'][fichier] = self._detecter_features_chatgpt(content)
                     
     except Exception as e:
-        print(f"❌ Erreur lecture {fichier}: {e}")
+    print(f"❌ Erreur lecture {fichier}: {e}")
         
     return analysis
     
@@ -109,8 +109,8 @@ class AgentAnalyseSolutionChatGPT:
     for feature_name, patterns in patterns_chatgpt.items():
     for pattern in patterns:
     if pattern.lower() in content.lower():
-        features.append(feature_name)
-        break
+    features.append(feature_name)
+    break
         
     return features
     
@@ -269,7 +269,7 @@ class AgentAnalyseSolutionChatGPT:
     methods = len(re.findall(r'def\s+\w+', content))
                 
     if methods > 0:
-        quality_metrics['docstrings_ratio'] += docstrings / methods
+    quality_metrics['docstrings_ratio'] += docstrings / methods
                 
     quality_metrics['error_handling'] += len(re.findall(r'try:|except|finally:', content))
     quality_metrics['type_hints'] += len(re.findall(r':\s*\w+|-> \w+', content))

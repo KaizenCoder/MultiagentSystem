@@ -40,7 +40,9 @@ Spécialités :
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 from pathlib import Path
@@ -64,7 +66,9 @@ except ImportError:
                 self.agent_type = agent_type
                 self.config = config
                 # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="Agent",
             role="ai_processor",
@@ -580,3 +584,6 @@ if __name__ == "__main__":
 def create_agent_02ArchitectePatternFactoryDeprecated(**config):
     """Factory function pour créer un Agent 02ArchitectePatternFactoryDeprecated conforme Pattern Factory"""
     return Agent02ArchitectePatternFactoryDeprecated(**config)
+
+
+

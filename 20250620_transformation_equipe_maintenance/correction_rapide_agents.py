@@ -20,13 +20,21 @@ def corriger_erreurs_indentation():
     corrections = [
         # Erreur import LoggingManager mal indenté
         (
-            r"(\s+)# LoggingManager NextGeneration - Agent\s*\n\s*from logging_manager_optimized import LoggingManager",
-            r"\1# LoggingManager NextGeneration - Agent\n\1from logging_manager_optimized import LoggingManager"
+            r"(\s+)# LoggingManager NextGeneration - Agent\s*\n\s*import sys
+from pathlib import Path
+from core import logging_manager",
+            r"\1# LoggingManager NextGeneration - Agent\n\1import sys
+from pathlib import Path
+from core import logging_manager"
         ),
         # Erreur self.logger mal indenté
         (
-            r"(\s+)from logging_manager_optimized import LoggingManager\s*\n\s*self\.logger",
-            r"\1from logging_manager_optimized import LoggingManager\n\1self.logger"
+            r"(\s+)import sys
+from pathlib import Path
+from core import logging_manager\s*\n\s*self\.logger",
+            r"\1import sys
+from pathlib import Path
+from core import logging_manager\n\1self.logger"
         ),
         # Erreur async async def
         (
@@ -165,3 +173,6 @@ if __name__ == "__main__":
         print(f"\n⚠️ {len(agents_ko)} agent(s) nécessitent encore des corrections:")
         for agent, error in agents_ko:
             print(f"  ❌ {agent}: {error}") 
+
+
+

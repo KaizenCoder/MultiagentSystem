@@ -97,3 +97,6 @@ class TestHttpClientCoverage:
         timeout_value = 30
         assert timeout_value > 0
         assert isinstance(timeout_value, int) 
+
+
+

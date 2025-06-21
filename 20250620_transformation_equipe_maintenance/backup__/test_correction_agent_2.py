@@ -139,3 +139,6 @@ if __name__ == "__main__":
     print("🚀 Démarrage validation correction Agent 2")
     success = asyncio.run(test_validation_complete())
     sys.exit(0 if success else 1) 
+
+
+

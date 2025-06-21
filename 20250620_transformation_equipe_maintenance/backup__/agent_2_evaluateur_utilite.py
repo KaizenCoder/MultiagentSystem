@@ -533,3 +533,6 @@ if __name__ == "__main__":
         print(f"[CHECK] Test termin: {len(result['outils_utiles'])} outils utiles")
     
     asyncio.run(test()) 
+
+
+

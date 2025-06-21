@@ -20,7 +20,9 @@ Version : 2.0.0 (Sprint 4 Evolution)
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
@@ -203,7 +205,9 @@ class Agent06AdvancedMonitoring:
     )
         
         # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_agent_logger(
     agent_name="class",
     role="ai_processor",
@@ -295,9 +299,9 @@ class Agent06AdvancedMonitoring:
     "title": "Response Time Percentiles",
     "type": "graph",
     "targets": [
-        {"expr": "histogram_quantile(0.50, agent_factory_response_time_ms)", "legendFormat": "p50"},
-        {"expr": "histogram_quantile(0.95, agent_factory_response_time_ms)", "legendFormat": "p95"},
-        {"expr": "histogram_quantile(0.99, agent_factory_response_time_ms)", "legendFormat": "p99"}
+    {"expr": "histogram_quantile(0.50, agent_factory_response_time_ms)", "legendFormat": "p50"},
+    {"expr": "histogram_quantile(0.95, agent_factory_response_time_ms)", "legendFormat": "p95"},
+    {"expr": "histogram_quantile(0.99, agent_factory_response_time_ms)", "legendFormat": "p99"}
     ],
     "yAxes": [{"unit": "ms"}]
     },
@@ -306,7 +310,7 @@ class Agent06AdvancedMonitoring:
     "title": "Throughput",
     "type": "graph",
     "targets": [
-        {"expr": "rate(agent_factory_requests_total[5m])", "legendFormat": "RPS"}
+    {"expr": "rate(agent_factory_requests_total[5m])", "legendFormat": "RPS"}
     ],
     "yAxes": [{"unit": "rps"}]
     },
@@ -315,8 +319,8 @@ class Agent06AdvancedMonitoring:
     "title": "Resource Utilization",
     "type": "graph",
     "targets": [
-        {"expr": "agent_factory_cpu_usage", "legendFormat": "CPU %"},
-        {"expr": "agent_factory_memory_usage", "legendFormat": "Memory %"}
+    {"expr": "agent_factory_cpu_usage", "legendFormat": "CPU %"},
+    {"expr": "agent_factory_memory_usage", "legendFormat": "Memory %"}
     ],
     "yAxes": [{"unit": "percent"}]
     },
@@ -325,7 +329,7 @@ class Agent06AdvancedMonitoring:
     "title": "Cache Performance",
     "type": "stat",
     "targets": [
-        {"expr": "agent_factory_cache_hit_rate", "legendFormat": "Hit Rate"}
+    {"expr": "agent_factory_cache_hit_rate", "legendFormat": "Hit Rate"}
     ]
     },
     {
@@ -333,7 +337,7 @@ class Agent06AdvancedMonitoring:
     "title": "Compression Ratio",
     "type": "gauge",
     "targets": [
-        {"expr": "agent_factory_compression_ratio", "legendFormat": "Ratio"}
+    {"expr": "agent_factory_compression_ratio", "legendFormat": "Ratio"}
     ]
     },
     {
@@ -341,8 +345,8 @@ class Agent06AdvancedMonitoring:
     "title": "Control/Data Plane Latency",
     "type": "graph",
     "targets": [
-        {"expr": "agent_factory_control_plane_latency", "legendFormat": "Control Plane"},
-        {"expr": "agent_factory_data_plane_latency", "legendFormat": "Data Plane"}
+    {"expr": "agent_factory_control_plane_latency", "legendFormat": "Control Plane"},
+    {"expr": "agent_factory_data_plane_latency", "legendFormat": "Data Plane"}
     ]
     }
     ]
@@ -448,11 +452,11 @@ class Agent06AdvancedMonitoring:
     if OPENTELEMETRY_AVAILABLE and self.tracer:
     current_span = trace.get_current_span()
     if current_span:
-        current_span.set_status(trace.Status(trace.StatusCode.OK if status == "completed" else trace.StatusCode.ERROR))
-        if attributes:
-            for key, value in attributes.items():
-                current_span.set_attribute(key, value)
-        current_span.end()
+    current_span.set_status(trace.Status(trace.StatusCode.OK if status == "completed" else trace.StatusCode.ERROR))
+    if attributes:
+        for key, value in attributes.items():
+            current_span.set_attribute(key, value)
+    current_span.end()
                     
     self.logger.debug(f"🔍 Trace terminée: {distributed_trace.operation_name} ({duration_ms:.2f}ms)")
             
@@ -473,7 +477,7 @@ class Agent06AdvancedMonitoring:
                 # Calcul taux succès backups
     registry = getattr(self.backup_manager, 'backup_registry', {})
     if registry:
-        backup_stats["backup_success_rate"] = 0.95  # Mock
+    backup_stats["backup_success_rate"] = 0.95  # Mock
                     
             # Calcul percentiles response time
     recent_traces = [
@@ -544,7 +548,7 @@ class Agent06AdvancedMonitoring:
                 
                 # Rétention 1000 métriques
     if len(self.metrics_history) > 1000:
-        self.metrics_history = self.metrics_history[-1000:]
+    self.metrics_history = self.metrics_history[-1000:]
                     
     return advanced_metrics
             
@@ -634,29 +638,29 @@ agent_factory_sandbox_overhead{{agent="agent_06",sprint="4"}} {current_metrics.s
     try:
     dashboard_json = {
     "dashboard": {
-        "id": None,
-        "title": self.grafana_config.title,
-        "tags": ["agent-factory", "sprint4", "production"],
-        "style": "dark",
-        "timezone": "UTC",
-        "refresh": self.grafana_config.refresh_interval,
-        "time": {
-            "from": f"now-{self.grafana_config.time_range}",
-            "to": "now"
-        },
-        "panels": self.grafana_config.panels,
-        "templating": {
-            "list": self.grafana_config.variables
-        },
-        "annotations": {
-            "list": [
-                {
-                    "name": "Agent Factory Events",
-                    "type": "prometheus",
-                    "expr": "changes(agent_factory_response_time_p95[5m]) > 0"
-                }
-            ]
-        }
+    "id": None,
+    "title": self.grafana_config.title,
+    "tags": ["agent-factory", "sprint4", "production"],
+    "style": "dark",
+    "timezone": "UTC",
+    "refresh": self.grafana_config.refresh_interval,
+    "time": {
+        "from": f"now-{self.grafana_config.time_range}",
+        "to": "now"
+    },
+    "panels": self.grafana_config.panels,
+    "templating": {
+        "list": self.grafana_config.variables
+    },
+    "annotations": {
+        "list": [
+            {
+                "name": "Agent Factory Events",
+                "type": "prometheus",
+                "expr": "changes(agent_factory_response_time_p95[5m]) > 0"
+            }
+        ]
+    }
     },
     "overwrite": True,
     "folderId": 0
@@ -746,63 +750,63 @@ agent_factory_sandbox_overhead{{agent="agent_06",sprint="4"}} {current_metrics.s
             # Configuration résumé
     config_summary = {
     "opentelemetry": {
-        "enabled": OPENTELEMETRY_AVAILABLE,
-        "sampling_rate": self.monitoring_config["sampling_rate"],
-        "batch_timeout": self.monitoring_config["batch_timeout"]
+    "enabled": OPENTELEMETRY_AVAILABLE,
+    "sampling_rate": self.monitoring_config["sampling_rate"],
+    "batch_timeout": self.monitoring_config["batch_timeout"]
     },
     "integration": {
-        "sprint4_agents": SPRINT4_AGENTS_AVAILABLE,
-        "performance_optimizer": self.performance_optimizer is not None,
-        "backup_manager": self.backup_manager is not None
+    "sprint4_agents": SPRINT4_AGENTS_AVAILABLE,
+    "performance_optimizer": self.performance_optimizer is not None,
+    "backup_manager": self.backup_manager is not None
     },
     "grafana": {
-        "dashboard_configured": True,
-        "panels_count": len(self.grafana_config.panels),
-        "refresh_interval": self.grafana_config.refresh_interval
+    "dashboard_configured": True,
+    "panels_count": len(self.grafana_config.panels),
+    "refresh_interval": self.grafana_config.refresh_interval
     }
     }
             
             # Rapport Sprint 4
     sprint4_report = {
     "agent_info": {
-        "id": self.agent_id,
-        "name": self.agent_name,
-        "version": self.version,
-        "sprint": self.sprint,
-        "mission": self.mission,
-        "created_at": datetime.now().isoformat()
+    "id": self.agent_id,
+    "name": self.agent_name,
+    "version": self.version,
+    "sprint": self.sprint,
+    "mission": self.mission,
+    "created_at": datetime.now().isoformat()
     },
     "sprint4_objectives": {
-        "opentelemetry_distributed": f"{'✅' if OPENTELEMETRY_AVAILABLE else '⚠️'} OpenTelemetry distribué {'opérationnel' if OPENTELEMETRY_AVAILABLE else 'mode dégradé'}",
-        "advanced_metrics": "✅ Métriques avancées p95/p99 collectées",
-        "prometheus_export": "✅ Export Prometheus format avancé",
-        "grafana_dashboard": "✅ Dashboard Grafana production configuré",
-        "sprint4_integration": f"{'✅' if SPRINT4_AGENTS_AVAILABLE else '⚠️'} Intégration agents Sprint 4",
-        "sla_monitoring": f"{'✅' if sla_status.get('sla_compliance') else '⚠️'} Monitoring SLA production"
+    "opentelemetry_distributed": f"{'✅' if OPENTELEMETRY_AVAILABLE else '⚠️'} OpenTelemetry distribué {'opérationnel' if OPENTELEMETRY_AVAILABLE else 'mode dégradé'}",
+    "advanced_metrics": "✅ Métriques avancées p95/p99 collectées",
+    "prometheus_export": "✅ Export Prometheus format avancé",
+    "grafana_dashboard": "✅ Dashboard Grafana production configuré",
+    "sprint4_integration": f"{'✅' if SPRINT4_AGENTS_AVAILABLE else '⚠️'} Intégration agents Sprint 4",
+    "sla_monitoring": f"{'✅' if sla_status.get('sla_compliance') else '⚠️'} Monitoring SLA production"
     },
     "performance_metrics": asdict(current_metrics),
     "sla_validation": sla_status,
     "trace_statistics": trace_stats,
     "configuration": config_summary,
     "integration_status": {
-        "opentelemetry": OPENTELEMETRY_AVAILABLE,
-        "code_expert": CODE_EXPERT_AVAILABLE,
-        "sprint4_agents": SPRINT4_AGENTS_AVAILABLE,
-        "grafana_dashboard": True
+    "opentelemetry": OPENTELEMETRY_AVAILABLE,
+    "code_expert": CODE_EXPERT_AVAILABLE,
+    "sprint4_agents": SPRINT4_AGENTS_AVAILABLE,
+    "grafana_dashboard": True
     },
     "recommendations": [
-        "Déployer Jaeger collector pour traces distribuées",
-        "Configurer alertes Prometheus sur métriques SLA",
-        "Optimiser sampling OpenTelemetry selon charge",
-        "Intégrer monitoring avec déploiement K8s",
-        "Configurer retention traces selon GDPR",
-        "Implémenter profiling continu production"
+    "Déployer Jaeger collector pour traces distribuées",
+    "Configurer alertes Prometheus sur métriques SLA",
+    "Optimiser sampling OpenTelemetry selon charge",
+    "Intégrer monitoring avec déploiement K8s",
+    "Configurer retention traces selon GDPR",
+    "Implémenter profiling continu production"
     ],
     "next_steps_sprint5": [
-        "Monitoring distribué clusters K8s",
-        "Observabilité service mesh",
-        "Traces cross-cluster",
-        "Dashboard multi-environnements"
+    "Monitoring distribué clusters K8s",
+    "Observabilité service mesh",
+    "Traces cross-cluster",
+    "Dashboard multi-environnements"
     ],
     "timestamp": datetime.now().isoformat()
     }

@@ -30,7 +30,9 @@ except ImportError:
 
 # Imports internes (adaptés selon l'architecture)
 try:
-    from logging_manager_optimized import LoggingManager, LoggingConfig
+    import sys
+from pathlib import Path
+from core import logging_manager, LoggingConfig
 except ImportError:
     # Fallback pour les tests
     class LoggingManager:
@@ -167,7 +169,7 @@ class TemplateManagerIntegrated:
             encryption_enabled=True
         )
         
-        self.logger = LoggingManager().get_logger(
+        self.logger = logging_manager.get_logger(
             "template_manager_integrated",
             logging_config.__dict__
         )
@@ -651,3 +653,6 @@ if __name__ == "__main__":
     print(f"📊 Métriques: {manager.get_metrics()}")
     print(f"🏥 Health check: {manager.health_check()}")
     manager.shutdown()
+
+
+

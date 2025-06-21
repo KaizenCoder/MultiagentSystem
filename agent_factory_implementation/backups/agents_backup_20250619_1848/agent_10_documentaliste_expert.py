@@ -35,7 +35,9 @@ Updated: 2024-12-28
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import os
 import sys
 from dataclasses import dataclass, asdict
@@ -76,7 +78,9 @@ logging.basicConfig(
     ]
 )
 # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="class",
             role="ai_processor",
@@ -1109,3 +1113,6 @@ if __name__ == "__main__":
         print("\n🚀 Agent 10 opérationnel - Documentation prête")
     else:
         print("\n❌ Agent 10 - Problèmes détectés") 
+
+
+

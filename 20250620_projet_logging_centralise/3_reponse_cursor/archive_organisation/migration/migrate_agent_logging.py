@@ -35,21 +35,27 @@ class LoggingMigrator:
             "standard": {
                 "template": """
         # LoggingManager NextGeneration - Agent Standard
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="{agent_name}",
             role="ai_processor",
             domain="{domain}",
             async_enabled=True
         )""",
-                "import": "from logging_manager_optimized import LoggingManager"
+                "import": "import sys
+from pathlib import Path
+from core import logging_manager"
             },
             
             "coordinateur": {
                 "template": """
         # LoggingManager NextGeneration - Coordinateur
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={{
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={{
             "logger_name": "{agent_name}",
             "log_level": "INFO",
             "elasticsearch_enabled": True,
@@ -57,28 +63,36 @@ class LoggingMigrator:
             "async_enabled": True,
             "alerting_enabled": True
         }})""",
-                "import": "from logging_manager_optimized import LoggingManager"
+                "import": "import sys
+from pathlib import Path
+from core import logging_manager"
             },
             
             "outil": {
                 "template": """
         # LoggingManager NextGeneration - Outil
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={{
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={{
             "logger_name": "{agent_name}",
             "log_level": "INFO",
             "elasticsearch_enabled": False,
             "encryption_enabled": False,
             "async_enabled": True
         }})""",
-                "import": "from logging_manager_optimized import LoggingManager"
+                "import": "import sys
+from pathlib import Path
+from core import logging_manager"
             },
             
             "performance": {
                 "template": """
         # LoggingManager NextGeneration - Performance
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={{
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={{
             "logger_name": "{agent_name}",
             "log_level": "INFO",
             "elasticsearch_enabled": True,
@@ -86,14 +100,18 @@ class LoggingMigrator:
             "async_enabled": True,
             "high_throughput": True
         }})""",
-                "import": "from logging_manager_optimized import LoggingManager"
+                "import": "import sys
+from pathlib import Path
+from core import logging_manager"
             },
             
             "security": {
                 "template": """
         # LoggingManager NextGeneration - Sécurité
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={{
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={{
             "logger_name": "{agent_name}",
             "log_level": "INFO",
             "elasticsearch_enabled": True,
@@ -101,7 +119,9 @@ class LoggingMigrator:
             "async_enabled": True,
             "audit_enabled": True
         }})""",
-                "import": "from logging_manager_optimized import LoggingManager"
+                "import": "import sys
+from pathlib import Path
+from core import logging_manager"
             }
         }
     
@@ -172,7 +192,9 @@ class LoggingMigrator:
         # Remplacer import logging
         content = re.sub(
             r'^import logging$',
-            'from logging_manager_optimized import LoggingManager',
+            'import sys
+from pathlib import Path
+from core import logging_manager',
             content,
             flags=re.MULTILINE
         )
@@ -180,7 +202,9 @@ class LoggingMigrator:
         # Remplacer from logging import ...
         content = re.sub(
             r'^from logging import.*$',
-            'from logging_manager_optimized import LoggingManager',
+            'import sys
+from pathlib import Path
+from core import logging_manager',
             content,
             flags=re.MULTILINE
         )
@@ -441,3 +465,6 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
+
+

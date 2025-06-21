@@ -342,3 +342,6 @@ class PersistentExperienceBuffer:
             # Suppression avec TimescaleDB drop_chunks (plus efficace)
             await session.execute(
                 f"SELECT drop_chunks('experiences', older
+
+
+

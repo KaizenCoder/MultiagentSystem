@@ -6,7 +6,9 @@ Rle: Chef d'quipe technique, synthse analyses, solution finale
 """
 
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import asyncio
 from datetime import datetime
 from pathlib import Path
@@ -93,7 +95,9 @@ class CoordinateurEquipeExperts:
             ]
         )
         # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="import",
             role="ai_processor",
@@ -240,7 +244,9 @@ Mission: Analyser Agent Factory Pattern pour NextGeneration
 """
 
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime
 from pathlib import Path
 
@@ -598,3 +604,6 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main()) 
+
+
+

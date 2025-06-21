@@ -15,7 +15,9 @@ Version: 1.0.0 - Agent Réel Autonome
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import time
 import zstandard as zstd
 import psutil
@@ -137,7 +139,9 @@ class RealAgent08PerformanceOptimizer:
     )
         
         # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_agent_logger(
     agent_name="class",
     role="ai_processor",
@@ -249,7 +253,7 @@ class RealAgent08PerformanceOptimizer:
                 
                 # Garder seulement les 1000 dernières métriques
     if len(self.metrics_history) > 1000:
-        self.metrics_history = self.metrics_history[-1000:]
+    self.metrics_history = self.metrics_history[-1000:]
             
     return state
             
@@ -305,11 +309,11 @@ class RealAgent08PerformanceOptimizer:
     try:
     with self.lock:
     if self.thread_pool:
-        self.thread_pool.shutdown(wait=False)
+    self.thread_pool.shutdown(wait=False)
                 
     self.thread_pool = ThreadPoolExecutor(
-        max_workers=new_size,
-        thread_name_prefix=f"{self.agent_id}_worker"
+    max_workers=new_size,
+    thread_name_prefix=f"{self.agent_id}_worker"
     )
     self.current_workers = new_size
                 
@@ -380,7 +384,7 @@ class RealAgent08PerformanceOptimizer:
             # Convertir datetime en string pour la sérialisation JSON
     def convert_datetime(obj):
     if isinstance(obj, datetime):
-        return obj.isoformat()
+    return obj.isoformat()
     raise TypeError("Type not serializable")
 
     async with aiofiles.open(report_file, 'w') as f:
@@ -398,7 +402,7 @@ class RealAgent08PerformanceOptimizer:
     try:
     await self.collect_performance_metrics()
     if int(time.time()) % 180 == 0:  # Sauvegarde toutes les 3 minutes
-        await self.save_performance_report()
+    await self.save_performance_report()
     await asyncio.sleep(10)
     except Exception as e:
     self.logger.error(f"❌ Erreur dans la boucle de performance: {e}")
@@ -411,19 +415,19 @@ class RealAgent08PerformanceOptimizer:
     try:
                 # Simulation requêtes templates
     for i in range(5):  # 5 templates par cycle
-        template_config = {
-            "id": f"template_{int(time.time())}_{i}",
-            "name": f"Template Test {i}",
-            "version": "1.0.0",
-            "config": {"param1": "value1", "param2": "value2"}
-        }
+    template_config = {
+        "id": f"template_{int(time.time())}_{i}",
+        "name": f"Template Test {i}",
+        "version": "1.0.0",
+        "config": {"param1": "value1", "param2": "value2"}
+    }
                     
-        result = await self.process_template_request(template_config)
+    result = await self.process_template_request(template_config)
                     
-        if result.get("sla_compliant", False):
-            self.logger.debug(f"✅ Template {result['template_id']}: {result['processing_time_ms']:.1f}ms")
-        else:
-            self.logger.warning(f"⚠️ SLA dépassé {result['template_id']}: {result['processing_time_ms']:.1f}ms")
+    if result.get("sla_compliant", False):
+        self.logger.debug(f"✅ Template {result['template_id']}: {result['processing_time_ms']:.1f}ms")
+    else:
+        self.logger.warning(f"⚠️ SLA dépassé {result['template_id']}: {result['processing_time_ms']:.1f}ms")
                 
     await asyncio.sleep(10)  # Cycle toutes les 10s
                 

@@ -52,7 +52,9 @@ class TestChatGPTIntegrationSimple:
     def test_imports_integration(self):
         """Test que tous les imports fonctionnent correctement"""
         try:
-            from logging_manager_optimized import LoggingManager, LoggingConfig
+            import sys
+from pathlib import Path
+from core import logging_manager, LoggingConfig
             from template_manager_integrated import TemplateManagerIntegrated, TemplateMetrics
             from agent_coordinateur_integrated import Agent0ChefEquipeCoordinateur, AICoordinationEngine
             
@@ -299,3 +301,6 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
+
+

@@ -98,7 +98,9 @@ class TestAdvancedMonitoring:
     def test_logging_manager_integration(self):
         """Test de l'intégration dans LoggingManager"""
         try:
-            from logging_manager_optimized import LoggingManager, LoggingConfig
+            import sys
+from pathlib import Path
+from core import logging_manager, LoggingConfig
             
             # Configuration avec monitoring avancé
             config = LoggingConfig(
@@ -132,7 +134,9 @@ class TestAdvancedMonitoring:
     def test_performance_monitoring(self):
         """Test du monitoring de performance"""
         try:
-            from logging_manager_optimized import LoggingManager, LoggingConfig
+            import sys
+from pathlib import Path
+from core import logging_manager, LoggingConfig
             
             # Configuration pour monitoring de performance
             config = LoggingConfig(
@@ -171,7 +175,9 @@ class TestAdvancedMonitoring:
     def test_metrics_aggregation(self):
         """Test de l'agrégation des métriques"""
         try:
-            from logging_manager_optimized import LoggingManager
+            import sys
+from pathlib import Path
+from core import logging_manager
             
             manager = LoggingManager()
             
@@ -303,3 +309,6 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
+
+

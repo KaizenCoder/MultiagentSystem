@@ -22,8 +22,7 @@
   - Taille: 6,393 bytes | Modifié: 2025-06-18 02:02
 
 ### 📝 Système Logging Centralisé NextGeneration - NOUVEAU ⭐
-- **[Documentation API Logging Uniformisé](20250620_projet_logging_centralise/3_reponse_cursor/DOCUMENTATION_API_LOGGING_UNIFORMISE_COMPLETE.md)** - API complète et référence développeur
-- **[Dossier projet logging](20250620_projet_logging_centralise/)** - Système logging centralisé enterprise
+- **[Documentation API Logging](docs/logging/DOCUMENTATION_API_LOGGING_UNIFORMISE_COMPLETE.md)** - API complète et référence développeur pour le système `core/`.
 - **Score actuel**: 96.8/100 | **Tests**: 35/35 (100%) | **Fonctionnalités**: 8/8 validées
 
 ### 🛠️ Équipe de Maintenance NextGeneration - NOUVEAU ⭐
@@ -71,7 +70,7 @@
 3. **[tools/project_backup_system/reports/](tools/project_backup_system/reports/)** - Rapports backup enterprise
 
 ### 🔧 Pour les Développeurs
-1. **[20250620_projet_logging_centralise/3_reponse_cursor/DOCUMENTATION_API_LOGGING_UNIFORMISE_COMPLETE.md](20250620_projet_logging_centralise/3_reponse_cursor/DOCUMENTATION_API_LOGGING_UNIFORMISE_COMPLETE.md)** - 📝 API Logging NextGeneration (NOUVEAU)
+1. **[API Logging NextGeneration](docs/logging/DOCUMENTATION_API_LOGGING_UNIFORMISE_COMPLETE.md)** - 📝 Documentation de l'API (NOUVEAU)
 2. **[DOCUMENTATION_EQUIPE_MAINTENANCE_NEXTGENERATION.md](./DOCUMENTATION_EQUIPE_MAINTENANCE_NEXTGENERATION.md)** - 🛠️ Équipe Maintenance (NOUVEAU)
 3. **[docs/agents_postgresql_resolution/](docs/agents_postgresql_resolution/)** - Système d'agents PostgreSQL
 4. **[tools/project_backup_system/agents/](tools/project_backup_system/agents/)** - Système d'agents backup

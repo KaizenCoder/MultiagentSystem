@@ -282,3 +282,6 @@ class Agent4TesteurIntegration:
 def create_agent_4TesteurIntegration(**config):
     """Factory function pour créer l'agent"""
     return Agent4TesteurIntegration(**config) 
+
+
+

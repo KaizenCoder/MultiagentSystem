@@ -16,7 +16,6 @@ Fonctionnalités avancées:
 
 import os
 import json
-from logging_manager_optimized import LoggingManager
 import asyncio
 from datetime import datetime
 from pathlib import Path
@@ -24,6 +23,11 @@ from typing import Dict, List, Optional, Any, Tuple
 import subprocess
 import hashlib
 import shutil
+import sys
+
+# Golden Source Logging
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from core import logging_manager
 
 class AgentGenerateurDocumentation:
     """Agent spécialisé pour générer la documentation complète NextGeneration"""
@@ -43,14 +47,12 @@ class AgentGenerateurDocumentation:
         self.config_file = self.workspace_path / "config" / "documentation_config.json"
         
         # Logging
-        # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_agent_logger(
-            agent_name="AgentGenerateurDocumentation",
-            role="ai_processor",
-            domain="general",
-            async_enabled=True
-        )
+        self.logger = logging_manager.get_logger('doc_generator_agent', custom_config={
+            "logger_name": "AgentGenerateurDocumentation",
+            "log_level": "INFO",
+            "async_enabled": True,
+            "elasticsearch_enabled": True
+        })
         
         # Métriques de génération
         self.generation_stats = {
@@ -531,3 +533,6 @@ class AgentGenerateurDocumentation:
         if file_path.exists():
             return file_path.stat().st_size // 1024
         return 0 
+
+
+

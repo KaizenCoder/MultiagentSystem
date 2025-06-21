@@ -7,15 +7,19 @@ Test avec la configuration Docker correcte
 import sys
 import os
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime
 import time
 
 # Configuration logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 # LoggingManager NextGeneration - Tests
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "test_validation_corrections",
             "log_level": "DEBUG",
             "elasticsearch_enabled": False,
@@ -152,3 +156,7 @@ if __name__ == "__main__":
         print("[CHECK] CORRECTIONS PARTIELLES - Les problmes SQLAlchemy principaux sont rsolus")
     else:
         print(" CORRECTIONS  COMPLTER - Des problmes persistent")
+
+
+
+

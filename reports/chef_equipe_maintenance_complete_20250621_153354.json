@@ -1,0 +1,119 @@
+{
+  "workflow_id": "maintenance_complete_20250621_153354",
+  "chef_equipe_id": "chef_equipe_coordinateur_20250621_153354",
+  "target_path": "20250621_1527_agent_racine_repertoire",
+  "etapes": {
+    "etape_1_analyse": {
+      "status": "complete",
+      "resultats": {
+        "tools": [],
+        "categories": {},
+        "dependencies": [],
+        "total_files": 16,
+        "analyzable_files": 0
+      },
+      "timestamp": "2025-06-21T15:33:54.316357"
+    },
+    "etape_2_evaluation": {
+      "status": "complete",
+      "resultats": {
+        "selected_tools": [],
+        "rejected_tools": [],
+        "evaluation_summary": {}
+      },
+      "timestamp": "2025-06-21T15:33:54.316868"
+    },
+    "etape_3_adaptation": {
+      "status": "complete",
+      "resultats": {
+        "status": "completed",
+        "nombre_adaptations": 2,
+        "outils_adaptes": [
+          "agent_coordinateur_refactorisation_simple.py",
+          "agent_testeur_agents.py"
+        ],
+        "corrections_detaillees": [
+          {
+            "agent": "agent_coordinateur_refactorisation_simple.py",
+            "corrections": [
+              "Correction complète 29 lignes d'indentation",
+              "Erreur résiduelle ligne 40: expected an indented block after function definition on line 38"
+            ],
+            "backup": "agent_coordinateur_refactorisation_simple.py.backup_20250621_153239"
+          },
+          {
+            "agent": "agent_testeur_agents.py",
+            "corrections": [
+              "Correction complète 133 lignes d'indentation",
+              "Erreur résiduelle ligne 42: expected an indented block after 'try' statement on line 41"
+            ],
+            "backup": "agent_testeur_agents.py.backup_20250621_153239"
+          }
+        ],
+        "timestamp": "2025-06-21T15:33:54.343316",
+        "agent_id": "adaptateur_code_upgraded_20250621_153354"
+      },
+      "timestamp": "2025-06-21T15:33:54.343316"
+    },
+    "etape_4_tests": {
+      "status": "complete",
+      "resultats": {
+        "status": "completed",
+        "tests_executed": 0,
+        "fake_agents_detected": 0,
+        "detection_results": {
+          "fake_agents_detected": 0,
+          "legitimate_agents": 0,
+          "total_violations": 0,
+          "detection_results": [],
+          "requires_immediate_action": false
+        },
+        "timestamp": 1750512834.3483148,
+        "agent_id": "testeur_anti_faux_agents_1750512834"
+      },
+      "timestamp": "2025-06-21T15:33:54.348315"
+    },
+    "etape_6_validation": {
+      "status": "complete",
+      "resultats": {
+        "status": "completed",
+        "validation_results": {
+          "team_directory": "agent_equipe_maintenance",
+          "validation_status": "FAILED",
+          "error": "Aucun agent de maintenance trouvé"
+        },
+        "timestamp": "2025-06-21T15:33:54.352322",
+        "agent_id": "agent_6_20250621_153354"
+      },
+      "timestamp": "2025-06-21T15:33:54.352322"
+    }
+  },
+  "status": "complete",
+  "resultats_consolides": {
+    "agents_analyses": 0,
+    "agents_valides": 0,
+    "adaptations_realisees": 2,
+    "tests_executes": 0,
+    "documents_generes": 0,
+    "score_final": 0
+  },
+  "timestamp_debut": "2025-06-21T15:33:54.308345",
+  "etape_5_documentation": {
+    "status": "success",
+    "message": "Dummy execution."
+  },
+  "timestamp_fin": "2025-06-21T15:33:54.352322",
+  "duree_totale_sec": 0.043977,
+  "recommandations_chef_equipe": [
+    "🔧 Corriger les agents non valides détectés",
+    "⚠️ Score de validation faible - Révision nécessaire",
+    "📊 Maintenir une surveillance continue de l'équipe",
+    "🔄 Programmer des maintenances préventives régulières",
+    "📈 Suivre les métriques de performance des agents"
+  ],
+  "actions_suivantes": [
+    "⚠️ Révision majeure nécessaire",
+    "🔍 Analyse approfondie des problèmes",
+    "🛠️ Plan de correction prioritaire"
+  ]
+}

@@ -16,7 +16,9 @@ Fonctionnalités :
 
 import json
 import os
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import asyncio
 import httpx
 import psutil
@@ -27,7 +29,9 @@ from datetime import datetime, timedelta
 from enum import Enum
 
 # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="from",
             role="ai_processor",
@@ -457,3 +461,6 @@ if __name__ == "__main__":
     # Stats
     stats = manager.get_usage_stats()
     print(f"Coût quotidien: ${stats['daily_cost']:.4f}") 
+
+
+

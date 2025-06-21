@@ -10,7 +10,9 @@ Coordination : Agent 04 (Sécurité) + Agent 02 (Architecte)
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime
 from typing import Dict, List, Optional, Any, Tuple
 from pathlib import Path
@@ -137,7 +139,9 @@ class Agent09SpecialistePlanes:
         
         # Logs
         # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_agent_logger(
     agent_name="AgentTemplate",
     role="ai_processor",
@@ -452,12 +456,12 @@ class Agent09SpecialistePlanes:
     wasi_policies = {
     'wasi_binary_signature_required': True,
     'wasi_blacklist_tools': [
-        'rm', 'dd', 'format', 'fdisk', 'mkfs',
-        'sudo', 'su', 'chmod', 'chown', 'mount'
+    'rm', 'dd', 'format', 'fdisk', 'mkfs',
+    'sudo', 'su', 'chmod', 'chown', 'mount'
     ],
     'wasi_modules_blocked': [
-        'os.system', 'subprocess.Popen', 'eval', 
-        'exec', '__import__', 'compile'
+    'os.system', 'subprocess.Popen', 'eval', 
+    'exec', '__import__', 'compile'
     ],
     'wasi_network_restricted': True,
     'wasi_filesystem_readonly': True

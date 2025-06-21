@@ -22,3 +22,7 @@ LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 SECURITY_ENABLED = True
 RSA_KEY_SIZE = 2048
 HASH_ALGORITHM = "sha256"
+
+
+
+

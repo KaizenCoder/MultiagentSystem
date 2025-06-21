@@ -32,7 +32,9 @@ DELIVERABLES :
 
 import os
 import shutil
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any, Optional
@@ -59,7 +61,9 @@ except ImportError:
                 self.agent_type = agent_type
                 self.config = config
                 # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="Agent",
             role="ai_processor",
@@ -807,3 +811,6 @@ if __name__ == "__main__":
 def create_agent_02ArchitecteCodeExpert(**config):
     """Factory function pour créer un Agent 02ArchitecteCodeExpert conforme Pattern Factory"""
     return Agent02ArchitecteCodeExpert(**config)
+
+
+

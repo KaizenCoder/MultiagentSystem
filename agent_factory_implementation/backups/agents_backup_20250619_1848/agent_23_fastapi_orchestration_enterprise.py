@@ -21,7 +21,9 @@ __compliance_score__ = "85%"
 __optimization_gain__ = "+8.8 points"
 __claude_recommendations__ = "100% implemented"
 
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import time
 from typing import Dict, List, Any
 from core.agent_factory_architecture import Agent, Task, Result, AgentType
@@ -35,8 +37,10 @@ from features.enterprise.fastapi_orchestration import (
 
 logging.basicConfig(level=logging.INFO)
 # LoggingManager NextGeneration - Orchestrateur
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "Agent23FastAPIOrchestrationEnterprise",
             "log_level": "INFO",
             "elasticsearch_enabled": True,
@@ -173,3 +177,6 @@ if __name__ == "__main__":
     if result.success:
         print(f"📈 Data: {result.data}")
         print(f"⚡ Metrics: {result.metrics}")
+
+
+

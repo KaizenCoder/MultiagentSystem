@@ -109,3 +109,7 @@ if __name__ == "__main__":
             print(f"\n[CHART] Rapport: {rapport}")
         else:
             print("\n[TARGET] Aucune action requise")
+
+
+
+

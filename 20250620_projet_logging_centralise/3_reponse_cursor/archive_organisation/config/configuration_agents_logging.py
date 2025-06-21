@@ -271,8 +271,10 @@ class ConfigurationAgentsLogging:
             "reports": reports_config,
             "specialized": specialized_config,
             "integration": {
-                "logging_manager_import": "from logging_manager_optimized import LoggingManager",
-                "initialization_code": f"self.logger = LoggingManager().get_agent_logger('{agent_id}')",
+                "logging_manager_import": "import sys
+from pathlib import Path
+from core import logging_manager",
+                "initialization_code": f"self.logger = logging_manager.get_logger('custom_agent_logger', custom_config={'logger_name': 'Agent', 'extra_fields': {}})",
                 "report_method": f"self.logger.log_structured_report(report_data, '{base_config['report_format']}')"
             }
         }
@@ -378,7 +380,9 @@ from pathlib import Path
 # Ajouter le chemin du système de logging
 sys.path.insert(0, str(Path(__file__).parent))
 
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 
 class {agent_id.replace('_', '').title()}LoggingIntegration:
     """
@@ -387,7 +391,7 @@ class {agent_id.replace('_', '').title()}LoggingIntegration:
     
     def __init__(self, agent_instance):
         self.agent = agent_instance
-        self.logger = LoggingManager().get_agent_logger('{agent_id}')
+        self.logger = logging_manager.get_logger('custom_agent_logger', custom_config={'logger_name': 'Agent', 'extra_fields': {}})
         
         # Configuration spécialisée
         self.reports_dir = Path(__file__).parent / "reports_equipe_agents" / "{agent_id}"
@@ -555,11 +559,13 @@ with open('config/agents_logging_config_{self.timestamp}.json') as f:
 ### 3. **Utilisation Standard**
 ```python
 # Pour chaque agent
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 
 class MonAgent:
     def __init__(self):
-        self.logger = LoggingManager().get_agent_logger('mon_agent_id')
+        self.logger = logging_manager.get_logger('custom_agent_logger', custom_config={'logger_name': 'Agent', 'extra_fields': {}})
     
     def process(self, data):
         self.logger.info("🚀 Démarrage traitement")
@@ -635,3 +641,7 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
+
+
+

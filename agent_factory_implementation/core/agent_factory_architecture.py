@@ -19,7 +19,9 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from pathlib import Path
 import threading
 import uuid
@@ -198,13 +200,16 @@ class Agent(ABC):
     Définit le contrat que tous les agents doivent respecter.
     """
     
-    def __init__(self, agent_type: str, **config):
-        self.type = agent_type
-        self.config = config
-        self.id = f"{agent_type}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}"
+    def __init__(self, agent_id: str, version: str, description: str, agent_type: str, status: str, **kwargs):
+        self.agent_id = agent_id
+        self.version = version
+        self.description = description
+        self.agent_type = agent_type
+        self.status = status
+        self.config = kwargs
+        self.id = agent_id  # Utiliser l'id fourni
         self.capabilities: List[str] = []
         self.created_at = datetime.now()
-        self.status = "ready"
         self.metadata: Dict[str, Any] = {}
         
         # Métriques d'utilisation
@@ -213,10 +218,19 @@ class Agent(ABC):
         self.success_rate = 0.0
         self.last_activity = datetime.now()
         
-        logger.info(f"Agent {self.type} créé avec ID: {self.id}")
+        # Utiliser le logger global configuré
+        self.logger = logging_manager.get_logger(f"agent.{self.agent_id.replace('-', '_')[:20]}")
+        self.logger.info(f"Agent {self.agent_type} ({self.id}) initialisé.")
+    
+    def log(self, message: str, level: str = "info"):
+        """Journalisation standardisée pour l'agent."""
+        if hasattr(self.logger, level):
+            getattr(self.logger, level)(f"[{self.id}] {message}")
+        else:
+            self.logger.info(f"[{self.id}] {message}")
     
     @abstractmethod
-    def execute_task(self, task: Task) -> Result:
+    async def execute_task(self, task: Task) -> Result:
         """
         ⚙️ Exécute une tâche et retourne le résultat
         
@@ -303,7 +317,7 @@ class Agent(ABC):
         """
         return {
             "id": self.id,
-            "type": self.type,
+            "type": self.agent_type,
             "status": self.status,
             "capabilities": self.capabilities,
             "tasks_executed": self.tasks_executed,
@@ -871,3 +885,6 @@ if __name__ == "__main__":
     print(f"Types disponibles: {factory.get_available_types()}")
     
     print("✅ Architecture Pattern Factory validée !") 
+
+
+

@@ -62,3 +62,6 @@ for pwd in passwords:
 else:
     print("❌ Aucun mot de passe testé ne fonctionne")
     print("💡 Il faut réinitialiser le mot de passe PostgreSQL") 
+
+
+

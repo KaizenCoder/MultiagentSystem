@@ -4,7 +4,9 @@ RÔLE : Review technique détaillée et validation code expert ligne par ligne
 
 import os
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any, Optional
@@ -14,7 +16,9 @@ import re
 # Configuration logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="Agent17PeerReviewerTechnique",
             role="ai_processor",
@@ -718,3 +722,6 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
+
+

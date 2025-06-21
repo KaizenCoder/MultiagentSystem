@@ -14,7 +14,9 @@ Version : 1.0.0
 """
 
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import re
 from dataclasses import dataclass, asdict
 from datetime import datetime
@@ -116,7 +118,9 @@ class Agent13DocumentationSpecialist:
         )
         
         # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="class",
             role="ai_processor",
@@ -1058,3 +1062,6 @@ def main():
 if __name__ == "__main__":
     success = main()
     exit(0 if success else 1) 
+
+
+

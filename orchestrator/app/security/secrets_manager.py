@@ -15,7 +15,9 @@ from typing import Dict, Optional, Any, List
 from enum import Enum
 from dataclasses import dataclass
 from contextlib import contextmanager
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from abc import ABC, abstractmethod
 
 # Azure KeyVault support
@@ -34,8 +36,10 @@ except ImportError:
     VAULT_AVAILABLE = False
 
 # LoggingManager NextGeneration - Tool/Utility
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "from",
             "log_level": "INFO",
             "elasticsearch_enabled": False,
@@ -676,3 +680,7 @@ def validate_secret_strength(secret_value: str, secret_type: SecretType) -> bool
     else:
         # Par dfaut: minimum 16 caractres
         return len(secret_value) >= 16
+
+
+
+

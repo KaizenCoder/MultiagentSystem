@@ -7,53 +7,66 @@ Utilise le Pattern Factory NextGeneration pour créer dynamiquement les agents d
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
 import sys
-from datetime import datetime
 from pathlib import Path
+from datetime import datetime
 from typing import Dict, List, Any, Optional
+
+# --- Configuration centralisée des imports et du logging ---
+# Assurer que la racine du projet est dans le sys.path pour les imports absolus
+project_root = Path(__file__).resolve().parents[1]
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
+
+try:
+    from core import logging_manager
+except ImportError:
+    print("Erreur: Impossible d'importer logging_manager depuis core. Assurez-vous que core est à la racine.")
+    # Fallback si l'import échoue, pour éviter un crash complet.
+    import logging
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    logger = logging.getLogger(__name__)
+    logging_manager = None
+
 
 # Import des composants Pattern Factory
 from code_expert.enhanced_agent_templates import AgentTemplate
 from code_expert.optimized_template_manager import TemplateManager
 from agents.base_agent import BaseAgent
 
-# Configuration logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-# LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_agent_logger(
-            agent_name="AgentAnalyseSolutionChatGPTFactory",
-            role="ai_processor",
-            domain="general",
-            async_enabled=True
-        )
 
 class AgentAnalyseSolutionChatGPTFactory:
     """
     🔍 Agent d'Analyse Solution ChatGPT utilisant le Pattern Factory
     
     Mission : Créer dynamiquement une équipe d'agents experts pour analyser
-    la solution d'intégration ChatGPT dans le dossier 3_reponse_cursor
+    la solution d'intégration ChatGPT.
     """
     
     def __init__(self):
         self.agent_id = "analyse_chatgpt_factory"
-        self.solution_dir = Path("../20250620_projet_logging_centralise/3_reponse_cursor")
+        # Le chemin est maintenant relatif à la racine du projet, pointant vers une zone d'intérêt.
+        # Ceci est un exemple, le chemin cible réel pourrait être passé en paramètre.
+        self.solution_dir = project_root / "agent_factory_implementation" 
         self.template_manager = TemplateManager()
         self.expert_agents: Dict[str, BaseAgent] = {}
         self.analysis_results: Dict[str, Any] = {}
         
-        logger.info("🏭 Initialisation Agent Factory pour analyse solution ChatGPT")
+        if logging_manager:
+            self.logger = logging_manager.get_logger(
+                'AgentAnalyseSolutionChatGPTFactory',
+                custom_config={'logger_name': 'AgentAnalyseSolutionChatGPTFactory'}
+            )
+        else:
+            self.logger = logger # Utilise le logger de fallback
+
+        self.logger.info("🏭 Initialisation Agent Factory pour analyse solution ChatGPT")
     
     async def initialiser_equipe_experts(self) -> Dict[str, BaseAgent]:
         """
         Créer l'équipe d'agents experts via le Pattern Factory
         """
-        logger.info("🚀 Création de l'équipe d'agents experts via Pattern Factory...")
+        self.logger.info("🚀 Création de l'équipe d'agents experts via Pattern Factory...")
         
         # Liste des agents experts à créer
         expert_templates = [
@@ -69,7 +82,7 @@ class AgentAnalyseSolutionChatGPTFactory:
         # Création des agents via le Pattern Factory
         for template_name in expert_templates:
             try:
-                logger.info(f"📋 Création agent expert : {template_name}")
+                self.logger.info(f"📋 Création agent expert : {template_name}")
                 
                 # Utiliser le TemplateManager pour créer l'agent
                 agent = self.template_manager.create_agent(
@@ -83,26 +96,26 @@ class AgentAnalyseSolutionChatGPTFactory:
                 )
                 
                 self.expert_agents[template_name] = agent
-                logger.info(f"✅ Agent {template_name} créé avec succès")
+                self.logger.info(f"✅ Agent {template_name} créé avec succès")
                 
             except Exception as e:
-                logger.error(f"❌ Erreur création agent {template_name}: {e}")
+                self.logger.error(f"❌ Erreur création agent {template_name}: {e}")
                 continue
         
-        logger.info(f"🎯 Équipe créée : {len(self.expert_agents)}/{len(expert_templates)} agents")
+        self.logger.info(f"🎯 Équipe créée : {len(self.expert_agents)}/{len(expert_templates)} agents")
         return self.expert_agents
     
     async def analyser_solution_complete(self) -> Dict[str, Any]:
         """
         Orchestrer l'analyse complète de la solution ChatGPT
         """
-        logger.info("🔍 Démarrage analyse complète solution ChatGPT...")
+        self.logger.info("🔍 Démarrage analyse complète solution ChatGPT...")
         
         # 1. Initialiser l'équipe d'experts
         await self.initialiser_equipe_experts()
         
         if not self.expert_agents:
-            logger.error("❌ Aucun agent expert disponible pour l'analyse")
+            self.logger.error("❌ Aucun agent expert disponible pour l'analyse")
             return {"error": "Équipe d'experts non disponible"}
         
         # 2. Analyser les fichiers de la solution
@@ -125,7 +138,7 @@ class AgentAnalyseSolutionChatGPTFactory:
         # 5. Générer le rapport de synthèse
         await self._generer_rapport_synthese(rapport_final)
         
-        logger.info("✅ Analyse complète terminée avec succès")
+        self.logger.info("✅ Analyse complète terminée avec succès")
         return rapport_final
     
     def _identifier_fichiers_solution(self) -> List[Path]:
@@ -133,19 +146,15 @@ class AgentAnalyseSolutionChatGPTFactory:
         fichiers = []
         
         if self.solution_dir.exists():
-            for fichier in self.solution_dir.glob("*.py"):
-                fichiers.append(fichier)
-            for fichier in self.solution_dir.glob("*.md"):
-                fichiers.append(fichier)
-            for fichier in self.solution_dir.glob("*.json"):
+            for fichier in self.solution_dir.glob("**/*.py"): # Recherche récursive
                 fichiers.append(fichier)
         
-        logger.info(f"📁 {len(fichiers)} fichiers identifiés pour analyse")
+        self.logger.info(f"📁 {len(fichiers)} fichiers identifiés pour analyse dans {self.solution_dir}")
         return fichiers
     
     async def _executer_peer_review_senior(self, fichiers: List[Path]) -> Dict[str, Any]:
         """Exécuter le peer review senior"""
-        logger.info("👨‍💼 Exécution Peer Review Senior...")
+        self.logger.info("👨‍💼 Exécution Peer Review Senior...")
         
         agent = self.expert_agents.get("agent_peer_reviewer_senior")
         if not agent:
@@ -173,7 +182,7 @@ class AgentAnalyseSolutionChatGPTFactory:
     
     async def _executer_peer_review_technique(self, fichiers: List[Path]) -> Dict[str, Any]:
         """Exécuter le peer review technique"""
-        logger.info("🔧 Exécution Peer Review Technique...")
+        self.logger.info("🔧 Exécution Peer Review Technique...")
         
         agent = self.expert_agents.get("agent_peer_reviewer_technique")
         if not agent:
@@ -200,7 +209,7 @@ class AgentAnalyseSolutionChatGPTFactory:
     
     async def _executer_audit_securite(self, fichiers: List[Path]) -> Dict[str, Any]:
         """Exécuter l'audit de sécurité"""
-        logger.info("🔒 Exécution Audit Sécurité...")
+        self.logger.info("🔒 Exécution Audit Sécurité...")
         
         agent = self.expert_agents.get("agent_auditeur_securite")
         if not agent:
@@ -229,7 +238,7 @@ class AgentAnalyseSolutionChatGPTFactory:
     
     async def _executer_audit_performance(self, fichiers: List[Path]) -> Dict[str, Any]:
         """Exécuter l'audit de performance"""
-        logger.info("⚡ Exécution Audit Performance...")
+        self.logger.info("⚡ Exécution Audit Performance...")
         
         agent = self.expert_agents.get("agent_auditeur_performance")
         if not agent:
@@ -262,7 +271,7 @@ class AgentAnalyseSolutionChatGPTFactory:
     
     async def _executer_audit_conformite(self, fichiers: List[Path]) -> Dict[str, Any]:
         """Exécuter l'audit de conformité"""
-        logger.info("📋 Exécution Audit Conformité...")
+        self.logger.info("📋 Exécution Audit Conformité...")
         
         agent = self.expert_agents.get("agent_auditeur_conformite")
         if not agent:
@@ -289,7 +298,7 @@ class AgentAnalyseSolutionChatGPTFactory:
     
     async def _executer_tests_specialises(self, fichiers: List[Path]) -> Dict[str, Any]:
         """Exécuter les tests spécialisés"""
-        logger.info("🧪 Exécution Tests Spécialisés...")
+        self.logger.info("🧪 Exécution Tests Spécialisés...")
         
         agent = self.expert_agents.get("agent_testeur_specialise")
         if not agent:
@@ -323,7 +332,7 @@ class AgentAnalyseSolutionChatGPTFactory:
     
     async def _executer_audit_qualite(self, fichiers: List[Path]) -> Dict[str, Any]:
         """Exécuter l'audit qualité"""
-        logger.info("⭐ Exécution Audit Qualité...")
+        self.logger.info("⭐ Exécution Audit Qualité...")
         
         agent = self.expert_agents.get("agent_auditeur_qualite")
         if not agent:
@@ -356,7 +365,7 @@ class AgentAnalyseSolutionChatGPTFactory:
     
     async def _consolider_analyses(self, analyses: Dict[str, Any]) -> Dict[str, Any]:
         """Consolider toutes les analyses en un rapport final"""
-        logger.info("📊 Consolidation des analyses...")
+        self.logger.info("📊 Consolidation des analyses...")
         
         # Calculer le score global
         scores = []
@@ -450,7 +459,7 @@ class AgentAnalyseSolutionChatGPTFactory:
     
     async def _generer_rapport_synthese(self, rapport: Dict[str, Any]) -> None:
         """Générer le rapport de synthèse final"""
-        logger.info("📝 Génération rapport de synthèse...")
+        self.logger.info("📝 Génération rapport de synthèse...")
         
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         nom_fichier = f"RAPPORT_ANALYSE_SOLUTION_CHATGPT_PATTERN_FACTORY_{timestamp}.json"
@@ -459,13 +468,13 @@ class AgentAnalyseSolutionChatGPTFactory:
             with open(nom_fichier, 'w', encoding='utf-8') as f:
                 json.dump(rapport, f, indent=2, ensure_ascii=False)
             
-            logger.info(f"✅ Rapport sauvegardé : {nom_fichier}")
+            self.logger.info(f"✅ Rapport sauvegardé : {nom_fichier}")
             
             # Générer aussi un résumé Markdown
             await self._generer_resume_markdown(rapport, timestamp)
             
         except Exception as e:
-            logger.error(f"❌ Erreur sauvegarde rapport : {e}")
+            self.logger.error(f"❌ Erreur sauvegarde rapport : {e}")
     
     async def _generer_resume_markdown(self, rapport: Dict[str, Any], timestamp: str) -> None:
         """Générer un résumé en Markdown"""
@@ -502,10 +511,10 @@ class AgentAnalyseSolutionChatGPTFactory:
             with open(nom_fichier_md, 'w', encoding='utf-8') as f:
                 f.write(contenu_md)
             
-            logger.info(f"✅ Résumé Markdown sauvegardé : {nom_fichier_md}")
+            self.logger.info(f"✅ Résumé Markdown sauvegardé : {nom_fichier_md}")
             
         except Exception as e:
-            logger.error(f"❌ Erreur sauvegarde résumé : {e}")
+            self.logger.error(f"❌ Erreur sauvegarde résumé : {e}")
 
 async def main():
     """Point d'entrée principal"""
@@ -538,3 +547,6 @@ if __name__ == "__main__":
     import asyncio
     exit_code = asyncio.run(main())
     sys.exit(exit_code) 
+
+
+

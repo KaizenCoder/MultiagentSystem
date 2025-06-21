@@ -24,7 +24,9 @@ PERFORMANCE : < 100ms garantie
 import os
 import sys
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import time
 import asyncio
 import threading
@@ -63,12 +65,14 @@ except ImportError:
                 # Configuration logging
     logging.basicConfig(level=logging.INFO)
                 # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_agent_logger(
-        agent_name="Agent",
-        role="ai_processor",
-        domain="general",
-        async_enabled=True
+    agent_name="Agent",
+    role="ai_processor",
+    domain="general",
+    async_enabled=True
     )
                 
     async def startup(self): pass
@@ -317,8 +321,8 @@ class Agent05MaitreTestsValidation:
     "capabilities": ["test_execution", "validation"],
     "tools": ["pytest", "locust"],
     "default_config": {
-        "timeout": 30,
-        "max_retries": 3
+    "timeout": 30,
+    "max_retries": 3
     }
     }
             
@@ -409,14 +413,14 @@ class Agent05MaitreTestsValidation:
     def worker_thread():
     try:
                     # Simulation accès concurrent au template manager
-        for _ in range(5):
-            try:
-                self.template_manager.get_template("nonexistent")
-            except:
-                pass
-        return True
+    for _ in range(5):
+        try:
+            self.template_manager.get_template("nonexistent")
+        except:
+            pass
+    return True
     except Exception:
-        return False
+    return False
             
             # Exécution 10 threads concurrents
     with ThreadPoolExecutor(max_workers=10) as executor:
@@ -774,12 +778,12 @@ class Agent05MaitreTestsValidation:
     },
     "mission_sprint1": {
     "objectifs_sprint1": [
-        "Tests smoke validation code expert ✅",
-        "Tests hot-reload production ✅", 
-        "Benchmark Locust < 100ms ✅",
-        "Tests héritage templates ✅",
-        "Validation performance cache ✅",
-        "Coordination Agent 15 ✅"
+    "Tests smoke validation code expert ✅",
+    "Tests hot-reload production ✅", 
+    "Benchmark Locust < 100ms ✅",
+    "Tests héritage templates ✅",
+    "Validation performance cache ✅",
+    "Coordination Agent 15 ✅"
     ],
     "status": "COMPLETED",
     "performance_grade": self._calculate_grade(success_rate)

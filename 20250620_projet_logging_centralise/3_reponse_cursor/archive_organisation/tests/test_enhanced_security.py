@@ -282,7 +282,9 @@ class TestEnhancedSecurity:
     def test_logging_manager_integration(self):
         """Test de l'intégration dans LoggingManager"""
         try:
-            from logging_manager_optimized import LoggingManager, LoggingConfig
+            import sys
+from pathlib import Path
+from core import logging_manager, LoggingConfig
             
             # Configuration avec chiffrement renforcé
             config = LoggingConfig(
@@ -442,3 +444,6 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
+
+

@@ -7,7 +7,9 @@ Ce module contient les utilitaires pour :
 - Masquage automatique des donnes sensibles
 """
 
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import json
 from datetime import datetime, timezone
 from enum import Enum
@@ -35,8 +37,10 @@ class SecurityLogger:
     
     def __init__(self):
         # LoggingManager NextGeneration - Tool/Utility
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "AuditEventType",
             "log_level": "INFO",
             "elasticsearch_enabled": False,
@@ -218,3 +222,6 @@ def setup_secure_logging():
     # Empcher la propagation vers le logger root
     security_log.propagate = False
     audit_log.propagate = False 
+
+
+

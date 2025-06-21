@@ -20,7 +20,9 @@ import time
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Any, Optional
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 
 # Configuration des chemins CORRIGÉS
 SOURCE_PATH = r"../agent_factory_implementation/agents"  # Chemin vers les agents à analyser
@@ -73,8 +75,10 @@ class CoordinateurEquipeTools:
             ]
         )
         # LoggingManager NextGeneration - Tool/Utility
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "CoordinateurEquipeTools",
             "log_level": "INFO",
             "elasticsearch_enabled": False,
@@ -343,3 +347,6 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
+
+

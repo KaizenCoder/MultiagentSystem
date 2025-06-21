@@ -127,3 +127,6 @@ if __name__ == "__main__":
     else:
         print("❌ ÉCHEC - Corrections nécessaires")
         exit(1) 
+
+
+

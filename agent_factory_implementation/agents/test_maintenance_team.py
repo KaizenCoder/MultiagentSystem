@@ -26,8 +26,8 @@ async def test_agent_maintenance_03():
         # Import dynamique pour éviter les erreurs
     import importlib.util
     spec = importlib.util.spec_from_file_location(
-    "agent_03", 
-    "agent_MAINTENANCE_03_adaptateur_code.py"
+        "agent_03", 
+        "agent_MAINTENANCE_03_adaptateur_code.py"
     )
     agent_03_module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(agent_03_module)
@@ -60,8 +60,8 @@ async def test_agent_maintenance_04():
         # Import dynamique
     import importlib.util
     spec = importlib.util.spec_from_file_location(
-    "agent_04", 
-    "agent_MAINTENANCE_04_testeur_anti_faux_agents.py"
+        "agent_04", 
+        "agent_MAINTENANCE_04_testeur_anti_faux_agents.py"
     )
     agent_04_module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(agent_04_module)
@@ -99,7 +99,7 @@ async def test_simple_functionality():
     print(f"  ✅ {len(maintenance_agents)} agents de maintenance trouvés")
         
     for agent_file in maintenance_agents:
-    print(f"    📁 {agent_file.name}")
+        print(f"    📁 {agent_file.name}")
         
     return True
         

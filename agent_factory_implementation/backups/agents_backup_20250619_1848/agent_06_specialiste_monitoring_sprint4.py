@@ -15,7 +15,9 @@ Version : 2.0.0 (Sprint 4 Evolution)
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
@@ -198,7 +200,9 @@ class Agent06AdvancedMonitoring:
         )
         
         # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="class",
             role="ai_processor",
@@ -887,3 +891,6 @@ def main():
 if __name__ == "__main__":
     success = main()
     exit(0 if success else 1) 
+
+
+

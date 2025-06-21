@@ -238,3 +238,6 @@ if __name__ == "__main__":
     print("=" * 70)
     
     asyncio.run(test_reparation_equipe_postgresql()) 
+
+
+

@@ -15,7 +15,9 @@ SPRINT 2.2 ENHANCEMENTS:
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import time
 from enum import Enum
 from typing import Dict, Optional, Any, Callable, List, Union
@@ -29,8 +31,10 @@ import functools
 from ..observability.monitoring import get_monitoring
 
 # LoggingManager NextGeneration - Tool/Utility
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "CircuitState",
             "log_level": "INFO",
             "elasticsearch_enabled": False,
@@ -533,3 +537,7 @@ def circuit_breaker(
             )
         return wrapper
     return decorator
+
+
+
+

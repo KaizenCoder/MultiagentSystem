@@ -28,7 +28,9 @@ from dataclasses import dataclass
 import importlib
 import time
 import re
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 
 # 🔧 Correction PYTHONPATH pour imports
 current_dir = Path(__file__).parent
@@ -99,7 +101,9 @@ class ImprovedEnterpriseAgentTester(Agent):
             
             logging.basicConfig(level=logging.INFO)
             # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="import",
             role="ai_processor",
@@ -1439,3 +1443,6 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
+
+

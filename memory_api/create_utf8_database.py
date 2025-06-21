@@ -196,3 +196,6 @@ if __name__ == "__main__":
     else:
         print("\n❌ Échec de la création de base")
         sys.exit(1) 
+
+
+

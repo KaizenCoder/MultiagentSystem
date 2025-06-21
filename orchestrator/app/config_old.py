@@ -40,3 +40,6 @@ class Settings(BaseSettings):
         return v
 
 settings = Settings()
+
+
+

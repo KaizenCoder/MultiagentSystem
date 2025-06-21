@@ -222,3 +222,6 @@ def get_encryption_service(key: Optional[bytes] = None) -> EncryptionService:
     if key:
         return EncryptionService(key)
     return default_encryption_service 
+
+
+

@@ -21,7 +21,9 @@ import os
 import ast
 import json
 import logging
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import asyncio
 from pathlib import Path
 from typing import Dict, List, Any, Optional
@@ -48,7 +50,9 @@ except ImportError:
                 self.config = config
                 self.agent_id = f"agent_1_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
                 # LoggingManager NextGeneration - Agent
-                from logging_manager_optimized import LoggingManager
+                import sys
+from pathlib import Path
+from core import logging_manager
                 self.logger = LoggingManager().get_agent_logger(
                     agent_name="Agent",
                     role="ai_processor",
@@ -1156,3 +1160,6 @@ if __name__ == "__main__":
                     recommendations.append("Ajouter des tests unitaires et d'intégration")
         
         return recommendations
+
+
+

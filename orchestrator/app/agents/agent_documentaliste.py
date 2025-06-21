@@ -314,3 +314,6 @@ class AgentDocumentaliste:
 
 # Instance globale de l'agent
 agent_documentaliste = AgentDocumentaliste() 
+
+
+

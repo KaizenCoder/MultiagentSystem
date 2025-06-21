@@ -19,7 +19,9 @@ PERFORMANCE : < 100ms garantie
 import os
 import sys
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import time
 import asyncio
 import threading
@@ -55,7 +57,9 @@ except ImportError:
                 self.agent_type = agent_type
                 self.config = config
                 # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="Agent",
             role="ai_processor",
@@ -911,3 +915,6 @@ if __name__ == "__main__":
 def create_agent_05MaitreTestsValidation(**config):
     """Factory function pour créer un Agent 05MaitreTestsValidation conforme Pattern Factory"""
     return Agent05MaitreTestsValidation(**config)
+
+
+

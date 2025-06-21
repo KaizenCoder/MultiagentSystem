@@ -23,3 +23,7 @@ def initialize_nextgen_environment():
 if __name__ == "__main__":
     result = initialize_nextgen_environment()
     print(f"Integration status: {result['status']}")
+
+
+
+

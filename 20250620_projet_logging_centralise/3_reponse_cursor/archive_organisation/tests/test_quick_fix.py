@@ -5,7 +5,9 @@ Test Quick Fix - Validation rapide du logging manager
 
 import time
 import tempfile
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 
 def test_basic_functionality():
     """Test basique pour identifier le problème"""
@@ -60,3 +62,6 @@ def test_basic_functionality():
 
 if __name__ == "__main__":
     test_basic_functionality() 
+
+
+

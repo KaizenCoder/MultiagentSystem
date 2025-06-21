@@ -13,12 +13,16 @@ from enum import Enum
 from dataclasses import dataclass, asdict
 from datetime import datetime, timezone
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from abc import ABC, abstractmethod
 
 # LoggingManager NextGeneration - Tool/Utility
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "HealthStatus",
             "log_level": "INFO",
             "elasticsearch_enabled": False,
@@ -711,3 +715,7 @@ def is_system_healthy() -> bool:
         return False
     
     return last_report.overall_status == HealthStatus.HEALTHY
+
+
+
+

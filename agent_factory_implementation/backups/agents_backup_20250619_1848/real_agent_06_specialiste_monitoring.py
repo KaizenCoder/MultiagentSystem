@@ -10,7 +10,9 @@ Mission: Agent autonome pour le monitoring de l'infrastructure et des agents.
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import signal
 import time
 from dataclasses import dataclass, asdict
@@ -71,7 +73,9 @@ class RealAgent06SpecialisteMonitoring:
             handlers=[logging.FileHandler(log_file), logging.StreamHandler()]
         )
         # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="class",
             role="ai_processor",
@@ -177,3 +181,6 @@ async def main():
 if __name__ == "__main__":
     import time # Ajout de l'import time manquant
     asyncio.run(main()) 
+
+
+

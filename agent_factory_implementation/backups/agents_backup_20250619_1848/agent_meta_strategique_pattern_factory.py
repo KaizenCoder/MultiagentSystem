@@ -12,7 +12,9 @@ Architecture : Pattern Factory compliant avec interface Agent standard
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, Any, List, Optional
@@ -24,7 +26,9 @@ sys.path.append(str(Path(__file__).parent.parent))
 from core.agent_factory_architecture import Agent, Task, Result, TaskStatus, Priority
 
 # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="class",
             role="ai_processor",
@@ -1033,3 +1037,6 @@ async def demo_meta_strategique_pattern_factory():
 if __name__ == "__main__":
     # Test direct de l'agent
     asyncio.run(demo_meta_strategique_pattern_factory())
+
+
+

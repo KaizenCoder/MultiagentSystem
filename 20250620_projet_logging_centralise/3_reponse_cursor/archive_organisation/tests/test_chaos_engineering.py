@@ -13,7 +13,9 @@ import shutil
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from unittest.mock import Mock, patch
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 
 class ChaosEngineeringTests(unittest.TestCase):
     """Tests de chaos engineering pour le système de logging"""
@@ -211,3 +213,7 @@ def run_chaos_tests():
 
 if __name__ == "__main__":
     exit(run_chaos_tests())
+
+
+
+

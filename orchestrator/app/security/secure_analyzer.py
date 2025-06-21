@@ -15,11 +15,15 @@ from typing import Dict, List, Set, Optional, Tuple
 from contextlib import contextmanager
 import uuid
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 
 # LoggingManager NextGeneration - Tool/Utility
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "SecurityError",
             "log_level": "INFO",
             "elasticsearch_enabled": False,
@@ -357,3 +361,7 @@ async def secure_python_linter_tool(code: str) -> str:
     except Exception as e:
         logger.error(f"Unexpected error in secure analysis: {e}")
         return "Analysis service temporarily unavailable"
+
+
+
+

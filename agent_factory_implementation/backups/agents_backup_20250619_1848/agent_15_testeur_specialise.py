@@ -16,7 +16,9 @@ RESPONSABILITÉS SPRINT 1 :
 import os
 import sys
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import time
 import asyncio
 from datetime import datetime
@@ -83,7 +85,9 @@ class Agent15TesteurSpecialise:
             ]
         )
         # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="class",
             role="ai_processor",
@@ -472,3 +476,6 @@ if __name__ == "__main__":
     
     print(f"📊 Statut: {results['status']}")
     print("✅ Agent 15 Sprint 1 TERMINÉ") 
+
+
+

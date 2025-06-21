@@ -6,7 +6,7 @@ L'Agent 00 coordonne toute son équipe pour analyser les agents de production
 """
 
 import asyncio
-from agent_equipe_maintenance.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
+from agent_factory_implementation.agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
 from datetime import datetime
 
 async def validation_equipe_nextgeneration():
@@ -134,3 +134,6 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
+
+

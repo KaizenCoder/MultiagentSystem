@@ -185,3 +185,7 @@ Write-Host "Redmarrer le terminal pour appliquer les changements." -ForegroundCo
 
 if __name__ == "__main__":
     resultat = fix_windows_encoding()
+
+
+
+

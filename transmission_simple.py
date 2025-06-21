@@ -113,3 +113,7 @@ if __name__ == "__main__":
             print(f"\n❌ ÉCHEC DE LA TRANSMISSION")
     except Exception as e:
         print(f"\n💥 Erreur: {e}")
+
+
+
+

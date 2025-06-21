@@ -699,3 +699,6 @@ if __name__ == "__main__":
         print(f"[CHECK] Structures: {result['structures_created']}")
     else:
         print(f"[CROSS] Erreur: {result['error']}") 
+
+
+

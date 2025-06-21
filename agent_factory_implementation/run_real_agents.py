@@ -11,7 +11,9 @@ import signal
 import sys
 from pathlib import Path
 from typing import List, Dict, Any, Union
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime
 import json
 
@@ -51,7 +53,9 @@ class AgentManager:
     def _setup_logging(self):
         """Configuration logging"""
         # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="AgentManager",
             role="ai_processor",
@@ -238,3 +242,6 @@ if __name__ == "__main__":
         sys.exit(1)
     
     asyncio.run(main()) 
+
+
+

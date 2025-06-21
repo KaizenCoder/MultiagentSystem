@@ -43,7 +43,9 @@ except ImportError:
                 self.agent_type = agent_type
                 self.config = config
                 # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="Agent",
             role="ai_processor",
@@ -1173,3 +1175,6 @@ def create_agent_03SpecialisteConfiguration(**config):
         return ["basic_capability"]
 
     return Agent03SpecialisteConfiguration(**config)
+
+
+

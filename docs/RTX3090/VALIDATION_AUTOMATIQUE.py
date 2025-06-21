@@ -6,7 +6,9 @@
 """
 
 import sys
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import torch
 
 # --- Configuration Logging ---
@@ -16,8 +18,10 @@ logging.basicConfig(
     stream=sys.stdout
 )
 # LoggingManager NextGeneration - Tool/Utility
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "VALIDATION_AUTOMATIQUE",
             "log_level": "INFO",
             "elasticsearch_enabled": False,
@@ -94,3 +98,6 @@ def validate_gpu_environment():
 
 if __name__ == "__main__":
     validate_gpu_environment() 
+
+
+

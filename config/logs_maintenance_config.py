@@ -58,3 +58,6 @@ def get_maintenance_log_path(agent_type: str, filename: str) -> Path:
 def get_maintenance_rapport_path(agent_type: str, rapport_type: str = "rapport") -> Path:
     """Fonction utilitaire pour obtenir un chemin de rapport de maintenance"""
     return LogsMaintenanceConfig.get_rapport_path(agent_type, rapport_type) 
+
+
+

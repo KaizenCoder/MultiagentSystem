@@ -39,7 +39,9 @@ FINALISATION : Sprint 3 complet avec Pattern Factory validé
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any, Tuple
 from pathlib import Path
@@ -495,7 +497,9 @@ class Agent01ChefProjet:
             '%(asctime)s - Agent01ChefProjet - %(levelname)s - %(message)s'
         ))
         # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="AgentTemplate",
             role="ai_processor",
@@ -1070,3 +1074,6 @@ if __name__ == "__main__":
 def create_agent_01ChefProjetPatternFactoryDeprecated(**config):
     """Factory function pour créer un Agent 01ChefProjetPatternFactoryDeprecated conforme Pattern Factory"""
     return Agent01ChefProjetPatternFactoryDeprecated(**config)
+
+
+

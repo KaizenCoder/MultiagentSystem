@@ -6,7 +6,9 @@ IA-2 Architecture & Production - Sprint 2.2
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import yaml
 from typing import Dict, List, Optional, Any, Union
 from dataclasses import dataclass, field
@@ -19,8 +21,10 @@ from kubernetes_asyncio.client.exceptions import ApiException
 from ..observability.monitoring import get_monitoring
 
 # LoggingManager NextGeneration - Tool/Utility
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "ScalingType",
             "log_level": "INFO",
             "elasticsearch_enabled": False,
@@ -615,3 +619,7 @@ async def setup_production_scaling(
     
     logger.info("Production auto-scaling configuration completed")
     return auto_scaler
+
+
+
+

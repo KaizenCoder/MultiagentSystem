@@ -518,3 +518,6 @@ if __name__ == "__main__":
         print(f"Recommandations: {len(result.next_phase_recommendations)}")
     
     asyncio.run(main()) 
+
+
+

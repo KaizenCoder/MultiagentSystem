@@ -6,7 +6,9 @@ Modle: Claude Sonnet 4.0 (architecture, patterns, extensibilit)
 """
 
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, List, Optional
@@ -72,7 +74,9 @@ class ExpertClaudeArchitecture:
             ]
         )
         # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="class",
             role="ai_processor",
@@ -411,3 +415,6 @@ if __name__ == "__main__":
         print(f"[CLIPBOARD] Rapport: {resultat['report_path']}")
     else:
         print(f"[CROSS] Erreur: {resultat['error']}") 
+
+
+

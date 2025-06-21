@@ -29,3 +29,6 @@ class SearchResult(BaseModel):
     """Modle pour les rsultats de recherche"""
     items: List[MemoryItem]
     total_count: int 
+
+
+

@@ -14,7 +14,9 @@ Performance : Suivi vélocité, qualité, conformité plans experts
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any, Tuple
 from pathlib import Path
@@ -38,20 +40,22 @@ except ImportError:
     print(f"⚠️ Pattern Factory non disponible: {e}")
         # Fallback pour compatibilité
     class Agent:
-    def __init__(self, agent_type: str, **config):
-    self.agent_id = f"agent_01_coordinateur_principal_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-    self.agent_type = agent_type
-    self.config = config
+        def __init__(self, agent_type: str, **config):
+            self.agent_id = f"agent_01_coordinateur_principal_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            self.agent_type = agent_type
+            self.config = config
                 # Configuration logging
-    logging.basicConfig(level=logging.INFO)
+            logging.basicConfig(level=logging.INFO)
                 # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
-    self.logger = LoggingManager().get_agent_logger(
-        agent_name="Agent",
-        role="ai_processor",
-        domain="general",
-        async_enabled=True
-    )
+            import sys
+from pathlib import Path
+from core import logging_manager
+            self.logger = LoggingManager().get_agent_logger(
+                agent_name="Agent",
+                role="ai_processor",
+                domain="general",
+                async_enabled=True
+            )
                 
     async def startup(self): pass
     async def shutdown(self): pass
@@ -59,14 +63,14 @@ except ImportError:
         
         class Task:
             def __init__(self, task_id: str, description: str, **kwargs):
-    self.task_id = task_id
-    self.description = description
+            self.task_id = task_id
+            self.description = description
                 
     class Result:
-    def __init__(self, success: bool, data: Any = None, error: str = None):
-    self.success = success
-    self.data = data
-    self.error = error
+        def __init__(self, success: bool, data: Any = None, error: str = None):
+            self.success = success
+            self.data = data
+            self.error = error
         
     PATTERN_FACTORY_AVAILABLE = False
 
@@ -141,14 +145,14 @@ class Agent01CoordinateurPrincipal:
         
         # Tracking progression
     self.tracking = {
-    'agent_id': self.agent_id,
-    'mission_status': 'DÉMARRAGE',
-    'sprint_actuel': self.sprint_actuel,
-    'timestamp_debut': datetime.now().isoformat(),
-    'progression_globale': 0.0,
-    'qualite_moyenne': 0.0,
-    'agents_operationnels': 0,
-    'agents_total': 17
+        'agent_id': self.agent_id,
+        'mission_status': 'DÉMARRAGE',
+        'sprint_actuel': self.sprint_actuel,
+        'timestamp_debut': datetime.now().isoformat(),
+        'progression_globale': 0.0,
+        'qualite_moyenne': 0.0,
+        'agents_operationnels': 0,
+        'agents_total': 17
     }
 
     def setup_logging(self):
@@ -157,12 +161,12 @@ class Agent01CoordinateurPrincipal:
     log_dir.mkdir(parents=True, exist_ok=True)
         
     logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - Agent01 - %(levelname)s - %(message)s',
-    handlers=[
-    logging.FileHandler(log_dir / f"agent_{self.agent_id}_coordination_sprint3-5_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"),
-    logging.StreamHandler()
-    ]
+        level=logging.INFO,
+        format='%(asctime)s - Agent01 - %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler(log_dir / f"agent_{self.agent_id}_coordination_sprint3-5_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"),
+            logging.StreamHandler()
+        ]
     )
     self.logger = logging.getLogger(f"Agent{self.agent_id}")
     self.logger.info(f"👑 Agent {self.agent_id} - {self.specialite} - Sprints 3-5 DÉMARRÉ")
@@ -170,72 +174,72 @@ class Agent01CoordinateurPrincipal:
     def _initialiser_equipe(self) -> Dict[str, Dict[str, Any]]:
         """Initialisation état équipe 17 agents"""
     return {
-    "agent_02": {"nom": "Architecte Code Expert", "status": AgentStatus.OPERATIONAL, "sprint": [0,1,2]},
-    "agent_03": {"nom": "Spécialiste Configuration", "status": AgentStatus.OPERATIONAL, "sprint": [0,1,2]},
-    "agent_04": {"nom": "Expert Sécurité Crypto", "status": AgentStatus.OPERATIONAL, "sprint": [2], "score": 9.2},
-    "agent_05": {"nom": "Maître Tests Validation", "status": AgentStatus.OPERATIONAL, "sprint": [0,1,2]},
-    "agent_06": {"nom": "Spécialiste Monitoring", "status": AgentStatus.OPERATIONAL, "sprint": [0,1,2]},
-    "agent_07": {"nom": "Expert Déploiement K8s", "status": AgentStatus.TO_CREATE, "sprint": [5]},
-    "agent_08": {"nom": "Optimiseur Performance", "status": AgentStatus.TO_CREATE, "sprint": [4]},
-    "agent_09": {"nom": "Spécialiste Control/Data Plane", "status": AgentStatus.OPERATIONAL, "sprint": [3], "score": 10.0},
-    "agent_10": {"nom": "Documentaliste Expert", "status": AgentStatus.OPERATIONAL, "sprint": [0,1,2]},
-    "agent_11": {"nom": "Auditeur Qualité", "status": AgentStatus.OPERATIONAL, "sprint": [3], "score": 10.0},
-    "agent_12": {"nom": "Gestionnaire Backups", "status": AgentStatus.TO_CREATE, "sprint": [4]},
-    "agent_13": {"nom": "Spécialiste Documentation", "status": AgentStatus.TO_CREATE, "sprint": [4]},
-    "agent_14": {"nom": "Spécialiste Workspace", "status": AgentStatus.OPERATIONAL, "sprint": [0,1,2]},
-    "agent_15": {"nom": "Testeur Spécialisé", "status": AgentStatus.OPERATIONAL, "sprint": [0,1,2]},
-    "agent_16": {"nom": "Peer Reviewer Senior", "status": AgentStatus.OPERATIONAL, "sprint": [0,1,2]},
-    "agent_17": {"nom": "Peer Reviewer Technique", "status": AgentStatus.OPERATIONAL, "sprint": [0,1,2]}
+        "agent_02": {"nom": "Architecte Code Expert", "status": AgentStatus.OPERATIONAL, "sprint": [0,1,2]},
+        "agent_03": {"nom": "Spécialiste Configuration", "status": AgentStatus.OPERATIONAL, "sprint": [0,1,2]},
+        "agent_04": {"nom": "Expert Sécurité Crypto", "status": AgentStatus.OPERATIONAL, "sprint": [2], "score": 9.2},
+        "agent_05": {"nom": "Maître Tests Validation", "status": AgentStatus.OPERATIONAL, "sprint": [0,1,2]},
+        "agent_06": {"nom": "Spécialiste Monitoring", "status": AgentStatus.OPERATIONAL, "sprint": [0,1,2]},
+        "agent_07": {"nom": "Expert Déploiement K8s", "status": AgentStatus.TO_CREATE, "sprint": [5]},
+        "agent_08": {"nom": "Optimiseur Performance", "status": AgentStatus.TO_CREATE, "sprint": [4]},
+        "agent_09": {"nom": "Spécialiste Control/Data Plane", "status": AgentStatus.OPERATIONAL, "sprint": [3], "score": 10.0},
+        "agent_10": {"nom": "Documentaliste Expert", "status": AgentStatus.OPERATIONAL, "sprint": [0,1,2]},
+        "agent_11": {"nom": "Auditeur Qualité", "status": AgentStatus.OPERATIONAL, "sprint": [3], "score": 10.0},
+        "agent_12": {"nom": "Gestionnaire Backups", "status": AgentStatus.TO_CREATE, "sprint": [4]},
+        "agent_13": {"nom": "Spécialiste Documentation", "status": AgentStatus.TO_CREATE, "sprint": [4]},
+        "agent_14": {"nom": "Spécialiste Workspace", "status": AgentStatus.OPERATIONAL, "sprint": [0,1,2]},
+        "agent_15": {"nom": "Testeur Spécialisé", "status": AgentStatus.OPERATIONAL, "sprint": [0,1,2]},
+        "agent_16": {"nom": "Peer Reviewer Senior", "status": AgentStatus.OPERATIONAL, "sprint": [0,1,2]},
+        "agent_17": {"nom": "Peer Reviewer Technique", "status": AgentStatus.OPERATIONAL, "sprint": [0,1,2]}
     }
 
     def _initialiser_roadmap(self) -> Dict[int, Dict[str, Any]]:
         """Initialisation roadmap Sprints 3-5"""
     return {
-    3: {
-    "nom": "Control/Data Plane & Sandbox",
-    "status": SprintStatus.IN_PROGRESS,
-    "objectifs": [
-        "Architecture Control/Data Plane séparée",
-        "Sandbox WASI sécurisé < 20% overhead",
-        "RBAC FastAPI intégré",
-        "Audit trail complet"
-    ],
-    "agents_assignes": ["agent_09", "agent_11", "agent_01"],
-    "dod_criteria": 8,
-    "duree_semaines": 1,
-    "date_debut": datetime.now(),
-    "date_fin_prevue": datetime.now() + timedelta(weeks=1)
-    },
-    4: {
-    "nom": "Observabilité Avancée & Performance",
-    "status": SprintStatus.NOT_STARTED,
-    "objectifs": [
-        "OpenTelemetry tracing distribué",
-        "Métriques Prometheus p95, cache, TTL",
-        "ThreadPool auto-tuned CPU × 2",
-        "Performance < 50ms/agent validée"
-    ],
-    "agents_assignes": ["agent_08", "agent_12", "agent_13"],
-    "dod_criteria": 6,
-    "duree_semaines": 1,
-    "date_debut": datetime.now() + timedelta(weeks=1),
-    "date_fin_prevue": datetime.now() + timedelta(weeks=2)
-    },
-    5: {
-    "nom": "Déploiement Kubernetes Production",
-    "status": SprintStatus.NOT_STARTED,
-    "objectifs": [
-        "Helm charts blue-green deploy",
-        "Chaos engineering 25% nodes off",
-        "SLA < 100ms p95 production",
-        "Runbook opérateur complet"
-    ],
-    "agents_assignes": ["agent_07"],
-    "dod_criteria": 5,
-    "duree_semaines": 1,
-    "date_debut": datetime.now() + timedelta(weeks=2),
-    "date_fin_prevue": datetime.now() + timedelta(weeks=3)
-    }
+        3: {
+            "nom": "Control/Data Plane & Sandbox",
+            "status": SprintStatus.IN_PROGRESS,
+            "objectifs": [
+                "Architecture Control/Data Plane séparée",
+                "Sandbox WASI sécurisé < 20% overhead",
+                "RBAC FastAPI intégré",
+                "Audit trail complet"
+            ],
+            "agents_assignes": ["agent_09", "agent_11", "agent_01"],
+            "dod_criteria": 8,
+            "duree_semaines": 1,
+            "date_debut": datetime.now(),
+            "date_fin_prevue": datetime.now() + timedelta(weeks=1)
+        },
+        4: {
+            "nom": "Observabilité Avancée & Performance",
+            "status": SprintStatus.NOT_STARTED,
+            "objectifs": [
+                "OpenTelemetry tracing distribué",
+                "Métriques Prometheus p95, cache, TTL",
+                "ThreadPool auto-tuned CPU × 2",
+                "Performance < 50ms/agent validée"
+            ],
+            "agents_assignes": ["agent_08", "agent_12", "agent_13"],
+            "dod_criteria": 6,
+            "duree_semaines": 1,
+            "date_debut": datetime.now() + timedelta(weeks=1),
+            "date_fin_prevue": datetime.now() + timedelta(weeks=2)
+        },
+        5: {
+            "nom": "Déploiement Kubernetes Production",
+            "status": SprintStatus.NOT_STARTED,
+            "objectifs": [
+                "Helm charts blue-green deploy",
+                "Chaos engineering 25% nodes off",
+                "SLA < 100ms p95 production",
+                "Runbook opérateur complet"
+            ],
+            "agents_assignes": ["agent_07"],
+            "dod_criteria": 5,
+            "duree_semaines": 1,
+            "date_debut": datetime.now() + timedelta(weeks=2),
+            "date_fin_prevue": datetime.now() + timedelta(weeks=3)
+        }
     }
 
     async def evaluer_progression_sprint3(self) -> Dict[str, Any]:
@@ -243,7 +247,7 @@ class Agent01CoordinateurPrincipal:
     📊 Évaluation progression Sprint 3 actuel
         
     Returns:
-    Dict avec métriques progression Sprint 3
+        Dict avec métriques progression Sprint 3
         """
     self.logger.info("📊 Évaluation progression Sprint 3")
         
@@ -253,14 +257,14 @@ class Agent01CoordinateurPrincipal:
     scores_agents = []
         
     for agent_id in agents_sprint3:
-    agent_file = Path(f"agents/{agent_id}_*.py")
-    if any(agent_file.parent.glob(f"{agent_id}_*.py")):
-    agents_operationnels += 1
+        agent_file = Path(f"agents/{agent_id}_*.py")
+        if any(agent_file.parent.glob(f"{agent_id}_*.py")):
+            agents_operationnels += 1
                 # Score par défaut si disponible
-    if agent_id in ["agent_09", "agent_11"]:
-        scores_agents.append(10.0)
-    else:
-        scores_agents.append(8.5)
+            if agent_id in ["agent_09", "agent_11"]:
+                scores_agents.append(10.0)
+            else:
+                scores_agents.append(8.5)
         
         # Métriques Sprint 3
     progression_sprint3 = (agents_operationnels / len(agents_sprint3)) * 100
@@ -270,24 +274,24 @@ class Agent01CoordinateurPrincipal:
     dod_compliance = 100.0  # Agent 11 a validé 100%
         
     sprint3_metrics = {
-    'sprint_id': 3,
-    'progression_percentage': progression_sprint3,
-    'agents_operationnels': agents_operationnels,
-    'agents_total': len(agents_sprint3),
-    'qualite_moyenne': qualite_moyenne,
-    'dod_compliance': dod_compliance,
-    'objectifs_atteints': [
-    "✅ Agent 09 - Control/Data Plane créé (10/10)",
-    "✅ Agent 11 - Audit qualité effectué (10/10)",
-    "✅ DoD Sprint 3 validé à 100%",
-    "🔄 Agent 01 - Coordination en cours"
-    ],
-    'blocages': [],
-    'recommandations': [
-    "Finaliser coordination Agent 01",
-    "Préparer Sprint 4 - Agents 08, 12, 13",
-    "Maintenir qualité exceptionnelle 10/10"
-    ]
+        'sprint_id': 3,
+        'progression_percentage': progression_sprint3,
+        'agents_operationnels': agents_operationnels,
+        'agents_total': len(agents_sprint3),
+        'qualite_moyenne': qualite_moyenne,
+        'dod_compliance': dod_compliance,
+        'objectifs_atteints': [
+            "✅ Agent 09 - Control/Data Plane créé (10/10)",
+            "✅ Agent 11 - Audit qualité effectué (10/10)",
+            "✅ DoD Sprint 3 validé à 100%",
+            "🔄 Agent 01 - Coordination en cours"
+        ],
+        'blocages': [],
+        'recommandations': [
+            "Finaliser coordination Agent 01",
+            "Préparer Sprint 4 - Agents 08, 12, 13",
+            "Maintenir qualité exceptionnelle 10/10"
+        ]
     }
         
     self.logger.info(f"📊 Sprint 3: {progression_sprint3:.0f}% - Qualité: {qualite_moyenne:.1f}/10")
@@ -298,76 +302,76 @@ class Agent01CoordinateurPrincipal:
     🚀 Planification Sprint 4 - Observabilité & Performance
         
     Returns:
-    Dict avec plan détaillé Sprint 4
+        Dict avec plan détaillé Sprint 4
         """
     self.logger.info("🚀 Planification Sprint 4")
         
     sprint4_plan = {
-    'sprint_id': 4,
-    'nom': 'Observabilité Avancée & Performance',
-    'date_debut_prevue': datetime.now() + timedelta(weeks=1),
-    'duree_semaines': 1,
-    'agents_a_creer': [
-    {
-        'agent_id': 'agent_08',
-        'nom': 'Optimiseur Performance',
-        'responsabilites': [
-            'ThreadPool auto-tuned (CPU × 2)',
-            'Compression .json.zst',
-            'Performance < 50ms/agent',
-            'Benchmarks validation'
+        'sprint_id': 4,
+        'nom': 'Observabilité Avancée & Performance',
+        'date_debut_prevue': datetime.now() + timedelta(weeks=1),
+        'duree_semaines': 1,
+        'agents_a_creer': [
+            {
+                'agent_id': 'agent_08',
+                'nom': 'Optimiseur Performance',
+                'responsabilites': [
+                    'ThreadPool auto-tuned (CPU × 2)',
+                    'Compression .json.zst',
+                    'Performance < 50ms/agent',
+                    'Benchmarks validation'
+                ],
+                'priorite': 'HAUTE'
+            },
+            {
+                'agent_id': 'agent_12',
+                'nom': 'Gestionnaire Backups',
+                'responsabilites': [
+                    'Versioning production',
+                    'Procédures rollback',
+                    'Backup automatique',
+                    'Intégrité données'
+                ],
+                'priorite': 'MOYENNE'
+            },
+            {
+                'agent_id': 'agent_13',
+                'nom': 'Spécialiste Documentation',
+                'responsabilites': [
+                    'Guides production',
+                    'Documentation API',
+                    'Standards documentation',
+                    'Auto-génération docs'
+                ],
+                'priorite': 'MOYENNE'
+            }
         ],
-        'priorite': 'HAUTE'
-    },
-    {
-        'agent_id': 'agent_12',
-        'nom': 'Gestionnaire Backups',
-        'responsabilites': [
-            'Versioning production',
-            'Procédures rollback',
-            'Backup automatique',
-            'Intégrité données'
+        'objectifs_techniques': [
+            'OpenTelemetry tracing distribué complet',
+            'Métriques Prometheus complètes (p95, cache, TTL)',
+            'ThreadPool adaptatif selon charge CPU',
+            'Compression templates active (.json.zst)',
+            'Performance < 50ms/agent production validée',
+            'Dashboard monitoring complet'
         ],
-        'priorite': 'MOYENNE'
-    },
-    {
-        'agent_id': 'agent_13',
-        'nom': 'Spécialiste Documentation',
-        'responsabilites': [
-            'Guides production',
-            'Documentation API',
-            'Standards documentation',
-            'Auto-génération docs'
+        'dod_criteria': [
+            'Tracing OpenTelemetry opérationnel',
+            'Métriques Prometheus complètes',
+            'ThreadPool adaptatif fonctionnel',
+            'Compression active',
+            'Performance validée',
+            'Dashboard opérationnel'
         ],
-        'priorite': 'MOYENNE'
-    }
-    ],
-    'objectifs_techniques': [
-    'OpenTelemetry tracing distribué complet',
-    'Métriques Prometheus complètes (p95, cache, TTL)',
-    'ThreadPool adaptatif selon charge CPU',
-    'Compression templates active (.json.zst)',
-    'Performance < 50ms/agent production validée',
-    'Dashboard monitoring complet'
-    ],
-    'dod_criteria': [
-    'Tracing OpenTelemetry opérationnel',
-    'Métriques Prometheus complètes',
-    'ThreadPool adaptatif fonctionnel',
-    'Compression active',
-    'Performance validée',
-    'Dashboard opérationnel'
-    ],
-    'risques_identifies': [
-    'Complexité OpenTelemetry',
-    'Performance ThreadPool',
-    'Intégration métriques'
-    ],
-    'mitigations': [
-    'Documentation OpenTelemetry détaillée',
-    'Tests performance automatisés',
-    'Monitoring intégration continue'
-    ]
+        'risques_identifies': [
+            'Complexité OpenTelemetry',
+            'Performance ThreadPool',
+            'Intégration métriques'
+        ],
+        'mitigations': [
+            'Documentation OpenTelemetry détaillée',
+            'Tests performance automatisés',
+            'Monitoring intégration continue'
+        ]
     }
         
     self.logger.info("🚀 Sprint 4 planifié - 3 agents à créer")
@@ -378,54 +382,54 @@ class Agent01CoordinateurPrincipal:
     🐳 Planification Sprint 5 - Déploiement K8s Production
         
     Returns:
-    Dict avec plan détaillé Sprint 5
+        Dict avec plan détaillé Sprint 5
         """
     self.logger.info("🐳 Planification Sprint 5")
         
     sprint5_plan = {
-    'sprint_id': 5,
-    'nom': 'Déploiement Kubernetes Production',
-    'date_debut_prevue': datetime.now() + timedelta(weeks=2),
-    'duree_semaines': 1,
-    'agents_a_creer': [
-    {
-        'agent_id': 'agent_07',
-        'nom': 'Expert Déploiement K8s',
-        'responsabilites': [
-            'Helm charts blue-green deploy',
-            'Chaos engineering tests (25% nodes off)',
-            'Runbook opérateur complet',
-            'SLA < 100ms p95 production',
-            'Monitoring production'
+        'sprint_id': 5,
+        'nom': 'Déploiement Kubernetes Production',
+        'date_debut_prevue': datetime.now() + timedelta(weeks=2),
+        'duree_semaines': 1,
+        'agents_a_creer': [
+            {
+                'agent_id': 'agent_07',
+                'nom': 'Expert Déploiement K8s',
+                'responsabilites': [
+                    'Helm charts blue-green deploy',
+                    'Chaos engineering tests (25% nodes off)',
+                    'Runbook opérateur complet',
+                    'SLA < 100ms p95 production',
+                    'Monitoring production'
+                ],
+                'priorite': 'CRITIQUE'
+            }
         ],
-        'priorite': 'CRITIQUE'
-    }
-    ],
-    'objectifs_techniques': [
-    'Déploiement K8s blue-green fonctionnel',
-    'Chaos test 25% nodes passant',
-    'Runbook opérateur complet et testé',
-    'Monitoring production opérationnel',
-    'SLA < 100ms p95 respecté production',
-    'Agent Factory Pattern production-ready'
-    ],
-    'dod_criteria': [
-    'Déploiement blue-green validé',
-    'Tests chaos réussis',
-    'Runbook testé',
-    'Monitoring opérationnel',
-    'SLA respecté'
-    ],
-    'risques_identifies': [
-    'Complexité déploiement K8s',
-    'Tests chaos destructifs',
-    'Performance production'
-    ],
-    'mitigations': [
-    'Environnement staging identique',
-    'Tests chaos contrôlés',
-    'Monitoring temps réel'
-    ]
+        'objectifs_techniques': [
+            'Déploiement K8s blue-green fonctionnel',
+            'Chaos test 25% nodes passant',
+            'Runbook opérateur complet et testé',
+            'Monitoring production opérationnel',
+            'SLA < 100ms p95 respecté production',
+            'Agent Factory Pattern production-ready'
+        ],
+        'dod_criteria': [
+            'Déploiement blue-green validé',
+            'Tests chaos réussis',
+            'Runbook testé',
+            'Monitoring opérationnel',
+            'SLA respecté'
+        ],
+        'risques_identifies': [
+            'Complexité déploiement K8s',
+            'Tests chaos destructifs',
+            'Performance production'
+        ],
+        'mitigations': [
+            'Environnement staging identique',
+            'Tests chaos contrôlés',
+            'Monitoring temps réel'
+        ]
     }
         
     self.logger.info("🐳 Sprint 5 planifié - Production-ready")
@@ -436,7 +440,7 @@ class Agent01CoordinateurPrincipal:
     📊 Génération rapport coordination complet Sprint 3
         
     Returns:
-    Dict avec rapport détaillé coordination
+        Dict avec rapport détaillé coordination
         """
     self.logger.info("📊 Génération rapport coordination Sprint 3")
         
@@ -449,19 +453,19 @@ class Agent01CoordinateurPrincipal:
         
         # Mise à jour tracking
     self.tracking.update({
-    'mission_status': 'COORDINATION_ACTIVE',
-    'progression_globale': progression_sprint3['progression_percentage'],
-    'qualite_moyenne': progression_sprint3['qualite_moyenne'],
-    'agents_operationnels': progression_sprint3['agents_operationnels'],
-    'sprint3_status': 'EN_COURS',
-    'sprint4_status': 'PLANIFIÉ',
-    'sprint5_status': 'PLANIFIÉ',
-    'dod_compliance_sprint3': progression_sprint3['dod_compliance'],
-    'objectifs_sprint3': progression_sprint3['objectifs_atteints'],
-    'recommandations': progression_sprint3['recommandations'],
-    'planification_sprint4': plan_sprint4,
-    'planification_sprint5': plan_sprint5,
-    'timestamp_rapport': datetime.now().isoformat()
+        'mission_status': 'COORDINATION_ACTIVE',
+        'progression_globale': progression_sprint3['progression_percentage'],
+        'qualite_moyenne': progression_sprint3['qualite_moyenne'],
+        'agents_operationnels': progression_sprint3['agents_operationnels'],
+        'sprint3_status': 'EN_COURS',
+        'sprint4_status': 'PLANIFIÉ',
+        'sprint5_status': 'PLANIFIÉ',
+        'dod_compliance_sprint3': progression_sprint3['dod_compliance'],
+        'objectifs_sprint3': progression_sprint3['objectifs_atteints'],
+        'recommandations': progression_sprint3['recommandations'],
+        'planification_sprint4': plan_sprint4,
+        'planification_sprint5': plan_sprint5,
+        'timestamp_rapport': datetime.now().isoformat()
     })
         
         # Sauvegarde rapport
@@ -499,7 +503,7 @@ class Agent01CoordinateurPrincipal:
 """
         
     for objectif in sprint3_metrics['objectifs_atteints']:
-    rapport_md += f"- {objectif}\n"
+        rapport_md += f"- {objectif}\n"
         
     rapport_md += f"""
 
@@ -507,7 +511,7 @@ class Agent01CoordinateurPrincipal:
 """
         
     for rec in sprint3_metrics['recommandations']:
-    rapport_md += f"- {rec}\n"
+        rapport_md += f"- {rec}\n"
         
     rapport_md += f"""
 
@@ -524,11 +528,11 @@ class Agent01CoordinateurPrincipal:
 """
         
     for agent in plan_sprint4['agents_a_creer']:
-    rapport_md += f"""
+        rapport_md += f"""
 #### {agent['agent_id']} - {agent['nom']} (Priorité: {agent['priorite']})
 """
-    for resp in agent['responsabilites']:
-    rapport_md += f"- {resp}\n"
+        for resp in agent['responsabilites']:
+            rapport_md += f"- {resp}\n"
         
     rapport_md += f"""
 
@@ -536,7 +540,7 @@ class Agent01CoordinateurPrincipal:
 """
         
     for obj in plan_sprint4['objectifs_techniques']:
-    rapport_md += f"- {obj}\n"
+        rapport_md += f"- {obj}\n"
         
     rapport_md += f"""
 
@@ -553,11 +557,11 @@ class Agent01CoordinateurPrincipal:
 """
         
     for agent in plan_sprint5['agents_a_creer']:
-    rapport_md += f"""
+        rapport_md += f"""
 #### {agent['agent_id']} - {agent['nom']} (Priorité: {agent['priorite']})
 """
-    for resp in agent['responsabilites']:
-    rapport_md += f"- {resp}\n"
+        for resp in agent['responsabilites']:
+            rapport_md += f"- {resp}\n"
         
     rapport_md += f"""
 
@@ -565,7 +569,7 @@ class Agent01CoordinateurPrincipal:
 """
         
     for obj in plan_sprint5['objectifs_techniques']:
-    rapport_md += f"- {obj}\n"
+        rapport_md += f"- {obj}\n"
         
     rapport_md += f"""
 
@@ -626,12 +630,12 @@ class Agent01CoordinateurPrincipal:
 """
         
     with open(rapport_file, 'w', encoding='utf-8') as f:
-    f.write(rapport_md)
+        f.write(rapport_md)
         
         # Sauvegarde JSON
     rapport_json = reports_dir / f"agent_{self.agent_id}_coordination_sprint3-5_{datetime.now().strftime('%Y-%m-%d')}.json"
     with open(rapport_json, 'w', encoding='utf-8') as f:
-    json.dump(self.tracking, f, indent=2, ensure_ascii=False, default=str)
+        json.dump(self.tracking, f, indent=2, ensure_ascii=False, default=str)
         
     self.logger.info(f"📄 Rapport coordination sauvegardé: {rapport_file}")
 

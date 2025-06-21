@@ -35,7 +35,9 @@ SPRINT 2 OBJECTIFS :
 import os
 import sys
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import asyncio
 import hashlib
 import base64
@@ -67,12 +69,14 @@ except ImportError:
                 # Configuration logging
     logging.basicConfig(level=logging.INFO)
                 # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_agent_logger(
-        agent_name="Agent",
-        role="ai_processor",
-        domain="general",
-        async_enabled=True
+    agent_name="Agent",
+    role="ai_processor",
+    domain="general",
+    async_enabled=True
     )
                 
     async def startup(self): pass
@@ -343,13 +347,13 @@ class Agent04ExpertSecuriteCrypto:
             # Chargement clés existantes
     try:
     with open(private_key_path, 'rb') as f:
-        self.private_key = serialization.load_pem_private_key(
-            f.read(),
-            password=None
-        )
+    self.private_key = serialization.load_pem_private_key(
+        f.read(),
+        password=None
+    )
                     
     with open(public_key_path, 'rb') as f:
-        self.public_key = serialization.load_pem_public_key(f.read())
+    self.public_key = serialization.load_pem_public_key(f.read())
                     
     self.logger.info("✅ Clés RSA 2048 chargées")
                 
@@ -438,8 +442,8 @@ class Agent04ExpertSecuriteCrypto:
     signature = self.private_key.sign(
     content_hash,
     padding.PSS(
-        mgf=padding.MGF1(hashes.SHA256()),
-        salt_length=padding.PSS.MAX_LENGTH
+    mgf=padding.MGF1(hashes.SHA256()),
+    salt_length=padding.PSS.MAX_LENGTH
     ),
     hashes.SHA256()
     )
@@ -528,8 +532,8 @@ class Agent04ExpertSecuriteCrypto:
     signature,
     content_hash,
     padding.PSS(
-        mgf=padding.MGF1(hashes.SHA256()),
-        salt_length=padding.PSS.MAX_LENGTH
+    mgf=padding.MGF1(hashes.SHA256()),
+    salt_length=padding.PSS.MAX_LENGTH
     ),
     hashes.SHA256()
     )
@@ -601,13 +605,13 @@ class Agent04ExpertSecuriteCrypto:
     required_fields = ["name", "role", "domain", "capabilities", "tools"]
     for field in required_fields:
     if field not in template_data:
-        validation_report["violations"].append({
-            "type": "MISSING_FIELD",
-            "field": field,
-            "severity": "HIGH",
-            "description": f"Champ obligatoire manquant: {field}"
-        })
-        validation_report["security_score"] -= 20
+    validation_report["violations"].append({
+        "type": "MISSING_FIELD",
+        "field": field,
+        "severity": "HIGH",
+        "description": f"Champ obligatoire manquant: {field}"
+    })
+    validation_report["security_score"] -= 20
                     
             # 2. Validation policy OPA - tools dangereux
     dangerous_found = []
@@ -615,21 +619,21 @@ class Agent04ExpertSecuriteCrypto:
             
     for tool in template_tools:
     if any(dangerous in tool.lower() for dangerous in self.security_config.dangerous_tools):
-        dangerous_found.append(tool)
-        validation_report["violations"].append({
-            "type": "DANGEROUS_TOOL",
-            "tool": tool,
-            "severity": "CRITICAL",
-            "description": f"Outil dangereux détecté: {tool}"
-        })
-        validation_report["security_score"] -= 30
+    dangerous_found.append(tool)
+    validation_report["violations"].append({
+        "type": "DANGEROUS_TOOL",
+        "tool": tool,
+        "severity": "CRITICAL",
+        "description": f"Outil dangereux détecté: {tool}"
+    })
+    validation_report["security_score"] -= 30
                     
                     # Métriques
-        self.metrics.policy_violations += 1
-        self.prometheus_metrics["policy_violations"].labels(
-            tool=tool,
-            severity="critical"
-        ).inc()
+    self.metrics.policy_violations += 1
+    self.prometheus_metrics["policy_violations"].labels(
+        tool=tool,
+        severity="critical"
+    ).inc()
                     
             # 3. Validation capabilities sécurisées
     capabilities = template_data.get("capabilities", [])
@@ -637,13 +641,13 @@ class Agent04ExpertSecuriteCrypto:
             
     for cap in capabilities:
     if any(risky in cap.lower() for risky in risky_capabilities):
-        validation_report["warnings"].append({
-            "type": "RISKY_CAPABILITY",
-            "capability": cap,
-            "severity": "MEDIUM",
-            "description": f"Capability risquée: {cap}"
-        })
-        validation_report["security_score"] -= 10
+    validation_report["warnings"].append({
+        "type": "RISKY_CAPABILITY",
+        "capability": cap,
+        "severity": "MEDIUM",
+        "description": f"Capability risquée: {cap}"
+    })
+    validation_report["security_score"] -= 10
                     
             # 4. Validation configuration par défaut
     default_config = template_data.get("default_config", {})
@@ -652,10 +656,10 @@ class Agent04ExpertSecuriteCrypto:
     timeout = default_config.get("timeout", 30)
     if timeout > 300:  # 5 minutes max
     validation_report["warnings"].append({
-        "type": "EXCESSIVE_TIMEOUT",
-        "value": timeout,
-        "severity": "MEDIUM",
-        "description": f"Timeout excessif: {timeout}s > 300s"
+    "type": "EXCESSIVE_TIMEOUT",
+    "value": timeout,
+    "severity": "MEDIUM",
+    "description": f"Timeout excessif: {timeout}s > 300s"
     })
     validation_report["security_score"] -= 5
                 
@@ -663,10 +667,10 @@ class Agent04ExpertSecuriteCrypto:
     temperature = default_config.get("temperature", 0.7)
     if temperature > 1.5:
     validation_report["warnings"].append({
-        "type": "HIGH_TEMPERATURE",
-        "value": temperature,
-        "severity": "LOW",
-        "description": f"Température AI élevée: {temperature}"
+    "type": "HIGH_TEMPERATURE",
+    "value": temperature,
+    "severity": "LOW",
+    "description": f"Température AI élevée: {temperature}"
     })
     validation_report["security_score"] -= 2
                 
@@ -674,9 +678,9 @@ class Agent04ExpertSecuriteCrypto:
     metadata = template_data.get("metadata", {})
     if not metadata.get("author"):
     validation_report["warnings"].append({
-        "type": "MISSING_AUTHOR",
-        "severity": "LOW",
-        "description": "Auteur template non spécifié"
+    "type": "MISSING_AUTHOR",
+    "severity": "LOW",
+    "description": "Auteur template non spécifié"
     })
     validation_report["security_score"] -= 3
                 
@@ -684,10 +688,10 @@ class Agent04ExpertSecuriteCrypto:
     version = template_data.get("version", "1.0.0")
     if not re.match(r'^\d+\.\d+\.\d+$', version):
     validation_report["warnings"].append({
-        "type": "INVALID_VERSION",
-        "version": version,
-        "severity": "LOW", 
-        "description": f"Format version invalide: {version}"
+    "type": "INVALID_VERSION",
+    "version": version,
+    "severity": "LOW", 
+    "description": f"Format version invalide: {version}"
     })
     validation_report["security_score"] -= 2
                 
@@ -704,12 +708,12 @@ class Agent04ExpertSecuriteCrypto:
             # 8. Génération recommandations
     if dangerous_found:
     validation_report["recommendations"].append(
-        "Remplacer ou sécuriser les outils dangereux détectés"
+    "Remplacer ou sécuriser les outils dangereux détectés"
     )
                 
     if validation_report["security_score"] < 100:
     validation_report["recommendations"].append(
-        "Réviser et corriger les problèmes de sécurité identifiés"
+    "Réviser et corriger les problèmes de sécurité identifiés"
     )
                 
     validation_report["recommendations"].append(
@@ -822,34 +826,34 @@ class Agent04ExpertSecuriteCrypto:
     'package': 'agent_factory.security',
     'default': {'allow': False},
     'blacklisted_tools': [
-        'eval',
-        'exec',
-        'subprocess.Popen',
-        'os.system',
-        'importlib.import_module',
-        '__import__',
-        'compile',
-        'globals',
-        'locals',
-        'vars'
+    'eval',
+    'exec',
+    'subprocess.Popen',
+    'os.system',
+    'importlib.import_module',
+    '__import__',
+    'compile',
+    'globals',
+    'locals',
+    'vars'
     ],
     'blacklisted_modules': [
-        'subprocess',
-        'os.system',
-        'importlib',
-        'pickle',
-        'marshal',
-        'code'
+    'subprocess',
+    'os.system',
+    'importlib',
+    'pickle',
+    'marshal',
+    'code'
     ],
     'rules': {
-        'allow_tool': {
-            'condition': 'not input.tool in data.blacklist.tools',
-            'message': 'Tool bloqué par politique sécurité'
-        },
-        'allow_module': {
-            'condition': 'not input.module in data.blacklist.modules',
-            'message': 'Module bloqué par politique sécurité'
-        }
+    'allow_tool': {
+        'condition': 'not input.tool in data.blacklist.tools',
+        'message': 'Tool bloqué par politique sécurité'
+    },
+    'allow_module': {
+        'condition': 'not input.module in data.blacklist.modules',
+        'message': 'Module bloqué par politique sécurité'
+    }
     }
     }
             
@@ -1211,34 +1215,34 @@ class Agent04ExpertSecuriteCrypto:
     try:
     metrics = {
     'agent_factory_security_signatures_total': {
-        'type': 'counter',
-        'help': 'Total signatures RSA créées',
-        'value': getattr(self, '_signatures_count', 0)
+    'type': 'counter',
+    'help': 'Total signatures RSA créées',
+    'value': getattr(self, '_signatures_count', 0)
     },
     'agent_factory_security_validations_total': {
-        'type': 'counter',
-        'help': 'Total validations templates',
-        'value': getattr(self, '_validations_count', 0)
+    'type': 'counter',
+    'help': 'Total validations templates',
+    'value': getattr(self, '_validations_count', 0)
     },
     'agent_factory_security_violations_total': {
-        'type': 'counter',
-        'help': 'Total violations sécurité détectées',
-        'value': getattr(self, '_violations_count', 0)
+    'type': 'counter',
+    'help': 'Total violations sécurité détectées',
+    'value': getattr(self, '_violations_count', 0)
     },
     'agent_factory_security_vault_rotations_total': {
-        'type': 'counter',
-        'help': 'Total rotations clés Vault',
-        'value': getattr(self, '_rotations_count', 0)
+    'type': 'counter',
+    'help': 'Total rotations clés Vault',
+    'value': getattr(self, '_rotations_count', 0)
     },
     'agent_factory_security_opa_blocks_total': {
-        'type': 'counter',
-        'help': 'Total requêtes bloquées OPA',
-        'value': getattr(self, '_opa_blocks_count', 0)
+    'type': 'counter',
+    'help': 'Total requêtes bloquées OPA',
+    'value': getattr(self, '_opa_blocks_count', 0)
     },
     'agent_factory_security_score': {
-        'type': 'gauge',
-        'help': 'Score sécurité global (0-10)',
-        'value': getattr(self, '_security_score', 10.0)
+    'type': 'gauge',
+    'help': 'Score sécurité global (0-10)',
+    'value': getattr(self, '_security_score', 10.0)
     }
     }
             
@@ -1272,18 +1276,18 @@ class Agent04ExpertSecuriteCrypto:
     'review_type': review_type,
     'reviewers': ['agent_16_peer_reviewer_senior', 'agent_17_peer_reviewer_technique'],
     'focus_areas': [
-        'cryptographic_implementation',
-        'vault_integration',
-        'opa_policies',
-        'security_validation',
-        'threat_modeling'
+    'cryptographic_implementation',
+    'vault_integration',
+    'opa_policies',
+    'security_validation',
+    'threat_modeling'
     ],
     'deliverables_to_review': [
-        'rsa_signature_implementation',
-        'vault_rotation_scripts',
-        'opa_policy_definitions',
-        'template_security_validator',
-        'security_audit_report'
+    'rsa_signature_implementation',
+    'vault_rotation_scripts',
+    'opa_policy_definitions',
+    'template_security_validator',
+    'security_audit_report'
     ]
     }
             
@@ -1295,11 +1299,11 @@ class Agent04ExpertSecuriteCrypto:
     'deadline': (datetime.now() + timedelta(days=2)).isoformat(),
     'context': 'Validation implémentation sécurité shift-left Sprint 2',
     'specific_questions': [
-        'Implémentation RSA 2048 + SHA-256 conforme standards?',
-        'Intégration Vault sécurisée et opérationnelle?',
-        'Politiques OPA suffisamment restrictives?',
-        'TemplateSecurityValidator production-ready?',
-        'Métriques sécurité complètes et pertinentes?'
+    'Implémentation RSA 2048 + SHA-256 conforme standards?',
+    'Intégration Vault sécurisée et opérationnelle?',
+    'Politiques OPA suffisamment restrictives?',
+    'TemplateSecurityValidator production-ready?',
+    'Métriques sécurité complètes et pertinentes?'
     ]
     }
             

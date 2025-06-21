@@ -1,0 +1,23 @@
+{
+  "workflow_result": {
+    "status": "completed",
+    "details": "Résultat de maintenance_complete"
+  },
+  "workflow_metrics": {
+    "workflow_id": "wf_maintenance_complete_20250621180857",
+    "start_time": "2025-06-21 18:08:57.527800",
+    "end_time": "2025-06-21 18:08:57.641059",
+    "status": "WorkflowStatus.COMPLETED",
+    "agents_involved": [],
+    "tasks_completed": 0,
+    "tasks_total": 6,
+    "errors": [],
+    "performance_data": {}
+  },
+  "chef_equipe": {
+    "agent_id": "coord_main_001",
+    "agent_type": "chef_equipe_coordinateur"
+  },
+  "nextgen_metadata": {},
+  "timestamp_generation": "2025-06-21T18:08:57.641059"
+}

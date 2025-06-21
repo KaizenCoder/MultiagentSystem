@@ -57,3 +57,7 @@ try:
 except Exception as e:
     print(f"[CROSS] Erreur lors du dmarrage: {e}")
     sys.exit(1)
+
+
+
+

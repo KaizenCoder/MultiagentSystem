@@ -30,7 +30,9 @@ SPRINT 2 OBJECTIFS :
 import os
 import sys
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import asyncio
 import hashlib
 import base64
@@ -60,7 +62,9 @@ except ImportError:
                 self.agent_type = agent_type
                 self.config = config
                 # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="Agent",
             role="ai_processor",
@@ -1466,3 +1470,6 @@ if __name__ == "__main__":
 def create_agent_04ExpertSecuriteCrypto(**config):
     """Factory function pour créer un Agent 04ExpertSecuriteCrypto conforme Pattern Factory"""
     return Agent04ExpertSecuriteCrypto(**config)
+
+
+

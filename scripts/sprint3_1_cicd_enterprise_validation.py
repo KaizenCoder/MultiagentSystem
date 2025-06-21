@@ -17,7 +17,9 @@ Composants valids:
 """
 
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import os
 import subprocess
 import sys
@@ -32,8 +34,10 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 # LoggingManager NextGeneration - Tool/Utility
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "CICDEnterpriseValidator",
             "log_level": "INFO",
             "elasticsearch_enabled": False,
@@ -738,3 +742,6 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main()) 
+
+
+

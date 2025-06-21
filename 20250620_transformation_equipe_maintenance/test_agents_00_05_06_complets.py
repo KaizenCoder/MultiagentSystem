@@ -12,15 +12,19 @@ Agents testés:
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime
 from pathlib import Path
 import sys
 
 # Configuration des logs
 # LoggingManager NextGeneration - Tests
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "test_agents_00_05_06_complets",
             "log_level": "DEBUG",
             "elasticsearch_enabled": False,
@@ -31,9 +35,9 @@ import sys
 
 # Import des agents
 sys.path.insert(0, str(Path(__file__).parent))
-from agent_equipe_maintenance.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
-from agent_equipe_maintenance.agent_MAINTENANCE_05_documenteur import create_agent_5_documenteur
-from agent_equipe_maintenance.agent_MAINTENANCE_06_validateur_final import create_agent_6ValidateurFinal
+from agent_factory_implementation.agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
+from agent_factory_implementation.agents.agent_MAINTENANCE_05_documenteur import create_agent_5_documenteur
+from agent_factory_implementation.agents.agent_MAINTENANCE_06_validateur_final import create_agent_6ValidateurFinal
 
 async def test_agent_00_chef_equipe():
     """Test complet Agent 00 - Chef d'Équipe Coordinateur"""
@@ -366,3 +370,6 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main()) 
+
+
+

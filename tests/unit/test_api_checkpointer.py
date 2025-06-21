@@ -392,3 +392,6 @@ class TestApiCheckpointerEdgeCases:
         # Vrifier que super().__init__() a t appel (BaseCheckpointSaver)
         from langgraph.checkpoint.base import BaseCheckpointSaver
         assert isinstance(checkpointer, BaseCheckpointSaver) 
+
+
+

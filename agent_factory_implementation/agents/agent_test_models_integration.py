@@ -24,7 +24,9 @@ Créé: 19 juin 2025 - 17h30
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import sys
 import time
 from datetime import datetime
@@ -95,11 +97,11 @@ class AgentTestModelsIntegration(BaseAgent):
     "domain": "models_validation",
     "description": "Agent de test pour validation architecture modèles IA",
     "capabilities": [
-        "test_models_integration",
-        "validate_ollama_connection", 
-        "benchmark_performance",
-        "test_agent_model_compatibility",
-        "generate_validation_report"
+    "test_models_integration",
+    "validate_ollama_connection", 
+    "benchmark_performance",
+    "test_agent_model_compatibility",
+    "generate_validation_report"
     ],
     "tools": ["model_manager", "ollama_client", "performance_tester"],
     "dependencies": [],
@@ -107,10 +109,10 @@ class AgentTestModelsIntegration(BaseAgent):
     "performance_targets": {"response_time": 30},
     "default_config": {"log_level": "INFO"},
     "pattern_factory": {
-        "template_version": "1.0.0",
-        "factory_compatible": True,
-        "auto_registration": False,
-        "hot_reload": False
+    "template_version": "1.0.0",
+    "factory_compatible": True,
+    "auto_registration": False,
+    "hot_reload": False
     }
     }
     config = AgentConfig.from_template(config_data)
@@ -125,7 +127,9 @@ class AgentTestModelsIntegration(BaseAgent):
             
             # Configuration logger
             # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_agent_logger(
     agent_name="BaseAgent",
     role="ai_processor",
@@ -183,11 +187,11 @@ QUESTIONS TECHNIQUES :
 4. Comment gérer les transactions distribuées ?
 5. Propose une refactorisation avec DDD.""",
     "evaluation_criteria": [
-        "Identifie Single Responsibility Principle violation",
-        "Propose Dependency Injection",
-        "Évoque Circuit Breaker pattern",
-        "Mentionne Saga pattern ou 2PC",
-        "Suggest Repository/Service layers"
+    "Identifie Single Responsibility Principle violation",
+    "Propose Dependency Injection",
+    "Évoque Circuit Breaker pattern",
+    "Mentionne Saga pattern ou 2PC",
+    "Suggest Repository/Service layers"
     ],
     "min_score": 3,
     "complexity": "senior"
@@ -219,11 +223,11 @@ DÉFIS TECHNIQUES :
 4. Gère les poids négatifs (Bellman-Ford)
 5. Optimise pour graphes très larges (A*)""",
     "evaluation_criteria": [
-        "Identifie O(V+E) mais inefficace à cause de la liste",
-        "Explique pourquoi BFS naïf est lent",
-        "Implémente correctement Dijkstra avec heapq",
-        "Mentionne Bellman-Ford pour poids négatifs",
-        "Propose A* avec heuristique"
+    "Identifie O(V+E) mais inefficace à cause de la liste",
+    "Explique pourquoi BFS naïf est lent",
+    "Implémente correctement Dijkstra avec heapq",
+    "Mentionne Bellman-Ford pour poids négatifs",
+    "Propose A* avec heuristique"
     ],
     "min_score": 3,
     "complexity": "expert"
@@ -253,11 +257,11 @@ AUDIT SÉCURITÉ :
 4. Gère le timing attack
 5. Ajoute 2FA et rate limiting""",
     "evaluation_criteria": [
-        "Identifie que SHA-256 est trop rapide",
-        "Explique les attaques par rainbow tables",
-        "Propose bcrypt/scrypt/Argon2",
-        "Mentionne constant-time comparison",
-        "Suggest TOTP/HOTP pour 2FA"
+    "Identifie que SHA-256 est trop rapide",
+    "Explique les attaques par rainbow tables",
+    "Propose bcrypt/scrypt/Argon2",
+    "Mentionne constant-time comparison",
+    "Suggest TOTP/HOTP pour 2FA"
     ],
     "min_score": 4,
     "complexity": "security_expert"
@@ -298,11 +302,11 @@ PROBLÈMES CONCURRENCE :
 4. Gère deadlocks potentiels
 5. Optimise avec lock-free structures""",
     "evaluation_criteria": [
-        "Identifie que le lock protège mais logique est fausse",
-        "Explique que temp=value puis value=temp+1 est atomique mais logique fausse",
-        "Propose self.value += 1 directement",
-        "Mentionne threading.Atomic ou multiprocessing.Value",
-        "Évoque lock-free queues/stacks"
+    "Identifie que le lock protège mais logique est fausse",
+    "Explique que temp=value puis value=temp+1 est atomique mais logique fausse",
+    "Propose self.value += 1 directement",
+    "Mentionne threading.Atomic ou multiprocessing.Value",
+    "Évoque lock-free queues/stacks"
     ],
     "min_score": 3,
     "complexity": "concurrency_expert"
@@ -330,11 +334,11 @@ OPTIMISATION BDD :
 4. Propose partitioning strategy
 5. Implémente avec cache Redis""",
     "evaluation_criteria": [
-        "Identifie EXISTS subquery comme problème",
-        "Propose index sur (user_id, total) et (created_at)",
-        "Réécrit avec JOIN au lieu de EXISTS",
-        "Mentionne partitioning par date",
-        "Propose cache avec TTL approprié"
+    "Identifie EXISTS subquery comme problème",
+    "Propose index sur (user_id, total) et (created_at)",
+    "Réécrit avec JOIN au lieu de EXISTS",
+    "Mentionne partitioning par date",
+    "Propose cache avec TTL approprié"
     ],
     "min_score": 3,
     "complexity": "database_expert"
@@ -358,11 +362,11 @@ DÉFIS ARCHITECTURE :
 4. Design event sourcing pour orders
 5. Propose monitoring/observability stack""",
     "evaluation_criteria": [
-        "Propose Saga pattern ou 2PC",
-        "Implémente circuit breaker avec hystrix-like",
-        "Explique CQRS + event sourcing",
-        "Design event store avec snapshots",
-        "Propose Prometheus + Grafana + Jaeger"
+    "Propose Saga pattern ou 2PC",
+    "Implémente circuit breaker avec hystrix-like",
+    "Explique CQRS + event sourcing",
+    "Design event store avec snapshots",
+    "Propose Prometheus + Grafana + Jaeger"
     ],
     "min_score": 4,
     "complexity": "system_architect"
@@ -392,11 +396,11 @@ PRODUCTION ML :
 4. Gère data drift detection
 5. Design MLOps pipeline complet""",
     "evaluation_criteria": [
-        "Identifie pickle security issues",
-        "Propose MLflow ou DVC pour versioning",
-        "Implémente feature flags pour A/B",
-        "Mentionne monitoring distribution shift",
-        "Design CI/CD avec Kubeflow/MLflow"
+    "Identifie pickle security issues",
+    "Propose MLflow ou DVC pour versioning",
+    "Implémente feature flags pour A/B",
+    "Mentionne monitoring distribution shift",
+    "Design CI/CD avec Kubeflow/MLflow"
     ],
     "min_score": 3,
     "complexity": "ml_engineer"
@@ -512,9 +516,9 @@ Comment optimiser pour 1M+ records ?"""
     return await self._test_model_compatibility(task_data)
     else:
     return {
-        "success": False,
-        "error": f"Type de test non supporté: {task_type}",
-        "available_types": ["complete_test_suite", "integration_test", "performance_test", "model_compatibility"]
+    "success": False,
+    "error": f"Type de test non supporté: {task_type}",
+    "available_types": ["complete_test_suite", "integration_test", "performance_test", "model_compatibility"]
     }
                 
     except Exception as e:
@@ -619,9 +623,9 @@ Comment optimiser pour 1M+ records ?"""
     model_privacy, provider_privacy = await self.model_manager.get_model_for_agent(agent_id, "privacy")
                 
     self.test_results["agent_model_configs"][agent_id] = {
-        "general": {"model": model_general, "provider": provider_general.value},
-        "code": {"model": model_code, "provider": provider_code.value},
-        "privacy": {"model": model_privacy, "provider": provider_privacy.value}
+    "general": {"model": model_general, "provider": provider_general.value},
+    "code": {"model": model_code, "provider": provider_code.value},
+    "privacy": {"model": model_privacy, "provider": provider_privacy.value}
     }
                 
     logger.info(f"✅ {agent_id}: Général={model_general}, Code={model_code}, Privacy={model_privacy}")
@@ -648,25 +652,25 @@ Comment optimiser pour 1M+ records ?"""
             # Test génération avec modèles locaux
     if ollama_models:
     for model in ollama_models[:3]:  # Test max 3 modèles
-        try:
-            test_prompt = "Bonjour, peux-tu me dire l'heure ?"
+    try:
+        test_prompt = "Bonjour, peux-tu me dire l'heure ?"
                         
-            start_time = time.time()
-            result = await self.model_manager.ollama_client.generate(model, test_prompt)
-            end_time = time.time()
+        start_time = time.time()
+        result = await self.model_manager.ollama_client.generate(model, test_prompt)
+        end_time = time.time()
                         
-            self.test_results["ollama_status"][f"test_{model}"] = {
-                "success": result.get("success", False),
-                "response_length": len(result.get("response", "")),
-                "response_time": end_time - start_time,
-                "tokens_per_sec": result.get("tokens_per_sec", 0)
-            }
+        self.test_results["ollama_status"][f"test_{model}"] = {
+            "success": result.get("success", False),
+            "response_length": len(result.get("response", "")),
+            "response_time": end_time - start_time,
+            "tokens_per_sec": result.get("tokens_per_sec", 0)
+        }
                         
-            logger.info(f"✅ Test Ollama {model}: {result.get('tokens_per_sec', 0):.1f} tokens/sec")
+        logger.info(f"✅ Test Ollama {model}: {result.get('tokens_per_sec', 0):.1f} tokens/sec")
                         
-        except Exception as e:
-            logger.error(f"❌ Erreur test {model}: {e}")
-            self.test_results["ollama_status"][f"test_{model}"] = {"error": str(e)}
+    except Exception as e:
+        logger.error(f"❌ Erreur test {model}: {e}")
+        self.test_results["ollama_status"][f"test_{model}"] = {"error": str(e)}
             
     except Exception as e:
     logger.error(f"❌ Erreur test Ollama: {e}")
@@ -699,18 +703,18 @@ Comment optimiser pour 1M+ records ?"""
                 
                 # Test génération normale
     result = await self.model_manager.generate_response(
-        scenario["agent"], 
-        prompt, 
-        scenario["task_type"]
+    scenario["agent"], 
+    prompt, 
+    scenario["task_type"]
     )
                 
     self.test_results["fallback_tests"][scenario["agent"]] = {
-        "task_type": scenario["task_type"],
-        "success": result.get("success", False),
-        "model_used": result.get("model", "unknown"),
-        "provider": result.get("provider", "unknown"),
-        "response_time": result.get("response_time", 0),
-        "cost": result.get("cost", 0)
+    "task_type": scenario["task_type"],
+    "success": result.get("success", False),
+    "model_used": result.get("model", "unknown"),
+    "provider": result.get("provider", "unknown"),
+    "response_time": result.get("response_time", 0),
+    "cost": result.get("cost", 0)
     }
                 
     logger.info(f"✅ Fallback {scenario['agent']}: {result.get('model')} ({result.get('provider')})")
@@ -738,30 +742,30 @@ Comment optimiser pour 1M+ records ?"""
             
     for i, prompt in enumerate(benchmark_prompts):
     try:
-        start_time = time.time()
+    start_time = time.time()
                     
-        result = await self.model_manager.generate_response(
-            agent_id,
-            prompt,
-            "code" if "algorithme" in prompt else "general"
-        )
+    result = await self.model_manager.generate_response(
+        agent_id,
+        prompt,
+        "code" if "algorithme" in prompt else "general"
+    )
                     
-        end_time = time.time()
+    end_time = time.time()
                     
-        self.test_results["performance_metrics"][agent_id][f"test_{i+1}"] = {
-            "prompt_length": len(prompt),
-            "response_length": len(result.get("response", "")),
-            "response_time": end_time - start_time,
-            "model_used": result.get("model", "unknown"),
-            "provider": result.get("provider", "unknown"),
-            "tokens": result.get("tokens", 0),
-            "tokens_per_sec": result.get("tokens_per_sec", 0),
-            "cost": result.get("cost", 0)
-        }
+    self.test_results["performance_metrics"][agent_id][f"test_{i+1}"] = {
+        "prompt_length": len(prompt),
+        "response_length": len(result.get("response", "")),
+        "response_time": end_time - start_time,
+        "model_used": result.get("model", "unknown"),
+        "provider": result.get("provider", "unknown"),
+        "tokens": result.get("tokens", 0),
+        "tokens_per_sec": result.get("tokens_per_sec", 0),
+        "cost": result.get("cost", 0)
+    }
                     
     except Exception as e:
-        logger.error(f"❌ Erreur benchmark {agent_id} test {i+1}: {e}")
-        self.test_results["performance_metrics"][agent_id][f"test_{i+1}"] = {"error": str(e)}
+    logger.error(f"❌ Erreur benchmark {agent_id} test {i+1}: {e}")
+    self.test_results["performance_metrics"][agent_id][f"test_{i+1}"] = {"error": str(e)}
     
     async def _test_response_generation(self):
         """🧠 Test génération de réponses avec VRAIES questions de développement informatique"""
@@ -776,23 +780,23 @@ Comment optimiser pour 1M+ records ?"""
                 
                 # Sélection agent selon la complexité
     if challenge_data['complexity'] in ['security_expert']:
-        agent_id = "agent_04_expert_securite_crypto"
+    agent_id = "agent_04_expert_securite_crypto"
     elif challenge_data['complexity'] in ['senior', 'expert', 'system_architect']:
-        agent_id = "agent_02_architecte_code_expert"
+    agent_id = "agent_02_architecte_code_expert"
     elif challenge_data['complexity'] in ['database_expert']:
-        agent_id = "agent_24_gestionnaire_stockage_enterprise"
+    agent_id = "agent_24_gestionnaire_stockage_enterprise"
     elif challenge_data['complexity'] in ['ml_engineer']:
-        agent_id = "agent_25_monitoring_performance_enterprise"
+    agent_id = "agent_25_monitoring_performance_enterprise"
     else:
-        agent_id = "agent_01_coordinateur_principal"
+    agent_id = "agent_01_coordinateur_principal"
                 
                 # Mesure performance
     start_time = time.time()
                 
     result = await self.model_manager.generate_response(
-        agent_id, 
-        challenge_data['prompt'], 
-        "development_challenge"
+    agent_id, 
+    challenge_data['prompt'], 
+    "development_challenge"
     )
                 
     response_time = time.time() - start_time
@@ -800,25 +804,25 @@ Comment optimiser pour 1M+ records ?"""
                 # Évaluation qualitative de la réponse
     response_text = result.get("response", "")
     evaluation_score = await self._evaluate_technical_response(
-        response_text, 
-        challenge_data['evaluation_criteria'],
-        challenge_data['min_score']
+    response_text, 
+    challenge_data['evaluation_criteria'],
+    challenge_data['min_score']
     )
                 
     self.test_results["development_challenges"][challenge_name] = {
-        "agent_used": agent_id,
-        "model": result.get("model", "unknown"),
-        "provider": result.get("provider", "unknown"),
-        "complexity": challenge_data['complexity'],
-        "success": result.get("success", False),
-        "response_time": response_time,
-        "tokens": result.get("tokens", 0),
-        "cost": result.get("cost", 0),
-        "evaluation_score": evaluation_score,
-        "min_required_score": challenge_data['min_score'],
-        "passed": evaluation_score >= challenge_data['min_score'],
-        "response_preview": response_text[:200] + "..." if len(response_text) > 200 else response_text,
-        "technical_depth": self._analyze_technical_depth(response_text)
+    "agent_used": agent_id,
+    "model": result.get("model", "unknown"),
+    "provider": result.get("provider", "unknown"),
+    "complexity": challenge_data['complexity'],
+    "success": result.get("success", False),
+    "response_time": response_time,
+    "tokens": result.get("tokens", 0),
+    "cost": result.get("cost", 0),
+    "evaluation_score": evaluation_score,
+    "min_required_score": challenge_data['min_score'],
+    "passed": evaluation_score >= challenge_data['min_score'],
+    "response_preview": response_text[:200] + "..." if len(response_text) > 200 else response_text,
+    "technical_depth": self._analyze_technical_depth(response_text)
     }
                 
     status = "✅ RÉUSSI" if evaluation_score >= challenge_data['min_score'] else "❌ ÉCHOUÉ"
@@ -827,9 +831,9 @@ Comment optimiser pour 1M+ records ?"""
     except Exception as e:
     logger.error(f"❌ Erreur test {challenge_name}: {e}")
     self.test_results["development_challenges"][challenge_name] = {
-        "error": str(e),
-        "complexity": challenge_data['complexity'],
-        "passed": False
+    "error": str(e),
+    "complexity": challenge_data['complexity'],
+    "passed": False
     }
         
         # Test des questions de debug
@@ -920,9 +924,9 @@ Comment optimiser pour 1M+ records ?"""
     start_time = time.time()
                 
     result = await self.model_manager.generate_response(
-        "agent_02_architecte_code_expert",
-        challenge_prompt,
-        "debug_challenge"
+    "agent_02_architecte_code_expert",
+    challenge_prompt,
+    "debug_challenge"
     )
                 
     response_time = time.time() - start_time
@@ -932,12 +936,12 @@ Comment optimiser pour 1M+ records ?"""
     debug_score = self._evaluate_debug_response(challenge_name, response_text)
                 
     self.test_results["debug_challenges"][challenge_name] = {
-        "model": result.get("model", "unknown"),
-        "response_time": response_time,
-        "debug_score": debug_score,
-        "identified_issue": debug_score >= 2,
-        "proposed_solution": debug_score >= 3,
-        "response_preview": response_text[:150] + "..."
+    "model": result.get("model", "unknown"),
+    "response_time": response_time,
+    "debug_score": debug_score,
+    "identified_issue": debug_score >= 2,
+    "proposed_solution": debug_score >= 3,
+    "response_preview": response_text[:150] + "..."
     }
                 
     status = "✅ IDENTIFIÉ" if debug_score >= 2 else "❌ RATÉ"
@@ -986,9 +990,9 @@ Comment optimiser pour 1M+ records ?"""
     start_time = time.time()
                 
     result = await self.model_manager.generate_response(
-        "agent_25_monitoring_performance_enterprise",
-        challenge_prompt,
-        "performance_challenge"
+    "agent_25_monitoring_performance_enterprise",
+    challenge_prompt,
+    "performance_challenge"
     )
                 
     response_time = time.time() - start_time
@@ -998,12 +1002,12 @@ Comment optimiser pour 1M+ records ?"""
     perf_score = self._evaluate_performance_response(response_text)
                 
     self.test_results["performance_challenges"][challenge_name] = {
-        "model": result.get("model", "unknown"),
-        "response_time": response_time,
-        "performance_score": perf_score,
-        "optimizations_proposed": perf_score >= 3,
-        "advanced_techniques": perf_score >= 5,
-        "response_preview": response_text[:150] + "..."
+    "model": result.get("model", "unknown"),
+    "response_time": response_time,
+    "performance_score": perf_score,
+    "optimizations_proposed": perf_score >= 3,
+    "advanced_techniques": perf_score >= 5,
+    "response_preview": response_text[:150] + "..."
     }
                 
     status = "✅ OPTIMISÉ" if perf_score >= 3 else "❌ BASIQUE"
@@ -1248,34 +1252,34 @@ Comment optimiser pour 1M+ records ?"""
     for category, tests in self.test_results.items():
     if isinstance(tests, dict):
     for test_name, result in tests.items():
-        if isinstance(result, dict) and "model" in result:
-            model = result["model"]
+    if isinstance(result, dict) and "model" in result:
+        model = result["model"]
                         
-            if model not in model_analysis:
-                model_analysis[model] = {
-                    "tests_count": 0,
-                    "avg_response_time": 0,
-                    "technical_depth": 0,
-                    "success_rate": 0,
-                    "strengths": [],
-                    "weaknesses": []
-                }
+        if model not in model_analysis:
+            model_analysis[model] = {
+                "tests_count": 0,
+                "avg_response_time": 0,
+                "technical_depth": 0,
+                "success_rate": 0,
+                "strengths": [],
+                "weaknesses": []
+            }
                         
                         # Accumulation des métriques
-            model_analysis[model]["tests_count"] += 1
+        model_analysis[model]["tests_count"] += 1
                         
-            if "response_time" in result:
-                model_analysis[model]["avg_response_time"] += result["response_time"]
+        if "response_time" in result:
+            model_analysis[model]["avg_response_time"] += result["response_time"]
                         
-            if "technical_depth" in result:
-                depth = result["technical_depth"].get("depth_score", 0)
-                model_analysis[model]["technical_depth"] += depth
+        if "technical_depth" in result:
+            depth = result["technical_depth"].get("depth_score", 0)
+            model_analysis[model]["technical_depth"] += depth
                         
                         # Identification des forces/faiblesses
-            if result.get("passed", False) or result.get("evaluation_score", 0) >= 3:
-                model_analysis[model]["strengths"].append(test_name)
-            else:
-                model_analysis[model]["weaknesses"].append(test_name)
+        if result.get("passed", False) or result.get("evaluation_score", 0) >= 3:
+            model_analysis[model]["strengths"].append(test_name)
+        else:
+            model_analysis[model]["weaknesses"].append(test_name)
         
         # Calcul des moyennes
     for model, stats in model_analysis.items():
@@ -1306,7 +1310,7 @@ Comment optimiser pour 1M+ records ?"""
     for agent, metrics in performance_data.items():
     for test, data in metrics.items():
     if isinstance(data, dict) and data.get("response_time", 0) > 30:
-        slow_responses.append(f"{agent}:{test}")
+    slow_responses.append(f"{agent}:{test}")
         
     if slow_responses:
     recommendations.append(f"⚠️ Réponses lentes détectées: {', '.join(slow_responses)}")
@@ -1446,22 +1450,22 @@ Comment optimiser pour 1M+ records ?"""
     results = []
     for agent_id in test_agents:
     try:
-        result = await self.model_manager.generate_response(
-            agent_id=agent_id,
-            prompt="Test compatibilité",
-            task_type="general"
-        )
-        results.append({
-            "agent": agent_id,
-            "success": result.get("success", False),
-            "model": result.get("model", "unknown")
-        })
+    result = await self.model_manager.generate_response(
+        agent_id=agent_id,
+        prompt="Test compatibilité",
+        task_type="general"
+    )
+    results.append({
+        "agent": agent_id,
+        "success": result.get("success", False),
+        "model": result.get("model", "unknown")
+    })
     except Exception as e:
-        results.append({
-            "agent": agent_id,
-            "success": False,
-            "error": str(e)
-        })
+    results.append({
+        "agent": agent_id,
+        "success": False,
+        "error": str(e)
+    })
             
     return {
     "success": any(r["success"] for r in results),

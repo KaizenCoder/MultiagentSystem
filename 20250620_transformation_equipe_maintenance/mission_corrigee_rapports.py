@@ -8,7 +8,7 @@ Test avec imports corrigés + vérification des rapports générés
 import asyncio
 import os
 from datetime import datetime
-from agent_equipe_maintenance.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
+from agent_factory_implementation.agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
 
 async def mission_corrigee_avec_rapports():
     """Mission avec imports corrigés et vérification des rapports"""
@@ -181,3 +181,6 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
+
+

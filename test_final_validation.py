@@ -2,7 +2,7 @@
 """Test final de validation de l'équipe NextGeneration"""
 
 import asyncio
-from agent_equipe_maintenance.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
+from agent_factory_implementation.agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
 
 async def test_final_validation():
     """Test final de validation complète"""
@@ -38,7 +38,7 @@ async def test_final_validation():
         print()
         print("🔍 TEST AGENT 01 - Analyseur Structure")
         try:
-            from agent_equipe_maintenance.agent_MAINTENANCE_01_analyseur_structure import create_agent_analyseur_structure
+            from agent_factory_implementation.agents.agent_MAINTENANCE_01_analyseur_structure import create_agent_analyseur_structure
             agent_1 = create_agent_analyseur_structure(source_path="tools")
             print("✅ Agent 01 créé avec succès")
             
@@ -61,7 +61,7 @@ async def test_final_validation():
         print()
         print("⚖️ TEST AGENT 02 - Évaluateur Utilité")
         try:
-            from agent_equipe_maintenance.agent_MAINTENANCE_02_evaluateur_utilite import create_agent_evaluateur_utilite
+            from agent_factory_implementation.agents.agent_MAINTENANCE_02_evaluateur_utilite import create_agent_evaluateur_utilite
             agent_2 = create_agent_evaluateur_utilite()
             print("✅ Agent 02 créé avec succès")
             
@@ -140,3 +140,6 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
+
+

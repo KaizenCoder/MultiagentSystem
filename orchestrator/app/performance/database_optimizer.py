@@ -4,7 +4,9 @@ Handles PostgreSQL connection pooling, read replicas, backup automation, and per
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import time
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any, Union
@@ -24,8 +26,10 @@ from ..observability.monitoring import monitoring_manager
 
 
 # LoggingManager NextGeneration - Tool/Utility
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "from",
             "log_level": "INFO",
             "elasticsearch_enabled": False,
@@ -668,3 +672,7 @@ async def initialize_database_manager():
     except Exception as e:
         logger.error(f"Failed to initialize database manager: {e}")
         return False
+
+
+
+

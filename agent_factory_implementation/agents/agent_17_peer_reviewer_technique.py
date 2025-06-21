@@ -9,7 +9,9 @@ RÔLE : Review technique détaillée et validation code expert ligne par ligne
 
 import os
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import asyncio
 from pathlib import Path
 from datetime import datetime
@@ -20,7 +22,9 @@ import re
 # Configuration logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_agent_logger(
     agent_name="Agent17PeerReviewerTechnique",
     role="ai_processor",
@@ -227,16 +231,16 @@ class Agent17PeerReviewerTechnique:
             
     for node in ast.walk(tree):
     if isinstance(node, ast.ClassDef) and node.name == class_name:
-        analysis["docstring_present"] = ast.get_docstring(node) is not None
+    analysis["docstring_present"] = ast.get_docstring(node) is not None
                     
-        methods = [n for n in node.body if isinstance(n, ast.FunctionDef)]
-        analysis["methods_count"] = len(methods)
+    methods = [n for n in node.body if isinstance(n, ast.FunctionDef)]
+    analysis["methods_count"] = len(methods)
                     
                     # Vérifier type hints
-        for method in methods:
-            if method.returns or any(arg.annotation for arg in method.args.args):
-                analysis["type_hints"] = True
-                break
+    for method in methods:
+        if method.returns or any(arg.annotation for arg in method.args.args):
+            analysis["type_hints"] = True
+            break
                     
     except Exception as e:
     logger.warning(f"Erreur analyse AST : {e}")

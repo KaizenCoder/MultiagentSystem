@@ -15,7 +15,9 @@ Ce script montre :
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime
 from pathlib import Path
 import sys
@@ -31,7 +33,9 @@ logging.basicConfig(
 )
 
 # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="AgentMetaStrategique",
             role="ai_processor",
@@ -457,3 +461,6 @@ async def main():
 if __name__ == "__main__":
     # Exécution de la démonstration
     asyncio.run(main()) 
+
+
+

@@ -12,7 +12,9 @@ from datetime import datetime, timezone
 from contextvars import ContextVar
 from typing import Dict, Any, Optional, List
 from enum import Enum
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import traceback
 import os
 
@@ -442,3 +444,7 @@ def get_correlation_context() -> Dict[str, str]:
 
 # Configuration automatique au dmarrage
 configure_structured_logging()
+
+
+
+

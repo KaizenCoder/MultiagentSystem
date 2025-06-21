@@ -545,15 +545,7 @@ def log_capture():
     ch = logging.StreamHandler(log_capture_string)
     
     # Configuration du logger de test
-    test_# LoggingManager NextGeneration - Tool/Utility
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
-            "logger_name": "from",
-            "log_level": "INFO",
-            "elasticsearch_enabled": False,
-            "encryption_enabled": False,
-            "async_enabled": True
-        })
+    test_logger = logging.getLogger('tests')
     test_logger.setLevel(logging.DEBUG)
     test_logger.addHandler(ch)
     
@@ -587,7 +579,7 @@ def pytest_configure(config):
 def pytest_runtest_setup(item):
     """Setup avant chaque test."""
     if "security" in item.keywords:
-        print(f"\\n Running security test: {item.name}")
+        print(f"\n Running security test: {item.name}")
 
 
 def pytest_runtest_teardown(item, nextitem):
@@ -672,3 +664,7 @@ def configure_test_logging():
     test_logger.setLevel(logging.DEBUG)
     
     yield test_logger
+
+
+
+

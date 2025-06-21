@@ -21,7 +21,9 @@ __compliance_score__ = "90%"
 __optimization_gain__ = "+20.0 points"
 __claude_recommendations__ = "100% implemented"
 
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import time
 from typing import Dict, List, Any
 from core.agent_factory_architecture import Agent, Task, Result, AgentType
@@ -36,7 +38,9 @@ from features.enterprise.production_monitoring import (
 
 logging.basicConfig(level=logging.INFO)
 # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="Agent25ProductionMonitoringEnterprise",
             role="ai_processor",
@@ -176,3 +180,6 @@ if __name__ == "__main__":
     if result.success:
         print(f"📈 Data: {result.data}")
         print(f"⚡ Metrics: {result.metrics}")
+
+
+

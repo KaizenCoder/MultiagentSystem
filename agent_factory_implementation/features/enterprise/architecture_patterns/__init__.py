@@ -12,14 +12,18 @@ Created: 2024-12-19
 """
 
 from typing import Dict, List, Any, Optional
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import json
 import time
 from dataclasses import dataclass
 from core.agent_factory_architecture import Task, Result
 
 # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="from",
             role="ai_processor",
@@ -232,3 +236,6 @@ __all__ = [
     'DomainDrivenFeature',
     'CQRSEventSourcingFeature'
 ] 
+
+
+

@@ -262,3 +262,6 @@ if __name__ == "__main__":
     print(f" Score mutation : {report['mutation_score']:.1f}%")
     print(f" Qualit : {report['quality_rating']}")
     print("\n[CHECK] MUTATION TESTING SUITE OPERATIONAL") 
+
+
+

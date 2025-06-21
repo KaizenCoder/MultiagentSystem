@@ -4,11 +4,16 @@ Gestionnaire des templates JSON pour la création d'agents
 """
 
 import json
-from logging_manager_optimized import LoggingManager
-from typing import Dict, List, Any, Optional
+import sys
 from pathlib import Path
+from typing import Dict, List, Any, Optional
 import os
 from datetime import datetime
+
+# Golden Source Logging
+# La solution robuste serait d'installer 'core' comme un paquet
+# ou de gérer le PYTHONPATH. Pour la migration, on utilise un chemin relatif.
+from core import logging_manager
 
 from base_agent_template import BaseAgent, TemplateBasedAgent, AgentConfig
 
@@ -26,16 +31,17 @@ class TemplateManager:
             templates_dir: Répertoire contenant les templates JSON
         """
         self.templates_dir = Path(templates_dir)
-        # LoggingManager NextGeneration - Template Manager
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        
+        # Logging avec la Golden Source
+        self.logger = logging_manager.get_logger('TemplateManager', custom_config={
             "logger_name": "TemplateManager",
             "log_level": "INFO",
             "elasticsearch_enabled": True,
             "encryption_enabled": False,
             "async_enabled": True,
-            "structured_logging": True
+            "structured_logging": True # Ce paramètre sera ignoré, mais ne cause pas d'erreur
         })
+
         self.loaded_templates = {}
         self.active_agents = {}
         
@@ -170,3 +176,6 @@ class TemplateManager:
             'templates': list(self.loaded_templates.keys()),
             'agents': list(self.active_agents.keys())
         } 
+
+
+

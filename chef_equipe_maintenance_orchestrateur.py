@@ -20,7 +20,9 @@ Mission: Simplifier la maintenance d'équipes d'agents via interface unique
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Any, Optional
@@ -51,8 +53,10 @@ except ImportError:
             self.agent_type = agent_type
             self.config = config
             # LoggingManager NextGeneration - Orchestrateur
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "LogsMaintenanceConfig",
             "log_level": "INFO",
             "elasticsearch_enabled": True,
@@ -684,3 +688,6 @@ def create_chef_equipe_maintenance_orchestrateur(**config):
 
 if __name__ == "__main__":
     asyncio.run(main()) 
+
+
+

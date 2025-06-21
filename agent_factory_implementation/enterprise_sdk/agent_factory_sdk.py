@@ -70,3 +70,7 @@ class AgentFactoryClient:
         response = self.session.get(f"{self.base_url}/metrics")
         response.raise_for_status()
         return response.json()
+
+
+
+

@@ -5,7 +5,7 @@
 global:
   imageRegistry: ""
   imagePullSecrets: []
-  storageClass: "gp3"
+  storageClass: ""
 
 # Application configuration
 app:
@@ -163,7 +163,7 @@ postgresql:
     persistence:
       enabled: true
       size: 100Gi
-      storageClass: "gp3"
+      storageClass: ""
     
   readReplicas:
     replicaCount: 2
@@ -178,7 +178,7 @@ postgresql:
 # Redis configuration
 redis:
   enabled: true
-  architecture: cluster
+  architecture: replication
   cluster:
     nodes: 6
     replicas: 1
@@ -195,14 +195,15 @@ redis:
     persistence:
       enabled: true
       size: 20Gi
-      storageClass: "gp3"
+      storageClass: ""
 
 # Monitoring configuration
 monitoring:
   prometheus:
     enabled: true
     serviceMonitor:
-      enabled: true
+      # NOTE: Change this to true only if you have the Prometheus Operator CRDs installed
+      enabled: false 
       interval: 30s
       scrapeTimeout: 10s
       
@@ -243,7 +244,7 @@ security:
 persistence:
   enabled: true
   size: 10Gi
-  storageClass: "gp3"
+  storageClass: ""
   accessModes:
     - ReadWriteOnce
 

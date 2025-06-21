@@ -64,3 +64,6 @@ class Supervisor:
 
 # Instance globale du superviseur
 supervisor = Supervisor() 
+
+
+

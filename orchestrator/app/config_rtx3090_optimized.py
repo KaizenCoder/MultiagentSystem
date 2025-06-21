@@ -68,3 +68,7 @@ class RTX3090OptimizedConfig:
 
 # Configuration globale
 settings = RTX3090OptimizedConfig()
+
+
+
+

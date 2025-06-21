@@ -18,7 +18,9 @@ Responsabilités :
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime
 from typing import Dict, List, Optional, Any
 from pathlib import Path
@@ -125,7 +127,9 @@ class AgentOrchestrateur:
     def _setup_logging(self):
         """Configuration logging orchestrateur"""
         # LoggingManager NextGeneration - Orchestrateur
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_logger(custom_config={
     "logger_name": "from",
     "log_level": "INFO",
@@ -223,11 +227,11 @@ class AgentOrchestrateur:
     for agent_type in self.agents.keys():
     task_counter += 1
     task = AuditTask(
-        task_id=f"TASK_{task_counter:03d}",
-        agent_type=agent_type,
-        target=target,
-        priority=priority,
-        status="préparé"
+    task_id=f"TASK_{task_counter:03d}",
+    agent_type=agent_type,
+    target=target,
+    priority=priority,
+    status="préparé"
     )
     self.audit_tasks.append(task)
         
@@ -393,29 +397,29 @@ class AgentOrchestrateur:
                 
                 # Extraction scores selon le type d'agent
     if task.agent_type == 'securite' and 'security_score' in result:
-        metrics['security_score'] = max(metrics['security_score'], result['security_score'])
-        scores.append(result['security_score'])
+    metrics['security_score'] = max(metrics['security_score'], result['security_score'])
+    scores.append(result['security_score'])
                     
     elif task.agent_type == 'performance' and 'score' in result:
-        metrics['performance_score'] = max(metrics['performance_score'], result['score'])
-        scores.append(result['score'])
+    metrics['performance_score'] = max(metrics['performance_score'], result['score'])
+    scores.append(result['score'])
                     
     elif task.agent_type == 'conformite' and 'conformity_score' in result:
-        metrics['conformity_score'] = max(metrics['conformity_score'], result['conformity_score'])
-        scores.append(result['conformity_score'])
+    metrics['conformity_score'] = max(metrics['conformity_score'], result['conformity_score'])
+    scores.append(result['conformity_score'])
                 
                 # Comptage issues
     if 'findings' in result:
-        metrics['total_issues'] += len(result['findings'])
+    metrics['total_issues'] += len(result['findings'])
                     # Compter critiques (selon structure)
-        critical_findings = [f for f in result['findings'] if 'critical' in str(f).lower()]
-        metrics['critical_issues'] += len(critical_findings)
+    critical_findings = [f for f in result['findings'] if 'critical' in str(f).lower()]
+    metrics['critical_issues'] += len(critical_findings)
                 
     if 'issues' in result:
-        metrics['total_issues'] += len(result['issues'])
+    metrics['total_issues'] += len(result['issues'])
                 
     if 'recommendations' in result:
-        metrics['recommendations_count'] += len(result['recommendations'])
+    metrics['recommendations_count'] += len(result['recommendations'])
         
         # Score global (moyenne des scores disponibles)
     if scores:
@@ -500,20 +504,20 @@ class AgentOrchestrateur:
     for agent_type, agent_results in consolidated['results_by_agent'].items():
     for agent_result in agent_results:
     if agent_result['status'] == 'terminé' and agent_result['result']:
-        result = agent_result['result']
+    result = agent_result['result']
                     
                     # Actions basées sur les findings critiques
-        if 'findings' in result:
-            critical_findings = [
-                f for f in result['findings'] 
-                if hasattr(f, 'security_level') and 'critical' in str(f.security_level).lower()
-            ]
-            if critical_findings:
-                actions.append(f"🚨 {agent_type.upper()}: {len(critical_findings)} vulnérabilité(s) critique(s) à corriger")
+    if 'findings' in result:
+        critical_findings = [
+            f for f in result['findings'] 
+            if hasattr(f, 'security_level') and 'critical' in str(f.security_level).lower()
+        ]
+        if critical_findings:
+            actions.append(f"🚨 {agent_type.upper()}: {len(critical_findings)} vulnérabilité(s) critique(s) à corriger")
                     
                     # Actions basées sur les bottlenecks
-        if 'bottlenecks' in result and result['bottlenecks']:
-            actions.append(f"⚡ {agent_type.upper()}: Résoudre {len(result['bottlenecks'])} goulot(s) d'étranglement")
+    if 'bottlenecks' in result and result['bottlenecks']:
+        actions.append(f"⚡ {agent_type.upper()}: Résoudre {len(result['bottlenecks'])} goulot(s) d'étranglement")
         
         # Actions générales si peu d'actions spécifiques
     if len(actions) < 3:
@@ -533,10 +537,10 @@ class AgentOrchestrateur:
     for agent_type, agent_results in consolidated['results_by_agent'].items():
     for agent_result in agent_results:
     if agent_result['status'] == 'terminé' and agent_result['result']:
-        result = agent_result['result']
+    result = agent_result['result']
                     
-        if 'recommendations' in result:
-            all_recommendations.update(result['recommendations'])
+    if 'recommendations' in result:
+        all_recommendations.update(result['recommendations'])
         
         # Recommandations orchestrateur
     orchestrator_recs = [

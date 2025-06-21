@@ -35,7 +35,9 @@ from __future__ import annotations
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import time
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
@@ -56,8 +58,10 @@ from ..agents.base_agent import BaseAgent
 from ..config.agent_config import AgentFactoryConfig
 
 # LoggingManager NextGeneration - Template Manager
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "class",
             "log_level": "INFO",
             "elasticsearch_enabled": True,
@@ -532,3 +536,6 @@ def get_template_manager(
 
 # Alias pour compatibilit
 template_manager = get_template_manager()
+
+
+

@@ -27,7 +27,9 @@ Created: 2025-01-20
 import asyncio
 import ast
 import logging
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import re
 import json
 from datetime import datetime
@@ -56,7 +58,9 @@ except ImportError:
                 # Configuration logging
                 logging.basicConfig(level=logging.INFO)
                 # LoggingManager NextGeneration - Agent
-                from logging_manager_optimized import LoggingManager
+                import sys
+from pathlib import Path
+from core import logging_manager
                 self.logger = LoggingManager().get_agent_logger(
                     agent_name="Agent",
                     role="ai_processor",
@@ -769,7 +773,9 @@ Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 from pathlib import Path
@@ -1340,3 +1346,6 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main()) 
+
+
+

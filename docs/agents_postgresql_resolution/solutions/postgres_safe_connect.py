@@ -48,3 +48,7 @@ if __name__ == "__main__":
             print(f"Base: {result.fetchone()[0]}")
     else:
         print("[CROSS] chec connexion")
+
+
+
+

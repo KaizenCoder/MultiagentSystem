@@ -1,0 +1,44 @@
+{
+  "missions": [
+    {
+      "mission": "Auditer la sécurité du module d'authentification",
+      "priority": 9
+    },
+    {
+      "mission": "Optimiser les requêtes PostgreSQL lentes",
+      "priority": 8
+    },
+    {
+      "mission": "Générer la documentation API complète",
+      "priority": 7
+    },
+    {
+      "mission": "Refactorer le code legacy du service utilisateur",
+      "priority": 6
+    },
+    {
+      "mission": "Créer des tests unitaires pour le module de paiement",
+      "priority": 5
+    },
+    {
+      "mission": "Analyser les performances GPU RTX3090",
+      "priority": 8
+    },
+    {
+      "mission": "Déployer la nouvelle version du microservice",
+      "priority": 4
+    },
+    {
+      "mission": "Créer un rapport d'analyse des logs d'erreur",
+      "priority": 6
+    },
+    {
+      "mission": "Optimiser les images Docker du projet",
+      "priority": 3
+    },
+    {
+      "mission": "Vérifier la conformité RGPD des données",
+      "priority": 7
+    }
+  ]
+}

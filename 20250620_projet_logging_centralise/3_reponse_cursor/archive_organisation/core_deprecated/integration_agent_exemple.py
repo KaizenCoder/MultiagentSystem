@@ -4,7 +4,9 @@ EXEMPLE D'INTÉGRATION - LoggingManager NextGeneration dans un Agent IA
 Montre comment migrer facilement un agent existant vers le nouveau système
 """
 
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import time
 
 # ============================================================================
@@ -184,7 +186,9 @@ def migrer_agent_existant(agent_file_path: str, agent_type: str):
     # 3. Remplacement des imports de logging
     content = content.replace(
         "import logging",
-        "from logging_manager_optimized import LoggingManager"
+        "import sys
+from pathlib import Path
+from core import logging_manager"
     )
     
     # 4. Remplacement des initialisations de logger
@@ -200,7 +204,7 @@ def migrer_agent_existant(agent_file_path: str, agent_type: str):
     elif agent_type == "coordinateur":
         logger_init = """
         # LoggingManager NextGeneration avec alerting
-        self.logger = LoggingManager().get_logger(custom_config={
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": self.__class__.__name__,
             "elasticsearch_enabled": True,
             "encryption_enabled": True,
@@ -210,7 +214,7 @@ def migrer_agent_existant(agent_file_path: str, agent_type: str):
     else:  # outil
         logger_init = """
         # LoggingManager NextGeneration léger
-        self.logger = LoggingManager().get_logger(custom_config={
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": self.__class__.__name__,
             "elasticsearch_enabled": False,
             "encryption_enabled": False,
@@ -273,3 +277,6 @@ if __name__ == "__main__":
     
     print("\n✅ Intégration réussie ! Vos agents utilisent maintenant")
     print("   le système de logging NextGeneration (score 99.1/100) 🏆") 
+
+
+

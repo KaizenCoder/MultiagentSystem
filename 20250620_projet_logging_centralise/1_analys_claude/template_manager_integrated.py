@@ -1033,3 +1033,6 @@ class TemplateManager:
                         "version_changed": old_hash != new_hash
                     }
                 )
+
+
+

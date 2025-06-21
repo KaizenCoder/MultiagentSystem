@@ -551,3 +551,6 @@ class TestEncryptionEdgeCases:
         
         # Ce test vrifie surtout qu'il n'y a pas de fuite mmoire vidente
         # L'assertion principale est que le code s'excute sans erreur 
+
+
+

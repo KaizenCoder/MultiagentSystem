@@ -17,7 +17,9 @@ Modles: Cloud uniquement (Claude, GPT-4, Gemini)
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import time
 from datetime import datetime
 from pathlib import Path
@@ -56,8 +58,10 @@ class CoordinateurEquipeTools:
             ]
         )
         # LoggingManager NextGeneration - Tool/Utility
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "CoordinateurEquipeTools",
             "log_level": "INFO",
             "elasticsearch_enabled": False,
@@ -324,3 +328,6 @@ if __name__ == "__main__":
         await coordinateur.demarrer_mission()
     
     asyncio.run(main()) 
+
+
+

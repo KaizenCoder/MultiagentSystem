@@ -18,3 +18,7 @@ def get_dev_engine():
     engine = create_engine("sqlite:///./nextgen_dev.db", echo=False)
     Base.metadata.create_all(engine)
     return engine
+
+
+
+

@@ -63,3 +63,7 @@ API d'orchestration IA multi-agents refactorise depuis god mode files.
 
 # Usage dans main.py
 # app.openapi = lambda: custom_openapi(app)
+
+
+
+

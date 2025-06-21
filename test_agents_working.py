@@ -6,71 +6,68 @@ Vérifie que les agents créés à partir des templates JSON fonctionnent correc
 
 import sys
 import json
-from logging_manager_optimized import LoggingManager
 from pathlib import Path
 
+# Golden Source Logging
+from core import logging_manager
+
 # Configuration du logging
-# LoggingManager NextGeneration - Tests
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
-            "logger_name": "test_agents_working",
-            "log_level": "DEBUG",
-            "elasticsearch_enabled": False,
-            "encryption_enabled": False,
-            "async_enabled": False,  # Tests synchrones
-            "console_output": True
-        })s - %(name)s - %(levelname)s - %(message)s')
+logger = logging_manager.get_logger('custom_test_config_2', custom_config={
+    "logger_name": "test_agents_working",
+    "log_level": "DEBUG",
+    "async_enabled": False, # Tests synchrones
+})
 
 def test_template_manager():
     """Teste le TemplateManager"""
-    print("=== Test du TemplateManager ===")
+    logger.info("=== Test du TemplateManager ===")
     
     try:
-        from core.template_manager import TemplateManager
+        from core.template_manager import TemplateManager # Note: l'import est différent ici
         
         # Créer le gestionnaire
         manager = TemplateManager("templates")
         
         # Lister les templates
         templates = manager.list_templates()
-        print(f"Templates disponibles: {len(templates)}")
+        logger.info(f"Templates disponibles: {len(templates)}")
         
         for template in templates:
-            print(f"  - {template['name']} (v{template['version']}) - {template['role']}")
+            logger.debug(f"  - {template['name']} (v{template['version']}) - {template['role']}")
         
         return manager
         
     except Exception as e:
-        print(f"❌ Erreur TemplateManager: {e}")
+        logger.error(f"❌ Erreur TemplateManager: {e}", exc_info=True)
         return None
 
 def test_agent_creation(manager):
     """Teste la création d'agents"""
-    print("\n=== Test de création d'agents ===")
+    logger.info("\n=== Test de création d'agents ===")
     
     try:
         # Créer un agent coordinateur
         agent = manager.create_agent("Agent Coordinateur", "test_coordinator")
         
         if agent:
-            print(f"✅ Agent créé: {agent.config.name}")
-            print(f"   Rôle: {agent.config.role}")
-            print(f"   Status: {agent.status}")
-            print(f"   Capacités: {len(agent.config.capabilities)}")
-            print(f"   Outils: {len(agent.config.tools)}")
+            logger.info(f"✅ Agent créé: {agent.config.name}")
+            logger.debug(f"   Rôle: {agent.config.role}")
+            logger.debug(f"   Status: {agent.status}")
+            logger.debug(f"   Capacités: {len(agent.config.capabilities)}")
+            logger.debug(f"   Outils: {len(agent.config.tools)}")
             
             return agent
         else:
-            print("❌ Échec de création d'agent")
+            logger.error("❌ Échec de création d'agent")
             return None
             
     except Exception as e:
-        print(f"❌ Erreur création agent: {e}")
+        logger.error(f"❌ Erreur création agent: {e}", exc_info=True)
         return None
 
 def test_agent_execution(agent):
     """Teste l'exécution de tâches"""
-    print("\n=== Test d'exécution de tâches ===")
+    logger.info("\n=== Test d'exécution de tâches ===")
     
     try:
         # Tâche simple
@@ -81,9 +78,9 @@ def test_agent_execution(agent):
         }
         
         result1 = agent.execute_task(task1)
-        print(f"✅ Tâche 1 - Status: {result1['status']}")
+        logger.info(f"✅ Tâche 1 - Status: {result1['status']}")
         if result1['status'] == 'success':
-            print(f"   Résultat: {result1['result']['message']}")
+            logger.info(f"   Résultat: {result1['result']['message']}")
         
         # Tâche avec capacité requise
         task2 = {
@@ -93,36 +90,36 @@ def test_agent_execution(agent):
         }
         
         result2 = agent.execute_task(task2)
-        print(f"✅ Tâche 2 - Status: {result2['status']}")
+        logger.info(f"✅ Tâche 2 - Status: {result2['status']}")
         
         return True
         
     except Exception as e:
-        print(f"❌ Erreur exécution: {e}")
+        logger.error(f"❌ Erreur exécution: {e}", exc_info=True)
         return False
 
 def test_agent_status(agent):
     """Teste le statut de l'agent"""
-    print("\n=== Test du statut d'agent ===")
+    logger.info("\n=== Test du statut d'agent ===")
     
     try:
         status = agent.get_status()
-        print(f"✅ Status récupéré:")
-        print(f"   Nom: {status['name']}")
-        print(f"   Statut: {status['status']}")
-        print(f"   Uptime: {status['uptime']:.2f}s")
-        print(f"   Tâches complétées: {status['metrics']['tasks_completed']}")
-        print(f"   Tâches échouées: {status['metrics']['tasks_failed']}")
+        logger.info(f"✅ Status récupéré:")
+        logger.debug(f"   Nom: {status['name']}")
+        logger.debug(f"   Statut: {status['status']}")
+        logger.debug(f"   Uptime: {status['uptime']:.2f}s")
+        logger.debug(f"   Tâches complétées: {status['metrics']['tasks_completed']}")
+        logger.debug(f"   Tâches échouées: {status['metrics']['tasks_failed']}")
         
         return True
         
     except Exception as e:
-        print(f"❌ Erreur statut: {e}")
+        logger.error(f"❌ Erreur statut: {e}", exc_info=True)
         return False
 
 def test_multiple_agents(manager):
     """Teste la création de plusieurs agents"""
-    print("\n=== Test de plusieurs agents ===")
+    logger.info("\n=== Test de plusieurs agents ===")
     
     try:
         templates = manager.list_templates()
@@ -134,58 +131,58 @@ def test_multiple_agents(manager):
             
             if agent:
                 agents_created.append(agent_id)
-                print(f"✅ Agent créé: {agent.config.name} (ID: {agent_id})")
+                logger.info(f"✅ Agent créé: {agent.config.name} (ID: {agent_id})")
         
         # Lister les agents actifs
         active_agents = manager.list_active_agents()
-        print(f"\n📋 Agents actifs: {len(active_agents)}")
+        logger.info(f"\n📋 Agents actifs: {len(active_agents)}")
         
         for agent_info in active_agents:
-            print(f"  - {agent_info['name']} ({agent_info['id']}) - {agent_info['status']}")
+            logger.debug(f"  - {agent_info['name']} ({agent_info['id']}) - {agent_info['status']}")
         
         return agents_created
         
     except Exception as e:
-        print(f"❌ Erreur agents multiples: {e}")
+        logger.error(f"❌ Erreur agents multiples: {e}", exc_info=True)
         return []
 
 def main():
     """Fonction principale de test"""
-    print("🚀 Test des agents template-based")
-    print("=" * 50)
+    logger.info("🚀 Test des agents template-based")
+    logger.info("=" * 50)
     
     # Test 1: TemplateManager
     manager = test_template_manager()
     if not manager:
-        print("❌ Échec du test TemplateManager")
+        logger.critical("❌ Échec du test TemplateManager")
         return False
     
     # Test 2: Création d'agent
     agent = test_agent_creation(manager)
     if not agent:
-        print("❌ Échec du test de création d'agent")
+        logger.critical("❌ Échec du test de création d'agent")
         return False
     
     # Test 3: Exécution de tâches
     if not test_agent_execution(agent):
-        print("❌ Échec du test d'exécution")
+        logger.critical("❌ Échec du test d'exécution")
         return False
     
     # Test 4: Statut d'agent
     if not test_agent_status(agent):
-        print("❌ Échec du test de statut")
+        logger.critical("❌ Échec du test de statut")
         return False
     
     # Test 5: Agents multiples
     agents = test_multiple_agents(manager)
     if not agents:
-        print("❌ Échec du test d'agents multiples")
+        logger.critical("❌ Échec du test d'agents multiples")
         return False
     
-    print("\n" + "=" * 50)
-    print("✅ Tous les tests sont passés avec succès!")
-    print(f"   Templates chargés: {len(manager.list_templates())}")
-    print(f"   Agents créés: {len(manager.list_active_agents())}")
+    logger.info("\n" + "=" * 50)
+    logger.info("✅ Tous les tests sont passés avec succès!")
+    logger.info(f"   Templates chargés: {len(manager.list_templates())}")
+    logger.info(f"   Agents créés: {len(manager.list_active_agents())}")
     
     return True
 
@@ -194,8 +191,11 @@ if __name__ == "__main__":
         success = main()
         sys.exit(0 if success else 1)
     except KeyboardInterrupt:
-        print("\n⚠️ Test interrompu par l'utilisateur")
+        logger.warning("\n⚠️ Test interrompu par l'utilisateur")
         sys.exit(1)
     except Exception as e:
-        print(f"\n❌ Erreur inattendue: {e}")
+        logger.critical(f"\n❌ Erreur inattendue: {e}", exc_info=True)
         sys.exit(1) 
+
+
+

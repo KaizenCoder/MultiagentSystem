@@ -23,7 +23,7 @@ def main():
     
     try:
         # Import Agent 02
-        from agent_equipe_maintenance.agent_MAINTENANCE_02_evaluateur_utilite import AgentEvaluateurUtiliteUpgraded
+        from agent_factory_implementation.agents.agent_MAINTENANCE_02_evaluateur_utilite import AgentEvaluateurUtiliteUpgraded
         
         # Créer l'agent
         agent_02 = AgentEvaluateurUtiliteUpgraded()
@@ -170,3 +170,6 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
+
+

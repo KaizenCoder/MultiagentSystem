@@ -147,3 +147,6 @@ if __name__ == "__main__":
         print("\n✅ L'équipe de maintenance peut commencer les opérations!")
     else:
         print("\n⚠️ Préparation supplémentaire nécessaire.") 
+
+
+

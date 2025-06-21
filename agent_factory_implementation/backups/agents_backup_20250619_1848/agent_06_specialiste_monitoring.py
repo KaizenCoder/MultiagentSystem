@@ -36,7 +36,9 @@ Updated: 2024-12-28
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, asdict
@@ -67,7 +69,9 @@ except ImportError:
                 self.agent_type = agent_type
                 self.config = config
                 # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="Agent",
             role="ai_processor",
@@ -832,3 +836,6 @@ if __name__ == "__main__":
 def create_agent_06SpecialisteMonitoring(**config):
     """Factory function pour créer un Agent 06SpecialisteMonitoring conforme Pattern Factory"""
     return Agent06SpecialisteMonitoring(**config)
+
+
+

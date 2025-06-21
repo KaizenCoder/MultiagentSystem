@@ -108,3 +108,6 @@ if __name__ == "__main__":
     else:
         print("\n❌ Échec relancement Agent 06")
         sys.exit(1) 
+
+
+

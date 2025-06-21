@@ -332,3 +332,6 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"[CROSS] Erreur dmarrage: {e}")
         print("[BULB] Essayez un autre port ou vrifiez les permissions") 
+
+
+

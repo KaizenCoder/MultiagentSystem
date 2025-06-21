@@ -1532,3 +1532,6 @@ class AgentTaskMasterNextGeneration:
             summary_parts.extend([f"- {rec}" for rec in validation.recommendations])
         """Analyse la complexité d'une tâche"""
         
+
+
+

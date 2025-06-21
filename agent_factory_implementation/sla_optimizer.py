@@ -10,7 +10,9 @@ Objectif: Optimiser de 145.9ms → < 100ms (-45.9ms minimum)
 import asyncio
 import time
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any
@@ -31,7 +33,9 @@ class SLAOptimizer:
     def _setup_logging(self):
         """Configuration logging optimisé"""
         # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="SLAOptimizer",
             role="ai_processor",
@@ -328,3 +332,6 @@ def main():
 
 if __name__ == "__main__":
     results = main() 
+
+
+

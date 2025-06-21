@@ -50,7 +50,9 @@ class TestChatGPTSimple:
         """Test de l'existence du LoggingManager optimisé"""
         try:
             sys.path.append(str(Path(__file__).parent))
-            from logging_manager_optimized import LoggingManager, LoggingConfig
+            import sys
+from pathlib import Path
+from core import logging_manager, LoggingConfig
             
             # Test d'initialisation
             manager = LoggingManager()
@@ -440,3 +442,6 @@ def main():
 if __name__ == "__main__":
     exit_code = main()
     sys.exit(exit_code) 
+
+
+

@@ -15,7 +15,9 @@ import asyncio
 import json
 import hashlib
 import time
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from typing import Any, Optional, Dict, List, Union
 from datetime import datetime, timedelta
 from dataclasses import dataclass
@@ -24,8 +26,10 @@ from enum import Enum
 # Configuration logging
 logging.basicConfig(level=logging.INFO)
 # LoggingManager NextGeneration - Tool/Utility
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "from",
             "log_level": "INFO",
             "elasticsearch_enabled": False,
@@ -496,3 +500,6 @@ if __name__ == "__main__":
             print("[CROSS] chec initialisation cache")
     
     asyncio.run(test_cache()) 
+
+
+

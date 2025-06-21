@@ -62,3 +62,7 @@ if __name__ == "__main__":
         print("\n[CHECK] PostgreSQL est oprationnel et prt  l'emploi")
     else:
         print("\n Problmes de connectivit dtects")
+
+
+
+

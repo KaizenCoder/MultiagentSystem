@@ -115,3 +115,6 @@ if __name__ == "__main__":
         print(f"\n💥 Erreur inattendue: {e}")
         traceback.print_exc()
         sys.exit(1) 
+
+
+

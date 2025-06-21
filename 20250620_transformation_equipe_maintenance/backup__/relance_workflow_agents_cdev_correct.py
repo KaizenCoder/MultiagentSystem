@@ -76,3 +76,6 @@ if __name__ == "__main__":
     else:
         print("\n💥 ÉCHEC DE L'ANALYSE")
         sys.exit(1) 
+
+
+

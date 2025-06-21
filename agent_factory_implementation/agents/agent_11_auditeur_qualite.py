@@ -16,7 +16,9 @@ Date: 2025-06-21 02:36:28
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 from pathlib import Path
@@ -41,7 +43,9 @@ except ImportError:
     self.config = config
     logging.basicConfig(level=logging.INFO)
                 # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_agent_logger(
     agent_name="Agent",
     role="ai_processor",
@@ -123,27 +127,27 @@ class Agent11AuditeurQualite(Agent):
     results = await self.execute_mission(mission_data)
                 
     return Result(
-        success=True,
-        data={
-            "mission_results": results,
-            "agent_id": self.agent_id,
-            "task_id": task.task_id
-        }
+    success=True,
+    data={
+        "mission_results": results,
+        "agent_id": self.agent_id,
+        "task_id": task.task_id
+    }
     )
                 
     elif task.task_id == "process_data":
                 # Tâche de traitement de données
     data = getattr(task, 'data', None)
     if data is None:
-        return Result(success=False, error="data requis pour process_data")
+    return Result(success=False, error="data requis pour process_data")
                     
     processed = await self.process_data(data)
     return Result(success=True, data=processed)
                 
     else:
     return Result(
-        success=False, 
-        error=f"Tâche non reconnue: {task.task_id}"
+    success=False, 
+    error=f"Tâche non reconnue: {task.task_id}"
     )
                 
     except Exception as e:
@@ -220,3 +224,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+

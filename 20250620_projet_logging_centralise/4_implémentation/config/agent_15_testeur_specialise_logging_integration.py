@@ -12,7 +12,9 @@ from pathlib import Path
 # Ajouter le chemin du système de logging
 sys.path.insert(0, str(Path(__file__).parent))
 
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 
 class Agent15TesteurspecialiseLoggingIntegration:
     """
@@ -21,7 +23,7 @@ class Agent15TesteurspecialiseLoggingIntegration:
     
     def __init__(self, agent_instance):
         self.agent = agent_instance
-        self.logger = LoggingManager().get_agent_logger('agent_15_testeur_specialise')
+        self.logger = logging_manager.get_logger('custom_agent_logger', custom_config={'logger_name': 'Agent', 'extra_fields': {}})
         
         # Configuration spécialisée
         self.reports_dir = Path(__file__).parent / "reports_equipe_agents" / "agent_15_testeur_specialise"
@@ -102,3 +104,8 @@ if __name__ == "__main__":
     integration.log_mission_completion({"score": 8.5, "status": "success", "findings": ["Test successful"]})
     
     print("✅ Test d'intégration réussi")
+
+
+
+
+

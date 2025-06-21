@@ -145,3 +145,4 @@ class ConfigurationManager:
 
 # Instance singleton globale
 config_manager = ConfigurationManager()
+

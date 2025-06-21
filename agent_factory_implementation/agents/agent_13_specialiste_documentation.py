@@ -19,7 +19,9 @@ Version : 1.0.0
 """
 
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import re
 from dataclasses import dataclass, asdict
 from datetime import datetime
@@ -121,7 +123,9 @@ class Agent13DocumentationSpecialist:
     )
         
         # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_agent_logger(
     agent_name="class",
     role="ai_processor",
@@ -373,94 +377,94 @@ ps aux | grep wasi
             # Définition endpoints API
     endpoints = [
     APIEndpoint(
-        path="/health",
-        method="GET", 
-        description="Health check système",
-        parameters={},
-        responses={
-            "200": {"description": "Système opérationnel", "schema": {"status": "healthy"}},
-            "503": {"description": "Système dégradé", "schema": {"status": "unhealthy", "issues": ["string"]}}
-        },
-        examples=[{"request": "GET /health", "response": {"status": "healthy", "uptime": 3600}}],
-        authentication="None",
-        rate_limits="100/min"
+    path="/health",
+    method="GET", 
+    description="Health check système",
+    parameters={},
+    responses={
+        "200": {"description": "Système opérationnel", "schema": {"status": "healthy"}},
+        "503": {"description": "Système dégradé", "schema": {"status": "unhealthy", "issues": ["string"]}}
+    },
+    examples=[{"request": "GET /health", "response": {"status": "healthy", "uptime": 3600}}],
+    authentication="None",
+    rate_limits="100/min"
     ),
     APIEndpoint(
-        path="/metrics",
-        method="GET",
-        description="Métriques Prometheus",
-        parameters={},
-        responses={
-            "200": {"description": "Métriques format Prometheus", "content_type": "text/plain"}
-        },
-        examples=[{"request": "GET /metrics", "response": "# HELP agent_factory_response_time_ms..."}],
-        authentication="None", 
-        rate_limits="10/min"
+    path="/metrics",
+    method="GET",
+    description="Métriques Prometheus",
+    parameters={},
+    responses={
+        "200": {"description": "Métriques format Prometheus", "content_type": "text/plain"}
+    },
+    examples=[{"request": "GET /metrics", "response": "# HELP agent_factory_response_time_ms..."}],
+    authentication="None", 
+    rate_limits="10/min"
     ),
     APIEndpoint(
-        path="/factory/create",
-        method="POST",
-        description="Création template optimisée",
-        parameters={
-            "body": {
-                "id": {"type": "string", "required": True, "description": "ID unique template"},
-                "name": {"type": "string", "required": True, "description": "Nom template"},
-                "description": {"type": "string", "required": False, "description": "Description"},
-                "type": {"type": "string", "required": False, "default": "standard"}
-            }
-        },
-        responses={
-            "201": {"description": "Template créé avec succès", "schema": {"template_id": "string", "performance_ms": "number"}},
-            "400": {"description": "Paramètres invalides", "schema": {"error": "string"}},
-            "500": {"description": "Erreur interne", "schema": {"error": "string"}}
-        },
-        examples=[{
-            "request": {"id": "test_template", "name": "Template Test", "type": "performance"},
-            "response": {"template_id": "test_template", "performance_ms": 42.5, "compressed": True}
-        }],
-        authentication="Bearer token",
-        rate_limits="50/min"
+    path="/factory/create",
+    method="POST",
+    description="Création template optimisée",
+    parameters={
+        "body": {
+            "id": {"type": "string", "required": True, "description": "ID unique template"},
+            "name": {"type": "string", "required": True, "description": "Nom template"},
+            "description": {"type": "string", "required": False, "description": "Description"},
+            "type": {"type": "string", "required": False, "default": "standard"}
+        }
+    },
+    responses={
+        "201": {"description": "Template créé avec succès", "schema": {"template_id": "string", "performance_ms": "number"}},
+        "400": {"description": "Paramètres invalides", "schema": {"error": "string"}},
+        "500": {"description": "Erreur interne", "schema": {"error": "string"}}
+    },
+    examples=[{
+        "request": {"id": "test_template", "name": "Template Test", "type": "performance"},
+        "response": {"template_id": "test_template", "performance_ms": 42.5, "compressed": True}
+    }],
+    authentication="Bearer token",
+    rate_limits="50/min"
     ),
     APIEndpoint(
-        path="/factory/templates/{id}",
-        method="GET",
-        description="Récupération template par ID",
-        parameters={
-            "path": {
-                "id": {"type": "string", "required": True, "description": "ID template"}
-            }
-        },
-        responses={
-            "200": {"description": "Template trouvé", "schema": {"template": "object"}},
-            "404": {"description": "Template non trouvé", "schema": {"error": "string"}}
-        },
-        examples=[{
-            "request": "GET /factory/templates/test_template",
-            "response": {"id": "test_template", "name": "Template Test", "created_at": "2025-01-28T10:00:00Z"}
-        }],
-        authentication="Bearer token",
-        rate_limits="100/min"
+    path="/factory/templates/{id}",
+    method="GET",
+    description="Récupération template par ID",
+    parameters={
+        "path": {
+            "id": {"type": "string", "required": True, "description": "ID template"}
+        }
+    },
+    responses={
+        "200": {"description": "Template trouvé", "schema": {"template": "object"}},
+        "404": {"description": "Template non trouvé", "schema": {"error": "string"}}
+    },
+    examples=[{
+        "request": "GET /factory/templates/test_template",
+        "response": {"id": "test_template", "name": "Template Test", "created_at": "2025-01-28T10:00:00Z"}
+    }],
+    authentication="Bearer token",
+    rate_limits="100/min"
     ),
     APIEndpoint(
-        path="/backup/create",
-        method="POST",
-        description="Création backup via Agent 12",
-        parameters={
-            "body": {
-                "source_path": {"type": "string", "required": True, "description": "Chemin source"},
-                "backup_type": {"type": "string", "required": False, "default": "production", "enum": ["critical", "production", "development"]}
-            }
-        },
-        responses={
-            "201": {"description": "Backup créé", "schema": {"backup_id": "string", "size_bytes": "number"}},
-            "400": {"description": "Paramètres invalides", "schema": {"error": "string"}}
-        },
-        examples=[{
-            "request": {"source_path": "/app/templates", "backup_type": "production"},
-            "response": {"backup_id": "backup_1738024800_production", "size_bytes": 1048576}
-        }],
-        authentication="Bearer token (admin)",
-        rate_limits="5/min"
+    path="/backup/create",
+    method="POST",
+    description="Création backup via Agent 12",
+    parameters={
+        "body": {
+            "source_path": {"type": "string", "required": True, "description": "Chemin source"},
+            "backup_type": {"type": "string", "required": False, "default": "production", "enum": ["critical", "production", "development"]}
+        }
+    },
+    responses={
+        "201": {"description": "Backup créé", "schema": {"backup_id": "string", "size_bytes": "number"}},
+        "400": {"description": "Paramètres invalides", "schema": {"error": "string"}}
+    },
+    examples=[{
+        "request": {"source_path": "/app/templates", "backup_type": "production"},
+        "response": {"backup_id": "backup_1738024800_production", "size_bytes": 1048576}
+    }],
+    authentication="Bearer token (admin)",
+    rate_limits="5/min"
     )
     ]
             
@@ -468,29 +472,29 @@ ps aux | grep wasi
     api_doc = {
     "openapi": "3.0.0",
     "info": {
-        "title": "Agent Factory Pattern API",
-        "description": "API pour Agent Factory Pattern - Sprint 4 Production",
-        "version": "1.0.0",
-        "contact": {
-            "name": "Agent Factory Team",
-            "email": "agents@factory.local"
-        }
+    "title": "Agent Factory Pattern API",
+    "description": "API pour Agent Factory Pattern - Sprint 4 Production",
+    "version": "1.0.0",
+    "contact": {
+        "name": "Agent Factory Team",
+        "email": "agents@factory.local"
+    }
     },
     "servers": [
-        {"url": "http://localhost:8000", "description": "Development"},
-        {"url": "https://api.agentfactory.production", "description": "Production"}
+    {"url": "http://localhost:8000", "description": "Development"},
+    {"url": "https://api.agentfactory.production", "description": "Production"}
     ],
     "security": [
-        {"BearerAuth": []}
+    {"BearerAuth": []}
     ],
     "components": {
-        "securitySchemes": {
-            "BearerAuth": {
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT"
-            }
+    "securitySchemes": {
+        "BearerAuth": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT"
         }
+    }
     },
     "paths": {}
     }
@@ -498,23 +502,23 @@ ps aux | grep wasi
             # Conversion endpoints vers OpenAPI
     for endpoint in endpoints:
     path_item = {
-        endpoint.method.lower(): {
-            "summary": endpoint.description,
-            "parameters": [],
-            "responses": endpoint.responses
-        }
+    endpoint.method.lower(): {
+        "summary": endpoint.description,
+        "parameters": [],
+        "responses": endpoint.responses
+    }
     }
                 
     if endpoint.parameters:
-        for param_type, params in endpoint.parameters.items():
-            for param_name, param_def in params.items():
-                path_item[endpoint.method.lower()]["parameters"].append({
-                    "name": param_name,
-                    "in": param_type,
-                    "required": param_def.get("required", False),
-                    "description": param_def.get("description", ""),
-                    "schema": {"type": param_def.get("type", "string")}
-                })
+    for param_type, params in endpoint.parameters.items():
+        for param_name, param_def in params.items():
+            path_item[endpoint.method.lower()]["parameters"].append({
+                "name": param_name,
+                "in": param_type,
+                "required": param_def.get("required", False),
+                "description": param_def.get("description", ""),
+                "schema": {"type": param_def.get("type", "string")}
+            })
                             
     api_doc["paths"][endpoint.path] = path_item
     self.api_endpoints[f"{endpoint.method} {endpoint.path}"] = endpoint
@@ -590,9 +594,9 @@ curl -H "Authorization: Bearer <token>" \\
     if endpoint.parameters:
     content += "**Paramètres :**\n\n"
     for param_type, params in endpoint.parameters.items():
-        for param_name, param_def in params.items():
-            required = "**Requis**" if param_def.get("required") else "Optionnel"
-            content += f"- `{param_name}` ({param_def.get('type', 'string')}) - {required} - {param_def.get('description', '')}\n"
+    for param_name, param_def in params.items():
+        required = "**Requis**" if param_def.get("required") else "Optionnel"
+        content += f"- `{param_name}` ({param_def.get('type', 'string')}) - {required} - {param_def.get('description', '')}\n"
     content += "\n"
                 
     content += "**Réponses :**\n\n"
@@ -604,9 +608,9 @@ curl -H "Authorization: Bearer <token>" \\
     content += "**Exemple :**\n\n"
     example = endpoint.examples[0]
     if isinstance(example.get('request'), dict):
-        content += f"```json\n{json.dumps(example['request'], indent=2)}\n```\n\n"
+    content += f"```json\n{json.dumps(example['request'], indent=2)}\n```\n\n"
     else:
-        content += f"```bash\n{example['request']}\n```\n\n"
+    content += f"```bash\n{example['request']}\n```\n\n"
                     
     content += f"```json\n{json.dumps(example['response'], indent=2)}\n```\n\n"
                 
@@ -947,8 +951,8 @@ python agents/agent_12_gestionnaire_backups.py --execute-rollback --plan=<plan_i
     total_size = sum(f.stat().st_size for f in files if f.exists())
                 
     doc_stats["categories"][category] = {
-        "files": file_count,
-        "size_bytes": total_size
+    "files": file_count,
+    "size_bytes": total_size
     }
     doc_stats["total_files"] += file_count
     doc_stats["total_size_bytes"] += total_size
@@ -956,42 +960,42 @@ python agents/agent_12_gestionnaire_backups.py --execute-rollback --plan=<plan_i
             # Rapport Sprint 4
     sprint4_report = {
     "agent_info": {
-        "id": self.agent_id,
-        "name": self.agent_name,
-        "version": self.version,
-        "sprint": self.sprint,
-        "mission": self.mission,
-        "created_at": datetime.now().isoformat()
+    "id": self.agent_id,
+    "name": self.agent_name,
+    "version": self.version,
+    "sprint": self.sprint,
+    "mission": self.mission,
+    "created_at": datetime.now().isoformat()
     },
     "sprint4_objectives": {
-        "production_guide": "✅ Guide production opérateur complet",
-        "api_documentation": f"✅ Documentation API ({len(self.api_endpoints)} endpoints)",
-        "runbook_operations": "✅ Runbook opérations production",
-        "documentation_structure": f"✅ Structure organisée ({len(self.doc_structure)} catégories)",
-        "standards_established": "✅ Standards documentation établis",
-        "integration_agents": "✅ Intégration tous agents Sprint 4"
+    "production_guide": "✅ Guide production opérateur complet",
+    "api_documentation": f"✅ Documentation API ({len(self.api_endpoints)} endpoints)",
+    "runbook_operations": "✅ Runbook opérations production",
+    "documentation_structure": f"✅ Structure organisée ({len(self.doc_structure)} catégories)",
+    "standards_established": "✅ Standards documentation établis",
+    "integration_agents": "✅ Intégration tous agents Sprint 4"
     },
     "documentation_statistics": doc_stats,
     "api_endpoints_count": len(self.api_endpoints),
     "structure_directories": list(self.doc_structure.keys()),
     "integration_status": {
-        "guides_created": True,
-        "api_documented": True,
-        "runbooks_available": True,
-        "standards_defined": True
+    "guides_created": True,
+    "api_documented": True,
+    "runbooks_available": True,
+    "standards_defined": True
     },
     "recommendations": [
-        "Déployer documentation sur plateforme centralised",
-        "Intégrer documentation dans CI/CD pipeline",
-        "Configurer génération automatique API docs",
-        "Former équipe ops sur runbooks",
-        "Implémenter feedback loop documentation"
+    "Déployer documentation sur plateforme centralised",
+    "Intégrer documentation dans CI/CD pipeline",
+    "Configurer génération automatique API docs",
+    "Former équipe ops sur runbooks",
+    "Implémenter feedback loop documentation"
     ],
     "next_steps_sprint5": [
-        "Documentation déploiement K8s Agent 07",
-        "Runbooks spécifiques production K8s",
-        "Guides troubleshooting clusters",
-        "Documentation monitoring distribué"
+    "Documentation déploiement K8s Agent 07",
+    "Runbooks spécifiques production K8s",
+    "Guides troubleshooting clusters",
+    "Documentation monitoring distribué"
     ],
     "timestamp": datetime.now().isoformat()
     }

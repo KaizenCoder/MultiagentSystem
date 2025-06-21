@@ -40,7 +40,9 @@ Updated: 2024-12-28
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import os
 import sys
 from dataclasses import dataclass, asdict
@@ -81,7 +83,9 @@ logging.basicConfig(
     ]
 )
 # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_agent_logger(
     agent_name="class",
     role="ai_processor",
@@ -148,10 +152,10 @@ class APIDocumentation:
     return {
     self.endpoint: {
     self.method.lower(): {
-        "summary": self.description,
-        "parameters": self.parameters,
-        "responses": self.responses,
-        "examples": self.examples
+    "summary": self.description,
+    "parameters": self.parameters,
+    "responses": self.responses,
+    "examples": self.examples
     }
     }
     }
@@ -642,8 +646,8 @@ class Agent10DocumentalisteExpert:
     name="Documentation Technique",
     description="Template documentation technique standard",
     sections=[
-        "Vue d'ensemble", "Architecture", "Installation", 
-        "Configuration", "Utilisation", "API", "Troubleshooting"
+    "Vue d'ensemble", "Architecture", "Installation", 
+    "Configuration", "Utilisation", "API", "Troubleshooting"
     ],
     required_fields=["title", "description", "version"],
     example="# Titre\n\n## Vue d'ensemble\n\n[Description]\n\n"
@@ -652,8 +656,8 @@ class Agent10DocumentalisteExpert:
     name="Guide Utilisateur",
     description="Template guide utilisateur standard",
     sections=[
-        "Introduction", "Démarrage rapide", "Exemples",
-        "Référence", "FAQ", "Support"
+    "Introduction", "Démarrage rapide", "Exemples",
+    "Référence", "FAQ", "Support"
     ],
     required_fields=["title", "audience", "objectives"],
     example="# Guide\n\n## Introduction\n\n[Public cible]\n\n"
@@ -662,8 +666,8 @@ class Agent10DocumentalisteExpert:
     name="Documentation API",
     description="Template documentation API REST",
     sections=[
-        "Overview", "Authentication", "Endpoints",
-        "Responses", "Examples", "Errors"
+    "Overview", "Authentication", "Endpoints",
+    "Responses", "Examples", "Errors"
     ],
     required_fields=["base_url", "version", "endpoints"],
     example="# API\n\n## Base URL\n\n```\nhttp://api.example.com\n```\n\n"
@@ -902,7 +906,7 @@ def example_function():
     file_path = doc_dir / f"{doc_type}.md"
                 
     with open(file_path, 'w', encoding='utf-8') as f:
-        f.write(content)
+    f.write(content)
                 
     saved_files[doc_type] = file_path
     logger.info(f"✅ Documentation sauvée: {file_path}")
@@ -1025,30 +1029,30 @@ def example_function():
     "success_percentage": success_percentage,
     "objectives_sprint_1": objectives,
     "documentation_generated": {
-        "technical_docs": 1,
-        "user_guides": 2, 
-        "api_docs": 1,
-        "architecture_docs": 1,
-        "standards_docs": 1,
-        "total_documents": 6
+    "technical_docs": 1,
+    "user_guides": 2, 
+    "api_docs": 1,
+    "architecture_docs": 1,
+    "standards_docs": 1,
+    "total_documents": 6
     },
     "templates_available": len(self.templates),
     "features_implemented": [
-        "Documentation technique complète",
-        "Guides utilisateur (quick start + avancé)",
-        "Documentation API endpoints", 
-        "Standards documentation équipe",
-        "Architecture overview",
-        "Templates documentation",
-        "Coordination Agent 13",
-        "Génération automatique"
+    "Documentation technique complète",
+    "Guides utilisateur (quick start + avancé)",
+    "Documentation API endpoints", 
+    "Standards documentation équipe",
+    "Architecture overview",
+    "Templates documentation",
+    "Coordination Agent 13",
+    "Génération automatique"
     ],
     "next_sprint_recommendations": [
-        "Documentation sécurité cryptographique",
-        "Runbook opérateur avancé",
-        "Documentation tests automatisés",
-        "Guides troubleshooting",
-        "Documentation déploiement K8s"
+    "Documentation sécurité cryptographique",
+    "Runbook opérateur avancé",
+    "Documentation tests automatisés",
+    "Guides troubleshooting",
+    "Documentation déploiement K8s"
     ]
     }
             

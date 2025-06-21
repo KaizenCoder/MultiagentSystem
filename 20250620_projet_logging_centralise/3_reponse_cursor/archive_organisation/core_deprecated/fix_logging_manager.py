@@ -17,7 +17,9 @@ def fix_logging_manager():
             content = f.read()
         
         # Vérifier s'il contient déjà l'import NextGeneration
-        if "from logging_manager_optimized import LoggingManager" in content:
+        if "import sys
+from pathlib import Path
+from core import logging_manager" in content:
             print("✅ Fichier déjà migré correctement")
             return True
             
@@ -44,9 +46,11 @@ def fix_logging_manager():
         # Insérer l'import NextGeneration
         logging_import = """# LoggingManager NextGeneration - Core System
 try:
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     # Configuration automatique pour le core system
-    _core_logger = LoggingManager().get_logger(custom_config={
+    _core_logger = logging_manager.get_logger(custom_config={
         "logger_name": "LoggingManagerCore",
         "log_level": "INFO",
         "elasticsearch_enabled": True,
@@ -83,3 +87,6 @@ if __name__ == "__main__":
         print("🎉 Correction terminée avec succès !")
     else:
         print("💥 Échec de la correction") 
+
+
+

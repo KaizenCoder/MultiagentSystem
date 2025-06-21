@@ -18,7 +18,9 @@ Responsabilités:
 """
 
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import asyncio
 from datetime import datetime
 from typing import Dict, List, Any, Optional
@@ -43,7 +45,9 @@ except ImportError:
             self.config = config
             self.agent_id = f"agent_2_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
             # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="Agent",
             role="ai_processor",
@@ -1131,3 +1135,6 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+
+

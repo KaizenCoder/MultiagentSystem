@@ -4,7 +4,9 @@ RÔLE : Review senior et validation architecture code expert
 
 import os
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any, Optional
@@ -12,7 +14,9 @@ from typing import Dict, List, Any, Optional
 # Configuration logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="Agent16PeerReviewerSenior",
             role="ai_processor",
@@ -539,3 +543,6 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
+
+

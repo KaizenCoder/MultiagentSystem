@@ -6,3 +6,7 @@ print("✅ Agent MAINTENANCE_01 créé directement")
 print(f"Agent ID: {agent.agent_id}")
 print(f"Agent Type: {agent.agent_type}")
 
+
+
+
+

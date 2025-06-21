@@ -100,3 +100,7 @@ if __name__ == "__main__":
         print("   Les modles corrigs fonctionnent parfaitement!")
     else:
         print("\n Problmes SQLAlchemy dtects")
+
+
+
+

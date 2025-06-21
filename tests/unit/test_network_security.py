@@ -550,3 +550,6 @@ class TestNetworkSecurityEdgeCases:
         
         assert allowed  # allow_rule est value en premier
         assert "allow-rule" in reason 
+
+
+

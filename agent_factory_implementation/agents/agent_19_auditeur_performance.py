@@ -16,7 +16,9 @@ Responsabilités :
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import time
 import psutil
 from datetime import datetime
@@ -71,7 +73,9 @@ class Agent19AuditeurPerformance:
 
     def _setup_logging(self):
         # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_agent_logger(
     agent_name="from",
     role="ai_processor",
@@ -135,28 +139,28 @@ class Agent19AuditeurPerformance:
     line_count = len(content.splitlines())
     if line_count > 500:
     metrics.append(PerformanceMetric(
-        metric_id=f"SIZE_{hash(file_path)}",
-        metric_type="file_size",
-        value=float(line_count),
-        benchmark=500.0,
-        level=self._get_level(line_count, 500),
-        location=file_path,
-        recommendations=["Diviser en modules plus petits"]
+    metric_id=f"SIZE_{hash(file_path)}",
+    metric_type="file_size",
+    value=float(line_count),
+    benchmark=500.0,
+    level=self._get_level(line_count, 500),
+    location=file_path,
+    recommendations=["Diviser en modules plus petits"]
     ))
             
             # Anti-patterns
     for pattern_name, pattern in self.antipatterns.items():
     matches = len(re.findall(pattern, content, re.MULTILINE))
     if matches > 0:
-        metrics.append(PerformanceMetric(
-            metric_id=f"PATTERN_{pattern_name}_{hash(file_path)}",
-            metric_type="antipattern",
-            value=float(matches),
-            benchmark=0.0,
-            level=PerformanceLevel.POOR if matches > 3 else PerformanceLevel.AVERAGE,
-            location=file_path,
-            recommendations=self._get_pattern_recommendations(pattern_name)
-        ))
+    metrics.append(PerformanceMetric(
+        metric_id=f"PATTERN_{pattern_name}_{hash(file_path)}",
+        metric_type="antipattern",
+        value=float(matches),
+        benchmark=0.0,
+        level=PerformanceLevel.POOR if matches > 3 else PerformanceLevel.AVERAGE,
+        location=file_path,
+        recommendations=self._get_pattern_recommendations(pattern_name)
+    ))
             
     except Exception as e:
     self.logger.error(f"Erreur audit {file_path}: {e}")

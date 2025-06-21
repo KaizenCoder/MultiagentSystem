@@ -13,7 +13,9 @@ Responsabilités :
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime
 from typing import Dict, List, Optional, Any
 from pathlib import Path
@@ -120,8 +122,10 @@ class AgentOrchestrateur:
     def _setup_logging(self):
         """Configuration logging orchestrateur"""
         # LoggingManager NextGeneration - Orchestrateur
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "from",
             "log_level": "INFO",
             "elasticsearch_enabled": True,
@@ -620,3 +624,6 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main()) 
+
+
+

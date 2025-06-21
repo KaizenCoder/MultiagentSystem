@@ -11,7 +11,9 @@ Spécifications :
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime
 from typing import Dict, List, Optional, Any
 from pathlib import Path
@@ -106,7 +108,9 @@ class Agent11AuditeurQualiteSprint3:
         
         # Setup logging
         # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_agent_logger(
     agent_name="from",
     role="ai_processor",

@@ -4,7 +4,9 @@ Handles parallel agent execution, resource allocation, and dynamic scaling.
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import time
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any, Set, Tuple, Callable
@@ -22,7 +24,9 @@ from ..performance.memory_optimizer import get_memory_optimizer
 
 
 # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="AgentPriority",
             role="ai_processor",
@@ -783,3 +787,7 @@ advanced_coordination = AdvancedAgentCoordinator()
 def get_advanced_coordination():
     """Get advanced coordination instance"""
     return advanced_coordination
+
+
+
+

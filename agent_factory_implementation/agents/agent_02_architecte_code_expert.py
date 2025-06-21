@@ -37,7 +37,9 @@ DELIVERABLES :
 
 import os
 import shutil
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any, Optional
@@ -67,12 +69,14 @@ except ImportError:
                 # Configuration logging
     logging.basicConfig(level=logging.INFO)
                 # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_agent_logger(
-        agent_name="Agent",
-        role="ai_processor",
-        domain="general",
-        async_enabled=True
+    agent_name="Agent",
+    role="ai_processor",
+    domain="general",
+    async_enabled=True
     )
                 
     async def startup(self): pass
@@ -127,13 +131,13 @@ class Agent02ArchitecteCodeExpert:
     "target": self.code_expert_dir / "enhanced_agent_templates.py",
     "lines": 753,
     "features": [
-        "Validation JSON Schema complte",
-        "Hritage templates avec fusion intelligente", 
-        "Versioning smantique (1.0.0, 2.1.3)",
-        "Mtadonnes enrichies + hooks personnalisables",
-        "Gnration dynamique classes d'agents",
-        "Cache global partag",
-        "Factory methods flexibles"
+    "Validation JSON Schema complte",
+    "Hritage templates avec fusion intelligente", 
+    "Versioning smantique (1.0.0, 2.1.3)",
+    "Mtadonnes enrichies + hooks personnalisables",
+    "Gnration dynamique classes d'agents",
+    "Cache global partag",
+    "Factory methods flexibles"
     ]
     },
     "optimized_template_manager": {
@@ -141,13 +145,13 @@ class Agent02ArchitecteCodeExpert:
     "target": self.code_expert_dir / "optimized_template_manager.py", 
     "lines": 511,
     "features": [
-        "Thread-safety RLock complet",
-        "Cache LRU + TTL configurable",
-        "Hot-reload watchdog automatique", 
-        "Support async/await natif",
-        "Mtriques performance dtailles",
-        "Batch operations optimises",
-        "Cleanup automatique entries obsoltes"
+    "Thread-safety RLock complet",
+    "Cache LRU + TTL configurable",
+    "Hot-reload watchdog automatique", 
+    "Support async/await natif",
+    "Mtriques performance dtailles",
+    "Batch operations optimises",
+    "Cleanup automatique entries obsoltes"
     ]
     }
     }
@@ -241,38 +245,38 @@ class Agent02ArchitecteCodeExpert:
                 
     if source_path.exists():
                     # Analyser le fichier
-        with open(source_path, 'r', encoding='utf-8') as f:
-            content = f.read()
-            lines_count = len(content.splitlines())
+    with open(source_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+        lines_count = len(content.splitlines())
                     
-        validation_results["scripts_found"][script_name] = {
-            "path": str(source_path),
-            "exists": True,
-            "size_kb": round(source_path.stat().st_size / 1024, 2),
-            "lines_actual": lines_count,
-            "lines_expected": script_info["lines"],
-            "features": script_info["features"],
-            "quality": "NIVEAU ENTREPRISE "
-        }
+    validation_results["scripts_found"][script_name] = {
+        "path": str(source_path),
+        "exists": True,
+        "size_kb": round(source_path.stat().st_size / 1024, 2),
+        "lines_actual": lines_count,
+        "lines_expected": script_info["lines"],
+        "features": script_info["features"],
+        "quality": "NIVEAU ENTREPRISE "
+    }
                     
-        logger.info(f"[CHECK] {script_name}: {lines_count} lignes - NIVEAU ENTREPRISE")
+    logger.info(f"[CHECK] {script_name}: {lines_count} lignes - NIVEAU ENTREPRISE")
     else:
-        validation_results["scripts_found"][script_name] = {
-            "exists": False,
-            "error": f"Script non trouv : {source_path}"
-        }
-        logger.error(f"[CROSS] Script manquant : {source_path}")
+    validation_results["scripts_found"][script_name] = {
+        "exists": False,
+        "error": f"Script non trouv : {source_path}"
+    }
+    logger.error(f"[CROSS] Script manquant : {source_path}")
             
             # valuation globale qualit
     if len(validation_results["scripts_found"]) == 2:
     total_lines = sum(info.get("lines_actual", 0) for info in validation_results["scripts_found"].values() if info.get("exists"))
     validation_results["quality_assessment"] = {
-        "total_scripts": len(self.expert_scripts),
-        "scripts_found": len([s for s in validation_results["scripts_found"].values() if s.get("exists")]),
-        "total_lines_code": total_lines,
-        "quality_level": "PRODUCTION-READY ENTREPRISE",
-        "features_count": sum(len(info["features"]) for info in self.expert_scripts.values()),
-        "assessment": " CODE EXPERT EXCEPTIONNEL - ARCHITECTURE AVANCE"
+    "total_scripts": len(self.expert_scripts),
+    "scripts_found": len([s for s in validation_results["scripts_found"].values() if s.get("exists")]),
+    "total_lines_code": total_lines,
+    "quality_level": "PRODUCTION-READY ENTREPRISE",
+    "features_count": sum(len(info["features"]) for info in self.expert_scripts.values()),
+    "assessment": " CODE EXPERT EXCEPTIONNEL - ARCHITECTURE AVANCE"
     }
                 
     validation_results["status"] = "[CHECK] SUCCS - SCRIPTS EXPERTS VALIDS"
@@ -374,40 +378,40 @@ Adapt pour environnement NextGeneration sans modification logique mtier.
                 
     if source_path.exists():
                     # Lire script expert original
-        with open(source_path, 'r', encoding='utf-8') as f:
-            original_content = f.read()
+    with open(source_path, 'r', encoding='utf-8') as f:
+        original_content = f.read()
                     
                     # Adaptations pour NextGeneration (sans modifier logique mtier)
-        adapted_content = self._adapt_script_for_nextgeneration(
-            original_content, script_name
-        )
+    adapted_content = self._adapt_script_for_nextgeneration(
+        original_content, script_name
+    )
                     
                     # Sauvegarder script adapt
-        with open(target_path, 'w', encoding='utf-8') as f:
-            f.write(adapted_content)
+    with open(target_path, 'w', encoding='utf-8') as f:
+        f.write(adapted_content)
                     
                     # Backup original dans documentation
-        backup_path = self.code_expert_dir / "documentation" / f"{script_name}_original.py"
-        shutil.copy2(source_path, backup_path)
+    backup_path = self.code_expert_dir / "documentation" / f"{script_name}_original.py"
+    shutil.copy2(source_path, backup_path)
                     
-        integration_results["scripts_integrated"][script_name] = {
-            "source": str(source_path),
-            "target": str(target_path), 
-            "backup": str(backup_path),
-            "lines_original": len(original_content.splitlines()),
-            "lines_adapted": len(adapted_content.splitlines()),
-            "status": "[CHECK] INTGR"
-        }
+    integration_results["scripts_integrated"][script_name] = {
+        "source": str(source_path),
+        "target": str(target_path), 
+        "backup": str(backup_path),
+        "lines_original": len(original_content.splitlines()),
+        "lines_adapted": len(adapted_content.splitlines()),
+        "status": "[CHECK] INTGR"
+    }
                     
-        self.performance_metrics["scripts_integrated"] += 1
-        self.performance_metrics["total_lines_code"] += len(adapted_content.splitlines())
+    self.performance_metrics["scripts_integrated"] += 1
+    self.performance_metrics["total_lines_code"] += len(adapted_content.splitlines())
                     
-        logger.info(f"[CHECK] {script_name} intgr avec succs")
+    logger.info(f"[CHECK] {script_name} intgr avec succs")
                     
     else:
-        integration_results["scripts_integrated"][script_name] = {
-            "status": f"[CROSS] ERREUR : Source non trouve {source_path}"
-        }
+    integration_results["scripts_integrated"][script_name] = {
+        "status": f"[CROSS] ERREUR : Source non trouve {source_path}"
+    }
             
     integration_results["status"] = "[CHECK] SUCCS - SCRIPTS EXPERTS INTGRS"
     integration_results["summary"] = {

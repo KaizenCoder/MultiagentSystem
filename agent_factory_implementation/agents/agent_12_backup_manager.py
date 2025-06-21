@@ -15,7 +15,9 @@ Version: 1.0.0 - Agent Réel Autonome
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import hashlib
 import shutil
 import tarfile
@@ -171,7 +173,9 @@ class RealAgent12BackupManager:
     )
         
         # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_agent_logger(
     agent_name="class",
     role="ai_processor",
@@ -192,8 +196,8 @@ class RealAgent12BackupManager:
                 
                 # Configuration initiale
     with self.git_repo.config_writer() as config:
-        config.set_value("user", "name", "Agent 12 Backup Manager")
-        config.set_value("user", "email", "agent12@factory.local")
+    config.set_value("user", "name", "Agent 12 Backup Manager")
+    config.set_value("user", "email", "agent12@factory.local")
                 
                 # Commit initial
     initial_file = VERSIONING_DIR / "README.md"
@@ -220,7 +224,7 @@ class RealAgent12BackupManager:
     sha256_hash = hashlib.sha256()
     with open(file_path, "rb") as f:
     for chunk in iter(lambda: f.read(4096), b""):
-        sha256_hash.update(chunk)
+    sha256_hash.update(chunk)
     return sha256_hash.hexdigest()
     except Exception as e:
     self.logger.error(f"❌ Erreur checksum {file_path}: {e}")
@@ -240,15 +244,15 @@ class RealAgent12BackupManager:
             
     with tarfile.open(backup_file, "w:gz") as tar:
     for monitored_path in self.monitored_paths:
-        if monitored_path.exists():
-            for file_path in monitored_path.rglob("*"):
-                if file_path.is_file() and not file_path.name.startswith('.'):
-                    try:
-                        tar.add(file_path, arcname=file_path.relative_to(PROJECT_ROOT))
-                        total_files += 1
-                        total_size += file_path.stat().st_size
-                    except Exception as e:
-                        self.logger.warning(f"⚠️ Impossible d'ajouter {file_path}: {e}")
+    if monitored_path.exists():
+        for file_path in monitored_path.rglob("*"):
+            if file_path.is_file() and not file_path.name.startswith('.'):
+                try:
+                    tar.add(file_path, arcname=file_path.relative_to(PROJECT_ROOT))
+                    total_files += 1
+                    total_size += file_path.stat().st_size
+                except Exception as e:
+                    self.logger.warning(f"⚠️ Impossible d'ajouter {file_path}: {e}")
             
             # Calcul checksum
     checksum = self.calculate_file_checksum(backup_file)
@@ -258,23 +262,23 @@ class RealAgent12BackupManager:
     if self.git_repo:
     try:
                     # Copier fichiers importants dans repo versioning
-        for monitored_path in self.monitored_paths:
-            if monitored_path.exists():
-                dest_path = VERSIONING_DIR / monitored_path.name
-                if dest_path.exists():
-                    shutil.rmtree(dest_path)
-                shutil.copytree(monitored_path, dest_path, ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
+    for monitored_path in self.monitored_paths:
+        if monitored_path.exists():
+            dest_path = VERSIONING_DIR / monitored_path.name
+            if dest_path.exists():
+                shutil.rmtree(dest_path)
+            shutil.copytree(monitored_path, dest_path, ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
                     
                     # Commit
-        self.git_repo.git.add(all=True)
-        commit_msg = f"Backup {backup_id}: {description or 'Automatic backup'}"
-        commit = self.git_repo.index.commit(commit_msg)
-        git_commit_hash = commit.hexsha
+    self.git_repo.git.add(all=True)
+    commit_msg = f"Backup {backup_id}: {description or 'Automatic backup'}"
+    commit = self.git_repo.index.commit(commit_msg)
+    git_commit_hash = commit.hexsha
                     
-        self.logger.info(f"📝 Git commit: {git_commit_hash[:8]}")
+    self.logger.info(f"📝 Git commit: {git_commit_hash[:8]}")
                     
     except Exception as e:
-        self.logger.warning(f"⚠️ Erreur Git commit: {e}")
+    self.logger.warning(f"⚠️ Erreur Git commit: {e}")
             
             # Métadonnées
     metadata = BackupMetadata(
@@ -326,9 +330,9 @@ class RealAgent12BackupManager:
     try:
     with tarfile.open(backup_file, "r:gz") as tar:
                     # Vérifier que l'archive peut être lue
-        members = tar.getmembers()
-        if len(members) != backup_metadata.file_count:
-            self.logger.warning(f"⚠️ Nombre fichiers différent: {len(members)} vs {backup_metadata.file_count}")
+    members = tar.getmembers()
+    if len(members) != backup_metadata.file_count:
+        self.logger.warning(f"⚠️ Nombre fichiers différent: {len(members)} vs {backup_metadata.file_count}")
     except Exception as e:
     self.logger.error(f"❌ Archive corrompue {backup_metadata.backup_id}: {e}")
     return False
@@ -348,26 +352,26 @@ class RealAgent12BackupManager:
             
     for backup_file in BACKUPS_DIR.glob("*_metadata.json"):
     try:
-        async with aiofiles.open(backup_file, 'r') as f:
-            metadata_data = json.loads(await f.read())
+    async with aiofiles.open(backup_file, 'r') as f:
+        metadata_data = json.loads(await f.read())
                     
-        backup_time = datetime.fromisoformat(metadata_data['timestamp'])
-        retention_days = metadata_data.get('retention_days', 30)
-        age_days = (current_time - backup_time).days
+    backup_time = datetime.fromisoformat(metadata_data['timestamp'])
+    retention_days = metadata_data.get('retention_days', 30)
+    age_days = (current_time - backup_time).days
                     
-        if age_days > retention_days:
+    if age_days > retention_days:
                         # Supprimer backup et métadonnées
-            backup_archive = BACKUPS_DIR / f"{metadata_data['backup_id']}.tar.gz"
+        backup_archive = BACKUPS_DIR / f"{metadata_data['backup_id']}.tar.gz"
                         
-            if backup_archive.exists():
-                backup_archive.unlink()
-            backup_file.unlink()
+        if backup_archive.exists():
+            backup_archive.unlink()
+        backup_file.unlink()
                         
-            cleaned_count += 1
-            self.logger.info(f"🗑️ Backup supprimé: {metadata_data['backup_id']} (âge: {age_days} jours)")
+        cleaned_count += 1
+        self.logger.info(f"🗑️ Backup supprimé: {metadata_data['backup_id']} (âge: {age_days} jours)")
                 
     except Exception as e:
-        self.logger.warning(f"⚠️ Erreur nettoyage {backup_file}: {e}")
+    self.logger.warning(f"⚠️ Erreur nettoyage {backup_file}: {e}")
             
     if cleaned_count > 0:
     self.logger.info(f"🧹 Nettoyage terminé: {cleaned_count} backups supprimés")
@@ -392,27 +396,27 @@ class RealAgent12BackupManager:
             
     for metadata_file in metadata_files:
     try:
-        async with aiofiles.open(metadata_file, 'r') as f:
-            metadata = json.loads(await f.read())
-        backup_time = datetime.fromisoformat(metadata['timestamp'])
-        if backup_time > last_backup_time:
-            last_backup_time = backup_time
+    async with aiofiles.open(metadata_file, 'r') as f:
+        metadata = json.loads(await f.read())
+    backup_time = datetime.fromisoformat(metadata['timestamp'])
+    if backup_time > last_backup_time:
+        last_backup_time = backup_time
     except:
-        continue
+    continue
             
             # Fichiers surveillés
     files_monitored = 0
     for path in self.monitored_paths:
     if path.exists():
-        files_monitored += len(list(path.rglob("*.py")))
+    files_monitored += len(list(path.rglob("*.py")))
             
             # Commits Git
     git_commits = 0
     if self.git_repo:
     try:
-        git_commits = len(list(self.git_repo.iter_commits()))
+    git_commits = len(list(self.git_repo.iter_commits()))
     except:
-        pass
+    pass
             
     state = BackupState(
     timestamp=datetime.now(),
@@ -439,7 +443,7 @@ class RealAgent12BackupManager:
     if self.current_state and self.current_state.last_backup_time:
     time_since_last = datetime.now() - self.current_state.last_backup_time
     if time_since_last.total_seconds() < 300:  # 5 minutes minimum
-        return
+    return
             
             # Créer backup incrémental
     await self.create_backup(
@@ -455,7 +459,7 @@ class RealAgent12BackupManager:
     try:
     for path in self.monitored_paths:
     if path.exists():
-        self.observer.schedule(self.file_handler, str(path), recursive=True)
+    self.observer.schedule(self.file_handler, str(path), recursive=True)
             
     self.observer.start()
     self.logger.info("👁️ Surveillance fichiers démarrée")
@@ -472,14 +476,14 @@ class RealAgent12BackupManager:
                 # Backup quotidien
     current_hour = datetime.now().hour
     if current_hour == 2:  # 2h du matin
-        await self.create_backup(
-            backup_type="production",
-            description="Daily automatic backup"
-        )
+    await self.create_backup(
+        backup_type="production",
+        description="Daily automatic backup"
+    )
                 
                 # Nettoyage hebdomadaire
     if datetime.now().weekday() == 0 and current_hour == 3:  # Lundi 3h
-        await self.cleanup_old_backups()
+    await self.cleanup_old_backups()
                 
     await asyncio.sleep(3600)  # Vérifier chaque heure
                 
@@ -498,11 +502,11 @@ class RealAgent12BackupManager:
                 
                 # Log état toutes les 10 minutes
     if int(time.time()) % 600 == 0 and self.current_state:
-        self.logger.info(
-            f"📊 État: {self.current_state.total_backups} backups "
-            f"({self.current_state.total_size_gb:.1f}GB) "
-            f"- {self.current_state.files_monitored} fichiers surveillés"
-        )
+    self.logger.info(
+        f"📊 État: {self.current_state.total_backups} backups "
+        f"({self.current_state.total_size_gb:.1f}GB) "
+        f"- {self.current_state.files_monitored} fichiers surveillés"
+    )
                 
     await asyncio.sleep(60)  # Collecte chaque minute
                 

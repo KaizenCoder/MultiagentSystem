@@ -733,3 +733,6 @@ class TestServiceInitialization:
         assert hasattr(rag_service, 'search_memory')
         assert hasattr(state_service, 'set_state')
         assert hasattr(state_service, 'get_state') 
+
+
+

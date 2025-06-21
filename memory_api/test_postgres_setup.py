@@ -4,7 +4,9 @@ Script de test et validation de l'infrastructure PostgreSQL NextGeneration
 Valide la configuration, performance et fonctionnalits enterprise
 """
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import sys
 import time
 import json
@@ -15,8 +17,10 @@ import uuid
 # Configuration logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 # LoggingManager NextGeneration - Tests
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "in",
             "log_level": "DEBUG",
             "elasticsearch_enabled": False,
@@ -343,3 +347,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+

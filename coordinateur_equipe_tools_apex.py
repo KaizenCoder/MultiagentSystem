@@ -10,7 +10,9 @@ quipe: 6 agents spcialiss avec modles cloud (Claude, GPT-4, Gemini)
 import os
 import sys
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import argparse
 from pathlib import Path
 from typing import Dict, List, Any, Optional
@@ -48,8 +50,10 @@ class CoordinateurEquipeToolsApex:
         self.reports_dir.mkdir(parents=True, exist_ok=True)
         
         # LoggingManager NextGeneration - Tool/Utility
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "CoordinateurEquipeToolsApex",
             "log_level": "INFO",
             "elasticsearch_enabled": False,
@@ -311,3 +315,6 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main()) 
+
+
+

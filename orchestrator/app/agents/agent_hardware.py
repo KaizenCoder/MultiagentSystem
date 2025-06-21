@@ -584,3 +584,6 @@ class AgentHardware:
 
 # Instance globale de l'agent
 agent_hardware = AgentHardware() 
+
+
+

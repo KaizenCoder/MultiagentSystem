@@ -18,7 +18,9 @@ Fonctionnalités:
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import schedule
 import time
 from datetime import datetime, timedelta
@@ -39,7 +41,9 @@ class AgentMetaStrategiqueScheduler:
     def __init__(self, config_path: str = "config/meta_strategique_config.json"):
         self.config_path = Path(config_path)
         # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="AgentMetaStrategiqueScheduler",
             role="ai_processor",
@@ -454,3 +458,6 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
+
+

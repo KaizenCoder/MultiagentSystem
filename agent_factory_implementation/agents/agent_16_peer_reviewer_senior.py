@@ -9,7 +9,9 @@ RÔLE : Review senior et validation architecture code expert
 
 import os
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any, Optional
@@ -17,7 +19,9 @@ from typing import Dict, List, Any, Optional
 # Configuration logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_agent_logger(
     agent_name="Agent16PeerReviewerSenior",
     role="ai_processor",
@@ -191,12 +195,12 @@ class Agent16PeerReviewerSenior:
     if self.code_expert_dir.exists():
     for item in self.code_expert_dir.iterdir():
     if item.is_dir():
-        structure["directories"][item.name] = "✅ Présent"
+    structure["directories"][item.name] = "✅ Présent"
     elif item.is_file() and item.suffix == '.py':
-        structure["files"][item.name] = {
-            "size_lines": len(item.read_text(encoding='utf-8').splitlines()),
-            "status": "✅ Analysé"
-        }
+    structure["files"][item.name] = {
+        "size_lines": len(item.read_text(encoding='utf-8').splitlines()),
+        "status": "✅ Analysé"
+    }
         
     return structure
     
@@ -290,9 +294,9 @@ class Agent16PeerReviewerSenior:
     for validation in [claude, specs, features]:
     for key, value in validation.items():
     if key != "status":
-        total_checks += 1
-        if "✅" in str(value):
-            passed_checks += 1
+    total_checks += 1
+    if "✅" in str(value):
+        passed_checks += 1
         
     return round((passed_checks / total_checks) * 10) if total_checks > 0 else 10
     

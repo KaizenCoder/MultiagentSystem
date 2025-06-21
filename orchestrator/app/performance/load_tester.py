@@ -5,7 +5,9 @@ Comprehensive load testing setup for performance validation and benchmarking.
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import subprocess
 import tempfile
 from datetime import datetime
@@ -18,8 +20,10 @@ from ..observability.monitoring import monitoring_manager
 
 
 # LoggingManager NextGeneration - Tool/Utility
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "class",
             "log_level": "INFO",
             "elasticsearch_enabled": False,
@@ -656,3 +660,7 @@ ${{indent}}  Data Sent: ${{(data.metrics.data_sent.count / 1024 / 1024).toFixed(
 
 # Global instance
 load_tester = K6LoadTester()
+
+
+
+

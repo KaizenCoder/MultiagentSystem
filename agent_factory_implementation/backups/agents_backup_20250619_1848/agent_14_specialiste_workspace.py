@@ -29,7 +29,9 @@ DELIVERABLES :
 """
 
 import os
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any
@@ -47,7 +49,9 @@ class Agent14SpecialisteWorkspace:
         # Configuration du logging
         logging.basicConfig(level=logging.INFO)
         # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="Agent14SpecialisteWorkspace",
             role="ai_processor",
@@ -377,3 +381,6 @@ if __name__ == "__main__":
     print("[CHECK] Workspace Agent Factory Implementation oprationnel")
     print("[CHECK] Prt pour Sprint 1 avec Agent 02 (Architecte Code Expert)")
     print("=" * 60) 
+
+
+

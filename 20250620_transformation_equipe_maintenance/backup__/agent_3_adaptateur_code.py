@@ -283,3 +283,6 @@ except Exception as e:
 def create_agent_3AdaptateurCode(**config):
     """Factory function pour créer l'agent"""
     return Agent3AdaptateurCode(**config) 
+
+
+

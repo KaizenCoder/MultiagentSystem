@@ -1988,3 +1988,6 @@ async def get_scaling_infrastructure_overview(request: Request):
         
     except Exception as e:
         raise HTTPException(500, f"Failed to get scaling infrastructure overview: {str(e)}")
+
+
+

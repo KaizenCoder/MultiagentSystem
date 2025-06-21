@@ -5,7 +5,9 @@ Optimized state persistence, compression, and efficient transitions.
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import pickle
 import zlib
 from datetime import datetime, timedelta
@@ -25,7 +27,9 @@ from ..performance.redis_cache import get_cache, CacheType
 
 
 # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="StateCompressionType",
             role="ai_processor",
@@ -626,3 +630,7 @@ advanced_state_manager = AdvancedStateManager()
 def get_advanced_state_manager():
     """Get advanced state manager instance"""
     return advanced_state_manager
+
+
+
+

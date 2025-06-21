@@ -13,11 +13,15 @@ import html
 import ipaddress
 from typing import Tuple, Optional
 from urllib.parse import urlparse
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 
 # LoggingManager NextGeneration - Tool/Utility
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "CodeValidator",
             "log_level": "INFO",
             "elasticsearch_enabled": False,
@@ -308,3 +312,7 @@ class InputSanitizer:
         # Remove characters other than alphanum, spaces, hyphens, underscores, slashes, dots, pipes, and quotes for arguments.
         sanitized = re.sub(r'[^a-zA-Z0-9\s\-_/|\. \'"]', '', command)
         return sanitized.strip()
+
+
+
+

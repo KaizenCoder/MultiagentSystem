@@ -40,7 +40,9 @@ NOUVEAUTÉ : Intégration Pattern Factory pour création dynamique d'agents WASI
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime
 from typing import Dict, List, Optional, Any, Tuple
 from pathlib import Path
@@ -471,7 +473,9 @@ class Agent09SpecialistePlanes:
             '%(asctime)s - Agent09PatternFactory - %(levelname)s - %(message)s'
         ))
         # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="AgentTemplate",
             role="ai_processor",
@@ -1072,3 +1076,6 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main()) 
+
+
+

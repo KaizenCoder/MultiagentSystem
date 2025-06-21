@@ -10,7 +10,9 @@ import tempfile
 import shutil
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 
 class SimplifiedChaosTests(unittest.TestCase):
     """Tests chaos simplifiés pour valider le bug fix AsyncLogHandler"""
@@ -157,3 +159,6 @@ def run_simplified_chaos():
 if __name__ == "__main__":
     success = run_simplified_chaos()
     exit(0 if success else 1) 
+
+
+

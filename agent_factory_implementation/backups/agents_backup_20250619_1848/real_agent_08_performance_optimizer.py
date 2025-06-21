@@ -15,7 +15,9 @@ Version: 1.0.0 - Agent Réel Autonome
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import time
 import zstandard as zstd
 import psutil
@@ -137,7 +139,9 @@ class RealAgent08PerformanceOptimizer:
         )
         
         # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="class",
             role="ai_processor",
@@ -491,3 +495,6 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main()) 
+
+
+

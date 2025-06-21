@@ -126,20 +126,20 @@ class Agent21SecurityEnterprise(Agent):
             # Dispatch vers feature appropriée
     for feature in self.features:
     if feature.can_handle(task):
-        result = feature.execute(task)
-        execution_time = (time.time() - start_time) * 1000
+    result = feature.execute(task)
+    execution_time = (time.time() - start_time) * 1000
                     
                     # Enrichissement avec métriques sécurité
-        result.metrics.update({
-            "agent_id": self.id,
-            "agent_version": self.agent_version,
-            "execution_time_ms": execution_time,
-            "feature_used": feature.__class__.__name__,
-            "security_compliance": self.compliance_target,
-            "zero_trust_active": True
-        })
+    result.metrics.update({
+        "agent_id": self.id,
+        "agent_version": self.agent_version,
+        "execution_time_ms": execution_time,
+        "feature_used": feature.__class__.__name__,
+        "security_compliance": self.compliance_target,
+        "zero_trust_active": True
+    })
                     
-        return result
+    return result
             
             # Fallback: tâche générique sécurité
     return self._handle_generic_security_task(task)

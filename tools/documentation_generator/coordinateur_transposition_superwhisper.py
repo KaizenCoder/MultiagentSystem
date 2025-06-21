@@ -17,7 +17,9 @@ Référence: SuperWhisper_V6 generate_bundle_coordinateur.py
 
 import asyncio
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import time
 from datetime import datetime
 from pathlib import Path
@@ -81,8 +83,10 @@ class CoordinateurTranspositionSuperWhisper:
             ]
         )
         # LoggingManager NextGeneration - Tool/Utility
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "CoordinateurTranspositionSuperWhisper",
             "log_level": "INFO",
             "elasticsearch_enabled": False,
@@ -353,3 +357,6 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main()) 
+
+
+

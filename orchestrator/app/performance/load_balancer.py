@@ -14,21 +14,24 @@ from dataclasses import dataclass, field
 from enum import Enum
 from datetime import datetime, timedelta
 import json
-from logging_manager_optimized import LoggingManager
 from collections import defaultdict, deque
+import sys
+from pathlib import Path
+
+# Golden Source Logging
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from core import logging_manager
 
 # Monitoring integration
 from ..observability.monitoring import get_monitoring
 
-# LoggingManager NextGeneration - Tool/Utility
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
-            "logger_name": "BackendHealth",
-            "log_level": "INFO",
-            "elasticsearch_enabled": False,
-            "encryption_enabled": False,
-            "async_enabled": True
-        })
+# Configuration du logging
+logger = logging_manager.get_logger('load_balancer', custom_config={
+    "logger_name": "LoadBalancer",
+    "log_level": "INFO",
+    "elasticsearch_enabled": True,
+    "async_enabled": True
+})
 
 class BackendHealth(Enum):
     """Backend health status enumeration"""
@@ -480,3 +483,7 @@ async def configure_load_balancer(
     await _load_balancer_instance.initialize()
     
     return _load_balancer_instance
+
+
+
+

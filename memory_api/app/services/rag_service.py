@@ -82,3 +82,6 @@ class RAGService:
             self.client.delete_collection(name="memory_collection")
             self.collection = self.client.get_or_create_collection(name="memory_collection")
         return True 
+
+
+

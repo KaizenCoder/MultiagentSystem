@@ -3,7 +3,9 @@ Configuration SQLite fallback pour résoudre le problème UTF-8 PostgreSQL Windo
 Solution temporaire recommandée par l'expert technique
 """
 import os
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from sqlalchemy import create_engine, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -12,8 +14,10 @@ from sqlalchemy.pool import StaticPool
 # Configuration du logging
 logging.basicConfig(level=logging.INFO)
 # LoggingManager NextGeneration - API
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "session_sqlite_fallback",
             "log_level": "INFO",
             "elasticsearch_enabled": True,
@@ -251,3 +255,6 @@ if __name__ == "__main__":
         print("\n🎯 Base de données prête pour TaskMaster NextGeneration !")
     else:
         print("\n❌ Problème de connexion persistant") 
+
+
+

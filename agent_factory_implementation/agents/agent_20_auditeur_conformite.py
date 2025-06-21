@@ -18,7 +18,9 @@ Responsabilités :
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime
 from typing import Dict, List, Optional, Any
 from pathlib import Path
@@ -110,7 +112,9 @@ class Agent20AuditeurConformite:
 
     def _setup_logging(self):
         # LoggingManager NextGeneration - Agent
-    from logging_manager_optimized import LoggingManager
+    import sys
+from pathlib import Path
+from core import logging_manager
     self.logger = LoggingManager().get_agent_logger(
     agent_name="from",
     role="ai_processor",
@@ -204,18 +208,18 @@ class Agent20AuditeurConformite:
                 # Recherche alternatives
     alternatives = list(project_path.glob(f"{file_name.split('.')[0]}.*"))
     if not alternatives:
-        self.issues.append(ConformityIssue(
-            issue_id=f"STRUCT_{file_name}",
-            standard_type=StandardType.DOCUMENTATION,
-            conformity_level=ConformityLevel.MAJOR_ISSUES,
-            title=f"Fichier essentiel manquant : {file_name}",
-            description=f"Le fichier {file_name} est requis pour la conformité projet",
-            location=str(project_path),
-            line_number=None,
-            requirement="Structure projet standard",
-            remediation=f"Créer le fichier {file_name}",
-            priority="haute"
-        ))
+    self.issues.append(ConformityIssue(
+        issue_id=f"STRUCT_{file_name}",
+        standard_type=StandardType.DOCUMENTATION,
+        conformity_level=ConformityLevel.MAJOR_ISSUES,
+        title=f"Fichier essentiel manquant : {file_name}",
+        description=f"Le fichier {file_name} est requis pour la conformité projet",
+        location=str(project_path),
+        line_number=None,
+        requirement="Structure projet standard",
+        remediation=f"Créer le fichier {file_name}",
+        priority="haute"
+    ))
         
         # Vérification dossiers standards
     standard_dirs = ['src', 'lib', 'tests', 'docs']
@@ -242,23 +246,23 @@ class Agent20AuditeurConformite:
     found = False
     for file_name in file_names:
     if (project_path / file_name).exists():
-        found = True
-        break
+    found = True
+    break
             
     if not found:
     severity = ConformityLevel.MAJOR_ISSUES if doc_type in ['readme_file', 'license_file'] else ConformityLevel.MINOR_ISSUES
                 
     self.issues.append(ConformityIssue(
-        issue_id=f"DOC_{doc_type}",
-        standard_type=StandardType.DOCUMENTATION,
-        conformity_level=severity,
-        title=f"Documentation manquante : {doc_type}",
-        description=f"Aucun fichier trouvé pour : {', '.join(file_names)}",
-        location=str(project_path),
-        line_number=None,
-        requirement="Documentation projet complète",
-        remediation=f"Créer un des fichiers : {', '.join(file_names)}",
-        priority="haute" if severity == ConformityLevel.MAJOR_ISSUES else "moyenne"
+    issue_id=f"DOC_{doc_type}",
+    standard_type=StandardType.DOCUMENTATION,
+    conformity_level=severity,
+    title=f"Documentation manquante : {doc_type}",
+    description=f"Aucun fichier trouvé pour : {', '.join(file_names)}",
+    location=str(project_path),
+    line_number=None,
+    requirement="Documentation projet complète",
+    remediation=f"Créer un des fichiers : {', '.join(file_names)}",
+    priority="haute" if severity == ConformityLevel.MAJOR_ISSUES else "moyenne"
     ))
 
     async def _check_licensing_compliance(self, project_path: Path):
@@ -284,22 +288,22 @@ class Agent20AuditeurConformite:
             # Vérification contenu licence
     for license_file in license_files:
     try:
-        content = license_file.read_text(encoding='utf-8')
-        if len(content.strip()) < 100:
-            self.issues.append(ConformityIssue(
-                issue_id=f"LIC_CONTENT_{license_file.name}",
-                standard_type=StandardType.LICENSING,
-                conformity_level=ConformityLevel.MINOR_ISSUES,
-                title="Contenu licence insuffisant",
-                description="Le fichier licence semble incomplet",
-                location=str(license_file),
-                line_number=None,
-                requirement="Licence complète et valide",
-                remediation="Vérifier et compléter le contenu de la licence",
-                priority="moyenne"
-            ))
+    content = license_file.read_text(encoding='utf-8')
+    if len(content.strip()) < 100:
+        self.issues.append(ConformityIssue(
+            issue_id=f"LIC_CONTENT_{license_file.name}",
+            standard_type=StandardType.LICENSING,
+            conformity_level=ConformityLevel.MINOR_ISSUES,
+            title="Contenu licence insuffisant",
+            description="Le fichier licence semble incomplet",
+            location=str(license_file),
+            line_number=None,
+            requirement="Licence complète et valide",
+            remediation="Vérifier et compléter le contenu de la licence",
+            priority="moyenne"
+        ))
     except Exception:
-        pass
+    pass
 
     async def _check_python_standards(self, content: str, file_path: str):
         """Vérification standards Python (PEP 8)"""
@@ -310,31 +314,31 @@ class Agent20AuditeurConformite:
             # Longueur de ligne
     if len(line) > 79:
     self.issues.append(ConformityIssue(
-        issue_id=f"PEP8_LINE_{i}",
-        standard_type=StandardType.CODING_STANDARDS,
-        conformity_level=ConformityLevel.MINOR_ISSUES,
-        title="Ligne trop longue",
-        description=f"Ligne {i} : {len(line)} caractères (max 79)",
-        location=file_path,
-        line_number=i,
-        requirement="PEP 8 - Longueur maximale de ligne",
-        remediation="Diviser la ligne ou utiliser des parenthèses",
-        priority="basse"
+    issue_id=f"PEP8_LINE_{i}",
+    standard_type=StandardType.CODING_STANDARDS,
+    conformity_level=ConformityLevel.MINOR_ISSUES,
+    title="Ligne trop longue",
+    description=f"Ligne {i} : {len(line)} caractères (max 79)",
+    location=file_path,
+    line_number=i,
+    requirement="PEP 8 - Longueur maximale de ligne",
+    remediation="Diviser la ligne ou utiliser des parenthèses",
+    priority="basse"
     ))
             
             # Espaces en fin de ligne
     if line.endswith(' ') or line.endswith('\t'):
     self.issues.append(ConformityIssue(
-        issue_id=f"PEP8_TRAIL_{i}",
-        standard_type=StandardType.CODING_STANDARDS,
-        conformity_level=ConformityLevel.MINOR_ISSUES,
-        title="Espaces en fin de ligne",
-        description=f"Ligne {i} contient des espaces superflus",
-        location=file_path,
-        line_number=i,
-        requirement="PEP 8 - Pas d'espaces superflus",
-        remediation="Supprimer les espaces en fin de ligne",
-        priority="basse"
+    issue_id=f"PEP8_TRAIL_{i}",
+    standard_type=StandardType.CODING_STANDARDS,
+    conformity_level=ConformityLevel.MINOR_ISSUES,
+    title="Espaces en fin de ligne",
+    description=f"Ligne {i} contient des espaces superflus",
+    location=file_path,
+    line_number=i,
+    requirement="PEP 8 - Pas d'espaces superflus",
+    remediation="Supprimer les espaces en fin de ligne",
+    priority="basse"
     ))
         
         # Vérification docstrings
@@ -342,16 +346,16 @@ class Agent20AuditeurConformite:
     functions_without_docstring = re.findall(r'def ([^_]\w*)\([^)]*\):\s*\n(?!\s*""")', content)
     for func_name in functions_without_docstring:
     self.issues.append(ConformityIssue(
-        issue_id=f"DOC_FUNC_{func_name}",
-        standard_type=StandardType.DOCUMENTATION,
-        conformity_level=ConformityLevel.MINOR_ISSUES,
-        title=f"Docstring manquante : {func_name}",
-        description=f"La fonction {func_name} n'a pas de docstring",
-        location=file_path,
-        line_number=None,
-        requirement="Documentation des fonctions publiques",
-        remediation=f"Ajouter une docstring à la fonction {func_name}",
-        priority="moyenne"
+    issue_id=f"DOC_FUNC_{func_name}",
+    standard_type=StandardType.DOCUMENTATION,
+    conformity_level=ConformityLevel.MINOR_ISSUES,
+    title=f"Docstring manquante : {func_name}",
+    description=f"La fonction {func_name} n'a pas de docstring",
+    location=file_path,
+    line_number=None,
+    requirement="Documentation des fonctions publiques",
+    remediation=f"Ajouter une docstring à la fonction {func_name}",
+    priority="moyenne"
     ))
 
     async def _check_documentation_standards(self, content: str, file_path: str):
@@ -365,20 +369,20 @@ class Agent20AuditeurConformite:
     content_lower = content.lower()
     for section in required_sections:
     if section not in content_lower:
-        missing_sections.append(section)
+    missing_sections.append(section)
             
     if missing_sections:
     self.issues.append(ConformityIssue(
-        issue_id="README_SECTIONS",
-        standard_type=StandardType.DOCUMENTATION,
-        conformity_level=ConformityLevel.MINOR_ISSUES,
-        title="Sections README manquantes",
-        description=f"Sections manquantes : {', '.join(missing_sections)}",
-        location=file_path,
-        line_number=None,
-        requirement="README complet et informatif",
-        remediation=f"Ajouter les sections : {', '.join(missing_sections)}",
-        priority="moyenne"
+    issue_id="README_SECTIONS",
+    standard_type=StandardType.DOCUMENTATION,
+    conformity_level=ConformityLevel.MINOR_ISSUES,
+    title="Sections README manquantes",
+    description=f"Sections manquantes : {', '.join(missing_sections)}",
+    location=file_path,
+    line_number=None,
+    requirement="README complet et informatif",
+    remediation=f"Ajouter les sections : {', '.join(missing_sections)}",
+    priority="moyenne"
     ))
 
     async def _check_general_standards(self, content: str, file_path: str):
@@ -391,18 +395,18 @@ class Agent20AuditeurConformite:
                 # Vérifier si c'est dans une chaîne de caractères (potentiellement sensible)
     pattern = rf'["\'].*{keyword}.*["\']'
     if re.search(pattern, content, re.IGNORECASE):
-        self.issues.append(ConformityIssue(
-            issue_id=f"SEC_SENSITIVE_{keyword}",
-            standard_type=StandardType.SECURITY_COMPLIANCE,
-            conformity_level=ConformityLevel.MAJOR_ISSUES,
-            title=f"Information sensible détectée : {keyword}",
-            description=f"Le mot-clé '{keyword}' pourrait indiquer des données sensibles",
-            location=file_path,
-            line_number=None,
-            requirement="Pas de données sensibles dans le code",
-            remediation="Vérifier et déplacer vers variables d'environnement",
-            priority="haute"
-        ))
+    self.issues.append(ConformityIssue(
+        issue_id=f"SEC_SENSITIVE_{keyword}",
+        standard_type=StandardType.SECURITY_COMPLIANCE,
+        conformity_level=ConformityLevel.MAJOR_ISSUES,
+        title=f"Information sensible détectée : {keyword}",
+        description=f"Le mot-clé '{keyword}' pourrait indiquer des données sensibles",
+        location=file_path,
+        line_number=None,
+        requirement="Pas de données sensibles dans le code",
+        remediation="Vérifier et déplacer vers variables d'environnement",
+        priority="haute"
+    ))
 
     async def _check_gdpr_compliance(self, project_path: Path):
         """Vérification conformité RGPD"""
@@ -411,29 +415,29 @@ class Agent20AuditeurConformite:
     for file_path in project_path.rglob('*'):
     if file_path.is_file() and not self._should_skip_file(file_path):
     try:
-        content = file_path.read_text(encoding='utf-8', errors='ignore')
+    content = file_path.read_text(encoding='utf-8', errors='ignore')
                     
                     # Détection données personnelles
-        for category, patterns in self.gdpr_patterns.items():
-            for pattern in patterns:
-                matches = re.findall(pattern, content, re.IGNORECASE)
-                if matches:
-                    self.issues.append(ConformityIssue(
-                        issue_id=f"GDPR_{category}_{hash(str(file_path))}",
-                        standard_type=StandardType.GDPR,
-                        conformity_level=ConformityLevel.MAJOR_ISSUES,
-                        title=f"Données RGPD détectées : {category}",
-                        description=f"Traitement potentiel de données personnelles : {pattern}",
-                        location=str(file_path),
-                        line_number=None,
-                        requirement="Conformité RGPD pour données personnelles",
-                        remediation="Vérifier conformité RGPD et ajouter consentement si nécessaire",
-                        priority="haute"
-                    ))
-                    break  # Un seul signalement par catégorie par fichier
+    for category, patterns in self.gdpr_patterns.items():
+        for pattern in patterns:
+            matches = re.findall(pattern, content, re.IGNORECASE)
+            if matches:
+                self.issues.append(ConformityIssue(
+                    issue_id=f"GDPR_{category}_{hash(str(file_path))}",
+                    standard_type=StandardType.GDPR,
+                    conformity_level=ConformityLevel.MAJOR_ISSUES,
+                    title=f"Données RGPD détectées : {category}",
+                    description=f"Traitement potentiel de données personnelles : {pattern}",
+                    location=str(file_path),
+                    line_number=None,
+                    requirement="Conformité RGPD pour données personnelles",
+                    remediation="Vérifier conformité RGPD et ajouter consentement si nécessaire",
+                    priority="haute"
+                ))
+                break  # Un seul signalement par catégorie par fichier
                         
     except Exception:
-        continue
+    continue
 
     def _calculate_conformity_score(self) -> float:
         """Calcule le score de conformité"""

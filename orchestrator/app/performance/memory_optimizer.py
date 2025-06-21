@@ -5,7 +5,9 @@ Handles memory leak detection, garbage collection optimization, and intelligent 
 
 import asyncio
 import gc
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import psutil
 import sys
 import time
@@ -22,8 +24,10 @@ from ..security.logging import security_logger
 
 
 # LoggingManager NextGeneration - Tool/Utility
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "class",
             "log_level": "INFO",
             "elasticsearch_enabled": False,
@@ -488,3 +492,7 @@ memory_optimizer = AdvancedMemoryManager()
 def get_memory_optimizer():
     """Get memory optimizer instance"""
     return memory_optimizer
+
+
+
+

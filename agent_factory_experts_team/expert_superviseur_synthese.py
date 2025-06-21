@@ -6,7 +6,9 @@ Modle: Claude-3.5-Sonnet (synthse, dcision, architecture finale)
 """
 
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, List, Optional, Tuple
@@ -69,7 +71,9 @@ class ExpertSuperviseurSynthese:
             ]
         )
         # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="from",
             role="ai_processor",
@@ -555,3 +559,7 @@ if __name__ == "__main__":
         print(f"[CONSTRUCTION] Architecture: {resultat['architecture_path']}")
     else:
         print(f"[CROSS] Erreur: {resultat['error']}")
+
+
+
+

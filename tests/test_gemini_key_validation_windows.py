@@ -306,3 +306,6 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"\nErreur inattendue: {e}")
         sys.exit(1) 
+
+
+

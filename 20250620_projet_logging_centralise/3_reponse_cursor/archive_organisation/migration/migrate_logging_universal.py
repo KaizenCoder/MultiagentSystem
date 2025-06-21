@@ -35,21 +35,27 @@ class UniversalLoggingMigrator:
             "agent": {
                 "template": """
         # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="{script_name}",
             role="ai_processor",
             domain="{domain}",
             async_enabled=True
         )""",
-                "import": "from logging_manager_optimized import LoggingManager"
+                "import": "import sys
+from pathlib import Path
+from core import logging_manager"
             },
             
             "template": {
                 "template": """
         # LoggingManager NextGeneration - Template Manager
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={{
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={{
             "logger_name": "{script_name}",
             "log_level": "INFO",
             "elasticsearch_enabled": True,
@@ -57,14 +63,18 @@ class UniversalLoggingMigrator:
             "async_enabled": True,
             "structured_logging": True
         }})""",
-                "import": "from logging_manager_optimized import LoggingManager"
+                "import": "import sys
+from pathlib import Path
+from core import logging_manager"
             },
             
             "orchestrator": {
                 "template": """
         # LoggingManager NextGeneration - Orchestrateur
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={{
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={{
             "logger_name": "{script_name}",
             "log_level": "INFO",
             "elasticsearch_enabled": True,
@@ -73,14 +83,18 @@ class UniversalLoggingMigrator:
             "alerting_enabled": True,
             "high_throughput": True
         }})""",
-                "import": "from logging_manager_optimized import LoggingManager"
+                "import": "import sys
+from pathlib import Path
+from core import logging_manager"
             },
             
             "test": {
                 "template": """
         # LoggingManager NextGeneration - Tests
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={{
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={{
             "logger_name": "{script_name}",
             "log_level": "DEBUG",
             "elasticsearch_enabled": False,
@@ -88,14 +102,18 @@ class UniversalLoggingMigrator:
             "async_enabled": False,  # Tests synchrones
             "console_output": True
         }})""",
-                "import": "from logging_manager_optimized import LoggingManager"
+                "import": "import sys
+from pathlib import Path
+from core import logging_manager"
             },
             
             "core": {
                 "template": """
         # LoggingManager NextGeneration - Core System
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={{
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={{
             "logger_name": "{script_name}",
             "log_level": "INFO",
             "elasticsearch_enabled": True,
@@ -104,14 +122,18 @@ class UniversalLoggingMigrator:
             "audit_enabled": True,
             "high_throughput": True
         }})""",
-                "import": "from logging_manager_optimized import LoggingManager"
+                "import": "import sys
+from pathlib import Path
+from core import logging_manager"
             },
             
             "api": {
                 "template": """
         # LoggingManager NextGeneration - API
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={{
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={{
             "logger_name": "{script_name}",
             "log_level": "INFO",
             "elasticsearch_enabled": True,
@@ -119,21 +141,27 @@ class UniversalLoggingMigrator:
             "async_enabled": True,
             "request_tracking": True
         }})""",
-                "import": "from logging_manager_optimized import LoggingManager"
+                "import": "import sys
+from pathlib import Path
+from core import logging_manager"
             },
             
             "tool": {
                 "template": """
         # LoggingManager NextGeneration - Tool/Utility
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={{
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={{
             "logger_name": "{script_name}",
             "log_level": "INFO",
             "elasticsearch_enabled": False,
             "encryption_enabled": False,
             "async_enabled": True
         }})""",
-                "import": "from logging_manager_optimized import LoggingManager"
+                "import": "import sys
+from pathlib import Path
+from core import logging_manager"
             }
         }
     
@@ -251,7 +279,9 @@ class UniversalLoggingMigrator:
         # Remplacer import logging
         content = re.sub(
             r'^import logging$',
-            'from logging_manager_optimized import LoggingManager',
+            'import sys
+from pathlib import Path
+from core import logging_manager',
             content,
             flags=re.MULTILINE
         )
@@ -259,7 +289,9 @@ class UniversalLoggingMigrator:
         # Remplacer from logging import ...
         content = re.sub(
             r'^from logging import.*$',
-            'from logging_manager_optimized import LoggingManager',
+            'import sys
+from pathlib import Path
+from core import logging_manager',
             content,
             flags=re.MULTILINE
         )
@@ -467,3 +499,6 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
+
+

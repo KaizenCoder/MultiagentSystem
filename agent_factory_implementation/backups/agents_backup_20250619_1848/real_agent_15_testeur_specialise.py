@@ -9,7 +9,9 @@ Mission: Exécuter des tests spécialisés de manière continue.
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import signal
 import random
 import time
@@ -70,7 +72,9 @@ class RealAgent15TesteurSpecialise:
             handlers=[logging.FileHandler(log_file), logging.StreamHandler()]
         )
         # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="class",
             role="ai_processor",
@@ -176,3 +180,6 @@ async def main():
 if __name__ == "__main__":
     import time # Ajout de l'import time manquant
     asyncio.run(main()) 
+
+
+

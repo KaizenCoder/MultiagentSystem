@@ -1,0 +1,38 @@
+# Fichier de dépendances pour le projet de logging NextGeneration
+# Version 1.0.0
+
+# Dépendances pour les outils de développement (optionnel)
+black>=22.0.0
+flake8>=4.0.0
+
+# Dépendances pour les fonctionnalités "Enterprise"
+cryptography    # Pour le chiffrement AES-256
+elasticsearch   # Pour l'intégration avec Elasticsearch
+
+# NextGeneration Logging Centralisé - Production Ready
+# Dépendances requises et optionnelles
+
+# === DÉPENDANCES OBLIGATOIRES ===
+# Chiffrement et sécurité
+cryptography>=3.4.8
+
+# === DÉPENDANCES OPTIONNELLES ===
+# Monitoring et métriques (recommandé pour production)
+opentelemetry-api>=1.12.0
+opentelemetry-sdk>=1.12.0
+opentelemetry-instrumentation>=0.33b0
+
+# Elasticsearch pour recherche avancée (optionnel)
+elasticsearch>=7.0.0,<8.0.0
+
+# Monitoring et alerting (optionnel)
+prometheus-client>=0.14.0
+requests>=2.25.0
+
+# Performance et cache (optionnel)
+redis>=4.0.0
+
+# Development et testing (dev uniquement)
+pytest>=6.0.0
+pytest-asyncio>=0.18.0
+pytest-cov>=3.0.0

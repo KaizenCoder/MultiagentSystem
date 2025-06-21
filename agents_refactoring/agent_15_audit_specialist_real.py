@@ -8,7 +8,9 @@ Travaille sur: refactoring_workspace/new_architecture/
 import os
 import sys
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import time
 import ast
 import re
@@ -60,7 +62,9 @@ class RealAuditSpecialistAgent:
             ]
         )
         # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="RealAuditSpecialistAgent",
             role="ai_processor",
@@ -827,3 +831,6 @@ if __name__ == "__main__":
         print(f"[CHECK] {result['message']}")
     else:
         print(f"[CROSS] Erreur: {result['error']}") 
+
+
+

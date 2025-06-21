@@ -16,7 +16,9 @@ from typing import Dict, Any
 sys.path.append(str(Path(__file__).parent))
 
 try:
-    from logging_manager_optimized import LoggingManager, LoggingConfig, LogLevel
+    import sys
+from pathlib import Path
+from core import logging_manager, LoggingConfig, LogLevel
     from template_manager_integrated import TemplateManagerIntegrated, TemplateMetrics
     from agent_coordinateur_integrated import Agent0ChefEquipeCoordinateur, AICoordinationEngine, WorkflowStatus
 except ImportError as e:
@@ -24,7 +26,9 @@ except ImportError as e:
     print("Tentative d'import avec noms alternatifs...")
     try:
         # Essayer des imports alternatifs
-        from logging_manager_optimized import LoggingManager, LoggingConfig
+        import sys
+from pathlib import Path
+from core import logging_manager, LoggingConfig
         LogLevel = None  # Défini dans le module
         from template_manager_integrated import TemplateMetrics
         TemplateManagerIntegrated = None  # Mock si nécessaire
@@ -486,3 +490,6 @@ async def main():
 if __name__ == "__main__":
     exit_code = asyncio.run(main())
     sys.exit(exit_code) 
+
+
+

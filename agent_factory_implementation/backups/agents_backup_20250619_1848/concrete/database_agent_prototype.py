@@ -13,12 +13,16 @@ from abc import ABC, abstractmethod
 from typing import Dict, Any, List, Optional
 from datetime import datetime
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import asyncio
 import psutil
 
 # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="Task",
             role="ai_processor",
@@ -485,3 +489,6 @@ def demo_database_agent():
 
 if __name__ == "__main__":
     demo_database_agent() 
+
+
+

@@ -5,7 +5,9 @@ Mtriques custom, dashboards, et alerting intelligent
 import os
 import time
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from typing import Dict, List, Optional, Any, Callable
 from datetime import datetime, timedelta
 from dataclasses import dataclass, field
@@ -21,8 +23,10 @@ except ImportError:
 from orchestrator.app.security.logging import security_logger
 
 # LoggingManager NextGeneration - Tool/Utility
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
+        import sys
+from pathlib import Path
+from core import logging_manager
+        self.logger = logging_manager.get_logger(custom_config={
             "logger_name": "MetricType",
             "log_level": "INFO",
             "elasticsearch_enabled": False,
@@ -714,3 +718,7 @@ def track_request_metrics(endpoint: str):
 
 # Export de l'instance globale pour compatibilit
 monitoring_manager = get_monitoring()
+
+
+
+

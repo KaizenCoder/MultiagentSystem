@@ -312,3 +312,6 @@ if __name__ == "__main__":
     print("=" * 70)
     
     asyncio.run(test_equipe_postgresql_simple()) 
+
+
+

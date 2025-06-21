@@ -11,9 +11,11 @@ Usage: python start_meta_strategique.py [options]
 """
 
 import argparse
-from logging_manager_optimized import LoggingManager
 import sys
 from pathlib import Path
+
+# Golden Source Logging
+from core import logging_manager
 
 # Ajout du chemin pour les imports
 sys.path.append(str(Path(__file__).parent))
@@ -22,29 +24,25 @@ sys.path.append(str(Path(__file__).parent / "agent_factory_implementation" / "ag
 from agent_meta_strategique import AgentMetaStrategique
 from agent_factory_implementation.agents.agent_meta_strategique_scheduler import AgentMetaStrategiqueScheduler
 
-def setup_logging(log_level: str = "INFO"):
-    """Configuration du logging"""
-    level = getattr(logging, log_level.upper(), logging.INFO)
-    
-    # LoggingManager NextGeneration - Tool/Utility
-        from logging_manager_optimized import LoggingManager
-        self.logger = LoggingManager().get_logger(custom_config={
-            "logger_name": "start_meta_strategique",
-            "log_level": "INFO",
-            "elasticsearch_enabled": False,
-            "encryption_enabled": False,
-            "async_enabled": True
-        })s - %(name)s - %(levelname)s - %(message)s',
-        handlers=[
-            logging.FileHandler('logs/agent_meta_strategique.log'),
-            logging.StreamHandler()
-        ]
+logger = None
+
+def setup_logging(log_level: str = "INFO", es_enabled: bool = False):
+    """Configuration du logging avec la Golden Source."""
+    global logger
+    logger = logging_manager.get_logger(
+        'MetaStrategiqueRunner', 
+        custom_config={"log_level": log_level.upper(), "elasticsearch_enabled": es_enabled}
     )
+    logger.info(f"Logging initialisé au niveau {log_level.upper()}. Elasticsearch: {'activé' if es_enabled else 'désactivé'}.")
 
 def run_single_analysis():
     """Exécution d'une analyse unique"""
     print("🚧 Exécution d'une analyse stratégique unique (VERSION DRAFT/PROTOTYPE)...")
     print("⚠️  ATTENTION: Version expérimentale - Ne pas utiliser en production")
+    
+    if not logger:
+        setup_logging()
+    logger.info("Début de l'analyse stratégique unique.")
     
     agent = AgentMetaStrategique()
     
@@ -54,6 +52,7 @@ def run_single_analysis():
     
     # Affichage du résumé
     analysis = agent.analyser_performance_globale()
+    logger.info(f"Analyse terminée. {len(analysis['strategic_insights'])} insights, {len(analysis['proposed_missions'])} missions, {len(analysis['anomalies_detected'])} anomalies.")
     print(f"\n📊 Résumé de l'analyse:")
     print(f"- Insights identifiés: {len(analysis['strategic_insights'])}")
     print(f"- Missions proposées: {len(analysis['proposed_missions'])}")
@@ -71,6 +70,10 @@ def run_scheduler():
     print("🚧 Démarrage du planificateur Agent Méta-Stratégique DRAFT/PROTOTYPE")
     print("⚠️  ATTENTION: Version expérimentale - Ne pas utiliser en production")
     print("   Ctrl+C pour arrêter")
+    
+    if not logger:
+        setup_logging()
+    logger.info("Démarrage du planificateur de l'agent méta-stratégique.")
     
     scheduler = AgentMetaStrategiqueScheduler()
     scheduler.start_scheduler()
@@ -90,7 +93,13 @@ def main():
         '--log-level',
         choices=['DEBUG', 'INFO', 'WARNING', 'ERROR'],
         default='INFO',
-        help='Niveau de logging'
+        help='Niveau de logging.'
+    )
+    
+    parser.add_argument(
+        '--es',
+        action='store_true',
+        help="Activer le logging vers Elasticsearch."
     )
     
     parser.add_argument(
@@ -101,7 +110,7 @@ def main():
     args = parser.parse_args()
     
     # Configuration du logging
-    setup_logging(args.log_level)
+    setup_logging(args.log_level, args.es)
     
     # Création du répertoire logs si nécessaire
     Path('logs').mkdir(exist_ok=True)
@@ -114,10 +123,17 @@ def main():
             
     except KeyboardInterrupt:
         print("\n🛑 Arrêt demandé par l'utilisateur")
+        if logger:
+            logger.warning("Arrêt demandé par l'utilisateur.")
         sys.exit(0)
     except Exception as e:
         print(f"❌ Erreur: {e}")
+        if logger:
+            logger.critical(f"Erreur non gérée: {e}", exc_info=True)
         sys.exit(1)
 
 if __name__ == "__main__":
     main() 
+
+
+

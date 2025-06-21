@@ -359,3 +359,6 @@ class AgentGenieLogiciel:
 
 # Instance globale de l'agent
 agent_genie_logiciel = AgentGenieLogiciel() 
+
+
+

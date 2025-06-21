@@ -23,7 +23,9 @@ from __future__ import annotations
 
 import hashlib
 import json
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 from datetime import datetime
 from functools import cached_property, lru_cache
 from pathlib import Path
@@ -35,7 +37,9 @@ from jsonschema import Draft7Validator
 from .base_agent import BaseAgent
 
 # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="TemplateValidationError",
             role="ai_processor",
@@ -758,3 +762,6 @@ class AgentTemplate:
     def __str__(self) -> str:
         """Reprsentation lisible."""
         return f"{self.name} v{self.version} ({self.role})"
+
+
+

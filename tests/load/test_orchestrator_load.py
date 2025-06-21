@@ -238,3 +238,6 @@ class TestOrchestratorPerformance:
         assert avg_duration < 1.0, f"Average response time {avg_duration:.3f}s too high"
         assert max_duration < 2.0, f"Max response time {max_duration:.3f}s too high"
         print(f"[CHECK] Temps moyen: {avg_duration:.3f}s, max: {max_duration:.3f}s") 
+
+
+

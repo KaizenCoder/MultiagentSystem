@@ -23,3 +23,6 @@ class AgentState(TypedDict):
     errors: List[str]
     logs: List[str]
     feedback: Optional[Dict[str, Any]] 
+
+
+

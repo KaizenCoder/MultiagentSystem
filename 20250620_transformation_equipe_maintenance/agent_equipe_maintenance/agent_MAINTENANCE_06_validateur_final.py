@@ -25,7 +25,9 @@ except ImportError as e:
             self.config = config
             self.agent_id = f"agent_6_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
             # LoggingManager NextGeneration - Agent
-            from logging_manager_optimized import LoggingManager
+            import sys
+from pathlib import Path
+from core import logging_manager
             self.logger = LoggingManager().get_agent_logger(
                 agent_name="Agent",
                 role="ai_processor",
@@ -322,3 +324,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+
+
+

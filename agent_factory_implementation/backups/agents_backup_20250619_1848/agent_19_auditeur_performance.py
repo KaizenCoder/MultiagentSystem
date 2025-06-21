@@ -11,7 +11,9 @@ Responsabilités :
 """
 
 import asyncio
-from logging_manager_optimized import LoggingManager
+import sys
+from pathlib import Path
+from core import logging_manager
 import time
 import psutil
 from datetime import datetime
@@ -66,7 +68,9 @@ class Agent19AuditeurPerformance:
 
     def _setup_logging(self):
         # LoggingManager NextGeneration - Agent
-        from logging_manager_optimized import LoggingManager
+        import sys
+from pathlib import Path
+from core import logging_manager
         self.logger = LoggingManager().get_agent_logger(
             agent_name="from",
             role="ai_processor",
@@ -307,3 +311,6 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main()) 
+
+
+

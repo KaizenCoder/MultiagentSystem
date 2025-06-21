@@ -105,3 +105,6 @@ class TestSupervisorSimple:
         
         # ASSERT
         performance_monitor.assert_max_duration(2000)  # Max 2 secondes pour 5 oprations 
+
+
+
