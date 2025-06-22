@@ -1,127 +1,98 @@
-#!/usr/bin/env python3
-"""
-🔍 AGENT 2 - ÉVALUATEUR D'UTILITÉ AMÉLIORÉ (NextGeneration + TOP)
-=================================================================
-Mission: Évaluer l'utilité des outils analysés avec intelligence multi-critères avancée
-
-🚀 AMÉLIORATIONS INTÉGRÉES DE L'ÉQUIPE TOP:
-- 🧠 Système d'évaluation multi-critères pondérés
-- 🎯 Mots-clés NextGeneration spécialisés (high/medium/low priority)
-- ⚖️ Évaluation 5 dimensions: technique, architecture, valeur, intégration, maintenance
-- 🔍 Détection automatique conflits et redondances
-- 📊 Algorithme de similarité entre outils
-- 🎯 Priorisation intelligente basée sur scores composites
-- 🏆 Support évaluation spécialisée (APEX, PowerShell, Batch)
-
-Architecture Pattern Factory:
-- Hérite de Agent de base  
-- Implémente méthodes abstraites obligatoires
-- Configuration NextGeneration intégrée
-- Logging Pattern Factory standardisé
-"""
-
-import json
-import sys
+import ast
 from pathlib import Path
-import asyncio
-from datetime import datetime
-from typing import Dict, List, Any, Optional
-import re
-import uuid
-
-# --- Configuration Robuste du Chemin d'Importation ---
-try:
-    project_root = Path(__file__).resolve().parents[2]
-    if str(project_root) not in sys.path:
-        sys.path.insert(0, str(project_root))
-except (IndexError, NameError):
-    if '.' not in sys.path:
-        sys.path.insert(0, '.')
-
-from core import logging_manager
 from core.agent_factory_architecture import Agent, Task, Result
+from typing import List, Dict, Any
 
 class AgentMAINTENANCE02EvaluateurUtilite(Agent):
     """
-    Agent chargé d'évaluer l'utilité et la pertinence d'un fichier de code.
-    Il vérifie si le code est un placeholder, un vrai agent, ou vide.
+    Évalue l'utilité d'un script Python en se basant sur une analyse statique
+    de son arbre syntaxique abstrait (AST).
     """
-    def __init__(self, agent_id="agent_MAINTENANCE_02_evaluateur_utilite", version="1.0", description="Évalue l'utilité d'un fichier de code.", status="enabled", **kwargs):
-        super().__init__(agent_id, version, description, "evaluator", status, **kwargs)
-        # Regex pour détecter les signes de code "placeholder" ou non-implémenté
-        self.placeholder_patterns = [
-            re.compile(r'^\s*pass\s*$', re.MULTILINE),
-            re.compile(r'raise\s+NotImplementedError'),
-            re.compile(r'#\s*TODO', re.IGNORECASE),
-            re.compile(r'return\s+None', re.IGNORECASE)
-        ]
 
-    async def startup(self):
-        await super().startup()
-        self.log("Évaluateur d'utilité prêt.")
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.logger.info(f"Évaluateur d'utilité ({self.agent_id}) initialisé.")
 
     async def execute_task(self, task: Task) -> Result:
-        if task.type != "evaluate_utility":
-            return Result(success=False, error="Type de tâche non supporté.")
-
-        code = task.params.get("code")
-        file_path = task.params.get("file_path", "unknown_file")
-        if code is None:
-            return Result(success=False, error="Code non fourni.")
-
+        file_path = task.params.get("file_path")
         self.log(f"Évaluation du fichier : {file_path}")
 
-        # 1. Vérifier si le code est vide ou ne contient que des commentaires/espaces
-        stripped_code = re.sub(r'#.*|\s', '', code)
-        if not stripped_code:
-            self.log(f"Fichier {file_path} est vide ou ne contient pas de code fonctionnel.")
-            return Result(success=False, error="Le code est vide.", data={"evaluation": "empty"})
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                code = f.read()
+        except Exception as e:
+            self.logger.error(f"Impossible de lire le fichier {file_path}: {e}")
+            return Result(success=False, error=f"Erreur de lecture du fichier: {e}")
 
-        # 2. Vérifier les patterns de code placeholder
-        placeholder_score = 0
-        for pattern in self.placeholder_patterns:
-            if pattern.search(code):
-                placeholder_score += 1
-        
-        # 3. Vérifier la complexité (très basique)
-        num_lines = len([line for line in code.splitlines() if line.strip()])
-        num_functions = code.count("def ")
-        num_classes = code.count("class ")
+        try:
+            tree = ast.parse(code)
+            score = self._evaluate_ast(tree)
+            min_score = self.config.get("min_score_for_usefulness", 15) if hasattr(self, 'config') else 15
+            is_useful = score >= min_score
+            self.log(f"Résultat pour {file_path}: Score={score}, Utile={is_useful}")
+            return Result(
+                success=True, 
+                data={"score": score, "is_useful": is_useful, "details": "Évaluation réussie"}
+            )
+        except SyntaxError as e:
+            self.logger.error(f"Impossible d'évaluer le script {file_path}, erreur de syntaxe: {e}")
+            return Result(
+                success=True, 
+                data={"score": 0, "is_useful": False, "details": f"Erreur de syntaxe: {e}"}
+            )
 
-        # Heuristique simple pour décider
-        if num_lines < 10 and num_functions < 2 and placeholder_score > 0:
-            self.log(f"Fichier {file_path} semble être un placeholder.")
-            return Result(success=False, error="Le code est un placeholder.", data={"evaluation": "placeholder", "score": placeholder_score})
+    def _evaluate_ast(self, tree):
+        score = 0
+        has_class = False
+        has_function = False
 
-        # Si aucune condition d'inutilité n'est remplie
-        self.log(f"Fichier {file_path} semble être un agent utile.")
-        return Result(success=True, data={
-            "evaluation": "useful", 
-            "lines": num_lines, 
-            "functions": num_functions,
-            "classes": num_classes,
-            "placeholder_score": placeholder_score
-        })
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                score += 1 * len(node.names)
+            elif isinstance(node, ast.ImportFrom):
+                score += 1 * len(node.names)
+            elif isinstance(node, ast.FunctionDef):
+                score += 5
+                has_function = True
+                if node.body:
+                    score += len(node.body)
+            elif isinstance(node, ast.ClassDef):
+                score += 10
+                has_class = True
+                if node.body:
+                    score += len(node.body)
+            elif isinstance(node, ast.Call):
+                score += 1
+            elif isinstance(node, ast.Try):
+                score += 2
+            elif isinstance(node, (ast.If, ast.For, ast.While)):
+                score += 2
 
-    async def shutdown(self):
-        self.log("Évaluateur d'utilité éteint.", level="info")
-        return Result(success=True)
-        
-    async def get_capabilities(self):
-        return Result(success=True, data=self.capabilities)
+        if has_class and has_function:
+            score += 5
+            
+        for node in ast.walk(tree):
+            if isinstance(node, ast.FunctionDef) and len(node.body) == 1 and isinstance(node.body[0], ast.Pass):
+                score -= 5
+            if isinstance(node, ast.ClassDef) and len(node.body) == 1 and isinstance(node.body[0], ast.Pass):
+                score -= 5
 
-    async def health_check(self):
-        return Result(success=True, data={"status": "ok"})
+        return max(0, score)
 
-def create_agent_MAINTENANCE_02_evaluateur_utilite(**config) -> AgentMAINTENANCE02EvaluateurUtilite:
+    async def startup(self) -> None:
+        self.log("Évaluateur d'utilité prêt.")
+        pass
+
+    async def shutdown(self) -> None:
+        self.log("Évaluateur d'utilité éteint.")
+        pass
+
+    def get_capabilities(self) -> List[str]:
+        return ["evaluate_utility", "ast_evaluation"]
+
+    async def health_check(self) -> Dict[str, Any]:
+        return {"status": "ok"}
+
+def create_agent_MAINTENANCE_02_evaluateur_utilite(**config) -> "AgentMAINTENANCE02EvaluateurUtilite":
     """Factory pour créer une instance de l'Agent 2."""
     return AgentMAINTENANCE02EvaluateurUtilite(**config)
-
-if __name__ == "__main__":
-    async def main():
-        print("🧠 AGENT 2 - ÉVALUATEUR D'UTILITÉ AMÉLIORÉ")
-        agent = create_agent_MAINTENANCE_02_evaluateur_utilite()
-        await agent.startup()
-        await agent.shutdown()
-    asyncio.run(main()) 
-

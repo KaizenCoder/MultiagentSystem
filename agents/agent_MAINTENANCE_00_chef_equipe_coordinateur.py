@@ -1,23 +1,13 @@
 #!/usr/bin/env python3
 """
-🎖️ CHEF D'ÉQUIPE COORDINATEUR ENTERPRISE TRANSFORMÉ - Pattern Factory NextGeneration
+🎖️ CHEF D'ÉQUIPE COORDINATEUR ENTERPRISE - Pattern Factory NextGeneration
 ===============================================================================
 
-🎯 Mission : Orchestration centrale de l'équipe de maintenance transformée
-⚡ Modèle : Claude Sonnet 4 
-🏢 Équipe : NextGeneration Tools Migration - Architecture Enterprise
-
-Nouvelles Capacités Avancées :
-- 🚀 Coordination intelligente multi-agents
-- 📊 Orchestration de workflows complexes
-- 🔄 Gestion automatisée des dépendances
-- 📈 Monitoring temps réel de l'équipe
-- 🎯 Optimisation de performance collaborative
-- 📋 Rapports consolidés avancés
+🎯 Mission : Orchestration centrale de l'équipe de maintenance.
+⚡ Capacités : Boucle de réparation itérative, coordination d'équipe, reporting.
 
 Author: Équipe de Maintenance NextGeneration
-Version: 2.0.0 - Enterprise Transformation
-Created: 2025-01-19
+Version: 4.1.0 - Hotfix Communication
 """
 
 import asyncio
@@ -27,357 +17,226 @@ from typing import Dict, List, Any, Optional
 import sys
 import time
 import json
-from abc import ABC, abstractmethod
 import logging
 import uuid
-import importlib
-import inspect
-import os
 
 # --- Configuration Robuste du Chemin d'Importation ---
 try:
-    project_root = Path(__file__).resolve().parents[2]
+    project_root = Path(__file__).resolve().parents[1]
     if str(project_root) not in sys.path:
         sys.path.insert(0, str(project_root))
 except (IndexError, NameError):
     if '.' not in sys.path:
         sys.path.insert(0, '.')
 
-# --- Imports Post-Path-Correction ---
-try:
-    from core import logging_manager
-    from core.agent_factory_architecture import Agent, Task, Result
-    PATTERN_FACTORY_AVAILABLE = True
-except ImportError:
-    try:
-        from core.agent_factory_architecture import Agent, Task, Result
-        PATTERN_FACTORY_AVAILABLE = True
-    except ImportError as e:
-        print(f"⚠️ Pattern Factory non disponible: {e}")
-        # Fallback pour compatibilité
-        class Agent:
-            async def __init__(self, agent_type: str, **config):
-                self.agent_id = f"chef_equipe_coordinateur_{int(time.time())}"
-                self.agent_type = agent_type
-                self.config = config
-            
-            async def startup(self): pass
-            async def shutdown(self): pass
-            async def health_check(self): return {"status": "healthy"}
-            async def get_capabilities(self): return []
-    
-        class Task:
-            async def __init__(self, task_id: str, description: str, **kwargs):
-                self.task_id = task_id
-                self.description = description
-            
-        class Result:
-            async def __init__(self, success: bool, data: Any = None, error: str = None):
-                self.success = success
-                self.data = data
-                self.error = error
-    
-        PATTERN_FACTORY_AVAILABLE = False
-
+# Import direct de l'architecture et des agents
+from core.agent_factory_architecture import Agent, Task, Result, AgentFactory
 
 class ChefEquipeCoordinateurEnterprise(Agent):
     """
-    Chef d'équipe pour orchestrer des workflows de maintenance complexes.
+    Chef d'équipe pour orchestrer des workflows de maintenance complexes
+    avec une boucle de réparation itérative et un reporting enrichi.
     """
-    def __init__(
-        self,
-        agent_id: str = None, 
-        agent_type: str = "coordinateur_maintenance",
-        target_path: str = None, 
-        workspace_path: str = None, 
-        **config
-    ):
-        """Initialisation moderne et robuste."""
-        # Création d'un ID unique et fiable dès le départ
-        self.agent_id = agent_id or f"{agent_type}_{uuid.uuid4().hex[:8]}"
-        self.agent_type = agent_type
-        self.config = config
-
-        # --- Initialisation du Logger ---
-        if logging_manager:
-            custom_conf = {
-                "logger_name": f"agent.{self.agent_id}",
-                "metadata": {"agent_id": self.agent_id, "role": "chef_equipe"}
-            }
-            self.logger = logging_manager.get_logger("agent_maintenance", custom_config=custom_conf)
-        else:
-            logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-            self.logger = logging.getLogger(self.agent_id)
-
-        self.logger.info(f"Chef d'équipe initialisé avec ID: {self.agent_id}")
+    def __init__(self, agent_id: str = None, **kwargs):
+        super().__init__(
+            agent_id=agent_id or f"coordinateur_maintenance_{uuid.uuid4().hex[:8]}",
+            version="4.1.0",
+            description="Coordinateur central pour la maintenance des agents avec reporting enrichi.",
+            agent_type="coordinateur",
+            status="operational",
+            **kwargs
+        )
+        self.logger.info(f"Chef d'équipe v4.1.0 initialisé avec ID: {self.agent_id}")
         
-        if not target_path:
-            raise ValueError("Le paramètre 'target_path' est obligatoire.")
-        self.target_path = Path(target_path)
-        self.workspace_path = Path(workspace_path or ".")
+        self.workspace_path = Path(kwargs.get("workspace_path", "."))
+        self.factory = AgentFactory(config_path=str(self.workspace_path / "config" / "maintenance_config.json"))
         
-        self.logger.info(f"Répertoire cible : {self.target_path}")
-        self.logger.info(f"Workspace : {self.workspace_path}")
-
-        self.equipe_agents = {}
-        self.workflows_disponibles = [
-            "maintenance_complete"
-        ]
-        self.config_workflows = {
-            "timeout_default": config.get("timeout", 300),
-            "max_agents_parallel": config.get("max_agents_parallel", 6),
-        }
-        
-        self.rapport_final = {}
+        self.equipe_agents: Dict[str, Agent] = {}
+        self.mission_context = {}
         
     async def startup(self):
-        self.logger.info(f"🚀 Chef d'Équipe Coordinateur {self.agent_id} - DÉMARRAGE")
-        if not self.target_path.exists():
-            raise FileNotFoundError(f"Le répertoire cible n'existe pas : {self.target_path}")
-        self.logger.info("✅ Chef d'Équipe prêt.")
-        
+        self.logger.info(f"🚀 Démarrage du Chef d'Équipe {self.agent_id}")
+        await self._recruter_equipe()
+        self.log("Chef d'Équipe prêt et équipe recrutée.")
+
     async def shutdown(self):
-        self.logger.info(f"🛑 Chef d'Équipe Coordinateur {self.agent_id} - ARRÊT")
+        self.logger.info(f"🛑 Arrêt du Chef d'Équipe {self.agent_id}")
         for agent in self.equipe_agents.values():
-            if hasattr(agent, "shutdown"):
+            if hasattr(agent, 'shutdown'):
                 await agent.shutdown()
-                
-    async def health_check(self) -> Dict[str, Any]:
-        return {"status": "healthy", "agent_id": self.agent_id}
-    
+
     def get_capabilities(self) -> List[str]:
-        return self.workflows_disponibles
-    
+        return ["workflow_maintenance_complete"]
+        
+    async def health_check(self) -> Dict[str, Any]:
+        team_status = {}
+        for role, agent in self.equipe_agents.items():
+            try:
+                agent_health = await agent.health_check()
+                team_status[role] = agent_health.get("status", "unknown")
+            except Exception:
+                team_status[role] = "error"
+        is_healthy = all(s == "healthy" for s in team_status.values())
+        return {"status": "healthy" if is_healthy else "degraded", "team_status": team_status}
+
     async def execute_task(self, task: Task) -> Result:
-        """Point d'entrée principal conforme au Pattern Factory."""
-        self.logger.info(f"Tâche reçue: {task.id} - {task.type}")
-        
-        # On délègue l'exécution au workflow principal
-        report = await self.workflow_maintenance_complete(mission_config=task.params)
-        
-        success = report.get("statut_mission") == "SUCCÈS"
-        if success:
-            return Result(success=True, data=report)
-        else:
-            return Result(success=False, data=report, error=report.get("erreur", "Erreur inconnue dans le workflow."))
+        if task.type == "workflow_maintenance_complete":
+            final_report = await self.workflow_maintenance_complete(task.params)
+            return Result(success=True, data=final_report)
+        return Result(success=False, error=f"Tâche non reconnue: {task.type}")
 
-    async def workflow_maintenance_complete(self, mission_config: Dict = None) -> Dict[str, Any]:
-        start_time = time.time()
+    async def workflow_maintenance_complete(self, mission_config: Dict) -> Dict:
         mission_id = f"mission_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-        self.logger.info(f"🚀 LANCEMENT WORKFLOW COMPLET - MISSION ID: {mission_id}")
+        self.logger.info(f"===== DÉBUT DE LA MISSION DE MAINTENANCE : {mission_id} =====")
+        start_time = time.time()
 
-        rapport_final = {"mission_id": mission_id, "statut_mission": "INCOMPLET", "etapes": {}}
-        rapports_par_agent = {}
-
-        try:
-            # Étape 1: Analyse de la structure par l'agent 01 pour obtenir la liste des agents
-            self.logger.info("--- Étape 1: Analyse de la structure ---")
-            analyseur = await self._instancier_agent("agent_MAINTENANCE_01_analyseur_structure")
-            if not analyseur:
-                raise Exception("Impossible d'instancier l'agent_MAINTENANCE_01_analyseur_structure")
-            
-            # L'agent 01 doit avoir une méthode qui retourne la liste des fichiers
-            if not hasattr(analyseur, 'run_analysis'):
-                 raise Exception("L'agent 01 n'a pas la méthode 'run_analysis'")
-            
-            analyse_result = await analyseur.run_analysis(self.target_path)
-            rapport_final["etapes"]["analyse_structure"] = analyse_result.data
-            
-            agents_a_traiter = analyse_result.data.get("files", [])
-            if not agents_a_traiter:
-                raise Exception("Aucun agent trouvé par l'analyseur de structure.")
-            
-            self.logger.info(f"✅ {len(agents_a_traiter)} agents à traiter.")
-
-            # Étapes suivantes: Boucle sur chaque agent trouvé
-            processed_files_reports = []
-            for file_info in agents_a_traiter:
-                
-                # Vérification de robustesse
-                if not file_info or not isinstance(file_info, dict):
-                    self.logger.warning(f"Information de fichier invalide (pas un dict): {file_info}")
-                    continue
-                
-                agent_path_str = file_info.get("path")
-                if not agent_path_str:
-                    self.logger.warning(f"Information de fichier invalide (chemin manquant): {file_info}")
-                    continue
-
-                agent_path = Path(agent_path_str)
-                
-                if not agent_path.exists():
-                    self.logger.warning(f"Le fichier agent n'existe pas : {agent_path}")
-                    continue
-
-                agent_name = agent_path.name
-                self.logger.info(f"--- Traitement de l'agent: {agent_name} ---")
-                rapports_par_agent[agent_name] = {}
-
-                # Lire le contenu du fichier pour les agents suivants
-                with open(agent_path, 'r', encoding='utf-8') as f:
-                    agent_code = f.read()
-
-                # Étape 2: Évaluateur
-                self.logger.info(f"  -> Étape 2: Évaluation de l'utilité")
-                eval_result = await self._run_sub_task("evaluateur", "evaluate_utility", {"code": agent_code, "file_path": agent_path})
-                file_report = {"agent_name": agent_name, "evaluation": eval_result.to_dict()}
-                if not eval_result.success:
-                    self.logger.warning(f"  -> Évaluation échouée, passage au fichier suivant: {eval_result.error}", exc_info=True)
-                    processed_files_reports.append(file_report)
-                    continue
-
-                # Étape 3: Adaptateur
-                self.logger.info(f"  -> Étape 3: Adaptation du code")
-                adapt_result = await self._run_sub_task("adaptateur", "adapt_code", {"code": agent_code, "file_path": agent_path})
-                file_report["sub_steps"].append({"agent": "adaptateur", "result": adapt_result.to_dict()})
-                if not adapt_result.success:
-                     self.logger.warning(f"  -> Adaptation échouée, passage au fichier suivant: {adapt_result.error}", exc_info=True)
-                     processed_files_reports.append(file_report)
-                     continue
-                adapted_code = adapt_result.data["adapted_code"]
-
-                # Étape 4: Testeur
-                self.logger.info(f"  -> Étape 4: Test dynamique")
-                test_result = await self._run_sub_task("testeur", "test_code", {"code": adapted_code, "file_path": agent_path})
-                file_report["sub_steps"].append({"agent": "testeur", "result": test_result.to_dict()})
-                if not test_result.success:
-                    self.logger.warning(f"  -> Tests échoués, passage au fichier suivant: {test_result.error}", exc_info=True)
-                    processed_files_reports.append(file_report)
-                    continue
-
-                # Étape 5: Documenteur / Peer Reviewer
-                self.logger.info(f"  -> Étape 5: Documentation et Peer Review")
-                doc_result = await self._run_sub_task("documenteur", "document_code", {"code": adapted_code, "file_path": agent_path})
-                file_report["sub_steps"].append({"agent": "documenteur", "result": doc_result.to_dict()})
-                if not doc_result.success:
-                     self.logger.warning(f"  -> Documentation échouée, passage au fichier suivant: {doc_result.error}", exc_info=True)
-                     processed_files_reports.append(file_report)
-                     continue
-                final_code = doc_result.data["documented_code"]
-
-                # Étape 6: Validateur Final
-                self.logger.info(f"  -> Étape 6: Validation finale")
-                validate_result = await self._run_sub_task("validateur", "validate_code", {"code": final_code, "file_path": agent_path})
-                file_report["sub_steps"].append({"agent": "validateur", "result": validate_result.to_dict()})
-                
-                if validate_result.success:
-                    self.logger.info(f"  -> Validation réussie pour {agent_path}. Sauvegarde...")
-
-                processed_files_reports.append(file_report)
-
-            rapport_final["resultats_par_agent"] = rapports_par_agent
-            rapport_final["statut_mission"] = "SUCCÈS"
-        except Exception as e:
-            rapport_final["statut_mission"] = "ÉCHEC"
-            rapport_final["erreur"] = str(e)
-            self.logger.error(f"❌ Erreur workflow: {e}", exc_info=True)
-        finally:
-            end_time = time.time()
-            rapport_final["duree_totale_sec"] = round(end_time - start_time, 2)
-            self.logger.info(f"🏁 Fin du workflow en {rapport_final['duree_totale_sec']:.2f}s. Statut: {rapport_final['statut_mission']}")
+        agents_a_traiter = mission_config.get("target_files", [])
         
-        return rapport_final
-    
-    async def _instancier_agent(self, nom_agent: str) -> Optional[Any]:
-        module_path = f"agent_factory_implementation.agents.{nom_agent}"
-        try:
-            agent_module = importlib.import_module(module_path)
+        self.mission_context = {
+            "mission_id": mission_id,
+            "statut_mission": "EN_COURS",
+            "resultats_par_agent": []
+        }
+        
+        for agent_path_str in agents_a_traiter:
+            agent_path = Path(agent_path_str)
+            agent_name = agent_path.name
+            self.logger.info(f"--- 🔁 DÉBUT DU TRAITEMENT ITÉRATIF POUR: {agent_name} ---")
             
-            # On force l'utilisation de la factory pour plus de prévisibilité
-            factory_name = f"create_{nom_agent}"
-            
-            if hasattr(agent_module, factory_name):
-                factory_func = getattr(agent_module, factory_name)
-                # On passe les arguments nécessaires à l'agent
-                instance = factory_func(
-                    source_path=str(self.target_path),
-                    # Ajoutez d'autres arguments si nécessaire pour les autres agents
-                )
-                self.logger.info(f"✅ Agent '{nom_agent}' instancié via factory.")
-                return instance
+            try:
+                original_code = agent_path.read_text(encoding='utf-8')
+                file_report = await self._run_remediation_cycle(agent_path_str, original_code)
+            except Exception as e:
+                self.logger.error(f"Erreur critique lors du traitement de {agent_name}: {e}")
+                file_report = {"agent_name": agent_name, "status": "CRITICAL_FAILURE", "last_error": str(e)}
+
+            self.mission_context["resultats_par_agent"].append(file_report)
+            self.logger.info(f"--- ☑️ FIN DU TRAITEMENT POUR: {agent_name} ---")
+
+        self.mission_context["duree_totale_sec"] = time.time() - start_time
+        self.mission_context["statut_mission"] = "SUCCÈS - Terminée"
+        
+        await self._generer_et_sauvegarder_rapports(mission_id)
+        
+        return self.mission_context
+
+    async def _run_remediation_cycle(self, agent_path_str: str, original_code: str) -> Dict:
+        agent_name = Path(agent_path_str).name
+        file_report = {
+            "agent_name": agent_name,
+            "status": "PENDING",
+            "original_code": original_code,
+            "final_code": original_code,
+            "repair_history": [],
+            "initial_evaluation": {},
+            "performance_analysis": {}
+        }
+
+        # 1. Évaluation initiale - CORRECTION: on passe file_path
+        eval_result = await self._run_sub_task("evaluateur", "evaluate_code", {"file_path": agent_path_str})
+        
+        if eval_result and eval_result.success:
+            file_report["initial_evaluation"] = eval_result.data
+            if eval_result.data.get("is_useful"):
+                self.logger.info(f"  ✅ Évaluation initiale réussie pour {agent_name}. Aucune réparation nécessaire.")
+                file_report["status"] = "NO_REPAIR_NEEDED"
             else:
-                self.logger.error(f"❌ Factory '{factory_name}' non trouvée dans le module {nom_agent}.")
-                return None
+                self.logger.warning(f"  -> Code jugé inutile (score: {eval_result.data.get('score')}). Lancement du cycle de réparation.")
+        else:
+            error_msg = eval_result.error if eval_result else "Réponse invalide de l'évaluateur"
+            self.logger.error(f"L'évaluateur a échoué pour {agent_name}: {error_msg}. Démarrage du cycle de réparation par précaution.")
+            file_report["initial_evaluation"] = {"error": f"Évaluation initiale échouée: {error_msg}"}
 
-        except Exception as e:
-            self.logger.error(f"❌ Erreur d'instanciation de '{nom_agent}': {e}", exc_info=True)
-            return None
+        # 2. Boucle de réparation (si nécessaire)
+        if file_report["status"] != "NO_REPAIR_NEEDED":
+            await self._perform_repair_loop(agent_path_str, file_report)
 
-    async def _run_sub_task(self, agent_name: str, task_type: str, params: dict) -> Result:
-        """Factorise l'appel à un agent de l'équipe."""
-        agent = self.equipe_agents.get(agent_name)
-        if not agent:
-            return Result(success=False, error=f"Agent '{agent_name}' non trouvé dans l'équipe.")
+        # 3. Analyse de performance finale
+        perf_result = await self._run_sub_task("analyseur_performance", "analyze_performance", {"code": file_report["final_code"]})
+        if perf_result and perf_result.success:
+            file_report["performance_analysis"] = perf_result.data
+        else:
+            file_report["performance_analysis"] = {"error": "Analyse de performance échouée."}
+
+        return file_report
+
+    async def _perform_repair_loop(self, agent_path_str: str, file_report: Dict):
+        MAX_REPAIR_ATTEMPTS = 5
+        current_code = file_report["original_code"]
+        # On prend l'erreur la plus précise possible
+        last_error = file_report["initial_evaluation"].get("reason") or file_report["initial_evaluation"].get("error", "Évaluation initiale négative.")
+
+        for attempt in range(MAX_REPAIR_ATTEMPTS):
+            # ADAPTATION
+            adapt_result = await self._run_sub_task("adaptateur", "adapt_code", {"code": current_code, "feedback": last_error})
+            if not (adapt_result and adapt_result.success and adapt_result.data.get("adapted_code")):
+                file_report["status"] = "REPAIR_FAILED"
+                file_report["last_error"] = "L'adaptateur n'a pas pu modifier le code."
+                break
+            
+            current_code = adapt_result.data["adapted_code"]
+            
+            # TEST
+            test_result = await self._run_sub_task("testeur", "test_agent_code", {"code_content": current_code})
+            
+            file_report["repair_history"].append({
+                "iteration": attempt + 1,
+                "error_detected": last_error,
+                "adaptation_attempted": adapt_result.data.get("adaptations", ["Adaptation inconnue."]),
+                "test_result": "Succès" if test_result.success else f"Échec: {test_result.error}"
+            })
+            
+            if test_result.success:
+                self.logger.info(f"  ✅ Réparation réussie pour {Path(agent_path_str).name} à la tentative {attempt + 1}.")
+                file_report["status"] = "REPAIRED"
+                file_report["final_code"] = current_code
+                return
+
+            last_error = test_result.error
+
+        if file_report["status"] != "REPAIRED":
+            file_report["status"] = "REPAIR_FAILED"
+            file_report["last_error"] = last_error
+            file_report["final_code"] = current_code
+
+    async def _generer_et_sauvegarder_rapports(self, mission_id):
+        self.logger.info("Génération du rapport de mission par l'agent Documenteur...")
+        doc_result = await self._run_sub_task("documenteur", "generate_mission_report", {"report_data": self.mission_context})
         
-        task = Task(type=task_type, params=params)
+        report_dir = self.workspace_path / "reports"
+        report_dir.mkdir(exist_ok=True, parents=True)
+
+        # Sauvegarde du JSON brut
+        json_report_path = report_dir / f"rapport_mission_{mission_id}.json"
+        with open(json_report_path, "w", encoding="utf-8") as f:
+            json.dump(self.mission_context, f, indent=2)
+        self.logger.info(f"Rapport JSON détaillé sauvegardé : {json_report_path}")
+
+        # Sauvegarde du rapport Markdown
+        if doc_result and doc_result.success:
+            md_content = doc_result.data.get("md_content")
+            md_report_path = report_dir / f"rapport_mission_{mission_id}.md"
+            with open(md_report_path, "w", encoding="utf-8") as f:
+                f.write(md_content)
+            self.logger.info(f"Rapport Markdown sauvegardé : {md_report_path}")
+        else:
+            self.logger.error("L'agent Documenteur a échoué à générer le rapport Markdown.")
+
+    async def _recruter_equipe(self):
+        self.logger.info("Recrutement de l'équipe de maintenance...")
+        roles = ["evaluateur", "adaptateur", "testeur", "documenteur", "analyseur_performance"]
+        for role in roles:
+            agent = await self.factory.create_agent(role, startup=True)
+            self.equipe_agents[role] = agent
+
+    async def _run_sub_task(self, agent_role: str, task_type: str, params: dict) -> Optional[Result]:
+        agent = self.equipe_agents.get(agent_role)
+        if not agent:
+            self.logger.error(f"Tentative d'appel à un agent non recruté : {agent_role}")
+            return Result(success=False, error=f"Agent '{agent_role}' non disponible.")
+        
+        task = Task(id=f"task_{agent_role}_{uuid.uuid4().hex[:4]}", type=task_type, params=params)
         return await agent.execute_task(task)
 
 def create_agent_MAINTENANCE_00_chef_equipe_coordinateur(**kwargs) -> ChefEquipeCoordinateurEnterprise:
     return ChefEquipeCoordinateurEnterprise(**kwargs)
-
-# Point d'entrée direct
-async def main():
-    """Point d'entrée principal Agent 0 Chef d'Équipe"""
-    print("🎖️ AGENT 0 - CHEF D'ÉQUIPE COORDINATEUR")
-    print("=" * 50)
-    
-    # Configuration par défaut
-    target_path = "../agent_factory_implementation/agents"
-    workspace_path = "."
-    
-    # Arguments en ligne de commande
-    if len(sys.argv) > 1:
-        if sys.argv[1] in ["--help", "-h"]:
-            print("""
-Usage: python agent_0_chef_equipe_coordinateur.py [TARGET_PATH] [WORKSPACE_PATH]
-
-Arguments:
-  TARGET_PATH     Chemin vers le répertoire des agents à analyser
-  WORKSPACE_PATH  Chemin vers l'espace de travail
-  
-Exemples:
-  python agent_0_chef_equipe_coordinateur.py
-  python agent_0_chef_equipe_coordinateur.py ../agents
-  python agent_0_chef_equipe_coordinateur.py ../agents ./workspace
-""")
-            return
-        
-        target_path = sys.argv[1]
-        if len(sys.argv) > 2:
-            workspace_path = sys.argv[2]
-    
-    try:
-        # Création et exécution
-        chef_equipe = create_agent_MAINTENANCE_00_chef_equipe_coordinateur(target_path, workspace_path)
-        await chef_equipe.startup()
-        
-        # Health check
-        health = await chef_equipe.health_check()
-        print(f"🏥 Statut: {health['status']}")
-        
-        # Lancement workflow maintenance complète
-        print("\n🚀 Lancement workflow maintenance complète...")
-        resultats = await chef_equipe.workflow_maintenance_complete()
-        
-        # Affichage résultats
-        print("\n📊 RÉSULTATS FINAUX:")
-        print(f"Status: {resultats['status']}")
-        if resultats['status'] == 'complete':
-            consolides = resultats.get('resultats_consolides', {})
-            print(f"Agents analysés: {consolides.get('agents_analyses', 0)}")
-            print(f"Agents valides: {consolides.get('agents_valides', 0)}")
-            print(f"Score final: {consolides.get('score_final', 0)}/100")
-            print(f"Durée: {resultats.get('duree_totale_sec', 0):.1f}s")
-        
-        await chef_equipe.shutdown()
-        print("✅ Chef d'équipe terminé avec succès")
-        
-    except Exception as e:
-        print(f"❌ Erreur: {e}")
-        return 1
-    
-    return 0
-
-if __name__ == "__main__":
-    result = asyncio.run(main())
-    sys.exit(result) 

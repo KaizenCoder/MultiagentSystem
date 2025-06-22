@@ -31,14 +31,15 @@ PATTERN_FACTORY_AVAILABLE = True
 
 class AgentMAINTENANCE01AnalyseurStructure(Agent):
     """
-    Agent chargé d'analyser la structure des fichiers d'un répertoire donné.
+    Agent spécialisé dans l'analyse de la structure des fichiers de code.
     """
-    def __init__(self, agent_id="agent_MAINTENANCE_01_analyseur_structure", version="1.0", description="Analyse la structure des fichiers d'un répertoire.", status="enabled", **kwargs):
-        super().__init__(agent_id, version, description, "analyser", status, **kwargs)
+    def __init__(self, **kwargs):
+        """Initialisation standardisée."""
+        super().__init__(**kwargs)
+        self.logger.info(f"Analyseur de structure ({self.agent_id}) initialisé.")
 
     async def startup(self):
-        """Initialise l'agent et ses dépendances."""
-        await super().startup()
+        """Démarrage de l'agent."""
         self.log("Analyseur de structure prêt.")
 
     async def execute_task(self, task: Task) -> Result:
@@ -112,16 +113,15 @@ class AgentMAINTENANCE01AnalyseurStructure(Agent):
 
         return analysis_report
 
-    async def get_capabilities(self):
-        return Result(success=True, data={"capabilities": "Analyse de structure de fichiers Python."})
+    def get_capabilities(self) -> List[str]:
+        return ["analyse_structure"]
 
-    async def health_check(self):
-        return Result(success=True, data={"status": "healthy"})
+    async def health_check(self) -> Dict[str, Any]:
+        return {"status": "healthy"}
 
     async def shutdown(self):
         self.log("Analyseur de structure éteint.")
-        await super().shutdown()
-        return Result(success=True)
+        
 
     async def run_analysis(self, directory: str) -> Result:
         """Méthode de compatibilité pour l'ancien appel du coordinateur."""

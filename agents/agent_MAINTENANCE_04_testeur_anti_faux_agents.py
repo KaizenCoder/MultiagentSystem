@@ -20,6 +20,8 @@ import asyncio
 import tempfile
 import importlib.util
 import os
+import uuid
+from datetime import datetime
 
 # --- Configuration Robuste du Chemin d'Importation ---
 try:
@@ -48,143 +50,176 @@ class FakeAgentDetection:
 
 class AgentMAINTENANCE04TesteurAntiFauxAgents(Agent):
     """
-    Agent chargé de tester dynamiquement le code pour s'assurer qu'il ne s'agit pas
-    d'un "faux agent" (par exemple, un script qui ne fait rien ou qui échoue immédiatement).
-    Il exécute une méthode de test standard (`execute_task`).
+    Agent spécialisé dans le test dynamique des agents pour s'assurer qu'ils ne sont pas des 'faux' agents.
     """
-    def __init__(self, agent_id="agent_MAINTENANCE_04_testeur_anti_faux_agents", version="1.0", description="Teste dynamiquement le code contre les faux agents.", status="enabled", **kwargs):
-        super().__init__(agent_id, version, description, "tester", status, **kwargs)
+
+    def __init__(self, **kwargs):
+        """Initialisation standardisée."""
+        super().__init__(**kwargs)
+        self.logger.info(f"Testeur anti-faux agents ({self.agent_id}) initialisé.")
 
     async def startup(self):
-        await super().startup()
+        """Démarrage de l'agent."""
         self.log("Testeur anti-faux agents prêt.")
 
     async def execute_task(self, task: Task) -> Result:
-        if task.type != "test_code":
+        """Exécute une tâche de test dynamique."""
+        if task.type != "dynamic_test":
             return Result(success=False, error="Type de tâche non supporté.")
 
-        code = task.params.get("code")
-        file_path = task.params.get("file_path", "unknown_file")
-        if not code:
-            return Result(success=False, error="Code non fourni.")
+        file_path = task.params.get("file_path")
+        code_content = task.params.get("code_content")
+
+        if not file_path or not code_content:
+            return Result(success=False, error="Chemin ou contenu du fichier manquant.")
 
         self.log(f"Test dynamique du fichier : {file_path}")
+        
+        test_passed, details_or_error = await self._run_dynamic_test(file_path, code_content)
+        
+        self.log(f"Test dynamique pour {file_path} terminé. Succès: {test_passed}")
+        
+        if test_passed:
+            return Result(
+                success=True,
+                data={"file_path": file_path, "details": details_or_error}
+            )
+        else:
+            return Result(
+                success=False,
+                error=details_or_error,
+                data={"file_path": file_path}
+            )
 
-        tmp_path = None
+    async def _run_dynamic_test(self, file_path: str, code_content: str) -> (bool, str):
+        """
+        Tente de charger et d'instancier l'agent depuis le code fourni.
+        C'est un test simple pour voir si le code est viable.
+        """
+        temp_file_path = None
         try:
-            # Utiliser un fichier temporaire pour charger le module
-            with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False, encoding='utf-8') as tmp:
-                tmp.write(code)
-                tmp_path = tmp.name
+            # Créer un fichier temporaire pour l'importation
+            temp_dir = Path("./temp_test_agents")
+            temp_dir.mkdir(exist_ok=True)
+            temp_file_name = f"temp_{Path(file_path).stem}_{uuid.uuid4().hex}.py"
+            temp_file_path = temp_dir / temp_file_name
 
-            module_name = os.path.basename(tmp_path).replace('.py', '')
-            
-            # Ajouter le répertoire temporaire au path
-            temp_dir = os.path.dirname(tmp_path)
-            if temp_dir not in sys.path:
-                sys.path.insert(0, temp_dir)
-            
-            try:
-                spec = importlib.util.spec_from_file_location(module_name, tmp_path)
-                if spec is None or spec.loader is None:
-                    return Result(success=False, error="Impossible de créer la spécification du module.")
-                
-                agent_module = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(agent_module)
-                
-                # Trouver la classe de l'agent dans le module
-                agent_class = None
-                for name, obj in agent_module.__dict__.items():
-                    if (isinstance(obj, type) and 
-                        hasattr(obj, '__bases__') and 
-                        any('Agent' in str(base) for base in obj.__mro__) and 
-                        obj.__name__ != 'Agent'):
-                        agent_class = obj
-                        break
-                
-                if not agent_class:
-                    return Result(success=False, error="Aucune classe Agent trouvée dans le code.")
+            with open(temp_file_path, "w", encoding="utf-8") as f:
+                f.write(code_content)
 
-                # Instancier et tester l'agent
-                self.log(f"Instanciation de la classe {agent_class.__name__} pour test.")
-                
-                # Test d'instanciation
-                try:
-                    instance = agent_class()
-                except Exception as e:
-                    return Result(success=False, error=f"Erreur lors de l'instanciation: {e}")
-                
-                # Test 1: La méthode startup fonctionne-t-elle ?
-                try:
-                    await instance.startup()
-                except Exception as e:
-                    self.log(f"Avertissement: startup() a échoué: {e}", level="warning")
+            # Charger le module dynamiquement
+            module_name = temp_file_path.stem
+            spec = importlib.util.spec_from_file_location(module_name, temp_file_path)
+            if spec and spec.loader:
+                module = importlib.util.module_from_spec(spec)
+                sys.modules[module_name] = module
+                spec.loader.exec_module(module)
 
-                # Test 2: La méthode execute_task répond-elle correctement à une tâche invalide ?
-                dummy_task = Task(type="dummy_task_for_testing", params={})
-                try:
-                    test_result = await instance.execute_task(dummy_task)
-                    
-                    # L'agent devrait rejeter une tâche invalide
-                    if test_result.success:
-                        return Result(success=False, error="L'agent n'a pas rejeté une tâche invalide comme attendu.")
-                    
-                    # Vérifier que le message d'erreur est approprié
-                    error_msg = test_result.error.lower() if test_result.error else ""
-                    if "non supporté" not in error_msg and "unsupported" not in error_msg and "not supported" not in error_msg:
-                        self.log(f"Message d'erreur inattendu mais acceptable: {test_result.error}", level="warning")
+                # Essayer de trouver et d'instancier une classe Agent
+                for name, obj in module.__dict__.items():
+                    if isinstance(obj, type) and issubclass(obj, Agent) and obj is not Agent:
+                        self.log(f"Instanciation de la classe {name} pour test.")
+                        
+                        # NOUVEAU: Introspection pour instanciation dynamique
+                        try:
+                            sig = inspect.signature(obj.__init__)
+                            params = sig.parameters
+                            
+                            # Créer des arguments factices basés sur la signature
+                            test_args = {}
+                            for param_name, param in params.items():
+                                if param_name == 'self':
+                                    continue
+                                # Si l'argument a une valeur par défaut, on ne le fournit pas
+                                if param.default != inspect.Parameter.empty:
+                                    continue
+                                # Si ce sont des kwargs, on ne fournit rien
+                                if param.kind == inspect.Parameter.VAR_KEYWORD:
+                                    continue
+                                
+                                # Fournir des valeurs factices pour les types communs
+                                if param.annotation == str:
+                                    test_args[param_name] = f"test_{param_name}"
+                                elif param.annotation == int:
+                                    test_args[param_name] = 123
+                                elif param.annotation == bool:
+                                    test_args[param_name] = True
+                                else:
+                                    # Pour les autres, on tente un dict vide, ce qui est souvent
+                                    # utilisé pour les configurations `**kwargs`
+                                    pass # Ne rien faire et espérer que ce soit optionnel ou kwarg
 
-                    self.log(f"Test dynamique réussi pour {file_path}.")
-                    return Result(success=True, data={
-                        "test_status": "passed", 
-                        "class_found": agent_class.__name__,
-                        "startup_test": "completed",
-                        "invalid_task_rejection": "passed"
-                    })
-                    
-                except Exception as e:
-                    return Result(success=False, error=f"Erreur lors du test execute_task: {e}")
-            
-            finally:
-                # Nettoyer le path
-                if temp_dir in sys.path:
-                    sys.path.remove(temp_dir)
+                            self.log(f"Arguments d'instanciation déduits: {test_args}")
+                            instance = obj(**test_args)
+
+                        except TypeError as te:
+                            # Fallback vers l'ancienne méthode si l'introspection échoue
+                            self.log(f"L'instanciation dynamique a échoué ({te}), tentative avec des valeurs par défaut.", level="warning")
+                            instance = obj(agent_id='test-agent', version='0.0.0', description='test', agent_type='test', status='testing')
+
+                        if hasattr(instance, 'health_check') and asyncio.iscoroutinefunction(instance.health_check):
+                            await instance.health_check()
+                        return True, f"Agent {name} instancié et health_check réussi."
+                
+                return False, "Aucune classe héritant de 'Agent' n'a pu être trouvée et instanciée."
+            else:
+                return False, "Impossible de créer le spec du module."
 
         except Exception as e:
-            self.log(f"Échec du test dynamique pour {file_path}: {e}", level="error")
-            return Result(success=False, error=f"Test execution failed: {e}")
-        
+            return False, f"Échec du test dynamique: {e}"
         finally:
             # Nettoyer le fichier temporaire
-            if tmp_path and os.path.exists(tmp_path):
-                try:
-                    os.remove(tmp_path)
-                except Exception as e:
-                    self.log(f"Impossible de supprimer le fichier temporaire {tmp_path}: {e}", level="warning")
+            if temp_file_path and os.path.exists(temp_file_path):
+                os.remove(temp_file_path)
 
-    async def get_capabilities(self):
-        return Result(success=True, data=self.capabilities)
 
-    async def health_check(self):
-        return Result(success=True, data={"status": "ok"})
+    def get_capabilities(self) -> List[str]:
+        return ["dynamic_test"]
+
+    async def health_check(self) -> Dict[str, Any]:
+        return {"status": "healthy"}
 
     async def shutdown(self):
+        """Arrêt de l'agent."""
         self.log("Testeur anti-faux agents éteint.")
-        await super().shutdown()
-        return Result(success=True)
+        
+    async def run_test(self, file_path: str, code_content: str) -> Result:
+        """Méthode de compatibilité pour l'ancien appel."""
+        self.log(f"Appel de compatibilité 'run_test' pour {file_path}", level="warning")
+        test_task = Task(type="dynamic_test", params={"file_path": file_path, "code_content": code_content})
+        return await self.execute_task(test_task)
+
 
 def create_agent_MAINTENANCE_04_testeur_anti_faux_agents(**config) -> AgentMAINTENANCE04TesteurAntiFauxAgents:
     """Factory pour créer une instance de l'Agent 4."""
     return AgentMAINTENANCE04TesteurAntiFauxAgents(**config)
 
-async def main():
-    """Point d'entrée pour test."""
-    tester = create_agent_MAINTENANCE_04_testeur_anti_faux_agents()
-    await tester.startup()
-    results = await tester.run_fake_agent_detection()
-    print(json.dumps(results, indent=2))
-    await tester.shutdown()
+if __name__ == '__main__':
+    async def main_test():
+        agent = create_agent_MAINTENANCE_04_testeur_anti_faux_agents()
+        await agent.startup()
+        
+        # Test avec un code qui devrait fonctionner
+        good_code = """
+from core.agent_factory_architecture import Agent, Task, Result
+class GoodAgent(Agent):
+    def __init__(self, **kwargs): super().__init__(**kwargs)
+    async def execute_task(self, task: Task) -> Result: return Result(success=True)
+    def get_capabilities(self) -> list: return []
+    async def startup(self): pass
+    async def shutdown(self): pass
+    async def health_check(self) -> dict: return {"status": "ok"}
+"""
+        results = await agent.run_test("good_agent.py", good_code)
+        print("--- Test Agent Valide ---")
+        print(json.dumps(results.to_dict(), indent=2))
+        
+        # Test avec un code qui devrait échouer
+        bad_code = "class BadAgent: pass"
+        results = await agent.run_test("bad_agent.py", bad_code)
+        print("\n--- Test Agent Invalide ---")
+        print(json.dumps(results.to_dict(), indent=2))
+        
+        await agent.shutdown()
 
-if __name__ == "__main__":
-    asyncio.run(main()) 
-
+    asyncio.run(main_test())

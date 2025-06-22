@@ -1,22 +1,21 @@
 #!/usr/bin/env python3
 """
-Agent Six - Validateur Final NextGeneration
-Validation finale et certification des transformations de l'équipe de maintenance
+AGENT 6 - VALIDATEUR FINAL (Pattern Factory)
 """
 
 import asyncio
 import json
 import logging
-from pathlib import Path
-from datetime import datetime
-from typing import Dict, List, Any
-import ast
-import uuid
 import sys
-import re
+import time
+import uuid
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+import os
+import ast
 import subprocess
 import tempfile
-import os
 
 # --- Configuration Robuste du Chemin d'Importation ---
 try:
@@ -27,7 +26,6 @@ except (IndexError, NameError):
     if '.' not in sys.path:
         sys.path.insert(0, '.')
 
-# Imports Pattern Factory NextGeneration
 from core import logging_manager
 from core.agent_factory_architecture import Agent, Task, Result
 
@@ -36,8 +34,10 @@ class AgentMAINTENANCE06ValidateurFinal(Agent):
     Agent chargé de la validation finale du code.
     Il effectue une vérification de syntaxe finale avec le compilateur Python.
     """
-    def __init__(self, agent_id="agent_MAINTENANCE_06_validateur_final", version="1.0", description="Valide le code final.", status="enabled", **kwargs):
-        super().__init__(agent_id, version, description, "validator", status, **kwargs)
+    def __init__(self, **kwargs):
+        """Initialisation robuste et compatible avec le coordinateur."""
+        super().__init__(**kwargs)
+        self.logger.info(f"Validateur Final ({self.agent_id}) initialisé.")
 
     async def startup(self):
         await super().startup()
@@ -178,35 +178,54 @@ class AgentMAINTENANCE06ValidateurFinal(Agent):
         
         return validation
 
-    async def get_capabilities(self):
-        return Result(success=True, data=self.capabilities)
+    def get_capabilities(self) -> List[str]:
+        return ["final_validation"]
 
-    async def health_check(self):
-        return Result(success=True, data={"status": "ok"})
+    async def health_check(self) -> Dict[str, Any]:
+        return {"status": "healthy"}
 
     async def shutdown(self):
-        self.log("Validateur Final éteint.", level="info")
-        await super().shutdown()
-        return Result(success=True)
+        """Arrêt de l'agent."""
+        self.log("Validateur Final éteint.")
+
+    async def run_validation(self, file_path: str, code_content: str) -> Result:
+        """Méthode de compatibilité pour l'ancien appel."""
+        self.log(f"Appel de compatibilité 'run_validation' pour {file_path}", level="warning")
+        validation_task = Task(type="final_validation", params={"file_path": file_path, "code_content": code_content})
+        return await self.execute_task(validation_task)
+
 
 def create_agent_MAINTENANCE_06_validateur_final(**config) -> AgentMAINTENANCE06ValidateurFinal:
     """Factory pour créer une instance de l'Agent 6."""
     return AgentMAINTENANCE06ValidateurFinal(**config)
 
-async def main():
-    """Test de l'agent si exécuté directement."""
-    print("🏆 Agent 06 Validateur Final - Test")
-    
-    validator = create_agent_MAINTENANCE_06_validateur_final()
-    await validator.startup()
-    
-    health = await validator.health_check()
-    print(f"Health check : {health}")
-    
-    results = await validator.valider_mission()
-    print("Résultats de la validation:", json.dumps(results, indent=2, default=str))
+if __name__ == '__main__':
+    async def main_test():
+        agent = create_agent_MAINTENANCE_06_validateur_final(agent_id='test-validator', version='1.0', description='test', agent_type='validator', status='testing')
+        await agent.startup()
+        
+        valid_code = '''
+from core.agent_factory_architecture import Agent, Task, Result
+import asyncio
 
-    await validator.shutdown()
+class MyAgent(Agent):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+    async def execute_task(self, task: Task) -> Result: return Result(success=True)
+    def get_capabilities(self) -> list: return []
+    async def startup(self): pass
+    async def shutdown(self): pass
+    async def health_check(self) -> dict: return {"status": "ok"}
+'''
+        results = await agent.run_validation("valid_agent.py", valid_code)
+        print("--- Validation Agent Valide ---")
+        print(json.dumps(results.to_dict(), indent=2))
 
-if __name__ == "__main__":
-    asyncio.run(main())
+        invalid_code = "def my_func(): pass"
+        results = await agent.run_validation("invalid_agent.py", invalid_code)
+        print("\n--- Validation Agent Invalide ---")
+        print(json.dumps(results.to_dict(), indent=2))
+        
+        await agent.shutdown()
+
+    asyncio.run(main_test())
