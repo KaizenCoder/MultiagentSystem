@@ -28,7 +28,7 @@ except ImportError as e:
 
 # --- Imports des Agents de Maintenance ---
 try:
-    from agent_factory_implementation.agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur as create_chef_equipe
+    from agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur as create_chef_equipe
 except ImportError as e:
     print(f"Erreur d'importation de l'agent: {e}")
     sys.exit(1)
@@ -87,6 +87,7 @@ if __name__ == "__main__":
         asyncio.run(lancer_mission_analyse_agents_racine())
     except Exception as e:
         print(f"Une erreur inattendue est survenue: {e}") 
+
 
 
 

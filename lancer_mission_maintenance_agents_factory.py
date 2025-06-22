@@ -15,7 +15,7 @@ try:
 
     from core import logging_manager
     print("✅ logging_manager depuis 'core' à la racine importé avec succès.")
-    from agent_factory_implementation.core.agent_factory_architecture import Task, Result
+    from core.agent_factory_architecture import Task, Result
 
 except ImportError as e:
     print(f"❌ Erreur critique d'importation: {e}")
@@ -26,7 +26,7 @@ except ImportError as e:
 
 # --- Imports des Agents de Maintenance ---
 try:
-    from agent_factory_implementation.agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_MAINTENANCE_00_chef_equipe_coordinateur as create_chef_equipe
+    from agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_MAINTENANCE_00_chef_equipe_coordinateur as create_chef_equipe
     print("✅ Import de l'agent chef d'équipe réussi.")
 except ImportError as e:
     print(f"❌ Erreur d'importation de l'agent chef d'équipe: {e}")
@@ -179,3 +179,4 @@ def main():
 
 if __name__ == "__main__":
     main() 
+

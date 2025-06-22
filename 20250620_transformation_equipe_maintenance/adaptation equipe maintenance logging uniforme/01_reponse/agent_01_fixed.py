@@ -1,6 +1,6 @@
 import os
 import ast
-from agent_factory_implementation.core.agent_factory_architecture import Agent, Task, Result
+from core.agent_factory_architecture import Agent, Task, Result
 
 class AgentMAINTENANCE01AnalyseurStructure(Agent):
     """

@@ -37,7 +37,7 @@ import os
 # Import Pattern Factory (OBLIGATOIRE selon guide)
 sys.path.insert(0, str(Path(__file__).parent))
 try:
-    from agent_factory_implementation.core.agent_factory_architecture import Agent, Task, Result
+    from core.agent_factory_architecture import Agent, Task, Result
     PATTERN_FACTORY_AVAILABLE = True
 except ImportError:
     try:
@@ -316,7 +316,7 @@ class AgentTesteurAgents(Agent):
             
             # 1. Import Pattern Factory CORRECT et COMPLET
     import_patterns = [
-    "from agent_factory_implementation.core.agent_factory_architecture import Agent",
+    "from core.agent_factory_architecture import Agent",
     "from core.agent_factory_architecture import Agent",
     "sys.path.insert(0, str(Path(__file__).parent))"
     ]
@@ -1460,6 +1460,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main()) 
+
 
 
 

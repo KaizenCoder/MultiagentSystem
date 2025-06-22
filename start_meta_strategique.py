@@ -22,7 +22,7 @@ sys.path.append(str(Path(__file__).parent))
 sys.path.append(str(Path(__file__).parent / "agent_factory_implementation" / "agents"))
 
 from agent_meta_strategique import AgentMetaStrategique
-from agent_factory_implementation.agents.agent_meta_strategique_scheduler import AgentMetaStrategiqueScheduler
+from agents.agent_meta_strategique_scheduler import AgentMetaStrategiqueScheduler
 
 logger = None
 
@@ -134,6 +134,7 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
 
 
 

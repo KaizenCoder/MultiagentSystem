@@ -15,7 +15,7 @@
   - [x] `tests/advanced/load_testing_1000_users_real.py`
   - [x] `tools/documentation_generator/agent_generateur_documentation.py`
   - [x] `orchestrator/app/performance/load_balancer.py`
-  - [ ] `agent_factory_implementation/agents/agent_MAINTENANCE_00_chef_equipe_coordinateur.py`
+  - [ ] `agents/agent_MAINTENANCE_00_chef_equipe_coordinateur.py`
 
 ## Phase 2 : Refactoring des Fichiers
 
@@ -75,8 +75,11 @@
   - [x] Valider le fonctionnement (test ou exécution).
   - [x] Mettre à jour ce document.
 
-- **Fichier `agent_factory_implementation/agents/agent_MAINTENANCE_00_chef_equipe_coordinateur.py`**
-  - [ ] Remplacer les anciens imports.
+- **Fichier `agents/agent_MAINTENANCE_00_chef_equipe_coordinateur.py`**
+  - [x] Remplacer les anciens imports.
+  - [x] Adapter les appels à la nouvelle API.
+  - [x] Valider le fonctionnement (test ou exécution).
+  - [x] Mettre à jour ce document.
 
 ## Phase 2b : Migration en Masse (Terminée)
 
@@ -97,14 +100,42 @@
 
 ## 🚫 Fichiers Hors Périmètre (Ne pas modifier)
 
-- `agent_factory_implementation/agents/agent_MAINTENANCE_00_chef_equipe_coordinateur.py`
-- `agent_factory_implementation/agents/agent_MAINTENANCE_01_analyseur_structure.py`
-- `agent_factory_implementation/agents/agent_MAINTENANCE_02_evaluateur_utilite.py`
-- `agent_factory_implementation/agents/agent_MAINTENANCE_03_adaptateur_code.py`
-- `agent_factory_implementation/agents/agent_MAINTENANCE_04_testeur_anti_faux_agents.py`
-- `agent_factory_implementation/agents/agent_MAINTENANCE_05_documenteur_peer_reviewer.py`
-- `agent_factory_implementation/agents/agent_MAINTENANCE_06_validateur_final.py`
+- `agents/agent_MAINTENANCE_01_analyseur_structure.py`
+- `agents/agent_MAINTENANCE_02_evaluateur_utilite.py`
+- `agents/agent_MAINTENANCE_03_adaptateur_code.py`
+- `agents/agent_MAINTENANCE_04_testeur_anti_faux_agents.py`
+- `agents/agent_MAINTENANCE_05_documenteur_peer_reviewer.py`
+- `agents/agent_MAINTENANCE_06_validateur_final.py`
 
 ## Phase 5 : Mission Terminée
 
-- [ ] Confirmer le succès de la migration. 
+- [ ] Confirmer le succès de la migration.
+
+### Fichiers à Adapter
+
+- [x] `agents/agent_MAINTENANCE_00_chef_equipe_coordinateur.py`
+- [x] `agents/agent_MAINTENANCE_01_analyseur_structure.py`
+- [x] `agents/agent_MAINTENANCE_02_evaluateur_utilite.py`
+- [x] `agents/agent_MAINTENANCE_03_adaptateur_code.py`
+- [x] `agents/agent_MAINTENANCE_04_testeur_anti_faux_agents.py`
+- [x] `agents/agent_MAINTENANCE_05_documenteur_peer_reviewer.py`
+- [x] `agents/agent_MAINTENANCE_06_validateur_final.py`
+
+### Plan de Déploiement
+
+1.  **Backup :** Sauvegarde complète des agents.
+2.  **Adaptation :**
+    - `agents/agent_MAINTENANCE_00_chef_equipe_coordinateur.py`
+    - `agents/agent_MAINTENANCE_01_analyseur_structure.py`
+    - `agents/agent_MAINTENANCE_02_evaluateur_utilite.py`
+    - `agents/agent_MAINTENANCE_03_adaptateur_code.py`
+    - `agents/agent_MAINTENANCE_04_testeur_anti_faux_agents.py`
+    - `agents/agent_MAINTENANCE_05_documenteur_peer_reviewer.py`
+    - `agents/agent_MAINTENANCE_06_validateur_final.py`
+3.  **Tests :** Exécution de `test_all_agents.py`.
+4.  **Validation :** Vérification manuelle des logs.
+
+- **Fichier `agents/agent_MAINTENANCE_00_chef_equipe_coordinateur.py`**
+  - **Ligne 23:** `self.log_manager = LoggingManager(config_path='../../config/logging_centralized.json', agent_name=self.name)` -> `self.log_manager = LoggingManager(agent_name=self.name)`
+  - **Ligne 24:** `self.logger = self.log_manager.get_logger()`
+  - **Statut :** ✅ Appliqué 

@@ -25,7 +25,7 @@ logger = logging_manager.get_logger('custom_workflow_test', custom_config={
 
 # Import des agents
 sys.path.insert(0, str(Path(__file__).parent))
-from agent_factory_implementation.agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
+from agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
 
 async def test_workflow_complet():
     """Test du workflow complet de l'équipe de maintenance"""
@@ -225,6 +225,7 @@ if __name__ == "__main__":
         logger.info("🚀 L'équipe est prête pour toutes les missions de production!")
     else:
         logger.warning("⚠️ Workflow partiellement validé - Optimisations possibles") 
+
 
 
 

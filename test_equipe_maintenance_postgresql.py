@@ -10,15 +10,21 @@ import json
 import time
 from datetime import datetime
 from pathlib import Path
+import logging
 
+from core import logging_manager
 # Import de l'équipe de maintenance depuis le nouvel emplacement
-from agent_factory_implementation.agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
-from agent_factory_implementation.agents.agent_MAINTENANCE_01_analyseur_structure import create_agent_analyseur_structure
-from agent_factory_implementation.agents.agent_MAINTENANCE_02_evaluateur_utilite import create_agent_evaluateur_utilite
-from agent_factory_implementation.agents.agent_MAINTENANCE_03_adaptateur_code import create_agent_3_adaptateur_code
-from agent_factory_implementation.agents.agent_MAINTENANCE_04_testeur_anti_faux_agents import create_agent_testeur_anti_faux
-from agent_factory_implementation.agents.agent_MAINTENANCE_05_documenteur_peer_reviewer import create_agent_5_peer_reviewer_enrichi
-from agent_factory_implementation.agents.agent_MAINTENANCE_06_validateur_final import create_agent_6ValidateurFinal
+from core.agent_factory_architecture import Agent, Task, Result
+from agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_MAINTENANCE_00_chef_equipe_coordinateur
+from agents.agent_MAINTENANCE_01_analyseur_structure import create_agent_MAINTENANCE_01_analyseur_structure
+from agents.agent_MAINTENANCE_02_evaluateur_utilite import create_agent_MAINTENANCE_02_evaluateur_utilite
+from agents.agent_MAINTENANCE_03_adaptateur_code import create_agent_MAINTENANCE_03_adaptateur_code
+from agents.agent_MAINTENANCE_04_testeur_anti_faux_agents import create_agent_MAINTENANCE_04_testeur_anti_faux_agents
+from agents.agent_MAINTENANCE_05_documenteur_peer_reviewer import create_agent_MAINTENANCE_05_documenteur_peer_reviewer
+from agents.agent_MAINTENANCE_06_validateur_final import create_agent_MAINTENANCE_06_validateur_final
+
+# Configuration du logging
+LOG_LEVEL = logging.INFO
 
 def analyser_agents_postgresql():
     """Analyse les agents PostgreSQL vides."""
@@ -62,10 +68,20 @@ def test_chef_equipe_coordination():
     print("="*50)
     
     try:
-        chef_equipe = create_agent_0_chef_equipe_coordinateur(
-            target_path="docs/agents_postgresql_resolution",
-            workspace_path="."
-        )
+        # Création des agents de l'équipe
+        agents = {
+            "chef_equipe": create_agent_MAINTENANCE_00_chef_equipe_coordinateur(
+                logger=logging_manager.get_logger("chef_equipe"), 
+                level=LOG_LEVEL,
+                target_path="docs/agents_postgresql_resolution"
+            ),
+            "analyseur_structure": create_agent_MAINTENANCE_01_analyseur_structure(logger=logging_manager.get_logger("analyseur"), level=LOG_LEVEL),
+            "evaluateur_utilite": create_agent_MAINTENANCE_02_evaluateur_utilite(logger=logging_manager.get_logger("evaluateur"), level=LOG_LEVEL),
+            "adaptateur_code": create_agent_MAINTENANCE_03_adaptateur_code(logger=logging_manager.get_logger("adaptateur"), level=LOG_LEVEL),
+            "testeur_anti_faux": create_agent_MAINTENANCE_04_testeur_anti_faux_agents(logger=logging_manager.get_logger("testeur"), level=LOG_LEVEL),
+            "peer_reviewer": create_agent_MAINTENANCE_05_documenteur_peer_reviewer(logger=logging_manager.get_logger("reviewer"), level=LOG_LEVEL),
+            "validateur_final": create_agent_MAINTENANCE_06_validateur_final(logger=logging_manager.get_logger("validateur"), level=LOG_LEVEL)
+        }
         
         mission_postgresql = {
             "type": "mission_reparation_postgresql",
@@ -112,7 +128,7 @@ def test_analyseur_structure():
     print("="*50)
     
     try:
-        analyseur = create_agent_analyseur_structure()
+        analyseur = create_agent_MAINTENANCE_01_analyseur_structure()
         
         # Analyse de la structure PostgreSQL
         structure_analysis = {
@@ -147,7 +163,7 @@ def test_evaluateur_utilite():
     print("="*50)
     
     try:
-        evaluateur = create_agent_evaluateur_utilite()
+        evaluateur = create_agent_MAINTENANCE_02_evaluateur_utilite()
         
         # Évaluation de l'utilité de chaque agent PostgreSQL
         evaluations = {
@@ -261,6 +277,7 @@ if __name__ == "__main__":
         import traceback
         traceback.print_exc()
         sys.exit(1) 
+
 
 
 

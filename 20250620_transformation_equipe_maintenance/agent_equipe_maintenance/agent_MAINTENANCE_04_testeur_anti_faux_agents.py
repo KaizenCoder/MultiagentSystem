@@ -39,7 +39,7 @@ sys.path.insert(0, str(project_root))
 
 # Import Pattern Factory (OBLIGATOIRE selon guide)
 try:
-    from agent_factory_implementation.core.agent_factory_architecture import Agent, Task, Result
+    from core.agent_factory_architecture import Agent, Task, Result
     PATTERN_FACTORY_AVAILABLE = True
 except ImportError:
     try:
@@ -1130,7 +1130,7 @@ from core import logging_manager
         }
         
         # Détecter tentative d'import
-        if 'from agent_factory_implementation.core.agent_factory_architecture import' in source_code:
+        if 'from core.agent_factory_architecture import' in source_code:
             result["pattern_factory_available"] = True
         elif 'from core.agent_factory_architecture import' in source_code:
             result["pattern_factory_available"] = True
@@ -1443,6 +1443,7 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
 
 
 

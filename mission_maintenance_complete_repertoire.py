@@ -34,7 +34,7 @@ def main():
     try:
         # Import du chef d'équipe
         sys.path.append('20250620_transformation_equipe_maintenance')
-        from agent_factory_implementation.agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import (
+        from agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import (
             ChefEquipeCoordinateurEnterprise, create_agent_0_chef_equipe_coordinateur
         )
         
@@ -99,6 +99,7 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
 
 
 

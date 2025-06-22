@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path('.').resolve()))
 
-from agent_factory_implementation.agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
+from agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
 
 # Instructions détaillées pour le chef d'équipe
 instructions_mission = {
@@ -208,6 +208,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main()) 
+
 
 
 

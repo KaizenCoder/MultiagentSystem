@@ -71,9 +71,9 @@ L'**Équipe de Maintenance NextGeneration** est un système multi-agents autonom
 # Lancement de la maintenance complète
 python mission_maintenance_complete_repertoire.py
 ```
-- **Cible** : `C:\Dev\nextgeneration\agent_factory_implementation\agents`
-- **Objectif** : Correction automatique de tous les agents
-- **Résultats** : 419+ lignes corrigées automatiquement
+- **Périmètre** : Agents Python (`.py`)
+- **Cible** : `C:\Dev\nextgeneration\agents`
+- **Objectif** : Assurer la conformité des agents avec le `AgentFactoryPattern`.
 
 ### **🎯 Mission Spécialisée - Agents Critiques**
 ```bash
@@ -181,7 +181,7 @@ cd C:\Dev\nextgeneration
 python mission_maintenance_complete_repertoire.py
 
 # 3. Vérification des résultats
-# Voir les rapports dans agent_factory_implementation/reviews/
+# Voir les rapports dans agents/reviews/
 ```
 
 ### **🔧 Configuration Avancée**
@@ -190,7 +190,7 @@ python mission_maintenance_complete_repertoire.py
 # Paramètres de mission personnalisés
 mission_params = {
     'mission_type': 'MAINTENANCE_COMPLETE_REPERTOIRE_CORRECTIONS_FORCEES',
-    'target_path': 'C:\\Dev\\nextgeneration\\agent_factory_implementation\\agents',
+    'target_path': 'C:\\Dev\\nextgeneration\\agents',
     'corrections_automatiques': True,
     'backup_enabled': True,
     'force_corrections': True,
@@ -274,8 +274,179 @@ L'**Équipe de Maintenance NextGeneration** représente une **révolution** dans
 ### **📁 Fichiers Clés**
 - `mission_maintenance_complete_repertoire.py` - Mission principale
 - `20250620_transformation_equipe_maintenance/` - Répertoire équipe
-- `agent_factory_implementation/agents/` - Agents cibles
-- `agent_factory_implementation/reviews/` - Rapports générés
+- `agents/` - Agents cibles
+- `ARCHIVE_agent_factory_implementation/reviews/` - Rapports générés
+
+### **🎯 Commandes Utiles**
+```bash
+# Test complet de l'équipe
+python test_workflow_complet_equipe.py
+
+# Validation finale
+python validation_equipe.py
+
+# Mission de correction
+python mission_correction_agents_critiques.py
+```
+
+---
+
+**📅 Dernière mise à jour** : 21 juin 2025  
+**👨‍💻 Équipe** : NextGeneration Maintenance Team  
+**🎯 Statut** : Production Ready - 100% Opérationnel
+
+Le chef d'équipe démarre une mission en ciblant le répertoire des agents.
+
+```json
+// payload_lancement.json
+{
+  "mission_type": "maintenance_complete",
+  "target_path": "C:\\Dev\\nextgeneration\\agents",
+  "exclude_files": ["__init__.py"]
+}
+```
+
+Les rapports et les audits de qualité sont stockés dans un sous-répertoire `reviews` à la racine des agents.
+
+# Voir les rapports dans agents/reviews/
+
+### Exemple de configuration d'agent (extrait)
+```python
+# agent_MAINTENANCE_01_analyseur_structure.py
+class AnalyseurStructure(Agent):
+    def __init__(self):
+        super().__init__(
+            name="AnalyseurStructure",
+            # ...
+        )
+        self.config = {
+            'target_path': 'C:\\Dev\\nextgeneration\\agents',
+            'file_pattern': '*.py',
+            'exclude_files': ['__init__.py', 'agent_MAINTENANCE_00_chef_equipe_coordinateur.py']
+        }
+```
+
+---
+
+## **🛡️ SÉCURITÉ ET FIABILITÉ**
+
+### **🔒 Mesures de Sécurité**
+
+1. **Backups Automatiques** : Avant toute modification
+2. **Validation Syntaxe** : Après chaque correction
+3. **Fallback** : Restauration automatique en cas d'erreur
+4. **Logs Détaillés** : Traçabilité complète des opérations
+5. **Tests Anti-Faux-Agents** : Validation de l'intégrité
+
+---
+
+## **🚀 UTILISATION PRATIQUE**
+
+### **🎯 Démarrage Rapide**
+
+```bash
+# 1. Navigation vers le répertoire
+cd C:\Dev\nextgeneration
+
+# 2. Lancement mission complète
+python mission_maintenance_complete_repertoire.py
+
+# 3. Vérification des résultats
+# Voir les rapports dans agents/reviews/
+```
+
+### **🔧 Configuration Avancée**
+
+```python
+# Paramètres de mission personnalisés
+mission_params = {
+    'mission_type': 'MAINTENANCE_COMPLETE_REPERTOIRE_CORRECTIONS_FORCEES',
+    'target_path': 'C:\\Dev\\nextgeneration\\agents',
+    'corrections_automatiques': True,
+    'backup_enabled': True,
+    'force_corrections': True,
+    'mode_agressif': True
+}
+```
+
+---
+
+## **📁 STRUCTURE DES FICHIERS**
+
+### **🎯 Répertoire Principal**
+```
+20250620_transformation_equipe_maintenance/
+├── agent_equipe_maintenance/           # 🤖 Agents spécialisés
+│   ├── agent_MAINTENANCE_00_chef_equipe_coordinateur.py
+│   ├── agent_MAINTENANCE_01_analyseur_structure.py
+│   ├── agent_MAINTENANCE_02_evaluateur_utilite.py
+│   ├── agent_MAINTENANCE_03_adaptateur_code.py      # ★ STAR
+│   ├── agent_MAINTENANCE_04_testeur_anti_faux_agents.py
+│   ├── agent_MAINTENANCE_05_documenteur_peer_reviewer.py
+│   └── agent_MAINTENANCE_06_validateur_final.py
+├── reports/                            # 📊 Rapports générés
+├── logs/                              # 📝 Logs détaillés
+└── backup/                            # 💾 Sauvegardes
+```
+
+### **🚀 Scripts de Mission**
+```
+mission_maintenance_complete_repertoire.py    # Mission principale
+mission_correction_agents_critiques.py        # Mission spécialisée
+test_workflow_complet_equipe.py              # Tests complets
+validation_equipe.py                          # Validation finale
+```
+
+---
+
+## **📈 ÉVOLUTION ET AMÉLIORATIONS**
+
+### **🎯 Version 3.0 - Gestion Intelligente des Backups**
+
+**Nouveautés** :
+- ✅ **Anti-anarchie des backups** : Fini les doublons !
+- ✅ **Timestamp de session unique** : Cohérence garantie
+- ✅ **Nettoyage automatique** : Garde les 2 plus récents
+- ✅ **Réutilisation intelligente** : Évite les backups inutiles
+
+**Améliorations** :
+- ✅ **Scan complet** : Correction de toutes les lignes similaires
+- ✅ **Corrections massives** : 419+ lignes en une passe
+- ✅ **Performance** : Workflow 25 secondes pour 35 agents
+
+---
+
+## **🏆 CONCLUSION**
+
+L'**Équipe de Maintenance NextGeneration** représente une **révolution** dans la maintenance automatique de code :
+
+### **🎯 Points Forts**
+- ✅ **100% Automatique** : Aucune intervention manuelle
+- ✅ **Corrections Intelligentes** : Gestion des backups révolutionnaire
+- ✅ **Performance** : 419+ lignes corrigées en 25 secondes
+- ✅ **Fiabilité** : Validation syntaxe et fallback automatique
+- ✅ **Scalabilité** : Applicable à tout répertoire de code
+
+### **🚀 Impact**
+- **Productivité** : +300% sur la maintenance de code
+- **Qualité** : 0 erreur après corrections automatiques
+- **Sécurité** : Backups intelligents et validation complète
+- **Maintenance** : Réduction de 90% du temps manuel
+
+---
+
+## **📞 RÉFÉRENCES CROISÉES**
+
+### **🔗 Liens Internes**
+- [README Principal](./README.md) - Vue d'ensemble du projet
+- [Guide PostgreSQL UTF-8](./GUIDE_RESOLUTION_POSTGRESQL_UTF8.md) - Résolution base de données
+- [Analyse Experts TaskMaster](./ANALYSE_RETOURS_EXPERTS_TASKMASTER.md) - Retours d'experts
+
+### **📁 Fichiers Clés**
+- `mission_maintenance_complete_repertoire.py` - Mission principale
+- `20250620_transformation_equipe_maintenance/` - Répertoire équipe
+- `agents/` - Agents cibles
+- `ARCHIVE_agent_factory_implementation/reviews/` - Rapports générés
 
 ### **🎯 Commandes Utiles**
 ```bash

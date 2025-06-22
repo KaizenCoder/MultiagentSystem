@@ -86,7 +86,7 @@ async def test_agent_04_ameliore():
 
 # Import avec fallback
 try:
-    from agent_factory_implementation.core.agent_factory_architecture import Agent
+    from core.agent_factory_architecture import Agent
     PATTERN_FACTORY_AVAILABLE = True
 except ImportError:
     print("Pattern Factory non disponible")
@@ -141,6 +141,7 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
 
 
 

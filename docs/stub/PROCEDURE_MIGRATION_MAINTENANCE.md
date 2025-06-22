@@ -15,7 +15,7 @@ Ce document détaille les étapes suivies pour migrer l'équipe d'agents de main
 *   **Problème :** Après le déplacement, 27 fichiers du projet contenaient encore des importations pointant vers l'ancien emplacement des agents.
 *   **Solution :**
     1.  Création d'un script Python ad-hoc (`update_imports_maintenance.py`).
-    2.  Ce script a parcouru l'ensemble du projet pour identifier les fichiers concernés et remplacer automatiquement les anciens chemins d'importation (`from agent_equipe_maintenance...`) par les nouveaux (`from agent_factory_implementation.agents...`).
+    2.  Ce script a parcouru l'ensemble du projet pour identifier les fichiers concernés et remplacer automatiquement les anciens chemins d'importation (`from agent_equipe_maintenance...`) par les nouveaux (`from agents...`).
     3.  Le script a été exécuté avec succès, corrigeant toutes les dépendances en une seule opération.
 
 ## 3. Validation par une Mission de Développement (Agents PostgreSQL)

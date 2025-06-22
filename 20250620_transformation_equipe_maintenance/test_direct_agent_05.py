@@ -11,7 +11,7 @@ from pathlib import Path
 current_dir = Path(__file__).parent
 sys.path.insert(0, str(current_dir))
 
-from agent_factory_implementation.agents.agent_MAINTENANCE_05_peer_reviewer_enrichi import create_agent_5_peer_reviewer_enrichi
+from agents.agent_MAINTENANCE_05_peer_reviewer_enrichi import create_agent_5_peer_reviewer_enrichi
 
 async def test_correction_agent():
     """Test de correction d'un agent défaillant"""
@@ -178,6 +178,7 @@ if __name__ == "__main__":
 
 if __name__ == "__main__":
     asyncio.run(test_correction_agent()) 
+
 
 
 

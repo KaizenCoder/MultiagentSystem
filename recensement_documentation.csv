@@ -1,0 +1,7 @@
+Fichier,Type,Labels
+README.md,Générale,""
+DOCUMENTATION_INDEX.md,Générale,""
+DOCUMENTATION_EQUIPE_MAINTENANCE_NEXTGENERATION.md,Générale,""
+migration_tracking.md,Spécifique,"migration, tracking"
+migration_prompt.md,Spécifique,"migration, prompt"
+PROMPT_MIGRATION_LOGGING.md,Spécifique,"migration, prompt, logging" 

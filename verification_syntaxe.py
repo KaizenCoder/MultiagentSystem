@@ -24,7 +24,7 @@ def check_syntax(file_path):
             problems.append("Double 'async' détecté")
         
         # Vérifier les imports manquants communs
-        if 'from agent_factory_implementation.core.agent_factory_architecture import' not in content:
+        if 'from core.agent_factory_architecture import' not in content:
             if 'class Agent' not in content and 'Agent' in content:
                 problems.append("Import de Agent potentiellement manquant")
         

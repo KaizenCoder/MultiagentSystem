@@ -2,7 +2,7 @@
 """Test de validation finale simple - Équipe NextGeneration"""
 
 import asyncio
-from agent_factory_implementation.agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
+from agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
 
 async def validation_finale():
     """Test de validation finale avec toutes les corrections"""
@@ -44,7 +44,7 @@ async def validation_finale():
         
         # Test Agent 1
         try:
-            from agent_factory_implementation.agents.agent_MAINTENANCE_01_analyseur_structure import create_agent_analyseur_structure
+            from agents.agent_MAINTENANCE_01_analyseur_structure import create_agent_analyseur_structure
             agent_1 = create_agent_analyseur_structure(source_path="tools")
             
             # Vérifications
@@ -60,7 +60,7 @@ async def validation_finale():
         
         # Test Agent 2  
         try:
-            from agent_factory_implementation.agents.agent_MAINTENANCE_02_evaluateur_utilite import create_agent_evaluateur_utilite
+            from agents.agent_MAINTENANCE_02_evaluateur_utilite import create_agent_evaluateur_utilite
             agent_2 = create_agent_evaluateur_utilite()
             
             methode_ok = hasattr(agent_2, "evaluate_tools_utility")
@@ -132,6 +132,7 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
 
 
 

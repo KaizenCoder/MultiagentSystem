@@ -26,7 +26,7 @@ import sys
 # Import Pattern Factory (OBLIGATOIRE selon guide)
 sys.path.insert(0, str(Path(__file__).parent))
 try:
-    from agent_factory_implementation.core.agent_factory_architecture import Agent, Task, Result
+    from core.agent_factory_architecture import Agent, Task, Result
     PATTERN_FACTORY_AVAILABLE = True
 except ImportError:
     try:
@@ -207,6 +207,7 @@ def create_agent_AdaptateurDocumentation(**config):
 def create_agent_AdaptateurDocumentation(**config):
     """Factory function pour créer un Agent AdaptateurDocumentation conforme Pattern Factory"""
     return AgentAdaptateurDocumentation(**config)
+
 
 
 

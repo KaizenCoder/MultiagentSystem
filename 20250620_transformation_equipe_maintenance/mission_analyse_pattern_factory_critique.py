@@ -11,7 +11,7 @@ import os
 import json
 from datetime import datetime
 from pathlib import Path
-from agent_factory_implementation.agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
+from agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
 
 async def analyse_pattern_factory_critique():
     """Analyse critique de la conformité Pattern Factory des agents"""
@@ -117,7 +117,7 @@ async def analyse_pattern_factory_critique():
                 
                 # 1. Vérifier imports Pattern Factory
                 imports_pf = any(
-                    "from agent_factory_implementation.core.agent_factory_architecture import" in line or
+                    "from core.agent_factory_architecture import" in line or
                     "from core.agent_factory_architecture import" in line
                     for line in lignes
                 )
@@ -365,6 +365,8 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
+
 
 
 

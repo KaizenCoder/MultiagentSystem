@@ -495,7 +495,7 @@ class ChefEquipeMaintenanceOrchestrator(Agent):
         try:
             # Import dynamique agent docteur (coûteux en ressources)
             try:
-                from agent_factory_implementation.agents.agent_docteur_reparation import create_agent_docteur_reparation
+                from agents.agent_docteur_reparation import create_agent_docteur_reparation
                 
                 docteur = create_agent_docteur_reparation(backup_enabled=True)
                 await docteur.startup()
@@ -688,6 +688,7 @@ def create_chef_equipe_maintenance_orchestrateur(**config):
 
 if __name__ == "__main__":
     asyncio.run(main()) 
+
 
 
 

@@ -10,10 +10,10 @@ import json
 from datetime import datetime
 
 # Import de l'équipe de maintenance
-from agent_factory_implementation.agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
-from agent_factory_implementation.agents.agent_MAINTENANCE_01_analyseur_structure import create_agent_analyseur_structure
-from agent_factory_implementation.agents.agent_MAINTENANCE_02_evaluateur_utilite import create_agent_evaluateur_utilite
-from agent_factory_implementation.agents.agent_MAINTENANCE_03_adaptateur_code import create_agent_3_adaptateur_code
+from agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
+from agents.agent_MAINTENANCE_01_analyseur_structure import create_agent_analyseur_structure
+from agents.agent_MAINTENANCE_02_evaluateur_utilite import create_agent_evaluateur_utilite
+from agents.agent_MAINTENANCE_03_adaptateur_code import create_agent_3_adaptateur_code
 
 def lancer_coordination_chef_equipe():
     """Phase 1: Coordination par le chef d'équipe."""
@@ -532,6 +532,7 @@ def main():
 if __name__ == "__main__":
     success = main()
     sys.exit(0 if success else 1) 
+
 
 
 

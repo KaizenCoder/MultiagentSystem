@@ -1,4 +1,4 @@
-from agent_factory_implementation.core.agent_factory_architecture import Agent, Task, Result
+from core.agent_factory_architecture import Agent, Task, Result
 import asyncio
 import tempfile
 import importlib.util

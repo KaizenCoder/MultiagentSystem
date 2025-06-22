@@ -16,13 +16,13 @@ from datetime import datetime
 from typing import Dict, List, Any
 
 # Import des agents transformés - TOUS
-from agent_factory_implementation.agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import ChefEquipeCoordinateurEnterprise
-from agent_factory_implementation.agents.agent_MAINTENANCE_01_analyseur_structure import create_agent_analyseur_structure
-from agent_factory_implementation.agents.agent_MAINTENANCE_02_evaluateur_utilite import create_agent_evaluateur_utilite  
-from agent_factory_implementation.agents.agent_MAINTENANCE_03_adaptateur_code import create_agent_3_adaptateur_code
-from agent_factory_implementation.agents.agent_MAINTENANCE_04_testeur_anti_faux_agents import create_agent_testeur_anti_faux
-from agent_factory_implementation.agents.agent_MAINTENANCE_05_documenteur import DocumenteurEnterprise
-from agent_factory_implementation.agents.agent_MAINTENANCE_06_validateur_final import ValidateurFinalEnterprise
+from agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import ChefEquipeCoordinateurEnterprise
+from agents.agent_MAINTENANCE_01_analyseur_structure import create_agent_analyseur_structure
+from agents.agent_MAINTENANCE_02_evaluateur_utilite import create_agent_evaluateur_utilite  
+from agents.agent_MAINTENANCE_03_adaptateur_code import create_agent_3_adaptateur_code
+from agents.agent_MAINTENANCE_04_testeur_anti_faux_agents import create_agent_testeur_anti_faux
+from agents.agent_MAINTENANCE_05_documenteur import DocumenteurEnterprise
+from agents.agent_MAINTENANCE_06_validateur_final import ValidateurFinalEnterprise
 
 async def test_agent_pattern_factory_compliance(agent, agent_name: str) -> Dict[str, Any]:
     """Test de conformité Pattern Factory pour un agent"""
@@ -240,6 +240,7 @@ async def main():
 if __name__ == "__main__":
     result = asyncio.run(main())
     exit(0 if result >= 80.0 else 1) 
+
 
 
 

@@ -24,7 +24,9 @@
 
 ### 🏭 Agent Factory - NOUVEAU ⭐
 - **[Script de Lancement](./lancer_mission_maintenance_agents_factory.py)** - Point d'entrée pour la maintenance de l'équipe d'agents.
-- **[Dossier des Agents](./agent_factory_implementation/agents/)** - Contient le code source des 6 agents de maintenance et de leur coordinateur.
+- **[Dossier des Agents](./agents/)** - Contient le code source des 6 agents de maintenance et de leur coordinateur.
+- **[Rapports d'Analyse](./20250620_transformation_equipe_maintenance/reports/)** - Contient tous les rapports générés par les agents.
+- **[Journal de Maintenance](./20250620_transformation_equipe_maintenance/docs/JOURNAL_MAINTENANCE.md)** - Suivi des opérations de l'équipe de maintenance.
 - **Statut**: 100% Opérationnel.
 - **Description**: Une équipe de 6 agents spécialisés, orchestrée par un chef d'équipe, capable de s'auto-maintenir. Le workflow complet a été débogué et stabilisé, assurant une chaîne de traitement robuste (Analyse -> Évaluation -> Adaptation -> Test -> Documentation -> Validation).
 

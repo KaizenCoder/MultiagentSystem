@@ -16,7 +16,7 @@ sys.path.insert(0, str(current_dir))
 print(f"Chemin ajouté : {current_dir}")
 
 try:
-    from agent_factory_implementation.agents.agent_MAINTENANCE_05_peer_reviewer_enrichi import create_agent_5_peer_reviewer_enrichi
+    from agents.agent_MAINTENANCE_05_peer_reviewer_enrichi import create_agent_5_peer_reviewer_enrichi
     print("✅ Import réussi")
 except Exception as e:
     print(f"❌ Erreur import : {e}")
@@ -52,6 +52,7 @@ if __name__ == "__main__":
     print("Lancement test asyncio...")
     asyncio.run(test_simple())
     print("🏁 FIN TEST") 
+
 
 
 

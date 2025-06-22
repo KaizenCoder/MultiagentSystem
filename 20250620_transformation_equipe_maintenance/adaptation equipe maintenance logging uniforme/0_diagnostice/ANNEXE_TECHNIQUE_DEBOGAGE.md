@@ -10,7 +10,7 @@ Voici la sortie complète du terminal lors de la dernière tentative de lancemen
 ✅ logging_manager depuis 'core' à la racine importé avec succès.
 Traceback (most recent call last):
   File "C:\Dev\nextgeneration\lancer_mission_maintenance_agents_factory.py", line 26, in <module>
-    from agent_factory_implementation.agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_MAINTENANCE_00_chef_equipe_coordinateur as create_chef_equipe
+    from agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_MAINTENANCE_00_chef_equipe_coordinateur as create_chef_equipe
   File "C:\Dev\nextgeneration\agent_factory_implementation\agents\agent_MAINTENANCE_00_chef_equipe_coordinateur.py", line 18, in <module>
     from .agent_MAINTENANCE_01_analyseur_structure import AgentMAINTENANCE01AnalyseurStructure
   File "C:\Dev\nextgeneration\agent_factory_implementation\agents\agent_MAINTENANCE_01_analyseur_structure.py", line 125
@@ -55,7 +55,7 @@ except ImportError as e:
 
 # --- Imports des Agents de Maintenance ---
 try:
-    from agent_factory_implementation.agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_MAINTENANCE_00_chef_equipe_coordinateur as create_chef_equipe
+    from agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_MAINTENANCE_00_chef_equipe_coordinateur as create_chef_equipe
 except ImportError as e:
     print(f"Erreur d'importation de l'agent: {e}")
     # Tentative de résolution du chemin si l'import échoue

@@ -41,7 +41,7 @@ async def main():
     try:
         # AGENT 00 - Chef d'équipe
         print_section("AGENT 00 - CHEF D'ÉQUIPE COORDINATEUR")
-        from agent_factory_implementation.agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import ChefEquipeCoordinateurEnterprise
+        from agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import ChefEquipeCoordinateurEnterprise
         
         agent_00 = ChefEquipeCoordinateurEnterprise()
         print(f"✅ Agent 00 créé: {agent_00.agent_id}")
@@ -51,7 +51,7 @@ async def main():
         
         # AGENT 01 - Analyseur structure
         print_section("AGENT 01 - ANALYSEUR STRUCTURE")
-        from agent_factory_implementation.agents.agent_MAINTENANCE_01_analyseur_structure import AgentAnalyseurStructure
+        from agents.agent_MAINTENANCE_01_analyseur_structure import AgentAnalyseurStructure
         
         agent_01 = AgentAnalyseurStructure()
         print(f"✅ Agent 01 créé: {agent_01.agent_id}")
@@ -61,7 +61,7 @@ async def main():
         
         # AGENT 02 - Évaluateur utilité
         print_section("AGENT 02 - ÉVALUATEUR UTILITÉ UPGRADED")
-        from agent_factory_implementation.agents.agent_MAINTENANCE_02_evaluateur_utilite import AgentEvaluateurUtiliteUpgraded
+        from agents.agent_MAINTENANCE_02_evaluateur_utilite import AgentEvaluateurUtiliteUpgraded
         
         agent_02 = AgentEvaluateurUtiliteUpgraded()
         print(f"✅ Agent 02 créé: {agent_02.agent_id}")
@@ -88,7 +88,7 @@ async def main():
         
         # AGENT 03 - Adaptateur code
         print_section("AGENT 03 - ADAPTATEUR CODE")
-        from agent_factory_implementation.agents.agent_MAINTENANCE_03_adaptateur_code import AdaptateurCodeUpgraded
+        from agents.agent_MAINTENANCE_03_adaptateur_code import AdaptateurCodeUpgraded
         
         agent_03 = AdaptateurCodeUpgraded()
         print(f"✅ Agent 03 créé: {agent_03.agent_id}")
@@ -98,7 +98,7 @@ async def main():
         
         # AGENT 04 - Testeur anti-faux-agents
         print_section("AGENT 04 - TESTEUR ANTI-FAUX-AGENTS")
-        from agent_factory_implementation.agents.agent_MAINTENANCE_04_testeur_anti_faux_agents import ImprovedEnterpriseAgentTester
+        from agents.agent_MAINTENANCE_04_testeur_anti_faux_agents import ImprovedEnterpriseAgentTester
         
         agent_04 = ImprovedEnterpriseAgentTester()
         print(f"✅ Agent 04 créé: {agent_04.agent_id}")
@@ -108,7 +108,7 @@ async def main():
         
         # AGENT 05 - Documenteur peer-reviewer enrichi
         print_section("AGENT 05 - DOCUMENTEUR PEER-REVIEWER ENRICHI")
-        from agent_factory_implementation.agents.agent_MAINTENANCE_05_documenteur_peer_reviewer import DocumenteurEnterprisePeerReviewerEnrichi
+        from agents.agent_MAINTENANCE_05_documenteur_peer_reviewer import DocumenteurEnterprisePeerReviewerEnrichi
         
         agent_05 = DocumenteurEnterprisePeerReviewerEnrichi()
         print(f"✅ Agent 05 créé: {agent_05.agent_id}")
@@ -118,7 +118,7 @@ async def main():
         
         # AGENT 06 - Validateur final
         print_section("AGENT 06 - VALIDATEUR FINAL")
-        from agent_factory_implementation.agents.agent_MAINTENANCE_06_validateur_final import ValidateurFinalNextGeneration
+        from agents.agent_MAINTENANCE_06_validateur_final import ValidateurFinalNextGeneration
         
         agent_06 = ValidateurFinalNextGeneration()
         print(f"✅ Agent 06 créé: {agent_06.agent_id}")
@@ -203,6 +203,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main()) 
+
 
 
 

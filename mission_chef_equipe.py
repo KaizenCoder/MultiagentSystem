@@ -11,7 +11,7 @@ import os
 from pathlib import Path
 
 # Import du chef d'équipe coordinateur
-from agent_factory_implementation.agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
+from agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
 
 def main():
     # Configuration de la mission
@@ -89,6 +89,7 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
 
 
 

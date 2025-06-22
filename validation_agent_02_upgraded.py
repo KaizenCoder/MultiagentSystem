@@ -23,7 +23,7 @@ import sys
 
 # Import de l'agent UPGRADED
 sys.path.insert(0, str(Path(__file__).parent))
-from agent_factory_implementation.agents.agent_MAINTENANCE_02_evaluateur_utilite_UPGRADED import (
+from agents.agent_MAINTENANCE_02_evaluateur_utilite_UPGRADED import (
     AgentEvaluateurUtiliteUpgraded, create_agent_evaluateur_utilite_upgraded
 )
 
@@ -461,6 +461,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main()) 
+
 
 
 

@@ -35,9 +35,9 @@ from core import logging_manager
 
 # Import des agents
 sys.path.insert(0, str(Path(__file__).parent))
-from agent_factory_implementation.agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
-from agent_factory_implementation.agents.agent_MAINTENANCE_05_documenteur import create_agent_5_documenteur
-from agent_factory_implementation.agents.agent_MAINTENANCE_06_validateur_final import create_agent_6ValidateurFinal
+from agents.agent_MAINTENANCE_00_chef_equipe_coordinateur import create_agent_0_chef_equipe_coordinateur
+from agents.agent_MAINTENANCE_05_documenteur import create_agent_5_documenteur
+from agents.agent_MAINTENANCE_06_validateur_final import create_agent_6ValidateurFinal
 
 async def test_agent_00_chef_equipe():
     """Test complet Agent 00 - Chef d'Équipe Coordinateur"""
@@ -370,6 +370,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main()) 
+
 
 
 

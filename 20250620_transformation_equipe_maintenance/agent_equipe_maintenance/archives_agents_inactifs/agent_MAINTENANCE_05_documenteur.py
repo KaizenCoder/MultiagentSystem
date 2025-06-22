@@ -38,7 +38,7 @@ sys.path.insert(0, str(project_root))
 
 # Import Pattern Factory (OBLIGATOIRE selon guide)
 try:
-    from agent_factory_implementation.core.agent_factory_architecture import Agent, Task, Result
+    from core.agent_factory_architecture import Agent, Task, Result
     PATTERN_FACTORY_AVAILABLE = True
 except ImportError:
     try:
@@ -993,6 +993,7 @@ async def main():
 if __name__ == "__main__":
     result = asyncio.run(main())
     exit(result) 
+
 
 
 

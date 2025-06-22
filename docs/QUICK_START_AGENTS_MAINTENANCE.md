@@ -21,7 +21,7 @@ python lancer_mission_maintenance_agents_factory.py
 
 L'exécution de ce script déclenche un workflow complet orchestré par l'agent **Chef d'Équipe Coordinateur** :
 
-1.  **🤖 Analyse** : L'agent 01 scanne le répertoire `agent_factory_implementation/agents/` pour trouver tous les fichiers d'agents.
+1.  **🤖 Analyse** : L'agent 01 scanne le répertoire `agents/` pour trouver tous les fichiers d'agents.
 2.  **🤔 Évaluation** : L'agent 02 évalue chaque script pour déterminer s'il nécessite une maintenance.
 3.  **✍️ Adaptation** : L'agent 03 corrige et refactorise le code de l'agent.
 4.  **🔬 Test** : L'agent 04 exécute le code modifié pour s'assurer de son bon fonctionnement.
