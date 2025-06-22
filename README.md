@@ -229,28 +229,57 @@ ChromaDB: Collections vectorielles locales
 
 *Projet TaskMaster NextGeneration - Résolution complète le 21 juin 2025*
 
+---
+
+## 🏆 Accomplissement Récent : Refactorisation de l'Architecture
+
+Une refactorisation majeure a été achevée le 21 Juin 2025 pour améliorer la clarté, la maintenabilité et la centralisation de la base de code.
+
+- **Statut** : ✅ **Terminé**
+- **Objectifs atteints** :
+    - **Centralisation du `core`**: Tous les composants de base sont maintenant unifiés dans le répertoire `core/` à la racine.
+    - **Déplacement des `agents`**: Les agents spécialisés ont été déplacés de `agent_factory_implementation/agents` vers un répertoire `agents/` de premier niveau pour une meilleure visibilité.
+    - **Archivage**: Le répertoire `agent_factory_implementation` a été archivé dans `ARCHIVE_agent_factory_implementation`.
+- **Bénéfices**: Structure de projet simplifiée, réduction de la duplication de code, et clarification des dépendances.
+- **Validation**: La migration a été validée par l'exécution réussie des tests d'intégration (`test_equipe_maintenance_postgresql.py`).
+
+---
+
 # Projet NextGeneration
 
 Ce dépôt centralise un ensemble d'outils, d'agents IA et de projets visant à moderniser et automatiser divers processus de développement et de maintenance. Il est structuré comme un monorepo contenant plusieurs initiatives distinctes mais interconnectées.
 
+---
+
 ## Vue d'ensemble de l'Architecture
 
-Le projet est organisé autour de plusieurs composants clés :
+Le projet est organisé autour de plusieurs composants clés qui ont été récemment refactorisés pour plus de clarté et de centralisation :
 
-- **`core/`**: Contient les bibliothèques fondamentales partagées par l'ensemble des projets, notamment le **système de logging centralisé et uniforme**. C'est le socle technique sur lequel s'appuient les autres modules.
-- **`agent_factory_implementation/`**: Un framework avancé pour la création, le déploiement et la gestion d'équipes d'agents IA spécialisés. Il suit un pattern de "factory" pour produire des agents sur mesure.
-- **`20250620_projet_logging_centralise/`**: Le projet initial qui a conduit à la création du `core/logging_core`. Il contient toutes les phases d'analyse et de conception du système de logging.
-- **`20250620_projet_taskmanager/`**: Un projet dédié à la gestion de tâches complexes par une équipe d'agents IA coordonnés.
-- **`20250620_transformation_equipe_maintenance/`**: Vise à transformer les processus de maintenance logicielle en utilisant des agents pour l'analyse, l'évaluation et la refactorisation de code.
-- **`tools/`**: Une collection d'outils et d'utilitaires spécialisés, comme des générateurs de documentation, des systèmes de backup ou des lanceurs de scripts.
-- **`docs/`**: Documentation générale du projet, guides d'architecture, procédures opérationnelles et notes de recherche.
+- **`core/`**: **(Centralisé)** Contient l'ensemble des bibliothèques et composants fondamentaux partagés, incluant le système de logging, la gestion des modèles et l'architecture de base des agents. C'est le socle technique unique du projet.
+- **`agents/`**: **(Nouveau)** Répertoire racine contenant désormais tous les agents IA spécialisés, directement accessibles et plus faciles à gérer.
+- **`20250620_transformation_equipe_maintenance/`**: Vise à transformer les processus de maintenance logicielle en utilisant les agents intelligents désormais situés dans `agents/`.
+- **`20250620_projet_taskmanager/`**: Un projet dédié à la gestion de tâches complexes par des agents IA coordonnés.
+- **`ARCHIVE_agent_factory_implementation/`**: **(Archivé)** L'ancien framework de création d'agents, conservé pour référence historique. Les composants actifs ont été migrés vers `core/` et les agents vers `agents/`.
+- **`tools/`**: Une collection d'outils et d'utilitaires spécialisés.
+- **`docs/`**: Documentation générale, guides d'architecture et procédures.
 
 ## Principes Directeurs
 
-1.  **Centralisation & Uniformité**: Comme démontré par le module de logging, l'objectif est de créer des standards cohérents à travers tout le projet.
-2.  **Automatisation par IA**: L'utilisation d'agents intelligents pour automatiser des tâches complexes est au cœur de la stratégie "NextGeneration".
-3.  **Robustesse & Qualité**: L'architecture est conçue pour être de "qualité production", avec des tests, du monitoring et des déploiements contrôlés.
+1.  **Centralisation & Uniformité**: Créer des standards cohérents à travers tout le projet.
+2.  **Automatisation par IA**: Utiliser des agents pour automatiser les tâches complexes.
+3.  **Robustesse & Qualité**: Viser une qualité "production-ready" avec des tests, du monitoring et des déploiements contrôlés.
 
 ## Pour commencer
 
-Pour utiliser un composant spécifique, veuillez vous référer au `README.md` situé dans le répertoire du projet concerné. Le point d'entrée pour le système de logging est la classe `LoggingManager` dans `core/manager.py`.
+Pour explorer un composant, veuillez vous référer au `README.md` de son répertoire. Le point d'entrée du système de logging est la classe `LoggingManager` dans `core/manager.py`.
+
+---
+
+## 🏆 Accomplissement Récent : Mission TaskMaster NextGeneration
+
+Un jalon majeur a été atteint avec la finalisation du projet **TaskMaster NextGeneration**.
+
+- **Statut** : ✅ **100% FONCTIONNEL** (70/70 points de validation)
+- **Date de résolution** : 21 juin 2025
+- **Problème critique résolu** : Correction de l'encodage `UTF-8` pour PostgreSQL sous Windows en environnement français, un défi technique majeur qui a été entièrement surmonté.
+- **Détails du projet** : L'ensemble de la documentation et des solutions se trouve dans le répertoire `20250620_projet_taskmanager/`.
