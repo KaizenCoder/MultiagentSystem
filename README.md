@@ -228,3 +228,29 @@ ChromaDB: Collections vectorielles locales
 ---
 
 *Projet TaskMaster NextGeneration - Résolution complète le 21 juin 2025*
+
+# Projet NextGeneration
+
+Ce dépôt centralise un ensemble d'outils, d'agents IA et de projets visant à moderniser et automatiser divers processus de développement et de maintenance. Il est structuré comme un monorepo contenant plusieurs initiatives distinctes mais interconnectées.
+
+## Vue d'ensemble de l'Architecture
+
+Le projet est organisé autour de plusieurs composants clés :
+
+- **`core/`**: Contient les bibliothèques fondamentales partagées par l'ensemble des projets, notamment le **système de logging centralisé et uniforme**. C'est le socle technique sur lequel s'appuient les autres modules.
+- **`agent_factory_implementation/`**: Un framework avancé pour la création, le déploiement et la gestion d'équipes d'agents IA spécialisés. Il suit un pattern de "factory" pour produire des agents sur mesure.
+- **`20250620_projet_logging_centralise/`**: Le projet initial qui a conduit à la création du `core/logging_core`. Il contient toutes les phases d'analyse et de conception du système de logging.
+- **`20250620_projet_taskmanager/`**: Un projet dédié à la gestion de tâches complexes par une équipe d'agents IA coordonnés.
+- **`20250620_transformation_equipe_maintenance/`**: Vise à transformer les processus de maintenance logicielle en utilisant des agents pour l'analyse, l'évaluation et la refactorisation de code.
+- **`tools/`**: Une collection d'outils et d'utilitaires spécialisés, comme des générateurs de documentation, des systèmes de backup ou des lanceurs de scripts.
+- **`docs/`**: Documentation générale du projet, guides d'architecture, procédures opérationnelles et notes de recherche.
+
+## Principes Directeurs
+
+1.  **Centralisation & Uniformité**: Comme démontré par le module de logging, l'objectif est de créer des standards cohérents à travers tout le projet.
+2.  **Automatisation par IA**: L'utilisation d'agents intelligents pour automatiser des tâches complexes est au cœur de la stratégie "NextGeneration".
+3.  **Robustesse & Qualité**: L'architecture est conçue pour être de "qualité production", avec des tests, du monitoring et des déploiements contrôlés.
+
+## Pour commencer
+
+Pour utiliser un composant spécifique, veuillez vous référer au `README.md` situé dans le répertoire du projet concerné. Le point d'entrée pour le système de logging est la classe `LoggingManager` dans `core/manager.py`.
