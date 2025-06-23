@@ -20,20 +20,43 @@ CONFIG_FILE_PATH = CONFIG_DIR / "maintenance_config.json"
 
 class AgentConfig(BaseSettings):
     """Configuration pour un agent de maintenance individuel."""
-    nom_agent: str = Field(..., description="Le nom de fichier du script de l'agent.")
-    classe_agent: str = Field(..., description="Le nom de la classe de l'agent à instancier.")
-    description: str = ""
-    entry_point: Optional[str] = Field(None, description="Point d'entrée pour la factory, ex: 'agents.agent:create_agent'")
+    module: str = Field(..., description="Le chemin du module Python de l'agent, ex: 'agents.agent_01'")
+    class_name: str = Field(..., alias='class', description="Le nom de la classe de l'agent à instancier.")
+    factory_function: str = Field(..., description="La fonction factory pour créer l'agent.")
+    config: Dict[str, Any] = Field({}, description="Configuration spécifique à l'agent.")
+
+class FactoryConfig(BaseSettings):
+    """Configuration pour la factory elle-même."""
+    max_concurrent_agents: int = 10
+    default_timeout_seconds: int = 60
+    log_level: str = "INFO"
+
+class HvacConfig(BaseSettings):
+    """Configuration pour le client HashiCorp Vault."""
+    vault_url: str
+    vault_token: str
+
+class JwtConfig(BaseSettings):
+    """Configuration pour la génération de tokens JWT."""
+    secret_key: str
+    algorithm: str
+
+class RsaConfig(BaseSettings):
+    """Configuration pour la génération de clés RSA."""
+    key_size: int
+
+class ToolsConfig(BaseSettings):
+    """Configuration pour les outils partagés."""
+    hvac: HvacConfig
+    jwt: JwtConfig
+    rsa: RsaConfig
 
 class MaintenanceTeamConfig(BaseSettings):
     """Configuration complète pour l'équipe de maintenance."""
     
-    # Configuration des agents membres de l'équipe
+    factory_config: FactoryConfig
     agents: Dict[str, AgentConfig] = Field(..., description="Dictionnaire des agents de l'équipe, la clé est le rôle.")
-
-    # Configuration du workflow
-    workflows_disponibles: List[str] = ["maintenance_complete"]
-    rapport_final_path: str = "reports/maintenance_workflow_report.json"
+    tools: ToolsConfig
 
     # Configuration Pydantic pour charger depuis un fichier JSON
     model_config = SettingsConfigDict(
@@ -66,9 +89,9 @@ if __name__ == "__main__":
         print("\nAgents configurés:")
         for role, agent_conf in config.agents.items():
             print(f"  - Rôle: {role}")
-            print(f"    Classe: {agent_conf.classe_agent}")
-            if agent_conf.entry_point:
-                print(f"    EntryPoint: {agent_conf.entry_point}")
+            print(f"    Classe: {agent_conf.class_name}")
+            if agent_conf.factory_function:
+                print(f"    EntryPoint: {agent_conf.factory_function}")
         
     except FileNotFoundError as e:
         print(f"\n❌ Erreur: {e}")

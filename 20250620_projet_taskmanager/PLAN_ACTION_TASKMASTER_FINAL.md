@@ -20,7 +20,9 @@ Construire un agent TaskMaster de production, `agents/taskmaster_final.py`, qui 
 
 *   **Répertoire de l'Agent :** `/agents/`
 *   **Répertoire de Production (WORK_DIR) :** `20250620_projet_taskmanager/TASKMASTER_PRODUCTION_READY/` (conservé pour les logs et rapports).
-*   **Règles du Sanctuaire `/core` et de Non-Régression :** Maintenues.
+*   **Règle d'Or - Non-Régression :** Le nouvel agent `taskmaster_final.py` doit impérativement conserver 100% des fonctionnalités critiques de l'ancienne version. Toute modification doit être validée par un test pour garantir qu'aucune capacité n'est perdue.
+*   **Contrôle de Référence :** Un ou plusieurs scénarios de test critiques couverts par `DEPRECATED_taskmaster_agent.py` seront identifiés pour servir de baseline de non-régression.
+*   **Sanctuaire `/core` :** Le répertoire `core` reste protégé. Aucune modification ne peut y être apportée sans une justification majeure et des tests approfondis.
 
 ## 4. Plan d'Action Détaillé (Méthodologie M-T-D)
 
@@ -58,6 +60,11 @@ Construire un agent TaskMaster de production, `agents/taskmaster_final.py`, qui 
         3.  Instancie l'agent sélectionné et lui délègue la tâche.
         4.  Récupère et sauvegarde le résultat.
 
+*   **Étape 3.3 : Contrôle de Non-Régression Primaire (Test)**
+    *   **Action :** Créer un test simple qui exécute une mission de base sur le `taskmaster_final.py`.
+    *   **Scénario :** Le test vérifiera que pour une tâche simple (ex: "documente le projet"), l'agent sélectionné par le nouveau TaskMaster est bien `agent_13_specialiste_documentation`, conformément au comportement attendu.
+    *   **Critère de Succès :** Le bon agent est sélectionné, confirmant que la logique de délégation de base n'a pas régressé.
+
 *   **Commit Obligatoire 2**
     *   **Message :** `feat(taskmaster): core logic with agent discovery and delegation`
     *   **Raison :** Implémente la fonctionnalité principale de l'agent.
@@ -66,16 +73,19 @@ Construire un agent TaskMaster de production, `agents/taskmaster_final.py`, qui 
 
 *   **Étape 4.1 : Création du Test de Workflow**
     *   **Action :** Créer le script `tests/integration/test_taskmaster_final_workflow.py`.
-    *   **Scénario :** Instancier `TaskMasterFinal` et lui soumettre une mission comme `"Crée un workspace pour un projet et documente-le."`.
+    *   **Scénario :** Instancier `TaskMasterFinal` et lui soumettre une mission complexe comme `"Crée un workspace pour un projet et documente-le."`, qui représente un cas d'usage clé de l'ancien agent.
     *   **Critères de Succès :**
         1.  `TaskMasterFinal` sélectionne et délègue correctement à `agent_14` puis `agent_13`.
         2.  Le workflow complet s'exécute sans erreur.
         3.  Les artefacts (fichiers, rapports) sont créés dans le `WORK_DIR`.
+        4.  **Le succès de ce test sur un scénario de référence valide la non-régression fonctionnelle de bout en bout.**
 
 ### **Phase 5 – Documentation Finale (Documentation)**
 
 *   **Étape 5.1 : Création du `README.md`**
-    *   **Action :** Mettre à jour le `TASKMASTER_PRODUCTION_READY/README.md` pour décrire l'architecture finale du `taskmaster_final.py`, son utilisation, et comment lancer la suite de tests.
+    *   **Action :** 
+        *   Mettre à jour le `README.md` principal pour décrire l'architecture finale du `taskmaster_final.py`, son utilisation, et comment lancer la suite de tests.
+        *   **Ajouter une section "Validation de Non-Régression"** qui confirme que les fonctionnalités critiques ont été préservées, en citant le test de workflow comme preuve.
 
 *   **Commit Obligatoire 3**
     *   **Message :** `docs(taskmaster): final user documentation`

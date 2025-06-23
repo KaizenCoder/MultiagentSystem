@@ -1,0 +1,113 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+📊 AGENT 06 - MONITORING AVANCÉ
+Mission: Observabilité distribuée avec OpenTelemetry et Prometheus.
+"""
+import sys
+from pathlib import Path
+
+# Ajout du répertoire parent au path pour résoudre les imports locaux
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+
+import asyncio
+import logging
+from typing import Dict, List, Optional, Any
+from core.manager import LoggingManager
+
+from core.agent_factory_architecture import Agent, Task, Result
+
+try:
+    from opentelemetry import trace, metrics
+    from opentelemetry.sdk.trace import TracerProvider
+    from opentelemetry.sdk.metrics import MeterProvider
+    OPENTELEMETRY_AVAILABLE = True
+except ImportError:
+    OPENTELEMETRY_AVAILABLE = False
+
+
+class Agent06AdvancedMonitoring(Agent):
+    """
+    📊 AGENT 06 - MONITORING AVANCÉ - Version restructurée et fonctionnelle.
+    """
+    
+    def __init__(self, agent_id="agent_06_specialiste_monitoring", agent_type="monitoring", **kwargs):
+        # Initialisation du logger spécifique à l'agent
+        logging_manager = LoggingManager()
+        custom_log_config = {
+            "logger_name": f"agent.{agent_id}",
+            "metadata": {
+                "agent_name": agent_id,
+                "role": "monitoring",
+                "domain": "observability"
+            }
+        }
+        logger = logging_manager.get_logger(config_name="default", custom_config=custom_log_config)
+        super().__init__(agent_id=agent_id, agent_type=agent_type, logger=logger, **kwargs)
+        self.logger = logger
+        
+        self.tracer_provider = None
+        self.meter_provider = None
+        self.tracer = None
+        self.meter = None
+        
+        if OPENTELEMETRY_AVAILABLE:
+            self._setup_opentelemetry()
+        else:
+            self.logger.warning("⚠️ OpenTelemetry non disponible - mode dégradé.")
+
+    def _setup_opentelemetry(self):
+        """Initialisation propre d'OpenTelemetry."""
+        try:
+            self.tracer_provider = TracerProvider()
+            trace.set_tracer_provider(self.tracer_provider)
+            self.tracer = trace.get_tracer(__name__)
+            
+            self.meter_provider = MeterProvider()
+            metrics.set_meter_provider(self.meter_provider)
+            self.meter = metrics.get_meter(__name__)
+            
+            self.logger.info("✅ OpenTelemetry initialisé avec succès.")
+        except Exception as e:
+            self.logger.error(f"❌ Erreur initialisation OpenTelemetry: {e}")
+            global OPENTELEMETRY_AVAILABLE
+            OPENTELEMETRY_AVAILABLE = False
+
+    async def execute_task(self, task: Task) -> Result:
+        """
+        Exécute une tâche de monitoring. Pour l'instant, retourne l'état du système.
+        """
+        self.logger.info(f"⚙️ Exécution de la tâche de monitoring: {task.task_id}")
+
+        if self.tracer and OPENTELEMETRY_AVAILABLE:
+            with self.tracer.start_as_current_span("monitoring_task") as span:
+                span.set_attribute("task.id", task.task_id)
+                status = self.get_system_status()
+                span.set_attribute("system.status", "ok" if status.get("success") else "error")
+                return Result(success=True, data=status)
+        else:
+            status = self.get_system_status()
+            return Result(success=True, data=status)
+
+    def get_system_status(self) -> Dict[str, Any]:
+        """Retourne un rapport d'état simple."""
+        return {
+            "success": True,
+            "timestamp": asyncio.get_event_loop().time(),
+            "opentelemetry_enabled": OPENTELEMETRY_AVAILABLE,
+        }
+
+    async def startup(self):
+        self.logger.info(f"📊 {self.agent_id} v{self.version} - DÉMARRAGE")
+
+    async def shutdown(self):
+        self.logger.info(f"📊 {self.agent_id} v{self.version} - ARRÊT")
+
+    def get_capabilities(self) -> list[str]:
+        return ["monitoring", "observability", "opentelemetry"]
+
+    async def health_check(self) -> dict:
+        return {"status": "ok", "opentelemetry_available": OPENTELEMETRY_AVAILABLE}
+
+def create_agent_06_specialiste_monitoring_sprint4(**config):
+    return Agent06AdvancedMonitoring(**config)

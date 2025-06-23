@@ -82,6 +82,39 @@
                 "enable_auto_rename": true,
                 "enable_nlp_rules": false
             }
+        },
+        "agent_05_maitre_tests_validation": {
+            "version": "1.0.0",
+            "mission": "Tests complets et validation de la performance.",
+            "description": "Agent 05 - Maître Tests & Validation. Exécute des tests complets et valide la performance du système, en s'appuyant sur le code expert pour la gestion des templates de test.",
+            "dependencies": [
+                "core.agent_factory_architecture",
+                "code_expert.enhanced_agent_templates",
+                "code_expert.optimized_template_manager"
+            ],
+            "status": "A_REPARER",
+            "agent_type": "test",
+            "config": {
+                "cache_size": 100,
+                "ttl_seconds": 300,
+                "enable_hot_reload": true,
+                "num_workers": 4,
+                "code_expert_dir": "code_expert",
+                "templates_subdir": "templates"
+            }
+        }
+    },
+    "tools": {
+        "hvac": {
+            "vault_url": "http://127.0.0.1:8200",
+            "vault_token": "my-root-token"
+        },
+        "jwt": {
+            "secret_key": "une-super-cle-secrete-a-changer-en-prod",
+            "algorithm": "HS256"
+        },
+        "rsa": {
+            "key_size": 2048
         }
     }
 }

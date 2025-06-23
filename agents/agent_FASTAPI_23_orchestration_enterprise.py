@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 
 # 🔧 CONVERTI AUTOMATIQUEMENT SYNC → ASYNC
@@ -43,19 +42,6 @@ from features.enterprise.fastapi_orchestration import (
 
 logging.basicConfig(level=logging.INFO)
 # LoggingManager NextGeneration - Orchestrateur
-    import sys
-from pathlib import Path
-from core import logging_manager
-    self.logger = LoggingManager().get_logger(custom_config={
-    "logger_name": "Agent23FastAPIOrchestrationEnterprise",
-    "log_level": "INFO",
-    "elasticsearch_enabled": True,
-    "encryption_enabled": True,
-    "async_enabled": True,
-    "alerting_enabled": True,
-    "high_throughput": True
-    })
-
 
 class Agent23FastAPIOrchestrationEnterprise(Agent):
     """
@@ -67,97 +53,99 @@ class Agent23FastAPIOrchestrationEnterprise(Agent):
     """
     
     def __init__(self, **config):
-    super().__init__(AgentType.API.value, **config)
-    self.agent_version = __version__
-    self.agent_name = __agent_name__
-    self.compliance_score = __compliance_score__
-    self.optimization_gain = __optimization_gain__
-        
+        super().__init__(AgentType.API.value, **config)
+        self.agent_version = __version__
+        self.agent_name = __agent_name__
+        self.compliance_score = __compliance_score__
+        self.optimization_gain = __optimization_gain__
         # Initialisation features enterprise modulaires
-    self.features = [
-    AuthenticationFeature(config.get('authentication', {})),
-    RateLimitingFeature(config.get('rate_limiting', {})),
-    DocumentationFeature(config.get('documentation', {})),
-    MonitoringFeature(config.get('monitoring', {})),
-    SecurityFeature(config.get('security', {}))
-    ]
-        
-    logger.info(f"✅ Agent 23 {self.agent_name} v{self.agent_version} initialisé - {len(self.features)} features chargées")
-    
+        self.features = [
+            AuthenticationFeature(config.get('authentication', {})),
+            RateLimitingFeature(config.get('rate_limiting', {})),
+            DocumentationFeature(config.get('documentation', {})),
+            MonitoringFeature(config.get('monitoring', {})),
+            SecurityFeature(config.get('security', {}))
+        ]
+        self.logger = logging_manager.get_logger(custom_config={
+            "logger_name": "Agent23FastAPIOrchestrationEnterprise",
+            "log_level": "INFO",
+            "elasticsearch_enabled": True,
+            "encryption_enabled": True,
+            "async_enabled": True,
+            "alerting_enabled": True,
+            "high_throughput": True
+        })
+        self.logger.info(f"✅ Agent 23 {self.agent_name} v{self.agent_version} initialisé - {len(self.features)} features chargées")
+
     def get_capabilities(self) -> List[str]:
         """📋 Capacités de l'agent API FastAPI Enterprise"""
-    return [
-    "authentication_setup", "rate_limiting_config", "api_documentation",
-    "monitoring_setup", "security_enhancement", "performance_optimization"
-    ]
+        return [
+            "authentication_setup", "rate_limiting_config", "api_documentation",
+            "monitoring_setup", "security_enhancement", "performance_optimization"
+        ]
     
     async def execute_task(self, task: Task) -> Result:
         """🎯 Exécution de tâche via features modulaires (Pattern Factory)"""
-    try:
-    start_time = time.time()
-            
+        try:
+            start_time = time.time()
             # Dispatch vers feature appropriée
-    for feature in self.features:
-    if feature.can_handle(task):
-    result = feature.execute(task)
-    execution_time = (time.time() - start_time) * 1000
-                    
+            for feature in self.features:
+                if feature.can_handle(task):
+                    result = await feature.execute(task)
+                    execution_time = (time.time() - start_time) * 1000
                     # Enrichissement avec métriques agent
-    result.metrics.update({
-        "agent_id": self.id,
-        "agent_version": self.agent_version,
-        "execution_time_ms": execution_time,
-        "feature_used": feature.__class__.__name__
-    })
-                    
-    return result
-            
+                    result.metrics.update({
+                        "agent_id": self.id,
+                        "agent_version": self.agent_version,
+                        "execution_time_ms": execution_time,
+                        "feature_used": feature.__class__.__name__
+                    })
+                    return result
             # Aucune feature ne peut traiter la tâche
-    return Result(
-    success=False,
-    error=f"Task type '{task.type}' not supported",
-    agent_id=self.id,
-    task_id=task.id
-    )
-            
-    except Exception as e:
-    logger.error(f"❌ Erreur exécution tâche {task.type}: {e}")
-    return Result(success=False, error=str(e), agent_id=self.id, task_id=task.id)
+            return Result(
+                success=False,
+                error=f"Task type '{task.type}' not supported",
+                agent_id=self.id,
+                task_id=task.id
+            )
+        except Exception as e:
+            self.logger.error(f"❌ Erreur exécution tâche {task.type}: {e}")
+            return Result(success=False, error=str(e), agent_id=self.id, task_id=task.id)
     
     async def startup(self) -> None:
         """🚀 Initialisation Agent 23 Enterprise"""
-    self.status = "starting"
-    logger.info(f"🚀 Agent 23 {self.agent_name} v{self.agent_version} démarrage...")
+        self.status = "starting"
+        self.logger.info(f"🚀 Agent 23 {self.agent_name} v{self.agent_version} démarrage...")
         # Initialisation features enterprise
-    for feature in self.features:
-    if hasattr(feature, 'initialize'):
-    await feature.initialize()
-    self.status = "running"
-    logger.info(f"✅ Agent 23 {self.agent_name} opérationnel")
+        for feature in self.features:
+            if hasattr(feature, 'initialize'):
+                await feature.initialize()
+        self.status = "running"
+        self.logger.info(f"✅ Agent 23 {self.agent_name} opérationnel")
     
     async def shutdown(self) -> None:
         """🛑 Arrêt propre Agent 23 Enterprise"""
-    self.status = "stopping"
-    logger.info(f"🛑 Agent 23 {self.agent_name} v{self.agent_version} arrêt...")
+        self.status = "stopping"
+        self.logger.info(f"🛑 Agent 23 {self.agent_name} v{self.agent_version} arrêt...")
         # Nettoyage features
-    for feature in self.features:
-    if hasattr(feature, 'cleanup'):
-    await feature.cleanup()
-    self.status = "stopped"
-    logger.info(f"✅ Agent 23 {self.agent_name} arrêté proprement")
+        for feature in self.features:
+            if hasattr(feature, 'cleanup'):
+                await feature.cleanup()
+        self.status = "stopped"
+        self.logger.info(f"✅ Agent 23 {self.agent_name} arrêté proprement")
     
     async def health_check(self) -> Dict[str, Any]:
         """🩺 Vérification santé Agent 23 Enterprise"""
-    return {
-    "agent_id": self.id,
-    "agent_version": self.agent_version,
-    "status": self.status,
-    "features_count": len(self.features),
-    "tasks_executed": self.tasks_executed,
-    "uptime_seconds": (time.time() - self.created_at.timestamp()),
-    "compliance_score": self.compliance_score,
-    "enterprise_ready": True
-    }
+        return {
+            "agent_id": self.id,
+            "agent_version": self.agent_version,
+            "status": self.status,
+            "features_count": len(self.features),
+            "tasks_executed": self.tasks_executed,
+            "uptime_seconds": (time.time() - self.created_at.timestamp()),
+            "compliance_score": self.compliance_score,
+            "enterprise_ready": True
+        }
 
 
 def create_agent_23_enterprise(**config) -> Agent23FastAPIOrchestrationEnterprise:
@@ -171,7 +159,8 @@ if __name__ == "__main__":
     # Démo Pattern Factory compliance
     agent = create_agent_23_enterprise()
     task = Task(type="authentication_setup", params={"demo": True})
-    result = agent.execute_task(task)
+    # L'appel à execute_task doit être awaité car c'est une coroutine
+    result = asyncio.run(agent.execute_task(task))
     
     print(f"✅ Agent 23 Pattern Factory Compliant")
     print(f"📊 Résultat: {result.success}")
@@ -181,5 +170,5 @@ if __name__ == "__main__":
     print(f"🚀 Réduction: -69% de code !")
     print(f"📋 Version: {__version__} | Claude: {__claude_recommendations__}")
     if result.success:
-    print(f"📈 Data: {result.data}")
-    print(f"⚡ Metrics: {result.metrics}")
+        print(f"📈 Data: {result.data}")
+        print(f"⚡ Metrics: {result.metrics}")
