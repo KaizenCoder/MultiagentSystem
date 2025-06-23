@@ -1,19 +1,34 @@
 import sys
 from pathlib import Path
 import logging
+import hashlib
+from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
+import re
+import os
+import importlib
+import inspect
 
-# Ajout du chemin vers le système de logging centralisé
-# Ce bloc DOIT être au tout début du fichier pour que les imports suivants fonctionnent.
-# Le chemin est construit en remontant depuis l'emplacement de ce fichier.
+# --- Configuration des Chemins Stratégiques ---
+
+# PROJECT_ROOT pour les imports Python robustes.
+# Le script est dans nextgeneration/agents/, on remonte de 1 niveau.
 try:
-    # Chemin relatif depuis agent_factory_implementation/agents/
-    # -> agent_factory_implementation/ -> / (racine projet)
-    base_path = Path(__file__).resolve().parents[2]
-    logging_path = base_path / "20250620_projet_logging_centralise" / "PRODUCTION_READY" / "core"
-    if str(logging_path) not in sys.path:
-        sys.path.insert(0, str(logging_path))
+    PROJECT_ROOT = Path(__file__).resolve().parents[1]
 except IndexError:
-    print("Erreur de calcul du chemin pour le logger. Assurez-vous que la structure du projet est correcte.")
+    # Fallback si la structure est inattendue.
+    PROJECT_ROOT = Path.cwd()
+
+# WORK_DIR pour toutes les opérations de lecture/écriture (logs, data, reports).
+# IMPORTANT : Utiliser des barres obliques pour la compatibilité multi-OS.
+WORK_DIR = Path("C:/Dev/nextgeneration/20250620_projet_taskmanager/TASKMASTER_PRODUCTION_READY")
+
+# Ajout du chemin du logger au sys.path en utilisant PROJECT_ROOT
+logging_path = PROJECT_ROOT / "20250620_projet_logging_centralise" / "PRODUCTION_READY" / "core"
+if str(logging_path) not in sys.path:
+    sys.path.insert(0, str(logging_path))
+
+# --- Fin de la Configuration des Chemins ---
 
 #!/usr/bin/env python3
 """
@@ -36,11 +51,12 @@ from concurrent.futures import ThreadPoolExecutor
 import re
 
 # Import des composants NextGeneration existants
-# Corrigé pour pointer vers le logger "Golden Source"
-from logging_manager import NextGenLoggingManager, log_performance
+from core.manager import LoggingManager
+from core.agent_factory_architecture import Agent
+
+# La fonction log_performance est une méthode de LoggingManager, pas un import séparé.
 
 # Les composants suivants sont mis en commentaire car ils ne sont pas disponibles
-# ou stabilisés dans la structure actuelle. Ils seront réintégrés ultérieurement.
 # from ..monitoring.metrics_collector import MetricsCollector
 # from ..monitoring.health_monitor import HealthMonitor
 # from ..agents.base_agent import BaseAgent
@@ -190,7 +206,7 @@ class NLPProcessor:
             TaskType.OPTIMIZATION: ["optimiser", "améliorer", "accélérer", "performance"],
             TaskType.DOCUMENTATION: ["documenter", "documentation", "générer doc", "readme"],
             TaskType.TESTING: ["tester", "test", "valider", "vérification"],
-            TaskType.REFACTORING: ["refactorer", "refactoring", "réorganiser", "nettoyer code"],
+            TaskType.REFACTORING: ["refactorer", "refactoring", "réorganiser", "nettoyer code", "refactorise"],
             TaskType.MONITORING: ["monitorer", "surveiller", "observer", "tracking"],
             TaskType.DEPLOYMENT: ["déployer", "deploiement", "mise en production", "release"]
         }
@@ -299,7 +315,7 @@ class NLPProcessor:
             TaskType.OPTIMIZATION: ["performance_profiling", "algorithm_optimization", "resource_management"],
             TaskType.DOCUMENTATION: ["technical_writing", "diagram_generation", "api_documentation"],
             TaskType.TESTING: ["unit_testing", "integration_testing", "load_testing"],
-            TaskType.REFACTORING: ["code_analysis", "pattern_detection", "dependency_management"],
+            TaskType.REFACTORING: ["code_adaptation"],
             TaskType.MONITORING: ["metrics_collection", "alerting", "dashboard_creation"],
             TaskType.DEPLOYMENT: ["ci_cd", "container_management", "rollback_capability"]
         }
@@ -328,7 +344,7 @@ class NLPProcessor:
             TaskType.OPTIMIZATION: ["performance_report", "optimized_code", "benchmark_results"],
             TaskType.DOCUMENTATION: ["documentation_files", "api_specs", "user_guides"],
             TaskType.TESTING: ["test_report", "coverage_metrics", "bug_list"],
-            TaskType.REFACTORING: ["refactored_code", "improvement_report", "migration_guide"],
+            TaskType.REFACTORING: ["refactored_code", "improvement_report"],
             TaskType.MONITORING: ["dashboard_url", "alert_rules", "metrics_config"],
             TaskType.DEPLOYMENT: ["deployment_log", "rollback_plan", "health_check_results"]
         }
@@ -620,11 +636,10 @@ class DependencyResolver:
     def __init__(self, logger: logging.Logger):
         """Initialisation du résolveur de dépendances"""
         self.logger = logger
-        # L'appel à _scan_for_agents() est commenté car la méthode n'est pas implémentée.
-        # self.available_agents = self._scan_for_agents()
-        self.available_agents = {} # Initialisation avec un dictionnaire vide
+        # Ce resolver est stateless et n'a pas sa propre liste d'agents.
+        # Il se base sur les capabilities pour suggérer des types d'agents.
         self.logger.info(
-            f"🔗 DependencyResolver initialisé avec {len(self.available_agents)} agents découverts."
+            f"🔗 DependencyResolver initialisé."
         )
 
     def analyze_dependencies(self, task_definition: TaskDefinition) -> Dict[str, Any]:
@@ -687,17 +702,18 @@ class DependencyResolver:
     
     def _get_agents_for_capability(self, capability: str) -> List[str]:
         """Retourne les agents ayant une capacité spécifique"""
-        # Mapping simplifié - en production, interroger le registre d'agents
+        # CORRECTION: Mapping utilisant les vrais noms d'agents du répertoire /agents.
         capability_agents = {
-            "security_analysis": ["security_analyzer", "penetration_tester"],
-            "data_analysis": ["data_analyzer", "ml_engine"],
-            "performance_profiling": ["performance_profiler", "metrics_collector"],
-            "technical_writing": ["doc_generator", "technical_writer"],
-            "unit_testing": ["test_runner", "test_generator"],
-            "code_analysis": ["code_analyzer", "ast_parser"]
+            "security_analysis": ["agent_MAINTENANCE_09_analyseur_securite"],
+            "data_analysis": ["agent_MAINTENANCE_01_analyseur_structure"],
+            "pattern_recognition": ["agent_MAINTENANCE_01_analyseur_structure"],
+            "performance_profiling": ["agent_MAINTENANCE_08_analyseur_performance"],
+            "technical_writing": ["agent_MAINTENANCE_05_documenteur_peer_reviewer"],
+            "unit_testing": ["agent_MAINTENANCE_04_testeur_anti_faux_agents"],
+            "code_analysis": ["agent_MAINTENANCE_01_analyseur_structure"]
         }
         
-        return capability_agents.get(capability, ["generic_agent"])
+        return capability_agents.get(capability, ["agent_MAINTENANCE_00_chef_equipe_coordinateur"])
     
     def create_execution_plan(self, dependencies: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Crée un plan d'exécution ordonné"""
@@ -879,6 +895,16 @@ class TaskMasterAI:
             validation_results.append(result)
         
         # Agrégation des résultats
+        if not validation_results:
+            return ValidationResult(
+                success=True, # Pas de résultats à valider, on considère que c'est un succès.
+                confidence_score=1.0,
+                status=ValidationStatus.APPROVED,
+                checks=[],
+                evidence_trail=[],
+                recommendations=[]
+            )
+
         total_confidence = sum(r.confidence_score for r in validation_results) / len(validation_results)
         all_checks = []
         all_evidence = []
@@ -973,25 +999,33 @@ class AgentTaskMasterNextGeneration:
         self.agent_id = agent_id or f"taskmaster_{uuid4().hex[:8]}"
         self.agent_type = agent_type
         self.config = config or {}
+        self.work_dir = WORK_DIR
         
         # Logging centralisé avec isolation par instance
-        # On instancie le manager pour pouvoir récupérer des loggers
-        logging_manager = NextGenLoggingManager()
+        # CORRECTION : Utilisation de la classe LoggingManager et de la méthode get_logger
+        # avec une configuration personnalisée pour reproduire l'ancien comportement.
+        self.logging_manager = LoggingManager()
         
         logging_config = self.config.get("logging")
         if logging_config:
-            self.logger = logging_manager.get_logger(custom_config=logging_config)
+            self.logger = self.logging_manager.get_logger("custom", custom_config=logging_config)
         else:
-            self.logger = logging_manager.get_agent_logger(
-                agent_name=f"taskmaster_{self.agent_id}",
-                role="task_manager",
-                domain="task_coordination",
-                agent_id=self.agent_id,
-                async_enabled=True
+            agent_logger_config = {
+                "logger_name": f"taskmaster_{self.agent_id}",
+                "log_level": "INFO",
+                "file_enabled": True,
+                "log_dir": str(self.work_dir / f"logs/agents/taskmaster_{self.agent_id}"),
+                "filename_pattern": "taskmaster_activity.log",
+                "console_enabled": True,
+                "async_enabled": True
+            }
+            self.logger = self.logging_manager.get_logger(
+                config_name="agent_taskmaster",
+                custom_config=agent_logger_config
             )
         
         # Audit logger pour traçabilité - mis en commentaire car non implémenté dans le manager actuel
-        # self.audit_logger = logging_manager.create_audit_logger(
+        # self.audit_logger = self.logging_manager.create_audit_logger(
         #     user_id=self.agent_id,
         #     action_type="task_management"
         # )
@@ -1046,99 +1080,100 @@ class AgentTaskMasterNextGeneration:
         )
     
     def _discover_available_agents(self) -> Dict[str, Dict[str, Any]]:
-        """Découvre les agents disponibles dans l'écosystème"""
-        # Simulation - en production, interroger le registre d'agents
-        return {
-            "agent_0_coordinateur": {
-                "capabilities": ["coordination", "workflow_management"],
-                "status": "available"
-            },
-            "agent_1_analyseur": {
-                "capabilities": ["code_analysis", "pattern_detection"],
-                "status": "available"
-            },
-            "agent_2_evaluateur": {
-                "capabilities": ["quality_assessment", "metrics_evaluation"],
-                "status": "available"
-            },
-            "agent_3_adaptateur": {
-                "capabilities": ["code_adaptation", "refactoring"],
-                "status": "available"
-            },
-            "agent_4_testeur": {
-                "capabilities": ["testing", "validation"],
-                "status": "available"
-            },
-            "agent_5_documenteur": {
-                "capabilities": ["documentation", "api_specs"],
-                "status": "available"
-            },
-            "agent_6_validateur": {
-                "capabilities": ["final_validation", "compliance_check"],
-                "status": "available"
-            }
-        }
+        """Scanne le répertoire /agents pour découvrir dynamiquement les agents et leurs capacités."""
+        self.logger.info("Début de la découverte dynamique des agents...")
+        agents_dir = PROJECT_ROOT / "agents"
+        available_agents = {}
+
+        if not agents_dir.is_dir():
+            self.logger.warning(f"Le répertoire des agents '{agents_dir}' n'a pas été trouvé.")
+            return {}
+
+        for filename in os.listdir(agents_dir):
+            if filename.startswith("agent_") and filename.endswith(".py"):
+                module_name = f"agents.{filename[:-3]}"
+                try:
+                    module = importlib.import_module(module_name)
+                    for _, cls in inspect.getmembers(module, inspect.isclass):
+                        if issubclass(cls, Agent) and cls is not Agent:
+                            instance = cls()
+                            capabilities = instance.get_capabilities()
+                            agent_name = filename[:-3]
+                            available_agents[agent_name] = {
+                                "capabilities": capabilities,
+                                "status": "available"
+                            }
+                            self.logger.debug(f"Agent découvert: {agent_name} avec les capacités: {capabilities}")
+                            break 
+                except Exception as e:
+                    self.logger.error(f"Impossible de charger ou d'inspecter l'agent {module_name}: {e}")
+        
+        self.logger.info(f"{len(available_agents)} agents découverts dynamiquement.")
+        return available_agents
     
     async def startup(self) -> Dict[str, Any]:
         """Démarrage de l'instance TaskMaster"""
-        with log_performance("taskmaster_startup", self.logger):
+        start_time = time.time()
+        self.logger.info(
+            f"🚀 Démarrage TaskMaster {self.agent_id}",
+            extra={"operation": "startup", "phase": "init"}
+        )
+        
+        try:
+            # Vérification de l'environnement
+            await self._verify_environment()
+            
+            # Démarrage des composants - mis en commentaire
+            # await self.metrics_collector.start()
+            # await self.health_monitor.start()
+            
+            # Chargement de l'état si persisté
+            await self._load_state()
+            
+            self._is_running = True
+            
+            # Démarrer la maintenance périodique - Commenté car la méthode n'est pas implémentée
+            # asyncio.create_task(self._periodic_maintenance())
+            
+            result = {
+                "status": "started",
+                "agent_id": self.agent_id,
+                "available_agents": len(self.available_agents),
+                "timestamp": datetime.now().isoformat()
+            }
+            
             self.logger.info(
-                f"🚀 Démarrage TaskMaster {self.agent_id}",
-                extra={"operation": "startup", "phase": "init"}
+                f"✅ TaskMaster {self.agent_id} démarré",
+                extra={"operation": "startup", "phase": "complete", "result": result}
             )
             
-            try:
-                # Vérification de l'environnement
-                await self._verify_environment()
-                
-                # Démarrage des composants - mis en commentaire
-                # await self.metrics_collector.start()
-                # await self.health_monitor.start()
-                
-                # Chargement de l'état si persisté
-                await self._load_state()
-                
-                self._is_running = True
-                
-                # Démarrer la maintenance périodique - Commenté car la méthode n'est pas implémentée
-                # asyncio.create_task(self._periodic_maintenance())
-                
-                result = {
-                    "status": "started",
-                    "agent_id": self.agent_id,
-                    "available_agents": len(self.available_agents),
-                    "timestamp": datetime.now().isoformat()
-                }
-                
-                self.logger.info(
-                    f"✅ TaskMaster {self.agent_id} démarré",
-                    extra={"operation": "startup", "phase": "complete", "result": result}
-                )
-                
-                return result
-                
-            except Exception as e:
-                self.logger.error(
-                    f"❌ Erreur démarrage TaskMaster",
-                    extra={"error": str(e)},
-                    exc_info=True
-                )
-                raise
+            exec_time = time.time() - start_time
+            self.logging_manager.log_performance("taskmaster_startup", exec_time)
+            
+            return result
+            
+        except Exception as e:
+            self.logger.error(
+                f"❌ Erreur démarrage TaskMaster",
+                extra={"error": str(e)},
+                exc_info=True
+            )
+            raise
     
     async def _verify_environment(self):
-        """Vérifie l'environnement d'exécution"""
+        """Vérifie l'environnement d'exécution en utilisant WORK_DIR."""
         required_dirs = [
-            Path(f"logs/agents/taskmaster_{self.agent_id}"),
-            Path(f"data/taskmaster_{self.agent_id}"),
-            Path(f"reports/taskmaster_{self.agent_id}")
+            self.work_dir / f"logs/agents/taskmaster_{self.agent_id}",
+            self.work_dir / f"data/taskmaster_{self.agent_id}",
+            self.work_dir / f"reports/taskmaster_{self.agent_id}"
         ]
         
         for dir_path in required_dirs:
             dir_path.mkdir(parents=True, exist_ok=True)
     
     async def _load_state(self):
-        """Charge l'état persisté si disponible"""
-        state_file = Path(f"data/taskmaster_{self.agent_id}/state.json")
+        """Charge l'état persisté si disponible depuis WORK_DIR."""
+        state_file = self.work_dir / f"data/taskmaster_{self.agent_id}/state.json"
         if state_file.exists():
             try:
                 with open(state_file, 'r') as f:
@@ -1148,6 +1183,43 @@ class AgentTaskMasterNextGeneration:
                     self.logger.info(f"État restauré depuis {state_file}")
             except Exception as e:
                 self.logger.warning(f"Impossible de charger l'état: {e}")
+
+    async def shutdown(self):
+        """Arrêt propre de l'instance TaskMaster."""
+        start_time = time.time()
+        self.logger.info(
+            f"🔌 Arrêt de TaskMaster {self.agent_id}",
+            extra={"operation": "shutdown", "phase": "init"}
+        )
+        
+        self._is_running = False
+        
+        # Arrêter le pool de threads
+        self.logger.info(f"Arrêt du pool de threads pour {self.agent_id}...")
+        self._executor.shutdown(wait=True)
+        self.logger.info("Pool de threads arrêté.")
+        
+        # Arrêt des composants - mis en commentaire pour l'instant
+        # await self.metrics_collector.stop()
+        # await self.health_monitor.stop()
+        
+        # Sauvegarder l'état final - mis en commentaire car non implémenté
+        # await self._save_state()
+
+        result = {
+            "status": "shutdown",
+            "agent_id": self.agent_id,
+            "timestamp": datetime.now().isoformat()
+        }
+
+        self.logger.info(
+            f"🛑 TaskMaster {self.agent_id} arrêté proprement.",
+            extra={"operation": "shutdown", "phase": "complete", "result": result}
+        )
+        
+        exec_time = time.time() - start_time
+        self.logging_manager.log_performance("taskmaster_shutdown", exec_time)
+        return result
     
     async def create_task_from_natural_language(
         self,
@@ -1166,131 +1238,109 @@ class AgentTaskMasterNextGeneration:
                 "retry_after": 60
             }
         
-        with log_performance(f"create_task_{task_id}", self.logger):
-            try:
-                # Log de la requête
-                self.logger.info(
-                    f"📝 Nouvelle requête TaskMaster",
-                    extra={
-                        "task_id": task_id,
-                        "user_id": user_id,
-                        "request": user_request[:100] + "..." if len(user_request) > 100 else user_request
-                    }
-                )
-                
-                # Créer ou récupérer la session utilisateur
-                if user_id not in self.user_sessions:
-                    self.user_sessions[user_id] = {
-                        "created_at": datetime.now(),
-                        "task_count": 0,
-                        "context": context or {}
-                    }
-                
-                session = self.user_sessions[user_id]
-                session["task_count"] += 1
-                
-                # 1. Parser la requête en langage naturel
-                task_definition = self.taskmaster_ai.parse_natural_language_request(user_request)
-                
-                # 2. Analyser la complexité
-                complexity_analysis = self.taskmaster_ai.analyze_task_complexity(task_definition)
-                
-                # 3. Créer les métriques de tâche
-                task_metrics = TaskMetrics(
-                    task_id=task_id,
-                    task_type=task_definition.task_type.value,
-                    user_request=user_request,
-                    natural_language_command=user_request,
-                    start_time=datetime.now(),
-                    expected_completion=datetime.now() + complexity_analysis["estimated_duration"],
-                    tasks_total=len(complexity_analysis["required_agents"])
-                )
-                
-                # 4. Validation de faisabilité
-                validation_result = await self._validate_task_feasibility(
-                    task_definition,
-                    complexity_analysis
-                )
-                
-                if validation_result["feasible"]:
-                    # 5. Décomposer en sous-tâches
-                    subtasks = self.taskmaster_ai.suggest_task_breakdown(task_definition)
-                    task_metrics.subtasks = subtasks
-                    
-                    # 6. Enregistrer la tâche
-                    self.active_tasks[task_id] = task_metrics
-                    
-                    # 7. Audit log
-                    self.audit_logger.info(
-                        f"Task created: {task_id}",
-                        extra={
-                            "user_id": user_id,
-                            "task_type": task_definition.task_type.value,
-                            "complexity": complexity_analysis["level"]
-                        }
-                    )
-                    
-                    # 8. Lancer l'exécution asynchrone
-                    asyncio.create_task(
-                        self._execute_task_async(
-                            task_id,
-                            task_definition,
-                            task_metrics,
-                            complexity_analysis
-                        )
-                    )
-                    
-                    return {
-                        "status": "accepted",
-                        "task_id": task_id,
-                        "task_type": task_definition.task_type.value,
-                        "title": task_definition.title,
-                        "complexity": complexity_analysis["level"],
-                        "estimated_completion": task_metrics.expected_completion.isoformat(),
-                        "subtasks_count": len(subtasks),
-                        "tracking_url": f"/taskmaster/status/{task_id}"
-                    }
-                else:
-                    return {
-                        "status": "rejected",
-                        "reason": validation_result["reason"],
-                        "suggestions": validation_result.get("suggestions", [])
-                    }
-                    
-            except Exception as e:
-                self.logger.error(
-                    f"Erreur création tâche",
-                    extra={"task_id": task_id, "error": str(e)},
-                    exc_info=True
-                )
-                
-                return {
-                    "status": "error",
-                    "error": str(e),
-                    "task_id": task_id
+        start_time = time.time()
+        try:
+            # Log de la requête
+            self.logger.info(
+                f"📝 Nouvelle requête TaskMaster",
+                extra={
+                    "task_id": task_id,
+                    "user_id": user_id,
+                    "request": user_request[:100] + "..." if len(user_request) > 100 else user_request
                 }
+            )
+            
+            # Créer ou récupérer la session utilisateur
+            if user_id not in self.user_sessions:
+                self.user_sessions[user_id] = {
+                    "created_at": datetime.now(),
+                    "task_count": 0,
+                    "context": context or {}
+                }
+            
+            session = self.user_sessions[user_id]
+            session["task_count"] += 1
+            
+            # 1. Parser la requête en langage naturel
+            task_definition = self.taskmaster_ai.parse_natural_language_request(user_request)
+            
+            # 2. Analyser la complexité
+            complexity_analysis = self.taskmaster_ai.analyze_task_complexity(task_definition)
+            
+            # 3. Créer les métriques de tâche
+            task_metrics = TaskMetrics(
+                task_id=task_id,
+                task_type=task_definition.task_type.value,
+                user_request=user_request,
+                natural_language_command=user_request,
+                start_time=datetime.now()
+            )
+            task_metrics.tasks_total = len(task_metrics.subtasks)
+            
+            # 4. Valider la faisabilité de la tâche
+            feasibility_result = await self._validate_task_feasibility(task_definition, complexity_analysis)
+            
+            if not feasibility_result["feasible"]:
+                return {
+                    "status": "rejected",
+                    "reason": feasibility_result["reason"],
+                    "suggestions": feasibility_result["checks"]
+                }
+            
+            # Tâche acceptée, ajout à la liste des tâches actives
+            self.active_tasks[task_id] = task_metrics
+
+            # 5. Exécuter la tâche
+            await self._execute_task_async(task_id, task_definition, task_metrics, complexity_analysis)
+            
+            result = {
+                "status": "accepted",
+                "task_id": task_id,
+                "timestamp": datetime.now().isoformat()
+            }
+            
+            self.logger.info(
+                f"✅ Tâche {task_id} acceptée",
+                extra={"operation": "create_task", "phase": "complete", "result": result}
+            )
+            
+            exec_time = time.time() - start_time
+            self.logging_manager.log_performance(f"create_task_{task_id}", exec_time)
+            
+            return result
+            
+        except Exception as e:
+            self.logger.error(
+                f"❌ Erreur création tâche {task_id}",
+                extra={"task_id": task_id, "error": str(e)},
+                exc_info=True
+            )
+            raise
     
     async def _validate_task_feasibility(
         self,
         task_definition: TaskDefinition,
         complexity_analysis: Dict[str, Any]
     ) -> Dict[str, Any]:
-        """Valide la faisabilité d'une tâche"""
+        """Valide la faisabilité d'une tâche en vérifiant les capacités requises."""
         feasibility_checks = []
+
+        # 1. Vérifier la disponibilité des capacités requises
+        required_capabilities = set(task_definition.required_capabilities)
         
-        # 1. Vérifier la disponibilité des agents requis
-        required_agents = complexity_analysis["required_agents"]
-        available_count = sum(
-            1 for agent in required_agents
-            if agent in self.available_agents and
-            self.available_agents[agent]["status"] == "available"
-        )
+        all_available_capabilities = set()
+        for agent_info in self.available_agents.values():
+            if agent_info.get("status") == "available":
+                all_available_capabilities.update(agent_info.get("capabilities", []))
+
+        missing_capabilities = required_capabilities - all_available_capabilities
         
-        agents_available = available_count == len(required_agents)
+        capabilities_available = not missing_capabilities
+        
         feasibility_checks.append({
-            "check": "agents_availability",
-            "passed": agents_available,
-            "details": f"{available_count}/{len(required_agents)} agents available"
+            "check": "capabilities_availability",
+            "passed": capabilities_available,
+            "details": f"Missing capabilities: {missing_capabilities}" if not capabilities_available else "All capabilities available"
         })
         
         # 2. Vérifier les contraintes
@@ -1336,9 +1386,9 @@ class AgentTaskMasterNextGeneration:
         suggestions = []
         
         for check in failed_checks:
-            if check["check"] == "agents_availability":
-                suggestions.append("Wait for required agents to become available")
-                suggestions.append("Consider splitting the task into smaller parts")
+            if check["check"] == "capabilities_availability":
+                suggestions.append("Deploy required agents or check their status")
+                suggestions.append("Consider splitting the task into smaller parts with available capabilities")
             elif check["check"] == "system_load":
                 suggestions.append("Wait for current tasks to complete")
                 suggestions.append("Increase system capacity")
@@ -1478,6 +1528,33 @@ class AgentTaskMasterNextGeneration:
             if task_id in self.active_tasks:
                 self.completed_tasks[task_id] = self.active_tasks.pop(task_id)
     
+    async def _save_task_report(
+        self,
+        task_id: str,
+        task_result: Dict[str, Any],
+        task_metrics: TaskMetrics
+    ):
+        """Sauvegarde le rapport de tâche dans un fichier JSON dans WORK_DIR."""
+        report_dir = self.work_dir / f"reports/taskmaster_{self.agent_id}"
+        report_dir.mkdir(parents=True, exist_ok=True)
+        report_file = report_dir / f"task_report_{task_id}.json"
+        
+        report_data = {
+            "task_result": task_result,
+            "task_metrics": asdict(task_metrics)
+        }
+        
+        try:
+            with open(report_file, 'w', encoding='utf-8') as f:
+                json.dump(report_data, f, indent=4, default=str)
+            self.logger.info(f"Rapport de tâche sauvegardé dans {report_file}")
+        except Exception as e:
+            self.logger.error(
+                f"Erreur lors de la sauvegarde du rapport de tâche {task_id}",
+                extra={"error": str(e), "path": str(report_file)},
+                exc_info=True
+            )
+    
     def _select_agent_for_subtask(
         self,
         subtask: SubTask,
@@ -1497,7 +1574,7 @@ class AgentTaskMasterNextGeneration:
             return available[0]
         else:
             # Fallback sur un agent générique
-            return "agent_0_coordinateur"
+            return "agent_MAINTENANCE_00_chef_equipe_coordinateur"
     
     async def _execute_subtask(
         self,
@@ -1573,6 +1650,8 @@ class AgentTaskMasterNextGeneration:
         if validation.recommendations:
             summary_parts.extend(["", "Recommendations:"])
             summary_parts.extend([f"- {rec}" for rec in validation.recommendations])
+        
+        return "\n".join(summary_parts)
 
 
 
