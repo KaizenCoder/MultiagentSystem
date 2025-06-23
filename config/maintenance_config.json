@@ -72,6 +72,16 @@
             "class": "AgentMAINTENANCE11HarmonisateurStyle",
             "factory_function": "create_agent_MAINTENANCE_11_harmonisateur_style",
             "config": {}
+        },
+        "correcteur_semantique": {
+            "module": "agents.agent_MAINTENANCE_12_correcteur_semantique",
+            "class": "CorrecteurSemantique",
+            "factory_function": "create_agent",
+            "config": {
+                "max_iterations": 3,
+                "enable_auto_rename": true,
+                "enable_nlp_rules": false
+            }
         }
     }
 }
