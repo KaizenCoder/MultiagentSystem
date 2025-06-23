@@ -28,6 +28,7 @@ import re
 import logging
 from dataclasses import dataclass
 from enum import Enum
+from core.manager import LoggingManager
 
 class ConformityLevel(Enum):
     COMPLIANT = "conforme"
@@ -111,15 +112,19 @@ class Agent20AuditeurConformite:
 
     def _setup_logging(self):
         # LoggingManager NextGeneration - Agent
-        logger = logging_manager.get_agent_logger(
-            agent_name="Agent20",
-            role="ai_processor",
-            domain="general",
-            async_enabled=True
-        )
+        logging_manager = LoggingManager()
+        custom_log_config = {
+            "logger_name": f"agent.{self.agent_id}",
+            "metadata": {
+                "agent_name": f"Agent20_{self.agent_id}",
+                "role": "ai_processor",
+                "domain": "general"
+            },
+            "async_enabled": True
+        }
+        logger = logging_manager.get_logger(config_name="default", custom_config=custom_log_config)
         log_dir = Path("nextgeneration/agent_factory_implementation/logs")
         log_dir.mkdir(parents=True, exist_ok=True)
-        
         handler = logging.FileHandler(
             log_dir / f"agent_{self.agent_id}_conformite_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
         )

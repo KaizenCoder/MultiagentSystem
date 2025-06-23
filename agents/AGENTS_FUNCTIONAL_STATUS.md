@@ -24,3 +24,6 @@ Ce document sert de source de vérité pour l'état de chaque agent.
 | `agent_15_testeur_specialise.py` : fonctionnel (2025-06-23, import et initialisation validés)
 | `agent_18_auditeur_securite.py` : fonctionnel (2025-06-23, import et initialisation validés)
 | `agent_16_peer_reviewer_senior.py` : fonctionnel (2025-06-23, import et initialisation validés)
+| `agent_17_peer_reviewer_technique.py` : fonctionnel (2025-06-23, import et initialisation validés)
+| `agent_19_auditeur_performance.py` : fonctionnel (2025-06-23, import et initialisation validés)
+| `agent_20_auditeur_conformite.py` : fonctionnel (2025-06-23, import et initialisation validés, logger corrigé)

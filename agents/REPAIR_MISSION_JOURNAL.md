@@ -178,4 +178,10 @@ Poursuite de la politique stricte :
 - Agent 16 : Import et initialisation validés (logger, configuration OK).
 - Tous les agents marqués comme fonctionnels dans le suivi.
 
+## 2025-06-23 — Agents 17, 19, 20 (Peer Reviewer Technique, Auditeur Performance, Auditeur Conformité)
+- Agent 17 : Import et initialisation validés (logger, configuration OK).
+- Agent 19 : Import et initialisation validés (logger, configuration OK).
+- Agent 20 : Correction du logger (utilisation de get_logger), import et initialisation validés.
+- Tous les agents marqués comme fonctionnels dans le suivi.
+
 --- 
