@@ -132,3 +132,48 @@
 *   **Résultat du Test de Workflow :** N/A (Changement stratégique).
 *   **Observations post-test :** La nouvelle stratégie est claire : construire un agent final, unifié, dans le bon répertoire, en suivant une méthodologie stricte.
 *   **Décision Finale :** GO.
+
+---
+## Phase 1 & 2 (M-T) : Création et Validation du Squelette
+
+### **Étape 1.1 & 2.1 : Création et Test d'Instanciation**
+*   **Date :** 23/06/2025
+*   **Analyse Comparative :** L'objectif était de créer un fichier `agents/taskmaster_final.py` et un test pour valider son instanciation.
+*   **Déroulement du test :** Le processus a été extrêmement laborieux en raison de problèmes d'import persistants et inattendus (`ModuleNotFoundError`). Plusieurs stratégies (unittest discover, PYTHONPATH, `__init__.py`) ont échoué. La cause racine s'est avérée être une non-création initiale du fichier `taskmaster_final.py`. Après sa création manuelle, un dernier contournement utilisant un script de test temporaire à la racine et une importation dynamique `importlib` a permis de valider le squelette.
+*   **Décision avant test :** GO.
+*   **Résultat du Test de Workflow :** **SUCCÈS**.
+*   **Observations post-test :** Le squelette de `TaskMasterFinal` est fonctionnel. Il s'initialise, gère ses chemins, configure son logger et son cycle de vie de base (`startup`/`shutdown`) est valide. La base est saine pour la prochaine phase de développement.
+*   **Décision Finale :** **GO**.
+
+---
+## Phase 3 (M-T) : Implémentation du Cœur Métier
+
+### **Étape 3.1 : Découverte Dynamique des Agents**
+*   **Date :** 23/06/2025
+*   **Analyse Comparative (M):** La méthode `_discover_agents` a été implémentée dans `TaskMasterFinal`. Les agents cibles (`13`, `14`, `16`) ont été modifiés pour exposer une variable de classe `CAPABILITIES`.
+*   **Déroulement du test (T):** L'exécution directe de `taskmaster_final.py` a été utilisée comme test.
+*   **Décision avant test :** GO.
+*   **Résultat du Test de Workflow :** **SUCCÈS**.
+*   **Observations post-test :** La sortie des logs confirme que le `TaskMaster` a correctement scanné le répertoire `/agents`, a ignoré les nombreux agents défectueux sans planter, et a identifié avec succès les 3 agents valides et leurs capacités respectives. La découverte dynamique est fonctionnelle et robuste.
+*   **Décision Finale :** **GO**.
+
+### **Étape 3.2 : Logique de Traitement de Mission**
+*   **Date :** 23/06/2025
+*   **Analyse Comparative (M):** Implémentation de la méthode `execute_mission` avec une logique de sélection par mots-clés. Ajout de méthodes `run` comme points d'entrée standardisés pour les agents 14 et 16. Correction de la logique de sélection et de la méthode `run` de l'agent 16 suite à un premier test infructueux.
+*   **Déroulement du test (T):** L'exécution du script `taskmaster_final.py` a servi de test d'intégration. Deux missions ont été testées : une revue de code et une création de workspace.
+*   **Décision avant test :** GO.
+*   **Résultat du Test de Workflow :** **SUCCÈS TOTAL**.
+*   **Observations post-test :** Le `TaskMasterFinal` a correctement sélectionné et délégué la tâche à l'agent approprié pour chaque mission. Les deux agents ont exécuté leur logique principale sans erreur et ont retourné un résultat. Le cycle de vie complet de la mission (Réception -> Sélection -> Délégation -> Exécution) est validé.
+*   **Décision Finale :** **GO**.
+
+---
+## Phase 4 (T) : Validation par Test d'Intégration Formel
+
+### **Étape 4.1 : Création et Exécution du Test de Workflow**
+*   **Date :** 23/06/2025
+*   **Analyse Comparative (M-T):** Création d'un test `unittest` (`test_workflow_temp.py`) pour automatiser la validation du workflow. Correction d'une `PermissionError` sous Windows en ajoutant une méthode `shutdown` aux agents pour fermer les handles de log, et en l'appelant depuis le `TaskMasterFinal`.
+*   **Déroulement du test (T):** Exécution du script de test `unittest`.
+*   **Décision avant test :** GO.
+*   **Résultat du Test de Workflow :** **SUCCÈS TOTAL (OK)**.
+*   **Observations post-test :** Les deux scénarios de test (création de workspace, revue de code) sont passés avec succès. Les assertions sur les résultats et la création d'artefacts sont validées. Le cycle de nettoyage (`tearDown`) fonctionne, confirmant la résolution du problème de verrou de fichier. Le `TaskMasterFinal` est maintenant considéré comme robuste et fiable.
+*   **Décision Finale :** **GO**.

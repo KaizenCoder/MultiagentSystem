@@ -1,0 +1,67 @@
+{
+  "timestamp": "2025-06-18T01:50:13.019738",
+  "tests": {
+    "sqlalchemy_imports": {
+      "status": "SUCCESS",
+      "message": "Tous les imports SQLAlchemy fonctionnels"
+    },
+    "models_import": {
+      "status": "FAILED",
+      "error": "cannot import name 'CommunicationHistory' from 'memory_api.app.db.models' (C:\\Dev\\nextgeneration\\memory_api\\app\\db\\models.py)"
+    },
+    "metadata_fix": {
+      "status": "SUCCESS",
+      "message": "Conflit metadata résolu - session_metadata disponible"
+    },
+    "table_definitions": {
+      "status": "SUCCESS",
+      "message": "Définitions des tables valides",
+      "agent_columns": [
+        "id",
+        "session_id",
+        "agent_id",
+        "agent_type",
+        "created_at",
+        "updated_at",
+        "last_activity",
+        "is_active",
+        "status",
+        "total_tokens_used",
+        "total_cost",
+        "session_metadata"
+      ],
+      "memory_columns": [
+        "id",
+        "session_id",
+        "content",
+        "content_hash",
+        "content_type",
+        "category",
+        "importance_score",
+        "token_count",
+        "embeddings_vector",
+        "created_at",
+        "updated_at",
+        "accessed_at",
+        "access_count",
+        "is_archived",
+        "session_metadata"
+      ]
+    },
+    "model_relations": {
+      "status": "SUCCESS",
+      "message": "Relations entre modèles fonctionnelles",
+      "session_relations": [
+        "memory_items",
+        "state_items"
+      ],
+      "memory_relations": [
+        "session"
+      ]
+    }
+  },
+  "success_count": 4,
+  "total_tests": 5,
+  "encoding_issue_noted": true,
+  "success_rate": 80.0
+}

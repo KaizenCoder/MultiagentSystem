@@ -1,0 +1,35 @@
+{
+  "timestamp": "2025-06-18T01:48:47.728410",
+  "steps": [
+    {
+      "step": "stop_container",
+      "status": "SUCCESS"
+    },
+    {
+      "step": "remove_container",
+      "status": "SUCCESS"
+    },
+    {
+      "step": "create_utf8_config",
+      "status": "SUCCESS",
+      "file": "C:\\Dev\\nextgeneration\\docker-compose.utf8.yml"
+    },
+    {
+      "step": "start_utf8_postgres",
+      "status": "SUCCESS"
+    },
+    {
+      "step": "test_utf8_connection",
+      "status": "FAILED",
+      "error": "'utf-8' codec can't decode byte 0xe9 in position 84: invalid continuation byte"
+    },
+    {
+      "step": "create_tables_utf8",
+      "status": "FAILED",
+      "error": "'utf-8' codec can't decode byte 0xe9 in position 84: invalid continuation byte"
+    }
+  ],
+  "success_count": 4,
+  "total_count": 6,
+  "success_rate": 66.66666666666666
+}

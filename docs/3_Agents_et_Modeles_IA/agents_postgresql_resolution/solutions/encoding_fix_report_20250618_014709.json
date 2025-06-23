@@ -1,0 +1,32 @@
+{
+  "timestamp": "2025-06-18T01:47:09.388807",
+  "solutions": [
+    {
+      "solution": "Variables environnement Python",
+      "vars": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONLEGACYWINDOWSSTDIO": "1",
+        "PYTHONUTF8": "1"
+      },
+      "status": "APPLIED"
+    },
+    {
+      "solution": "Connexion PostgreSQL UTF-8",
+      "status": "FAILED",
+      "error": "'utf-8' codec can't decode byte 0xe9 in position 84: invalid continuation byte"
+    },
+    {
+      "solution": "Création tables SQLAlchemy",
+      "status": "SKIPPED",
+      "reason": "Pas de connexion DB"
+    },
+    {
+      "solution": "Script PowerShell configuration",
+      "script_path": "C:\\Dev\\nextgeneration\\docs\\agents_postgresql_resolution\\solutions\\fix_encoding_windows.ps1",
+      "status": "GENERATED"
+    }
+  ],
+  "success_count": 2,
+  "total_count": 4,
+  "success_rate": 50.0
+}

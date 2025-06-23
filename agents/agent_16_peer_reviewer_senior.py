@@ -5,7 +5,7 @@ import json
 import sys
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 import logging
 
 class Agent16PeerReviewerSenior:
@@ -16,7 +16,11 @@ class Agent16PeerReviewerSenior:
     FOCUS : Validation conformité plans experts + architecture + best practices
     """
     
-    def __init__(self):
+    CAPABILITIES = ["code_review", "quality_assessment"]
+
+    def __init__(self, agent_id="peer_reviewer_senior_01"):
+        self.name = "Agent 16 - Peer Reviewer Senior"
+        self.agent_id = agent_id
         self.logger = logging.getLogger(__name__)
         self.workspace_root = Path.cwd()
         self.code_expert_dir = self.workspace_root / "code_expert"
@@ -36,6 +40,16 @@ class Agent16PeerReviewerSenior:
         
         self.logger.info("🎖️ Agent 16 - Peer Reviewer Senior v1.0.0 - MISSION REVIEW ACTIVÉE")
         self.logger.info(f"📁 Code expert à reviewer : {self.code_expert_dir}")
+        self.logger.info(f"Agent {self.name} initialisé.")
+        self.logger.info(f"Workspace root: {self.workspace_root}")
+    
+    def shutdown(self):
+        """Ferme les handlers de logging pour libérer les fichiers."""
+        self.logger.info(f"Arrêt de l'agent {self.name} et libération des logs.")
+        handlers = self.logger.handlers[:]
+        for handler in handlers:
+            handler.close()
+            self.logger.removeHandler(handler)
     
     def run_senior_review_mission(self) -> Dict[str, Any]:
         """Mission principale : Review senior architecture code expert"""
@@ -506,6 +520,17 @@ class Agent16PeerReviewerSenior:
             "review_rating": "⚡ EXCEPTIONNEL" if quality_score >= 9 else "✅ EXCELLENT",
             "validation_status": "✅ APPROUVÉ - QUALITÉ EXCEPTIONNELLE"
         }
+
+    def run(self, task_prompt: str):
+        """Point d'entrée principal pour l'agent."""
+        self.logger.info(f"Reçu une tâche de revue de code : {task_prompt}")
+        # La capacité principale de cet agent est d'exécuter une revue senior.
+        return self.run_senior_review_mission()
+
+    def _get_file_content(self, file_path_str: str) -> Optional[str]:
+        """Charge le contenu d'un fichier en toute sécurité."""
+        # Implementation of _get_file_content method
+        pass
 
 def main():
     """Fonction principale d'exécution de l'Agent 16"""

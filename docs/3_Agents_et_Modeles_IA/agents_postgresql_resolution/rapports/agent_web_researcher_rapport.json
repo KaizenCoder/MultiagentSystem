@@ -1,0 +1,238 @@
+{
+  "github_solutions": {
+    "timestamp": "2025-06-18T01:29:24.625362",
+    "requetes_effectuees": [
+      "sqlalchemy metadata reserved",
+      "postgresql textual sql expression",
+      "docker postgres windows",
+      "sqlalchemy 2.0 migration",
+      "psycopg2 windows installation"
+    ],
+    "solutions_trouvees": [
+      {
+        "probleme": "SQLAlchemy metadata conflict",
+        "source": "GitHub Issues",
+        "solution": "Renommer attribut 'metadata' en '__metadata__' ou utiliser declarative_base()",
+        "url_simulee": "https://github.com/sqlalchemy/sqlalchemy/issues/xxxx",
+        "score_pertinence": 95
+      },
+      {
+        "probleme": "SQLAlchemy 2.x text() requirement",
+        "source": "GitHub Issues",
+        "solution": "Utiliser text() pour expressions SQL: text('SELECT 1 as test_value')",
+        "url_simulee": "https://github.com/sqlalchemy/sqlalchemy/issues/yyyy",
+        "score_pertinence": 98
+      },
+      {
+        "probleme": "Docker PostgreSQL Windows connectivity",
+        "source": "GitHub Docker",
+        "solution": "Utiliser host.docker.internal ou configurer réseau bridge",
+        "url_simulee": "https://github.com/docker/for-win/issues/zzzz",
+        "score_pertinence": 85
+      }
+    ],
+    "repositories_pertinents": []
+  },
+  "stackoverflow_solutions": {
+    "timestamp": "2025-06-18T01:29:25.128645",
+    "questions_analysees": [
+      "Attribute name metadata is reserved SQLAlchemy",
+      "Textual SQL expression should be explicitly declared",
+      "PostgreSQL Docker Windows connection",
+      "SQLAlchemy 2.x compatibility issues",
+      "psycopg2 vs psycopg2-binary"
+    ],
+    "solutions_validees": [
+      {
+        "question": "SQLAlchemy metadata attribute error",
+        "reponse_validee": "Utiliser __mapper_args__ ou changer nom attribut",
+        "votes": 156,
+        "acceptee": true,
+        "code_exemple": "\n# Avant (erreur)\nclass Model(Base):\n    metadata = Column(String)\n    \n# Après (correct)\nclass Model(Base):\n    __metadata__ = Column(String)\n    # ou\n    model_metadata = Column(String)\n",
+        "url_simulee": "https://stackoverflow.com/q/xxxxxx"
+      },
+      {
+        "question": "psycopg2 vs psycopg2-binary Windows",
+        "reponse_validee": "Utiliser psycopg2-binary pour Windows",
+        "votes": 89,
+        "acceptee": true,
+        "code_exemple": "\n# Installation recommandée Windows\npip uninstall psycopg2\npip install psycopg2-binary\n\n# Vérification\nimport psycopg2\nprint(psycopg2.__version__)\n",
+        "url_simulee": "https://stackoverflow.com/q/zzzzzz"
+      }
+    ],
+    "patterns_communs": []
+  },
+  "documentation_solutions": {
+    "timestamp": "2025-06-18T01:29:25.128645",
+    "sources_consultees": [
+      "SQLAlchemy 2.0 Documentation",
+      "PostgreSQL Docker Hub",
+      "psycopg2 Official Docs",
+      "Docker Compose Documentation"
+    ],
+    "guides_migration": [
+      {
+        "source": "SQLAlchemy 2.0 Migration Guide",
+        "titre": "Migration from 1.x to 2.0",
+        "points_cles": [
+          "text() requis pour expressions SQL brutes",
+          "Changements dans declarative_base()",
+          "Nouvelle syntaxe pour requêtes",
+          "Gestion des métadonnées modifiée"
+        ],
+        "exemple_migration": "\n# SQLAlchemy 1.x\nfrom sqlalchemy.ext.declarative import declarative_base\nresult = conn.execute(\"SELECT * FROM table\")\n\n# SQLAlchemy 2.x  \nfrom sqlalchemy.orm import declarative_base\nfrom sqlalchemy import text\nresult = conn.execute(text(\"SELECT * FROM table\"))\n",
+        "url": "https://docs.sqlalchemy.org/en/20/changelog/migration_20.html"
+      }
+    ],
+    "bonnes_pratiques": [
+      {
+        "source": "PostgreSQL Docker Hub",
+        "titre": "PostgreSQL Docker Best Practices",
+        "recommandations": [
+          "Utiliser volumes nommés pour persistance",
+          "Configurer healthcheck",
+          "Définir variables environnement sécurisées",
+          "Optimiser performance avec shared_preload_libraries"
+        ],
+        "exemple_compose": "\nversion: '3.8'\nservices:\n  postgres:\n    image: postgres:15-alpine\n    environment:\n      POSTGRES_DB: myapp\n      POSTGRES_USER: postgres\n      POSTGRES_PASSWORD: secure_password\n    volumes:\n      - postgres_data:/var/lib/postgresql/data\n    healthcheck:\n      test: [\"CMD-SHELL\", \"pg_isready -U postgres\"]\n      interval: 30s\n      timeout: 10s\n      retries: 3\nvolumes:\n  postgres_data:\n",
+        "url": "https://hub.docker.com/_/postgres"
+      }
+    ],
+    "exemples_code": [
+      {
+        "source": "psycopg2 Documentation",
+        "titre": "Installation et Configuration Windows",
+        "instructions": [
+          "Installer Microsoft Visual C++ Build Tools",
+          "Utiliser psycopg2-binary pour éviter compilation",
+          "Configurer variables d'environnement PostgreSQL",
+          "Tester connexion avec paramètres explicites"
+        ],
+        "code_test": "\nimport psycopg2\nfrom psycopg2 import sql\n\n# Test connexion robuste\ntry:\n    conn = psycopg2.connect(\n        host=\"localhost\",\n        database=\"postgres\",\n        user=\"postgres\",\n        password=\"password\",\n        port=\"5432\"\n    )\n    print(\"✅ Connexion PostgreSQL réussie\")\n    conn.close()\nexcept Exception as e:\n    print(f\"❌ Erreur connexion: {e}\")\n",
+        "url": "https://www.psycopg.org/docs/"
+      }
+    ]
+  },
+  "synthese": {
+    "timestamp": "2025-06-18T01:29:25.128645",
+    "problemes_identifies": [
+      {
+        "probleme": "SQLAlchemy metadata attribute conflict",
+        "criticite": "HAUTE",
+        "impact": "Bloque initialisation modèles",
+        "sources": [
+          "GitHub",
+          "Stack Overflow"
+        ]
+      },
+      {
+        "probleme": "SQLAlchemy 2.x text() requirement",
+        "criticite": "HAUTE",
+        "impact": "Empêche exécution requêtes SQL",
+        "sources": [
+          "Documentation officielle",
+          "Stack Overflow"
+        ]
+      },
+      {
+        "probleme": "psycopg2 installation Windows",
+        "criticite": "MOYENNE",
+        "impact": "Problèmes de connexion PostgreSQL",
+        "sources": [
+          "GitHub",
+          "Documentation"
+        ]
+      },
+      {
+        "probleme": "Docker PostgreSQL connectivity",
+        "criticite": "MOYENNE",
+        "impact": "Containers inaccessibles",
+        "sources": [
+          "GitHub",
+          "Docker Hub"
+        ]
+      }
+    ],
+    "solutions_prioritaires": [
+      {
+        "rang": 1,
+        "probleme": "SQLAlchemy metadata conflict",
+        "solution": "Renommer attributs conflictuels dans modèles",
+        "code_fix": "\n# Dans models.py - AVANT (problématique)\nclass AgentSession(Base):\n    metadata = Column(JSON)  # ❌ Conflit avec SQLAlchemy\n\n# APRÈS (corrigé)\nclass AgentSession(Base):\n    session_metadata = Column(JSON)  # ✅ OK\n    # ou\n    __metadata__ = Column(JSON)  # ✅ Alternative\n",
+        "effort": "1-2 heures",
+        "risque": "FAIBLE"
+      },
+      {
+        "rang": 2,
+        "probleme": "text() requirement SQLAlchemy 2.x",
+        "solution": "Wrapper expressions SQL avec text()",
+        "code_fix": "\n# Import nécessaire\nfrom sqlalchemy import text\n\n# Dans session.py - AVANT (problématique)  \nresult = conn.execute(\"SELECT 1 as test_value\")  # ❌\n\n# APRÈS (corrigé)\nresult = conn.execute(text(\"SELECT 1 as test_value\"))  # ✅\n\n# Pour requêtes dynamiques\nquery = text(\"SELECT * FROM table WHERE id = :id\")\nresult = conn.execute(query, {\"id\": 123})\n",
+        "effort": "2-3 heures",
+        "risque": "FAIBLE"
+      },
+      {
+        "rang": 3,
+        "probleme": "psycopg2 Windows installation",
+        "solution": "Utiliser psycopg2-binary",
+        "code_fix": "\n# Terminal Windows\npip uninstall psycopg2\npip install psycopg2-binary\n\n# Vérification requirements.txt\npsycopg2-binary>=2.9.0\n# au lieu de\n# psycopg2>=2.9.0\n",
+        "effort": "30 minutes",
+        "risque": "TRÈS FAIBLE"
+      }
+    ],
+    "plan_implementation": [
+      {
+        "phase": 1,
+        "titre": "Correction SQLAlchemy immédiate",
+        "actions": [
+          "Backup fichiers modèles existants",
+          "Renommer attributs 'metadata' conflictuels",
+          "Ajouter imports text() nécessaires",
+          "Tester compilation modèles"
+        ],
+        "duree_estimee": "2-3 heures"
+      },
+      {
+        "phase": 2,
+        "titre": "Validation environnement",
+        "actions": [
+          "Vérifier installation psycopg2-binary",
+          "Tester connexions PostgreSQL",
+          "Valider Docker containers",
+          "Exécuter suite de tests"
+        ],
+        "duree_estimee": "1-2 heures"
+      },
+      {
+        "phase": 3,
+        "titre": "Optimisation et documentation",
+        "actions": [
+          "Optimiser configuration Docker",
+          "Documenter procédures",
+          "Créer guide troubleshooting",
+          "Mettre en place monitoring"
+        ],
+        "duree_estimee": "2-4 heures"
+      }
+    ],
+    "ressources_complementaires": [
+      {
+        "type": "Guide migration",
+        "titre": "SQLAlchemy 1.x to 2.x Complete Guide",
+        "url": "https://docs.sqlalchemy.org/en/20/changelog/migration_20.html",
+        "utilite": "Référence complète pour migration"
+      },
+      {
+        "type": "Troubleshooting",
+        "titre": "PostgreSQL Docker Windows Issues",
+        "url": "https://github.com/docker/for-win/issues",
+        "utilite": "Solutions problèmes spécifiques Windows"
+      },
+      {
+        "type": "Best practices",
+        "titre": "Production PostgreSQL Docker Setup",
+        "url": "https://hub.docker.com/_/postgres",
+        "utilite": "Configuration production optimisée"
+      }
+    ]
+  }
+}

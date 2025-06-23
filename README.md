@@ -231,6 +231,28 @@ ChromaDB: Collections vectorielles locales
 
 ---
 
+## 🤖 Agent Orchestrateur : TaskMasterFinal
+
+Le cœur du système `NextGeneration` est l'agent **`TaskMasterFinal`**, un orchestrateur intelligent et autonome qui réside dans `agents/taskmaster_final.py`. Il est conçu pour analyser des missions complexes et les déléguer aux agents spécialisés les plus compétents.
+
+### Architecture du TaskMasterFinal
+
+*   **Découverte Dynamique :** Au démarrage, le `TaskMaster` scanne le répertoire `agents/` pour identifier tous les agents disponibles et valides, garantissant ainsi la stabilité du système.
+*   **Délégation Basée sur les Capacités :** Chaque agent spécialisé déclare ses compétences (ex: `doc_writing`, `code_review`). Le `TaskMaster` utilise cette information pour assigner la mission à l'expert le plus pertinent.
+*   **Exécution Standardisée :** Tous les agents suivent une interface commune avec des méthodes `run()` et `shutdown()`, assurant une orchestration fluide et prédictible.
+*   **Robustesse et Logging :** Les opérations sont tracées dans des fichiers de log situés dans `20250620_projet_taskmanager/TASKMASTER_PRODUCTION_READY/logs/` pour une auditabilité complète.
+
+### Utilisation du TaskMasterFinal
+
+Pour lancer une mission, exécutez le script principal. Des exemples de missions sont inclus dans le code pour démonstration.
+
+```bash
+# Lancer le TaskMaster et ses missions
+python agents/taskmaster_final.py
+```
+
+---
+
 ## 🏆 Accomplissement Récent : Refactorisation de l'Architecture
 
 Une refactorisation majeure a été achevée le 21 Juin 2025 pour améliorer la clarté, la maintenabilité et la centralisation de la base de code.

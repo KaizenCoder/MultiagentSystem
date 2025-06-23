@@ -1,0 +1,30 @@
+{
+  "timestamp": "2025-06-18T01:27:38.533884",
+  "tests_executes": [
+    {
+      "test": "Import modules PostgreSQL",
+      "statut": "PARTIAL",
+      "details": "Imports essentiels validés"
+    },
+    {
+      "test": "Modèles SQLAlchemy corrigés",
+      "statut": "SUCCESS",
+      "details": "Modèles et CRUD validés"
+    },
+    {
+      "test": "Performance Baseline",
+      "statut": "SUCCESS",
+      "duration_ms": 100.75
+    }
+  ],
+  "erreurs": [
+    "Connexion DATABASE_URL: Aucune URL fonctionnelle",
+    "PostgreSQL Docker: Container non accessible"
+  ],
+  "recommandations": [],
+  "statistiques": {
+    "total_tests": 5,
+    "tests_reussis": 3,
+    "taux_reussite": 60.0
+  }
+}

@@ -29,11 +29,15 @@ from pathlib import Path
 from typing import Dict, List, Optional, Any
 import os
 import sys
+import logging
 
 # Configuration paths
 AGENT_ROOT = Path(__file__).parent
 PROJECT_ROOT = AGENT_ROOT.parent
 sys.path.append(str(AGENT_ROOT))
+
+# Configuration de base du logging
+# logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 @dataclass
 class DocumentationTemplate:
@@ -61,82 +65,72 @@ class APIEndpoint:
     authentication: str
     rate_limits: Optional[str]
 
-class Agent13DocumentationSpecialist:
-    """
-    📚 AGENT 13 - SPÉCIALISTE DOCUMENTATION
+class Agent13SpecialisteDocumentation:
+    """Agent 13 - Spécialiste Documentation pour Agent Factory Implementation"""
     
-    Responsabilités Sprint 4:
-    - Guides production opérateur complets
-    - Documentation API Agent Factory
-    - Runbooks procédures opérationnelles
-    - Standards documentation équipe
-    - Intégration tous agents Sprint 4
-    """
-    
-    def __init__(self):
-    self.agent_id = "agent_13"
-    self.agent_name = "Spécialiste Documentation"
-    self.version = "1.0.0"
-    self.sprint = "Sprint 4"
-    self.mission = "Documentation production complète"
+    CAPABILITIES = ["documentation_generation", "documentation_review"]
+
+    def __init__(self, agent_id="specialiste_documentation_01"):
+        self.name = "Agent 13 - Spécialiste Documentation"
+        self.agent_id = agent_id
+        self.agent_name = "Spécialiste Documentation"
+        self.version = "1.0.0"
+        self.sprint = "Sprint 4"
+        self.mission = "Documentation production complète"
         
         # Logging configuration
-    self._setup_logging()
+        self._setup_logging()
         
         # Documentation paths
-    self.docs_root = PROJECT_ROOT / "documentation"
-    self.docs_root.mkdir(exist_ok=True)
+        self.docs_root = PROJECT_ROOT / "documentation"
+        self.docs_root.mkdir(exist_ok=True)
         
         # Structure documentation
-    self.doc_structure = {
-    "guides": self.docs_root / "guides",
-    "api": self.docs_root / "api", 
-    "runbooks": self.docs_root / "runbooks",
-    "architecture": self.docs_root / "architecture",
-    "deployment": self.docs_root / "deployment",
-    "troubleshooting": self.docs_root / "troubleshooting"
-    }
+        self.doc_structure = {
+            "guides": self.docs_root / "guides",
+            "api": self.docs_root / "api", 
+            "runbooks": self.docs_root / "runbooks",
+            "architecture": self.docs_root / "architecture",
+            "deployment": self.docs_root / "deployment",
+            "troubleshooting": self.docs_root / "troubleshooting"
+        }
         
-    for doc_dir in self.doc_structure.values():
-    doc_dir.mkdir(exist_ok=True)
+        for doc_dir in self.doc_structure.values():
+            doc_dir.mkdir(exist_ok=True)
             
         # Templates et standards
-    self.doc_templates = {}
-    self.api_endpoints = {}
+        self.doc_templates = {}
+        self.api_endpoints = {}
         
-    self.logger.info(f"📚 {self.agent_name} initialisé - Sprint 4")
+        self.logger.info(f"📚 {self.agent_name} initialisé - Sprint 4")
+        self.logger.info(f"Rapports générés dans : {self.reports_dir}")
         
     def _setup_logging(self):
         """Configuration logging Agent 13"""
-    log_dir = PROJECT_ROOT / "logs"
-    log_dir.mkdir(exist_ok=True)
+        log_dir = PROJECT_ROOT / "logs"
+        log_dir.mkdir(exist_ok=True)
         
-    log_file = log_dir / f"{self.agent_id}_documentation.log"
+        log_file = log_dir / f"{self.agent_id}_documentation.log"
         
-    logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-    logging.FileHandler(log_file),
-    logging.StreamHandler()
-    ]
-    )
-        
-        # LoggingManager NextGeneration - Agent
-    import sys
-from pathlib import Path
-from core import logging_manager
-    self.logger = LoggingManager().get_agent_logger(
-    agent_name="class",
-    role="ai_processor",
-    domain="general",
-    async_enabled=True
-    )
+        self.logger = logging.getLogger(self.__class__.__name__)
+        self.logger.setLevel(logging.INFO)
+
+        # Prevent duplicate handlers
+        if not self.logger.handlers:
+            # File handler
+            fh = logging.FileHandler(log_file)
+            fh.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+            self.logger.addHandler(fh)
+
+            # Stream handler
+            sh = logging.StreamHandler()
+            sh.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+            self.logger.addHandler(sh)
         
     def create_production_guide(self) -> Dict[str, Any]:
         """Guide production opérateur complet"""
-    try:
-    guide_content = """# 🚀 **GUIDE PRODUCTION - AGENT FACTORY PATTERN**
+        try:
+            guide_content = """# 🔧 **GUIDE PRODUCTION - AGENT FACTORY PATTERN**
 
 ## **Vue d'Ensemble Production**
 
@@ -355,199 +349,199 @@ ps aux | grep wasi
 """
 
             # Sauvegarde guide
-    guide_file = self.doc_structure["guides"] / "production_operator_guide.md"
-    guide_file.write_text(guide_content)
+            guide_file = self.doc_structure["guides"] / "production_operator_guide.md"
+            guide_file.write_text(guide_content)
             
-    self.logger.info("✅ Guide production opérateur créé")
+            self.logger.info("✅ Guide production opérateur créé")
             
-    return {
-    "status": "success",
-    "guide_file": str(guide_file),
-    "sections_count": guide_content.count("##"),
-    "word_count": len(guide_content.split())
-    }
+            return {
+                "status": "success",
+                "guide_file": str(guide_file),
+                "sections_count": guide_content.count("##"),
+                "word_count": len(guide_content.split())
+            }
             
-    except Exception as e:
-    self.logger.error(f"❌ Erreur création guide production: {e}")
-    return {"status": "error", "error": str(e)}
+        except Exception as e:
+            self.logger.error(f"❌ Erreur création guide production: {e}")
+            return {"status": "error", "error": str(e)}
             
     def create_api_documentation(self) -> Dict[str, Any]:
         """Documentation API Agent Factory complète"""
-    try:
+        try:
             # Définition endpoints API
-    endpoints = [
-    APIEndpoint(
-    path="/health",
-    method="GET", 
-    description="Health check système",
-    parameters={},
-    responses={
-        "200": {"description": "Système opérationnel", "schema": {"status": "healthy"}},
-        "503": {"description": "Système dégradé", "schema": {"status": "unhealthy", "issues": ["string"]}}
-    },
-    examples=[{"request": "GET /health", "response": {"status": "healthy", "uptime": 3600}}],
-    authentication="None",
-    rate_limits="100/min"
-    ),
-    APIEndpoint(
-    path="/metrics",
-    method="GET",
-    description="Métriques Prometheus",
-    parameters={},
-    responses={
-        "200": {"description": "Métriques format Prometheus", "content_type": "text/plain"}
-    },
-    examples=[{"request": "GET /metrics", "response": "# HELP agent_factory_response_time_ms..."}],
-    authentication="None", 
-    rate_limits="10/min"
-    ),
-    APIEndpoint(
-    path="/factory/create",
-    method="POST",
-    description="Création template optimisée",
-    parameters={
-        "body": {
-            "id": {"type": "string", "required": True, "description": "ID unique template"},
-            "name": {"type": "string", "required": True, "description": "Nom template"},
-            "description": {"type": "string", "required": False, "description": "Description"},
-            "type": {"type": "string", "required": False, "default": "standard"}
-        }
-    },
-    responses={
-        "201": {"description": "Template créé avec succès", "schema": {"template_id": "string", "performance_ms": "number"}},
-        "400": {"description": "Paramètres invalides", "schema": {"error": "string"}},
-        "500": {"description": "Erreur interne", "schema": {"error": "string"}}
-    },
-    examples=[{
-        "request": {"id": "test_template", "name": "Template Test", "type": "performance"},
-        "response": {"template_id": "test_template", "performance_ms": 42.5, "compressed": True}
-    }],
-    authentication="Bearer token",
-    rate_limits="50/min"
-    ),
-    APIEndpoint(
-    path="/factory/templates/{id}",
-    method="GET",
-    description="Récupération template par ID",
-    parameters={
-        "path": {
-            "id": {"type": "string", "required": True, "description": "ID template"}
-        }
-    },
-    responses={
-        "200": {"description": "Template trouvé", "schema": {"template": "object"}},
-        "404": {"description": "Template non trouvé", "schema": {"error": "string"}}
-    },
-    examples=[{
-        "request": "GET /factory/templates/test_template",
-        "response": {"id": "test_template", "name": "Template Test", "created_at": "2025-01-28T10:00:00Z"}
-    }],
-    authentication="Bearer token",
-    rate_limits="100/min"
-    ),
-    APIEndpoint(
-    path="/backup/create",
-    method="POST",
-    description="Création backup via Agent 12",
-    parameters={
-        "body": {
-            "source_path": {"type": "string", "required": True, "description": "Chemin source"},
-            "backup_type": {"type": "string", "required": False, "default": "production", "enum": ["critical", "production", "development"]}
-        }
-    },
-    responses={
-        "201": {"description": "Backup créé", "schema": {"backup_id": "string", "size_bytes": "number"}},
-        "400": {"description": "Paramètres invalides", "schema": {"error": "string"}}
-    },
-    examples=[{
-        "request": {"source_path": "/app/templates", "backup_type": "production"},
-        "response": {"backup_id": "backup_1738024800_production", "size_bytes": 1048576}
-    }],
-    authentication="Bearer token (admin)",
-    rate_limits="5/min"
-    )
-    ]
+            endpoints = [
+                APIEndpoint(
+                    path="/health",
+                    method="GET", 
+                    description="Health check système",
+                    parameters={},
+                    responses={
+                        "200": {"description": "Système opérationnel", "schema": {"status": "healthy"}},
+                        "503": {"description": "Système dégradé", "schema": {"status": "unhealthy", "issues": ["string"]}}
+                    },
+                    examples=[{"request": "GET /health", "response": {"status": "healthy", "uptime": 3600}}],
+                    authentication="None",
+                    rate_limits="100/min"
+                ),
+                APIEndpoint(
+                    path="/metrics",
+                    method="GET",
+                    description="Métriques Prometheus",
+                    parameters={},
+                    responses={
+                        "200": {"description": "Métriques format Prometheus", "content_type": "text/plain"}
+                    },
+                    examples=[{"request": "GET /metrics", "response": "# HELP agent_factory_response_time_ms..."}],
+                    authentication="None", 
+                    rate_limits="10/min"
+                ),
+                APIEndpoint(
+                    path="/factory/create",
+                    method="POST",
+                    description="Création template optimisée",
+                    parameters={
+                        "body": {
+                            "id": {"type": "string", "required": True, "description": "ID unique template"},
+                            "name": {"type": "string", "required": True, "description": "Nom template"},
+                            "description": {"type": "string", "required": False, "description": "Description"},
+                            "type": {"type": "string", "required": False, "default": "standard"}
+                        }
+                    },
+                    responses={
+                        "201": {"description": "Template créé avec succès", "schema": {"template_id": "string", "performance_ms": "number"}},
+                        "400": {"description": "Paramètres invalides", "schema": {"error": "string"}},
+                        "500": {"description": "Erreur interne", "schema": {"error": "string"}}
+                    },
+                    examples=[{
+                        "request": {"id": "test_template", "name": "Template Test", "type": "performance"},
+                        "response": {"template_id": "test_template", "performance_ms": 42.5, "compressed": True}
+                    }],
+                    authentication="Bearer token",
+                    rate_limits="50/min"
+                ),
+                APIEndpoint(
+                    path="/factory/templates/{id}",
+                    method="GET",
+                    description="Récupération template par ID",
+                    parameters={
+                        "path": {
+                            "id": {"type": "string", "required": True, "description": "ID template"}
+                        }
+                    },
+                    responses={
+                        "200": {"description": "Template trouvé", "schema": {"template": "object"}},
+                        "404": {"description": "Template non trouvé", "schema": {"error": "string"}}
+                    },
+                    examples=[{
+                        "request": "GET /factory/templates/test_template",
+                        "response": {"id": "test_template", "name": "Template Test", "created_at": "2025-01-28T10:00:00Z"}
+                    }],
+                    authentication="Bearer token",
+                    rate_limits="100/min"
+                ),
+                APIEndpoint(
+                    path="/backup/create",
+                    method="POST",
+                    description="Création backup via Agent 12",
+                    parameters={
+                        "body": {
+                            "source_path": {"type": "string", "required": True, "description": "Chemin source"},
+                            "backup_type": {"type": "string", "required": False, "default": "production", "enum": ["critical", "production", "development"]}
+                        }
+                    },
+                    responses={
+                        "201": {"description": "Backup créé", "schema": {"backup_id": "string", "size_bytes": "number"}},
+                        "400": {"description": "Paramètres invalides", "schema": {"error": "string"}}
+                    },
+                    examples=[{
+                        "request": {"source_path": "/app/templates", "backup_type": "production"},
+                        "response": {"backup_id": "backup_1738024800_production", "size_bytes": 1048576}
+                    }],
+                    authentication="Bearer token (admin)",
+                    rate_limits="5/min"
+                )
+            ]
             
             # Génération documentation OpenAPI
-    api_doc = {
-    "openapi": "3.0.0",
-    "info": {
-    "title": "Agent Factory Pattern API",
-    "description": "API pour Agent Factory Pattern - Sprint 4 Production",
-    "version": "1.0.0",
-    "contact": {
-        "name": "Agent Factory Team",
-        "email": "agents@factory.local"
-    }
-    },
-    "servers": [
-    {"url": "http://localhost:8000", "description": "Development"},
-    {"url": "https://api.agentfactory.production", "description": "Production"}
-    ],
-    "security": [
-    {"BearerAuth": []}
-    ],
-    "components": {
-    "securitySchemes": {
-        "BearerAuth": {
-            "type": "http",
-            "scheme": "bearer",
-            "bearerFormat": "JWT"
-        }
-    }
-    },
-    "paths": {}
-    }
+            api_doc = {
+                "openapi": "3.0.0",
+                "info": {
+                    "title": "Agent Factory Pattern API",
+                    "description": "API pour Agent Factory Pattern - Sprint 4 Production",
+                    "version": "1.0.0",
+                    "contact": {
+                        "name": "Agent Factory Team",
+                        "email": "agents@factory.local"
+                    }
+                },
+                "servers": [
+                    {"url": "http://localhost:8000", "description": "Development"},
+                    {"url": "https://api.agentfactory.production", "description": "Production"}
+                ],
+                "security": [
+                    {"BearerAuth": []}
+                ],
+                "components": {
+                    "securitySchemes": {
+                        "BearerAuth": {
+                            "type": "http",
+                            "scheme": "bearer",
+                            "bearerFormat": "JWT"
+                        }
+                    }
+                },
+                "paths": {}
+            }
             
             # Conversion endpoints vers OpenAPI
-    for endpoint in endpoints:
-    path_item = {
-    endpoint.method.lower(): {
-        "summary": endpoint.description,
-        "parameters": [],
-        "responses": endpoint.responses
-    }
-    }
+            for endpoint in endpoints:
+                path_item = {
+                    endpoint.method.lower(): {
+                        "summary": endpoint.description,
+                        "parameters": [],
+                        "responses": endpoint.responses
+                    }
+                }
                 
-    if endpoint.parameters:
-    for param_type, params in endpoint.parameters.items():
-        for param_name, param_def in params.items():
-            path_item[endpoint.method.lower()]["parameters"].append({
-                "name": param_name,
-                "in": param_type,
-                "required": param_def.get("required", False),
-                "description": param_def.get("description", ""),
-                "schema": {"type": param_def.get("type", "string")}
-            })
+                if endpoint.parameters:
+                    for param_type, params in endpoint.parameters.items():
+                        for param_name, param_def in params.items():
+                            path_item[endpoint.method.lower()]["parameters"].append({
+                                "name": param_name,
+                                "in": param_type,
+                                "required": param_def.get("required", False),
+                                "description": param_def.get("description", ""),
+                                "schema": {"type": param_def.get("type", "string")}
+                            })
                             
-    api_doc["paths"][endpoint.path] = path_item
-    self.api_endpoints[f"{endpoint.method} {endpoint.path}"] = endpoint
+                api_doc["paths"][endpoint.path] = path_item
+                self.api_endpoints[f"{endpoint.method} {endpoint.path}"] = endpoint
                 
             # Sauvegarde documentation API
-    api_file = self.doc_structure["api"] / "openapi.json"
-    api_file.write_text(json.dumps(api_doc, indent=2))
+            api_file = self.doc_structure["api"] / "openapi.json"
+            api_file.write_text(json.dumps(api_doc, indent=2))
             
             # Documentation Markdown API
-    api_md_content = self._generate_api_markdown(endpoints)
-    api_md_file = self.doc_structure["api"] / "API_Documentation.md"
-    api_md_file.write_text(api_md_content)
+            api_md_content = self._generate_api_markdown(endpoints)
+            api_md_file = self.doc_structure["api"] / "API_Documentation.md"
+            api_md_file.write_text(api_md_content)
             
-    self.logger.info(f"✅ Documentation API créée ({len(endpoints)} endpoints)")
+            self.logger.info(f"✅ Documentation API créée ({len(endpoints)} endpoints)")
             
-    return {
-    "status": "success",
-    "endpoints_count": len(endpoints),
-    "openapi_file": str(api_file),
-    "markdown_file": str(api_md_file)
-    }
+            return {
+                "status": "success",
+                "endpoints_count": len(endpoints),
+                "openapi_file": str(api_file),
+                "markdown_file": str(api_md_file)
+            }
             
-    except Exception as e:
-    self.logger.error(f"❌ Erreur création documentation API: {e}")
-    return {"status": "error", "error": str(e)}
+        except Exception as e:
+            self.logger.error(f"❌ Erreur création documentation API: {e}")
+            return {"status": "error", "error": str(e)}
             
     def _generate_api_markdown(self, endpoints: List[APIEndpoint]) -> str:
         """Génération documentation API Markdown"""
-    content = """# 🔌 **API DOCUMENTATION - AGENT FACTORY PATTERN**
+        content = """# 🔌 **API DOCUMENTATION - AGENT FACTORY PATTERN**
 
 ## **Vue d'Ensemble**
 
@@ -582,8 +576,8 @@ curl -H "Authorization: Bearer <token>" \\
 
 """
         
-    for endpoint in endpoints:
-    content += f"""### **{endpoint.method} {endpoint.path}**
+        for endpoint in endpoints:
+            content += f"""### **{endpoint.method} {endpoint.path}**
 
 **Description :** {endpoint.description}  
 **Authentification :** {endpoint.authentication}  
@@ -591,37 +585,37 @@ curl -H "Authorization: Bearer <token>" \\
 
 """
             
-    if endpoint.parameters:
-    content += "**Paramètres :**\n\n"
-    for param_type, params in endpoint.parameters.items():
-    for param_name, param_def in params.items():
-        required = "**Requis**" if param_def.get("required") else "Optionnel"
-        content += f"- `{param_name}` ({param_def.get('type', 'string')}) - {required} - {param_def.get('description', '')}\n"
-    content += "\n"
+            if endpoint.parameters:
+                content += "**Paramètres :**\n\n"
+                for param_type, params in endpoint.parameters.items():
+                    for param_name, param_def in params.items():
+                        required = "**Requis**" if param_def.get("required") else "Optionnel"
+                        content += f"- `{param_name}` ({param_def.get('type', 'string')}) - {required} - {param_def.get('description', '')}\n"
+                content += "\n"
                 
-    content += "**Réponses :**\n\n"
-    for status, response in endpoint.responses.items():
-    content += f"- **{status}** : {response.get('description', '')}\n"
-    content += "\n"
+            content += "**Réponses :**\n\n"
+            for status, response in endpoint.responses.items():
+                content += f"- **{status}** : {response.get('description', '')}\n"
+            content += "\n"
             
-    if endpoint.examples:
-    content += "**Exemple :**\n\n"
-    example = endpoint.examples[0]
-    if isinstance(example.get('request'), dict):
-    content += f"```json\n{json.dumps(example['request'], indent=2)}\n```\n\n"
-    else:
-    content += f"```bash\n{example['request']}\n```\n\n"
+            if endpoint.examples:
+                content += "**Exemple :**\n\n"
+                example = endpoint.examples[0]
+                if isinstance(example.get('request'), dict):
+                    content += f"```json\n{json.dumps(example['request'], indent=2)}\n```\n\n"
+                else:
+                    content += f"```bash\n{example['request']}\n```\n\n"
                     
-    content += f"```json\n{json.dumps(example['response'], indent=2)}\n```\n\n"
+                content += f"```json\n{json.dumps(example['response'], indent=2)}\n```\n\n"
                 
-    content += "---\n\n"
+            content += "---\n\n"
             
-    return content
+        return content
         
     def create_runbook_operations(self) -> Dict[str, Any]:
         """Runbook opérations production"""
-    try:
-    runbook_content = """# 📖 **RUNBOOK OPÉRATIONS - AGENT FACTORY PATTERN**
+        try:
+            runbook_content = """# 📖 **RUNBOOK OPÉRATIONS - AGENT FACTORY PATTERN**
 
 ## **🚨 Procédures d'Urgence**
 
@@ -919,101 +913,116 @@ python agents/agent_12_gestionnaire_backups.py --execute-rollback --plan=<plan_i
 """
 
             # Sauvegarde runbook
-    runbook_file = self.doc_structure["runbooks"] / "operations_runbook.md"
-    runbook_file.write_text(runbook_content)
+            runbook_file = self.doc_structure["runbooks"] / "operations_runbook.md"
+            runbook_file.write_text(runbook_content)
             
-    self.logger.info("✅ Runbook opérations créé")
+            self.logger.info("✅ Runbook opérations créé")
             
-    return {
-    "status": "success",
-    "runbook_file": str(runbook_file),
-    "procedures_count": runbook_content.count("###"),
-    "word_count": len(runbook_content.split())
-    }
+            return {
+                "status": "success",
+                "runbook_file": str(runbook_file),
+                "procedures_count": runbook_content.count("###"),
+                "word_count": len(runbook_content.split())
+            }
             
-    except Exception as e:
-    self.logger.error(f"❌ Erreur création runbook: {e}")
-    return {"status": "error", "error": str(e)}
+        except Exception as e:
+            self.logger.error(f"❌ Erreur création runbook: {e}")
+            return {"status": "error", "error": str(e)}
             
     def generate_sprint4_report(self) -> Dict[str, Any]:
         """Génération rapport Agent 13 Sprint 4"""
-    try:
+        try:
             # Statistiques documentation
-    doc_stats = {
-    "total_files": 0,
-    "total_size_bytes": 0,
-    "categories": {}
-    }
+            doc_stats = {
+                "total_files": 0,
+                "total_size_bytes": 0,
+                "categories": {}
+            }
             
-    for category, doc_dir in self.doc_structure.items():
-    files = list(doc_dir.glob("*.md")) + list(doc_dir.glob("*.json"))
-    file_count = len(files)
-    total_size = sum(f.stat().st_size for f in files if f.exists())
+            for category, doc_dir in self.doc_structure.items():
+                files = list(doc_dir.glob("*.md")) + list(doc_dir.glob("*.json"))
+                file_count = len(files)
+                total_size = sum(f.stat().st_size for f in files if f.exists())
                 
-    doc_stats["categories"][category] = {
-    "files": file_count,
-    "size_bytes": total_size
-    }
-    doc_stats["total_files"] += file_count
-    doc_stats["total_size_bytes"] += total_size
+                doc_stats["categories"][category] = {
+                    "files": file_count,
+                    "size_bytes": total_size
+                }
+                doc_stats["total_files"] += file_count
+                doc_stats["total_size_bytes"] += total_size
                 
             # Rapport Sprint 4
-    sprint4_report = {
-    "agent_info": {
-    "id": self.agent_id,
-    "name": self.agent_name,
-    "version": self.version,
-    "sprint": self.sprint,
-    "mission": self.mission,
-    "created_at": datetime.now().isoformat()
-    },
-    "sprint4_objectives": {
-    "production_guide": "✅ Guide production opérateur complet",
-    "api_documentation": f"✅ Documentation API ({len(self.api_endpoints)} endpoints)",
-    "runbook_operations": "✅ Runbook opérations production",
-    "documentation_structure": f"✅ Structure organisée ({len(self.doc_structure)} catégories)",
-    "standards_established": "✅ Standards documentation établis",
-    "integration_agents": "✅ Intégration tous agents Sprint 4"
-    },
-    "documentation_statistics": doc_stats,
-    "api_endpoints_count": len(self.api_endpoints),
-    "structure_directories": list(self.doc_structure.keys()),
-    "integration_status": {
-    "guides_created": True,
-    "api_documented": True,
-    "runbooks_available": True,
-    "standards_defined": True
-    },
-    "recommendations": [
-    "Déployer documentation sur plateforme centralised",
-    "Intégrer documentation dans CI/CD pipeline",
-    "Configurer génération automatique API docs",
-    "Former équipe ops sur runbooks",
-    "Implémenter feedback loop documentation"
-    ],
-    "next_steps_sprint5": [
-    "Documentation déploiement K8s Agent 07",
-    "Runbooks spécifiques production K8s",
-    "Guides troubleshooting clusters",
-    "Documentation monitoring distribué"
-    ],
-    "timestamp": datetime.now().isoformat()
-    }
+            sprint4_report = {
+                "agent_info": {
+                    "id": self.agent_id,
+                    "name": self.agent_name,
+                    "version": self.version,
+                    "sprint": self.sprint,
+                    "mission": self.mission,
+                    "created_at": datetime.now().isoformat()
+                },
+                "sprint4_objectives": {
+                    "production_guide": "✅ Guide production opérateur complet",
+                    "api_documentation": f"✅ Documentation API ({len(self.api_endpoints)} endpoints)",
+                    "runbook_operations": "✅ Runbook opérations production",
+                    "documentation_structure": f"✅ Structure organisée ({len(self.doc_structure)} catégories)",
+                    "standards_established": "✅ Standards documentation établis",
+                    "integration_agents": "✅ Intégration tous agents Sprint 4"
+                },
+                "documentation_statistics": doc_stats,
+                "api_endpoints_count": len(self.api_endpoints),
+                "structure_directories": list(self.doc_structure.keys()),
+                "integration_status": {
+                    "guides_created": True,
+                    "api_documented": True,
+                    "runbooks_available": True,
+                    "standards_defined": True
+                },
+                "recommendations": [
+                    "Déployer documentation sur plateforme centralised",
+                    "Intégrer documentation dans CI/CD pipeline",
+                    "Configurer génération automatique API docs",
+                    "Former équipe ops sur runbooks",
+                    "Implémenter feedback loop documentation"
+                ],
+                "next_steps_sprint5": [
+                    "Documentation déploiement K8s Agent 07",
+                    "Runbooks spécifiques production K8s",
+                    "Guides troubleshooting clusters",
+                    "Documentation monitoring distribué"
+                ],
+                "timestamp": datetime.now().isoformat()
+            }
             
             # Sauvegarde rapport
-    reports_dir = PROJECT_ROOT / "reports"
-    reports_dir.mkdir(exist_ok=True)
+            reports_dir = PROJECT_ROOT / "reports"
+            reports_dir.mkdir(exist_ok=True)
             
-    report_file = reports_dir / f"{self.agent_id}_rapport_sprint4_{datetime.now().strftime('%Y-%m-%d')}.json"
-    report_file.write_text(json.dumps(sprint4_report, indent=2, ensure_ascii=False))
+            report_file = reports_dir / f"{self.agent_id}_rapport_sprint4_{datetime.now().strftime('%Y-%m-%d')}.json"
+            report_file.write_text(json.dumps(sprint4_report, indent=2, ensure_ascii=False))
             
-    self.logger.info(f"📊 Rapport Sprint 4 généré: {report_file}")
+            self.logger.info(f"📊 Rapport Sprint 4 généré: {report_file}")
             
-    return sprint4_report
+            return sprint4_report
             
-    except Exception as e:
-    self.logger.error(f"❌ Erreur génération rapport Sprint 4: {e}")
-    return {"error": str(e)}
+        except Exception as e:
+            self.logger.error(f"❌ Erreur génération rapport Sprint 4: {e}")
+            return {"error": str(e)}
+
+    def shutdown(self):
+        """Ferme les handlers de logging pour libérer les fichiers."""
+        self.logger.info(f"Arrêt de l'agent {self.name} et libération des logs.")
+        handlers = self.logger.handlers[:]
+        for handler in handlers:
+            handler.close()
+            self.logger.removeHandler(handler)
+
+    def run(self, task_prompt: str):
+        """
+        Point d'entrée principal pour l'agent de documentation.
+        """
+        # Implementation of the run method
+        pass
 
 def main():
     """Point d'entrée Agent 13"""
@@ -1021,48 +1030,48 @@ def main():
     
     try:
         # Initialisation Agent 13
-    agent = Agent13DocumentationSpecialist()
+        agent = Agent13SpecialisteDocumentation()
         
         # Création guide production
-    print("\n📖 CRÉATION GUIDE PRODUCTION...")
-    guide_result = agent.create_production_guide()
-    if guide_result["status"] == "success":
-    print(f"✅ Guide créé: {guide_result['sections_count']} sections")
-    print(f"✅ Contenu: {guide_result['word_count']} mots")
+        print("\n📖 CRÉATION GUIDE PRODUCTION...")
+        guide_result = agent.create_production_guide()
+        if guide_result["status"] == "success":
+            print(f"✅ Guide créé: {guide_result['sections_count']} sections")
+            print(f"✅ Contenu: {guide_result['word_count']} mots")
         
         # Documentation API
-    print("\n🔌 GÉNÉRATION DOCUMENTATION API...")
-    api_result = agent.create_api_documentation()
-    if api_result["status"] == "success":
-    print(f"✅ API documentée: {api_result['endpoints_count']} endpoints")
-    print(f"✅ OpenAPI: {api_result['openapi_file']}")
-    print(f"✅ Markdown: {api_result['markdown_file']}")
+        print("\n🔌 GÉNÉRATION DOCUMENTATION API...")
+        api_result = agent.create_api_documentation()
+        if api_result["status"] == "success":
+            print(f"✅ API documentée: {api_result['endpoints_count']} endpoints")
+            print(f"✅ OpenAPI: {api_result['openapi_file']}")
+            print(f"✅ Markdown: {api_result['markdown_file']}")
         
         # Runbook opérations
-    print("\n📋 CRÉATION RUNBOOK OPÉRATIONS...")
-    runbook_result = agent.create_runbook_operations()
-    if runbook_result["status"] == "success":
-    print(f"✅ Runbook créé: {runbook_result['procedures_count']} procédures")
-    print(f"✅ Contenu: {runbook_result['word_count']} mots")
+        print("\n📋 CRÉATION RUNBOOK OPÉRATIONS...")
+        runbook_result = agent.create_runbook_operations()
+        if runbook_result["status"] == "success":
+            print(f"✅ Runbook créé: {runbook_result['procedures_count']} procédures")
+            print(f"✅ Contenu: {runbook_result['word_count']} mots")
         
         # Génération rapport Sprint 4
-    print("\n📊 GÉNÉRATION RAPPORT SPRINT 4...")
-    sprint4_report = agent.generate_sprint4_report()
-    if "error" not in sprint4_report:
-    print("✅ Rapport Sprint 4 généré avec succès")
-    print(f"✅ Objectifs Sprint 4: {len([obj for obj in sprint4_report['sprint4_objectives'].values() if '✅' in obj])}/6 complétés")
-    print(f"✅ Documentation totale: {sprint4_report['documentation_statistics']['total_files']} fichiers")
-    print(f"✅ API endpoints: {sprint4_report['api_endpoints_count']} documentés")
+        print("\n📊 GÉNÉRATION RAPPORT SPRINT 4...")
+        sprint4_report = agent.generate_sprint4_report()
+        if "error" not in sprint4_report:
+            print("✅ Rapport Sprint 4 généré avec succès")
+            print(f"✅ Objectifs Sprint 4: {len([obj for obj in sprint4_report['sprint4_objectives'].values() if '✅' in obj])}/6 complétés")
+            print(f"✅ Documentation totale: {sprint4_report['documentation_statistics']['total_files']} fichiers")
+            print(f"✅ API endpoints: {sprint4_report['api_endpoints_count']} documentés")
         
-    print("\n🎉 AGENT 13 - SPÉCIALISTE DOCUMENTATION - SPRINT 4 TERMINÉ AVEC SUCCÈS!")
-    print("📚 Guide Production | 🔌 API Docs | 📋 Runbooks | 📖 Standards")
-    print("🚀 Prêt pour intégration Sprint 5 - Documentation K8s Production")
+        print("\n🎉 AGENT 13 - SPÉCIALISTE DOCUMENTATION - SPRINT 4 TERMINÉ AVEC SUCCÈS!")
+        print("📚 Guide Production | 🔌 API Docs | 📋 Runbooks | 📖 Standards")
+        print("🚀 Prêt pour intégration Sprint 5 - Documentation K8s Production")
         
-    return True
+        return True
         
     except Exception as e:
-    print(f"❌ ERREUR AGENT 13: {e}")
-    return False
+        print(f"❌ ERREUR AGENT 13: {e}")
+        return False
 
 if __name__ == "__main__":
     success = main()
