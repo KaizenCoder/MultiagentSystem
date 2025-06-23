@@ -159,18 +159,6 @@ class Agent14SpecialisteWorkspace:
                 (agents_dir / agent_file).touch()
                 self.metrics["files_created"] += 1
                 
-            # Cration structure code_expert
-            code_expert_dir = self.base_path / "code_expert"
-            expert_files = [
-                "enhanced-agent-templates.py",
-                "optimized-template-manager.py", 
-                "expert_integration_guide.md"
-            ]
-            
-            for expert_file in expert_files:
-                (code_expert_dir / expert_file).touch()
-                self.metrics["files_created"] += 1
-                
             self.logger.info(f"[CHECK] Structure workspace complte cre avec {len(created_dirs)} rpertoires")
             
             return {

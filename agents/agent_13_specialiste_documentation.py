@@ -84,6 +84,8 @@ class Agent13SpecialisteDocumentation:
         # Documentation paths
         self.docs_root = PROJECT_ROOT / "documentation"
         self.docs_root.mkdir(exist_ok=True)
+        self.reports_dir = PROJECT_ROOT / "reports"
+        self.reports_dir.mkdir(exist_ok=True)
         
         # Structure documentation
         self.doc_structure = {

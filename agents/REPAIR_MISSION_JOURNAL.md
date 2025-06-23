@@ -151,4 +151,23 @@ Poursuite de la politique stricte :
 - **Agents 109 (planes) et 110 : bloqués pour dépendance code_expert**.
 - **La politique de conformité est respectée sur l'ensemble du périmètre audité.**
 
+---
+
+## 2025-06-23 — Agent 05 (Maître Tests & Validation)
+- Test d'import et d'initialisation via script temporaire.
+- Résultat : succès, initialisation du code expert OK, TemplateManager OK.
+- Warnings logger : config par défaut utilisée, champ _comment_block_ ignoré (non bloquant).
+- Agent marqué comme fonctionnel dans le suivi.
+
+## 2025-06-23 — Agent 06 (Specialiste Monitoring Sprint4)
+- Correction du constructeur : ajout du paramètre agent_type et initialisation explicite du logger via LoggingManager.
+- Test d'import et d'initialisation via script temporaire : succès, OpenTelemetry initialisé.
+- Agent marqué comme fonctionnel dans le suivi.
+
+## 2025-06-23 — Agents 12, 13, 14 (Backup, Documentation, Workspace)
+- Agent 12 : Correction du logger (LoggingManager), initialisation et repository Git OK.
+- Agent 13 : Correction de l'ordre d'initialisation (logger avant usage), initialisation OK.
+- Agent 14 : Initialisation et logger standard OK.
+- Tous les agents importés et instanciés sans erreur.
+
 --- 

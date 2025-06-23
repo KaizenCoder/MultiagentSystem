@@ -34,15 +34,30 @@ from watchdog.events import FileSystemEventHandler
 import signal
 import sys
 import logging
+from core.manager import LoggingManager
 
-# Configuration
+# Configuration robuste des chemins
 try:
-    AGENT_ROOT = Path(__file__).parent
-    PROJECT_ROOT = AGENT_ROOT.parent
+    # Le chemin absolu du fichier de script actuel
+    _current_file = Path(__file__).resolve()
+    # Le répertoire racine du projet est 2 niveaux au-dessus de '.../agents/agent_12...'
+    PROJECT_ROOT = _current_file.parent.parent
 except NameError:
-    # Fallback si __file__ n'est pas défini
-    AGENT_ROOT = Path.cwd() / "agents"
+    # Fallback robuste : on part du répertoire de travail actuel et on s'assure
+    # qu'on ne remonte pas trop haut si on est déjà à la racine.
     PROJECT_ROOT = Path.cwd()
+
+# On vérifie que le PROJECT_ROOT semble correct (contient un fichier connu)
+if not (PROJECT_ROOT / "README.md").exists():
+    # Si le README n'est pas là, le fallback a probablement échoué.
+    # On tente une dernière fois en supposant une structure standard.
+    if "nextgeneration" in str(PROJECT_ROOT):
+        while PROJECT_ROOT.name != 'nextgeneration':
+            PROJECT_ROOT = PROJECT_ROOT.parent
+    # Si on ne trouve toujours rien, on loggue une erreur mais on continue avec le CWD.
+    # Le logger n'est pas encore dispo, on utilise print.
+    print(f"AVERTISSEMENT: Le PROJECT_ROOT '{PROJECT_ROOT}' semble incorrect. Les backups pourraient être au mauvais endroit.")
+
 
 BACKUPS_DIR = PROJECT_ROOT / "backups"
 LOGS_DIR = PROJECT_ROOT / "logs"
@@ -136,7 +151,6 @@ class RealAgent12BackupManager:
         self.backup_history = []
         self.monitored_paths = [
             PROJECT_ROOT / "agents",
-            PROJECT_ROOT / "code_expert",
             PROJECT_ROOT / "documentation",
             PROJECT_ROOT / "tests"
         ]
@@ -174,12 +188,15 @@ class RealAgent12BackupManager:
         )
         
         # LoggingManager NextGeneration - Agent
-        self.logger = logging_manager.LoggingManager().get_agent_logger(
-            agent_name="class",
-            role="ai_processor",
-            domain="general",
-            async_enabled=True
-        )
+        custom_log_config = {
+            "logger_name": f"agent.{self.agent_id}",
+            "metadata": {
+                "agent_name": self.agent_id,
+                "role": "backup_manager",
+                "domain": "backup"
+            }
+        }
+        self.logger = LoggingManager().get_logger(config_name="default", custom_config=custom_log_config)
     
     def _setup_git_repository(self):
         """Initialisation repository Git"""
