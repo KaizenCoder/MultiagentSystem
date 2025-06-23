@@ -225,4 +225,19 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
 
+self.code_expert_path = self.workspace_root / "code_expert"
+        
+        try:
+            sys.path.insert(0, str(self.code_expert_path.parent))
+            from code_expert.enhanced_agent_templates import AgentTemplate
+            from code_expert.optimized_template_manager import OptimizedTemplateManager
+            self.code_expert_available = True
+            self.logger.info("[BOOT] Code expert Claude Phase 2 (templates, manager) chargé.")
+        except ImportError as e:
+            self.code_expert_available = False
+            self.logger.warning(f"[BOOT] Code expert non disponible: {e}")
+
+        self.quality_report = {}
+        self.dod_status = {}
+
 

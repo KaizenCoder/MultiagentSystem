@@ -21,6 +21,8 @@ import json
 from dataclasses import dataclass
 from enum import Enum
 import sys
+import logging
+from core.manager import LoggingManager
 
 # Import Pattern Factory (OBLIGATOIRE selon guide)
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -99,13 +101,17 @@ class Agent11AuditeurQualiteSprint3:
         self.sprint = "Sprint 3"
         
         # Setup logging
-        # LoggingManager NextGeneration - Agent
-        self.logger = LoggingManager().get_agent_logger(
-            agent_name="from",
-            role="ai_processor",
-            domain="general",
-            async_enabled=True
-        )
+        logging_manager = LoggingManager()
+        custom_log_config = {
+            "logger_name": f"agent.{self.agent_id}",
+            "metadata": {
+                "agent_name": f"Agent11_{self.agent_id}",
+                "role": "ai_processor",
+                "domain": "quality_audit"
+            },
+            "async_enabled": True
+        }
+        self.logger = logging_manager.get_logger(config_name="default", custom_config=custom_log_config)
         self.setup_logging()
         
         # Pattern Factory setup
