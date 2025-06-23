@@ -42,6 +42,8 @@ Vous êtes chargé de rendre fonctionnels des agents Python dans un projet d'orc
 ### 5. Documentation et Traçabilité
 - **Mettre à jour le journal de réparation** (ex : `REPAIR_MISSION_JOURNAL.md`).
 - **Mettre à jour le tableau de statut des agents** (ex : `AGENTS_FUNCTIONAL_STATUS.md`).
+- **Après chaque modification d'agent, la mise à jour de `AGENTS_FUNCTIONAL_STATUS.md` est OBLIGATOIRE.**
+- **Après chaque cycle Mission / Tâche / Documentation (M T D), un commit Git doit être réalisé pour garantir la traçabilité.**
 - **Lister pour chaque agent** :
     - Statut (Réparé, Partiellement fonctionnel, Bloqué)
     - Dépendances restantes
