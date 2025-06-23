@@ -2,7 +2,18 @@
 
 *   **Date de début :** 24/06/2025
 *   **Objectif :** Rendre l'agent TaskMaster robuste, autonome et prêt pour la production en suivant un cycle strict M-T-D renforcé avec Git.
-*   **Version du Plan :** 2.0 (Final)
+*   **Version du Plan :** 4.1 (Final, avec commits)
+
+---
+## Phase 5 : Raffinement du Plan d'Action (v4.1)
+
+*   **Date :** 23/06/2025
+*   **Contexte :** Pour renforcer la discipline de développement et la traçabilité, le `PLAN_ACTION_TASKMASTER_FINAL.md` est mis à jour.
+*   **Modification :**
+    1.  Ajout de points de **Commit Obligatoire** à la fin de chaque cycle de développement (après les tests et la documentation).
+    2.  Chaque commit est accompagné d'un message standardisé (`feat:`, `docs:`) et d'une justification.
+*   **Objectif :** Créer un historique Git propre et significatif, où chaque commit représente une étape fonctionnelle et validée du projet.
+*   **Décision :** GO. Le plan est maintenant prêt pour l'exécution.
 
 --- 
 ## Phase 1 : Renforcement de l'Agent
@@ -44,6 +55,40 @@
 *   **Décision Finale :** En attente de test.
 
 ---
+## Phase 1 (Experte) : Analyse et Prise en Main
+
+### **Étape 1.1 : Compréhension de l'Architecture**
+*   **Date :** 23/06/2025
+*   **Analyse Comparative :** L'analyse du `README` et du code de `task_scheduler_cursor.py` révèle que ce dernier est le chef d'orchestre. Il gère une file d'attente de tâches via un `PostgreSQLManager` et surveille le GPU via un `RTX3090Optimizer`. Fait crucial, la méthode `execute_task` est une **simulation** et l'intégration avec un agent TaskMaster réel n'est pas encore implémentée.
+*   **Livrable (Diagramme d'Architecture Actuelle) :**
+    ```mermaid
+    graph TD;
+        subgraph "Utilisateur";
+            CLI[/"Ligne de commande<br>(Utilisateur)"/];
+        end;
+
+        subgraph "Système TaskMaster Cursor";
+            A[cli_taskmaster_cursor.py];
+            B[TaskSchedulerCursor];
+            C[PostgreSQLManager];
+            D[RTX3090Optimizer];
+            E["execute_task (Simulation)"];
+            F[(Base de données<br>PostgreSQL/SQLite)];
+        end;
+
+        CLI --> A;
+        A --> B;
+        B --> C;
+        B --> D;
+        B --> E;
+        C --> F;
+    ```
+*   **Décision avant test :** GO pour la prochaine étape.
+*   **Résultat du Test de Workflow :** N/A.
+*   **Observations post-test :** L'architecture est comprise. L'absence d'intégration réelle du TaskMaster est le point clé pour la suite.
+*   **Décision Finale :** GO.
+
+---
 ## Phase 2 : Validation Opérationnelle
 
 ### **Étape 2.1 : Exécution du Test Fonctionnel**
@@ -59,3 +104,31 @@
 *   **Résultat du Test de Workflow :** **SUCCÈS**.
 *   **Observations post-test :** Le script s'est exécuté sans erreur. Les logs et le rapport de tâche ont été correctement générés dans `WORK_DIR/logs` et `WORK_DIR/reports`. Le cycle de vie complet de l'agent est validé.
 *   **Décision Finale :** **GO**.
+
+---
+## Phase 3 : Réorientation Stratégique et Pivot vers l'Implémentation Experte
+
+*   **Date :** 23/06/2025
+*   **Analyse Comparative :** Mon travail s'est concentré sur `agents/taskmaster_agent.py`, qui s'avère être une version obsolète ou parallèle. Le document `ANALYSE_CONFORMITE_EXPERTS.md` a révélé que l'implémentation validée et prête pour la production est celle située dans `20250620_projet_taskmanager/04_implémentatin_cursor/`.
+*   **Proposition de Fusion :**
+    1.  **Changement de Cible :** Abandonner le travail sur `agents/taskmaster_agent.py` (maintenant renommé en `DEPRECATED_taskmaster_agent.py`).
+    2.  **Adoption de la version experte :** Focaliser tous les efforts futurs sur le système `TaskMaster` situé dans `04_implémentatin_cursor`.
+    3.  **Révision du Plan :** Mettre à jour le `PLAN_ACTION_TASKMASTER_FINAL.md` pour refléter cette nouvelle stratégie, avec de nouvelles phases d'analyse, de test et de documentation adaptées à la nouvelle base de code.
+*   **Décision avant test :** GO - Commande de l'utilisateur.
+*   **Résultat du Test de Workflow :** N/A (Changement stratégique).
+*   **Observations post-test :** La stratégie est maintenant alignée sur la version de production validée. Le plan d'action doit être reconstruit.
+*   **Décision Finale :** GO.
+
+---
+## Phase 4 : Second Pivot Stratégique vers un Agent Unifié
+*   **Date :** 23/06/2025
+*   **Analyse Comparative :** L'instruction de l'utilisateur de faire fonctionner l'agent depuis le répertoire `/agents` et l'emphase sur la méthode M-T-D invalident le plan précédent qui se concentrait sur le *scheduler* `04_implémentatin_cursor`. L'objectif n'est pas d'utiliser le scheduler en tant que tel, mais de s'en inspirer pour construire un agent TaskMaster robuste et autonome qui vit aux côtés des autres agents.
+*   **Proposition de Fusion :**
+    1.  **Abandon du plan v3.0 :** Le plan basé sur le `scheduler` est abandonné.
+    2.  **Création d'un nouvel agent :** La nouvelle stratégie est de créer un agent `agents/taskmaster_final.py` en partant de zéro.
+    3.  **Inspiration Architecturale :** Ce nouvel agent s'inspirera des concepts de robustesse (gestion des chemins, fallback DB) du `scheduler` mais sera conçu comme un agent autonome (découverte d'agents, exécution de mission unique).
+    4.  **Révision du Plan :** Mettre à jour le `PLAN_ACTION_TASKMASTER_FINAL.md` en version 4.0 pour refléter cette stratégie de construction d'un nouvel agent unifié.
+*   **Décision avant test :** GO - Commande de l'utilisateur.
+*   **Résultat du Test de Workflow :** N/A (Changement stratégique).
+*   **Observations post-test :** La nouvelle stratégie est claire : construire un agent final, unifié, dans le bon répertoire, en suivant une méthodologie stricte.
+*   **Décision Finale :** GO.

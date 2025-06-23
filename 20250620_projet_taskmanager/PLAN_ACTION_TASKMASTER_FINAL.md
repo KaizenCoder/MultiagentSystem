@@ -1,113 +1,88 @@
-# Plan d'Action Final – Opérationnalisation de l'Agent TaskMaster (Next-Generation)
+# Plan d'Action Final – Construction de l'Agent TaskMaster Unifié
 
-*   **Version :** 2.0 (Final)
-*   **Date :** 24/06/2025
-*   **Contexte :** Vous êtes un assistant IA spécialisé en architecture logicielle. Votre mission est de piloter l'évolution du script `agents/taskmaster_agent.py` pour le rendre robuste, autonome et prêt pour la production, en suivant une méthodologie stricte et sans introduire de régression fonctionnelle.
+*   **Version :** 4.0 (Stratégie de Construction)
+*   **Date :** 23/06/2025
+*   **Contexte :** Suite à un pivot stratégique, l'objectif est de **construire un nouvel agent `taskmaster_final.py`** dans le répertoire `/agents`. Cet agent doit être autonome, robuste et s'inspirer des meilleures pratiques architecturales découvertes, tout en s'intégrant parfaitement à l'écosystème des agents existants. La méthodologie M-T-D (Modifier-Tester-Documenter) sera appliquée de manière stricte.
 
 ---
 
 ## 1. Contexte Global & Mission
 
-Nous partons d'une version d'origine de `taskmaster_agent.py`. L'objectif est de le transformer en un agent "Next-Generation" qui soit :
-1.  **Indépendant de son emplacement :** La logique d'import doit être découplée de la logique de lecture/écriture des fichiers.
-2.  **Centralisé :** Toutes ses dépendances externes (logs, data, rapports, tests) doivent être gérées dans un répertoire de production unique.
-3.  **Robuste :** Le processus de modification doit suivre une procédure systématique de test et de documentation.
+Construire un agent TaskMaster de production, `agents/taskmaster_final.py`, qui orchestrera les autres agents pour accomplir des missions complexes.
 
 ## 2. État Actuel
 
-*   Le script `agents/taskmaster_agent.py` est dans sa version originale.
-*   Aucune modification de code n'a encore été effectuée. Ce plan d'action est la référence unique.
+*   La stratégie de construction d'un nouvel agent est actée.
+*   Nous disposons de 3 agents spécialisés et validés (`agent_13`, `agent_14`, `agent_16`) qui serviront de cibles pour les tests de délégation.
+*   Les concepts de robustesse du `scheduler` ont été analysés et seront une source d'inspiration.
 
-## 3. Répertoires & Directives
+## 3. Directives
 
-### 3.1. Répertoire de Production (WORK_DIR)
+*   **Répertoire de l'Agent :** `/agents/`
+*   **Répertoire de Production (WORK_DIR) :** `20250620_projet_taskmanager/TASKMASTER_PRODUCTION_READY/` (conservé pour les logs et rapports).
+*   **Règles du Sanctuaire `/core` et de Non-Régression :** Maintenues.
 
-Le répertoire de travail unique pour tous les artéfacts générés est :
-**`C:\Dev\nextgeneration\20250620_projet_taskmanager\TASKMASTER_PRODUCTION_READY`**
+## 4. Plan d'Action Détaillé (Méthodologie M-T-D)
 
-Sa structure sera :
-```
-TASKMASTER_PRODUCTION_READY/
-├── logs/
-├── data/
-├── reports/
-├── tests/
-└── TASKMASTER_JOURNAL.md
-```
+### **Phase 1 – Conception et Initialisation (Modification)**
 
-### 3.2. Variables de Chemin Stratégiques
+*   **Étape 1.1 : Création du Squelette de l'Agent**
+    *   **Action :** Créer le fichier `agents/taskmaster_final.py`.
+    *   **Contenu :**
+        *   Classe `TaskMasterFinal`.
+        *   `__init__` avec gestion des chemins `PROJECT_ROOT` et `WORK_DIR`.
+        *   Configuration d'un logger qui écrit dans `WORK_DIR/logs/taskmaster_final.log`.
+        *   Méthodes `startup` et `shutdown` basiques.
+    *   **Livrable :** Fichier `agents/taskmaster_final.py` créé.
 
-Pour éviter les conflits, l'agent utilisera deux variables de chemin distinctes :
-*   `PROJECT_ROOT`: Pointera vers la racine du projet (`C:\Dev\nextgeneration`) pour assurer la robustesse des imports Python (ex: logger centralisé).
-*   `WORK_DIR`: Pointera vers le `PROD_PATH` ci-dessus et sera utilisé **exclusivement** pour toutes les opérations de lecture/écriture (logs, data, reports).
+### **Phase 2 – Test de Viabilité (Test)**
 
-## 4. Méthodologie Impérative : Le Cycle M-T-D Renforcé avec Git
+*   **Étape 2.1 : Création du Test d'Instanciation**
+    *   **Action :** Créer le script `tests/integration/test_taskmaster_final_instantiation.py`.
+    *   **Scénario :** Le test importera `TaskMasterFinal`, l'instanciera, appellera `startup` puis `shutdown`.
+    *   **Critère de Succès :** Le test s'exécute sans erreur et un fichier de log est créé.
 
-Chaque action sur le code de l'agent suivra **strictement** la séquence suivante :
+*   **Commit Obligatoire 1**
+    *   **Message :** `feat(taskmaster): skeleton and instantiation test`
+    *   **Raison :** Valide la structure de base et la viabilité de l'agent avant d'ajouter la logique métier.
 
-1.  **Commit Git Préalable :** S'assurer que l'état de travail actuel est propre et que la dernière version stable est `commitée` dans Git avec un message clair.
-2.  **Proposition d'Analyse :** Analyser l'étape à réaliser et proposer la modification.
-3.  **Journal (Proposition) :** Consigner l'analyse et la proposition dans le fichier `WORK_DIR/TASKMASTER_JOURNAL.md`.
-4.  **Validation Utilisateur :** Attendre un **"GO"** explicite de votre part avant toute modification du code.
-5.  **Application :** Vous appliquerez la modification via copier-coller.
-6.  **Test Fonctionnel :** Je fournirai les instructions pour exécuter le script de test depuis `WORK_DIR/tests/run_functional_test.py`.
-7.  **Analyse des Résultats :** Vérifier les logs et les rapports produits dans `WORK_DIR` pour confirmer le succès.
-8.  **Journal (Résultat) :** Inscrire le résultat (`SUCCÈS`/`ÉCHEC`), les preuves et les observations dans le journal.
-9.  **Validation Finale :** Attendre un **"GO/NO-GO"** de votre part pour passer à l'étape suivante.
+### **Phase 3 – Implémentation du Cœur Métier (Modification)**
 
-### 4.1. Règle d'Or : Non-Régression Fonctionnelle
-*   **Directive Impérative :** Toute modification proposée doit préserver ou enrichir les fonctionnalités existantes de l'agent TaskMaster. La réduction ou la désactivation de fonctionnalités, même temporairement pour contourner un problème, est strictement interdite. L'objectif est l'amélioration continue, jamais la régression.
+*   **Étape 3.1 : Découverte Dynamique des Agents**
+    *   **Action :** Implémenter dans `TaskMasterFinal` une méthode `_discover_agents` qui scanne le répertoire `/agents`, ignore les agents défectueux, et charge les `capabilities` des agents valides.
 
-### 4.2. Règle du Sanctuaire : Intégrité du Core
-*   **Directive Impérative :** Le répertoire `/core` est considéré comme un "sanctuaire" de code. Son contenu est stable, testé, et ne doit sous aucun prétexte être modifié dans le cadre de cette mission. Toute fonctionnalité requise doit être construite en utilisant les composants du `/core` tels qu'ils sont, sans les altérer.
+*   **Étape 3.2 : Logique de Traitement de Mission**
+    *   **Action :** Implémenter une méthode `execute_mission(natural_language_prompt: str)` qui :
+        1.  Analyse le prompt pour en extraire l'intention et les entités.
+        2.  Sélectionne l'agent le plus pertinent parmi ceux découverts.
+        3.  Instancie l'agent sélectionné et lui délègue la tâche.
+        4.  Récupère et sauvegarde le résultat.
 
-## 5. Plan d'Action Détaillé
+*   **Commit Obligatoire 2**
+    *   **Message :** `feat(taskmaster): core logic with agent discovery and delegation`
+    *   **Raison :** Implémente la fonctionnalité principale de l'agent.
 
-### **Phase 1 – Renforcement de l'Agent (Modification)**
+### **Phase 4 – Test Fonctionnel Complet (Test)**
 
-*   **Étape 1.1 : Gestion Stratégique des Chemins**
-    *   **Modification :** Introduire les variables `PROJECT_ROOT` et `WORK_DIR` pour découpler les imports de la gestion des fichiers. `PROJECT_ROOT` pointera deux niveaux au-dessus du script, et `WORK_DIR` sera une chaîne de caractères statique pointant vers le répertoire de production.
-    *   **Impact :** `__init__`, `_verify_environment`, `_load_state`.
-
-*   **Étape 1.2 : Implémentation de la Sauvegarde des Rapports**
-    *   **Modification :** Implémenter la méthode `_save_task_report` pour qu'elle écrive les rapports JSON dans `WORK_DIR/reports`.
-    *   **Impact :** Ajout de la méthode `_save_task_report`.
-
-*   **Étape 1.3 : Implémentation du Shutdown Propre**
-    *   **Modification :** Ajouter une méthode `shutdown` pour fermer proprement le `ThreadPoolExecutor` et éviter les processus zombies.
-    *   **Impact :** Ajout de la méthode `shutdown`.
-
-### **Phase 2 – Validation Opérationnelle (Test)**
-
-*   **Étape 2.1 : Création du Script de Test Fonctionnel**
-    *   **Objectif :** Créer le script `WORK_DIR/tests/run_functional_test.py`.
-    *   **Contenu :** Il importera l'agent, l'instanciera, lancera une tâche simple en langage naturel, attendra son exécution, puis appellera `shutdown`.
+*   **Étape 4.1 : Création du Test de Workflow**
+    *   **Action :** Créer le script `tests/integration/test_taskmaster_final_workflow.py`.
+    *   **Scénario :** Instancier `TaskMasterFinal` et lui soumettre une mission comme `"Crée un workspace pour un projet et documente-le."`.
     *   **Critères de Succès :**
-        1.  Le script s'exécute sans erreur.
-        2.  Un fichier de log est créé dans `WORK_DIR/logs`.
-        3.  Un rapport de tâche JSON est créé dans `WORK_DIR/reports`.
+        1.  `TaskMasterFinal` sélectionne et délègue correctement à `agent_14` puis `agent_13`.
+        2.  Le workflow complet s'exécute sans erreur.
+        3.  Les artefacts (fichiers, rapports) sont créés dans le `WORK_DIR`.
 
-### **Phase 3 – Documentation**
+### **Phase 5 – Documentation Finale (Documentation)**
 
-*   **Étape 3.1 : Création du README.md**
-    *   **Objectif :** Créer le fichier `WORK_DIR/README.md`.
-    *   **Contenu :** Il décrira la structure du répertoire, expliquera comment lancer le test fonctionnel et comment interpréter les résultats.
+*   **Étape 5.1 : Création du `README.md`**
+    *   **Action :** Mettre à jour le `TASKMASTER_PRODUCTION_READY/README.md` pour décrire l'architecture finale du `taskmaster_final.py`, son utilisation, et comment lancer la suite de tests.
 
----
-
-## 6. Instruction Initiale de la Session
-
-Votre première et unique action immédiate est de **créer le fichier `TASKMASTER_JOURNAL.md`** à l'emplacement `C:\Dev\nextgeneration\20250620_projet_taskmanager\TASKMASTER_PRODUCTION_READY\TASKMASTER_JOURNAL.md` avec le contenu initial suivant.
-
-**Contenu initial pour `TASKMASTER_JOURNAL.md` :**
-```markdown
-# Journal d'Évolution du Projet TaskMaster
-
-*   **Date de début :** 24/06/2025
-*   **Objectif :** Rendre l'agent TaskMaster robuste, autonome et prêt pour la production en suivant un cycle strict M-T-D renforcé avec Git.
-*   **Version du Plan :** 2.0 (Final)
+*   **Commit Obligatoire 3**
+    *   **Message :** `docs(taskmaster): final user documentation`
+    *   **Raison :** Finalise le projet avec une documentation à jour pour les utilisateurs.
 
 ---
-```
 
-N'exécutez aucune autre action. Une fois le journal créé, attendez ma proposition pour la **Phase 1, Étape 1.1**. 
+## 5. Instruction Initiale de la Session
+
+Votre première action est d'acter ce changement de plan dans le journal, puis de procéder à la **Phase 1, Étape 1.1 : Création du Squelette de l'Agent**. 
