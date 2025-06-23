@@ -184,4 +184,11 @@ Poursuite de la politique stricte :
 - Agent 20 : Correction du logger (utilisation de get_logger), import et initialisation validés.
 - Tous les agents marqués comme fonctionnels dans le suivi.
 
+## 2025-06-23 — Agents 108, 109 (version, planes), 110 (Performance Optimizer, Pattern Factory, Planes, Documentaliste)
+- Agent 108 : Import et initialisation validés, agent fonctionnel.
+- Agent 109 (Pattern Factory Version) : Import et initialisation validés, agent fonctionnel.
+- Agent 109 (Specialiste Planes) : BLOQUÉ, dépendance code_expert interdite par la politique de conformité (RuntimeError au test d'instanciation).
+- Agent 110 (Documentaliste Expert) : BLOQUÉ, dépendance code_expert interdite par la politique de conformité (RuntimeError au test d'instanciation).
+- Statuts mis à jour dans le suivi.
+
 --- 

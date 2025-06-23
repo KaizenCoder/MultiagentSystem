@@ -27,3 +27,7 @@ Ce document sert de source de vérité pour l'état de chaque agent.
 | `agent_17_peer_reviewer_technique.py` : fonctionnel (2025-06-23, import et initialisation validés)
 | `agent_19_auditeur_performance.py` : fonctionnel (2025-06-23, import et initialisation validés)
 | `agent_20_auditeur_conformite.py` : fonctionnel (2025-06-23, import et initialisation validés, logger corrigé)
+| `agent_108_performance_optimizer.py` : fonctionnel (2025-06-23, import et initialisation validés)
+| `agent_109_pattern_factory_version.py` : fonctionnel (2025-06-23, import et initialisation validés)
+| `agent_109_specialiste_planes.py` : bloqué (2025-06-23, dépendance code_expert interdite par la politique de conformité)
+| `agent_110_documentaliste_expert.py` : bloqué (2025-06-23, dépendance code_expert interdite par la politique de conformité)

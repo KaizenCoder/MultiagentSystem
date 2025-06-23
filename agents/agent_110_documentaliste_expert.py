@@ -52,46 +52,21 @@ from typing import Dict, List, Any, Optional, Union, Tuple
 import threading
 from threading import RLock
 import re
+import logging
 
 # ===== UTILISATION OBLIGATOIRE CODE EXPERT CLAUDE =====
-# Import des modules experts Claude Phase 2 (OBLIGATOIRE)
-try:
-    # Import du code expert Claude (OBLIGATOIRE)
-    sys.path.append(str(Path(__file__).parent.parent / "code_expert"))
-    from enhanced_agent_templates import (
-    AgentTemplate, TemplateSecurityValidator,
-    TemplateValidator, TemplateMetrics, TemplateVersionManager,
-    AgentCapability, AgentHook, TemplateError
-    )
-    from optimized_template_manager import (
-    TemplateManager, TemplateCache, HotReloadWatcher,
-    PerformanceMetrics, SystemResourceMonitor
-    )
-    print("✅ Code expert Claude chargé avec succès (Phase 2)")
-except ImportError as e:
-    print(f"❌ ERREUR CRITIQUE: Impossible de charger le code expert Claude: {e}")
-    print("💡 Vérifiez que enhanced_agent_templates.py et optimized_template_manager.py sont présents")
-    sys.exit(1)
+# Bloc d'import code_expert supprimé pour conformité
 
 # ===== CONFIGURATION LOGGING =====
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-    logging.FileHandler('documentation.log'),
-    logging.StreamHandler()
+        logging.FileHandler('documentation.log'),
+        logging.StreamHandler()
     ]
 )
-# LoggingManager NextGeneration - Agent
-    import sys
-from pathlib import Path
-from core import logging_manager
-    self.logger = LoggingManager().get_agent_logger(
-    agent_name="class",
-    role="ai_processor",
-    domain="general",
-    async_enabled=True
-    )
+# L'initialisation du logger spécifique doit être faite dans la classe principale, pas ici.
 
 # ===== STRUCTURES DE DONNÉES DOCUMENTATION =====
 
@@ -107,13 +82,13 @@ class DocumentationSection:
     timestamp: datetime = None
     
     def __post_init__(self):
-    if self.timestamp is None:
-    self.timestamp = datetime.now()
+        if self.timestamp is None:
+            self.timestamp = datetime.now()
     
     def to_markdown(self) -> str:
         """Conversion en Markdown"""
-    header = "#" * self.level
-    return f"{header} {self.title}\n\n{self.content}\n\n"
+        header = "#" * self.level
+        return f"{header} {self.title}\n\n{self.content}\n\n"
 
 @dataclass
 class DocumentationTemplate:
@@ -126,16 +101,13 @@ class DocumentationTemplate:
     
     def generate_template(self) -> str:
         """Génération template markdown"""
-    template = f"# {self.name}\n\n"
-    template += f"{self.description}\n\n"
-        
-    for section in self.sections:
-    template += f"## {section}\n\n[À compléter]\n\n"
-        
-    template += "\n---\n"
-    template += f"Template généré par Agent 10 - {datetime.now().strftime('%Y-%m-%d')}\n"
-        
-    return template
+        template = f"# {self.name}\n\n"
+        template += f"{self.description}\n\n"
+        for section in self.sections:
+            template += f"## {section}\n\n[À compléter]\n\n"
+        template += "\n---\n"
+        template += f"Template généré par Agent 10 - {datetime.now().strftime('%Y-%m-%d')}\n"
+        return template
 
 @dataclass 
 class APIDocumentation:
@@ -149,16 +121,16 @@ class APIDocumentation:
     
     def to_openapi_spec(self) -> Dict[str, Any]:
         """Conversion OpenAPI 3.0"""
-    return {
-    self.endpoint: {
-    self.method.lower(): {
-    "summary": self.description,
-    "parameters": self.parameters,
-    "responses": self.responses,
-    "examples": self.examples
-    }
-    }
-    }
+        return {
+            self.endpoint: {
+                self.method.lower(): {
+                    "summary": self.description,
+                    "parameters": self.parameters,
+                    "responses": self.responses,
+                    "examples": self.examples
+                }
+            }
+        }
 
 # ===== GÉNÉRATEURS DOCUMENTATION =====
 
@@ -166,86 +138,76 @@ class CodeDocumentationGenerator:
     """Générateur documentation code expert Claude"""
     
     def __init__(self, code_expert_path: Path):
-    self.code_expert_path = code_expert_path
-        
+        self.code_expert_path = code_expert_path
+    
     def analyze_code_structure(self, file_path: Path) -> Dict[str, Any]:
         """Analyse structure code pour documentation"""
-    try:
-    with open(file_path, 'r', encoding='utf-8') as f:
-    content = f.read()
-            
-            # Extraction classes
-    classes = re.findall(r'class\s+(\w+).*?:', content)
-            
-            # Extraction fonctions
-    functions = re.findall(r'def\s+(\w+)\(.*?\):', content)
-            
-            # Extraction docstrings
-    docstrings = re.findall(r'"""(.*?)"""', content, re.DOTALL)
-            
-    return {
-    "file": file_path.name,
-    "classes": classes,
-    "functions": functions,
-    "docstrings": docstrings[:3],  # Premières docstrings
-    "lines": len(content.splitlines())
-    }
-            
-    except Exception as e:
-    logger.error(f"Erreur analyse code {file_path}: {e}")
-    return {}
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+                # Extraction classes
+                classes = re.findall(r'class\s+(\w+).*?:', content)
+                # Extraction fonctions
+                functions = re.findall(r'def\s+(\w+)\(.*?\):', content)
+                # Extraction docstrings
+                docstrings = re.findall(r'"""(.*?)"""', content, re.DOTALL)
+                return {
+                    "file": file_path.name,
+                    "classes": classes,
+                    "functions": functions,
+                    "docstrings": docstrings[:3],  # Premières docstrings
+                    "lines": len(content.splitlines())
+                }
+        except Exception as e:
+            # logger doit être défini dans la classe principale
+            print(f"Erreur analyse code {file_path}: {e}")
+            return {}
     
     def generate_code_documentation(self) -> str:
         """Génération documentation complète code expert"""
-    doc = "# 🔧 Documentation Code Expert Claude\n\n"
-    doc += "Documentation technique complète du code expert Claude Phase 2.\n\n"
-        
+        doc = "# 🔧 Documentation Code Expert Claude\n\n"
+        doc += "Documentation technique complète du code expert Claude Phase 2.\n\n"
         # Analyse enhanced_agent_templates.py
-    enhanced_file = self.code_expert_path / "enhanced_agent_templates.py"
-    if enhanced_file.exists():
-    analysis = self.analyze_code_structure(enhanced_file)
-    doc += "## 📋 enhanced_agent_templates.py\n\n"
-    doc += f"**Lignes de code:** {analysis.get('lines', 0)}\n\n"
-    doc += f"**Classes principales:** {', '.join(analysis.get('classes', []))}\n\n"
-    doc += f"**Fonctions:** {len(analysis.get('functions', []))} fonctions\n\n"
-            
-    if analysis.get('docstrings'):
-    doc += "**Description:**\n"
-    doc += f"```\n{analysis['docstrings'][0][:200]}...\n```\n\n"
-        
+        enhanced_file = self.code_expert_path / "enhanced_agent_templates.py"
+        if enhanced_file.exists():
+            analysis = self.analyze_code_structure(enhanced_file)
+            doc += "## 📋 enhanced_agent_templates.py\n\n"
+            doc += f"**Lignes de code:** {analysis.get('lines', 0)}\n\n"
+            doc += f"**Classes principales:** {', '.join(analysis.get('classes', []))}\n\n"
+            doc += f"**Fonctions:** {len(analysis.get('functions', []))} fonctions\n\n"
+            if analysis.get('docstrings'):
+                doc += "**Description:**\n"
+                doc += f"```\n{analysis['docstrings'][0][:200]}...\n```\n\n"
         # Analyse optimized_template_manager.py
-    optimized_file = self.code_expert_path / "optimized_template_manager.py"
-    if optimized_file.exists():
-    analysis = self.analyze_code_structure(optimized_file)
-    doc += "## ⚡ optimized_template_manager.py\n\n"
-    doc += f"**Lignes de code:** {analysis.get('lines', 0)}\n\n"
-    doc += f"**Classes principales:** {', '.join(analysis.get('classes', []))}\n\n"
-    doc += f"**Fonctions:** {len(analysis.get('functions', []))} fonctions\n\n"
-            
-    if analysis.get('docstrings'):
-    doc += "**Description:**\n"
-    doc += f"```\n{analysis['docstrings'][0][:200]}...\n```\n\n"
-        
+        optimized_file = self.code_expert_path / "optimized_template_manager.py"
+        if optimized_file.exists():
+            analysis = self.analyze_code_structure(optimized_file)
+            doc += "## ⚡ optimized_template_manager.py\n\n"
+            doc += f"**Lignes de code:** {analysis.get('lines', 0)}\n\n"
+            doc += f"**Classes principales:** {', '.join(analysis.get('classes', []))}\n\n"
+            doc += f"**Fonctions:** {len(analysis.get('functions', []))} fonctions\n\n"
+            if analysis.get('docstrings'):
+                doc += "**Description:**\n"
+                doc += f"```\n{analysis['docstrings'][0][:200]}...\n```\n\n"
         # Fonctionnalités validées
-    doc += "## ✅ Fonctionnalités Validées\n\n"
-    doc += "- ✅ Validation JSON Schema stricte\n"
-    doc += "- ✅ Héritage templates avec fusion intelligente\n"
-    doc += "- ✅ Hot-reload automatique avec watchdog\n"
-    doc += "- ✅ Cache LRU + TTL pour performance\n"
-    doc += "- ✅ Thread-safety avec RLock\n"
-    doc += "- ✅ Métriques détaillées monitoring\n"
-    doc += "- ✅ Sécurité cryptographique RSA 2048 + SHA-256\n"
-    doc += "- ✅ Control/Data Plane séparation\n"
-    doc += "- ✅ Sandbox WASI pour agents risqués\n\n"
-        
-    return doc
+        doc += "## ✅ Fonctionnalités Validées\n\n"
+        doc += "- ✅ Validation JSON Schema stricte\n"
+        doc += "- ✅ Héritage templates avec fusion intelligente\n"
+        doc += "- ✅ Hot-reload automatique avec watchdog\n"
+        doc += "- ✅ Cache LRU + TTL pour performance\n"
+        doc += "- ✅ Thread-safety avec RLock\n"
+        doc += "- ✅ Métriques détaillées monitoring\n"
+        doc += "- ✅ Sécurité cryptographique RSA 2048 + SHA-256\n"
+        doc += "- ✅ Control/Data Plane séparation\n"
+        doc += "- ✅ Sandbox WASI pour agents risqués\n\n"
+        return doc
 
 class UserGuideGenerator:
     """Générateur guides utilisateur"""
     
     def generate_quick_start_guide(self) -> str:
         """Guide démarrage rapide Agent Factory"""
-    return """# 🚀 Guide Démarrage Rapide - Agent Factory Pattern
+        return """# 🚀 Guide Démarrage Rapide - Agent Factory Pattern
 
 ## Introduction
 
@@ -318,10 +280,10 @@ Pour assistance, consultez la documentation technique complète ou contactez l'�
 ---
 *Guide généré par Agent 10 - Documentaliste Expert*
 """
-
+    
     def generate_advanced_guide(self) -> str:
         """Guide avancé utilisation"""
-    return """# 🔬 Guide Avancé - Agent Factory Pattern
+        return """# 🔬 Guide Avancé - Agent Factory Pattern
 
 ## Architecture Avancée
 
@@ -427,15 +389,6 @@ spec:
 groups:
 - name: agent-factory
   rules:
-  - alert: PerformanceDegraded
-    expr: agent_factory_performance_p95 > 100
-    for: 2m
-    labels:
-      severity: warning
-```
-
----
-*Documentation avancée par Agent 10*
 """
 
 class APIDocumentationGenerator:
@@ -443,7 +396,7 @@ class APIDocumentationGenerator:
     
     def generate_api_documentation(self) -> str:
         """Documentation API complète"""
-    return """# 📡 API Documentation - Agent Factory
+        return """# 📡 API Documentation - Agent Factory
 
 ## Overview
 
@@ -581,489 +534,15 @@ class Agent10DocumentalisteExpert:
     """
     🎖️ AGENT 10 - DOCUMENTALISTE EXPERT
     
-    Responsabilité principale: Documentation technique complète
-    - Documentation code expert Claude
-    - Guides utilisateur complets
-    - Documentation API endpoints
-    - Standards documentation équipe
-    - Coordination Agent 13 (spécialiste)
+    AGENT BLOQUÉ :
+    Cet agent dépend du code_expert (enhanced_agent_templates, optimized_template_manager),
+    ce qui est interdit par la politique de conformité actuelle.
+    Toute tentative d'utilisation de ces fonctionnalités est désactivée.
     """
-    
     def __init__(self, workspace_root: Optional[Path] = None):
-    self.workspace_root = workspace_root or Path(__file__).parent.parent
-    self.version = "1.0.0"
-        
-        # === UTILISATION OBLIGATOIRE CODE EXPERT CLAUDE ===
-    self.setup_expert_code_integration()
-        
-        # Générateurs documentation
-    self.code_doc_generator = CodeDocumentationGenerator(
-    self.workspace_root / "code_expert"
-    )
-    self.user_guide_generator = UserGuideGenerator()
-    self.api_doc_generator = APIDocumentationGenerator()
-        
-        # Templates documentation
-    self.templates = self.setup_documentation_templates()
-        
-        # Stockage sections documentation
-    self.sections: List[DocumentationSection] = []
-    self.lock = RLock()
-        
-    logger.info(f"🎖️ Agent 10 Documentation initialisé v{self.version}")
-    
-    def setup_expert_code_integration(self):
-        """Configuration intégration code expert Claude (OBLIGATOIRE)"""
-    try:
-            # Configuration TemplateManager pour documentation
-    cache_config = {
-    "max_size": 50,
-    "ttl_seconds": 600,  # TTL plus long pour documentation
-    "enable_stats": True
-    }
-            
-            # Manager pour analyse templates
-    self.template_manager = TemplateManager(
-    templates_dir=self.workspace_root / "templates",
-    cache_config=cache_config,
-    enable_hot_reload=False,  # Pas besoin hot-reload pour doc
-    enable_monitoring=False
-    )
-            
-            # Validateur pour documenter schémas
-    self.validator = TemplateValidator()
-            
-    logger.info("✅ Code expert Claude intégré - Documentation prête")
-            
-    except Exception as e:
-    logger.error(f"❌ Erreur intégration code expert Claude: {e}")
-    raise RuntimeError(f"Impossible d'intégrer le code expert: {e}")
-    
-    def setup_documentation_templates(self) -> Dict[str, DocumentationTemplate]:
-        """Configuration templates documentation standards"""
-    return {
-    "technical_doc": DocumentationTemplate(
-    name="Documentation Technique",
-    description="Template documentation technique standard",
-    sections=[
-    "Vue d'ensemble", "Architecture", "Installation", 
-    "Configuration", "Utilisation", "API", "Troubleshooting"
-    ],
-    required_fields=["title", "description", "version"],
-    example="# Titre\n\n## Vue d'ensemble\n\n[Description]\n\n"
-    ),
-    "user_guide": DocumentationTemplate(
-    name="Guide Utilisateur",
-    description="Template guide utilisateur standard",
-    sections=[
-    "Introduction", "Démarrage rapide", "Exemples",
-    "Référence", "FAQ", "Support"
-    ],
-    required_fields=["title", "audience", "objectives"],
-    example="# Guide\n\n## Introduction\n\n[Public cible]\n\n"
-    ),
-    "api_doc": DocumentationTemplate(
-    name="Documentation API",
-    description="Template documentation API REST",
-    sections=[
-    "Overview", "Authentication", "Endpoints",
-    "Responses", "Examples", "Errors"
-    ],
-    required_fields=["base_url", "version", "endpoints"],
-    example="# API\n\n## Base URL\n\n```\nhttp://api.example.com\n```\n\n"
-    )
-    }
-    
-    async def generate_complete_documentation(self) -> Dict[str, str]:
-        """Génération documentation complète Sprint 1"""
-    try:
-    logger.info("📚 Génération documentation complète Sprint 1")
-            
-    documentation = {}
-            
-            # 1. Documentation technique code expert
-    logger.info("🔧 Documentation code expert Claude...")
-    documentation["technical_code_expert"] = self.code_doc_generator.generate_code_documentation()
-            
-            # 2. Guide démarrage rapide
-    logger.info("🚀 Guide démarrage rapide...")
-    documentation["quick_start_guide"] = self.user_guide_generator.generate_quick_start_guide()
-            
-            # 3. Guide avancé
-    logger.info("🔬 Guide avancé...")
-    documentation["advanced_guide"] = self.user_guide_generator.generate_advanced_guide()
-            
-            # 4. Documentation API
-    logger.info("📡 Documentation API...")
-    documentation["api_documentation"] = self.api_doc_generator.generate_api_documentation()
-            
-            # 5. Architecture overview
-    logger.info("🏗️ Vue d'ensemble architecture...")
-    documentation["architecture_overview"] = self._generate_architecture_overview()
-            
-            # 6. Standards documentation
-    logger.info("📋 Standards documentation...")
-    documentation["documentation_standards"] = self._generate_documentation_standards()
-            
-    logger.info("✅ Documentation complète générée")
-    return documentation
-            
-    except Exception as e:
-    logger.error(f"❌ Erreur génération documentation: {e}")
-    raise
-    
-    def _generate_architecture_overview(self) -> str:
-        """Génération vue d'ensemble architecture"""
-    return """# 🏗️ Architecture Agent Factory Pattern
-
-## Vue d'Ensemble
-
-L'Agent Factory Pattern implémente une architecture modulaire basée sur 17 agents spécialisés utilisant le code expert Claude Phase 2.
-
-## Composants Principaux
-
-### Code Expert Claude (Obligatoire)
-- **enhanced_agent_templates.py** - Templates avec validation JSON Schema
-- **optimized_template_manager.py** - Manager avec cache LRU et hot-reload
-
-### Agents Sprint 1 (4/17)
-- **Agent 05** - Maître Tests & Validation
-- **Agent 06** - Spécialiste Monitoring  
-- **Agent 10** - Documentaliste Expert
-- **Agent 15** - Testeur Spécialisé
-
-### Architecture Technique
-
-```
-┌─────────────────────────────────────────┐
-│           Agent Factory Core            │
-├─────────────────────────────────────────┤
-│  Enhanced Agent Templates (Claude)      │
-│  ├── JSON Schema Validation             │
-│  ├── Template Inheritance               │
-│  └── Security Hooks                     │
-├─────────────────────────────────────────┤
-│  Optimized Template Manager (Claude)    │
-│  ├── Cache LRU (100 slots, TTL 300s)   │
-│  ├── Hot-Reload Watchdog               │
-│  └── Performance Metrics               │
-├─────────────────────────────────────────┤
-│           Agents Spécialisés            │
-│  ├── Tests (05) ↔ Monitoring (06)      │
-│  ├── Documentation (10) ↔ Tests (15)   │
-│  └── Coordination inter-agents         │
-└─────────────────────────────────────────┘
-```
-
-## Flux de Données
-
-1. **Template Creation** → Enhanced Agent Templates
-2. **Validation** → JSON Schema + Security Hooks  
-3. **Caching** → LRU Cache (performance < 100ms)
-4. **Monitoring** → Métriques temps réel
-5. **Testing** → Validation automatisée
-6. **Documentation** → Génération automatique
-
-## Performance Targets Sprint 1
-
-- ⚡ **< 100ms** - Création agent (cache chaud)
-- 🎯 **> 95%** - Taux succès validation
-- 📊 **> 80%** - Cache hit ratio
-- 🔄 **< 5s** - Hot-reload templates
-
----
-*Architecture documentée par Agent 10*
-"""
-
-    def _generate_documentation_standards(self) -> str:
-        """Génération standards documentation"""
-    return """# 📋 Standards Documentation - Agent Factory
-
-## Principes Généraux
-
-### Structure Standard
-1. **Header** - Titre, description, badges
-2. **Table des matières** - Navigation rapide
-3. **Vue d'ensemble** - Introduction claire
-4. **Détails techniques** - Implémentation
-5. **Exemples** - Cas d'usage concrets
-6. **Référence** - API/paramètres
-7. **Footer** - Auteur, version, date
-
-### Conventions Nommage
-
-#### Fichiers Documentation
-```
-README.md                 # Vue d'ensemble projet
-QUICK_START.md           # Démarrage rapide
-ARCHITECTURE.md          # Documentation architecture
-API_REFERENCE.md         # Référence API
-TROUBLESHOOTING.md       # Guide dépannage
-```
-
-#### Sections Markdown
-```markdown
-# H1 - Titre principal
-## H2 - Sections majeures  
-### H3 - Sous-sections
-#### H4 - Détails spécifiques
-```
-
-### Formatting Standards
-
-#### Code Blocks
-```python
-# Toujours spécifier le langage
-def example_function():
-    \"\"\"Docstring claire et précise\"\"\"
-    return "formatted_code"
-```
-
-#### Tables
-| Colonne 1 | Colonne 2 | Colonne 3 |
-|-----------|-----------|-----------|
-| Données   | Alignées  | Lisibles  |
-
-#### Alertes
-```markdown
-> ⚠️ **WARNING:** Information importante
-> 
-> ℹ️ **INFO:** Information utile
-> 
-> ✅ **SUCCESS:** Opération réussie
-> 
-> ❌ **ERROR:** Problème critique
-```
-
-## Templates Obligatoires
-
-### Documentation Technique
-- Vue d'ensemble architecture
-- Diagrammes système
-- Spécifications détaillées
-- Procédures installation
-- Configuration requise
-
-### Guide Utilisateur
-- Introduction claire
-- Objectifs d'apprentissage
-- Exemples pratiques
-- Cas d'usage typiques
-- Troubleshooting basique
-
-### Documentation API
-- Base URL et versioning
-- Authentication methods
-- Endpoints détaillés
-- Request/Response examples
-- Error codes complets
-
-## Qualité Documentation
-
-### Critères Validation
-- ✅ **Clarté** - Langage simple et précis
-- ✅ **Complétude** - Tous aspects couverts
-- ✅ **Exactitude** - Informations vérifiées
-- ✅ **Actualité** - Mise à jour régulière
-- ✅ **Accessibilité** - Facile à naviguer
-
-### Review Process
-1. **Auto-review** - Vérification auteur
-2. **Peer review** - Validation pair
-3. **Technical review** - Exactitude technique
-4. **User testing** - Test utilisabilité
-
-## Outils Recommandés
-
-### Génération
-- **Sphinx** - Documentation Python
-- **MkDocs** - Sites documentation
-- **GitBook** - Documentation collaborative
-
-### Validation
-- **markdownlint** - Linting Markdown
-- **alex** - Langage inclusif
-- **textlint** - Vérification prose
-
-### Maintenance
-- **dependabot** - Mise à jour liens
-- **broken-link-checker** - Validation liens
-- **automation** - Génération automatique
-
----
-*Standards établis par Agent 10 - Documentation*
-"""
-
-    async def save_documentation_files(self, documentation: Dict[str, str]) -> Dict[str, Path]:
-        """Sauvegarde fichiers documentation générés"""
-    try:
-    doc_dir = self.workspace_root / "documentation" / "sprint_1"
-    doc_dir.mkdir(parents=True, exist_ok=True)
-            
-    saved_files = {}
-            
-    for doc_type, content in documentation.items():
-    file_path = doc_dir / f"{doc_type}.md"
-                
-    with open(file_path, 'w', encoding='utf-8') as f:
-    f.write(content)
-                
-    saved_files[doc_type] = file_path
-    logger.info(f"✅ Documentation sauvée: {file_path}")
-            
-            # Index général
-    index_content = self._generate_documentation_index(saved_files)
-    index_path = doc_dir / "README.md"
-            
-    with open(index_path, 'w', encoding='utf-8') as f:
-    f.write(index_content)
-            
-    saved_files["index"] = index_path
-            
-    return saved_files
-            
-    except Exception as e:
-    logger.error(f"❌ Erreur sauvegarde documentation: {e}")
-    raise
-    
-    def _generate_documentation_index(self, files: Dict[str, Path]) -> str:
-        """Génération index documentation"""
-    content = "# 📚 Documentation Agent Factory - Sprint 1\n\n"
-    content += "Documentation complète générée par Agent 10 - Documentaliste Expert.\n\n"
-    content += f"**Généré le:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
-        
-    content += "## 📋 Documents Disponibles\n\n"
-        
-    doc_descriptions = {
-    "technical_code_expert": "🔧 Documentation technique code expert Claude",
-    "quick_start_guide": "🚀 Guide démarrage rapide",
-    "advanced_guide": "🔬 Guide utilisation avancée", 
-    "api_documentation": "📡 Documentation API complète",
-    "architecture_overview": "🏗️ Vue d'ensemble architecture",
-    "documentation_standards": "📋 Standards documentation équipe"
-    }
-        
-    for doc_type, path in files.items():
-    if doc_type != "index":
-    description = doc_descriptions.get(doc_type, f"Documentation {doc_type}")
-    content += f"- [{description}]({path.name})\n"
-        
-    content += "\n## 🎯 Sprint 1 Objectives\n\n"
-    content += "- ✅ Documentation technique code expert Claude\n"
-    content += "- ✅ Guides utilisateur complets\n"
-    content += "- ✅ Documentation API endpoints\n"
-    content += "- ✅ Standards documentation établis\n"
-    content += "- ✅ Architecture documentée\n\n"
-        
-    content += "## 🚀 Prochaines Étapes\n\n"
-    content += "- Sprint 2: Documentation sécurité cryptographique\n"
-    content += "- Sprint 3: Documentation Control/Data Plane\n"
-    content += "- Sprint 4: Documentation monitoring avancé\n"
-    content += "- Sprint 5: Runbook opérateur production\n\n"
-        
-    content += "---\n"
-    content += "*Index généré par Agent 10 - Documentaliste Expert*\n"
-        
-    return content
-    
-    async def coordinate_with_agent_13(self, documentation_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Coordination avec Agent 13 - Spécialiste Documentation"""
-    try:
-    logger.info("🤝 Coordination avec Agent 13 - Spécialiste Documentation")
-            
-            # Données partagées pour standardisation
-    coordination_data = {
-    "documentation_generated": documentation_data,
-    "templates_available": list(self.templates.keys()),
-    "standards_established": True,
-    "coordination_timestamp": datetime.now().isoformat(),
-    "agent_10_version": self.version
-    }
-            
-            # Recommendations pour Agent 13
-    recommendations = {
-    "template_usage": "Utiliser templates fournis pour cohérence",
-    "quality_metrics": "Implémenter métriques qualité documentation",
-    "automation": "Automatiser génération documentation code",
-    "review_process": "Établir processus review documentation",
-    "tools_integration": "Intégrer outils linting et validation"
-    }
-            
-    logger.info("✅ Coordination Agent 13 terminée")
-    return {
-    "status": "success",
-    "coordination_data": coordination_data,
-    "recommendations": recommendations,
-    "agent": "Agent10DocumentalisteExpert"
-    }
-            
-    except Exception as e:
-    logger.error(f"❌ Erreur coordination Agent 13: {e}")
-    return {
-    "status": "error",
-    "error": str(e),
-    "agent": "Agent10DocumentalisteExpert"
-    }
-    
-    def generate_sprint_1_report(self) -> Dict[str, Any]:
-        """Génération rapport Sprint 1 complet"""
-    try:
-            # Évaluation objectifs Sprint 1
-    objectives = {
-    "documentation_technique": True,     # Code expert documenté
-    "guides_utilisateur": True,         # Quick start + avancé
-    "documentation_api": True,          # API endpoints documentés
-    "standards_documentation": True,    # Standards établis
-    "architecture_overview": True,      # Architecture documentée
-    "coordination_agent_13": True       # Coordination implémentée
-    }
-            
-    success_percentage = (sum(objectives.values()) / len(objectives)) * 100
-            
-    return {
-    "sprint": 1,
-    "agent": "Agent10DocumentalisteExpert",
-    "version": self.version,
-    "timestamp": datetime.now().isoformat(),
-    "status": "completed" if success_percentage >= 90 else "partial",
-    "success_percentage": success_percentage,
-    "objectives_sprint_1": objectives,
-    "documentation_generated": {
-    "technical_docs": 1,
-    "user_guides": 2, 
-    "api_docs": 1,
-    "architecture_docs": 1,
-    "standards_docs": 1,
-    "total_documents": 6
-    },
-    "templates_available": len(self.templates),
-    "features_implemented": [
-    "Documentation technique complète",
-    "Guides utilisateur (quick start + avancé)",
-    "Documentation API endpoints", 
-    "Standards documentation équipe",
-    "Architecture overview",
-    "Templates documentation",
-    "Coordination Agent 13",
-    "Génération automatique"
-    ],
-    "next_sprint_recommendations": [
-    "Documentation sécurité cryptographique",
-    "Runbook opérateur avancé",
-    "Documentation tests automatisés",
-    "Guides troubleshooting",
-    "Documentation déploiement K8s"
-    ]
-    }
-            
-    except Exception as e:
-    logger.error(f"❌ Erreur génération rapport Sprint 1: {e}")
-    return {
-    "sprint": 1,
-    "agent": "Agent10DocumentalisteExpert",
-    "status": "error", 
-    "error": str(e)
-    }
+        raise RuntimeError("Agent 10 bloqué : dépendance code_expert interdite par la politique de conformité.")
+    # Tout le reste de la classe est désactivé pour conformité
+    # ...
 
 # ===== FONCTIONS UTILITAIRES =====
 
@@ -1073,37 +552,37 @@ async def test_agent_10_documentation():
     
     try:
         # Initialisation
-    agent = Agent10DocumentalisteExpert()
+        agent = Agent10DocumentalisteExpert()
         
         # Génération documentation complète
-    print("📚 Génération documentation complète...")
-    documentation = await agent.generate_complete_documentation()
-    print(f"✅ {len(documentation)} documents générés")
+        print("📚 Génération documentation complète...")
+        documentation = await agent.generate_complete_documentation()
+        print(f"✅ {len(documentation)} documents générés")
         
         # Sauvegarde fichiers
-    print("💾 Sauvegarde fichiers documentation...")
-    saved_files = await agent.save_documentation_files(documentation)
-    print(f"✅ {len(saved_files)} fichiers sauvés")
+        print("💾 Sauvegarde fichiers documentation...")
+        saved_files = await agent.save_documentation_files(documentation)
+        print(f"✅ {len(saved_files)} fichiers sauvés")
         
         # Test coordination Agent 13
-    coordination_data = {
-    "documentation_count": len(documentation),
-    "templates_used": list(agent.templates.keys())
-    }
+        coordination_data = {
+            "documentation_count": len(documentation),
+            "templates_used": list(agent.templates.keys())
+        }
         
-    coordination = await agent.coordinate_with_agent_13(coordination_data)
-    print(f"✅ Coordination Agent 13: {coordination['status']}")
+        coordination = await agent.coordinate_with_agent_13(coordination_data)
+        print(f"✅ Coordination Agent 13: {coordination['status']}")
         
         # Rapport Sprint 1
-    report = agent.generate_sprint_1_report()
-    print(f"✅ Rapport Sprint 1: {report['success_percentage']:.1f}% objectifs")
+        report = agent.generate_sprint_1_report()
+        print(f"✅ Rapport Sprint 1: {report['success_percentage']:.1f}% objectifs")
         
-    print("🎉 Agent 10 - Tests réussis")
-    return True
+        print("🎉 Agent 10 - Tests réussis")
+        return True
         
     except Exception as e:
-    print(f"❌ Erreur test Agent 10: {e}")
-    return False
+        print(f"❌ Erreur test Agent 10: {e}")
+        return False
 
 if __name__ == "__main__":
     print("🎖️ AGENT 10 - DOCUMENTALISTE EXPERT")
@@ -1115,6 +594,6 @@ if __name__ == "__main__":
     success = asyncio.run(test_agent_10_documentation())
     
     if success:
-    print("\n🚀 Agent 10 opérationnel - Documentation prête")
+        print("\n🚀 Agent 10 opérationnel - Documentation prête")
     else:
-    print("\n❌ Agent 10 - Problèmes détectés") 
+        print("\n❌ Agent 10 - Problèmes détectés") 
