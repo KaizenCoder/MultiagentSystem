@@ -170,4 +170,12 @@ Poursuite de la politique stricte :
 - Agent 14 : Initialisation et logger standard OK.
 - Tous les agents importés et instanciés sans erreur.
 
+## 2025-06-23 — Agents 15, 18, 16 (Testeur Spécialisé, Auditeur Sécurité, Peer Reviewer Senior)
+- Début de la fiabilisation séquentielle de ces trois agents.
+- Tests d'import et d'initialisation en cours.
+- Agent 15 : Import et initialisation validés (logger, configuration OK).
+- Agent 18 : Import et initialisation validés (logger, configuration OK).
+- Agent 16 : Import et initialisation validés (logger, configuration OK).
+- Tous les agents marqués comme fonctionnels dans le suivi.
+
 --- 

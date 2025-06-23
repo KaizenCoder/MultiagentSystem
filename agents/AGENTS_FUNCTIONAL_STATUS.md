@@ -21,3 +21,6 @@ Ce document sert de source de vérité pour l'état de chaque agent.
 | `agent_12_backup_manager.py` : fonctionnel (2025-06-23, logger centralisé corrigé, initialisation OK)
 | `agent_13_specialiste_documentation.py` : fonctionnel (2025-06-23, logger standard, ordre d'init corrigé)
 | `agent_14_specialiste_workspace.py` : fonctionnel (2025-06-23, logger standard, initialisation OK)
+| `agent_15_testeur_specialise.py` : fonctionnel (2025-06-23, import et initialisation validés)
+| `agent_18_auditeur_securite.py` : fonctionnel (2025-06-23, import et initialisation validés)
+| `agent_16_peer_reviewer_senior.py` : fonctionnel (2025-06-23, import et initialisation validés)

@@ -23,7 +23,7 @@ class Agent16PeerReviewerSenior:
         self.agent_id = agent_id
         self.logger = logging.getLogger(__name__)
         self.workspace_root = Path.cwd()
-        self.code_expert_dir = self.workspace_root / "code_expert"
+        # self.code_expert_dir = self.workspace_root / "code_expert"  # SUPPRIMÉ pour conformité
         self.reviews_dir = self.workspace_root / "reviews"
         self.reviews_dir.mkdir(exist_ok=True)
         
@@ -39,7 +39,7 @@ class Agent16PeerReviewerSenior:
         }
         
         self.logger.info("🎖️ Agent 16 - Peer Reviewer Senior v1.0.0 - MISSION REVIEW ACTIVÉE")
-        self.logger.info(f"📁 Code expert à reviewer : {self.code_expert_dir}")
+        # self.logger.info(f"📁 Code expert à reviewer : {self.code_expert_dir}")  # SUPPRIMÉ
         self.logger.info(f"Agent {self.name} initialisé.")
         self.logger.info(f"Workspace root: {self.workspace_root}")
     
@@ -178,29 +178,8 @@ class Agent16PeerReviewerSenior:
         return conformity_review
     
     def _analyze_code_structure(self) -> Dict[str, Any]:
-        """Analyse structure code expert"""
-        structure = {
-            "directories": {},
-            "files": {},
-            "organization": "excellent"
-        }
-        
-        if not self.code_expert_dir.exists():
-            return {"error": "Le répertoire code_expert n'existe pas."}
-
-        for item in self.code_expert_dir.iterdir():
-            if item.is_dir():
-                structure["directories"][item.name] = "✅ Présent"
-            elif item.is_file() and item.suffix == '.py':
-                try:
-                    structure["files"][item.name] = {
-                        "size_lines": len(item.read_text(encoding='utf-8').splitlines()),
-                        "status": "✅ Analysé"
-                    }
-                except Exception as e:
-                    structure["files"][item.name] = {"status": f"❌ Erreur lecture: {e}"}
-        
-        return structure
+        """Analyse structure code expert (désactivée pour conformité)"""
+        return {"info": "L'analyse du dossier code_expert est désactivée pour conformité à la politique de sécurité."}
     
     def _validate_planes_separation(self) -> Dict[str, Any]:
         """Validation séparation Control/Data Plane"""
