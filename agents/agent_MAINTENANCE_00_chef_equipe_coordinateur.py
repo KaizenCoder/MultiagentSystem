@@ -223,7 +223,17 @@ class ChefEquipeCoordinateurEnterprise(Agent):
 
     async def _recruter_equipe(self):
         self.logger.info("Recrutement de l'équipe de maintenance...")
-        roles = ["evaluateur", "adaptateur", "testeur", "documenteur", "analyseur_performance", "dependency_manager", "security_manager"]
+        roles = [
+            "evaluateur", 
+            "adaptateur", 
+            "testeur", 
+            "documenteur", 
+            "analyseur_performance", 
+            "dependency_manager", 
+            "security_manager",
+            "correcteur_logique",
+            "auditeur_qualite"
+        ]
         for role in roles:
             try:
                 agent = self.factory.create_agent(role)

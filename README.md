@@ -245,6 +245,30 @@ Une refactorisation majeure a été achevée le 21 Juin 2025 pour améliorer la 
 
 ---
 
+## 🏛️ Architecture de Configuration des Agents (Post-Refactorisation)
+
+Une seconde refactorisation critique a été entreprise pour stabiliser le **système de configuration des agents**, qui souffrait d'une dépendance circulaire. Cette nouvelle architecture garantit un démarrage fiable et une configuration robuste.
+
+- **Statut** : ✅ **Terminé et Validé**
+- **Problème résolu** : Élimination du `ModuleNotFoundError` au démarrage des agents, causé par la nécessité de générer un fichier de configuration Python (`agent_config.py`) avant même que les agents puissent être importés.
+
+### **Rôle Central du Répertoire `core/config_models_agent`**
+
+Le répertoire `C:\Dev\nextgeneration\core\config_models_agent` est désormais au cœur de la nouvelle stratégie de configuration.
+
+1.  **Schémas de Configuration Statiques** : Ce dossier contient les **modèles Pydantic** qui définissent la **structure** de la configuration des équipes d'agents (par exemple, `config_models_maintenance.py`). Ces fichiers font partie intégrante du code source et ne sont plus générés dynamiquement. Ils agissent comme un "contrat" de configuration.
+
+2.  **Génération de Fichiers de Valeurs** : Les agents spécialisés (comme `agent_03_specialiste_configuration.py`) utilisent ces schémas pour générer des fichiers de configuration statiques (ex: `config/maintenance_config.json`). Ils ne génèrent plus de code Python.
+
+3.  **Chargement Robuste** : Les agents (comme le `Chef d'Équipe`) lisent directement ces fichiers JSON au démarrage en utilisant les modèles Pydantic pour valider et charger les données. Cela brise la dépendance circulaire.
+
+- **Bénéfices** :
+    - **Fiabilité** : Démarrage prédictible et stable des agents.
+    - **Clarté** : Séparation nette entre la structure de la configuration (le code) et les valeurs (les données).
+    - **Maintenabilité** : Facilité de modification des configurations sans altérer le code des agents.
+
+---
+
 # Projet NextGeneration
 
 Ce dépôt centralise un ensemble d'outils, d'agents IA et de projets visant à moderniser et automatiser divers processus de développement et de maintenance. Il est structuré comme un monorepo contenant plusieurs initiatives distinctes mais interconnectées.

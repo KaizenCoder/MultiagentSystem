@@ -1,0 +1,108 @@
+2025-06-22 23:02:25,527 - nextgen.logging.manager - ERROR - [manager.py:68] - Erreur chargement config: LoggingConfig.__init__() got an unexpected keyword argument '_comment_block_'. Création d'une config par défaut.
+2025-06-22 23:02:25,527 - nextgen.logging.manager - INFO - [manager.py:44] - LoggingManager modulaire initialisé.
+2025-06-22 23:02:25,531 - nextgen.logging.manager - WARNING - [manager.py:126] - Config 'agent_maintenance' non trouvée. Utilisation de la config par défaut.
+WARNING:nextgen.logging.manager:Config 'agent_maintenance' non trouvée. Utilisation de la config par défaut.
+2025-06-22 23:02:25,531 - nextgen.logging.manager - WARNING - [manager.py:126] - Config 'manager_debug' non trouvée. Utilisation de la config par défaut.
+WARNING:nextgen.logging.manager:Config 'manager_debug' non trouvée. Utilisation de la config par défaut.
+2025-06-22 23:02:25,532 - nextgen.default - DEBUG - [manager.py:203] - Logger 'nextgen.default' créé et configuré.
+2025-06-22 23:02:25,532 - nextgen.default - INFO - [agent_factory_architecture.py:228] - Agent coordinateur (coordinateur_maintenance_38d0f123) initialisé.
+2025-06-22 23:02:25,532 - nextgen.default - INFO - [agent_MAINTENANCE_00_chef_equipe_coordinateur.py:49] - Chef d'équipe v4.1.0 initialisé avec ID: coordinateur_maintenance_38d0f123
+INFO:core.agent_factory_architecture:AgentRegistry initialisé
+INFO:core.agent_factory_architecture:Configuration chargée avec succès depuis C:\Dev\nextgeneration\config\maintenance_config.json
+WARNING:core.agent_factory_architecture:Agent Méta-Stratégique non disponible: No module named 'agents.agent_meta_strategique_pattern_factory'
+INFO:core.agent_factory_architecture:🏭 Agents par défaut enregistrés
+INFO:core.agent_factory_architecture:Enregistrement de 8 agents depuis la configuration...
+INFO:core.agent_factory_architecture:Type d'agent enregistré: analyseur -> AgentMAINTENANCE01AnalyseurStructure
+INFO:core.agent_factory_architecture:  -> Agent 'AgentMAINTENANCE01AnalyseurStructure' enregistré pour le rôle 'analyseur'.
+INFO:core.agent_factory_architecture:Type d'agent enregistré: evaluateur -> AgentMAINTENANCE02EvaluateurUtilite
+INFO:core.agent_factory_architecture:  -> Agent 'AgentMAINTENANCE02EvaluateurUtilite' enregistré pour le rôle 'evaluateur'.
+INFO:core.agent_factory_architecture:Type d'agent enregistré: adaptateur -> AgentMAINTENANCE03AdaptateurCode
+INFO:core.agent_factory_architecture:  -> Agent 'AgentMAINTENANCE03AdaptateurCode' enregistré pour le rôle 'adaptateur'.
+INFO:core.agent_factory_architecture:Type d'agent enregistré: testeur -> AgentMAINTENANCE04TesteurAntiFauxAgents
+INFO:core.agent_factory_architecture:  -> Agent 'AgentMAINTENANCE04TesteurAntiFauxAgents' enregistré pour le rôle 'testeur'.
+INFO:core.agent_factory_architecture:Type d'agent enregistré: documenteur -> AgentMAINTENANCE05DocumenteurPeerReviewer
+INFO:core.agent_factory_architecture:  -> Agent 'AgentMAINTENANCE05DocumenteurPeerReviewer' enregistré pour le rôle 'documenteur'.
+INFO:core.agent_factory_architecture:Type d'agent enregistré: validateur -> AgentMAINTENANCE06ValidateurFinal
+INFO:core.agent_factory_architecture:  -> Agent 'AgentMAINTENANCE06ValidateurFinal' enregistré pour le rôle 'validateur'.
+INFO:core.agent_factory_architecture:Type d'agent enregistré: gestionnaire_dependances -> AgentMAINTENANCE07GestionnaireDependances
+INFO:core.agent_factory_architecture:  -> Agent 'AgentMAINTENANCE07GestionnaireDependances' enregistré pour le rôle 'gestionnaire_dependances'.
+INFO:core.agent_factory_architecture:Type d'agent enregistré: analyseur_performance -> AgentMAINTENANCE08AnalyseurPerformance
+INFO:core.agent_factory_architecture:  -> Agent 'AgentMAINTENANCE08AnalyseurPerformance' enregistré pour le rôle 'analyseur_performance'.
+INFO:core.agent_factory_architecture:AgentFactory initialisée avec 8 types d'agents
+2025-06-22 23:02:25,743 - nextgen.default - INFO - [agent_MAINTENANCE_00_chef_equipe_coordinateur.py:58] - 🚀 Démarrage du Chef d'Équipe coordinateur_maintenance_38d0f123
+2025-06-22 23:02:25,743 - nextgen.default - INFO - [agent_MAINTENANCE_00_chef_equipe_coordinateur.py:226] - Recrutement de l'équipe de maintenance...
+2025-06-22 23:02:25,743 - nextgen.logging.manager - WARNING - [manager.py:126] - Config 'agent_maintenance' non trouvée. Utilisation de la config par défaut.
+WARNING:nextgen.logging.manager:Config 'agent_maintenance' non trouvée. Utilisation de la config par défaut.
+2025-06-22 23:02:25,743 - nextgen.default - INFO - [agent_factory_architecture.py:228] - Agent evaluateur (AgentMAINTENANCE02EvaluateurUtilite) initialisé.
+2025-06-22 23:02:25,743 - nextgen.default - INFO - [agent_MAINTENANCE_02_evaluateur_utilite.py:14] - Évaluateur d'utilité (AgentMAINTENANCE02EvaluateurUtilite) initialisé.
+INFO:core.agent_factory_architecture:Agent AgentMAINTENANCE02EvaluateurUtilite (evaluateur) créé.
+2025-06-22 23:02:25,743 - nextgen.default - INFO - [agent_factory_architecture.py:233] - [AgentMAINTENANCE02EvaluateurUtilite] Évaluateur d'utilité prêt.
+INFO:core.agent_factory_architecture:Agent AgentMAINTENANCE02EvaluateurUtilite démarré et prêt.
+2025-06-22 23:02:25,743 - nextgen.logging.manager - WARNING - [manager.py:126] - Config 'agent_maintenance' non trouvée. Utilisation de la config par défaut.
+WARNING:nextgen.logging.manager:Config 'agent_maintenance' non trouvée. Utilisation de la config par défaut.
+2025-06-22 23:02:25,743 - nextgen.default - INFO - [agent_factory_architecture.py:228] - Agent adaptateur (AgentMAINTENANCE03AdaptateurCode) initialisé.
+2025-06-22 23:02:25,743 - nextgen.default - INFO - [agent_MAINTENANCE_03_adaptateur_code.py:160] - Adaptateur de code CST v1.0 (AgentMAINTENANCE03AdaptateurCode) initialisé.
+INFO:core.agent_factory_architecture:Agent AgentMAINTENANCE03AdaptateurCode (adaptateur) créé.
+2025-06-22 23:02:25,743 - nextgen.default - INFO - [agent_MAINTENANCE_03_adaptateur_code.py:230] - Agent Adaptateur CST démarré.
+INFO:core.agent_factory_architecture:Agent AgentMAINTENANCE03AdaptateurCode démarré et prêt.
+2025-06-22 23:02:25,743 - nextgen.logging.manager - WARNING - [manager.py:126] - Config 'agent_maintenance' non trouvée. Utilisation de la config par défaut.
+WARNING:nextgen.logging.manager:Config 'agent_maintenance' non trouvée. Utilisation de la config par défaut.
+2025-06-22 23:02:25,743 - nextgen.default - INFO - [agent_factory_architecture.py:228] - Agent testeur (AgentMAINTENANCE04TesteurAntiFauxAgents) initialisé.
+2025-06-22 23:02:25,743 - nextgen.default - INFO - [agent_MAINTENANCE_04_testeur_anti_faux_agents.py:59] - Testeur anti-faux agents (AgentMAINTENANCE04TesteurAntiFauxAgents) initialisé.
+INFO:core.agent_factory_architecture:Agent AgentMAINTENANCE04TesteurAntiFauxAgents (testeur) créé.
+2025-06-22 23:02:25,743 - nextgen.default - INFO - [agent_factory_architecture.py:233] - [AgentMAINTENANCE04TesteurAntiFauxAgents] Testeur anti-faux agents prêt.
+INFO:core.agent_factory_architecture:Agent AgentMAINTENANCE04TesteurAntiFauxAgents démarré et prêt.
+2025-06-22 23:02:25,743 - nextgen.logging.manager - WARNING - [manager.py:126] - Config 'agent_maintenance' non trouvée. Utilisation de la config par défaut.
+WARNING:nextgen.logging.manager:Config 'agent_maintenance' non trouvée. Utilisation de la config par défaut.
+2025-06-22 23:02:25,743 - nextgen.default - INFO - [agent_factory_architecture.py:228] - Agent documenteur (AgentMAINTENANCE05DocumenteurPeerReviewer) initialisé.
+2025-06-22 23:02:25,743 - nextgen.default - INFO - [agent_MAINTENANCE_05_documenteur_peer_reviewer.py:37] - 🔍 Agent Documenteur v1.0 initialisé - ID: AgentMAINTENANCE05DocumenteurPeerReviewer
+INFO:core.agent_factory_architecture:Agent AgentMAINTENANCE05DocumenteurPeerReviewer (documenteur) créé.
+2025-06-22 23:02:25,743 - nextgen.default - INFO - [agent_factory_architecture.py:233] - [AgentMAINTENANCE05DocumenteurPeerReviewer] Agent Documenteur prêt.
+INFO:core.agent_factory_architecture:Agent AgentMAINTENANCE05DocumenteurPeerReviewer démarré et prêt.
+2025-06-22 23:02:25,743 - nextgen.logging.manager - WARNING - [manager.py:126] - Config 'agent_maintenance' non trouvée. Utilisation de la config par défaut.
+WARNING:nextgen.logging.manager:Config 'agent_maintenance' non trouvée. Utilisation de la config par défaut.
+2025-06-22 23:02:25,743 - nextgen.default - INFO - [agent_factory_architecture.py:228] - Agent analyseur_performance (AgentMAINTENANCE08AnalyseurPerformance) initialisé.
+INFO:core.agent_factory_architecture:Agent AgentMAINTENANCE08AnalyseurPerformance (analyseur_performance) créé.
+2025-06-22 23:02:25,743 - nextgen.default - INFO - [agent_factory_architecture.py:233] - [AgentMAINTENANCE08AnalyseurPerformance] Optimiseur de performance prêt.
+INFO:core.agent_factory_architecture:Agent AgentMAINTENANCE08AnalyseurPerformance démarré et prêt.
+2025-06-22 23:02:25,743 - nextgen.default - INFO - [agent_factory_architecture.py:233] - [coordinateur_maintenance_38d0f123] Chef d'Équipe prêt et équipe recrutée.
+INFO:MaintenanceWorkflowRunner:Lancement du workflow de maintenance sur les cibles...
+2025-06-22 23:02:25,743 - nextgen.default - INFO - [agent_MAINTENANCE_00_chef_equipe_coordinateur.py:90] - ===== DÉBUT DE LA MISSION DE MAINTENANCE : mission_20250622_230225 =====
+2025-06-22 23:02:25,743 - nextgen.default - INFO - [agent_MAINTENANCE_00_chef_equipe_coordinateur.py:104] - --- 🔁 DÉBUT DU TRAITEMENT ITÉRATIF POUR: agent_16_peer_reviewer_senior.py ---
+2025-06-22 23:02:25,744 - nextgen.default - INFO - [agent_factory_architecture.py:233] - [AgentMAINTENANCE02EvaluateurUtilite] Évaluation du fichier : agents/agent_16_peer_reviewer_senior.py
+2025-06-22 23:02:25,744 - nextgen.default - ERROR - [agent_MAINTENANCE_02_evaluateur_utilite.py:38] - Impossible d'évaluer le script agents/agent_16_peer_reviewer_senior.py, erreur de syntaxe: unexpected indent (<unknown>, line 22)
+2025-06-22 23:02:25,744 - nextgen.default - WARNING - [agent_MAINTENANCE_00_chef_equipe_coordinateur.py:144] -   -> Code jugé inutile (score: 0). Lancement du cycle de réparation.
+2025-06-22 23:02:25,747 - nextgen.default - ERROR - [agent_MAINTENANCE_03_adaptateur_code.py:223] - Erreur de syntaxe CST irrécupérable : Syntax Error @ 23:5.
+parser error: error at 22:4: expected one of (, *, +, -, ..., AWAIT, EOF, False, NAME, NUMBER, None, True, [, break, continue, lambda, match, not, pass, ~
+
+from pathlib import Path
+    ^
+2025-06-22 23:02:25,747 - nextgen.default - INFO - [agent_MAINTENANCE_00_chef_equipe_coordinateur.py:114] - --- ☑️ FIN DU TRAITEMENT POUR: agent_16_peer_reviewer_senior.py ---
+2025-06-22 23:02:25,747 - nextgen.default - INFO - [agent_MAINTENANCE_00_chef_equipe_coordinateur.py:104] - --- 🔁 DÉBUT DU TRAITEMENT ITÉRATIF POUR: agent_17_peer_reviewer_technique.py ---
+2025-06-22 23:02:25,748 - nextgen.default - INFO - [agent_factory_architecture.py:233] - [AgentMAINTENANCE02EvaluateurUtilite] Évaluation du fichier : agents/agent_17_peer_reviewer_technique.py
+2025-06-22 23:02:25,748 - nextgen.default - ERROR - [agent_MAINTENANCE_02_evaluateur_utilite.py:38] - Impossible d'évaluer le script agents/agent_17_peer_reviewer_technique.py, erreur de syntaxe: unexpected indent (<unknown>, line 25)
+2025-06-22 23:02:25,748 - nextgen.default - WARNING - [agent_MAINTENANCE_00_chef_equipe_coordinateur.py:144] -   -> Code jugé inutile (score: 0). Lancement du cycle de réparation.
+2025-06-22 23:02:25,749 - nextgen.default - ERROR - [agent_MAINTENANCE_03_adaptateur_code.py:223] - Erreur de syntaxe CST irrécupérable : Syntax Error @ 26:5.
+parser error: error at 25:4: expected one of (, *, +, -, ..., AWAIT, EOF, False, NAME, NUMBER, None, True, [, break, continue, lambda, match, not, pass, ~
+
+from pathlib import Path
+    ^
+2025-06-22 23:02:25,749 - nextgen.default - INFO - [agent_MAINTENANCE_00_chef_equipe_coordinateur.py:114] - --- ☑️ FIN DU TRAITEMENT POUR: agent_17_peer_reviewer_technique.py ---
+2025-06-22 23:02:25,749 - nextgen.default - INFO - [agent_MAINTENANCE_00_chef_equipe_coordinateur.py:203] - Génération du rapport de mission par l'agent Documenteur...
+2025-06-22 23:02:25,749 - nextgen.default - INFO - [agent_MAINTENANCE_05_documenteur_peer_reviewer.py:55] - 🎯 Exécution tâche: generate_mission_report
+2025-06-22 23:02:25,750 - nextgen.default - INFO - [agent_MAINTENANCE_00_chef_equipe_coordinateur.py:213] - Rapport JSON détaillé sauvegardé : C:\Dev\nextgeneration\reports\rapport_mission_mission_20250622_230225.json
+2025-06-22 23:02:25,751 - nextgen.default - INFO - [agent_MAINTENANCE_00_chef_equipe_coordinateur.py:221] - Rapport Markdown sauvegardé : C:\Dev\nextgeneration\reports\rapport_mission_mission_20250622_230225.md
+INFO:MaintenanceWorkflowRunner:--- RAPPORT FINAL DE LA MISSION ---
+INFO:MaintenanceWorkflowRunner:Statut de la mission : SUCCÈS
+INFO:MaintenanceWorkflowRunner:ID de la mission : mission_20250622_230225
+INFO:MaintenanceWorkflowRunner:Durée totale : 0.00599980354309082s
+INFO:MaintenanceWorkflowRunner:Agents traités : 2
+INFO:MaintenanceWorkflowRunner:  - agent_16_peer_reviewer_senior.py: REPAIR_FAILED
+INFO:MaintenanceWorkflowRunner:  - agent_17_peer_reviewer_technique.py: REPAIR_FAILED
+2025-06-22 23:02:25,751 - nextgen.default - INFO - [agent_MAINTENANCE_00_chef_equipe_coordinateur.py:63] - 🛑 Arrêt du Chef d'Équipe coordinateur_maintenance_38d0f123
+2025-06-22 23:02:25,751 - nextgen.default - INFO - [agent_factory_architecture.py:233] - [AgentMAINTENANCE02EvaluateurUtilite] Évaluateur d'utilité éteint.
+2025-06-22 23:02:25,751 - nextgen.default - INFO - [agent_MAINTENANCE_03_adaptateur_code.py:233] - Agent Adaptateur CST arrêté.
+2025-06-22 23:02:25,751 - nextgen.default - INFO - [agent_factory_architecture.py:233] - [AgentMAINTENANCE04TesteurAntiFauxAgents] Testeur anti-faux agents éteint.
+2025-06-22 23:02:25,751 - nextgen.default - INFO - [agent_factory_architecture.py:233] - [AgentMAINTENANCE05DocumenteurPeerReviewer] Agent Documenteur éteint.
+2025-06-22 23:02:25,751 - nextgen.default - INFO - [agent_factory_architecture.py:233] - [AgentMAINTENANCE08AnalyseurPerformance] Optimiseur de performance éteint.
+INFO: Lancement de la maintenance sur les 2 agents spécifiés en argument.

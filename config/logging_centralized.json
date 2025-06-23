@@ -40,5 +40,33 @@
     "elasticsearch_config": {},
     "encryption_config": {},
     "alerting_config": {}
+  },
+  "agent_maintenance": {
+    "logger_name": "agent.maintenance",
+    "log_level": "INFO",
+    "log_dir": "agents/reviews/audit_team_review",
+    
+    "_comment_block_": "--- MODIFICATION POUR DEBUG LOGGING (2025-06-22) ---",
+    "_comment_context_": "Le `FileHandler` (`core/handlers/file_handler.py`) s'attend à un placeholder ({date} ou {component}) dans le nom de fichier pour utiliser .format(). L'absence de placeholder provoquait une KeyError silencieuse, empêchant la création du fichier de log.",
+    "_comment_original_version_": "VERSION ORIGINALE (défectueuse) : \"maintenance_team.log\"",
+    "_comment_reversibility_": "VERSION CORRIGÉE (fonctionnelle et réversible en utilisant la valeur de _comment_original_version_)",
+    
+    "filename_pattern": "maintenance_team_{date}.log",
+    
+    "max_file_size": 5242880,
+    "backup_count": 5,
+    "console_enabled": true,
+    "file_enabled": true,
+    "format_string": "%(asctime)s - %(name)s - [%(levelname)s] - %(message)s",
+    "async_enabled": true,
+    "compression_enabled": false,
+    "retention_days": 15,
+    "elasticsearch_enabled": false,
+    "encryption_enabled": false,
+    "alerting_enabled": false,
+    "metadata": {},
+    "elasticsearch_config": {},
+    "encryption_config": {},
+    "alerting_config": {}
   }
 }

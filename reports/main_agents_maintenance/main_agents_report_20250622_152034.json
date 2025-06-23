@@ -1,0 +1,188 @@
+{
+  "mission_id": "mission_20250622_152034",
+  "statut_mission": "ÉCHEC",
+  "etapes": {},
+  "resultats_par_agent": [
+    {
+      "agent_name": "agent_01_coordinateur_principal.py",
+      "status": "REPAIR_FAILED",
+      "repair_history": [
+        {
+          "iteration": 1,
+          "error_detected": "Évaluation initiale échouée ou absente.",
+          "adaptation_attempted": "Adaptation non décrite."
+        },
+        {
+          "iteration": 2,
+          "error_detected": "Échec du test dynamique: No module named 'agent_config'",
+          "adaptation_attempted": "Adaptation non décrite."
+        },
+        {
+          "iteration": 3,
+          "error_detected": "Échec du test dynamique: No module named 'agent_config'",
+          "adaptation_attempted": "Adaptation non décrite."
+        }
+      ],
+      "final_code": null,
+      "evaluation": {
+        "file_path": "agents/agent_01_coordinateur_principal.py",
+        "is_useful": true,
+        "score": 13,
+        "justification": {
+          "contains_class": true,
+          "contains_async_functions": true,
+          "is_runnable": true,
+          "has_main_block": false,
+          "imports_core_libs": true,
+          "has_docstrings": true
+        }
+      },
+      "last_error": "Échec du test dynamique: No module named 'agent_config'"
+    },
+    {
+      "agent_name": "agent_02_architecte_code_expert.py",
+      "status": "REPAIR_FAILED",
+      "repair_history": [
+        {
+          "iteration": 1,
+          "error_detected": "Évaluation initiale échouée ou absente.",
+          "adaptation_attempted": "Adaptation non décrite."
+        },
+        {
+          "iteration": 2,
+          "error_detected": "Échec du test dynamique: Can't instantiate abstract class Agent02ArchitecteCodeExpert without an implementation for abstract methods 'execute_task', 'get_capabilities', 'health_check', 'shutdown', 'startup'",
+          "adaptation_attempted": "Adaptation non décrite."
+        },
+        {
+          "iteration": 3,
+          "error_detected": "Échec du test dynamique: Can't instantiate abstract class Agent02ArchitecteCodeExpert without an implementation for abstract methods 'execute_task', 'get_capabilities', 'health_check', 'shutdown', 'startup'",
+          "adaptation_attempted": "Adaptation non décrite."
+        }
+      ],
+      "final_code": null,
+      "evaluation": {
+        "file_path": "agents/agent_02_architecte_code_expert.py",
+        "is_useful": true,
+        "score": 13,
+        "justification": {
+          "contains_class": true,
+          "contains_async_functions": true,
+          "is_runnable": true,
+          "has_main_block": false,
+          "imports_core_libs": true,
+          "has_docstrings": true
+        }
+      },
+      "last_error": "Échec du test dynamique: Can't instantiate abstract class Agent02ArchitecteCodeExpert without an implementation for abstract methods 'execute_task', 'get_capabilities', 'health_check', 'shutdown', 'startup'"
+    },
+    {
+      "agent_name": "agent_03_specialiste_configuration.py",
+      "status": "REPAIR_FAILED",
+      "repair_history": [
+        {
+          "iteration": 1,
+          "error_detected": "Évaluation initiale échouée ou absente.",
+          "adaptation_attempted": "Adaptation non décrite."
+        },
+        {
+          "iteration": 2,
+          "error_detected": "Échec du test dynamique: core.agent_factory_architecture.Agent.__init__() got multiple values for keyword argument 'agent_id'",
+          "adaptation_attempted": "Adaptation non décrite."
+        },
+        {
+          "iteration": 3,
+          "error_detected": "Échec du test dynamique: core.agent_factory_architecture.Agent.__init__() got multiple values for keyword argument 'agent_id'",
+          "adaptation_attempted": "Adaptation non décrite."
+        }
+      ],
+      "final_code": null,
+      "evaluation": {
+        "file_path": "agents/agent_03_specialiste_configuration.py",
+        "is_useful": true,
+        "score": 17,
+        "justification": {
+          "contains_class": true,
+          "contains_async_functions": true,
+          "is_runnable": true,
+          "has_main_block": true,
+          "imports_core_libs": true,
+          "has_docstrings": true
+        }
+      },
+      "last_error": "Échec du test dynamique: core.agent_factory_architecture.Agent.__init__() got multiple values for keyword argument 'agent_id'"
+    },
+    {
+      "agent_name": "agent_04_expert_securite_crypto.py",
+      "status": "REPAIR_FAILED",
+      "repair_history": [
+        {
+          "iteration": 1,
+          "error_detected": "Évaluation initiale échouée ou absente.",
+          "adaptation_attempted": "Adaptation non décrite."
+        },
+        {
+          "iteration": 2,
+          "error_detected": "Échec du test dynamique: expected an indented block after 'try' statement on line 58 (temp_agent_04_expert_securite_crypto_df94af409b614d89b16d39df706533f2.py, line 59)",
+          "adaptation_attempted": "Adaptation non décrite."
+        },
+        {
+          "iteration": 3,
+          "error_detected": "Échec du test dynamique: expected an indented block after 'try' statement on line 58 (temp_agent_04_expert_securite_crypto_0dcf17cd03274ec6a7dfa9b213e5db6b.py, line 59)",
+          "adaptation_attempted": "Adaptation non décrite."
+        }
+      ],
+      "final_code": null,
+      "evaluation": {
+        "file_path": "agents/agent_04_expert_securite_crypto.py",
+        "is_useful": true,
+        "score": 13,
+        "justification": {
+          "contains_class": true,
+          "contains_async_functions": true,
+          "is_runnable": true,
+          "has_main_block": false,
+          "imports_core_libs": true,
+          "has_docstrings": true
+        }
+      },
+      "last_error": "Échec du test dynamique: expected an indented block after 'try' statement on line 58 (temp_agent_04_expert_securite_crypto_acf8efc9f1894d38a64ebd4c86d14219.py, line 59)"
+    },
+    {
+      "agent_name": "agent_05_maitre_tests_validation.py",
+      "status": "REPAIR_FAILED",
+      "repair_history": [
+        {
+          "iteration": 1,
+          "error_detected": "Évaluation initiale échouée ou absente.",
+          "adaptation_attempted": "Adaptation non décrite."
+        },
+        {
+          "iteration": 2,
+          "error_detected": "Échec du test dynamique: expected an indented block after 'try' statement on line 54 (temp_agent_05_maitre_tests_validation_9627034281fe4ec89f96d1f63b936a65.py, line 55)",
+          "adaptation_attempted": "Adaptation non décrite."
+        },
+        {
+          "iteration": 3,
+          "error_detected": "Échec du test dynamique: expected an indented block after 'try' statement on line 54 (temp_agent_05_maitre_tests_validation_67cc8af201824f5291e4fdb630d7711e.py, line 55)",
+          "adaptation_attempted": "Adaptation non décrite."
+        }
+      ],
+      "final_code": null,
+      "evaluation": {
+        "file_path": "agents/agent_05_maitre_tests_validation.py",
+        "is_useful": true,
+        "score": 13,
+        "justification": {
+          "contains_class": true,
+          "contains_async_functions": true,
+          "is_runnable": true,
+          "has_main_block": false,
+          "imports_core_libs": true,
+          "has_docstrings": true
+        }
+      },
+      "last_error": "Échec du test dynamique: expected an indented block after 'try' statement on line 54 (temp_agent_05_maitre_tests_validation_eb2b44b4951b4ac89be4247987c5a645.py, line 55)"
+    }
+  ],
+  "duree_totale_sec": 0.18
+}

@@ -48,6 +48,18 @@
             "class": "AgentMAINTENANCE09AnalyseurSecurite",
             "factory_function": "create_agent_MAINTENANCE_09_analyseur_securite",
             "config": {}
+        },
+        "correcteur_logique": {
+            "module": "agents.agent_MAINTENANCE_06_correcteur_logique_metier",
+            "class": "AgentMAINTENANCE06CorrecteurLogiqueMetier",
+            "factory_function": "create_agent_MAINTENANCE_06_correcteur_logique_metier",
+            "config": {}
+        },
+        "auditeur_qualite": {
+            "module": "agents.agent_MAINTENANCE_10_auditeur_qualite_normes",
+            "class": "AgentMAINTENANCE10AuditeurQualiteNormes",
+            "factory_function": "create_agent_MAINTENANCE_10_auditeur_qualite_normes",
+            "config": {}
         }
     }
 }

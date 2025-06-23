@@ -133,6 +133,27 @@ L'Agent 3 effectue un **scan complet** avec corrections :
 
 ---
 
+## 🏛️ Architecture et Configuration
+
+L'architecture de l'équipe de maintenance a été refactorisée pour garantir une fiabilité maximale et éliminer les dépendances circulaires qui empêchaient le système de démarrer correctement.
+
+### **Philosophie de Configuration Statique**
+
+Le système repose désormais sur une configuration statique, où la **structure** de la configuration est séparée des **valeurs**.
+
+1.  **Schémas Statiques (`core/config_models_agent`)** : Ce répertoire contient les modèles Pydantic qui agissent comme des "plans" ou des "contrats" pour la configuration. Par exemple, `config_models_maintenance.py` définit la structure attendue pour l'équipe de maintenance. Ces fichiers font partie du code source.
+
+2.  **Fichiers de Valeurs (`config/`)** : Un agent spécialisé (`agent_03_specialiste_configuration.py`) lit les schémas et génère un fichier de valeurs concret, comme `config/maintenance_config.json`. C'est ce fichier qui contient la configuration réelle (quels agents recruter, etc.).
+
+3.  **Chargement au Démarrage** : Au démarrage, le **Chef d'Équipe** lit le fichier `maintenance_config.json`, le valide grâce au modèle Pydantic, et charge sa configuration. Ce mécanisme est robuste et évite les erreurs d'importation.
+
+### **Avantages de cette approche**
+- **Fiabilité** : Plus d'erreurs d'importation dues à des dépendances circulaires.
+- **Clarté** : La structure est découplée des données.
+- **Maintenabilité** : Les configurations peuvent être modifiées dans le fichier `.json` sans toucher au code des agents.
+
+---
+
 ## **📊 MÉTRIQUES DE PERFORMANCE**
 
 ### **🎯 Résultats Dernière Mission**

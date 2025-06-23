@@ -1,0 +1,9 @@
+# Dépendances pour l'équipe de maintenance et la manipulation de code
+
+# Bibliothèque pour la manipulation d'Arbres Syntaxiques Concrets (CST)
+# C'est une dépendance clé pour la réparation robuste de code invalide.
+libcst==1.1.0
+
+# Bibliothèque pour convertir un AST en code source Python
+# Utilisé comme fallback ou alternative à ast.unparse
+astor==0.8.1 
