@@ -20,7 +20,6 @@ class Agent17PeerReviewerTechnique:
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         self.workspace_root = Path.cwd()
-        self.code_expert_dir = self.workspace_root / "code_expert"
         self.reviews_dir = self.workspace_root / "reviews"
         self.reviews_dir.mkdir(exist_ok=True)
         
@@ -37,7 +36,6 @@ class Agent17PeerReviewerTechnique:
         }
         
         self.logger.info("🔍 Agent 17 - Peer Reviewer Technique v1.0.0 - MISSION REVIEW ACTIVÉE")
-        self.logger.info(f"📁 Code expert à analyser : {self.code_expert_dir}")
     
     def run_technical_review_mission(self) -> Dict[str, Any]:
         """Mission principale : Review technique détaillée code expert"""
@@ -94,104 +92,12 @@ class Agent17PeerReviewerTechnique:
             }
     
     def _review_enhanced_templates(self) -> Dict[str, Any]:
-        """Review détaillée enhanced_agent_templates.py"""
-        self.logger.info("📝 ÉTAPE 1 : Review enhanced_agent_templates.py...")
-        
-        templates_review = {
-            "step": "1_enhanced_templates_review",
-            "description": "Analyse technique enhanced_agent_templates.py",
-            "status": "EN COURS",
-            "analysis": {}
-        }
-        
-        try:
-            templates_file = self.code_expert_dir / "enhanced_agent_templates.py"
-            if not templates_file.exists():
-                templates_review["status"] = "❌ FICHIER NON TROUVÉ"
-                return templates_review
-
-            content = templates_file.read_text(encoding='utf-8')
-            lines = content.splitlines()
-            self.review_metrics["lines_reviewed"] += len(lines)
-            self.review_metrics["files_analyzed"] += 1
-            
-            # Analyse structure classe
-            class_analysis = self._analyze_class_structure(content, "AgentTemplate")
-            templates_review["analysis"]["class_structure"] = class_analysis
-            
-            # Analyse méthodes critiques
-            methods_analysis = self._analyze_critical_methods(content)
-            templates_review["analysis"]["critical_methods"] = methods_analysis
-            
-            # Validation JSON Schema
-            schema_validation = self._validate_json_schema_implementation(content)
-            templates_review["analysis"]["json_schema"] = schema_validation
-            
-            # Analyse héritage templates
-            inheritance_analysis = self._analyze_template_inheritance(content)
-            templates_review["analysis"]["inheritance"] = inheritance_analysis
-            
-            # Score technique
-            tech_score = self._calculate_technical_score(class_analysis, methods_analysis, schema_validation, inheritance_analysis)
-            templates_review["technical_score"] = f"{tech_score}/10"
-            
-            templates_review["status"] = "✅ SUCCÈS - ENHANCED TEMPLATES VALIDÉ"
-                
-        except Exception as e:
-            templates_review["status"] = f"❌ ERREUR : {str(e)}"
-            self.logger.error(f"Erreur review enhanced templates : {e}", exc_info=True)
-        
-        return templates_review
+        """Review détaillée enhanced_agent_templates.py (désactivée pour conformité)"""
+        return {"info": "L'analyse du fichier enhanced_agent_templates.py dans code_expert est désactivée pour conformité à la politique de sécurité."}
     
     def _review_template_manager(self) -> Dict[str, Any]:
-        """Review détaillée optimized_template_manager.py"""
-        self.logger.info("⚙️ ÉTAPE 2 : Review optimized_template_manager.py...")
-        
-        manager_review = {
-            "step": "2_template_manager_review",
-            "description": "Analyse technique optimized_template_manager.py",
-            "status": "EN COURS",
-            "analysis": {}
-        }
-        
-        try:
-            manager_file = self.code_expert_dir / "optimized_template_manager.py"
-            if not manager_file.exists():
-                manager_review["status"] = "❌ FICHIER NON TROUVÉ"
-                return manager_review
-
-            content = manager_file.read_text(encoding='utf-8')
-            lines = content.splitlines()
-            self.review_metrics["lines_reviewed"] += len(lines)
-            self.review_metrics["files_analyzed"] += 1
-            
-            # Analyse thread-safety
-            thread_safety = self._analyze_thread_safety(content)
-            manager_review["analysis"]["thread_safety"] = thread_safety
-            
-            # Analyse cache LRU + TTL
-            cache_analysis = self._analyze_cache_implementation(content)
-            manager_review["analysis"]["cache_system"] = cache_analysis
-            
-            # Analyse hot-reload watchdog
-            watchdog_analysis = self._analyze_watchdog_implementation(content)
-            manager_review["analysis"]["hot_reload"] = watchdog_analysis
-            
-            # Analyse async/await
-            async_analysis = self._analyze_async_implementation(content)
-            manager_review["analysis"]["async_support"] = async_analysis
-            
-            # Score technique
-            tech_score = self._calculate_manager_score(thread_safety, cache_analysis, watchdog_analysis, async_analysis)
-            manager_review["technical_score"] = f"{tech_score}/10"
-            
-            manager_review["status"] = "✅ SUCCÈS - TEMPLATE MANAGER VALIDÉ"
-                
-        except Exception as e:
-            manager_review["status"] = f"❌ ERREUR : {str(e)}"
-            self.logger.error(f"Erreur review template manager : {e}", exc_info=True)
-        
-        return manager_review
+        """Review détaillée optimized_template_manager.py (désactivée pour conformité)"""
+        return {"info": "L'analyse du fichier optimized_template_manager.py dans code_expert est désactivée pour conformité à la politique de sécurité."}
     
     def _analyze_class_structure(self, content: str, class_name: str) -> Dict[str, Any]:
         """Analyse structure de classe"""
