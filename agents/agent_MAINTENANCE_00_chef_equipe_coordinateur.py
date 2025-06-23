@@ -223,12 +223,15 @@ class ChefEquipeCoordinateurEnterprise(Agent):
 
     async def _recruter_equipe(self):
         self.logger.info("Recrutement de l'équipe de maintenance...")
-        roles = ["evaluateur", "adaptateur", "testeur", "documenteur", "analyseur_performance"]
+        roles = ["evaluateur", "adaptateur", "testeur", "documenteur", "analyseur_performance", "dependency_manager", "security_manager"]
         for role in roles:
-            agent = self.factory.create_agent(role)
-            if hasattr(agent, 'startup'):
-                await agent.startup()
-            self.equipe_agents[role] = agent
+            try:
+                agent = self.factory.create_agent(role)
+                if hasattr(agent, 'startup'):
+                    await agent.startup()
+                self.equipe_agents[role] = agent
+            except Exception as e:
+                self.logger.error(f"Erreur lors de la création de l'agent {role}: {e}")
 
     async def _run_sub_task(self, agent_role: str, task_type: str, params: dict) -> Optional[Result]:
         agent = self.equipe_agents.get(agent_role)

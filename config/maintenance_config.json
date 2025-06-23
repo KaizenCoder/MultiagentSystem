@@ -1,0 +1,53 @@
+{
+    "factory_config": {
+        "max_concurrent_agents": 10,
+        "default_timeout_seconds": 60,
+        "log_level": "INFO"
+    },
+    "agents": {
+        "evaluateur": {
+            "module": "agents.agent_MAINTENANCE_02_evaluateur_utilite",
+            "class": "AgentMAINTENANCE02EvaluateurUtilite",
+            "factory_function": "create_agent_MAINTENANCE_02_evaluateur_utilite",
+            "config": {
+                "min_score_for_usefulness": 15
+            }
+        },
+        "adaptateur": {
+            "module": "agents.agent_MAINTENANCE_03_adaptateur_code",
+            "class": "AgentMAINTENANCE03AdaptateurCode",
+            "factory_function": "create_agent_MAINTENANCE_03_adaptateur_code",
+            "config": {}
+        },
+        "testeur": {
+            "module": "agents.agent_MAINTENANCE_04_testeur_anti_faux_agents",
+            "class": "AgentMAINTENANCE04TesteurAntiFauxAgents",
+            "factory_function": "create_agent_MAINTENANCE_04_testeur_anti_faux_agents",
+            "config": {}
+        },
+        "documenteur": {
+            "module": "agents.agent_MAINTENANCE_05_documenteur_peer_reviewer",
+            "class": "AgentMAINTENANCE05DocumenteurPeerReviewer",
+            "factory_function": "create_agent_MAINTENANCE_05_documenteur_peer_reviewer",
+            "config": {}
+        },
+        "analyseur_performance": {
+            "module": "agents.agent_MAINTENANCE_08_analyseur_performance",
+            "class": "AgentMAINTENANCE08AnalyseurPerformance",
+            "factory_function": "create_agent_MAINTENANCE_08_analyseur_performance",
+            "config": {}
+        },
+        "dependency_manager": {
+            "module": "agents.agent_MAINTENANCE_07_gestionnaire_dependances",
+            "class": "AgentMAINTENANCE07GestionnaireDependances",
+            "factory_function": "create_agent_MAINTENANCE_07_gestionnaire_dependances",
+            "config": {}
+        },
+        "security_manager": {
+            "module": "agents.agent_MAINTENANCE_09_analyseur_securite",
+            "class": "AgentMAINTENANCE09AnalyseurSecurite",
+            "factory_function": "create_agent_MAINTENANCE_09_analyseur_securite",
+            "config": {}
+        }
+    }
+}

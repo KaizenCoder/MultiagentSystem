@@ -13,6 +13,7 @@ Version: 1.0.0
 import ast
 import re
 import hashlib
+import logging
 from typing import List, Dict, Any
 from core.agent_factory_architecture import Agent, Task, Result
 
@@ -27,12 +28,12 @@ class AgentMAINTENANCE09AnalyseurSecurite(Agent):
     """
     
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__(agent_type="security_manager", **kwargs)
+        self.logger = logging.getLogger(self.__class__.__name__)
         self.agent_id = "agent_MAINTENANCE_09_Analyseur_Securite"
         self.version = "1.0"
         self.description = "Analyse et sécurise le code Python."
         self.status = "enabled"
-        self.agent_type = "security_manager"
         
         # Fonctions dangereuses à éviter
         self.dangerous_functions = {
@@ -111,18 +112,18 @@ class AgentMAINTENANCE09AnalyseurSecurite(Agent):
 
     async def startup(self):
         await super().startup()
-        self.log("Gestionnaire de sécurité prêt. Chargement des règles de sécurité...")
+        self.logger.info("Gestionnaire de sécurité prêt. Chargement des règles de sécurité...")
 
-    async def run(self, task: Task) -> Result:
+    async def execute_task(self, task: Task) -> Result:
         if task.type != "security_scan":
-            return Result(success=False, error="Type de tâche non supporté.")
-
+            return Result(success=False, error=f"Tâche non supportée: {task.type}")
+        
         code = task.params.get("code")
         file_path = task.params.get("file_path", "unknown_file")
         if not code:
             return Result(success=False, error="Code non fourni.")
 
-        self.log(f"🔐 Analyse de sécurité pour : {file_path}")
+        self.logger.info(f"🔐 Analyse de sécurité pour : {file_path}")
 
         try:
             # Analyses de sécurité complètes
@@ -167,25 +168,21 @@ class AgentMAINTENANCE09AnalyseurSecurite(Agent):
                 "total_issues": len(vulnerabilities)
             }
 
-            self.log(f"🔐 Analyse de sécurité terminée pour {file_path} - Score: {security_score}/100, Issues: {len(vulnerabilities)}")
+            self.logger.info(f"🔐 Analyse de sécurité terminée pour {file_path} - Score: {security_score}/100, Issues: {len(vulnerabilities)}")
             
             return Result(success=True, data={
                 "security_report": report,
-                "needs_security_review": security_score < 80 or any(v['severity'] == 'CRITICAL' for v in vulnerabilities)
+                "score": security_score,
+                "vulnerabilities": vulnerabilities
             })
 
         except Exception as e:
-            self.log(f"Erreur lors de l'analyse de sécurité de {file_path}: {e}", level="error")
+            self.logger.error(f"Erreur lors de l'analyse de sécurité de {file_path}: {e}")
             return Result(success=False, error=str(e))
 
-    async def prepare_and_execute(self, code_to_analyse: str, file_path: str):
-        """Méthode de compatibilité pour le workflow de maintenance."""
-        task = Task(
-            task_id=f"security_scan_{self.agent_id}_{file_path}",
-            type="security_scan",
-            params={"code": code_to_analyse, "file_path": file_path}
-        )
-        return await self.run(task)
+    async def shutdown(self):
+        self.logger.info("Analyseur de sécurité éteint.")
+        await super().shutdown()
 
     def get_capabilities(self) -> List[str]:
         """Retourne les capacités de l'agent."""
@@ -194,12 +191,6 @@ class AgentMAINTENANCE09AnalyseurSecurite(Agent):
     async def health_check(self) -> Dict[str, Any]:
         """Vérifie l'état de santé de l'agent."""
         return {"status": "healthy", "version": self.version}
-
-    async def execute_task(self, task: Task) -> Result:
-        """Point d'entrée principal pour l'exécution des tâches."""
-        if task.type in self.get_capabilities():
-            return await self.run(task)
-        return Result(success=False, error=f"Tâche non supportée : {task.type}")
 
     def _analyze_ast_security(self, code: str) -> List[Dict[str, Any]]:
         """Analyse AST pour détecter les fonctions dangereuses."""
@@ -477,13 +468,9 @@ class AgentMAINTENANCE09AnalyseurSecurite(Agent):
         
         return suggestions
 
-    async def shutdown(self):
-        self.log("Analyseur de sécurité éteint.")
-        await super().shutdown()
-
-def create_agent_MAINTENANCE_09_analyseur_securite(agent_id: str, **kwargs) -> Agent:
+def create_agent_MAINTENANCE_09_analyseur_securite(**kwargs) -> Agent:
     """Factory function pour créer une instance de l'analyseur de sécurité."""
-    return AgentMAINTENANCE09AnalyseurSecurite(agent_id=agent_id, **kwargs)
+    return AgentMAINTENANCE09AnalyseurSecurite(**kwargs)
 
 
 # --- Section de test local ---
@@ -518,7 +505,7 @@ def dynamic_exec(code_str):
     )
 
     # Exécution de la tâche
-    result = await security_agent.run(task)
+    result = await security_agent.execute_task(task)
 
     # Affichage des résultats
     if result.success:

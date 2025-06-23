@@ -4,6 +4,7 @@ import subprocess
 import importlib.util
 from collections import defaultdict
 from core.agent_factory_architecture import Agent, Task, Result
+import logging
 
 class AgentMAINTENANCE07GestionnaireDependances(Agent):
     """
@@ -14,8 +15,9 @@ class AgentMAINTENANCE07GestionnaireDependances(Agent):
     - Organise et optimise les imports
     """
     
-    def __init__(self, agent_id="agent_MAINTENANCE_07_gestionnaire_dependances", version="1.0", description="Gère les dépendances et imports Python.", agent_type="dependency_manager", status="enabled", **kwargs):
-        super().__init__(agent_id=agent_id, version=version, description=description, agent_type=agent_type, status=status, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(agent_type="dependency_manager", **kwargs)
+        self.logger = logging.getLogger(self.__class__.__name__)
         
         self.stdlib_modules = {
             'ast', 'asyncio', 'os', 'sys', 'json', 'datetime', 'pathlib', 're', 
@@ -34,7 +36,7 @@ class AgentMAINTENANCE07GestionnaireDependances(Agent):
 
     async def startup(self):
         await super().startup()
-        self.log("Gestionnaire de dépendances prêt.")
+        self.logger.info("Gestionnaire de dépendances prêt.")
 
     async def execute_task(self, task: Task) -> Result:
         if task.type != "manage_dependencies":
@@ -45,7 +47,7 @@ class AgentMAINTENANCE07GestionnaireDependances(Agent):
         if not code:
             return Result(success=False, error="Code non fourni dans les paramètres de la tâche.")
 
-        self.log(f"Analyse des dépendances pour : {file_path}")
+        self.logger.info(f"Analyse des dépendances pour : {file_path}")
 
         try:
             tree = ast.parse(code)
@@ -64,7 +66,7 @@ class AgentMAINTENANCE07GestionnaireDependances(Agent):
                 "optimization_applied": analysis["optimization_applied"]
             }
 
-            self.log(f"Analyse des dépendances terminée pour {file_path}")
+            self.logger.info(f"Analyse des dépendances terminée pour {file_path}")
             
             return Result(success=True, data={
                 "adapted_content": optimized_code,
@@ -73,10 +75,10 @@ class AgentMAINTENANCE07GestionnaireDependances(Agent):
             })
 
         except SyntaxError as e:
-            self.log(f"Erreur de syntaxe lors de l'analyse de {file_path}: {e}", level="error")
+            self.logger.error(f"Erreur de syntaxe lors de l'analyse de {file_path}: {e}")
             return Result(success=False, error=f"SyntaxError: {e}")
         except Exception as e:
-            self.log(f"Erreur inattendue lors de l'analyse de {file_path}: {e}", level="error")
+            self.logger.error(f"Erreur inattendue lors de l'analyse de {file_path}: {e}")
             return Result(success=False, error=str(e))
 
     def _analyze_dependencies(self, tree: ast.AST) -> dict:
@@ -239,7 +241,7 @@ class AgentMAINTENANCE07GestionnaireDependances(Agent):
 
     async def shutdown(self):
         """Arrête l'agent."""
-        self.log("Gestionnaire de dépendances éteint.")
+        self.logger.info("Gestionnaire de dépendances éteint.")
 
 def create_agent_MAINTENANCE_07_gestionnaire_dependances(**config) -> "AgentMAINTENANCE07GestionnaireDependances":
     return AgentMAINTENANCE07GestionnaireDependances(**config)
