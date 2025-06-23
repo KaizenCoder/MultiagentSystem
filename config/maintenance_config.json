@@ -66,6 +66,12 @@
             "class": "AgentMAINTENANCE10AuditeurQualiteNormes",
             "factory_function": "create_agent_MAINTENANCE_10_auditeur_qualite_normes",
             "config": {}
+        },
+        "harmonisateur_style": {
+            "module": "agents.agent_MAINTENANCE_11_harmonisateur_style",
+            "class": "AgentMAINTENANCE11HarmonisateurStyle",
+            "factory_function": "create_agent_MAINTENANCE_11_harmonisateur_style",
+            "config": {}
         }
     }
 }

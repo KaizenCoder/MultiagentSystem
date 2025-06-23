@@ -131,7 +131,8 @@ class ChefEquipeCoordinateurEnterprise(Agent):
             "repair_history": [],
             "structure_analysis": {},
             "initial_evaluation": {},
-            "performance_analysis": {}
+            "performance_analysis": {},
+            "style_report": {}
         }
         
         # 0. Analyse de structure initiale
@@ -163,6 +164,18 @@ class ChefEquipeCoordinateurEnterprise(Agent):
         # 2. Boucle de réparation (si nécessaire)
         if file_report["status"] != "NO_REPAIR_NEEDED":
             await self._perform_repair_loop(agent_path_str, file_report)
+
+        # 2.5 Harmonisation du style
+        if file_report["status"] in ["REPAIRED", "NO_REPAIR_NEEDED"]:
+            self.logger.info(f"🎨 Lancement de l'harmonisation de style pour {agent_name}...")
+            style_result = await self._run_sub_task("harmonisateur_style", "harmonize_style", {"code": file_report["final_code"], "file_path": agent_path_str})
+            if style_result and style_result.success:
+                file_report["final_code"] = style_result.data.get("harmonized_code", file_report["final_code"])
+                file_report["style_report"] = style_result.data.get("style_report", {})
+                self.logger.info(f"🎨 Style harmonisé pour {agent_name}.")
+            else:
+                self.logger.warning(f"L'harmonisation du style a échoué pour {agent_name}.")
+                file_report["style_report"] = {"error": "Harmonisation du style a échoué."}
 
         # 3. Analyse de performance finale
         perf_result = await self._run_sub_task("analyseur_performance", "analyze_performance", {"code": file_report["final_code"]})
@@ -245,7 +258,8 @@ class ChefEquipeCoordinateurEnterprise(Agent):
             "dependency_manager", 
             "security_manager",
             "correcteur_logique",
-            "auditeur_qualite"
+            "auditeur_qualite",
+            "harmonisateur_style"
         ]
         for role in roles:
             try:

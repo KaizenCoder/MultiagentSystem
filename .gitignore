@@ -27,3 +27,6 @@ CODE-SOURCE.md.backup
 # Dépôts imbriqués à ignorer
 agent_factory_implementation/versioning/ 
 nextgeneration.egg-info/
+
+# Rapports générés
+reports/

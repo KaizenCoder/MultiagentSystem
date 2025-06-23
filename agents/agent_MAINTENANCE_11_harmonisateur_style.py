@@ -2,6 +2,7 @@ import ast
 import re
 import keyword
 from typing import List, Dict, Any, Tuple
+import logging
 
 # --- Configuration Robuste du Chemin d'Importation ---
 import sys
@@ -21,17 +22,16 @@ except (IndexError, NameError):
 
 from core.agent_factory_architecture import Agent, Task, Result
 
-class AgentMAINTENANCE10HarmonisateurStyle(Agent):
+class AgentMAINTENANCE11HarmonisateurStyle(Agent):
     """
     Agent chargé d'harmoniser le style du code Python en utilisant l'outil Black.
     """
     
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.agent_id="agent_MAINTENANCE_10_harmonisateur_style"
+        super().__init__(agent_type="harmonisateur_style", **kwargs)
+        self.logger = logging.getLogger(self.__class__.__name__)
         self.version="1.1" # Version incrémentée pour l'activation
         self.description="Harmonise le style du code Python en utilisant Black."
-        self.agent_type = "style_harmonizer"
         self.black_available = black is not None
         
         # Règles de style PEP 8
@@ -63,12 +63,12 @@ class AgentMAINTENANCE10HarmonisateurStyle(Agent):
     async def startup(self):
         await super().startup()
         if not self.black_available:
-            self.log("La bibliothèque 'black' n'est pas installée. L'agent ne pourra pas formater le code.", level="warning")
-        self.log("Harmonisateur de style (Black) prêt.")
+            self.logger.warning("La bibliothèque 'black' n'est pas installée. L'agent ne pourra pas formater le code.")
+        self.logger.info("Harmonisateur de style (Black) prêt.")
 
     async def shutdown(self):
         await super().shutdown()
-        self.log("Harmonisateur de style arrêté.")
+        self.logger.info("Harmonisateur de style arrêté.")
 
     def get_capabilities(self) -> List[str]:
         return ["style_harmonization"]
@@ -88,7 +88,7 @@ class AgentMAINTENANCE10HarmonisateurStyle(Agent):
         if not code:
             return Result(success=False, error="Code non fourni.")
 
-        self.log(f"🎨 Application de Black sur : {file_path}")
+        self.logger.info(f"🎨 Application de Black sur : {file_path}")
 
         try:
             # Configuration de Black
@@ -106,7 +106,7 @@ class AgentMAINTENANCE10HarmonisateurStyle(Agent):
                 "summary": "Le code a été reformaté." if code_changed else "Aucune modification de formatage nécessaire."
             }
 
-            self.log(f"🎨 Formatage terminé pour {file_path}. Changements appliqués: {code_changed}")
+            self.logger.info(f"🎨 Formatage terminé pour {file_path}. Changements appliqués: {code_changed}")
             
             return Result(success=True, data={
                 "harmonized_code": formatted_code,
@@ -124,8 +124,8 @@ class AgentMAINTENANCE10HarmonisateurStyle(Agent):
                 }
             })
         except Exception as e:
-            self.log(f"Erreur lors du formatage avec Black sur {file_path}: {e}", level="error")
+            self.logger.error(f"Erreur lors du formatage avec Black sur {file_path}: {e}")
             return Result(success=False, error=str(e))
 
-def create_agent_MAINTENANCE_10_harmonisateur_style(**kwargs) -> AgentMAINTENANCE10HarmonisateurStyle:
-    return AgentMAINTENANCE10HarmonisateurStyle(**kwargs) 
+def create_agent_MAINTENANCE_11_harmonisateur_style(**kwargs) -> AgentMAINTENANCE11HarmonisateurStyle:
+    return AgentMAINTENANCE11HarmonisateurStyle(**kwargs) 
