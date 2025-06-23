@@ -5,6 +5,12 @@
         "log_level": "INFO"
     },
     "agents": {
+        "analyseur_structure": {
+            "module": "agents.agent_MAINTENANCE_01_analyseur_structure",
+            "class": "AgentMAINTENANCE01AnalyseurStructure",
+            "factory_function": "create_agent_MAINTENANCE_01_analyseur_structure",
+            "config": {}
+        },
         "evaluateur": {
             "module": "agents.agent_MAINTENANCE_02_evaluateur_utilite",
             "class": "AgentMAINTENANCE02EvaluateurUtilite",

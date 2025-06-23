@@ -44,51 +44,61 @@ class AgentMAINTENANCE01AnalyseurStructure(Agent):
     """
     def __init__(self, **kwargs):
         """Initialisation standardisée."""
-        super().__init__(**kwargs)
-        self.logger.info(f"Analyseur de structure ({self.agent_id}) initialisé.")
+        super().__init__(agent_type="analyseur_structure", **kwargs)
+        self.logger = logging.getLogger(self.__class__.__name__)
+        self.logger.info(f"Analyseur de structure ({self.id}) initialisé.")
 
     async def startup(self):
         """Démarrage de l'agent."""
-        self.log("Analyseur de structure prêt.")
+        self.logger.info(f"Analyseur de structure prêt.")
 
     async def execute_task(self, task: Task) -> Result:
-        """Exécute la tâche d'analyse du répertoire."""
+        """Exécute la tâche d'analyse du répertoire ou d'un fichier."""
         if task.type != "analyse_structure":
             return Result(success=False, error="Type de tâche non supporté.")
 
         directory = task.params.get("directory")
-        if not directory or not os.path.isdir(directory):
-            return Result(success=False, error=f"Répertoire invalide ou non spécifié: {directory}")
+        file_path_param = task.params.get("file_path")
 
-        self.log(f"Analyse du répertoire : {directory}")
+        if not directory and not file_path_param:
+            return Result(success=False, error="Répertoire ou chemin de fichier non spécifié.")
+
+        if file_path_param:
+            files_to_process = [file_path_param]
+        else:
+            files_to_process = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith(".py")]
+
+        self.logger.info(f"Analyse demandée pour : {directory or file_path_param}")
+        
         files_analysis = []
         try:
-            for filename in os.listdir(directory):
-                if filename.endswith(".py") and filename.startswith("agent_MAINTENANCE_"):
-                    file_path = os.path.join(directory, filename)
-                    self.log(f"Analyse du fichier : {file_path}")
-                    try:
-                        with open(file_path, "r", encoding="utf-8") as f:
-                            content = f.read()
-                        
-                        analysis = self._analyze_python_file(content)
-                        files_analysis.append({
-                            "path": file_path,
-                            "content": content,
-                            "analysis": analysis,
-                        })
-                    except Exception as e:
-                        self.log(f"Erreur lors de l'analyse du fichier {file_path}: {e}", level="error")
-                        files_analysis.append({
-                            "path": file_path,
-                            "content": None,
-                            "error": str(e),
-                        })
+            for file_path in files_to_process:
+                self.logger.info(f"Analyse du fichier : {file_path}")
+                try:
+                    with open(file_path, "r", encoding="utf-8") as f:
+                        content = f.read()
+                    
+                    analysis = self._analyze_python_file(content)
+                    files_analysis.append({
+                        "path": file_path,
+                        "analysis": analysis,
+                    })
+                except Exception as e:
+                    self.logger.error(f"Erreur lors de l'analyse du fichier {file_path}: {e}")
+                    files_analysis.append({
+                        "path": file_path,
+                        "error": str(e),
+                    })
+            
+            # Pour la cohérence, si un seul fichier a été demandé, on retourne directement son analyse.
+            if file_path_param and len(files_analysis) == 1:
+                result_data = files_analysis[0]
+                return Result(success=not result_data.get("error"), data=result_data)
 
             return Result(success=True, data={"files": files_analysis})
 
         except Exception as e:
-            self.log(f"Erreur majeure lors de l'analyse du répertoire {directory}: {e}", level="critical")
+            self.logger.critical(f"Erreur majeure lors de l'analyse : {e}")
             return Result(success=False, error=str(e))
 
     def _analyze_python_file(self, code: str) -> dict:
@@ -129,12 +139,12 @@ class AgentMAINTENANCE01AnalyseurStructure(Agent):
         return {"status": "healthy"}
 
     async def shutdown(self):
-        self.log("Analyseur de structure éteint.")
+        self.logger.info("Analyseur de structure éteint.")
         
 
     async def run_analysis(self, directory: str) -> Result:
         """Méthode de compatibilité pour l'ancien appel du coordinateur."""
-        self.log(f"Appel de compatibilité 'run_analysis' pour le répertoire: {directory}", level="warning")
+        self.logger.warning(f"Appel de compatibilité 'run_analysis' pour le répertoire: {directory}")
         analyse_task = Task(type="analyse_structure", params={"directory": directory})
         return await self.execute_task(analyse_task)
 

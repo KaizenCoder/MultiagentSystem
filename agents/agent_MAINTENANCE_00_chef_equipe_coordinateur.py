@@ -129,9 +129,21 @@ class ChefEquipeCoordinateurEnterprise(Agent):
             "original_code": original_code,
             "final_code": original_code,
             "repair_history": [],
+            "structure_analysis": {},
             "initial_evaluation": {},
             "performance_analysis": {}
         }
+        
+        # 0. Analyse de structure initiale
+        structure_result = await self._run_sub_task("analyseur_structure", "analyse_structure", {"file_path": agent_path_str})
+        if structure_result and structure_result.success:
+            file_report["structure_analysis"] = structure_result.data.get("analysis", {})
+            if file_report["structure_analysis"].get("error"):
+                self.logger.warning(f"  -> Analyse de structure a trouvé une erreur de syntaxe pour {agent_name}: {file_report['structure_analysis']['error']}")
+        else:
+            error_msg = structure_result.error if structure_result else "Réponse invalide de l'analyseur"
+            file_report["structure_analysis"] = {"error": f"Analyse de structure a échoué: {error_msg}"}
+            self.logger.error(f"L'analyseur de structure a échoué pour {agent_name}: {error_msg}")
 
         # 1. Évaluation initiale
         eval_result = await self._run_sub_task("evaluateur", "evaluate_code", {"file_path": agent_path_str})
@@ -224,6 +236,7 @@ class ChefEquipeCoordinateurEnterprise(Agent):
     async def _recruter_equipe(self):
         self.logger.info("Recrutement de l'équipe de maintenance...")
         roles = [
+            "analyseur_structure",
             "evaluateur", 
             "adaptateur", 
             "testeur", 
