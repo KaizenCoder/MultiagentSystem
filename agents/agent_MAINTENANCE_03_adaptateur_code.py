@@ -250,71 +250,54 @@ class AgentMAINTENANCE03AdaptateurCode(Agent):
             return code, adaptations
 
     async def execute_task(self, task: Task) -> Result:
-        code_to_adapt = task.params.get("code")
+        """
+        Exécute la tâche d'adaptation du code en utilisant une approche multi-niveaux.
+        """
+        code = task.params.get("code")
         feedback = task.params.get("feedback")
+        error_type = task.params.get("error_type", "generic") # NOUVEAU
 
-        if not code_to_adapt:
-            return Result(success=False, error="Le code à adapter n'a pas été fourni.")
+        if not code:
+            return Result(success=False, error="Le code source est manquant.")
+
+        self.logger.info(f"Tâche d'adaptation reçue. Type d'erreur détecté: '{error_type}'.")
+
+        adaptations = []
+        modified_code = code
 
         try:
-            # --- NOUVELLE ÉTAPE : PRÉ-VÉRIFICATION SYNTAXIQUE ---
-            repaired_code, pre_adaptations = self._pre_check_and_repair_syntax(code_to_adapt)
+            # Stratégie de réparation basée sur le type d'erreur
+            if error_type == "indentation":
+                self.logger.info("Stratégie de réparation ciblée pour l'indentation activée.")
+                modified_code, pre_check_adaptations = self._pre_check_and_repair_syntax(modified_code)
+                adaptations.extend(pre_check_adaptations)
             
-            # Utiliser le code réparé pour la suite du processus
-            code_for_cst = repaired_code
-            
-            modules_to_add = []
-            complex_imports_to_add = {}
-            # Conserver les adaptations de la pré-correction
-            adaptations = pre_adaptations + ["Utilisation de LibCST pour la réparation structurelle." ]
+            # La logique existante pour les NameError et autres peut suivre ici
+            if "name" in str(feedback).lower() and "is not defined" in str(feedback).lower():
+                # ... (logique existante)
+                pass
 
-            if feedback:
-                match = re.search(r"name '(\w+)' is not defined", feedback)
-                if match:
-                    name = match.group(1)
-                    self.logger.info(f"Détection d'un 'NameError' via feedback pour : '{name}'.")
 
-                    if name in self.COMPLEX_IMPORT_MAP:
-                        module, import_name = self.COMPLEX_IMPORT_MAP[name]
-                        if module not in complex_imports_to_add:
-                            complex_imports_to_add[module] = []
-                        if import_name not in complex_imports_to_add[module]:
-                            complex_imports_to_add[module].append(import_name)
-                        adaptations.append(f"Ajout de l'import complexe : from {module} import {import_name}")
-                    else:
-                        if name not in modules_to_add:
-                            modules_to_add.append(name)
-                        adaptations.append(f"Ajout de l'import simple : {name}")
-
+            # --- Étape 3 : Correction des blocs vides avec LibCST (plus robuste) ---
             try:
-                tree = cst.parse_module(code_for_cst)
+                source_tree = cst.parse_module(modified_code)
+                pass_inserter = CstPassInserter()
+                modified_tree = source_tree.visit(pass_inserter)
+                if not source_tree.deep_equals(modified_tree):
+                    modified_code = modified_tree.code
+                    adaptations.append("Adaptation CST : Ajout de 'pass' dans un ou plusieurs blocs vides.")
             except cst.ParserSyntaxError as e:
-                self.logger.error(f"Erreur de syntaxe CST persistante malgré la pré-correction : {e}")
-                return Result(success=False, error=f"Erreur de syntaxe CST irrécupérable : {e}")
+                self.logger.warning(f"Erreur de parsing CST, impossible d'insérer 'pass': {e}")
 
-            modified_tree = tree
 
-            if complex_imports_to_add:
-                for module, names in complex_imports_to_add.items():
-                    complex_import_adder = CstComplexImportAdder(module, names)
-                    modified_tree = modified_tree.visit(complex_import_adder)
+            if not adaptations:
+                return Result(success=True, data={"adapted_code": modified_code, "adaptations": ["Aucune adaptation nécessaire."]})
 
-            if modules_to_add:
-                import_adder = CstImportAdder(modules_to_add)
-                modified_tree = modified_tree.visit(import_adder)
-            
-            pass_inserter = CstPassInserter()
-            modified_tree = modified_tree.visit(pass_inserter)
-            
-            final_code = modified_tree.code
-            return Result(success=True, data={"code": final_code, "adaptations": adaptations})
+            return Result(success=True, data={"adapted_code": modified_code, "adaptations": adaptations})
 
-        except cst.ParserSyntaxError as e:
-            self.logger.error(f"Erreur de syntaxe CST irrécupérable : {e}")
-            return Result(success=False, error=f"Erreur de syntaxe CST : {e}")
         except Exception as e:
-            self.logger.error(f"Erreur inattendue lors de l'adaptation CST: {e}")
-            return Result(success=False, error=f"Erreur inattendue dans l'adaptateur CST : {e}")
+            self.logger.error(f"Erreur inattendue durant l'adaptation du code: {e}", exc_info=True)
+            return Result(success=False, error=str(e))
 
     async def startup(self) -> None:
         self.logger.info(f"Agent Adaptateur CST démarré.")

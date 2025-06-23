@@ -24,6 +24,19 @@ import re
 # Import direct de l'architecture et des agents
 from core.agent_factory_architecture import Agent, Task, Result, AgentFactory
 
+def classify_exception(exc: Exception) -> str:
+    """
+    Classe les exceptions pour orienter la stratégie de réparation.
+    """
+    if isinstance(exc, (IndentationError, TabError)) or ("indent" in str(exc).lower()):
+        return "indentation"
+    if isinstance(exc, NameError):
+        return "name"
+    if isinstance(exc, (ImportError, ModuleNotFoundError)):
+        return "import"
+    # ... autres classes à ajouter selon besoin
+    return "generic"
+
 class ChefEquipeCoordinateurEnterprise(Agent):
     """
     Chef d'équipe pour orchestrer des workflows de maintenance complexes
@@ -208,11 +221,25 @@ class ChefEquipeCoordinateurEnterprise(Agent):
     async def _perform_repair_loop(self, agent_path_str: str, file_report: Dict):
         MAX_REPAIR_ATTEMPTS = 5
         current_code = file_report["original_code"]
-        last_error = file_report["initial_evaluation"].get("reason") or file_report["initial_evaluation"].get("error", "Évaluation initiale négative.")
+        last_exception = Exception(file_report["initial_evaluation"].get("reason") or file_report["initial_evaluation"].get("error", "Évaluation initiale négative."))
 
         for attempt in range(MAX_REPAIR_ATTEMPTS):
+            # CLASSIFICATION DE L'ERREUR
+            error_type = classify_exception(last_exception)
+            last_error_str = str(last_exception)
+            self.logger.info(f"Tentative {attempt + 1}/{MAX_REPAIR_ATTEMPTS}. Erreur détectée (type: {error_type}): {last_error_str}")
+
             # ADAPTATION
-            adapt_result = await self._run_sub_task("adaptateur", "adapt_code", {"code": current_code, "feedback": last_error})
+            adapt_result = await self._run_sub_task(
+                "adaptateur", 
+                "adapt_code", 
+                {
+                    "code": current_code, 
+                    "feedback": last_error_str,
+                    "error_type": error_type
+                }
+            )
+            
             if not (adapt_result and adapt_result.success and adapt_result.data.get("adapted_code")):
                 file_report["status"] = "REPAIR_FAILED"
                 file_report["last_error"] = "L'adaptateur n'a pas pu modifier le code."
@@ -221,11 +248,11 @@ class ChefEquipeCoordinateurEnterprise(Agent):
             current_code = adapt_result.data["adapted_code"]
             
             # TEST
-            test_result = await self._run_sub_task("testeur", "test_agent_code", {"code_content": current_code})
+            test_result = await self._run_sub_task("testeur", "test_agent_code", {"code_content": current_code}, return_exception=True)
             
             file_report["repair_history"].append({
                 "iteration": attempt + 1,
-                "error_detected": last_error,
+                "error_detected": last_error_str,
                 "adaptation_attempted": adapt_result.data.get("adaptations", ["Adaptation inconnue."]),
                 "test_result": "Succès" if test_result.success else f"Échec: {test_result.error}"
             })
@@ -236,11 +263,11 @@ class ChefEquipeCoordinateurEnterprise(Agent):
                 file_report["final_code"] = current_code
                 return
 
-            last_error = test_result.error
+            last_exception = test_result.raw_exception if hasattr(test_result, 'raw_exception') and test_result.raw_exception else Exception(test_result.error)
 
         if file_report["status"] != "REPAIRED":
             file_report["status"] = "REPAIR_FAILED"
-            file_report["last_error"] = last_error
+            file_report["last_error"] = str(last_exception)
             file_report["final_code"] = current_code
 
     async def _generer_et_sauvegarder_rapports(self, mission_id):
@@ -292,19 +319,25 @@ class ChefEquipeCoordinateurEnterprise(Agent):
             except Exception as e:
                 self.logger.error(f"Erreur lors de la création de l'agent {role}: {e}")
 
-    async def _run_sub_task(self, agent_role: str, task_type: str, params: dict) -> Optional[Result]:
+    async def _run_sub_task(self, agent_role: str, task_type: str, params: dict, return_exception: bool = False) -> Optional[Result]:
+        """Exécute une sous-tâche sur un agent de l'équipe."""
         agent = self.equipe_agents.get(agent_role)
         if not agent:
-            self.logger.error(f"Tentative d'utilisation d'un agent non recruté : {agent_role}")
-            return Result(success=False, error=f"Agent {agent_role} non disponible.")
+            self.logger.error(f"Agent avec le rôle '{agent_role}' non trouvé dans l'équipe.")
+            return Result(success=False, error=f"Agent '{agent_role}' non disponible.")
         
         task = Task(type=task_type, params=params)
-        self.logger.info(f"Délégation de la tâche '{task.type}' à l'agent '{agent_role}'")
+        
         try:
-            return await agent.execute_task(task)
+            result = await agent.execute_task(task)
+            return result
         except Exception as e:
-            self.logger.error(f"Erreur lors de l'exécution de la tâche par {agent_role}: {e}", exc_info=True)
-            return Result(success=False, error=f"Exception in {agent_role}: {e}")
+            self.logger.error(f"Erreur lors de l'exécution de la tâche '{task_type}' sur '{agent_role}': {e}", exc_info=True)
+            result = Result(success=False, error=str(e))
+            if return_exception:
+                result.raw_exception = e
+            return result
 
 def create_agent_MAINTENANCE_00_chef_equipe_coordinateur(**kwargs) -> ChefEquipeCoordinateurEnterprise:
+    """Crée une instance du Chef d'Équipe Coordinateur."""
     return ChefEquipeCoordinateurEnterprise(**kwargs)
