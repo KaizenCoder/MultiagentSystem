@@ -1,5 +1,7 @@
 """
+DEPRECATED NE PAS UTILISER
 Script pour lancer l'équipe de maintenance sur le répertoire des agents
+
 """
 from agent_MAINTENANCE_00_chef_equipe_coordinateur import AgentMaintenance00
 from agent_MAINTENANCE_01_analyseur_structure import AgentMaintenance01

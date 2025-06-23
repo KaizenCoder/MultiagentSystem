@@ -1,8 +1,11 @@
-#!/usr/bin/env python3
 """
-🧪 AGENT 4 - TESTEUR D'AGENTS ENTERPRISE (ANTI-FAUX-AGENTS)
-===========================================================
-Mission: Détecter les FAUX AGENTS (code SYNC) et valider la conformité.
+🛡️ TESTEUR ANTI-FAUX AGENTS - Agent 04
+======================================
+🎯 Mission : Valider qu'un agent est fonctionnel et n'est pas un "faux" agent.
+⚡ Capacités : Exécution de tests basiques (importation, instanciation, appels de méthodes).
+🏢 Équipe : NextGeneration Tools Migration
+Author: Équipe de Maintenance NextGeneration
+Version: 4.0.0
 """
 
 import sys
@@ -55,12 +58,14 @@ class AgentMAINTENANCE04TesteurAntiFauxAgents(Agent):
 
     def __init__(self, **kwargs):
         """Initialisation standardisée."""
-        super().__init__(**kwargs)
+        super().__init__(agent_type="testeur", **kwargs)
+        self.logger = logging.getLogger(self.__class__.__name__)
+        self.agent_id = self.id
         self.logger.info(f"Testeur anti-faux agents ({self.agent_id}) initialisé.")
 
     async def startup(self):
         """Démarrage de l'agent."""
-        self.log("Testeur anti-faux agents prêt.")
+        self.logger.info("Testeur anti-faux agents prêt.")
 
     async def execute_task(self, task: Task) -> Result:
         """Exécute une tâche de test dynamique."""
@@ -73,11 +78,11 @@ class AgentMAINTENANCE04TesteurAntiFauxAgents(Agent):
         if not file_path or not code_content:
             return Result(success=False, error="Chemin ou contenu du fichier manquant.")
 
-        self.log(f"Test dynamique du fichier : {file_path}")
+        self.logger.info(f"Test dynamique du fichier : {file_path}")
         
         test_passed, details_or_error = await self._run_dynamic_test(file_path, code_content)
         
-        self.log(f"Test dynamique pour {file_path} terminé. Succès: {test_passed}")
+        self.logger.info(f"Test dynamique pour {file_path} terminé. Succès: {test_passed}")
         
         if test_passed:
             return Result(
@@ -118,7 +123,7 @@ class AgentMAINTENANCE04TesteurAntiFauxAgents(Agent):
                 # Essayer de trouver et d'instancier une classe Agent
                 for name, obj in module.__dict__.items():
                     if isinstance(obj, type) and issubclass(obj, Agent) and obj is not Agent:
-                        self.log(f"Instanciation de la classe {name} pour test.")
+                        self.logger.info(f"Instanciation de la classe {name} pour test.")
                         
                         # NOUVEAU: Introspection pour instanciation dynamique
                         try:
@@ -149,12 +154,12 @@ class AgentMAINTENANCE04TesteurAntiFauxAgents(Agent):
                                     # utilisé pour les configurations `**kwargs`
                                     pass # Ne rien faire et espérer que ce soit optionnel ou kwarg
 
-                            self.log(f"Arguments d'instanciation déduits: {test_args}")
+                            self.logger.info(f"Arguments d'instanciation déduits: {test_args}")
                             instance = obj(**test_args)
 
                         except TypeError as te:
                             # Fallback vers l'ancienne méthode si l'introspection échoue
-                            self.log(f"L'instanciation dynamique a échoué ({te}), tentative avec des valeurs par défaut.", level="warning")
+                            self.logger.warning(f"L'instanciation dynamique a échoué ({te}), tentative avec des valeurs par défaut.")
                             instance = obj(agent_id='test-agent', version='0.0.0', description='test', agent_type='test', status='testing')
 
                         if hasattr(instance, 'health_check') and asyncio.iscoroutinefunction(instance.health_check):
@@ -181,11 +186,11 @@ class AgentMAINTENANCE04TesteurAntiFauxAgents(Agent):
 
     async def shutdown(self):
         """Arrêt de l'agent."""
-        self.log("Testeur anti-faux agents éteint.")
+        self.logger.info("Testeur anti-faux agents éteint.")
         
     async def run_test(self, file_path: str, code_content: str) -> Result:
         """Méthode de compatibilité pour l'ancien appel."""
-        self.log(f"Appel de compatibilité 'run_test' pour {file_path}", level="warning")
+        self.logger.warning(f"Appel de compatibilité 'run_test' pour {file_path}")
         test_task = Task(type="dynamic_test", params={"file_path": file_path, "code_content": code_content})
         return await self.execute_task(test_task)
 

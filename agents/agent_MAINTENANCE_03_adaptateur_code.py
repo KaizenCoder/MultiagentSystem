@@ -1,6 +1,15 @@
 #!/usr/bin/env python3
 """
 AGENT 3 - ADAPTATEUR DE CODE (LibCST)
+🛠️ ADAPTATEUR DE CODE - Agent 03
+=================================
+
+🎯 Mission : Corriger et adapter le code source sur la base d'un feedback.
+⚡ Capacités : Manipulation de l'AST avec LibCST pour des refactorings sécurisés.
+🏢 Équipe : NextGeneration Tools Migration
+
+Author: Équipe de Maintenance NextGeneration
+Version: 3.0.0
 """
 import sys
 from pathlib import Path
@@ -8,6 +17,11 @@ import logging
 import asyncio
 import re
 from typing import List, Dict, Any
+
+# --- Pyflakes Import ---
+from pyflakes.api import check
+from pyflakes.reporter import Reporter
+import io
 
 # --- Configuration Robuste du Chemin d'Importation ---
 try:
@@ -20,6 +34,23 @@ except (IndexError, NameError):
 
 from core.agent_factory_architecture import Agent, Task, Result
 import libcst as cst
+
+# --- Classes de Reporter pour Pyflakes ---
+
+class PyflakesErrorCollector(Reporter):
+    def __init__(self):
+        self.errors = []
+        super().__init__(io.StringIO(), io.StringIO())
+
+    def syntaxError(self, filename, msg, lineno, offset, text):
+        self.errors.append({'type': 'SyntaxError', 'message': msg, 'lineno': lineno, 'offset': offset, 'text': text})
+
+    def unexpectedError(self, filename, msg):
+        self.errors.append({'type': 'UnexpectedError', 'message': msg})
+
+    def flake(self, message):
+        self.errors.append({'type': 'Flake', 'message': str(message)})
+
 
 # --- Fonctions et Classes de Transformation CST ---
 
@@ -156,8 +187,10 @@ class AgentMAINTENANCE03AdaptateurCode(Agent):
     Agent qui utilise LibCST pour une réparation de code robuste et multi-niveaux.
     """
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.logger.info(f"Adaptateur de code CST v{self.version} ({self.agent_id}) initialisé.")
+        super().__init__(agent_type="adaptateur", **kwargs)
+        self.logger = logging.getLogger(self.__class__.__name__)
+        self.agent_id = self.id
+        self.logger.info(f"Adaptateur de code CST ({self.agent_id}) initialisé.")
         
         self.COMPLEX_IMPORT_MAP = {
             "Path": ("pathlib", "Path"),
@@ -171,6 +204,51 @@ class AgentMAINTENANCE03AdaptateurCode(Agent):
             "Result": ("core.agent_factory_architecture", "Result"),
         }
 
+    def get_capabilities(self) -> List[str]:
+        return ["code_adaptation", "import_fixing", "indentation_error_fix"]
+        
+    def _pre_check_and_repair_syntax(self, code: str) -> (str, List[str]):
+        """Utilise Pyflakes pour une analyse syntaxique rapide et tente de corriger les erreurs simples."""
+        adaptations = []
+        reporter = PyflakesErrorCollector()
+        
+        check(code, 'temp_code.py', reporter=reporter)
+        
+        # Filtrer spécifiquement les erreurs de syntaxe bloquantes
+        syntax_errors = [e for e in reporter.errors if e['type'] == 'SyntaxError' and 'expected an indented block' in e['message']]
+
+        if not syntax_errors:
+            return code, adaptations
+
+        self.logger.info(f"Pyflakes a détecté {len(syntax_errors)} erreur(s) d'indentation. Tentative de correction.")
+        
+        lines = code.splitlines()
+        corrected = False
+
+        # On parcourt les erreurs pour corriger
+        for error in sorted(syntax_errors, key=lambda x: x['lineno'], reverse=True):
+            error_lineno = error['lineno']
+            # On cherche la ligne de définition juste avant l'erreur
+            for i in range(error_lineno - 1, -1, -1):
+                line_content = lines[i].strip()
+                if (line_content.startswith(('def ', 'class ', 'try:', 'except', 'if ', 'elif ', 'else:', 'for ', 'while ')) and line_content.endswith(':')):
+                    
+                    # Correction pour gérer les lignes sans indentation
+                    match = re.match(r"^(\\s*)", lines[i])
+                    indentation = match.group(1) if match else ""
+
+                    # Insérer 'pass' avec l'indentation correcte
+                    lines.insert(i + 1, f"{indentation}    pass")
+                    adaptations.append(f"Correction auto (Pyflakes): Ajout de 'pass' après '{line_content[:30]}...' à la ligne {i+1}")
+                    corrected = True
+                    break # On passe à l'erreur suivante après correction
+
+        if corrected:
+            self.logger.info("Corrections d'indentation appliquées. Le code sera re-vérifié par LibCST.")
+            return "\\n".join(lines), adaptations
+        else:
+            return code, adaptations
+
     async def execute_task(self, task: Task) -> Result:
         code_to_adapt = task.params.get("code")
         feedback = task.params.get("feedback")
@@ -179,9 +257,16 @@ class AgentMAINTENANCE03AdaptateurCode(Agent):
             return Result(success=False, error="Le code à adapter n'a pas été fourni.")
 
         try:
+            # --- NOUVELLE ÉTAPE : PRÉ-VÉRIFICATION SYNTAXIQUE ---
+            repaired_code, pre_adaptations = self._pre_check_and_repair_syntax(code_to_adapt)
+            
+            # Utiliser le code réparé pour la suite du processus
+            code_for_cst = repaired_code
+            
             modules_to_add = []
             complex_imports_to_add = {}
-            adaptations = ["Utilisation de LibCST pour la réparation structurelle."]
+            # Conserver les adaptations de la pré-correction
+            adaptations = pre_adaptations + ["Utilisation de LibCST pour la réparation structurelle." ]
 
             if feedback:
                 match = re.search(r"name '(\w+)' is not defined", feedback)
@@ -201,7 +286,12 @@ class AgentMAINTENANCE03AdaptateurCode(Agent):
                             modules_to_add.append(name)
                         adaptations.append(f"Ajout de l'import simple : {name}")
 
-            tree = cst.parse_module(code_to_adapt)
+            try:
+                tree = cst.parse_module(code_for_cst)
+            except cst.ParserSyntaxError as e:
+                self.logger.error(f"Erreur de syntaxe CST persistante malgré la pré-correction : {e}")
+                return Result(success=False, error=f"Erreur de syntaxe CST irrécupérable : {e}")
+
             modified_tree = tree
 
             if complex_imports_to_add:
@@ -231,9 +321,6 @@ class AgentMAINTENANCE03AdaptateurCode(Agent):
 
     async def shutdown(self) -> None:
         self.logger.info(f"Agent Adaptateur CST arrêté.")
-
-    def get_capabilities(self) -> list[str]:
-        return ["code_adaptation", "syntax_repair", "name_error_fix"]
 
     async def health_check(self) -> Dict[str, Any]:
         return {"status": "healthy", "version": self.version}

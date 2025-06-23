@@ -19,20 +19,16 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 import json
-import sys
-from pathlib import Path
-from core import logging_manager
+import logging
 from pathlib import Path
 import threading
 import uuid
+import importlib
 
 # Intégration avec les templates existants (Sprints 1-5)
 import sys
 sys.path.append(str(Path(__file__).parent.parent))
 
-# LoggingManager NextGeneration - Configuration globale
-import logging
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # ==========================================
@@ -200,16 +196,13 @@ class Agent(ABC):
     Définit le contrat que tous les agents doivent respecter.
     """
     
-    def __init__(self, agent_id: str, version: str, description: str, agent_type: str, status: str, **kwargs):
-        self.agent_id = agent_id
-        self.version = version
-        self.description = description
-        self.agent_type = agent_type
-        self.status = status
-        self.config = kwargs
-        self.id = agent_id  # Utiliser l'id fourni
+    def __init__(self, agent_type: str, **config):
+        self.type = agent_type
+        self.config = config
+        self.id = f"{agent_type}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}"
         self.capabilities: List[str] = []
         self.created_at = datetime.now()
+        self.status = "ready"
         self.metadata: Dict[str, Any] = {}
         
         # Métriques d'utilisation
@@ -218,19 +211,10 @@ class Agent(ABC):
         self.success_rate = 0.0
         self.last_activity = datetime.now()
         
-        # Utiliser le logger global configuré
-        self.logger = logging_manager.get_logger(f"agent.{self.agent_id.replace('-', '_')[:20]}")
-        self.logger.info(f"Agent {self.agent_type} ({self.id}) initialisé.")
-    
-    def log(self, message: str, level: str = "info"):
-        """Journalisation standardisée pour l'agent."""
-        if hasattr(self.logger, level):
-            getattr(self.logger, level)(f"[{self.id}] {message}")
-        else:
-            self.logger.info(f"[{self.id}] {message}")
+        logger.info(f"Agent {self.type} créé avec ID: {self.id}")
     
     @abstractmethod
-    async def execute_task(self, task: Task) -> Result:
+    def execute_task(self, task: Task) -> Result:
         """
         ⚙️ Exécute une tâche et retourne le résultat
         
@@ -270,621 +254,520 @@ class Agent(ABC):
     @abstractmethod  
     async def shutdown(self) -> None:
         """
-        🛑 Arrête proprement l'agent et libère ses ressources
+        🛑 Arrête l'agent proprement et libère les ressources
         
-        Cette méthode est appelée lors de l'arrêt de l'agent
-        pour fermer les connexions, sauvegarder l'état, etc.
+        Cette méthode est appelée pour une terminaison propre.
         """
         pass
-    
+
     @abstractmethod
     async def health_check(self) -> Dict[str, Any]:
         """
-        🏥 Vérifie l'état de santé de l'agent
+        ❤️ Vérifie l'état de santé de l'agent
         
-        Returns:
-            Dict[str, Any]: Statut de santé avec métriques détaillées
-            {
-                "status": "healthy|degraded|unhealthy",
-                "uptime_seconds": float,
-                "last_task_time": str,
-                "resource_usage": {"cpu": float, "memory": float},
-                "dependencies": {"db": "connected", "api": "timeout"},
-                "errors": ["liste des erreurs récentes"],
-                "metrics": {"tasks_per_minute": float, "success_rate": float}
-            }
+        Retourne un dictionnaire avec le statut et des métriques de santé.
+        Ex: {"status": "healthy", "dependencies": {"db": "ok"}}
         """
         pass
-    
+
     def can_handle(self, task: Task) -> bool:
         """
-        ✅ Vérifie si l'agent peut traiter cette tâche
+        Vérifie si l'agent peut exécuter une tâche donnée
         
         Args:
-            task: Tâche à vérifier
-            
-        Returns:
-            bool: True si l'agent peut traiter la tâche
-        """
-        return task.type in self.get_capabilities()
-    
-    def get_status(self) -> Dict[str, Any]:
-        """
-        📊 Retourne le statut actuel de l'agent
+            task: La tâche à vérifier
         
         Returns:
-            Dict: Informations de statut et métriques
+            bool: True si la tâche est supportée, False sinon
+        """
+        return task.type in self.get_capabilities()
+
+    def get_status(self) -> Dict[str, Any]:
+        """
+        Retourne le statut complet de l'agent
         """
         return {
             "id": self.id,
-            "type": self.agent_type,
+            "type": self.type,
             "status": self.status,
-            "capabilities": self.capabilities,
-            "tasks_executed": self.tasks_executed,
-            "success_rate": self.success_rate,
-            "total_execution_time": self.total_execution_time,
-            "last_activity": self.last_activity.isoformat(),
             "created_at": self.created_at.isoformat(),
-            "config": self.config,
+            "last_activity": self.last_activity.isoformat(),
+            "tasks_executed": self.tasks_executed,
+            "total_execution_time_seconds": self.total_execution_time,
+            "success_rate": self.success_rate,
+            "capabilities": self.get_capabilities(),
             "metadata": self.metadata
         }
-    
+
     def update_metrics(self, result: Result, execution_time: float):
         """
-        📈 Met à jour les métriques de performance
-        
-        Args:
-            result: Résultat de la dernière exécution
-            execution_time: Temps d'exécution en secondes
+        Met à jour les métriques de l'agent après une exécution de tâche.
         """
         self.tasks_executed += 1
         self.total_execution_time += execution_time
-        self.last_activity = datetime.now()
         
-        # Calcul du taux de succès (simplification pour l'exemple)
-        # En production, il faudrait stocker l'historique
+        # Calcul du taux de succès
+        # (tasks_executed - 1) * old_success_rate + (1 if success else 0) / tasks_executed
+        current_success_count = (self.tasks_executed - 1) * self.success_rate
         if result.success:
-            self.success_rate = min(100.0, self.success_rate + 1.0)
-        else:
-            self.success_rate = max(0.0, self.success_rate - 0.5)
+            current_success_count += 1
+        self.success_rate = current_success_count / self.tasks_executed
+        
+        self.last_activity = datetime.now()
 
 # ==========================================
-# 3. REGISTRY DES AGENTS
+# 3. AGENT REGISTRY
 # ==========================================
 
 class AgentRegistry:
     """
-    📝 Registre des types d'agents disponibles
+    📖 Registre central pour les types d'agents.
     
-    Centralise l'enregistrement et la découverte des types d'agents.
+    Stocke les classes et les fonctions factory pour chaque type d'agent.
     """
     
     def __init__(self):
-        self._registry: Dict[str, Type[Agent]] = {}
-        self._factories: Dict[str, Callable] = {}
-        self._lock = threading.Lock()
-        
+        self._registry: Dict[str, Dict] = {}
+        self.lock = threading.Lock()
         logger.info("AgentRegistry initialisé")
-    
+
     def register(self, agent_type: str, agent_class: Type[Agent], 
                 factory_func: Optional[Callable] = None):
         """
-        📝 Enregistre un nouveau type d'agent
+        Enregistre un nouveau type d'agent.
         
         Args:
-            agent_type: Type d'agent (ex: "database")
-            agent_class: Classe de l'agent
-            factory_func: Fonction de création personnalisée (optionnel)
+            agent_type: Nom unique pour le type d'agent (ex: "database").
+            agent_class: La classe de l'agent qui hérite de Agent.
+            factory_func: Fonction optionnelle pour créer des instances.
         """
-        with self._lock:
-            self._registry[agent_type] = agent_class
-            if factory_func:
-                self._factories[agent_type] = factory_func
-            
-            logger.info(f"Type d'agent enregistré: {agent_type} -> {agent_class.__name__}")
-    
+        with self.lock:
+            if agent_type in self._registry:
+                logger.warning(f"Le type d'agent '{agent_type}' est déjà enregistré. "
+                               f"Il va être écrasé.")
+            self._registry[agent_type] = {
+                "class": agent_class, 
+                "factory": factory_func
+            }
+            logger.info(f"Type d'agent '{agent_type}' enregistré avec la classe "
+                        f"'{agent_class.__name__}'.")
+
     def get_agent_class(self, agent_type: str) -> Type[Agent]:
         """
-        🔍 Récupère la classe d'un type d'agent
+        Récupère la classe d'un type d'agent.
         
         Args:
-            agent_type: Type d'agent recherché
-            
+            agent_type: Nom du type d'agent.
+        
         Returns:
-            Type[Agent]: Classe de l'agent
+            La classe de l'agent.
             
         Raises:
-            ValueError: Si le type n'est pas enregistré
+            ValueError: Si le type n'est pas enregistré.
         """
-        if agent_type not in self._registry:
-            raise ValueError(f"Agent type '{agent_type}' not registered. "
-                           f"Available: {list(self._registry.keys())}")
-        
-        return self._registry[agent_type]
-    
+        with self.lock:
+            if agent_type not in self._registry:
+                raise ValueError(f"Agent type '{agent_type}' not registered. "
+                                 f"Available: {list(self._registry.keys())}")
+            return self._registry[agent_type]["class"]
+
     def get_factory_func(self, agent_type: str) -> Optional[Callable]:
         """
-        🏭 Récupère la fonction de création personnalisée
-        
-        Args:
-            agent_type: Type d'agent
-            
-        Returns:
-            Optional[Callable]: Fonction de création ou None
+        Récupère la fonction factory pour un type d'agent.
         """
-        return self._factories.get(agent_type)
-    
+        with self.lock:
+            if agent_type not in self._registry:
+                return None
+            return self._registry[agent_type].get("factory")
+
     def get_available_types(self) -> List[str]:
         """
-        📋 Retourne la liste des types d'agents disponibles
-        
-        Returns:
-            List[str]: Types d'agents enregistrés
+        Retourne la liste de tous les types d'agents enregistrés.
         """
-        return list(self._registry.keys())
-    
+        with self.lock:
+            return list(self._registry.keys())
+
     def get_registry_info(self) -> Dict[str, Any]:
         """
-        📊 Retourne les informations du registre
-        
-        Returns:
-            Dict: Informations sur les types enregistrés
+        Fournit un résumé du contenu du registre.
         """
-        return {
-            "total_types": len(self._registry),
-            "available_types": self.get_available_types(),
-            "has_custom_factories": list(self._factories.keys()),
-            "registry_timestamp": datetime.now().isoformat()
-        }
+        with self.lock:
+            info = {}
+            for agent_type, data in self._registry.items():
+                info[agent_type] = {
+                    "class_name": data["class"].__name__,
+                    "module": data["class"].__module__,
+                    "has_factory_function": data["factory"] is not None
+                }
+            return {
+                "total_types": len(self._registry),
+                "types": info
+            }
 
 # ==========================================
-# 4. AGENT FACTORY (CŒUR DU PATTERN)
+# 4. AGENT FACTORY (Cœur du Pattern)
 # ==========================================
 
 class AgentFactory:
     """
-    🏭 Factory Pattern - Création dynamique d'agents
-    
-    Point central pour créer des agents selon les besoins métier.
-    Intègre avec les templates et configurations existants des Sprints 1-5.
+    Crée, gère et supervise le cycle de vie des agents.
+    Le cœur du Pattern Factory.
     """
-    
+
     def __init__(self, config_path: Optional[str] = None):
-        self.registry = AgentRegistry()
-        self.config_path = config_path or "config/"
-        self.created_agents: Dict[str, Agent] = {}
-        self._lock = threading.Lock()
-        
-        # Chargement de la configuration (utilise les assets Sprints 1-5)
-        self._load_configuration()
-        
-        # Enregistrement des agents de base
-        self._register_default_agents()
-        
-        logger.info(f"AgentFactory initialisée avec {len(self.registry.get_available_types())} types d'agents")
-    
-    def _load_configuration(self):
         """
-        ⚙️ Charge la configuration depuis les assets existants
-        
-        Utilise les configurations créées dans les Sprints 1-5
-        """
-        try:
-            config_file = Path(self.config_path) / "agent_factory_config.json"
-            if config_file.exists():
-                with open(config_file, 'r', encoding='utf-8') as f:
-                    self.config = json.load(f)
-                logger.info(f"Configuration chargée depuis {config_file}")
-            else:
-                # Configuration par défaut
-                self.config = {
-                    "default_timeout": 300,
-                    "max_concurrent_agents": 10,
-                    "enable_metrics": True,
-                    "log_level": "INFO"
-                }
-                logger.warning("Configuration par défaut utilisée")
-        except Exception as e:
-            logger.error(f"Erreur chargement configuration: {e}")
-            self.config = {}
-    
-    def _register_default_agents(self):
-        """
-        📝 Enregistre les types d'agents par défaut
-        
-        En production, ceci utiliserait les vraies implémentations
-        des agents créés dans les Sprints 1-5
-        """
-        # Agent Méta-Stratégique Pattern Factory compliant
-        try:
-            from agents.agent_meta_strategique_pattern_factory import AgentMetaStrategique, create_meta_strategique_agent
-            self.register_agent_type("meta_strategique", AgentMetaStrategique, create_meta_strategique_agent)
-            logger.info("✅ Agent Méta-Stratégique enregistré dans Pattern Factory")
-        except ImportError as e:
-            logger.warning(f"Agent Méta-Stratégique non disponible: {e}")
-        
-        # Ici on enregistrerait les vraies classes d'agents
-        # Pour l'exemple, on utilise des classes simplifiées
-        logger.info("🏭 Agents par défaut enregistrés")
-    
-    def create_agent(self, agent_type: str, **config) -> Agent:
-        """
-        🎯 MÉTHODE CENTRALE : Crée un agent selon le type et la configuration
+        Initialise la Factory.
         
         Args:
-            agent_type: Type d'agent à créer
-            **config: Configuration spécifique à l'agent
+            config_path: Chemin vers le fichier de configuration JSON.
+        """
+        logger.info("🏭 Initialisation de l'AgentFactory...")
+        self.registry = AgentRegistry()
+        self.active_agents: Dict[str, Agent] = {}
+        self.config_path = config_path
+
+        if config_path:
+            self._load_configuration()
+        else:
+            logger.warning("Aucun chemin de configuration fourni. Utilisation des agents par défaut.")
+            self._register_default_agents()
+        
+        logger.info(f"AgentFactory initialisée avec {len(self.registry.get_available_types())} types d'agents.")
+
+    def _load_configuration(self):
+        """Charge les types d'agents depuis un fichier de configuration JSON."""
+        try:
+            with open(self.config_path, 'r', encoding='utf-8') as f:
+                config_data = json.load(f)
+            
+            # TODO: Traiter la config de la factory (ex: config_data['factory_config'])
+
+            # --- DEBUT DE LA MODIFICATION POUR CORRECTION ---
+            # EXPLICATION : Le code original (probablement modifié par erreur) cherchait la clé "agent_types".
+            # Cependant, l'écosystème de configuration (ex: maintenance_config.json) utilise la clé "agents".
+            # Nous rétablissons ici la clé correcte "agents" pour assurer la compatibilité.
+            
+            # Ligne originale incorrecte :
+            # agent_configs = config_data.get('agent_types', {})
+            
+            # Ligne corrigée :
+            agent_configs = config_data.get('agents', {})
+            # --- FIN DE LA MODIFICATION POUR CORRECTION ---
+
+            for agent_type, config in agent_configs.items():
+                try:
+                    module = importlib.import_module(config['module'])
+                    agent_class = getattr(module, config['class'])
+                    factory_func = getattr(module, config['factory_function']) if 'factory_function' in config else None
+                    self.register_agent_type(agent_type, agent_class, factory_func)
+                except (ImportError, AttributeError, KeyError) as e:
+                    logger.error(f"Échec du chargement de l'agent '{agent_type}': {e}")
+
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            logger.error(f"Erreur de chargement du fichier de configuration '{self.config_path}': {e}")
+            self._register_default_agents()
+
+    def _register_default_agents(self):
+        """
+        Enregistre des agents par défaut si aucune configuration n'est fournie.
+        (Mécanisme de fallback)
+        """
+        logger.warning("Configuration par défaut utilisée")
+        try:
+            # Exemple : enregistrer un agent méta-stratégique par défaut
+            from agents.agent_meta_strategique_pattern_factory import MetaStrategiqueAgent, create_meta_agent
+            self.register_agent_type("meta_strategique", MetaStrategiqueAgent, create_meta_agent)
+            logger.info("🏭 Agents par défaut enregistrés")
+        except ImportError:
+            logger.warning("Agent Méta-Stratégique non disponible: No module named 'agents.agent_meta_strategique_pattern_factory'")
+        except Exception as e:
+            logger.error(f"Erreur lors de l'enregistrement des agents par défaut: {e}")
+
+    def create_agent(self, agent_type: str, **config) -> Agent:
+        """
+        Crée une nouvelle instance d'un agent.
+        
+        Args:
+            agent_type: Le type d'agent à créer.
+            config: Configuration additionnelle pour l'instance de l'agent.
             
         Returns:
-            Agent: Agent configuré et prêt à l'emploi
+            Une instance de l'agent.
             
         Raises:
-            ValueError: Si le type d'agent n'est pas supporté
+            ValueError: Si le type d'agent n'est pas enregistré.
         """
-        with self._lock:
-            # Récupération de la classe d'agent
+        factory_func = self.registry.get_factory_func(agent_type)
+        if factory_func:
+            agent = factory_func(**config)
+        else:
             agent_class = self.registry.get_agent_class(agent_type)
-            
-            # Fonction de création personnalisée si disponible
-            factory_func = self.registry.get_factory_func(agent_type)
-            
-            if factory_func:
-                agent = factory_func(**config)
-            else:
-                agent = agent_class(**config)
-            
-            # Enregistrement de l'agent créé
-            self.created_agents[agent.id] = agent
-            
-            logger.info(f"Agent {agent_type} créé avec ID: {agent.id}")
-            return agent
-    
+            agent = agent_class(**config)
+        
+        self.active_agents[agent.id] = agent
+        logger.info(f"Agent '{agent.type}' (ID: {agent.id}) créé et activé.")
+        return agent
+
     def register_agent_type(self, agent_type: str, agent_class: Type[Agent], 
                           factory_func: Optional[Callable] = None):
         """
-        📝 Enregistre un nouveau type d'agent
-        
-        Args:
-            agent_type: Type d'agent
-            agent_class: Classe de l'agent
-            factory_func: Fonction de création personnalisée
+        Raccourci pour enregistrer un type dans le registre de la factory.
         """
         self.registry.register(agent_type, agent_class, factory_func)
-    
+
     def get_agent(self, agent_id: str) -> Optional[Agent]:
         """
-        🔍 Récupère un agent créé par son ID
-        
-        Args:
-            agent_id: Identifiant de l'agent
-            
-        Returns:
-            Optional[Agent]: Agent si trouvé, None sinon
+        Récupère un agent actif par son ID.
         """
-        return self.created_agents.get(agent_id)
-    
+        return self.active_agents.get(agent_id)
+
     def get_available_types(self) -> List[str]:
         """
-        📋 Retourne la liste des types d'agents disponibles
-        
-        Returns:
-            List[str]: Types d'agents supportés
+        Retourne la liste des types d'agents créables.
         """
         return self.registry.get_available_types()
-    
+
     def get_created_agents(self) -> Dict[str, Agent]:
         """
-        📊 Retourne tous les agents créés
-        
-        Returns:
-            Dict[str, Agent]: Dictionnaire ID -> Agent
+        Retourne un dictionnaire de tous les agents actifs.
         """
-        return self.created_agents.copy()
-    
+        return self.active_agents
+
     def cleanup_agents(self, max_age_hours: int = 24):
         """
-        🧹 Nettoie les agents anciens ou inactifs
-        
-        Args:
-            max_age_hours: Âge maximum en heures
+        Supprime les agents inactifs ou anciens.
+        (Exemple de gestion de cycle de vie)
         """
-        cutoff_time = datetime.now().timestamp() - (max_age_hours * 3600)
+        now = datetime.now()
+        to_remove = [
+            agent_id for agent_id, agent in self.active_agents.items()
+            if (now - agent.last_activity).total_seconds() > max_age_hours * 3600
+        ]
         
-        with self._lock:
-            agents_to_remove = []
-            for agent_id, agent in self.created_agents.items():
-                if agent.created_at.timestamp() < cutoff_time:
-                    agents_to_remove.append(agent_id)
+        for agent_id in to_remove:
+            logger.info(f"Nettoyage de l'agent inactif {agent_id}")
+            del self.active_agents[agent_id]
             
-            for agent_id in agents_to_remove:
-                del self.created_agents[agent_id]
-                logger.info(f"Agent {agent_id} supprimé (trop ancien)")
-    
+        return len(to_remove)
+
     def get_factory_status(self) -> Dict[str, Any]:
         """
-        📊 Retourne le statut de la factory
-        
-        Returns:
-            Dict: Informations sur l'état de la factory
+        Retourne le statut complet de la factory et de ses agents.
         """
         return {
-            "total_agents_created": len(self.created_agents),
-            "available_types": self.get_available_types(),
-            "active_agents": [
-                agent.get_status() for agent in self.created_agents.values()
-                if agent.status == "ready"
-            ],
+            "factory_id": id(self),
+            "config_path": self.config_path,
+            "total_active_agents": len(self.active_agents),
             "registry_info": self.registry.get_registry_info(),
-            "config": self.config,
-            "timestamp": datetime.now().isoformat()
+            "active_agent_details": {
+                agent_id: agent.get_status() for agent_id, agent in self.active_agents.items()
+            }
         }
 
 # ==========================================
-# 5. ORCHESTRATEUR AVANCÉ
+# 5. AGENT ORCHESTRATOR
 # ==========================================
 
 class AgentOrchestrator:
     """
-    🎭 Orchestrateur avancé - Coordination et pipeline d'agents
-    
-    Coordonne l'exécution de pipelines complexes avec plusieurs agents.
+    Orchestre des workflows complexes impliquant plusieurs agents.
+    Exécute des pipelines définis dans une configuration.
     """
     
     def __init__(self, factory: AgentFactory):
         self.factory = factory
-        self.execution_history: List[Dict[str, Any]] = []
-        self._lock = threading.Lock()
-        
-        logger.info("AgentOrchestrator initialisé")
-    
+        self.execution_history: List[Dict] = []
+        self.lock = threading.Lock()
+        logger.info("AgentOrchestrator initialisé.")
+
     def execute_pipeline(self, pipeline_config: Dict[str, Any]) -> Dict[str, Any]:
         """
-        🔄 Exécute un pipeline complet avec orchestration d'agents
+        Exécute un pipeline complet d'opérations.
         
         Args:
             pipeline_config: Configuration du pipeline
             
         Returns:
-            Dict: Résultats agrégés du pipeline
+            Dictionnaire contenant les résultats de chaque étape.
         """
-        pipeline_id = str(uuid.uuid4())
-        pipeline_name = pipeline_config.get("name", f"pipeline_{pipeline_id[:8]}")
+        pipeline_id = pipeline_config.get("id", f"pipeline_{uuid.uuid4().hex[:8]}")
+        start_time = datetime.now()
+        logger.info(f"🚀 Début d'exécution du pipeline '{pipeline_id}'")
+        
         steps = pipeline_config.get("steps", [])
+        pipeline_context = pipeline_config.get("context", {})
+        results = {}
         
-        logger.info(f"Démarrage pipeline: {pipeline_name} (ID: {pipeline_id})")
+        for i, step_config in enumerate(steps):
+            step_name = step_config.get("name", f"step_{i+1}")
+            logger.info(f"  -> Exécution de l'étape {i+1}: '{step_name}'")
+            
+            # Injecter les résultats des étapes précédentes dans les paramètres
+            params = step_config.get("params", {})
+            for key, value in params.items():
+                if isinstance(value, str) and value.startswith("$.steps."):
+                    parts = value.split('.')
+                    # $.steps.step_name.output.key
+                    try:
+                        ref_step_name = parts[2]
+                        ref_output_key = parts[4]
+                        params[key] = results[ref_step_name]['output'][ref_output_key]
+                    except (IndexError, KeyError) as e:
+                        logger.error(f"  ❌ Erreur de résolution de référence '{value}': {e}")
+                        step_result = {
+                            "status": "FAILED",
+                            "error": f"Référence invalide: {value}"
+                        }
+                        results[step_name] = step_result
+                        break # Arrêter le pipeline en cas d'erreur
+            
+            # Si une erreur a eu lieu à l'étape de résolution
+            if results.get(step_name, {}).get("status") == "FAILED":
+                break
+                
+            step_result = self._execute_step(step_config, i+1, pipeline_id)
+            results[step_name] = step_result
+            
+            if step_result["status"] != "COMPLETED":
+                logger.error(f"  ❌ L'étape '{step_name}' a échoué. Arrêt du pipeline.")
+                break
         
-        pipeline_results = {
+        end_time = datetime.now()
+        duration = (end_time - start_time).total_seconds()
+        
+        final_status = "COMPLETED" if all(r.get('status') == 'COMPLETED' for r in results.values()) else "FAILED"
+        
+        pipeline_summary = {
             "pipeline_id": pipeline_id,
-            "pipeline_name": pipeline_name,
-            "start_time": datetime.now().isoformat(),
-            "steps": [],
-            "total_duration_seconds": 0,
-            "success": True,
-            "summary": {},
-            "agents_used": []
+            "status": final_status,
+            "start_time": start_time.isoformat(),
+            "end_time": end_time.isoformat(),
+            "duration_seconds": duration,
+            "steps": results
         }
         
-        start_time = datetime.now()
-        agents_used = set()
+        with self.lock:
+            self.execution_history.append(pipeline_summary)
         
-        try:
-            for i, step in enumerate(steps, 1):
-                step_result = self._execute_step(step, i, pipeline_id)
-                pipeline_results["steps"].append(step_result)
-                
-                if step_result.get("agent_id"):
-                    agents_used.add(step_result["agent_id"])
-                
-                if not step_result.get("success", False):
-                    pipeline_results["success"] = False
-                    if pipeline_config.get("fail_fast", True):
-                        logger.warning(f"Pipeline {pipeline_name} arrêté à l'étape {i}")
-                        break
-            
-            # Finalisation
-            end_time = datetime.now()
-            pipeline_results["end_time"] = end_time.isoformat()
-            pipeline_results["total_duration_seconds"] = (end_time - start_time).total_seconds()
-            pipeline_results["agents_used"] = list(agents_used)
-            
-            # Résumé
-            total_steps = len(pipeline_results["steps"])
-            successful_steps = sum(1 for step in pipeline_results["steps"] if step.get("success", False))
-            
-            pipeline_results["summary"] = {
-                "total_steps": total_steps,
-                "successful_steps": successful_steps,
-                "failed_steps": total_steps - successful_steps,
-                "success_rate_percent": (successful_steps / total_steps * 100) if total_steps > 0 else 0,
-                "agents_count": len(agents_used)
-            }
-            
-            # Sauvegarde dans l'historique
-            with self._lock:
-                self.execution_history.append(pipeline_results.copy())
-            
-            logger.info(f"Pipeline {pipeline_name} terminé - Succès: {pipeline_results['success']}")
-            
-        except Exception as e:
-            logger.error(f"Erreur dans pipeline {pipeline_name}: {e}")
-            pipeline_results["success"] = False
-            pipeline_results["error"] = str(e)
-        
-        return pipeline_results
-    
+        logger.info(f"✅ Pipeline '{pipeline_id}' terminé avec le statut: {final_status}")
+        return pipeline_summary
+
     def _execute_step(self, step_config: Dict[str, Any], step_number: int, 
                      pipeline_id: str) -> Dict[str, Any]:
-        """
-        📋 Exécute une étape du pipeline
-        
-        Args:
-            step_config: Configuration de l'étape
-            step_number: Numéro de l'étape
-            pipeline_id: ID du pipeline
-            
-        Returns:
-            Dict: Résultats de l'étape
-        """
-        step_name = step_config.get("name", f"step_{step_number}")
-        agent_config = step_config.get("agent", {})
-        tasks = step_config.get("tasks", [])
-        
-        logger.info(f"Exécution étape {step_number}: {step_name}")
-        
-        step_result = {
-            "step_number": step_number,
-            "step_name": step_name,
-            "pipeline_id": pipeline_id,
-            "start_time": datetime.now().isoformat(),
-            "tasks": [],
-            "success": True,
-            "agent_id": None
-        }
+        """Exécute une seule étape du pipeline."""
+        start_time = datetime.now()
         
         try:
+            agent_type = step_config["agent_type"]
+            task_type = step_config["task"]["type"]
+            task_params = step_config["task"]["params"]
+            
             # Création de l'agent pour cette étape
-            agent_type = agent_config.get("type")
-            agent_params = agent_config.get("config", {})
+            agent = self.factory.create_agent(agent_type)
             
-            agent = self.factory.create_agent(agent_type, **agent_params)
-            step_result["agent_id"] = agent.id
+            # Création et exécution de la tâche
+            task = Task(type=task_type, params=task_params)
+            result = agent.execute_task(task)
             
-            # Exécution des tâches
-            for task_config in tasks:
-                task = Task(
-                    type=task_config["type"],
-                    params=task_config.get("params", {}),
-                    priority=Priority(task_config.get("priority", Priority.MEDIUM.value))
-                )
-                
-                task_start = datetime.now()
-                result = agent.execute_task(task)
-                execution_time = (datetime.now() - task_start).total_seconds()
-                
-                # Mise à jour des métriques de l'agent
-                agent.update_metrics(result, execution_time)
-                
-                task_result = {
-                    "task_id": task.id,
-                    "task_type": task.type,
-                    "success": result.success,
-                    "execution_time_seconds": execution_time,
-                    "data": result.data,
-                    "error": result.error
-                }
-                
-                step_result["tasks"].append(task_result)
-                
-                if not result.success:
-                    step_result["success"] = False
-                    logger.warning(f"Tâche {task.type} échouée: {result.error}")
+            # Mise à jour des métriques de l'agent
+            exec_time = (datetime.now() - start_time).total_seconds()
+            agent.update_metrics(result, exec_time)
             
-            step_result["end_time"] = datetime.now().isoformat()
-            logger.info(f"Étape {step_name} terminée - Succès: {step_result['success']}")
+            if result.success:
+                status = "COMPLETED"
+                output = result.data
+                error = None
+            else:
+                status = "FAILED"
+                output = None
+                error = result.error
+                logger.warning(f"    - Tâche '{task_type}' échouée pour l'agent '{agent_type}': {error}")
             
+        except KeyError as e:
+            status = "CONFIG_ERROR"
+            output = None
+            error = f"Clé manquante dans la configuration de l'étape: {e}"
+            logger.error(f"    - Erreur de configuration d'étape: {error}")
         except Exception as e:
-            step_result["success"] = False
-            step_result["error"] = str(e)
-            step_result["end_time"] = datetime.now().isoformat()
-            logger.error(f"Erreur étape {step_name}: {e}")
+            status = "EXECUTION_ERROR"
+            output = None
+            error = str(e)
+            logger.error(f"    - Erreur inattendue durant l'étape: {e}", exc_info=True)
+
+        end_time = datetime.now()
+        duration = (end_time - start_time).total_seconds()
         
-        return step_result
-    
+        return {
+            "step_number": step_number,
+            "agent_type": agent_type,
+            "task_type": task_type,
+            "status": status,
+            "duration_seconds": duration,
+            "output": output,
+            "error": error
+        }
+
     def get_execution_history(self, limit: int = 10) -> List[Dict[str, Any]]:
         """
-        📊 Retourne l'historique des exécutions
-        
-        Args:
-            limit: Nombre maximum d'éléments à retourner
-            
-        Returns:
-            List[Dict]: Historique des pipelines exécutés
+        Retourne l'historique des exécutions de pipelines.
         """
-        with self._lock:
-            return self.execution_history[-limit:] if self.execution_history else []
-    
+        with self.lock:
+            return self.execution_history[-limit:]
+
     def get_orchestrator_stats(self) -> Dict[str, Any]:
         """
-        📈 Retourne les statistiques de l'orchestrateur
-        
-        Returns:
-            Dict: Statistiques d'utilisation
+        Retourne des statistiques sur les exécutions.
         """
-        with self._lock:
+        with self.lock:
             total_pipelines = len(self.execution_history)
-            successful_pipelines = sum(1 for p in self.execution_history if p.get("success", False))
+            successful_pipelines = sum(1 for p in self.execution_history if p['status'] == 'COMPLETED')
+            failed_pipelines = total_pipelines - successful_pipelines
+            
+            total_duration = sum(p['duration_seconds'] for p in self.execution_history)
+            avg_duration = total_duration / total_pipelines if total_pipelines > 0 else 0
             
             return {
                 "total_pipelines_executed": total_pipelines,
                 "successful_pipelines": successful_pipelines,
-                "failed_pipelines": total_pipelines - successful_pipelines,
-                "success_rate_percent": (successful_pipelines / total_pipelines * 100) if total_pipelines > 0 else 0,
-                "total_execution_time": sum(p.get("total_duration_seconds", 0) for p in self.execution_history),
-                "average_execution_time": sum(p.get("total_duration_seconds", 0) for p in self.execution_history) / total_pipelines if total_pipelines > 0 else 0,
-                "last_execution": self.execution_history[-1]["start_time"] if self.execution_history else None
+                "failed_pipelines": failed_pipelines,
+                "success_rate": successful_pipelines / total_pipelines if total_pipelines > 0 else 0,
+                "average_pipeline_duration_seconds": avg_duration
             }
 
 # ==========================================
-# 6. FONCTIONS UTILITAIRES
+# Fonctions utilitaires
 # ==========================================
 
 def create_factory_with_defaults() -> AgentFactory:
     """
-    🏗️ Crée une factory avec la configuration par défaut
-    
-    Returns:
-        AgentFactory: Factory configurée avec les agents de base
+    Crée une AgentFactory avec les agents par défaut enregistrés.
     """
     factory = AgentFactory()
-    
-    # Enregistrement des agents par défaut
-    # En production, ceci utiliserait les vraies implémentations
-    
-    logger.info("Factory créée avec configuration par défaut")
+    # Ici, on pourrait ajouter un enregistrement plus complexe
+    # basé sur la découverte de plugins, etc.
     return factory
 
 def validate_pipeline_config(config: Dict[str, Any]) -> List[str]:
     """
-    ✅ Valide la configuration d'un pipeline
+    Valide une configuration de pipeline.
     
-    Args:
-        config: Configuration à valider
-        
     Returns:
-        List[str]: Liste des erreurs trouvées (vide si valide)
+        Liste des erreurs de validation. Liste vide si valide.
     """
     errors = []
-    
-    if "steps" not in config:
-        errors.append("Configuration 'steps' manquante")
+    if "steps" not in config or not isinstance(config["steps"], list):
+        errors.append("La clé 'steps' est manquante ou n'est pas une liste.")
         return errors
-    
-    steps = config["steps"]
-    if not isinstance(steps, list) or len(steps) == 0:
-        errors.append("'steps' doit être une liste non-vide")
-        return errors
-    
-    for i, step in enumerate(steps):
-        if "agent" not in step:
-            errors.append(f"Étape {i+1}: configuration 'agent' manquante")
-        elif "type" not in step["agent"]:
-            errors.append(f"Étape {i+1}: type d'agent manquant")
         
-        if "tasks" not in step:
-            errors.append(f"Étape {i+1}: configuration 'tasks' manquante")
-        elif not isinstance(step["tasks"], list):
-            errors.append(f"Étape {i+1}: 'tasks' doit être une liste")
-    
+    for i, step in enumerate(config["steps"]):
+        if not isinstance(step, dict):
+            errors.append(f"L'étape {i+1} n'est pas un dictionnaire.")
+            continue
+        if "agent_type" not in step:
+            errors.append(f"L'étape {i+1} n'a pas de 'agent_type'.")
+        if "task" not in step or not isinstance(step["task"], dict):
+            errors.append(f"L'étape {i+1} n'a pas de 'task' ou ce n'est pas un dictionnaire.")
+        elif "type" not in step.get("task", {}):
+            errors.append(f"La tâche de l'étape {i+1} n'a pas de 'type'.")
+            
     return errors
-
-if __name__ == "__main__":
-    # Test basique de l'architecture
-    print("🏭 Test Architecture Pattern Factory")
-    
-    factory = create_factory_with_defaults()
-    print(f"Types disponibles: {factory.get_available_types()}")
-    
-    print("✅ Architecture Pattern Factory validée !") 
-
-
-

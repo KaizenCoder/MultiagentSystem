@@ -1,19 +1,26 @@
+"""
+⏱️ ANALYSEUR DE PERFORMANCE - Agent 08
+=======================================
+
+🎯 Mission : Analyser la performance et la complexité du code.
+⚡ Capacités : Calcul de la complexité cyclomatique, analyse des "points chauds".
+🏢 Équipe : NextGeneration Tools Migration
+
+Author: Équipe de Maintenance NextGeneration
+Version: 1.0.0
+"""
+    
 import ast
 import re
 from collections import defaultdict
 from core.agent_factory_architecture import Agent, Task, Result
+import logging
 
 class AgentMAINTENANCE08AnalyseurPerformance(Agent):
-    """
-    Agent chargé d'optimiser les performances du code :
-    - Détecte les anti-patterns de performance
-    - Suggère des optimisations
-    - Analyse la complexité algorithmique
-    - Identifie les goulots d'étranglement potentiels
-    """
-    
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__(agent_type="analyseur_performance", **kwargs)
+        self.logger = logging.getLogger(self.__class__.__name__)
+        self.agent_id = self.id
         
         # Patterns d'anti-performance
         self.performance_antipatterns = [
@@ -36,7 +43,7 @@ class AgentMAINTENANCE08AnalyseurPerformance(Agent):
 
     async def startup(self):
         await super().startup()
-        self.log("Optimiseur de performance prêt.")
+        self.logger.info("Optimiseur de performance prêt.")
 
     async def execute_task(self, task: Task) -> Result:
         if task.type != "optimize_performance":
@@ -47,7 +54,7 @@ class AgentMAINTENANCE08AnalyseurPerformance(Agent):
         if not code:
             return Result(success=False, error="Code non fourni.")
 
-        self.log(f"Analyse de performance pour : {file_path}")
+        self.logger.info(f"Analyse de performance pour : {file_path}")
 
         try:
             tree = ast.parse(code)
@@ -76,7 +83,7 @@ class AgentMAINTENANCE08AnalyseurPerformance(Agent):
                 "optimization_suggestions": optimized_suggestions
             }
 
-            self.log(f"Analyse de performance terminée pour {file_path} - Score: {performance_score}/100")
+            self.logger.info(f"Analyse de performance terminée pour {file_path} - Score: {performance_score}/100")
             
             return Result(success=True, data={
                 "performance_report": report,
@@ -84,7 +91,7 @@ class AgentMAINTENANCE08AnalyseurPerformance(Agent):
             })
 
         except Exception as e:
-            self.log(f"Erreur lors de l'analyse de performance de {file_path}: {e}", level="error")
+            self.logger.error(f"Erreur lors de l'analyse de performance de {file_path}: {e}")
             return Result(success=False, error=str(e))
 
     def _analyze_complexity(self, tree: ast.AST) -> dict:
@@ -250,7 +257,7 @@ class AgentMAINTENANCE08AnalyseurPerformance(Agent):
         return optimizations
 
     def _is_boolean_search_loop(self, loop_node: ast.For) -> bool:
-        """Vérifie si une boucle est une recherche de booléen."""
+        """Détecte les boucles de recherche booléenne."""
         if len(loop_node.body) == 1 and isinstance(loop_node.body[0], ast.If):
             if_node = loop_node.body[0]
             if len(if_node.body) == 1 and isinstance(if_node.body[0], ast.Break):
@@ -258,60 +265,55 @@ class AgentMAINTENANCE08AnalyseurPerformance(Agent):
         return False
 
     def _has_accumulation_pattern(self, func_node: ast.AST) -> bool:
-        """Vérifie si une fonction a un pattern d'accumulation."""
-        has_init = False
-        has_append = False
-        
+        """Détecte les patterns d'accumulation simples."""
         for node in ast.walk(func_node):
-            if isinstance(node, ast.Assign):
-                if isinstance(node.value, (ast.List, ast.Dict)):
-                    has_init = True
-            elif isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
-                if node.func.attr == 'append':
-                    has_append = True
-        
-        return has_init and has_append
-        
+            if isinstance(node, ast.For):
+                for item in node.body:
+                    if isinstance(item, ast.Expr) and isinstance(item.value, ast.Call):
+                        call = item.value
+                        if isinstance(call.func, ast.Attribute) and call.func.attr == 'append':
+                            return True
+        return False
+
     def _calculate_performance_score(self, complexity: dict, antipatterns: list, optimizations: list) -> int:
         """Calcule un score de performance global."""
         score = 100
         
-        # Pénalités pour la complexité
-        score -= complexity["cyclomatic_complexity"]
-        score -= complexity["nested_loops"] * 10
-        score -= len(complexity["recursive_functions"]) * 5
-        score -= len(complexity["long_functions"]) * 2
+        # Pénalité pour complexité
+        score -= complexity["cyclomatic_complexity"] * 0.5
+        score -= complexity["nested_loops"] * 5
         
-        # Pénalités pour les anti-patterns
-        score -= len(antipatterns) * 5
+        # Pénalité pour anti-patterns
+        score -= len(antipatterns) * 3
         
-        # Bonus pour les opportunités d'optimisation
-        score += len(optimizations) * 2
+        # Bonus pour potentiel d'optimisation (négatif)
+        score -= len(optimizations) * 2
         
-        return max(0, min(100, score))
+        return max(0, int(score))
 
     def _generate_optimization_suggestions(self, code: str, antipatterns: list, optimizations: list) -> list:
         """Génère des suggestions de code optimisé."""
         suggestions = []
         
-        for anti_pattern in antipatterns:
-            suggestions.append(f"Line {anti_pattern['line']}: {anti_pattern['suggestion']}")
+        for ap in antipatterns:
+            suggestions.append(f"Ligne {ap['line']}: {ap['issue']}. Suggestion: {ap['suggestion']}")
             
         for opt in optimizations:
-            suggestions.append(f"Opportunity: {opt['suggestion']}")
-            
+            suggestions.append(f"Optimisation possible: {opt['suggestion']} (Impact: {opt['impact']})")
+        
         return suggestions
 
     async def shutdown(self) -> None:
+        """Arrête l'agent."""
         await super().shutdown()
-        self.log("Optimiseur de performance éteint.")
+        self.logger.info("Optimiseur de performance éteint.")
 
     def get_capabilities(self) -> list[str]:
         return ["optimize_performance"]
 
     async def health_check(self) -> dict:
-        return {"status": "healthy"}
+        return {"status": "healthy", "version": "1.0"}
 
 def create_agent_MAINTENANCE_08_analyseur_performance(**config) -> "AgentMAINTENANCE08AnalyseurPerformance":
-    """Factory function to create an instance of the agent."""
+    """Factory pour créer une instance de l'analyseur de performance."""
     return AgentMAINTENANCE08AnalyseurPerformance(**config)

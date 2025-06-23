@@ -101,95 +101,93 @@ class Agent18AuditeurSecurite:
     """
     
     def __init__(self, config: Optional[AgentFactoryConfig] = None):
-    self.config = config
-    self.agent_id = "18"
-    self.specialite = "Audit Sécurité Spécialisé"
-    self.mission = "Audit sécurité complet et détection vulnérabilités"
+        pass
+        self.config = config
+        self.agent_id = "18"
+        self.specialite = "Audit Sécurité Spécialisé"
+        self.mission = "Audit sécurité complet et détection vulnérabilités"
         
         # Patterns de sécurité à vérifier
-    self.security_patterns = {
-    'sql_injection': [
-    r'\.execute\([^)]*\+',
-    r'f".*{.*}.*".*execute',
-    r'%.*%.*execute',
-    r'cursor\.execute.*%',
-    ],
-    'xss': [
-    r'innerHTML\s*=',
-    r'document\.write\(',
-    r'eval\(',
-    r'\.html\([^)]*\+',
-    ],
-    'hardcoded_secrets': [
-    r'password\s*=\s*["\'][^"\']+["\']',
-    r'api_key\s*=\s*["\'][^"\']+["\']',
-    r'secret\s*=\s*["\'][^"\']+["\']',
-    r'token\s*=\s*["\'][^"\']+["\']',
-    ],
-    'weak_crypto': [
-    r'md5\(',
-    r'sha1\(',
-    r'DES\(',
-    r'RC4\(',
-    ],
-    'file_traversal': [
-    r'open\([^)]*\.\./[^)]*\)',
-    r'os\.path\.join\([^)]*\.\./[^)]*\)',
-    r'pathlib\.[^(]*\([^)]*\.\./[^)]*\)',
-    ]
-    }
+        self.security_patterns = {
+            'sql_injection': [
+                r'\.execute\([^)]*\+',
+                r'f".*{.*}.*".*execute',
+                r'%.*%.*execute',
+                r'cursor\.execute.*%',
+            ],
+            'xss': [
+                r'innerHTML\s*=',
+                r'document\.write\(',
+                r'eval\(',
+                r'\.html\([^)]*\+',
+            ],
+            'hardcoded_secrets': [
+                r'password\s*=\s*["\'][^"\']+["\']',
+                r'api_key\s*=\s*["\'][^"\']+["\']',
+                r'secret\s*=\s*["\'][^"\']+["\']',
+                r'token\s*=\s*["\'][^"\']+["\']',
+            ],
+            'weak_crypto': [
+                r'md5\(',
+                r'sha1\(',
+                r'DES\(',
+                r'RC4\(',
+            ],
+            'file_traversal': [
+                r'open\([^)]*\.\./[^)]*\)',
+                r'os\.path\.join\([^)]*\.\./[^)]*\)',
+                r'pathlib\.[^(]*\([^)]*\.\./[^)]*\)',
+            ]
+        }
         
         # Standards de sécurité
-    self.security_standards = {
-    'minimum_password_entropy': 60,
-    'max_file_permissions': 0o644,
-    'required_headers': ['X-Content-Type-Options', 'X-Frame-Options', 'X-XSS-Protection'],
-    'forbidden_functions': ['eval', 'exec', 'compile'],
-    'secure_protocols': ['https', 'tls', 'ssl']
-    }
+        self.security_standards = {
+            'minimum_password_entropy': 60,
+            'max_file_permissions': 0o644,
+            'required_headers': ['X-Content-Type-Options', 'X-Frame-Options', 'X-XSS-Protection'],
+            'forbidden_functions': ['eval', 'exec', 'compile'],
+            'secure_protocols': ['https', 'tls', 'ssl']
+        }
         
         # Résultats d'audits
-    self.security_reports = {}
-    self.current_findings = []
+        self.security_reports = {}
+        self.current_findings = []
         
         # Logs
         # LoggingManager NextGeneration - Agent
-    import sys
-from pathlib import Path
-from core import logging_manager
-    self.logger = LoggingManager().get_agent_logger(
-    agent_name="SecurityLevel",
-    role="ai_processor",
-    domain="general",
-    async_enabled=True
-    )
-    self.setup_logging()
+        self.logger = LoggingManager().get_agent_logger(
+            agent_name="SecurityLevel",
+            role="ai_processor",
+            domain="general",
+            async_enabled=True
+        )
+        self.setup_logging()
         
         # Rapport de mission
-    self.rapport = {
-    'agent_id': self.agent_id,
-    'mission_status': 'INITIALISÉ',
-    'audits_effectués': [],
-    'vulnérabilités_détectées': 0,
-    'niveau_sécurité_global': None,
-    'conformité_owasp': {},
-    'recommandations_critiques': []
-    }
+        self.rapport = {
+            'agent_id': self.agent_id,
+            'mission_status': 'INITIALISÉ',
+            'audits_effectués': [],
+            'vulnérabilités_détectées': 0,
+            'niveau_sécurité_global': None,
+            'conformité_owasp': {},
+            'recommandations_critiques': []
+        }
 
     def setup_logging(self):
         """Configuration logging Agent 18"""
-    log_dir = Path("nextgeneration/agent_factory_implementation/logs")
-    log_dir.mkdir(parents=True, exist_ok=True)
+        log_dir = Path("nextgeneration/agent_factory_implementation/logs")
+        log_dir.mkdir(parents=True, exist_ok=True)
         
-    handler = logging.FileHandler(
-    log_dir / f"agent_{self.agent_id}_securite_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
-    )
-    handler.setFormatter(logging.Formatter(
-    '%(asctime)s - Agent18_Sécurité - %(levelname)s - %(message)s'
-    ))
-    self.logger.addHandler(handler)
-    self.logger.setLevel(logging.INFO)
-    self.logger.info(f"🔐 Agent {self.agent_id} - {self.specialite} INITIALISÉ")
+        handler = logging.FileHandler(
+            log_dir / f"agent_{self.agent_id}_securite_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+        )
+        handler.setFormatter(logging.Formatter(
+            '%(asctime)s - Agent18_Sécurité - %(levelname)s - %(message)s'
+        ))
+        self.logger.addHandler(handler)
+        self.logger.setLevel(logging.INFO)
+        self.logger.info(f"🔐 Agent {self.agent_id} - {self.specialite} INITIALISÉ")
 
     async def auditer_securite_complete(self, target_path: str) -> SecurityReport:
         """
@@ -201,56 +199,80 @@ from core import logging_manager
     Returns:
     SecurityReport: Rapport complet d'audit de sécurité
         """
-    self.logger.info(f"🔐 Démarrage audit sécurité complet : {target_path}")
+        self.logger.info(f"🔐 Démarrage audit sécurité complet : {target_path}")
         
-    audit_id = f"SEC_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-    findings = []
+        audit_id = f"SEC_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        findings = []
         
-    if Path(target_path).is_file():
-    findings.extend(await self._audit_file_security(target_path))
-    elif Path(target_path).is_dir():
-    findings.extend(await self._audit_directory_security(target_path))
+        if Path(target_path).is_file():
+            findings.extend(await self._audit_file_security(target_path))
+        elif Path(target_path).is_dir():
+            findings.extend(await self._audit_directory_security(target_path))
         
         # Calcul score de sécurité
-    security_score = await self._calculate_security_score(findings)
+        security_score = await self._calculate_security_score(findings)
         
         # Vérification conformité OWASP
-    compliance_status = await self._check_owasp_compliance(findings)
+        compliance_status = await self._check_owasp_compliance(findings)
         
         # Génération recommandations
-    recommendations = await self._generate_security_recommendations(findings)
+        recommendations = await self._generate_security_recommendations(findings)
         
         # Création du rapport
-    report = SecurityReport(
-    audit_id=audit_id,
-    target=target_path,
-    timestamp=datetime.now(),
-    findings=findings,
-    security_score=security_score,
-    compliance_status=compliance_status,
-    recommendations=recommendations,
-    summary=self._generate_findings_summary(findings)
-    )
+        report = SecurityReport(
+            audit_id=audit_id,
+            target=target_path,
+            timestamp=datetime.now(),
+            findings=findings,
+            security_score=security_score,
+            compliance_status=compliance_status,
+            recommendations=recommendations,
+            summary=self._generate_findings_summary(findings)
+        )
         
         # Sauvegarde
-    self.security_reports[audit_id] = report
-    await self._save_security_report(report)
+        self.security_reports[audit_id] = report
+        await self._save_security_report(report)
         
-    self.logger.info(f"✅ Audit sécurité terminé - Score: {security_score:.1f}/10")
-    return report
+        self.logger.info(f"✅ Audit sécurité terminé - Score: {security_score:.1f}/10")
+        return report
 
     async def _audit_file_security(self, file_path: str) -> List[SecurityFinding]:
         """Audit de sécurité d'un fichier spécifique"""
-    findings = []
-    file_path_obj = Path(file_path)
+        findings = []
+        file_path_obj = Path(file_path)
         
-    if not file_path_obj.exists():
-    return findings
+        if not file_path_obj.exists():
+            return findings
         
-    try:
-    content = file_path_obj.read_text(encoding='utf-8', errors='ignore')
+        try:
+            content = file_path_obj.read_text(encoding='utf-8', errors='ignore')
             
             # Vérification patterns de vulnérabilités
+            for vuln_type, patterns in self.security_patterns.items():
+                for pattern in patterns:
+                    matches = re.finditer(pattern, content, re.IGNORECASE | re.MULTILINE)
+                    for match in matches:
+                        line_num = content[:match.start()].count('\n') + 1
+                        finding = await self._create_security_finding(
+                            vuln_type,
+                            f"Vulnérabilité potentielle {vuln_type}",
+                            f"Pattern suspect détecté : {match.group()}",
+                            str(file_path_obj),
+                            line_num,
+                            match.group()
+                        )
+                        findings.append(finding)
+            
+            # Vérifications spécifiques Python
+            if file_path.endswith('.py'):
+                findings.extend(await self._audit_python_security(content, str(file_path_obj)))
+            
+            # Vérifications fichiers de configuration
+            if file_path.endswith(('.json', '.yaml', '.yml', '.conf', '.ini')):
+                findings.extend(await self._audit_config_security(content, str(file_path_obj)))
+            
+        except Exception as e:
     for vuln_type, patterns in self.security_patterns.items():
     for pattern in patterns:
     matches = re.finditer(pattern, content, re.IGNORECASE | re.MULTILINE)

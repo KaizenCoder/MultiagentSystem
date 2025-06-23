@@ -7,7 +7,7 @@
 ⚡ Capacités : Boucle de réparation itérative, coordination d'équipe, reporting.
 
 Author: Équipe de Maintenance NextGeneration
-Version: 4.1.0 - Hotfix Communication
+Version: 4.2.0 - Report Enrichment
 """
 
 import asyncio
@@ -19,15 +19,7 @@ import time
 import json
 import logging
 import uuid
-
-# --- Configuration Robuste du Chemin d'Importation ---
-try:
-    project_root = Path(__file__).resolve().parents[1]
-    if str(project_root) not in sys.path:
-        sys.path.insert(0, str(project_root))
-except (IndexError, NameError):
-    if '.' not in sys.path:
-        sys.path.insert(0, '.')
+import re
 
 # Import direct de l'architecture et des agents
 from core.agent_factory_architecture import Agent, Task, Result, AgentFactory
@@ -37,16 +29,15 @@ class ChefEquipeCoordinateurEnterprise(Agent):
     Chef d'équipe pour orchestrer des workflows de maintenance complexes
     avec une boucle de réparation itérative et un reporting enrichi.
     """
-    def __init__(self, agent_id: str = None, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(
-            agent_id=agent_id or f"coordinateur_maintenance_{uuid.uuid4().hex[:8]}",
-            version="4.1.0",
-            description="Coordinateur central pour la maintenance des agents avec reporting enrichi.",
             agent_type="coordinateur",
-            status="operational",
             **kwargs
         )
-        self.logger.info(f"Chef d'équipe v4.1.0 initialisé avec ID: {self.agent_id}")
+        self.logger = logging.getLogger(self.__class__.__name__)
+        self.agent_id = self.id
+
+        self.logger.info(f"Chef d'équipe v4.2.0 initialisé avec ID: {self.agent_id}")
         
         self.workspace_path = Path(kwargs.get("workspace_path", "."))
         self.factory = AgentFactory(config_path=str(self.workspace_path / "config" / "maintenance_config.json"))
@@ -57,7 +48,7 @@ class ChefEquipeCoordinateurEnterprise(Agent):
     async def startup(self):
         self.logger.info(f"🚀 Démarrage du Chef d'Équipe {self.agent_id}")
         await self._recruter_equipe()
-        self.log("Chef d'Équipe prêt et équipe recrutée.")
+        self.logger.info("Chef d'Équipe prêt et équipe recrutée.")
 
     async def shutdown(self):
         self.logger.info(f"🛑 Arrêt du Chef d'Équipe {self.agent_id}")
@@ -68,6 +59,13 @@ class ChefEquipeCoordinateurEnterprise(Agent):
     def get_capabilities(self) -> List[str]:
         return ["workflow_maintenance_complete"]
         
+    def _extraire_mission_docstring(self, code: str) -> str:
+        """Extrait la description de la mission depuis le docstring de l'agent."""
+        match = re.search(r'🎯 Mission\s*:\s*(.*)', code)
+        if match:
+            return match.group(1).strip()
+        return "Non spécifiée"
+
     async def health_check(self) -> Dict[str, Any]:
         team_status = {}
         for role, agent in self.equipe_agents.items():
@@ -122,8 +120,11 @@ class ChefEquipeCoordinateurEnterprise(Agent):
 
     async def _run_remediation_cycle(self, agent_path_str: str, original_code: str) -> Dict:
         agent_name = Path(agent_path_str).name
+        agent_mission = self._extraire_mission_docstring(original_code)
+
         file_report = {
             "agent_name": agent_name,
+            "agent_mission": agent_mission,
             "status": "PENDING",
             "original_code": original_code,
             "final_code": original_code,
@@ -132,7 +133,7 @@ class ChefEquipeCoordinateurEnterprise(Agent):
             "performance_analysis": {}
         }
 
-        # 1. Évaluation initiale - CORRECTION: on passe file_path
+        # 1. Évaluation initiale
         eval_result = await self._run_sub_task("evaluateur", "evaluate_code", {"file_path": agent_path_str})
         
         if eval_result and eval_result.success:
@@ -163,7 +164,6 @@ class ChefEquipeCoordinateurEnterprise(Agent):
     async def _perform_repair_loop(self, agent_path_str: str, file_report: Dict):
         MAX_REPAIR_ATTEMPTS = 5
         current_code = file_report["original_code"]
-        # On prend l'erreur la plus précise possible
         last_error = file_report["initial_evaluation"].get("reason") or file_report["initial_evaluation"].get("error", "Évaluation initiale négative.")
 
         for attempt in range(MAX_REPAIR_ATTEMPTS):
@@ -201,18 +201,17 @@ class ChefEquipeCoordinateurEnterprise(Agent):
 
     async def _generer_et_sauvegarder_rapports(self, mission_id):
         self.logger.info("Génération du rapport de mission par l'agent Documenteur...")
+        self.mission_context['equipe_maintenance_roles'] = list(self.equipe_agents.keys())
         doc_result = await self._run_sub_task("documenteur", "generate_mission_report", {"report_data": self.mission_context})
         
         report_dir = self.workspace_path / "reports"
         report_dir.mkdir(exist_ok=True, parents=True)
 
-        # Sauvegarde du JSON brut
         json_report_path = report_dir / f"rapport_mission_{mission_id}.json"
         with open(json_report_path, "w", encoding="utf-8") as f:
             json.dump(self.mission_context, f, indent=2)
         self.logger.info(f"Rapport JSON détaillé sauvegardé : {json_report_path}")
 
-        # Sauvegarde du rapport Markdown
         if doc_result and doc_result.success:
             md_content = doc_result.data.get("md_content")
             md_report_path = report_dir / f"rapport_mission_{mission_id}.md"
@@ -226,17 +225,24 @@ class ChefEquipeCoordinateurEnterprise(Agent):
         self.logger.info("Recrutement de l'équipe de maintenance...")
         roles = ["evaluateur", "adaptateur", "testeur", "documenteur", "analyseur_performance"]
         for role in roles:
-            agent = await self.factory.create_agent(role, startup=True)
+            agent = self.factory.create_agent(role)
+            if hasattr(agent, 'startup'):
+                await agent.startup()
             self.equipe_agents[role] = agent
 
     async def _run_sub_task(self, agent_role: str, task_type: str, params: dict) -> Optional[Result]:
         agent = self.equipe_agents.get(agent_role)
         if not agent:
-            self.logger.error(f"Tentative d'appel à un agent non recruté : {agent_role}")
-            return Result(success=False, error=f"Agent '{agent_role}' non disponible.")
+            self.logger.error(f"Tentative d'utilisation d'un agent non recruté : {agent_role}")
+            return Result(success=False, error=f"Agent {agent_role} non disponible.")
         
-        task = Task(id=f"task_{agent_role}_{uuid.uuid4().hex[:4]}", type=task_type, params=params)
-        return await agent.execute_task(task)
+        task = Task(type=task_type, params=params)
+        self.logger.info(f"Délégation de la tâche '{task.type}' à l'agent '{agent_role}'")
+        try:
+            return await agent.execute_task(task)
+        except Exception as e:
+            self.logger.error(f"Erreur lors de l'exécution de la tâche par {agent_role}: {e}", exc_info=True)
+            return Result(success=False, error=f"Exception in {agent_role}: {e}")
 
 def create_agent_MAINTENANCE_00_chef_equipe_coordinateur(**kwargs) -> ChefEquipeCoordinateurEnterprise:
     return ChefEquipeCoordinateurEnterprise(**kwargs)

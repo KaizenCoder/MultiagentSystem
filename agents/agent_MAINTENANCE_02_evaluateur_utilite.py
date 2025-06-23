@@ -1,7 +1,19 @@
+"""
+⚖️ ÉVALUATEUR D'UTILITÉ - Agent 02
+===================================
+
+🎯 Mission : Évaluer la pertinence et la qualité fonctionnelle d'un agent.
+⚡ Capacités : Notation basée sur des heuristiques (longueur, complexité, docstrings).
+🏢 Équipe : NextGeneration Tools Migration
+
+Author: Équipe de Maintenance NextGeneration
+Version: 2.1.0
+"""
 import ast
 from pathlib import Path
 from core.agent_factory_architecture import Agent, Task, Result
 from typing import List, Dict, Any
+import logging
 
 class AgentMAINTENANCE02EvaluateurUtilite(Agent):
     """
@@ -10,12 +22,14 @@ class AgentMAINTENANCE02EvaluateurUtilite(Agent):
     """
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__(agent_type="evaluateur", **kwargs)
+        self.logger = logging.getLogger(self.__class__.__name__)
+        self.agent_id = self.id
         self.logger.info(f"Évaluateur d'utilité ({self.agent_id}) initialisé.")
 
     async def execute_task(self, task: Task) -> Result:
         file_path = task.params.get("file_path")
-        self.log(f"Évaluation du fichier : {file_path}")
+        self.logger.info(f"Évaluation du fichier : {file_path}")
 
         try:
             with open(file_path, "r", encoding="utf-8") as f:
@@ -29,7 +43,7 @@ class AgentMAINTENANCE02EvaluateurUtilite(Agent):
             score = self._evaluate_ast(tree)
             min_score = self.config.get("min_score_for_usefulness", 15) if hasattr(self, 'config') else 15
             is_useful = score >= min_score
-            self.log(f"Résultat pour {file_path}: Score={score}, Utile={is_useful}")
+            self.logger.info(f"Résultat pour {file_path}: Score={score}, Utile={is_useful}")
             return Result(
                 success=True, 
                 data={"score": score, "is_useful": is_useful, "details": "Évaluation réussie"}
@@ -80,11 +94,11 @@ class AgentMAINTENANCE02EvaluateurUtilite(Agent):
         return max(0, score)
 
     async def startup(self) -> None:
-        self.log("Évaluateur d'utilité prêt.")
+        self.logger.info("Évaluateur d'utilité prêt.")
         pass
 
     async def shutdown(self) -> None:
-        self.log("Évaluateur d'utilité éteint.")
+        self.logger.info("Évaluateur d'utilité éteint.")
         pass
 
     def get_capabilities(self) -> List[str]:

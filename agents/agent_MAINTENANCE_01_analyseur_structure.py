@@ -1,6 +1,15 @@
 #!/usr/bin/env python3
 """
 AGENT 1 - ANALYSEUR DE STRUCTURE (Pattern Factory)
+🏗️ ANALYSEUR DE STRUCTURE - Agent 01
+====================================
+
+🎯 Mission : Analyser la structure du code et détecter les erreurs syntaxiques.
+⚡ Capacités : Analyse statique avec `py_compile`, `ast`, et `pylint`.
+🏢 Équipe : NextGeneration Tools Migration
+
+Author: Équipe de Maintenance NextGeneration
+Version: 1.2.0
 """
 import asyncio
 import ast

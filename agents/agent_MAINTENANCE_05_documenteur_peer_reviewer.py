@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 🔍 PEER-REVIEWER ENRICHI / DOCUMENTEUR - Agent 05
 ==============================================================
@@ -8,7 +7,7 @@
 🏢 Équipe : NextGeneration Tools Migration
 
 Author: Équipe de Maintenance NextGeneration
-Version: 5.0.1 - Abstract Method Fix
+Version: 5.1.0 - Mission Display
 """
 
 import asyncio
@@ -17,6 +16,7 @@ from pathlib import Path
 from typing import Dict, List, Any
 import sys
 import difflib
+import logging
 
 # --- Configuration Robuste du Chemin d'Importation ---
 try:
@@ -33,16 +33,18 @@ class AgentMAINTENANCE05DocumenteurPeerReviewer(Agent):
     """Génère des rapports de mission de maintenance détaillés et analytiques."""
     
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.logger.info(f"🔍 Agent Documenteur v{self.version} initialisé - ID: {self.agent_id}")
+        super().__init__(agent_type="documenteur", **kwargs)
+        self.logger = logging.getLogger(self.__class__.__name__)
+        self.agent_id = self.id
+        self.logger.info(f"🔍 Agent Documenteur ({self.agent_id}) initialisé")
 
     async def startup(self):
         """Démarre l'agent Documenteur."""
-        self.log("Agent Documenteur prêt.")
+        self.logger.info("Agent Documenteur prêt.")
 
     async def shutdown(self):
         """Arrête l'agent Documenteur."""
-        self.log("Agent Documenteur éteint.")
+        self.logger.info("Agent Documenteur éteint.")
 
     async def health_check(self) -> Dict[str, Any]:
         """Vérifie l'état de santé de l'agent."""
@@ -89,19 +91,29 @@ class AgentMAINTENANCE05DocumenteurPeerReviewer(Agent):
         mission_id = rapport_data.get('mission_id', 'N/A')
         statut = rapport_data.get('statut_mission', 'INCONNU')
         duree = rapport_data.get('duree_totale_sec', 0)
+        equipe = rapport_data.get('equipe_maintenance_roles', [])
         
         lines = [f"# Rapport de Mission de Maintenance : `{mission_id}`"]
         lines.append(f"**Statut Final :** {statut} | **Durée :** {duree:.2f}s")
+        
+        if equipe:
+            lines.append("\n## Équipe de Maintenance Active")
+            lines.append("La mission a été menée par les agents suivants :")
+            for role in equipe:
+                lines.append(f"- `{role}`")
+
         lines.append("\n---")
         
         lines.append("## Résultats Détaillés par Agent\n")
 
         for agent_result in rapport_data.get("resultats_par_agent", []):
             agent_name = agent_result.get('agent_name', 'Agent Inconnu')
+            agent_mission = agent_result.get('agent_mission', 'Non spécifiée')
             status = agent_result.get('status', 'INCONNU')
             
             icon = "✅" if status in ["REPAIRED", "NO_REPAIR_NEEDED"] else "❌"
             lines.append(f"### {icon} Agent : `{agent_name}`")
+            lines.append(f"- **Mission de l'agent :** *{agent_mission}*")
             lines.append(f"- **Statut Final :** {status}")
 
             # Section Évaluation Initiale
@@ -134,6 +146,42 @@ class AgentMAINTENANCE05DocumenteurPeerReviewer(Agent):
                  lines.append(f"- **Dernière Erreur :** `{agent_result.get('last_error', 'N/A')}`")
 
             lines.append("\n---\n")
+
+        lines.append(self._generer_conclusion(rapport_data))
+
+        return "\n".join(lines)
+
+    def _generer_conclusion(self, rapport_data: Dict[str, Any]) -> str:
+        """Génère une conclusion synthétique pour la mission."""
+        results = rapport_data.get("resultats_par_agent", [])
+        total_agents = len(results)
+        repaired = sum(1 for r in results if r['status'] == 'REPAIRED')
+        no_repair = sum(1 for r in results if r['status'] == 'NO_REPAIR_NEEDED')
+        failed = sum(1 for r in results if r['status'] == 'REPAIR_FAILED')
+
+        lines = ["## Conclusion de la Mission"]
+
+        if not results:
+            lines.append("Aucun agent n'a été traité durant cette mission.")
+            return "\n".join(lines)
+
+        success_rate = (repaired + no_repair) / total_agents * 100
+        
+        if success_rate == 100:
+            conclusion = f"La mission est un succès total. L'ensemble des {total_agents} agents traités sont stables et opérationnels."
+            if no_repair == total_agents:
+                conclusion += " Aucun n'a nécessité de réparation."
+            else:
+                conclusion += f" {repaired} agents ont été réparés avec succès."
+        elif success_rate > 70:
+            conclusion = f"La mission s'est globalement bien déroulée avec un taux de succès de {success_rate:.0f}%. Sur {total_agents} agents, {repaired + no_repair} sont opérationnels."
+        else:
+            conclusion = f"La mission révèle des problèmes de stabilité significatifs avec un taux de succès de seulement {success_rate:.0f}%."
+
+        lines.append(conclusion)
+        
+        if failed > 0:
+            lines.append(f"**Point d'attention :** {failed} agent(s) n'ont pas pu être réparés et nécessitent une investigation manuelle.")
 
         return "\n".join(lines)
 
