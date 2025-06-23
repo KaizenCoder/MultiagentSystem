@@ -161,6 +161,25 @@ class ChefEquipeCoordinateurEnterprise(Agent):
             self.logger.error(f"L'évaluateur a échoué pour {agent_name}: {error_msg}. Démarrage du cycle de réparation par précaution.")
             file_report["initial_evaluation"] = {"error": f"Évaluation initiale échouée: {error_msg}"}
 
+        # 1.5 Correction sémantique automatique
+        if file_report["status"] != "CRITICAL_FAILURE":
+             self.logger.info(f"⚙️  Lancement du Correcteur sémantique pour {agent_name}...")
+             semantic_result = await self._run_sub_task(
+                 "correcteur_semantique", 
+                 "correct_semantics", 
+                 {"code": file_report["final_code"], "file_path": agent_path_str}
+             )
+             if semantic_result and semantic_result.success and semantic_result.data.get("score_improvement", 0) > 0:
+                 file_report["final_code"] = semantic_result.data["corrected_code"]
+                 file_report["semantic_fix"] = {
+                     "correction_count": semantic_result.data["correction_count"],
+                     "initial_score": semantic_result.data["initial_score"],
+                     "final_score": semantic_result.data["final_score"]
+                 }
+                 self.logger.info(f"  ✅ Correcteur sémantique a amélioré le code de {agent_name}.")
+             else:
+                 self.logger.info(f"  -> Correcteur sémantique n'a trouvé aucune amélioration pour {agent_name}.")
+
         # 2. Boucle de réparation (si nécessaire)
         if file_report["status"] != "NO_REPAIR_NEEDED":
             await self._perform_repair_loop(agent_path_str, file_report)
@@ -248,19 +267,22 @@ class ChefEquipeCoordinateurEnterprise(Agent):
 
     async def _recruter_equipe(self):
         self.logger.info("Recrutement de l'équipe de maintenance...")
+        
         roles = [
-            "analyseur_structure",
-            "evaluateur", 
+            "analyseur_structure", 
+            "evaluateur",
+            "correcteur_semantique",
             "adaptateur", 
             "testeur", 
             "documenteur", 
-            "analyseur_performance", 
-            "dependency_manager", 
+            "analyseur_performance",
+            "dependency_manager",
             "security_manager",
             "correcteur_logique",
             "auditeur_qualite",
             "harmonisateur_style"
         ]
+        
         for role in roles:
             try:
                 agent = self.factory.create_agent(role)

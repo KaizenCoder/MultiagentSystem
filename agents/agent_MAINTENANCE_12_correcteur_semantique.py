@@ -13,19 +13,12 @@ from typing import List, Dict, Any, Tuple
 
 # --- Blocs d'import pour test en isolation ---
 try:
-    from core.agent_core import AgentCore
-    from core.models.task import Task
-    from core.models.result import Result, Status
+    from core.agent_factory_architecture import Agent as AgentCore, Task, Result, TaskStatus as Status
 except ImportError:
-    # Classes de substitution si core n'est pas accessible
-    class AgentCore:
-        def __init__(self, agent_name, agent_type, **kwargs): self.agent_name = agent_name
-    class Task:
-        def __init__(self, task_id, description, data, metadata=None): self.task_id, self.description, self.data, self.metadata = task_id, description, data, metadata or {}
-    class Status:
-        COMPLETED, FAILED, ERROR = "COMPLETED", "FAILED", "ERROR"
-    class Result:
-        def __init__(self, task_id, status, message, data=None): self.task_id, self.status, self.message, self.data = task_id, status, message, data
+    # Ce bloc ne devrait plus jamais être atteint en production.
+    # Il est conservé pour la lisibilité mais signale une erreur de configuration.
+    logger.error("Échec de l'import des modules principaux depuis core.agent_factory_architecture. L'agent ne peut pas fonctionner.")
+    raise
 
 # --- Configuration du Logging ---
 LOG_DIR = "logs/agents"
@@ -95,21 +88,27 @@ class CorrecteurSemantique(AgentCore):
     }
 
     def __init__(self, agent_name="CorrecteurSemantique", **kwargs):
-        super().__init__(agent_name=agent_name, agent_type="correcteur_semantique", **kwargs)
+        super().__init__(agent_type="correcteur_semantique", **kwargs)
+        self.agent_name = agent_name
+        self.type = "correcteur_semantique"
         self.logger = logging.getLogger(self.__class__.__name__)
         self.enable_auto_rename = kwargs.get('enable_auto_rename', True)
         self.max_iterations = kwargs.get('max_iterations', 3)
 
-    def startup(self): self.logger.info(f"Agent {self.agent_name} (v6.5-SOP) démarré. Auto-rename: {'ON' if self.enable_auto_rename else 'OFF'}")
-    def shutdown(self): self.logger.info(f"Agent {self.agent_name} arrêté.")
+    async def startup(self): self.logger.info(f"Agent {self.agent_name} (v6.5-SOP) démarré. Auto-rename: {'ON' if self.enable_auto_rename else 'OFF'}")
+    async def shutdown(self): self.logger.info(f"Agent {self.agent_name} arrêté.")
     def get_capabilities(self) -> List[str]: return ["correct_semantics"]
     async def health_check(self) -> Dict[str, Any]: return {"status": "ok", "timestamp": datetime.now().isoformat()}
 
-    def execute_task(self, task: Task) -> Result:
+    async def execute_task(self, task: Task) -> Result:
         correction_id = f"corr-{uuid.uuid4()}"
-        self.logger.info(f"[{correction_id}] Début de l'analyse sémantique pour la tâche {task.task_id}")
+        self.logger.info(f"[{correction_id}] Début de l'analyse sémantique pour la tâche de type '{task.type}'")
         try:
-            original_code = task.data['code']
+            # Adaptation à la structure de Task du framework
+            if 'code' not in task.params:
+                return Result(success=False, error="Le paramètre 'code' est manquant dans la tâche.")
+            
+            original_code = task.params['code']
             metrics = self._gather_metrics(original_code)
             initial_score = self._calculate_score(metrics)
             self.logger.info(f"[{correction_id}] Score initial : {initial_score:.2f}/100")
@@ -128,14 +127,17 @@ class CorrecteurSemantique(AgentCore):
             final_score = self._calculate_score(self._gather_metrics(current_code))
             score_improvement = final_score - initial_score
             msg = f"Analyse terminée. {len(all_corrections)} corrections. Amélioration: {score_improvement:.2f} pts."
-            return Result(task.task_id, Status.COMPLETED, msg, data={
+            
+            # Adaptation à la structure de Result du framework
+            return Result(success=True, data={
                 "correction_id": correction_id, "initial_score": initial_score, "final_score": final_score,
                 "score_improvement": score_improvement, "correction_count": len(all_corrections),
-                "corrected_code": current_code if score_improvement > 0 else original_code
+                "corrected_code": current_code if score_improvement > 0 else original_code,
+                "message": msg
             })
         except Exception as e:
             self.logger.critical(f"[{correction_id}] Erreur inattendue : {e}", exc_info=True)
-            return Result(task.task_id, Status.ERROR, f"Erreur inattendue : {e}")
+            return Result(success=False, error=f"Erreur inattendue : {e}")
 
     def _apply_corrections(self, code: str, corrections: List[Dict[str, Any]]) -> str:
         code = self._apply_renames(code, [c for c in corrections if c['type'] == 'rename'])
