@@ -3,6 +3,7 @@ from typing import List, Optional
 
 from taskmaster_v3.core.models import Task, TaskStatus, TaskPriority
 from taskmaster_v3.modules.persistence.repository import AbstractTaskRepository
+from taskmaster_v3.modules.parsing.parser_service import ParserService
 
 
 class TaskService:
@@ -18,6 +19,31 @@ class TaskService:
             repository: Une instance d'une classe implémentant AbstractTaskRepository.
         """
         self.repository = repository
+        self.parser = ParserService()
+
+    async def create_tasks_from_text(self, text: str) -> List[Task]:
+        """
+        Analyse un texte, crée les tâches correspondantes et les sauvegarde.
+
+        Args:
+            text: Le texte brut à analyser.
+
+        Returns:
+            La liste des tâches de premier niveau qui ont été créées.
+        """
+        tasks = self.parser.parse_text_to_tasks(text)
+        
+        # Sauvegarder chaque tâche racine (les sous-tâches sont imbriquées)
+        for task in tasks:
+            await self._save_task_recursively(task)
+            
+        return tasks
+
+    async def _save_task_recursively(self, task: Task):
+        """Sauvegarde une tâche et toutes ses sous-tâches de manière récursive."""
+        await self.repository.save_task(task)
+        for subtask in task.subtasks:
+            await self._save_task_recursively(subtask)
 
     async def create_task(self, title: str, description: str, priority: TaskPriority = TaskPriority.MEDIUM) -> Task:
         """

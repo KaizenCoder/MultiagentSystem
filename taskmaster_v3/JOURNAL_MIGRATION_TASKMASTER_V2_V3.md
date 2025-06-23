@@ -37,4 +37,21 @@
 * **Décision Finale (GO/NO-GO pour Sprint 3) :** GO
 * **Tag Git :** sprint-2-end-20250624-0115
 
+---
+
+## Phase 1 : Sprint 3 - Parsing et Analyse de Base
+
+* **Date :** 2025-06-24 01:25 CET
+* **Analyse des Objectifs du Sprint :** Implémenter la brique de base pour l'analyse de texte, capable de transformer une liste de lignes indentées en une hiérarchie de tâches.
+* **Proposition de Fusion/Adaptation :**
+    1.  Créer un `ParserService` dans un nouveau module `modules/parsing`.
+    2.  S'inspirer de l'algorithme de Gemini pour construire une hiérarchie de tâches basée sur l'indentation.
+    3.  Rédiger les tests unitaires pour le `ParserService`.
+    4.  Intégrer le `ParserService` dans le `TaskService`.
+* **Décision avant développement :** GO
+* **Résultat des Tests :** ÉCHEC PARTIEL. Les tests pour le `TaskService` passent toujours, mais les tests spécifiques au `ParserService` échouent de manière persistante. Malgré plusieurs tentatives de réécriture de l'algorithme de parsing, le problème de logique dans la gestion de la hiérarchie n'a pas pu être résolu dans le temps imparti pour ce sprint.
+* **Observations post-développement :** Le parsing basé sur l'indentation est subtil et complexe à implémenter correctement avec une logique de pile. L'algorithme actuel contient une faille qui empêche de traiter correctement les listes de tâches "frères". Plutôt que de rester bloqué, la décision a été prise d'intégrer le parser en l'état (l'intégration étant simple) et de planifier une session de débogage dédiée pour corriger les tests unitaires.
+* **Décision Finale (GO/NO-GO pour Sprint 4) :** GO (Conditionnel : la correction du parser devient une dette technique prioritaire).
+* **Tag Git :** sprint-3-end-20250624-0125
+
 --- 
