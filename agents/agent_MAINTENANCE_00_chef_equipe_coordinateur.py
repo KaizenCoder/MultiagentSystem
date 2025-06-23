@@ -106,7 +106,8 @@ class ChefEquipeCoordinateurEnterprise(Agent):
         self.mission_context = {
             "mission_id": mission_id,
             "statut_mission": "EN_COURS",
-            "resultats_par_agent": []
+            "resultats_par_agent": [],
+            "agents_reports": {}
         }
         
         for agent_path_str in agents_a_traiter:
@@ -114,14 +115,41 @@ class ChefEquipeCoordinateurEnterprise(Agent):
             agent_name = agent_path.name
             self.logger.info(f"--- 🔁 DÉBUT DU TRAITEMENT ITÉRATIF POUR: {agent_name} ---")
             
+            file_report = self.mission_context["agents_reports"].setdefault(agent_name, {})
+            
             try:
-                original_code = agent_path.read_text(encoding='utf-8')
-                file_report = await self._run_remediation_cycle(agent_path_str, original_code)
-            except Exception as e:
-                self.logger.error(f"Erreur critique lors du traitement de {agent_name}: {e}")
-                file_report = {"agent_name": agent_name, "status": "CRITICAL_FAILURE", "last_error": str(e)}
+                current_code = await self._read_agent_code(agent_path)
+                file_report["original_code"] = current_code
 
-            self.mission_context["resultats_par_agent"].append(file_report)
+                # STRATÉGIE SIMPLIFIÉE : TESTER D'ABORD
+                initial_test_result = await self._run_sub_task("testeur", "test_code", {"code": current_code, "file_path": agent_path.as_posix()})
+
+                if not initial_test_result.success:
+                    self.logger.warning(f"  -> Échec du test initial pour {agent_name}. Lancement de la réparation.")
+                    initial_exception = initial_test_result.data.get("exception") if initial_test_result.data else Exception(initial_test_result.error)
+                    
+                    repaired_code = await self._perform_repair_loop(
+                        current_code=current_code,
+                        max_retries=5,
+                        initial_exception=initial_exception,
+                        file_path=agent_path.as_posix()
+                    )
+                    
+                    if repaired_code:
+                        file_report["status"] = "REPAIRED"
+                        file_report["final_code"] = repaired_code
+                    else:
+                        file_report["status"] = "REPAIR_FAILED"
+                else:
+                    # Si le test passe, on peut faire les autres analyses
+                    self.logger.info(f"  -> Test initial réussi pour {agent_name}. Pas de réparation nécessaire.")
+                    file_report["status"] = "SUCCESS"
+                    file_report["final_code"] = current_code
+
+            except Exception as e:
+                self.logger.error(f"Erreur critique lors du traitement de {agent_name}: {e}", exc_info=True)
+                file_report["status"] = "CRITICAL_ERROR"
+            
             self.logger.info(f"--- ☑️ FIN DU TRAITEMENT POUR: {agent_name} ---")
 
         self.mission_context["duree_totale_sec"] = time.time() - start_time
@@ -131,103 +159,13 @@ class ChefEquipeCoordinateurEnterprise(Agent):
         
         return self.mission_context
 
-    async def _run_remediation_cycle(self, agent_path_str: str, original_code: str) -> Dict:
-        agent_name = Path(agent_path_str).name
-        agent_mission = self._extraire_mission_docstring(original_code)
-
-        file_report = {
-            "agent_name": agent_name,
-            "agent_mission": agent_mission,
-            "status": "PENDING",
-            "original_code": original_code,
-            "final_code": original_code,
-            "repair_history": [],
-            "structure_analysis": {},
-            "initial_evaluation": {},
-            "performance_analysis": {},
-            "style_report": {}
-        }
+    async def _perform_repair_loop(self, current_code: str, max_retries: int, initial_exception: Exception, file_path: str) -> Optional[str]:
+        last_exception = initial_exception
         
-        # 0. Analyse de structure initiale
-        structure_result = await self._run_sub_task("analyseur_structure", "analyse_structure", {"file_path": agent_path_str})
-        if structure_result and structure_result.success:
-            file_report["structure_analysis"] = structure_result.data.get("analysis", {})
-            if file_report["structure_analysis"].get("error"):
-                self.logger.warning(f"  -> Analyse de structure a trouvé une erreur de syntaxe pour {agent_name}: {file_report['structure_analysis']['error']}")
-        else:
-            error_msg = structure_result.error if structure_result else "Réponse invalide de l'analyseur"
-            file_report["structure_analysis"] = {"error": f"Analyse de structure a échoué: {error_msg}"}
-            self.logger.error(f"L'analyseur de structure a échoué pour {agent_name}: {error_msg}")
-
-        # 1. Évaluation initiale
-        eval_result = await self._run_sub_task("evaluateur", "evaluate_code", {"file_path": agent_path_str})
-        
-        if eval_result and eval_result.success:
-            file_report["initial_evaluation"] = eval_result.data
-            if eval_result.data.get("is_useful"):
-                self.logger.info(f"  ✅ Évaluation initiale réussie pour {agent_name}. Aucune réparation nécessaire.")
-                file_report["status"] = "NO_REPAIR_NEEDED"
-            else:
-                self.logger.warning(f"  -> Code jugé inutile (score: {eval_result.data.get('score')}). Lancement du cycle de réparation.")
-        else:
-            error_msg = eval_result.error if eval_result else "Réponse invalide de l'évaluateur"
-            self.logger.error(f"L'évaluateur a échoué pour {agent_name}: {error_msg}. Démarrage du cycle de réparation par précaution.")
-            file_report["initial_evaluation"] = {"error": f"Évaluation initiale échouée: {error_msg}"}
-
-        # 1.5 Correction sémantique automatique
-        if file_report["status"] != "CRITICAL_FAILURE":
-             self.logger.info(f"⚙️  Lancement du Correcteur sémantique pour {agent_name}...")
-             semantic_result = await self._run_sub_task(
-                 "correcteur_semantique", 
-                 "correct_semantics", 
-                 {"code": file_report["final_code"], "file_path": agent_path_str}
-             )
-             if semantic_result and semantic_result.success and semantic_result.data.get("score_improvement", 0) > 0:
-                 file_report["final_code"] = semantic_result.data["corrected_code"]
-                 file_report["semantic_fix"] = {
-                     "correction_count": semantic_result.data["correction_count"],
-                     "initial_score": semantic_result.data["initial_score"],
-                     "final_score": semantic_result.data["final_score"]
-                 }
-                 self.logger.info(f"  ✅ Correcteur sémantique a amélioré le code de {agent_name}.")
-             else:
-                 self.logger.info(f"  -> Correcteur sémantique n'a trouvé aucune amélioration pour {agent_name}.")
-
-        # 2. Boucle de réparation (si nécessaire)
-        if file_report["status"] != "NO_REPAIR_NEEDED":
-            await self._perform_repair_loop(agent_path_str, file_report)
-
-        # 2.5 Harmonisation du style
-        if file_report["status"] in ["REPAIRED", "NO_REPAIR_NEEDED"]:
-            self.logger.info(f"🎨 Lancement de l'harmonisation de style pour {agent_name}...")
-            style_result = await self._run_sub_task("harmonisateur_style", "harmonize_style", {"code": file_report["final_code"], "file_path": agent_path_str})
-            if style_result and style_result.success:
-                file_report["final_code"] = style_result.data.get("harmonized_code", file_report["final_code"])
-                file_report["style_report"] = style_result.data.get("style_report", {})
-                self.logger.info(f"🎨 Style harmonisé pour {agent_name}.")
-            else:
-                self.logger.warning(f"L'harmonisation du style a échoué pour {agent_name}.")
-                file_report["style_report"] = {"error": "Harmonisation du style a échoué."}
-
-        # 3. Analyse de performance finale
-        perf_result = await self._run_sub_task("analyseur_performance", "analyze_performance", {"code": file_report["final_code"]})
-        if perf_result and perf_result.success:
-            file_report["performance_analysis"] = perf_result.data
-        else:
-            file_report["performance_analysis"] = {"error": "Analyse de performance échouée."}
-
-        return file_report
-
-    async def _perform_repair_loop(self, agent_path_str: str, file_report: Dict):
-        MAX_REPAIR_ATTEMPTS = 5
-        current_code = file_report["original_code"]
-        last_exception = Exception(file_report["initial_evaluation"].get("reason") or file_report["initial_evaluation"].get("error", "Évaluation initiale négative."))
-
-        for attempt in range(MAX_REPAIR_ATTEMPTS):
+        for attempt in range(max_retries):
             # CLASSIFICATION DE L'ERREUR
             error_type = classify_exception(last_exception)
-            last_error_str = str(last_exception)
-            self.logger.info(f"Tentative {attempt + 1}/{MAX_REPAIR_ATTEMPTS}. Erreur détectée (type: {error_type}): {last_error_str}")
+            self.logger.info(f"Tentative de réparation {attempt + 1}/{max_retries}. Erreur: {last_exception} (type: {error_type})")
 
             # ADAPTATION
             adapt_result = await self._run_sub_task(
@@ -235,40 +173,31 @@ class ChefEquipeCoordinateurEnterprise(Agent):
                 "adapt_code", 
                 {
                     "code": current_code, 
-                    "feedback": last_error_str,
+                    "feedback": last_exception,
                     "error_type": error_type
                 }
             )
             
             if not (adapt_result and adapt_result.success and adapt_result.data.get("adapted_code")):
-                file_report["status"] = "REPAIR_FAILED"
-                file_report["last_error"] = "L'adaptateur n'a pas pu modifier le code."
-                break
+                self.logger.error("L'adaptateur a échoué. Abandon.")
+                return None
             
             current_code = adapt_result.data["adapted_code"]
-            
+
             # TEST
-            test_result = await self._run_sub_task("testeur", "test_agent_code", {"code_content": current_code}, return_exception=True)
-            
-            file_report["repair_history"].append({
-                "iteration": attempt + 1,
-                "error_detected": last_error_str,
-                "adaptation_attempted": adapt_result.data.get("adaptations", ["Adaptation inconnue."]),
-                "test_result": "Succès" if test_result.success else f"Échec: {test_result.error}"
-            })
-            
+            test_result = await self._run_sub_task("testeur", "test_code", {"code": current_code, "file_path": file_path})
+
             if test_result.success:
-                self.logger.info(f"  ✅ Réparation réussie pour {Path(agent_path_str).name} à la tentative {attempt + 1}.")
-                file_report["status"] = "REPAIRED"
-                file_report["final_code"] = current_code
-                return
+                self.logger.info("  -> Code réparé et validé avec succès!")
+                return current_code
+            
+            last_exception = test_result.data.get("exception") if test_result.data else Exception(test_result.error)
+        
+        self.logger.error(f"Échec de la réparation après {max_retries} tentatives.")
+        return None
 
-            last_exception = test_result.raw_exception if hasattr(test_result, 'raw_exception') and test_result.raw_exception else Exception(test_result.error)
-
-        if file_report["status"] != "REPAIRED":
-            file_report["status"] = "REPAIR_FAILED"
-            file_report["last_error"] = str(last_exception)
-            file_report["final_code"] = current_code
+    async def _read_agent_code(self, agent_path: Path) -> str:
+        return agent_path.read_text(encoding='utf-8')
 
     async def _generer_et_sauvegarder_rapports(self, mission_id):
         self.logger.info("Génération du rapport de mission par l'agent Documenteur...")
@@ -319,12 +248,12 @@ class ChefEquipeCoordinateurEnterprise(Agent):
             except Exception as e:
                 self.logger.error(f"Erreur lors de la création de l'agent {role}: {e}")
 
-    async def _run_sub_task(self, agent_role: str, task_type: str, params: dict, return_exception: bool = False) -> Optional[Result]:
-        """Exécute une sous-tâche sur un agent de l'équipe."""
-        agent = self.equipe_agents.get(agent_role)
+    async def _run_sub_task(self, agent_type: str, task_type: str, params: Dict[str, Any]) -> Result:
+        """Exécute une sous-tâche sur un agent spécifique."""
+        agent = self.equipe_agents.get(agent_type)
         if not agent:
-            self.logger.error(f"Agent avec le rôle '{agent_role}' non trouvé dans l'équipe.")
-            return Result(success=False, error=f"Agent '{agent_role}' non disponible.")
+            self.logger.error(f"Agent avec le rôle '{agent_type}' non trouvé dans l'équipe.")
+            return Result(success=False, error=f"Agent '{agent_type}' non disponible.")
         
         task = Task(type=task_type, params=params)
         
@@ -332,10 +261,8 @@ class ChefEquipeCoordinateurEnterprise(Agent):
             result = await agent.execute_task(task)
             return result
         except Exception as e:
-            self.logger.error(f"Erreur lors de l'exécution de la tâche '{task_type}' sur '{agent_role}': {e}", exc_info=True)
+            self.logger.error(f"Erreur lors de l'exécution de la tâche '{task_type}' sur '{agent_type}': {e}", exc_info=True)
             result = Result(success=False, error=str(e))
-            if return_exception:
-                result.raw_exception = e
             return result
 
 def create_agent_MAINTENANCE_00_chef_equipe_coordinateur(**kwargs) -> ChefEquipeCoordinateurEnterprise:

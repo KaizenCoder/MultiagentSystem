@@ -10,43 +10,46 @@ from datetime import datetime
 
 class AgentDockerSpecialist:
     def __init__(self):
-    self.nom = "agent_POSTGRESQL_docker_specialist"
-    self.version = "1.0.0"
-    self.logs = []
+        self.nom = "agent_POSTGRESQL_docker_specialist"
+        self.version = "1.0.0"
+        self.logs = []
         
     def diagnostiquer_docker(self):
         """Diagnostic environnement Docker."""
-    diagnostic = {
-        "docker_disponible": False,
-        "containers_postgresql": [],
-        "images_disponibles": []
-    }
+        diagnostic = {
+            "docker_disponible": False,
+            "containers_postgresql": [],
+        }
         
-    try:
-            # Test Docker disponible
-        result = subprocess.run(['docker', '--version'], 
-                              capture_output=True, text=True)
-        if result.returncode == 0:
-            diagnostic["docker_disponible"] = True
-            diagnostic["version_docker"] = result.stdout.strip()
-            self.log("Docker détecté")
+        try:
+            # Test Docker disponible et daemon actif
+            result = subprocess.run(['docker', 'info'], capture_output=True, text=True)
+            if result.returncode == 0:
+                diagnostic["docker_disponible"] = True
+                self.log("Docker détecté et daemon actif")
                 
                 # Recherche containers PostgreSQL
-            result = subprocess.run(['docker', 'ps', '-a'], 
-                                  capture_output=True, text=True)
-            if 'postgres' in result.stdout:
-                diagnostic["containers_postgresql"].append("Container PostgreSQL détecté")
-                    
-    except FileNotFoundError:
-        diagnostic["erreur"] = "Docker non installé"
-        self.log("Docker non disponible")
+                result_ps = subprocess.run(['docker', 'ps', '-a', '--filter', 'ancestor=postgres'], 
+                                          capture_output=True, text=True)
+                if result_ps.stdout.strip() and "CONTAINER ID" in result_ps.stdout:
+                    lines = result_ps.stdout.strip().split('\\n')[1:]
+                    diagnostic["containers_postgresql"] = [line.split()[-1] for line in lines]
+                    if diagnostic["containers_postgresql"]:
+                        self.log(f"Containers PostgreSQL détectés: {', '.join(diagnostic['containers_postgresql'])}")
+
+            else:
+                diagnostic["erreur"] = "Le daemon Docker ne semble pas être en cours d'exécution."
+                self.log("Docker non disponible ou daemon arrêté.")
+                
+        except FileNotFoundError:
+            diagnostic["erreur"] = "La commande 'docker' est introuvable. Docker n'est probablement pas installé."
+            self.log("Docker non installé.")
             
-    return diagnostic
+        return diagnostic
         
-    def creer_docker_compose(self):
-        """Crée configuration Docker Compose PostgreSQL."""
-    compose_content = """version: '3.8'
-services:
+    def creer_docker_compose(self, directory="."):
+        """Crée configuration Docker Compose PostgreSQL dans un répertoire spécifié."""
+        compose_content = """services:
   nextgeneration-postgres:
     image: postgres:15-alpine
     container_name: nextgeneration-postgres
@@ -63,36 +66,50 @@ volumes:
   postgres_data:
 """
         
-    try:
-        with open("docker-compose.postgresql.yml", "w") as f:
-            f.write(compose_content)
-        self.log("Docker Compose PostgreSQL créé")
-        return True
-    except Exception as e:
-        self.log(f"Erreur création Docker Compose: {e}")
-        return False
+        compose_path = os.path.join(directory, "docker-compose.postgresql.yml")
+        
+        try:
+            with open(compose_path, "w") as f:
+                f.write(compose_content)
+            self.log(f"Docker Compose PostgreSQL créé : {compose_path}")
+            return compose_path
+        except Exception as e:
+            self.log(f"Erreur création Docker Compose: {e}")
+            return None
             
-    def demarrer_postgresql_docker(self):
-        """Démarre PostgreSQL via Docker."""
-    try:
-        cmd = ["docker-compose", "-f", "docker-compose.postgresql.yml", "up", "-d"]
-        result = subprocess.run(cmd, capture_output=True, text=True)
+    def demarrer_postgresql_docker(self, compose_file="docker-compose.postgresql.yml"):
+        """Démarre PostgreSQL via Docker en utilisant un fichier compose."""
+        if not os.path.exists(compose_file):
+            self.log(f"Fichier compose non trouvé: {compose_file}. Tentative de création.")
+            compose_file_path = os.path.dirname(compose_file) or "."
+            compose_file = self.creer_docker_compose(directory=compose_file_path)
+            if not compose_file:
+                self.log("Échec de la création du fichier compose. Démarrage annulé.")
+                return False
+
+        try:
+            cmd = ["docker-compose", "-f", compose_file, "up", "-d"]
+            result = subprocess.run(cmd, capture_output=True, text=True)
             
-        if result.returncode == 0:
-            self.log("PostgreSQL Docker démarré")
-            return True
-        else:
-            self.log(f"Erreur démarrage: {result.stderr}")
+            if result.returncode == 0:
+                self.log("PostgreSQL Docker démarré avec succès")
+                return True
+            else:
+                error_message = result.stderr or result.stdout
+                self.log(f"Erreur démarrage conteneur: {error_message.strip()}")
+                return False
+
+        except FileNotFoundError:
+            self.log("La commande 'docker-compose' est introuvable. Est-elle installée et dans le PATH ?")
             return False
-                
-    except Exception as e:
-        self.log(f"Erreur Docker: {e}")
-        return False
+        except Exception as e:
+            self.log(f"Erreur Docker: {e}")
+            return False
             
     def log(self, message):
-    entry = f"[{datetime.now().strftime('%H:%M:%S')}] {message}"
-    self.logs.append(entry)
-    print(f"🐳 {entry}")
+        entry = f"[{datetime.now().strftime('%H:%M:%S')}] {message}"
+        self.logs.append(entry)
+        print(f"🐳 {entry}")
 
 def create_agent_docker_specialist():
     return AgentDockerSpecialist()
@@ -100,7 +117,12 @@ def create_agent_docker_specialist():
 if __name__ == "__main__":
     agent = create_agent_docker_specialist()
     diagnostic = agent.diagnostiquer_docker()
-    agent.creer_docker_compose()
-    agent.demarrer_postgresql_docker()
+    print(f"Rapport de diagnostic: {diagnostic}")
+    
+    if diagnostic.get("docker_disponible"):
+        compose_file_path = agent.creer_docker_compose()
+        if compose_file_path:
+            agent.demarrer_postgresql_docker(compose_file_path)
+    
     print(f"Agent Docker Specialist opérationnel - {len(agent.logs)} actions")
 

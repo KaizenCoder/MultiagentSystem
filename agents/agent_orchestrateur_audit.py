@@ -28,6 +28,7 @@ import json
 import sys
 from dataclasses import dataclass
 from enum import Enum
+import logging
 
 # Import des agents auditeurs
 sys.path.insert(0, str(Path(__file__).parent))
@@ -66,7 +67,7 @@ class AuditTask:
     status: str
     result: Optional[Dict[str, Any]] = None
 
-class AgentOrchestrateur:
+class AgentOrchestrateurAudit:
     """
     🎯 Agent Orchestrateur Audit
     
@@ -74,47 +75,48 @@ class AgentOrchestrateur:
     pour des audits complets et coordonnés
     """
     
-    def __init__(self):
-    self.agent_id = "ORCHESTRATEUR_AUDIT"
-    self.specialite = "Orchestration Audit Multi-Agents"
+    def __init__(self, workspace_root: Path = None):
+        self.agent_id = "ORCHESTRATEUR_AUDIT"
+        self.specialite = "Orchestration Audit Multi-Agents"
+        self.workspace_root = workspace_root if workspace_root else Path(__file__).parent.parent
         
+        self.logger = self._setup_logging()
+
         # Initialisation agents disponibles
-    self.agents = {}
-    self._initialize_agents()
+        self.agents = {}
+        self._initialize_agents()
         
         # État de l'orchestration
-    self.current_phase = AuditPhase.PREPARATION
-    self.audit_tasks = []
-    self.consolidated_results = {}
+        self.current_phase = AuditPhase.PREPARATION
+        self.audit_tasks = []
+        self.consolidated_results = {}
         
         # Configuration audit
-    self.audit_config = {
-    'parallel_execution': True,
-    'timeout_minutes': 30,
-    'retry_on_failure': True,
-    'generate_executive_summary': True
-    }
+        self.audit_config = {
+            'parallel_execution': True,
+            'timeout_minutes': 30,
+            'retry_on_failure': True,
+            'generate_executive_summary': True
+        }
         
-    self.logger = self._setup_logging()
-        
-    self.logger.info(f"🎯 Orchestrateur Audit initialisé avec {len(self.agents)} agents")
+        self.logger.info(f"🎯 Orchestrateur Audit initialisé avec {len(self.agents)} agents")
 
     def _initialize_agents(self):
         """Initialisation des agents auditeurs disponibles"""
         
-    if AGENT_18_AVAILABLE:
-    try:
-    self.agents['securite'] = Agent18AuditeurSecurite()
-    self.logger.info("✅ Agent 18 Sécurité chargé")
-    except Exception as e:
-    self.logger.warning(f"⚠️ Erreur chargement Agent 18: {e}")
+        if AGENT_18_AVAILABLE:
+            try:
+                self.agents['securite'] = Agent18AuditeurSecurite()
+                self.logger.info("✅ Agent 18 Sécurité chargé")
+            except Exception as e:
+                self.logger.warning(f"⚠️ Erreur chargement Agent 18: {e}")
         
-    if AGENT_19_AVAILABLE:
-    try:
-    self.agents['performance'] = Agent19AuditeurPerformance()
-    self.logger.info("✅ Agent 19 Performance chargé")
-    except Exception as e:
-    self.logger.warning(f"⚠️ Erreur chargement Agent 19: {e}")
+        if AGENT_19_AVAILABLE:
+            try:
+                self.agents['performance'] = Agent19AuditeurPerformance()
+                self.logger.info("✅ Agent 19 Performance chargé")
+            except Exception as e:
+                self.logger.warning(f"⚠️ Erreur chargement Agent 19: {e}")
         
         # Agent 20 (à implémenter si disponible)
         # try:
@@ -125,32 +127,29 @@ class AgentOrchestrateur:
         #     self.logger.info("ℹ️ Agent 20 Conformité non disponible")
 
     def _setup_logging(self):
-        """Configuration logging orchestrateur"""
-        # LoggingManager NextGeneration - Orchestrateur
-    import sys
-from pathlib import Path
-from core import logging_manager
-    self.logger = LoggingManager().get_logger(custom_config={
-    "logger_name": "from",
-    "log_level": "INFO",
-    "elasticsearch_enabled": True,
-    "encryption_enabled": True,
-    "async_enabled": True,
-    "alerting_enabled": True,
-    "high_throughput": True
-    })
-    log_dir = Path("nextgeneration/agent_factory_implementation/logs")
-    log_dir.mkdir(parents=True, exist_ok=True)
+        """Configuration du logging pour l'orchestrateur."""
+        logger = logging.getLogger(f"OrchestrateurAudit.{self.agent_id}")
+        logger.setLevel(logging.INFO)
         
-    handler = logging.FileHandler(
-    log_dir / f"orchestrateur_audit_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
-    )
-    handler.setFormatter(logging.Formatter(
-    '%(asctime)s - Orchestrateur - %(levelname)s - %(message)s'
-    ))
-    logger.addHandler(handler)
-    logger.setLevel(logging.INFO)
-    return logger
+        if not logger.handlers:
+            log_dir = self.workspace_root / "logs" / "agents" / "orchestrateur_audit"
+            log_dir.mkdir(parents=True, exist_ok=True)
+            
+            log_file = log_dir / f"audit_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+            
+            # Handler Fichier
+            file_handler = logging.FileHandler(log_file, encoding='utf-8')
+            file_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+            file_handler.setFormatter(file_formatter)
+            logger.addHandler(file_handler)
+            
+            # Handler Console
+            console_handler = logging.StreamHandler(sys.stdout)
+            console_formatter = logging.Formatter('🕵️‍ (Orchestrateur) - %(levelname)s - %(message)s')
+            console_handler.setFormatter(console_formatter)
+            logger.addHandler(console_handler)
+            
+        return logger
 
     async def executer_audit_complet(self, targets: List[str]) -> Dict[str, Any]:
         """
@@ -520,12 +519,12 @@ from core import logging_manager
         actions.append(f"⚡ {agent_type.upper()}: Résoudre {len(result['bottlenecks'])} goulot(s) d'étranglement")
         
         # Actions générales si peu d'actions spécifiques
-    if len(actions) < 3:
-    actions.extend([
-    "🔍 Effectuer audit approfondi des composants critiques",
-    "📚 Améliorer la documentation technique",
-    "🔧 Mettre à jour les dépendances obsolètes"
-    ])
+    if len(actions) < 3 and len(self.audit_tasks) > 0:
+        actions.extend([
+        "🔍 Effectuer audit approfondi des composants critiques",
+        "📚 Améliorer la documentation technique",
+        "🔧 Mettre à jour les dépendances obsolètes"
+        ])
         
     return actions[:5]  # Top 5 actions
 
@@ -558,7 +557,7 @@ from core import logging_manager
     async def _save_orchestrator_report(self, report: Dict[str, Any]):
         """Sauvegarde le rapport de l'orchestrateur"""
     try:
-    reports_dir = Path("nextgeneration/agent_factory_implementation/reports")
+    reports_dir = self.workspace_root / "reports" / "orchestrateur_audit"
     reports_dir.mkdir(parents=True, exist_ok=True)
             
     report_file = reports_dir / f"orchestrator_audit_{report['audit_id']}.json"
@@ -576,22 +575,22 @@ async def main():
     print("🎯 ORCHESTRATEUR AUDIT - Démonstration")
     
     # Initialisation orchestrateur
-    orchestrateur = AgentOrchestrateur()
+    orchestrateur = AgentOrchestrateurAudit()
     
     # Définition des cibles d'audit
     targets = [
-    "nextgeneration/agent_factory_implementation/agents",
-    "nextgeneration/agent_factory_implementation/core"
+    "core",
+    "agents"
     ]
     
     # Filtrage des cibles existantes
-    existing_targets = [target for target in targets if Path(target).exists()]
+    existing_targets = [str(orchestrateur.workspace_root / target) for target in targets if (orchestrateur.workspace_root / target).exists()]
     
     if not existing_targets:
-    print("❌ Aucune cible d'audit trouvée")
+    print(f"❌ Aucune cible d'audit trouvée aux emplacements prévus (depuis {orchestrateur.workspace_root})")
     return
     
-    print(f"\n🎯 Démarrage audit sur {len(existing_targets)} cibles:")
+    print(f"\\n🎯 Démarrage audit sur {len(existing_targets)} cibles:")
     for target in existing_targets:
     print(f"  📁 {target}")
     
@@ -599,13 +598,13 @@ async def main():
     try:
     rapport = await orchestrateur.executer_audit_complet(existing_targets)
         
-    print(f"\n📊 === RAPPORT EXÉCUTIF AUDIT ===")
+    print(f"\\n📊 === RAPPORT EXÉCUTIF AUDIT ===")
     print(f"🆔 ID Audit: {rapport['audit_id']}")
     print(f"📈 Score Global: {rapport['executive_summary']['global_score']}/10")
     print(f"🎯 Statut: {rapport['executive_summary']['overall_status']}")
         
         # Détails par domaine
-    print(f"\n📋 ÉVALUATIONS PAR DOMAINE:")
+    print(f"\\n📋 ÉVALUATIONS PAR DOMAINE:")
     summary = rapport['executive_summary']
     print(f"  🔐 Sécurité: {summary['security_assessment']}")
     print(f"  ⚡ Performance: {summary['performance_assessment']}")
@@ -613,15 +612,15 @@ async def main():
         
         # Issues critiques
     if summary['critical_issues_count'] > 0:
-    print(f"\n🚨 ISSUES CRITIQUES: {summary['critical_issues_count']}")
+    print(f"\\n🚨 ISSUES CRITIQUES: {summary['critical_issues_count']}")
         
         # Actions prioritaires
     if rapport['priority_actions']:
-    print(f"\n🎯 ACTIONS PRIORITAIRES:")
+    print(f"\\n🎯 ACTIONS PRIORITAIRES:")
     for action in rapport['priority_actions'][:3]:
     print(f"  {action}")
         
-    print(f"\n✅ Audit orchestré terminé avec succès!")
+    print(f"\\n✅ Audit orchestré terminé avec succès!")
     print(f"📄 Rapport détaillé sauvegardé")
         
     except Exception as e:

@@ -61,13 +61,11 @@ class AgentMAINTENANCE11HarmonisateurStyle(Agent):
         }
 
     async def startup(self):
-        await super().startup()
         if not self.black_available:
             self.logger.warning("La bibliothèque 'black' n'est pas installée. L'agent ne pourra pas formater le code.")
         self.logger.info("Harmonisateur de style (Black) prêt.")
 
     async def shutdown(self):
-        await super().shutdown()
         self.logger.info("Harmonisateur de style arrêté.")
 
     def get_capabilities(self) -> List[str]:

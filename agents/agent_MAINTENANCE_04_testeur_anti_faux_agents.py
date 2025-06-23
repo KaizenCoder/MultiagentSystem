@@ -35,7 +35,6 @@ except (IndexError, NameError):
     if '.' not in sys.path:
         sys.path.insert(0, '.')
 
-from core import logging_manager
 from core.agent_factory_architecture import Agent, Task, Result
 
 @dataclass
@@ -69,32 +68,33 @@ class AgentMAINTENANCE04TesteurAntiFauxAgents(Agent):
 
     async def execute_task(self, task: Task) -> Result:
         """Exécute une tâche de test dynamique."""
-        if task.type != "dynamic_test":
-            return Result(success=False, error="Type de tâche non supporté.")
+        self.logger.info(f"Exécution de la tâche de type '{task.type}' avec les paramètres : {task.params}")
 
-        file_path = task.params.get("file_path")
-        code_content = task.params.get("code_content")
+        if task.type == "test_code":
+            code_to_test = task.params.get("code")
+            file_path = task.params.get("file_path", "temp_file_for_test.py")
+            
+            if not code_to_test:
+                return Result(success=False, error="Code ou chemin du fichier manquant.")
 
-        if not file_path or not code_content:
-            return Result(success=False, error="Chemin ou contenu du fichier manquant.")
-
-        self.logger.info(f"Test dynamique du fichier : {file_path}")
-        
-        test_passed, details_or_error = await self._run_dynamic_test(file_path, code_content)
-        
-        self.logger.info(f"Test dynamique pour {file_path} terminé. Succès: {test_passed}")
-        
-        if test_passed:
-            return Result(
-                success=True,
-                data={"file_path": file_path, "details": details_or_error}
-            )
-        else:
-            return Result(
-                success=False,
-                error=details_or_error,
-                data={"file_path": file_path}
-            )
+            self.logger.info(f"Test dynamique du fichier : {file_path}")
+            
+            test_passed, details_or_error = await self._run_dynamic_test(file_path, code_to_test)
+            
+            self.logger.info(f"Test dynamique pour {file_path} terminé. Succès: {test_passed}")
+            
+            if test_passed:
+                return Result(
+                    success=True,
+                    data={"file_path": file_path, "details": details_or_error}
+                )
+            else:
+                return Result(
+                    success=False,
+                    error=details_or_error,
+                    data={"file_path": file_path}
+                )
+        return Result(success=False, error="Type de tâche non supporté.")
 
     async def _run_dynamic_test(self, file_path: str, code_content: str) -> (bool, str):
         """
@@ -179,6 +179,7 @@ class AgentMAINTENANCE04TesteurAntiFauxAgents(Agent):
 
 
     def get_capabilities(self) -> List[str]:
+        """Retourne les capacités de l'agent."""
         return ["dynamic_test"]
 
     async def health_check(self) -> Dict[str, Any]:
@@ -191,7 +192,14 @@ class AgentMAINTENANCE04TesteurAntiFauxAgents(Agent):
     async def run_test(self, file_path: str, code_content: str) -> Result:
         """Méthode de compatibilité pour l'ancien appel."""
         self.logger.warning(f"Appel de compatibilité 'run_test' pour {file_path}")
-        test_task = Task(type="dynamic_test", params={"file_path": file_path, "code_content": code_content})
+        task_id = f"test_{uuid.uuid4().hex}"
+        task_description = f"Test dynamique pour le fichier {file_path}"
+        test_task = Task(
+            id=task_id,
+            description=task_description,
+            type="test_code",
+            params={"file_path": file_path, "code": code_content}
+        )
         return await self.execute_task(test_task)
 
 
@@ -217,13 +225,13 @@ class GoodAgent(Agent):
 """
         results = await agent.run_test("good_agent.py", good_code)
         print("--- Test Agent Valide ---")
-        print(json.dumps(results.to_dict(), indent=2))
+        print(json.dumps({'success': results.success, 'data': results.data, 'error': results.error}, indent=2))
         
         # Test avec un code qui devrait échouer
         bad_code = "class BadAgent: pass"
         results = await agent.run_test("bad_agent.py", bad_code)
         print("\n--- Test Agent Invalide ---")
-        print(json.dumps(results.to_dict(), indent=2))
+        print(json.dumps({'success': results.success, 'data': results.data, 'error': results.error}, indent=2))
         
         await agent.shutdown()
 

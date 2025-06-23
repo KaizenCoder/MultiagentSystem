@@ -10,6 +10,7 @@ import sys
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
 from typing import List, Dict, Any, Tuple
+import asyncio
 
 # --- Blocs d'import pour test en isolation ---
 try:
@@ -217,10 +218,11 @@ def create_agent(**kwargs) -> CorrecteurSemantique:
     return CorrecteurSemantique(**kwargs)
 
 if __name__ == '__main__':
-    logger.info("=== DÉMONSTRATION DE L'AGENT CORRECTEUR SÉMANTIQUE V6.5-SOP ===")
-    agent = CorrecteurSemantique(enable_auto_rename=True)
-    agent.startup()
-    test_code = '''
+    async def main():
+        logger.info("=== DÉMONSTRATION DE L'AGENT CORRECTEUR SÉMANTIQUE V6.5-SOP ===")
+        agent = CorrecteurSemantique(enable_auto_rename=True)
+        await agent.startup()
+        test_code = '''
 import os
 class my_calculator:
     def calculateSum(self, x, y):
@@ -232,9 +234,19 @@ def anotherFunction():
     a_task = Task(1, "d", {})
     return my_list
 '''
-    task = Task("demo-v6.5", "Appliquer toutes les corrections finales SOP", {"code": test_code})
-    result = agent.execute_task(task)
-    print(f"\nRésultat: {result.status} - {result.message}")
-    if result.data and result.data.get('score_improvement', 0) > 0:
-        print("\n--- CODE CORRIGÉ ---"); print(result.data['corrected_code']); print("--- FIN DU CODE ---")
-    agent.shutdown()
+        task = Task(type="correct_semantics", params={"code": test_code})
+        result = await agent.execute_task(task)
+        
+        print(f"\nRésultat: {'Succès' if result.success else 'Échec'}")
+        if result.success and result.data:
+            print(f"Message: {result.data.get('message')}")
+            if result.data.get('score_improvement', 0) > 0:
+                print("\n--- CODE CORRIGÉ ---")
+                print(result.data['corrected_code'])
+                print("--- FIN DU CODE ---")
+        elif result.error:
+            print(f"Erreur: {result.error}")
+            
+        await agent.shutdown()
+
+    asyncio.run(main())

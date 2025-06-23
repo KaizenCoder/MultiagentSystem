@@ -16,7 +16,8 @@ from pathlib import Path
 import logging
 import asyncio
 import re
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Tuple
+import textwrap
 
 # --- Pyflakes Import ---
 from pyflakes.api import check
@@ -207,47 +208,46 @@ class AgentMAINTENANCE03AdaptateurCode(Agent):
     def get_capabilities(self) -> List[str]:
         return ["code_adaptation", "import_fixing", "indentation_error_fix"]
         
-    def _pre_check_and_repair_syntax(self, code: str) -> (str, List[str]):
-        """Utilise Pyflakes pour une analyse syntaxique rapide et tente de corriger les erreurs simples."""
-        adaptations = []
-        reporter = PyflakesErrorCollector()
-        
-        check(code, 'temp_code.py', reporter=reporter)
-        
-        # Filtrer spécifiquement les erreurs de syntaxe bloquantes
-        syntax_errors = [e for e in reporter.errors if e['type'] == 'SyntaxError' and 'expected an indented block' in e['message']]
+    def _fix_indentation_errors(self, code: str, error: Exception) -> Tuple[str, List[str]]:
+        """
+        Corrige les IndentationError courants en se basant sur l'exception.
+        """
+        notes = []
+        if not isinstance(error, (SyntaxError, IndentationError)):
+            return code, notes
 
-        if not syntax_errors:
-            return code, adaptations
-
-        self.logger.info(f"Pyflakes a détecté {len(syntax_errors)} erreur(s) d'indentation. Tentative de correction.")
-        
         lines = code.splitlines()
-        corrected = False
+        msg = error.msg.lower()
+        lineno = error.lineno or 0
 
-        # On parcourt les erreurs pour corriger
-        for error in sorted(syntax_errors, key=lambda x: x['lineno'], reverse=True):
-            error_lineno = error['lineno']
-            # On cherche la ligne de définition juste avant l'erreur
-            for i in range(error_lineno - 1, -1, -1):
-                line_content = lines[i].strip()
-                if (line_content.startswith(('def ', 'class ', 'try:', 'except', 'if ', 'elif ', 'else:', 'for ', 'while ')) and line_content.endswith(':')):
-                    
-                    # Correction pour gérer les lignes sans indentation
-                    match = re.match(r"^(\\s*)", lines[i])
-                    indentation = match.group(1) if match else ""
+        # Cas 1: "expected an indented block" -> insère 'pass'
+        if "expected an indented block" in msg and 0 < lineno <= len(lines):
+            # Tente de trouver l'indentation de la ligne précédente (si elle existe)
+            if lineno > 1:
+                prev_line = lines[lineno - 2]
+                indent_level = len(prev_line) - len(prev_line.lstrip())
+                indent = " " * (indent_level + 4)
+            else: # Sinon, indentation par défaut
+                indent = " " * 4
+            
+            lines.insert(lineno - 1, f"{indent}pass")
+            notes.append(f"Auto-correction: Ajout de 'pass' à la ligne {lineno} pour bloc attendu.")
+        
+        # Cas 2: "unexpected indent" -> dé-indente la ligne
+        elif "unexpected indent" in msg and 0 < lineno <= len(lines):
+            lines[lineno - 1] = lines[lineno - 1].lstrip()
+            notes.append(f"Auto-correction: Suppression de l'indentation superflue à la ligne {lineno}.")
+            
+        # Cas 3: "unindent does not match" -> normalise tout le fichier
+        elif "unindent does not match" in msg:
+            try:
+                new_code = textwrap.dedent(code)
+                notes.append("Auto-correction: Normalisation de l'indentation globale (dedent) pour corriger un décalage incohérent.")
+                return new_code, notes
+            except Exception as e:
+                notes.append(f"Échec de la normalisation de l'indentation globale: {e}")
 
-                    # Insérer 'pass' avec l'indentation correcte
-                    lines.insert(i + 1, f"{indentation}    pass")
-                    adaptations.append(f"Correction auto (Pyflakes): Ajout de 'pass' après '{line_content[:30]}...' à la ligne {i+1}")
-                    corrected = True
-                    break # On passe à l'erreur suivante après correction
-
-        if corrected:
-            self.logger.info("Corrections d'indentation appliquées. Le code sera re-vérifié par LibCST.")
-            return "\\n".join(lines), adaptations
-        else:
-            return code, adaptations
+        return "\n".join(lines), notes
 
     async def execute_task(self, task: Task) -> Result:
         """
@@ -255,7 +255,7 @@ class AgentMAINTENANCE03AdaptateurCode(Agent):
         """
         code = task.params.get("code")
         feedback = task.params.get("feedback")
-        error_type = task.params.get("error_type", "generic") # NOUVEAU
+        error_type = task.params.get("error_type", "generic")
 
         if not code:
             return Result(success=False, error="Le code source est manquant.")
@@ -269,16 +269,16 @@ class AgentMAINTENANCE03AdaptateurCode(Agent):
             # Stratégie de réparation basée sur le type d'erreur
             if error_type == "indentation":
                 self.logger.info("Stratégie de réparation ciblée pour l'indentation activée.")
-                modified_code, pre_check_adaptations = self._pre_check_and_repair_syntax(modified_code)
-                adaptations.extend(pre_check_adaptations)
+                # Le `feedback` est l'exception brute dans ce cas
+                modified_code, indent_adaptations = self._fix_indentation_errors(modified_code, feedback)
+                adaptations.extend(indent_adaptations)
             
             # La logique existante pour les NameError et autres peut suivre ici
             if "name" in str(feedback).lower() and "is not defined" in str(feedback).lower():
                 # ... (logique existante)
                 pass
 
-
-            # --- Étape 3 : Correction des blocs vides avec LibCST (plus robuste) ---
+            # --- Correction des blocs vides avec LibCST (plus robuste) ---
             try:
                 source_tree = cst.parse_module(modified_code)
                 pass_inserter = CstPassInserter()
@@ -288,7 +288,8 @@ class AgentMAINTENANCE03AdaptateurCode(Agent):
                     adaptations.append("Adaptation CST : Ajout de 'pass' dans un ou plusieurs blocs vides.")
             except cst.ParserSyntaxError as e:
                 self.logger.warning(f"Erreur de parsing CST, impossible d'insérer 'pass': {e}")
-
+                # On retourne le code tel quel si CST échoue, car une correction a peut-être déjà eu lieu
+                return Result(success=True, data={"adapted_code": modified_code, "adaptations": adaptations})
 
             if not adaptations:
                 return Result(success=True, data={"adapted_code": modified_code, "adaptations": ["Aucune adaptation nécessaire."]})

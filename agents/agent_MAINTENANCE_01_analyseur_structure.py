@@ -33,7 +33,6 @@ except (IndexError, NameError):
     if '.' not in sys.path:
         sys.path.insert(0, '.')
 
-from core import logging_manager
 from core.agent_factory_architecture import Agent, Task, Result
 PATTERN_FACTORY_AVAILABLE = True
 
@@ -145,7 +144,14 @@ class AgentMAINTENANCE01AnalyseurStructure(Agent):
     async def run_analysis(self, directory: str) -> Result:
         """Méthode de compatibilité pour l'ancien appel du coordinateur."""
         self.logger.warning(f"Appel de compatibilité 'run_analysis' pour le répertoire: {directory}")
-        analyse_task = Task(type="analyse_structure", params={"directory": directory})
+        task_id = f"analyse_{uuid.uuid4().hex}"
+        task_description = f"Analyse de structure pour le répertoire {directory}"
+        analyse_task = Task(
+            id=task_id,
+            description=task_description,
+            type="analyse_structure",
+            params={"directory": directory}
+        )
         return await self.execute_task(analyse_task)
 
 def create_agent_MAINTENANCE_01_analyseur_structure(**config) -> AgentMAINTENANCE01AnalyseurStructure:
@@ -154,9 +160,13 @@ def create_agent_MAINTENANCE_01_analyseur_structure(**config) -> AgentMAINTENANC
 
 if __name__ == '__main__':
     async def main_test():
-        agent = create_agent_MAINTENANCE_01_analyseur_structure(source_path="agent_factory_implementation/agents")
+        agent = create_agent_MAINTENANCE_01_analyseur_structure()
         await agent.startup()
-        results = await agent.run_analysis("agent_factory_implementation/agents")
-        print(json.dumps(results, indent=2))
+        # On teste avec le répertoire 'agents' lui-même
+        results = await agent.run_analysis("agents")
+        
+        # Affichage correct du résultat
+        print(json.dumps({'success': results.success, 'data': results.data, 'error': results.error}, indent=2))
+        
         await agent.shutdown()
     asyncio.run(main_test())
