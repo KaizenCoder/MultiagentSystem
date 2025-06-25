@@ -29,21 +29,17 @@ from datetime import datetime
 from typing import Dict, List, Any, Tuple
 import json
 
-# Assurer que le module de logging est accessible
+# --- Logging ---
+# Tentative d'import du logger centralisé du projet.
+# Si l'import échoue, on se rabat sur le logger Python standard.
 try:
-    # Chemin relatif de ce fichier à la racine du projet pour trouver le module de logging
-    project_root_for_import = Path(__file__).resolve().parents[2]
-    # Ajout de la racine du projet au sys.path pour les imports directs comme 'from core import ...'
-    if str(project_root_for_import) not in sys.path:
-        sys.path.insert(0, str(project_root_for_import))
     from core import logging_manager
-except ImportError as e:
-    print(f"Erreur critique: Impossible d'importer le logging_manager. Vérifiez que 'core' est à la racine. Erreur: {e}")
-    # Fallback sur le logging standard si le manager n'est pas disponible
+    logger = logging_manager.get_logger("AgentAssistant99")
+except ImportError:
     import logging
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     logger = logging.getLogger(__name__)
-    logger.warning("Utilisation du logging standard de Python.")
+    logger.warning("Impossible d'importer le logging_manager de 'core'. Utilisation du logging standard.")
     logging_manager = None
 
 
@@ -56,19 +52,7 @@ class AgentAssistant99RefactoringHelper:
         self.domain = "refactoring_automation"
         self.project_root = project_root
         self.backup_dir = self.project_root / "backups_docteur" / f"refactoring_helper_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-
-        if logging_manager:
-            self.logger = logging_manager.get_logger(
-                'refactoring_helper',
-                custom_config={
-                    'logger_name': "AgentAssistant99RefactoringHelper",
-                    'console_enabled': True,
-                    'file_enabled': True,
-                    'file_path': f'logs/refactoring_helper_{datetime.now().strftime("%Y%m%d")}.log'
-                }
-            )
-        else:
-            self.logger = logger
+        self.logger = logger  # Utilise le logger configuré en haut du fichier
 
         self.metrics = {
             "files_scanned": 0,

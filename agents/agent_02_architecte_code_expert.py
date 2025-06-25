@@ -35,31 +35,24 @@ DELIVERABLES :
 - Mapping fonctionnalits expertes
 """
 
+import asyncio
+import hashlib
+import json
+import logging
 import os
 import shutil
-import sys
-from pathlib import Path
-from core import logging_manager
-from pathlib import Path
-from datetime import datetime
-from typing import Dict, List, Any, Optional
-import json
 import subprocess
-import hashlib
-import asyncio
-import logging
+import sys
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+from core import logging_manager
 
 # --- IMPORTS DIFFÉRÉS ---
 # L'import de la factory est nécessaire, mais les classes spécifiques du 'code_expert'
 # seront importées plus tard pour éviter les dépendances circulaires au démarrage.
-# La modification de sys.path est temporairement désactivée car elle cause des erreurs
-# inattendues. Le script de test (temp_runner_agent02.py) gère le path.
-# try:
-#     import sys
-#     sys.path.insert(0, str(Path(__file__).parent))
-# except NameError:
-#     print("AVERTISSEMENT : 'sys' non défini, tentative de continuer sans modifier le path.")
-#     pass
+# La modification de sys.path est gérée par les scripts de lancement et non plus ici.
 
 try:
     from core.agent_factory_architecture import Agent, Task, Result
@@ -821,40 +814,36 @@ agent = factory.create_agent("agent_template", {{
         return deliverables
 
 def main():
-    """Fonction principale d'excution de l'Agent 02"""
-    print("[TOOL] Agent 02 - Architecte Code Expert - DMARRAGE")
+    """Point d'entrée principal pour l'exécution directe de l'agent."""
+    print("--- DÉMARRAGE DU TEST DE L'AGENT 02 ---")
+    try:
+        # Instanciation directe de la classe de l'agent
+        agent = Agent02ArchitecteCodeExpert()
+        
+        # Simulation d'une exécution de mission
+        print("[INFO] Lancement de la mission d'intégration du code expert...")
+        results = agent.run_agent_02_mission()
+        
+        print("\n--- RAPPORT D'EXÉCUTION ---")
+        # Utilise json pour un affichage propre du dictionnaire de résultats
+        import json
+        print(json.dumps(results, indent=2, ensure_ascii=False))
+        print("---------------------------\n")
+
+        if results.get("status", "").startswith("[CHECK] SUCCS"):
+            print("[✅ SUCCÈS] La mission de l'Agent 02 semble s'être terminée correctement.")
+        else:
+            print("[⚠️ ALERTE] La mission de l'Agent 02 s'est terminée avec un statut inattendu.")
+
+    except Exception as e:
+        print(f"[❌ ERREUR] Une exception s'est produite lors du test de l'Agent 02: {e}")
+        # Affiche la trace de l'erreur pour un débogage plus facile
+        import traceback
+        traceback.print_exc()
     
-    # Initialiser agent
-    agent = Agent02ArchitecteCodeExpert()
-    
-    # Excuter mission critique
-    results = agent.run_agent_02_mission()
-    
-    # Afficher rsultats
-    print(f"\n[CLIPBOARD] MISSION {results['status']}")
-    print(f"[TARGET] Expert Code Quality: {results['expert_code_quality']}")
-    
-    if "performance" in results:
-        perf = results["performance"]
-        print(f" Dure: {perf['duration_seconds']}s")
-        print(f"[CHART] Scripts intgrs: {perf['scripts_integrated']}")
-        print(f" Qualit: {perf['quality_score']}")
-        print(f"[LIGHTNING] Performance: {perf['performance_rating']}")
-    
-    if "deliverables" in results:
-        print(f"\n LIVRABLES ({len(results['deliverables'])})")
-        for deliverable in results["deliverables"]:
-            print(f"  {deliverable}")
-    
-    # Gnrer rapport
-    report_path = Path("reports") / f"agent_02_rapport_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-    report_path.parent.mkdir(exist_ok=True)
-    
-    with open(report_path, 'w', encoding='utf-8') as f:
-        json.dump(results, f, indent=2, ensure_ascii=False, default=str)
-    
-    print(f"\n[DOCUMENT] Rapport gnr: {report_path}")
-    print("[CHECK] Agent 02 - Mission Code Expert termine avec succs")
+    finally:
+        print("--- FIN DU TEST DE L'AGENT 02 ---")
+
 
 if __name__ == "__main__":
     main() 

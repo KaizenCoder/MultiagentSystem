@@ -62,8 +62,8 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('documentation.log'),
-        logging.StreamHandler()
+    logging.FileHandler('documentation.log'),
+    logging.StreamHandler()
     ]
 )
 # L'initialisation du logger spécifique doit être faite dans la classe principale, pas ici.
@@ -82,13 +82,13 @@ class DocumentationSection:
     timestamp: datetime = None
     
     def __post_init__(self):
-        if self.timestamp is None:
-            self.timestamp = datetime.now()
+    if self.timestamp is None:
+    self.timestamp = datetime.now()
     
     def to_markdown(self) -> str:
         """Conversion en Markdown"""
-        header = "#" * self.level
-        return f"{header} {self.title}\n\n{self.content}\n\n"
+    header = "#" * self.level
+    return f"{header} {self.title}\n\n{self.content}\n\n"
 
 @dataclass
 class DocumentationTemplate:
@@ -101,13 +101,13 @@ class DocumentationTemplate:
     
     def generate_template(self) -> str:
         """Génération template markdown"""
-        template = f"# {self.name}\n\n"
-        template += f"{self.description}\n\n"
-        for section in self.sections:
-            template += f"## {section}\n\n[À compléter]\n\n"
-        template += "\n---\n"
-        template += f"Template généré par Agent 10 - {datetime.now().strftime('%Y-%m-%d')}\n"
-        return template
+    template = f"# {self.name}\n\n"
+    template += f"{self.description}\n\n"
+    for section in self.sections:
+    template += f"## {section}\n\n[À compléter]\n\n"
+    template += "\n---\n"
+    template += f"Template généré par Agent 10 - {datetime.now().strftime('%Y-%m-%d')}\n"
+    return template
 
 @dataclass 
 class APIDocumentation:
@@ -121,16 +121,16 @@ class APIDocumentation:
     
     def to_openapi_spec(self) -> Dict[str, Any]:
         """Conversion OpenAPI 3.0"""
-        return {
-            self.endpoint: {
-                self.method.lower(): {
-                    "summary": self.description,
-                    "parameters": self.parameters,
-                    "responses": self.responses,
-                    "examples": self.examples
-                }
-            }
-        }
+    return {
+    self.endpoint: {
+    self.method.lower(): {
+    "summary": self.description,
+    "parameters": self.parameters,
+    "responses": self.responses,
+    "examples": self.examples
+    }
+    }
+    }
 
 # ===== GÉNÉRATEURS DOCUMENTATION =====
 
@@ -138,76 +138,76 @@ class CodeDocumentationGenerator:
     """Générateur documentation code expert Claude"""
     
     def __init__(self, code_expert_path: Path):
-        self.code_expert_path = code_expert_path
-    
+    self.code_expert_path = code_expert_path
+        
     def analyze_code_structure(self, file_path: Path) -> Dict[str, Any]:
         """Analyse structure code pour documentation"""
-        try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                content = f.read()
-                # Extraction classes
-                classes = re.findall(r'class\s+(\w+).*?:', content)
-                # Extraction fonctions
-                functions = re.findall(r'def\s+(\w+)\(.*?\):', content)
-                # Extraction docstrings
-                docstrings = re.findall(r'"""(.*?)"""', content, re.DOTALL)
-                return {
-                    "file": file_path.name,
-                    "classes": classes,
-                    "functions": functions,
-                    "docstrings": docstrings[:3],  # Premières docstrings
-                    "lines": len(content.splitlines())
-                }
-        except Exception as e:
+    try:
+    with open(file_path, 'r', encoding='utf-8') as f:
+    content = f.read()
+            # Extraction classes
+    classes = re.findall(r'class\s+(\w+).*?:', content)
+            # Extraction fonctions
+    functions = re.findall(r'def\s+(\w+)\(.*?\):', content)
+            # Extraction docstrings
+    docstrings = re.findall(r'"""(.*?)"""', content, re.DOTALL)
+    return {
+    "file": file_path.name,
+    "classes": classes,
+    "functions": functions,
+    "docstrings": docstrings[:3],  # Premières docstrings
+    "lines": len(content.splitlines())
+    }
+    except Exception as e:
             # logger doit être défini dans la classe principale
             print(f"Erreur analyse code {file_path}: {e}")
-            return {}
+    return {}
     
     def generate_code_documentation(self) -> str:
         """Génération documentation complète code expert"""
-        doc = "# 🔧 Documentation Code Expert Claude\n\n"
-        doc += "Documentation technique complète du code expert Claude Phase 2.\n\n"
+    doc = "# 🔧 Documentation Code Expert Claude\n\n"
+    doc += "Documentation technique complète du code expert Claude Phase 2.\n\n"
         # Analyse enhanced_agent_templates.py
-        enhanced_file = self.code_expert_path / "enhanced_agent_templates.py"
-        if enhanced_file.exists():
-            analysis = self.analyze_code_structure(enhanced_file)
-            doc += "## 📋 enhanced_agent_templates.py\n\n"
-            doc += f"**Lignes de code:** {analysis.get('lines', 0)}\n\n"
-            doc += f"**Classes principales:** {', '.join(analysis.get('classes', []))}\n\n"
-            doc += f"**Fonctions:** {len(analysis.get('functions', []))} fonctions\n\n"
-            if analysis.get('docstrings'):
-                doc += "**Description:**\n"
-                doc += f"```\n{analysis['docstrings'][0][:200]}...\n```\n\n"
+    enhanced_file = self.code_expert_path / "enhanced_agent_templates.py"
+    if enhanced_file.exists():
+    analysis = self.analyze_code_structure(enhanced_file)
+    doc += "## 📋 enhanced_agent_templates.py\n\n"
+    doc += f"**Lignes de code:** {analysis.get('lines', 0)}\n\n"
+    doc += f"**Classes principales:** {', '.join(analysis.get('classes', []))}\n\n"
+    doc += f"**Fonctions:** {len(analysis.get('functions', []))} fonctions\n\n"
+    if analysis.get('docstrings'):
+    doc += "**Description:**\n"
+    doc += f"```\n{analysis['docstrings'][0][:200]}...\n```\n\n"
         # Analyse optimized_template_manager.py
-        optimized_file = self.code_expert_path / "optimized_template_manager.py"
-        if optimized_file.exists():
-            analysis = self.analyze_code_structure(optimized_file)
-            doc += "## ⚡ optimized_template_manager.py\n\n"
-            doc += f"**Lignes de code:** {analysis.get('lines', 0)}\n\n"
-            doc += f"**Classes principales:** {', '.join(analysis.get('classes', []))}\n\n"
-            doc += f"**Fonctions:** {len(analysis.get('functions', []))} fonctions\n\n"
-            if analysis.get('docstrings'):
-                doc += "**Description:**\n"
-                doc += f"```\n{analysis['docstrings'][0][:200]}...\n```\n\n"
+    optimized_file = self.code_expert_path / "optimized_template_manager.py"
+    if optimized_file.exists():
+    analysis = self.analyze_code_structure(optimized_file)
+    doc += "## ⚡ optimized_template_manager.py\n\n"
+    doc += f"**Lignes de code:** {analysis.get('lines', 0)}\n\n"
+    doc += f"**Classes principales:** {', '.join(analysis.get('classes', []))}\n\n"
+    doc += f"**Fonctions:** {len(analysis.get('functions', []))} fonctions\n\n"
+    if analysis.get('docstrings'):
+    doc += "**Description:**\n"
+    doc += f"```\n{analysis['docstrings'][0][:200]}...\n```\n\n"
         # Fonctionnalités validées
-        doc += "## ✅ Fonctionnalités Validées\n\n"
-        doc += "- ✅ Validation JSON Schema stricte\n"
-        doc += "- ✅ Héritage templates avec fusion intelligente\n"
-        doc += "- ✅ Hot-reload automatique avec watchdog\n"
-        doc += "- ✅ Cache LRU + TTL pour performance\n"
-        doc += "- ✅ Thread-safety avec RLock\n"
-        doc += "- ✅ Métriques détaillées monitoring\n"
-        doc += "- ✅ Sécurité cryptographique RSA 2048 + SHA-256\n"
-        doc += "- ✅ Control/Data Plane séparation\n"
-        doc += "- ✅ Sandbox WASI pour agents risqués\n\n"
-        return doc
+    doc += "## ✅ Fonctionnalités Validées\n\n"
+    doc += "- ✅ Validation JSON Schema stricte\n"
+    doc += "- ✅ Héritage templates avec fusion intelligente\n"
+    doc += "- ✅ Hot-reload automatique avec watchdog\n"
+    doc += "- ✅ Cache LRU + TTL pour performance\n"
+    doc += "- ✅ Thread-safety avec RLock\n"
+    doc += "- ✅ Métriques détaillées monitoring\n"
+    doc += "- ✅ Sécurité cryptographique RSA 2048 + SHA-256\n"
+    doc += "- ✅ Control/Data Plane séparation\n"
+    doc += "- ✅ Sandbox WASI pour agents risqués\n\n"
+    return doc
 
 class UserGuideGenerator:
     """Générateur guides utilisateur"""
     
     def generate_quick_start_guide(self) -> str:
         """Guide démarrage rapide Agent Factory"""
-        return """# 🚀 Guide Démarrage Rapide - Agent Factory Pattern
+    return """# 🚀 Guide Démarrage Rapide - Agent Factory Pattern
 
 ## Introduction
 
@@ -280,10 +280,10 @@ Pour assistance, consultez la documentation technique complète ou contactez l'�
 ---
 *Guide généré par Agent 10 - Documentaliste Expert*
 """
-    
+
     def generate_advanced_guide(self) -> str:
         """Guide avancé utilisation"""
-        return """# 🔬 Guide Avancé - Agent Factory Pattern
+    return """# 🔬 Guide Avancé - Agent Factory Pattern
 
 ## Architecture Avancée
 
@@ -396,7 +396,7 @@ class APIDocumentationGenerator:
     
     def generate_api_documentation(self) -> str:
         """Documentation API complète"""
-        return """# 📡 API Documentation - Agent Factory
+    return """# 📡 API Documentation - Agent Factory
 
 ## Overview
 
@@ -552,37 +552,37 @@ async def test_agent_10_documentation():
     
     try:
         # Initialisation
-        agent = Agent10DocumentalisteExpert()
+    agent = Agent10DocumentalisteExpert()
         
         # Génération documentation complète
-        print("📚 Génération documentation complète...")
-        documentation = await agent.generate_complete_documentation()
-        print(f"✅ {len(documentation)} documents générés")
+    print("📚 Génération documentation complète...")
+    documentation = await agent.generate_complete_documentation()
+    print(f"✅ {len(documentation)} documents générés")
         
         # Sauvegarde fichiers
-        print("💾 Sauvegarde fichiers documentation...")
-        saved_files = await agent.save_documentation_files(documentation)
-        print(f"✅ {len(saved_files)} fichiers sauvés")
+    print("💾 Sauvegarde fichiers documentation...")
+    saved_files = await agent.save_documentation_files(documentation)
+    print(f"✅ {len(saved_files)} fichiers sauvés")
         
         # Test coordination Agent 13
-        coordination_data = {
-            "documentation_count": len(documentation),
-            "templates_used": list(agent.templates.keys())
-        }
+    coordination_data = {
+    "documentation_count": len(documentation),
+    "templates_used": list(agent.templates.keys())
+    }
         
-        coordination = await agent.coordinate_with_agent_13(coordination_data)
-        print(f"✅ Coordination Agent 13: {coordination['status']}")
+    coordination = await agent.coordinate_with_agent_13(coordination_data)
+    print(f"✅ Coordination Agent 13: {coordination['status']}")
         
         # Rapport Sprint 1
-        report = agent.generate_sprint_1_report()
-        print(f"✅ Rapport Sprint 1: {report['success_percentage']:.1f}% objectifs")
+    report = agent.generate_sprint_1_report()
+    print(f"✅ Rapport Sprint 1: {report['success_percentage']:.1f}% objectifs")
         
-        print("🎉 Agent 10 - Tests réussis")
-        return True
+    print("🎉 Agent 10 - Tests réussis")
+    return True
         
     except Exception as e:
-        print(f"❌ Erreur test Agent 10: {e}")
-        return False
+    print(f"❌ Erreur test Agent 10: {e}")
+    return False
 
 if __name__ == "__main__":
     print("🎖️ AGENT 10 - DOCUMENTALISTE EXPERT")
@@ -594,6 +594,6 @@ if __name__ == "__main__":
     success = asyncio.run(test_agent_10_documentation())
     
     if success:
-        print("\n🚀 Agent 10 opérationnel - Documentation prête")
+    print("\n🚀 Agent 10 opérationnel - Documentation prête")
     else:
-        print("\n❌ Agent 10 - Problèmes détectés") 
+    print("\n❌ Agent 10 - Problèmes détectés") 

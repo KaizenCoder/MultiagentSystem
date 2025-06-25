@@ -35,22 +35,6 @@ import requests  # OPA client
 import prometheus_client
 from prometheus_client import Counter, Histogram, Gauge
 
-# Import code expert OBLIGATOIRE (SUPPRIMÉ POUR CONFORMITÉ)
-# sys.path.insert(0, str(Path(__file__).parent.parent / "code_expert"))
-# try:
-#     from enhanced_agent_templates import AgentTemplate
-#     from optimized_template_manager import OptimizedTemplateManager
-#     CODE_EXPERT_AVAILABLE = True
-# except ImportError as e:
-#     print(f"⚠️ Code expert non disponible: {e}")
-#     class AgentTemplate:
-#         def __init__(self, name: str):
-#             self.name = name
-#     class OptimizedTemplateManager:
-#         def __init__(self):
-#             pass
-#     CODE_EXPERT_AVAILABLE = False
-
 # Pattern Factory imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from core.agent_factory_architecture import Agent, Task, Result
@@ -100,17 +84,84 @@ class DataPlaneExecution:
     timestamp: datetime
     results: Optional[Dict[str, Any]]
 
-class Agent09SpecialistePlanes:
+class Agent09SpecialistePlanes(Agent):
     """
     🏗️ Agent 09 - Spécialiste Control/Data Plane
     
-    ARCHITECTURE BLOQUÉE :
-    Cet agent dépend du code_expert (AgentTemplate, OptimizedTemplateManager),
-    ce qui est interdit par la politique de conformité actuelle.
-    Toute tentative d'utilisation de ces fonctionnalités est désactivée.
+    [REFACTORING] Cet agent a été débloqué en supprimant la dépendance
+    interdite à `code_expert`. Les fonctionnalités de template sont
+    maintenant gérées par des chaînes de caractères standard.
     """
-    def __init__(self, config: Optional[AgentFactoryConfig] = None):
-        raise RuntimeError("Agent 09 bloqué : dépendance code_expert interdite par la politique de conformité.")
+    def __init__(self, **config):
+        # Pré-initialisation pour satisfaire les dépendances de la classe de base `Agent`
+        self.agent_type = "agent_09_specialiste_planes"
+        self.agent_id = config.get("agent_id", f"{self.agent_type}_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
+        self.name = "Agent 09 Spécialiste Planes"
+        self.logger = logging.getLogger(self.agent_id)
+        
+        # L'appel à super() se fait APRÈS la création des attributs dont il dépend.
+        super().__init__(self.agent_type, **config)
+        
+        # Le reste de l'initialisation est déplacé dans une méthode asynchrone
+        
+    async def _async_init(self):
+        """Initialisation asynchrone des composants de l'agent."""
+        self.logger.info("Agent 09 Spécialiste Planes - Initialisation asynchrone...")
+        self._setup_metrics()
+        
+        # Initialisation des managers pour les planes
+        self.control_plane = ControlPlaneManager(config={}, logger=self.logger, metrics=self.control_plane_requests)
+        self.data_plane = DataPlaneManager(config={}, logger=self.logger, metrics=self.data_plane_throughput)
+        self.wasi_sandbox = WASISandboxManager(config={}, logger=self.logger, metrics=self.wasi_executions)
+        
+        # Initialisation des modules de sécurité (maintenant avec await)
+        await self._setup_rsa_validation()
+        
+        self.rapport = {"realisations": {}}
+        self.logger.info("✅ Agent 09 initialisé et prêt.")
+
+    # Implémentation des méthodes abstraites du Pattern Factory
+    async def startup(self):
+        """Démarre l'agent."""
+        self.logger.info(f"🚀 Agent {self.agent_id} ({self.name}) démarré.")
+        await super().startup()
+
+    async def shutdown(self):
+        """Arrête l'agent."""
+        self.logger.info(f"🛑 Agent {self.agent_id} ({self.name}) arrêté.")
+        await super().shutdown()
+
+    async def health_check(self) -> Dict[str, Any]:
+        """Vérifie l'état de santé de l'agent."""
+        # TODO: Ajouter des vérifications plus poussées (connexion Vault, OPA...)
+        return {"status": "healthy", "timestamp": datetime.now().isoformat()}
+
+    def get_capabilities(self) -> Dict[str, Any]:
+        """Retourne les capacités de l'agent."""
+        return {
+            "name": "Agent09SpecialistePlanes",
+            "version": "1.0.0",
+            "description": "Agent spécialiste de l'architecture Control/Data Plane avec sandbox WASI.",
+            "tasks": [
+                {
+                    "name": "initialiser_architecture",
+                    "description": "Lance le workflow complet d'initialisation de l'architecture Control/Data Plane.",
+                    "parameters": {}
+                }
+            ]
+        }
+    
+    async def execute_task(self, task: Task) -> Result:
+        """Exécute une tâche spécifique."""
+        if task.description == "initialiser_architecture":
+            try:
+                result_data = await self.initialiser_architecture_planes()
+                return Result(success=True, data=result_data)
+            except Exception as e:
+                self.logger.error(f"Erreur critique lors de l'initialisation de l'architecture: {e}", exc_info=True)
+                return Result(success=False, error=str(e))
+        else:
+            return Result(success=False, error=f"Tâche inconnue: {task.description}")
 
     def _setup_metrics(self):
         """Configuration métriques Prometheus héritage Agent 04"""
@@ -985,18 +1036,41 @@ class WASIAgent(Agent):
 
 # Point d'entrée principal
 async def main():
-    """Point d'entrée principal Agent 09"""
-    # Configuration par défaut
-    config = config_manager.get_config()
-    agent09 = Agent09SpecialistePlanes(config)
+    """Point d'entrée pour tester l'agent 09."""
+    print("--- DÉMARRAGE DU TEST DE L'AGENT 09 ---")
+    try:
+        # L'agent est maintenant conforme au Pattern Factory
+        agent = Agent09SpecialistePlanes()
+        await agent._async_init()
+        await agent.startup()
+
+        print("[INFO] Lancement de la tâche 'initialiser_architecture'...")
+        task = Task("init_arch_01", "initialiser_architecture", data={})
+        result = await agent.execute_task(task)
+        
+        print("\n--- RAPPORT D'EXÉCUTION ---")
+        if result.success:
+            print("[✅ SUCCÈS] La tâche s'est terminée correctement.")
+            # Affichage partiel des résultats pour la lisibilité
+            if result.data:
+                print(f"  Statut Control Plane: {result.data.get('control_plane', {}).get('status')}")
+                print(f"  Statut Data Plane: {result.data.get('data_plane', {}).get('status')}")
+                print(f"  Statut WASI Sandbox: {result.data.get('wasi_sandbox', {}).get('status')}")
+        else:
+            print(f"[❌ ERREUR] La tâche a échoué: {result.error}")
+        
+        await agent.shutdown()
+
+    except Exception as e:
+        print(f"[❌ ERREUR] Une exception non gérée s'est produite: {e}")
+        import traceback
+        traceback.print_exc()
     
-    # Initialisation architecture
-    architecture_result = await agent09.initialiser_architecture_planes()
-    print(f"🏗️ Architecture initialisée: {architecture_result['status']}")
-    
-    # Génération rapport Sprint 3
-    rapport = await agent09.generer_rapport_sprint3()
-    print(f"📊 Rapport Sprint 3 généré - Status: {rapport['mission_status']}")
+    finally:
+        print("--- FIN DU TEST DE L'AGENT 09 ---")
 
 if __name__ == "__main__":
+    # Correction pour les environnements Windows où ProactorEventLoop est nécessaire
+    if sys.platform == "win32":
+        asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
     asyncio.run(main()) 

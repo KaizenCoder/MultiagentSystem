@@ -4,6 +4,7 @@ from typing import List, Optional
 from taskmaster_v3.core.models import Task, TaskStatus, TaskPriority
 from taskmaster_v3.modules.persistence.repository import AbstractTaskRepository
 from taskmaster_v3.modules.parsing.parser_service import ParserService
+from taskmaster_v3.modules.dependencies.dependency_analyzer import DependencyAnalyzer
 
 
 class TaskService:
@@ -20,6 +21,7 @@ class TaskService:
         """
         self.repository = repository
         self.parser = ParserService()
+        self.dependency_analyzer = DependencyAnalyzer()
 
     async def create_tasks_from_text(self, text: str) -> List[Task]:
         """
@@ -108,3 +110,10 @@ class TaskService:
         task.status = TaskStatus.IN_PROGRESS
         await self.repository.save_task(task)
         return task 
+
+    def analyze_dependencies(self, root_tasks: List[Task]):
+        """
+        Analyse les dépendances entre tâches et met à jour les statuts (BLOCKED/TODO).
+        Retourne le graphe de dépendances (id -> set d'ids dont il dépend).
+        """
+        return self.dependency_analyzer.analyze(root_tasks) 
