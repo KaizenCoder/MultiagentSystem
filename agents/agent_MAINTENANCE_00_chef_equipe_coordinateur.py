@@ -7,7 +7,7 @@
 ⚡ Capacités : Boucle de réparation itérative, coordination d'équipe, reporting.
 
 Author: Équipe de Maintenance NextGeneration
-Version: 4.2.0 - Report Enrichment
+Version: 4.3.0 - Harmonisation Standards Pattern Factory NextGeneration
 """
 
 import asyncio
@@ -39,8 +39,26 @@ def classify_exception(exc: Exception) -> str:
 
 class ChefEquipeCoordinateurEnterprise(Agent):
     """
-    Chef d'équipe pour orchestrer des workflows de maintenance complexes
-    avec une boucle de réparation itérative et un reporting enrichi.
+    🎖️ Chef d'Équipe Coordinateur Enterprise - Agent de Maintenance Principal
+    
+    Agent spécialisé dans l'orchestration centrale de l'équipe de maintenance NextGeneration.
+    Responsable de la coordination des workflows complexes avec boucle de réparation itérative 
+    et génération de rapports stratégiques détaillés.
+    
+    Capacités principales :
+    - Orchestration complète d'équipe de maintenance (12 agents spécialisés)
+    - Boucle de réparation itérative avec classification d'erreurs
+    - Coordination séquentielle : analyse → adaptation → test → validation
+    - Génération de rapports mission complets (JSON + Markdown)
+    - Gestion de santé d'équipe et monitoring temps réel
+    
+    Workflow type :
+    1. Recrutement automatique équipe maintenance 
+    2. Analyse initiale et test de code
+    3. Boucle réparation si nécessaire (max 5 tentatives)
+    4. Documentation et rapport final
+    
+    Conformité : Pattern Factory NextGeneration v4.3.0
     """
     def __init__(self, **kwargs):
         super().__init__(
@@ -70,7 +88,14 @@ class ChefEquipeCoordinateurEnterprise(Agent):
                 await agent.shutdown()
 
     def get_capabilities(self) -> List[str]:
-        return ["workflow_maintenance_complete"]
+        """Retourne les capacités spécialisées du Chef d'Équipe Coordinateur."""
+        return [
+            "workflow_maintenance_complete",
+            "orchestration_equipe_maintenance", 
+            "boucle_reparation_iterative",
+            "coordination_agents_maintenance",
+            "reporting_mission_json_md"
+        ]
         
     def _extraire_mission_docstring(self, code: str) -> str:
         """Extrait la description de la mission depuis le docstring de l'agent."""

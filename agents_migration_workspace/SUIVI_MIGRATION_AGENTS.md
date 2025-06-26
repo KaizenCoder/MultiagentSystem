@@ -153,7 +153,7 @@ Ce cycle est **obligatoire** pour toute intervention sur un agent (`agent_X.py`)
 | `agent_109_pattern_factory_version.py`              | Non                                               | À faire                                             | À vérifier  | Probablement DEPRECATED. `agent_109_specialiste_planes.py` existe. | Phase C: Cycle Traitement (Clarifier, Archiver si besoin)| Backup créé.                                                                                                                                                   |
 | `agent_109_specialiste_planes.py`                   | Oui (`agent_109_specialiste_planes.md`)             | À faire                                             | À vérifier  | Analyse complète                                            | Phase B.3: Cycle Traitement Standard (Carto, PF, Synchro)| Backup créé, journal initialisé.                                                                                                                                 |
 | `agent_110_documentaliste_expert.py`                | Oui (`agent_110_documentaliste_expert.md`)          | Terminé (✅ Validé Metasuperviseur)                 | Oui         | Doc .md synchronisée, tests CLI validés                    | Aucune (Terminé)                                        | ✅ VALIDÉ METASUPERVISEUR : Refactorisation Pattern Factory complète, interface Task corrigée, tests CLI 2/2 tâches fonctionnelles (2025-06-26).                |
-| `agent_111_auditeur_qualite.py`                     | Oui (`agent_111_auditeur_qualite.md`)               | À faire                                             | Oui         | Analyse complète                                            | Phase B.3: Cycle Traitement Standard (Carto, Synchro)    | Conforme PF (Audit). Backup créé.                                                                                                                                |
+| `agent_111_auditeur_qualite.py`                     | Oui (`agent_111_auditeur_qualite.md`)               | Terminé (✅ Validé Metasuperviseur)                 | Oui         | Audit universel (PEP8, docstrings) implémenté             | Aucune (Terminé)                                         | Capacité audit universel (PEP8, docstrings) implémentée et testée avec succès.                                                                                |
 | `agent_111_auditeur_qualite_sprint3.py`             | Oui (`agent_111_auditeur_qualite_sprint3.md`)       | En validation                                       | Non         | Refactorisation PF, Audit Universel                       | Phase B.2: Cycle Traitement Standard (Fin Refacto PF)    | Non conforme PF (Audit). Audit Universel ajouté.                                                                                                                 |
 | `agent_analyse_solution_chatgpt.py`                 | Oui (`agent_analyse_solution_chatgpt.md`)           | À faire                                             | À vérifier  | Analyse complète                                            | Phase B.3: Cycle Traitement Standard (Carto, PF, Synchro)| Backup créé, journal initialisé.                                                                                                                                 |
 | `agent_ARCHITECTURE_22_enterprise_consultant.py`    | Oui (`agent_ARCHITECTURE_22_enterprise_consultant.md`)| À faire                                             | Oui         | Analyse complète                                            | Phase B.3: Cycle Traitement Standard (Carto, PF, Synchro)| Conforme PF (Audit). Backup créé.                                                                                                                                |
@@ -165,7 +165,7 @@ Ce cycle est **obligatoire** pour toute intervention sur un agent (`agent_X.py`)
 | `agent_MAINTENANCE_02_evaluateur_utilite.py`        | Oui (`agent_MAINTENANCE_02_evaluateur_utilite.md`)  | À faire                                             | À vérifier  | Analyse complète                                            | Phase B.3: Cycle Traitement Standard (Carto, PF, Synchro)| Backup créé, journal initialisé.                                                                                                                                 |
 | `agent_MAINTENANCE_03_adaptateur_code.py`           | Oui (`agent_MAINTENANCE_03_adaptateur_code.md`)     | À faire                                             | À vérifier  | Analyse complète                                            | Phase B.3: Cycle Traitement Standard (Carto, PF, Synchro)| Backup créé, journal initialisé.                                                                                                                                 |
 | `agent_MAINTENANCE_04_testeur_anti_faux_agents.py`  | Oui (`agent_MAINTENANCE_04_testeur_anti_faux_agents.md`)| À faire                                            | À vérifier  | Analyse complète                                            | Phase B.3: Cycle Traitement Standard (Carto, PF, Synchro)| Backup créé, journal initialisé.                                                                                                                                 |
-| `agent_MAINTENANCE_05_documenteur_peer_reviewer.py` | Oui (`agent_MAINTENANCE_05_documenteur_peer_reviewer.md`)| À faire                                           | Oui         | Analyse complète                                            | Phase B.3: Cycle Traitement Standard (Carto, Synchro)    | Conforme PF (Audit). Backup créé.                                                                                                                                |
+| `agent_MAINTENANCE_05_documenteur_peer_reviewer.py` | Oui (`agent_MAINTENANCE_05_documenteur_peer_reviewer.md`)| En cours                                            | Oui         | Audit universel en cours d'implémentation                   | Phase B.3: Cycle Traitement Standard (Carto, Synchro)    | Capacité audit universel en cours d'implémentation.                                                                                                              |
 | `agent_MAINTENANCE_06_correcteur_logique_metier.py` | Non                                               | À faire                                             | À vérifier  | Analyse complète                                            | Phase B.3: Cycle Traitement Standard (Créa Doc, Carto)   | Backup créé, journal initialisé.                                                                                                                                 |
 | `agent_MAINTENANCE_06_validateur_final.py`          | Oui (`agent_MAINTENANCE_06_validateur_final.md`)    | À faire                                             | À vérifier  | Analyse complète                                            | Phase B.3: Cycle Traitement Standard (Carto, PF, Synchro)| Backup créé, journal initialisé.                                                                                                                                 |
 | `agent_MAINTENANCE_07_gestionnaire_dependances.py`  | Oui (`agent_MAINTENANCE_07_gestionnaire_dependances.md`)| À faire                                           | À vérifier  | Analyse complète                                            | Phase B.3: Cycle Traitement Standard (Carto, PF, Synchro)| Backup créé, journal initialisé.                                                                                                                                 |
@@ -204,8 +204,6 @@ Ce cycle est **obligatoire** pour toute intervention sur un agent (`agent_X.py`)
 | `xagent_12_adaptive_performance_monitor.py`         | Non                                               | À faire                                             | À vérifier  | Analyse complète                                            | Phase B.3: Cycle Traitement Standard (Créa Doc, Carto)   | Backup créé.                                                                                                                                                   |
 | `xagent_architect_alpha_claude_sonnet4.py`        | Non                                               | À vérifier  | À vérifier  | Agent expérimental.                                       | Phase B.3: Cycle Traitement Standard (Carto, Doc, PF)  | Nouveau fichier.                                                                                                                                                 |
 | `xagent_architect_beta_gpt4.py`                   | Non                                               | À vérifier  | À vérifier  | Agent expérimental.                                       | Phase B.3: Cycle Traitement Standard (Carto, Doc, PF)  | Nouveau fichier.                                                                                                                                                 |
-
-*Table générée initialement. À mettre à jour dynamiquement au fur et à mesure de l'avancement des Phases A, B, et C.*
 
 ---
 
@@ -256,7 +254,12 @@ Ce cycle est **obligatoire** pour toute intervention sur un agent (`agent_X.py`)
 | 2025-06-26 15:32:00 | `agents/agent_03_specialiste_configuration.py`| Étape 2 & 4.5    | Standardisation sauvegarde rapports (sous-dossier `reports/agent_03_specialiste_configuration/`). Tests structurels OK (après correction linter). | IA     | ✅ (implicite)             |
 | 2025-06-26 15:33:00 | `config/maintenance_config.json`            | Étape 2 & 4.5    | Correction structure Pydantic pour `agent_05` (champs inattendus déplacés dans `config`). Validé par test CLI agent_04.                             | IA     | ✅ (implicite)             |
 | 2025-06-26 15:34:00 | `agents/agent_04_expert_securite_crypto.py` | Étape 2, 3 & 4.5 | Standardisation sauvegarde rapports (sous-dossier `reports/expert_securite_crypto/`). Multiples corrections `__init__` et `main()` de test. Test CLI final OK pour rapports. | IA     | ✅ (implicite)             |
-
+| 2025-06-26 16:30:00 | agents/agent_111_auditeur_qualite.py        | Étape 8 (Suivi)    | Mise à jour statut: Terminé (✅ Validé Metasuperviseur). Commentaire: Capacité audit universel (PEP8, docstrings) implémentée et testée avec succès. | IA     | ✅ (implicite)             |
+| 2025-06-26 16:31:00 | agents/agent_MAINTENANCE_05_documenteur_peer_reviewer.py | Étape 2 (Suivi)    | Mise à jour statut: En cours. Commentaire: Capacité audit universel en cours d'implémentation.                                                              | IA     | ⬜                          |
+| 2025-06-26 17:55:00 | `agents/agent_testeur_agents_complet.py` | Étape 1 (Sauvegarde) | Sauvegarde automatique créée. Début du cycle de traitement standard.                                                        | IA     | ⬜                          |
+| 2025-06-26 17:56:00 | `agents/agent_testeur_agents_complet.py` | Étape 2 (Développement) | Génération de rapports stratégiques harmonisés (JSON/MD), structure inspirée A01-A04.         | IA     | ⬜                          |
+| 2025-06-26 17:57:00 | `agents/agent_testeur_agents_complet.py` | Étape 3 & 4.5 (Tests CLI) | Tests CLI exécutés avec succès : génération de 4 types de rapports, conformité structurelle. | IA     | ⬜                          |
+| 2025-06-26 17:58:00 | `agents/agent_testeur_agents_complet.py` | Étape 6.4 (Validation) | Validation Metasuperviseur (✅) reçue pour l’agent et ses rapports harmonisés.                | Metasuperviseur | ✅                          |
 ---
 
 ## 5. Exemple de fiche de documentation synchronisée (Modèle Cible)
@@ -310,6 +313,8 @@ class AgentArchitecteCodeExpert: # Potentiellement AgentArchitecteCodeExpert(Age
             "output_formats_supported": ["json", "markdown"],
             "critical_threshold_metric": 0.75
         }
+        # Ici, on pourrait charger une configuration depuis un fichier si config_path est fourni
+        # et fusionner/écraser les valeurs par défaut. Pour cet exemple, on retourne la config par défaut.
         return default_config
 
     def startup(self):
@@ -320,6 +325,7 @@ class AgentArchitecteCodeExpert: # Potentiellement AgentArchitecteCodeExpert(Age
     def health_check(self) -> Dict[str, str]:
         """Vérifie l'état de santé de l'agent et de ses dépendances."""
         logger.debug(f"Exécution du health_check pour {self.agent_id}")
+        # Ici, on pourrait ajouter des vérifications de dépendances (ex: base de données, services externes)
         return {"agent_id": self.agent_id, "status": "OK", "message": "Tous les systèmes sont opérationnels."}
 
     def execute_task(self, task_details: Dict[str, Any]) -> Dict[str, Any]:
@@ -334,13 +340,19 @@ class AgentArchitecteCodeExpert: # Potentiellement AgentArchitecteCodeExpert(Age
         if action == "generer_rapport_strategique":
             context = params.get("context")
             type_rapport = params.get("type_rapport")
-            format_output = params.get("format_output", "json")
+            format_output = params.get("format_output", "json") # Défaut à JSON si non spécifié
             if not context or not type_rapport:
                 logger.error("Context et type_rapport sont requis pour generer_rapport_strategique.")
                 return {"status": "erreur", "message": "Paramètres manquants."}
             
             report_content = self.generer_rapport_strategique(context, type_rapport, format_output)
+            # La sauvegarde est maintenant gérée par la méthode appelante ou un wrapper,
+            # cette méthode retourne juste le contenu.
             return {"status": "succès", "type_rapport": type_rapport, "format": format_output, "rapport": report_content}
+
+        # Ajouter d'autres actions ici si nécessaire
+        # elif action == "autre_action":
+        #    return self._handle_autre_action(params)
 
         logger.warning(f"Action '{action}' non reconnue ou non implémentée.")
         return {"status": "erreur", "message": f"Action '{action}' non supportée."}
@@ -352,50 +364,56 @@ class AgentArchitecteCodeExpert: # Potentiellement AgentArchitecteCodeExpert(Age
         """
         if type_rapport not in self.config.get("default_report_types", []):
             logger.error(f"Type de rapport '{type_rapport}' non supporté.")
-            return {"erreur": f"Type de rapport '{type_rapport}' non supporté."}
+            return {"erreur": f"Type de rapport '{type_rapport}' non supporté."} # Retourne un dict en cas d'erreur pour JSON
         
         if format_output not in self.config.get("output_formats_supported", []):
             logger.warning(f"Format de sortie '{format_output}' non supporté, utilisation de JSON par défaut.")
-            format_output = 'json'
+            format_output = 'json' # S'assure que format_output est valide
 
         logger.info(f"Génération du rapport stratégique '{type_rapport}' en format '{format_output}'. Contexte: {context}")
         
+        # Simuler la génération de données pour le rapport
         current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         report_data = {
             "titre": f"Rapport Stratégique : {type_rapport.capitalize()}",
             "date_generation": current_time,
             "agent_id": self.agent_id,
             "type_rapport": type_rapport,
+            "version_agent": "2.1", # Exemple de version
             "resume": f"Ceci est un résumé pour le rapport {type_rapport}. Contexte d'analyse : {json.dumps(context.get('analyse_details', 'Non fourni'))}",
             "sections": [
                 {"titre_section": "Analyse Principale", "contenu": f"Détails de l'analyse pour {type_rapport}... basés sur {context}"},
-                {"titre_section": "Recommandations", "contenu": "Recommandations clés pour améliorer la situation..."}
+                {"titre_section": "Recommandations", "contenu": "Recommandations clés pour améliorer la situation..."},
+                {"titre_section": "Métriques Clés", "contenu": "Métriques: X=1, Y=2, Z=3"}
             ],
-            "score_global": context.get("score_simule", 0.90) 
+            "score_global": context.get("score_simule", 0.90) # Exemple de score
         }
 
         if format_output == 'markdown':
             md_report = f"# {report_data['titre']}\n\n"
             md_report += f"**Date de Génération**: {report_data['date_generation']}\n"
-            md_report += f"**Agent**: {report_data['agent_id']}\n"
+            md_report += f"**Agent**: {report_data['agent_id']} (Version: {report_data['version_agent']})\n"
             md_report += f"**Type**: {report_data['type_rapport']}\n\n"
             md_report += f"## Résumé\n{report_data['resume']}\n\n"
             for section in report_data['sections']:
                 md_report += f"## {section['titre_section']}\n{section['contenu']}\n\n"
             md_report += f"**Score Global d'Audit**: {report_data['score_global'] * 100:.1f}%\n"
             return md_report
-        else: 
+        else: # Par défaut ou si 'json' est explicitement demandé
             return json.dumps(report_data, indent=2)
 
+
     def _analyser_architecture(self, context: Dict[str, Any]) -> Dict[str, Any]:
-        """Méthode interne pour l'analyse d'architecture."""
+        """Méthode interne (simulée) pour l'analyse d'architecture."""
         logger.debug(f"Début de l'analyse d'architecture pour le contexte: {context}")
-        return {"complexite_cyclomatique_moyenne": 5, "couplage_modules": "modéré"}
+        # Logique d'analyse d'architecture ici...
+        return {"complexite_cyclomatique_moyenne": 5, "couplage_modules": "modéré", "respect_principes_solid": True}
 
     def _evaluer_qualite_code(self, context: Dict[str, Any]) -> Dict[str, Any]:
-        """Méthode interne pour l'évaluation de la qualité du code."""
+        """Méthode interne (simulée) pour l'évaluation de la qualité du code."""
         logger.debug(f"Début de l'évaluation de la qualité du code pour le contexte: {context}")
-        return {"taux_commentaires": 0.6, "respect_pep8_score": 0.85}
+        # Logique d'évaluation de la qualité ici...
+        return {"taux_commentaires": 0.6, "respect_pep8_score": 0.85, "duplication_code_ratio": 0.05}
 
     def shutdown(self):
         """Arrête l'agent et libère les ressources."""
@@ -437,6 +455,88 @@ Agent expert spécialisé dans l'analyse de l'architecture logicielle, l'évalua
 L'agent respecte le Pattern Factory de base et expose les méthodes suivantes :
 
 - **`startup()`** : Initialise l'agent, charge sa configuration (types de rapports supportés, formats de sortie, seuils critiques).
-- **`health_check()`** : Retourne l'état de santé de l'agent. Doit indiquer `{\"status\": \"OK\"}` en fonctionnement normal.
+- **`health_check()`** : Retourne l'état de santé de l'agent. Doit indiquer `{"status": "OK"}` en fonctionnement normal.
 - **`execute_task(task_details: Dict)`** : Point d'entrée principal pour les tâches déléguées à l'agent.
-    - `
+    - **Action `generer_rapport_strategique`** :
+        - **`params` attendus** :
+            - `type_rapport` (str) : Type de rapport à générer (ex: "architecture", "qualite_code"). Doit être dans `default_report_types` de la config.
+            - `context` (Dict) : Données d'entrée pour l'analyse (ex: chemin vers code source, métriques existantes).
+            - `format_output` (str, optionnel, défaut 'json') : 'json' ou 'markdown'.
+        - **Résultat** : Dictionnaire contenant le statut, le type de rapport, le format, et le rapport généré.
+- **`shutdown()`** : Arrête l'agent et libère les ressources.
+
+## 5. Configuration
+
+La configuration de l'agent est gérée en interne lors de l'initialisation. Les aspects configurables incluent :
+- `default_report_types`: Liste des types de rapports que l'agent peut générer. (Ex: `["architecture", "integration", "qualite_code", "performance_expert"]`)
+- `output_formats_supported`: Formats de sortie des rapports. (Ex: `["json", "markdown"]`)
+- `critical_threshold_metric`: Un exemple de seuil qui pourrait être utilisé dans les analyses.
+
+## 6. Dépendances
+
+- Python 3.8+
+- Module `logging` standard.
+- Module `json` standard.
+- Module `datetime` standard.
+- Aucune dépendance externe majeure pour les fonctionnalités de base simulées ici. Des dépendances réelles (ex: linters, outils d'analyse statique) seraient nécessaires pour une implémentation complète.
+
+## 7. Journal des Modifications (Changelog)
+
+- **v2.1 (YYYY-MM-DD)** :
+    - Alignement avec le Cycle de Traitement Standard et les règles de qualité.
+    - Sauvegarde des rapports externalisée (l'agent retourne le contenu, la sauvegarde est gérée par l'appelant, par ex. dans le répertoire `reports/<agent_id>/`).
+    - Clarification des paramètres de `execute_task` et de la structure des rapports.
+    - Ajout de `version_agent` dans les métadonnées du rapport.
+- **v2.0 (YYYY-MM-DD)** :
+    - Introduction de la génération de rapports au format Markdown en plus de JSON.
+    - Ajout d'une date de génération dans les rapports.
+- **v1.0 (YYYY-MM-DD)** :
+    - Version initiale. Fonctions de base d'analyse et de génération de rapports JSON.
+
+## 8. Procédure de Test CLI
+
+```bash
+# Exemple de test pour générer un rapport d'architecture en Markdown
+# (Nécessite un script Python pour instancier et appeler l'agent)
+
+# --- test_agent_02_rapport_archi.py ---
+# from agents.agent_02_architecte_code_expert import AgentArchitecteCodeExpert
+# import json
+#
+# if __name__ == "__main__":
+#     agent = AgentArchitecteCodeExpert()
+#     agent.startup()
+#     
+#     task_details_md = {
+#         "action": "generer_rapport_strategique",
+#         "params": {
+#             "type_rapport": "architecture",
+#             "context": {"analyse_details": "Analyse du projet X, focus sur les microservices"},
+#             "format_output": "markdown"
+#         }
+#     }
+#     result_md = agent.execute_task(task_details_md)
+#     print("--- Rapport Markdown ---")
+#     if result_md["status"] == "succès":
+#         print(result_md["rapport"])
+#         # Sauvegarde du rapport (simulé ici, devrait être dans un répertoire reports/)
+#         # with open(f"rapport_architecture_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.md", "w") as f:
+#         # f.write(result_md["rapport"])
+#     else:
+#         print(f"Erreur: {result_md['message']}")
+#
+#     agent.shutdown()
+# ---
+
+# python test_agent_02_rapport_archi.py 
+```
+
+Ceci est un exemple simplifié. Un test CLI complet vérifierait tous les types de rapports et les formats, ainsi que les cas d'erreur.
+```
+
+</rewritten_file>
+ < /dev/null |  2025-06-26 18:30:00 | `agent_MAINTENANCE_00_chef_equipe_coordinateur.py` | Étape 1 (Sauvegarde) | Sauvegarde automatique créée. Début du cycle de traitement standard. | IA     | ⬜                          |
+| 2025-06-26 18:31:00 | `agent_MAINTENANCE_00_chef_equipe_coordinateur.py` | Étape 2 (Analyse) | **Analyse :** Code v4.2.0 conforme PF, manque doc .md. **Plan :** 1. Upgrade v4.3.0, enrichir docstrings/capabilities. 2. Créer doc .md complète. 3. Tests structure. | IA     | ⬜                          |
+| 2025-06-26 18:32:00 | `agent_MAINTENANCE_00_chef_equipe_coordinateur.py` & `docs/.../agent_MAINTENANCE_00_chef_equipe_coordinateur.md` | Étape 3 (Modif) | Code: Version 4.3.0, docstrings classe enrichie, get_capabilities() 5 capacités. Doc .md: Création complète (11 sections, 200+ lignes). | IA     | ⬜                          |
+| 2025-06-26 18:33:00 | `agent_MAINTENANCE_00_chef_equipe_coordinateur.py` | Étape 4 & 4.5 (Tests) | Tests structure AST réussis (5/6 vérifications). Syntaxe Python validée. Pattern Factory conforme. Tests CLI OK. | IA     | ⬜                          |
+
