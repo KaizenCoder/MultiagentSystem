@@ -15,6 +15,7 @@ import re
 from collections import defaultdict
 from core.agent_factory_architecture import Agent, Task, Result
 import logging
+from tools.universal_audit_report import generate_universal_audit_md
 
 class AgentMAINTENANCE08AnalyseurPerformance(Agent):
     def __init__(self, **kwargs):
@@ -85,6 +86,11 @@ class AgentMAINTENANCE08AnalyseurPerformance(Agent):
 
             self.logger.info(f"Analyse de performance terminée pour {file_path} - Score: {performance_score}/100")
             
+            # Génération du rapport universel (en plus du rapport classique)
+            output_md_universal = f"reports/audits/{file_path.replace('.', '_')}_performance_audit_universal.md"
+            generate_universal_audit_md(report, agent_type="performance", output_path=output_md_universal, extra={"auditeur": "AgentMAINTENANCE08AnalyseurPerformance"})
+            self.logger.info(f"Rapport Markdown universel généré : {output_md_universal}")
+
             return Result(success=True, data={
                 "performance_report": report,
                 "needs_optimization": performance_score < 70
@@ -317,3 +323,55 @@ class AgentMAINTENANCE08AnalyseurPerformance(Agent):
 def create_agent_MAINTENANCE_08_analyseur_performance(**config) -> "AgentMAINTENANCE08AnalyseurPerformance":
     """Factory pour créer une instance de l'analyseur de performance."""
     return AgentMAINTENANCE08AnalyseurPerformance(**config)
+
+async def main():
+    # Création de l'agent
+    security_agent = AgentMAINTENANCE08AnalyseurPerformance()
+    await security_agent.startup()
+
+    # Code à analyser
+    sample_code = """
+import os
+import pickle
+
+password = "my_super_secret_password"
+api_key = 'hf_1234567890abcdef1234567890abcdef'
+
+def execute_command(user_input):
+    os.system(f"echo {user_input}")
+
+def deserialize_data(data):
+    return pickle.loads(data)
+
+def dynamic_exec(code_str):
+    exec(code_str)
+"""
+
+    # Création de la tâche
+    task = Task(
+        type="optimize_performance",
+        params={"code": sample_code, "file_path": "example.py"}
+    )
+
+    # Exécution de la tâche
+    result = await security_agent.execute_task(task)
+
+    # Affichage des résultats
+    if result.success:
+        report = result.data['performance_report']
+        print("--- Rapport de Performance ---")
+        print(f"Fichier: {report['file_path']}")
+        print(f"Score de performance: {report['performance_score']}/100")
+        print(f"Complexité cyclomatique: {report['complexity_analysis']['cyclomatic_complexity']}")
+        print(f"Anti-patterns détectés: {len(report['antipatterns_detected'])}")
+        print(f"Optimisations suggérées: {len(report['optimizations_suggested'])}")
+        # Génération du rapport universel (en plus du rapport classique)
+        output_md_universal = f"reports/audits/{report['file_path'].replace('.', '_')}_performance_audit_universal.md"
+        generate_universal_audit_md(report, agent_type="performance", output_path=output_md_universal, extra={"auditeur": "AgentMAINTENANCE08AnalyseurPerformance"})
+        print(f"Rapport Markdown universel généré : {output_md_universal}")
+        with open(output_md_universal, "r", encoding="utf-8") as f:
+            print(f.read())
+    else:
+        print("Erreur lors de l'analyse de performance :", result.error)
+
+    await security_agent.shutdown()

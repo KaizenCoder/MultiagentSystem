@@ -1,0 +1,279 @@
+#!/usr/bin/env python3
+"""
+🔒 Agent 04 - Expert Sécurité Cryptographique
+"""
+
+import os
+import sys
+import json
+import asyncio
+import base64
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, Any, Optional, List
+from dataclasses import dataclass
+from cryptography.fernet import Fernet
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import rsa, padding
+import jwt
+import hvac
+
+# --- Imports Core & Factory ---
+try:
+    from core.agent_factory_architecture import Agent, Task, Result
+    from core.manager import LoggingManager
+    from core.config_models_agent.config_models_maintenance import get_maintenance_config
+    CONFIG_SYSTEM_AVAILABLE = True
+except ImportError as e:
+    # Utiliser le logger de base s'il est disponible
+    try:
+        logging_manager.get_logger().error(f"Impossible d'importer le système de configuration: {e}")
+    except NameError:
+        print(f"ERREUR CRITIQUE: Impossible d'importer le système de configuration: {e}")
+    CONFIG_SYSTEM_AVAILABLE = False
+
+
+class SecurityException(Exception):
+    """Exception levée pour les violations de sécurité."""
+    pass
+
+
+@dataclass
+class SecurityMetrics:
+    """Métriques sécurité temps réel pour Prometheus"""
+    signatures_created: int = 0
+    signatures_verified: int = 0
+    signature_failures: int = 0
+    key_rotations: int = 0
+    vault_operations: int = 0
+    policy_violations: int = 0
+    security_scans: int = 0
+    vulnerabilities_found: int = 0
+    templates_secured: int = 0
+    avg_signature_time: float = 0.0
+    avg_verification_time: float = 0.0
+    avg_policy_check_time: float = 0.0
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "signatures": {
+                "created": self.signatures_created,
+                "verified": self.signatures_verified,
+                "failures": self.signature_failures,
+                "avg_time_ms": self.avg_signature_time * 1000
+            },
+            "vault": {
+                "operations": self.vault_operations,
+                "key_rotations": self.key_rotations
+            },
+            "policy": {
+                "violations": self.policy_violations,
+                "avg_check_time_ms": self.avg_policy_check_time * 1000
+            },
+            "security": {
+                "scans": self.security_scans,
+                "vulnerabilities": self.vulnerabilities_found,
+                "templates_secured": self.templates_secured
+            }
+        }
+
+
+class Agent04ExpertSecuriteCrypto(Agent):
+    """🔒 Agent 04 - Expert Sécurité Cryptographique - v3.1"""
+
+    def __init__(self, **config):
+        """Initialise l'agent de sécurité."""
+        super().__init__("expert_securite_crypto", **config)
+        self.logging_manager = LoggingManager()
+        self.logger = self.logging_manager.get_logger("agent_securite")
+        self.version = "3.1.0"
+        self.name = "Expert Sécurité et Cryptographie"
+        self.logger.info(f"Agent {self.name} v{self.version} en cours d'initialisation.")
+        
+        if not CONFIG_SYSTEM_AVAILABLE:
+            raise RuntimeError("Le système de configuration centralisé n'est pas disponible.")
+        
+        self.maintenance_config = get_maintenance_config()
+        self.logger.info("Configuration centralisée chargée.")
+
+        self.jwt_secret_key = self.maintenance_config.tools.jwt.secret_key
+        self.private_key = None
+        self.public_key = None
+        self.vault_client = None
+        self.metrics = SecurityMetrics()
+
+    async def startup(self):
+        """Démarre l'agent et initialise les services externes comme Vault."""
+        self.logger.info(f"Démarrage de {self.name} v{self.version}")
+        await super().startup()
+
+        try:
+            await self._initialize_vault_client()
+        except Exception as e:
+            self.logger.warning(f"[VAULT] Impossible d'initialiser le client Vault : {e}. L'agent continuera sans les fonctionnalités de Vault.")
+
+        self._generate_rsa_keys()
+        self.logger.info(f"{self.name} est maintenant actif.")
+
+    async def _initialize_vault_client(self):
+        """Initialise le client Vault de manière asynchrone."""
+        self.logger.info("Initialisation du client Vault...")
+        try:
+            vault_url = self.maintenance_config.tools.hvac.vault_url
+            vault_token = self.maintenance_config.tools.hvac.vault_token
+
+            self.vault_client = hvac.Client(url=vault_url, token=vault_token)
+            
+            # hvac ne fournit pas de méthode de test async, nous devons donc supposer que c'est ok
+            # ou utiliser une bibliothèque http async pour tester le port. Pour l'instant, on log.
+            if self.vault_client.is_authenticated():
+                 self.logger.info("[VAULT] Client Vault authentifié avec succès.")
+            else:
+                 self.logger.warning("[VAULT] Client Vault non authentifié mais l'objet client est créé.")
+
+        except Exception as e:
+            self.logger.error(f"Erreur lors de l'initialisation de Vault: {e}")
+            self.vault_client = None
+            raise  # Propage l'erreur pour que startup puisse la gérer
+
+    def _generate_rsa_keys(self):
+        """Génère une paire de clés RSA si elles n'existent pas."""
+        self.logger.info("Vérification/Génération des clés RSA...")
+        rsa_conf = self.maintenance_config.tools.rsa
+        try:
+            self.private_key = rsa.generate_private_key(
+                public_exponent=65537,
+                key_size=rsa_conf.key_size,
+            )
+            self.public_key = self.private_key.public_key()
+            self.logger.info(f"Paire de clés RSA de {rsa_conf.key_size} bits générée.")
+        except Exception as e:
+            self.logger.error(f"Erreur génération clés RSA: {e}", exc_info=True)
+
+    async def execute_task(self, task: Task) -> Result:
+        """Exécute une tâche de sécurité."""
+        # This agent is not designed to be called directly by the coordinator in this way yet.
+        # Its methods would be called by other agents requiring security services.
+        return Result(success=True, data={"message": "Agent de sécurité est en attente de tâches spécifiques."})
+
+    def _sign_data(self, data: bytes) -> Optional[bytes]:
+        """Signe des données avec la clé privée RSA."""
+        if not self.private_key:
+            self.logger.error("La clé privée n'est pas disponible pour la signature.")
+            return None
+        return self.private_key.sign(
+            data,
+            padding.PKCS1v15(),
+            hashes.SHA256()
+        )
+
+    def sign_correction_plan(self, plan: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """
+        Signe un plan de correction pour en garantir l'intégrité et l'authenticité.
+        """
+        if not self.private_key:
+            raise SecurityException("Impossible de signer le plan : clé privée non disponible.")
+        
+        # Sérialisation canonique pour garantir une signature cohérente
+        plan_bytes = json.dumps(plan, sort_keys=True, separators=(',', ':')).encode('utf-8')
+        
+        signature = self.private_key.sign(
+            plan_bytes,
+            padding.PKCS1v15(),
+            hashes.SHA256()
+        )
+        
+        signed_plan = {
+            "plan": plan,
+            "signature": base64.b64encode(signature).decode('utf-8'),
+            "signer_id": self.id
+        }
+        self.logger.info(f"Plan de correction signé par {self.id}.")
+        return signed_plan
+
+    def verify_correction_plan(self, signed_plan: Dict[str, Any]) -> bool:
+        """
+        Vérifie la signature d'un plan de correction.
+        """
+        if not self.public_key:
+            raise SecurityException("Impossible de vérifier le plan : clé publique non disponible.")
+            
+        plan = signed_plan.get("plan")
+        signature_b64 = signed_plan.get("signature")
+
+        if not plan or not signature_b64:
+            raise SecurityException("Le plan ou la signature est manquant dans l'objet signé.")
+
+        plan_bytes = json.dumps(plan, sort_keys=True, separators=(',', ':')).encode('utf-8')
+        signature = base64.b64decode(signature_b64)
+        
+        try:
+            self.public_key.verify(
+                signature,
+                plan_bytes,
+                padding.PKCS1v15(),
+                hashes.SHA256()
+            )
+            self.logger.info(f"Vérification de la signature réussie pour le plan signé par {signed_plan.get('signer_id')}.")
+            return True
+        except Exception as e:
+            self.logger.error(f"ÉCHEC DE LA VÉRIFICATION DE SIGNATURE : {e}", exc_info=True)
+            return False
+
+    # --- Méthodes Abstraites de la Classe de Base ---
+    
+    async def shutdown(self):
+        """Arrête l'agent proprement."""
+        self.logger.info(f"🛑 Agent {self.id} ({self.name}) arrêté.")
+        self.status = "ARRETE"
+        await super().shutdown()
+
+    async def health_check(self) -> Dict[str, Any]:
+        """Vérifie l'état de santé de l'agent."""
+        is_healthy = self.vault_client is not None and self.vault_client.is_authenticated()
+        status = "SAIN" if is_healthy else "DÉGRADÉ"
+        return {
+            "status": status, 
+            "version": self.version, 
+            "vault_connected": is_healthy,
+            "timestamp": datetime.now().isoformat()
+        }
+
+    def get_capabilities(self) -> Dict[str, Any]:
+        """Retourne les capacités de l'agent."""
+        return {
+            "name": self.name,
+            "version": self.version,
+            "mission": "Fournir des services cryptographiques (signature, chiffrement, JWT) et interagir avec Vault.",
+            "tasks": [
+                {
+                    "name": "sign_correction_plan",
+                    "description": "Signe un plan de correction structuré.",
+                },
+                {
+                    "name": "verify_correction_plan",
+                    "description": "Vérifie la signature d'un plan de correction.",
+                },
+                {
+                    "name": "sign_data",
+                    "description": "Signe des données avec la clé privée de l'agent.",
+                },
+                {
+                    "name": "create_jwt",
+                    "description": "Crée un token JWT signé.",
+                }
+            ]
+        }
+
+def create_agent_04_expert_securite_crypto(**kwargs) -> Agent04ExpertSecuriteCrypto:
+    return Agent04ExpertSecuriteCrypto(**kwargs)
+
+if __name__ == '__main__':
+    async def main():
+        # Test d'exécution standalone
+        agent = create_agent_04_expert_securite_crypto()
+        await agent.startup()
+        print(f"Statut de l'agent: {agent.status}")
+        await agent.shutdown()
+
+    asyncio.run(main()) 

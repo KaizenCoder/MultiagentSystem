@@ -1,0 +1,270 @@
+#!/usr/bin/env python3
+"""
+🎖️ CHEF D'ÉQUIPE COORDINATEUR ENTERPRISE - Pattern Factory NextGeneration
+===============================================================================
+
+🎯 Mission : Orchestration centrale de l'équipe de maintenance.
+⚡ Capacités : Boucle de réparation itérative, coordination d'équipe, reporting.
+
+Author: Équipe de Maintenance NextGeneration
+Version: 4.2.0 - Report Enrichment
+"""
+
+import asyncio
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, List, Any, Optional
+import sys
+import time
+import json
+import logging
+import uuid
+import re
+
+# Import direct de l'architecture et des agents
+from core.agent_factory_architecture import Agent, Task, Result, AgentFactory
+
+def classify_exception(exc: Exception) -> str:
+    """
+    Classe les exceptions pour orienter la stratégie de réparation.
+    """
+    if isinstance(exc, (IndentationError, TabError)) or ("indent" in str(exc).lower()):
+        return "indentation"
+    if isinstance(exc, NameError):
+        return "name"
+    if isinstance(exc, (ImportError, ModuleNotFoundError)):
+        return "import"
+    # ... autres classes à ajouter selon besoin
+    return "generic"
+
+class ChefEquipeCoordinateurEnterprise(Agent):
+    """
+    Chef d'équipe pour orchestrer des workflows de maintenance complexes
+    avec une boucle de réparation itérative et un reporting enrichi.
+    """
+    def __init__(self, **kwargs):
+        super().__init__(
+            agent_type="coordinateur",
+            **kwargs
+        )
+        self.logger = logging.getLogger(self.__class__.__name__)
+        self.agent_id = self.id
+
+        self.logger.info(f"Chef d'équipe v4.2.0 initialisé avec ID: {self.agent_id}")
+        
+        self.workspace_path = Path(kwargs.get("workspace_path", "."))
+        self.factory = AgentFactory(config_path=str(self.workspace_path / "config" / "maintenance_config.json"))
+        
+        self.equipe_agents: Dict[str, Agent] = {}
+        self.mission_context = {}
+        
+    async def startup(self):
+        self.logger.info(f"🚀 Démarrage du Chef d'Équipe {self.agent_id}")
+        await self._recruter_equipe()
+        self.logger.info("Chef d'Équipe prêt et équipe recrutée.")
+
+    async def shutdown(self):
+        self.logger.info(f"🛑 Arrêt du Chef d'Équipe {self.agent_id}")
+        for agent in self.equipe_agents.values():
+            if hasattr(agent, 'shutdown'):
+                await agent.shutdown()
+
+    def get_capabilities(self) -> List[str]:
+        return ["workflow_maintenance_complete"]
+        
+    def _extraire_mission_docstring(self, code: str) -> str:
+        """Extrait la description de la mission depuis le docstring de l'agent."""
+        match = re.search(r'🎯 Mission\s*:\s*(.*)', code)
+        if match:
+            return match.group(1).strip()
+        return "Non spécifiée"
+
+    async def health_check(self) -> Dict[str, Any]:
+        team_status = {}
+        for role, agent in self.equipe_agents.items():
+            try:
+                agent_health = await agent.health_check()
+                team_status[role] = agent_health.get("status", "unknown")
+            except Exception:
+                team_status[role] = "error"
+        is_healthy = all(s == "healthy" for s in team_status.values())
+        return {"status": "healthy" if is_healthy else "degraded", "team_status": team_status}
+
+    async def execute_task(self, task: Task) -> Result:
+        if task.type == "workflow_maintenance_complete":
+            final_report = await self.workflow_maintenance_complete(task.params)
+            return Result(success=True, data=final_report)
+        return Result(success=False, error=f"Tâche non reconnue: {task.type}")
+
+    async def workflow_maintenance_complete(self, mission_config: Dict) -> Dict:
+        mission_id = f"mission_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        self.logger.info(f"===== DÉBUT DE LA MISSION DE MAINTENANCE : {mission_id} =====")
+        start_time = time.time()
+
+        agents_a_traiter = mission_config.get("target_files", [])
+        
+        self.mission_context = {
+            "mission_id": mission_id,
+            "statut_mission": "EN_COURS",
+            "resultats_par_agent": [],
+            "agents_reports": {}
+        }
+        
+        for agent_path_str in agents_a_traiter:
+            agent_path = Path(agent_path_str)
+            agent_name = agent_path.name
+            self.logger.info(f"--- 🔁 DÉBUT DU TRAITEMENT ITÉRATIF POUR: {agent_name} ---")
+            
+            file_report = self.mission_context["agents_reports"].setdefault(agent_name, {})
+            
+            try:
+                current_code = await self._read_agent_code(agent_path)
+                file_report["original_code"] = current_code
+
+                # STRATÉGIE SIMPLIFIÉE : TESTER D'ABORD
+                initial_test_result = await self._run_sub_task("testeur", "test_code", {"code": current_code, "file_path": agent_path.as_posix()})
+
+                if not initial_test_result.success:
+                    self.logger.warning(f"  -> Échec du test initial pour {agent_name}. Lancement de la réparation.")
+                    initial_exception = initial_test_result.data.get("exception") if initial_test_result.data else Exception(initial_test_result.error)
+                    
+                    repaired_code = await self._perform_repair_loop(
+                        current_code=current_code,
+                        max_retries=5,
+                        initial_exception=initial_exception,
+                        file_path=agent_path.as_posix()
+                    )
+                    
+                    if repaired_code:
+                        file_report["status"] = "REPAIRED"
+                        file_report["final_code"] = repaired_code
+                    else:
+                        file_report["status"] = "REPAIR_FAILED"
+                else:
+                    # Si le test passe, on peut faire les autres analyses
+                    self.logger.info(f"  -> Test initial réussi pour {agent_name}. Pas de réparation nécessaire.")
+                    file_report["status"] = "SUCCESS"
+                    file_report["final_code"] = current_code
+
+            except Exception as e:
+                self.logger.error(f"Erreur critique lors du traitement de {agent_name}: {e}", exc_info=True)
+                file_report["status"] = "CRITICAL_ERROR"
+            
+            self.logger.info(f"--- ☑️ FIN DU TRAITEMENT POUR: {agent_name} ---")
+
+        self.mission_context["duree_totale_sec"] = time.time() - start_time
+        self.mission_context["statut_mission"] = "SUCCÈS - Terminée"
+        
+        await self._generer_et_sauvegarder_rapports(mission_id)
+        
+        return self.mission_context
+
+    async def _perform_repair_loop(self, current_code: str, max_retries: int, initial_exception: Exception, file_path: str) -> Optional[str]:
+        last_exception = initial_exception
+        
+        for attempt in range(max_retries):
+            # CLASSIFICATION DE L'ERREUR
+            error_type = classify_exception(last_exception)
+            self.logger.info(f"Tentative de réparation {attempt + 1}/{max_retries}. Erreur: {last_exception} (type: {error_type})")
+
+            # ADAPTATION
+            adapt_result = await self._run_sub_task(
+                "adaptateur", 
+                "adapt_code", 
+                {
+                    "code": current_code, 
+                    "feedback": last_exception,
+                    "error_type": error_type
+                }
+            )
+            
+            if not (adapt_result and adapt_result.success and adapt_result.data.get("adapted_code")):
+                self.logger.error("L'adaptateur a échoué. Abandon.")
+                return None
+            
+            current_code = adapt_result.data["adapted_code"]
+
+            # TEST
+            test_result = await self._run_sub_task("testeur", "test_code", {"code": current_code, "file_path": file_path})
+
+            if test_result.success:
+                self.logger.info("  -> Code réparé et validé avec succès!")
+                return current_code
+            
+            last_exception = test_result.data.get("exception") if test_result.data else Exception(test_result.error)
+        
+        self.logger.error(f"Échec de la réparation après {max_retries} tentatives.")
+        return None
+
+    async def _read_agent_code(self, agent_path: Path) -> str:
+        return agent_path.read_text(encoding='utf-8')
+
+    async def _generer_et_sauvegarder_rapports(self, mission_id):
+        self.logger.info("Génération du rapport de mission par l'agent Documenteur...")
+        self.mission_context['equipe_maintenance_roles'] = list(self.equipe_agents.keys())
+        doc_result = await self._run_sub_task("documenteur", "generate_mission_report", {"report_data": self.mission_context})
+        
+        report_dir = self.workspace_path / "reports"
+        report_dir.mkdir(exist_ok=True, parents=True)
+
+        json_report_path = report_dir / f"rapport_mission_{mission_id}.json"
+        with open(json_report_path, "w", encoding="utf-8") as f:
+            json.dump(self.mission_context, f, indent=2)
+        self.logger.info(f"Rapport JSON détaillé sauvegardé : {json_report_path}")
+
+        if doc_result and doc_result.success:
+            md_content = doc_result.data.get("md_content")
+            md_report_path = report_dir / f"rapport_mission_{mission_id}.md"
+            with open(md_report_path, "w", encoding="utf-8") as f:
+                f.write(md_content)
+            self.logger.info(f"Rapport Markdown sauvegardé : {md_report_path}")
+        else:
+            self.logger.error("L'agent Documenteur a échoué à générer le rapport Markdown.")
+
+    async def _recruter_equipe(self):
+        self.logger.info("Recrutement de l'équipe de maintenance...")
+        
+        roles = [
+            "analyseur_structure", 
+            "evaluateur",
+            "correcteur_semantique",
+            "adaptateur", 
+            "testeur", 
+            "documenteur", 
+            "analyseur_performance",
+            "dependency_manager",
+            "security_manager",
+            "correcteur_logique",
+            "auditeur_qualite",
+            "harmonisateur_style"
+        ]
+        
+        for role in roles:
+            try:
+                agent = self.factory.create_agent(role)
+                if hasattr(agent, 'startup'):
+                    await agent.startup()
+                self.equipe_agents[role] = agent
+            except Exception as e:
+                self.logger.error(f"Erreur lors de la création de l'agent {role}: {e}")
+
+    async def _run_sub_task(self, agent_type: str, task_type: str, params: Dict[str, Any]) -> Result:
+        """Exécute une sous-tâche sur un agent spécifique."""
+        agent = self.equipe_agents.get(agent_type)
+        if not agent:
+            self.logger.error(f"Agent avec le rôle '{agent_type}' non trouvé dans l'équipe.")
+            return Result(success=False, error=f"Agent '{agent_type}' non disponible.")
+        
+        task = Task(type=task_type, params=params)
+        
+        try:
+            result = await agent.execute_task(task)
+            return result
+        except Exception as e:
+            self.logger.error(f"Erreur lors de l'exécution de la tâche '{task_type}' sur '{agent_type}': {e}", exc_info=True)
+            result = Result(success=False, error=str(e))
+            return result
+
+def create_agent_MAINTENANCE_00_chef_equipe_coordinateur(**kwargs) -> ChefEquipeCoordinateurEnterprise:
+    """Crée une instance du Chef d'Équipe Coordinateur."""
+    return ChefEquipeCoordinateurEnterprise(**kwargs)

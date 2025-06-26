@@ -1,0 +1,191 @@
+"""
+🔍 PEER-REVIEWER ENRICHI / DOCUMENTEUR - Agent 05
+==============================================================
+
+🎯 Mission : Générer un rapport de mission détaillé et analytique.
+⚡ Capacités : Analyse fine des erreurs, génération de diff, synthèse de mission.
+🏢 Équipe : NextGeneration Tools Migration
+
+Author: Équipe de Maintenance NextGeneration
+Version: 5.1.0 - Mission Display
+"""
+
+import asyncio
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, List, Any
+import sys
+import difflib
+import logging
+
+# --- Configuration Robuste du Chemin d'Importation ---
+try:
+    project_root = Path(__file__).resolve().parents[1]
+    if str(project_root) not in sys.path:
+        sys.path.insert(0, str(project_root))
+except (IndexError, NameError):
+    if '.' not in sys.path:
+        sys.path.insert(0, '.')
+
+from core.agent_factory_architecture import Agent, Task, Result
+
+class AgentMAINTENANCE05DocumenteurPeerReviewer(Agent):
+    """Génère des rapports de mission de maintenance détaillés et analytiques."""
+    
+    def __init__(self, **kwargs):
+        super().__init__(agent_type="documenteur", **kwargs)
+        self.logger = logging.getLogger(self.__class__.__name__)
+        self.agent_id = self.id
+        self.logger.info(f"🔍 Agent Documenteur ({self.agent_id}) initialisé")
+
+    async def startup(self):
+        """Démarre l'agent Documenteur."""
+        self.logger.info("Agent Documenteur prêt.")
+
+    async def shutdown(self):
+        """Arrête l'agent Documenteur."""
+        self.logger.info("Agent Documenteur éteint.")
+
+    async def health_check(self) -> Dict[str, Any]:
+        """Vérifie l'état de santé de l'agent."""
+        return {"status": "healthy", "version": self.version}
+
+    def get_capabilities(self) -> List[str]:
+        return ["generate_mission_report"]
+
+    async def execute_task(self, task: Task) -> Result:
+        self.logger.info(f"🎯 Exécution tâche: {task.type}")
+        if task.type == "generate_mission_report":
+            report_data = task.params.get("report_data")
+            if not report_data:
+                return Result(success=False, error="Données du rapport manquantes.")
+            
+            md_content = self._generer_rapport_md_enrichi(report_data)
+            return Result(success=True, data={"md_content": md_content})
+        else:
+            return Result(success=False, error=f"Tâche non reconnue: {task.type}")
+
+    def _generer_diff(self, original_code: str, final_code: str) -> str:
+        if not original_code or not final_code or original_code == final_code:
+            return "Aucune modification de code n'a été effectuée."
+        diff = difflib.unified_diff(
+            original_code.splitlines(keepends=True),
+            final_code.splitlines(keepends=True),
+            fromfile='original', tofile='corrected'
+        )
+        diff_str = "".join(diff)
+        return f"```diff\n{diff_str}\n```" if diff_str else "Aucune modification de code détectée."
+
+    def _format_history(self, history: List[Dict]) -> List[str]:
+        lines = ["- **Historique de Réparation :**", "  <details><summary>Cliquer pour voir les étapes</summary>", "  "]
+        for attempt in history:
+            lines.append(f"  - **Tentative {attempt.get('iteration', '?')}**")
+            lines.append(f"    - **Erreur Détectée :** `{attempt.get('error_detected', 'N/A')}`")
+            adaptations = attempt.get('adaptation_attempted', ['N/A'])
+            lines.append(f"    - **Adaptation Tentée :** `{adaptations[0]}`")
+            lines.append(f"    - **Résultat du Test :** {attempt.get('test_result', 'N/A')}")
+        lines.append("\n  </details>")
+        return lines
+
+    def _generer_rapport_md_enrichi(self, rapport_data: Dict[str, Any]) -> str:
+        mission_id = rapport_data.get('mission_id', 'N/A')
+        statut = rapport_data.get('statut_mission', 'INCONNU')
+        duree = rapport_data.get('duree_totale_sec', 0)
+        equipe = rapport_data.get('equipe_maintenance_roles', [])
+        
+        lines = [f"# Rapport de Mission de Maintenance : `{mission_id}`"]
+        lines.append(f"**Statut Final :** {statut} | **Durée :** {duree:.2f}s")
+        
+        if equipe:
+            lines.append("\n## Équipe de Maintenance Active")
+            lines.append("La mission a été menée par les agents suivants :")
+            for role in equipe:
+                lines.append(f"- `{role}`")
+
+        lines.append("\n---")
+        
+        lines.append("## Résultats Détaillés par Agent\n")
+
+        for agent_result in rapport_data.get("resultats_par_agent", []):
+            agent_name = agent_result.get('agent_name', 'Agent Inconnu')
+            agent_mission = agent_result.get('agent_mission', 'Non spécifiée')
+            status = agent_result.get('status', 'INCONNU')
+            
+            icon = "✅" if status in ["REPAIRED", "NO_REPAIR_NEEDED"] else "❌"
+            lines.append(f"### {icon} Agent : `{agent_name}`")
+            lines.append(f"- **Mission de l'agent :** *{agent_mission}*")
+            lines.append(f"- **Statut Final :** {status}")
+
+            # Section Évaluation Initiale
+            initial_eval = agent_result.get("initial_evaluation", {})
+            if initial_eval:
+                score = initial_eval.get('score', 'N/A')
+                reason = initial_eval.get('reason', 'N/A')
+                lines.append(f"- **Évaluation Initiale :** Score de {score}/100. (Raison: {reason})")
+            
+            # Section Historique de Réparation
+            history = agent_result.get("repair_history", [])
+            if history:
+                lines.extend(self._format_history(history))
+            
+            # Section Analyse de Performance
+            perf_analysis = agent_result.get("performance_analysis", {})
+            if perf_analysis and not perf_analysis.get('error'):
+                score = perf_analysis.get('score', 'N/A')
+                lines.append(f"- **Analyse de Performance :** Score de {score}/100.")
+            
+            # Section Diff
+            if status == "REPAIRED":
+                lines.append("- **Diff des Modifications :**")
+                lines.append("  <details><summary>Cliquer pour voir les changements</summary>\n")
+                diff_str = self._generer_diff(agent_result.get("original_code"), agent_result.get("final_code"))
+                lines.append(diff_str)
+                lines.append("\n  </details>")
+
+            if status == "REPAIR_FAILED":
+                 lines.append(f"- **Dernière Erreur :** `{agent_result.get('last_error', 'N/A')}`")
+
+            lines.append("\n---\n")
+
+        lines.append(self._generer_conclusion(rapport_data))
+
+        return "\n".join(lines)
+
+    def _generer_conclusion(self, rapport_data: Dict[str, Any]) -> str:
+        """Génère une conclusion synthétique pour la mission."""
+        results = rapport_data.get("resultats_par_agent", [])
+        total_agents = len(results)
+        repaired = sum(1 for r in results if r['status'] == 'REPAIRED')
+        no_repair = sum(1 for r in results if r['status'] == 'NO_REPAIR_NEEDED')
+        failed = sum(1 for r in results if r['status'] == 'REPAIR_FAILED')
+
+        lines = ["## Conclusion de la Mission"]
+
+        if not results:
+            lines.append("Aucun agent n'a été traité durant cette mission.")
+            return "\n".join(lines)
+
+        success_rate = (repaired + no_repair) / total_agents * 100
+        
+        if success_rate == 100:
+            conclusion = f"La mission est un succès total. L'ensemble des {total_agents} agents traités sont stables et opérationnels."
+            if no_repair == total_agents:
+                conclusion += " Aucun n'a nécessité de réparation."
+            else:
+                conclusion += f" {repaired} agents ont été réparés avec succès."
+        elif success_rate > 70:
+            conclusion = f"La mission s'est globalement bien déroulée avec un taux de succès de {success_rate:.0f}%. Sur {total_agents} agents, {repaired + no_repair} sont opérationnels."
+        else:
+            conclusion = f"La mission révèle des problèmes de stabilité significatifs avec un taux de succès de seulement {success_rate:.0f}%."
+
+        lines.append(conclusion)
+        
+        if failed > 0:
+            lines.append(f"**Point d'attention :** {failed} agent(s) n'ont pas pu être réparés et nécessitent une investigation manuelle.")
+
+        return "\n".join(lines)
+
+
+def create_agent_MAINTENANCE_05_documenteur_peer_reviewer(**config) -> AgentMAINTENANCE05DocumenteurPeerReviewer:
+    """Factory pour créer une instance de l'Agent 5."""
+    return AgentMAINTENANCE05DocumenteurPeerReviewer(**config)

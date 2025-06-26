@@ -8,26 +8,25 @@ from datetime import datetime
 from typing import Dict, List, Any, Optional
 import logging
 
-class Agent16PeerReviewerSenior:
-    """
-    Agent 16 - Peer Reviewer Senior
-    
-    MISSION : Review architecture globale et validation code expert niveau entreprise
-    FOCUS : Validation conformité plans experts + architecture + best practices
-    """
-    
-    CAPABILITIES = ["code_review", "quality_assessment"]
+# Gestion des imports selon le contexte d'exécution
+try:
+    from core.agent_factory_architecture import Agent, Task, Result
+except ImportError:
+    # En cas d'exécution CLI, ajouter le chemin parent
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    from core.agent_factory_architecture import Agent, Task, Result
 
-    def __init__(self, agent_id="peer_reviewer_senior_01"):
+class PeerReviewerSeniorAgent(Agent):
+    """
+    Agent 16 - Peer Reviewer Senior (Pattern Factory compliant)
+    """
+    def __init__(self, agent_type="peer_reviewer_senior", **config):
+        super().__init__(agent_type, **config)
         self.name = "Agent 16 - Peer Reviewer Senior"
-        self.agent_id = agent_id
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(f"agent.{self.type}")
         self.workspace_root = Path.cwd()
-        # self.code_expert_dir = self.workspace_root / "code_expert"  # SUPPRIMÉ pour conformité
         self.reviews_dir = self.workspace_root / "reviews"
         self.reviews_dir.mkdir(exist_ok=True)
-        
-        # Métriques de review
         self.review_metrics = {
             "start_time": datetime.now(),
             "elements_reviewed": 0,
@@ -37,20 +36,42 @@ class Agent16PeerReviewerSenior:
             "architecture_score": 0,
             "quality_score": 0
         }
-        
-        self.logger.info("🎖️ Agent 16 - Peer Reviewer Senior v1.0.0 - MISSION REVIEW ACTIVÉE")
-        # self.logger.info(f"📁 Code expert à reviewer : {self.code_expert_dir}")  # SUPPRIMÉ
-        self.logger.info(f"Agent {self.name} initialisé.")
-        self.logger.info(f"Workspace root: {self.workspace_root}")
-    
-    def shutdown(self):
-        """Ferme les handlers de logging pour libérer les fichiers."""
-        self.logger.info(f"Arrêt de l'agent {self.name} et libération des logs.")
+        self.capabilities = ["code_review", "quality_assessment"]
+        self.logger.info(f"🎖️ {self.name} (Pattern Factory) initialisé.")
+
+    def get_capabilities(self) -> List[str]:
+        return self.capabilities
+
+    async def startup(self) -> None:
+        self.logger.info(f"{self.name} démarré (Pattern Factory).")
+
+    async def shutdown(self) -> None:
+        self.logger.info(f"Arrêt de l'agent {self.name} (Pattern Factory).")
         handlers = self.logger.handlers[:]
         for handler in handlers:
             handler.close()
             self.logger.removeHandler(handler)
-    
+
+    async def health_check(self) -> Dict[str, Any]:
+        return {"status": "healthy", "agent": self.name, "timestamp": datetime.now().isoformat()}
+
+    def execute_task(self, task: Task) -> Result:
+        """
+        Exécute une tâche de review ou d'audit selon le type de task.
+        """
+        try:
+            if task.type == "code_review":
+                review_result = self.run_senior_review_mission()
+                return Result(success=True, data=review_result)
+            elif task.type == "quality_assessment":
+                review_result = self.run_senior_review_mission()
+                return Result(success=True, data=review_result)
+            else:
+                return Result(success=False, error=f"Task type {task.type} non supporté")
+        except Exception as e:
+            self.logger.error(f"Erreur execute_task : {e}", exc_info=True)
+            return Result(success=False, error=str(e))
+
     def run_senior_review_mission(self) -> Dict[str, Any]:
         """Mission principale : Review senior architecture code expert"""
         self.logger.info("🎯 DÉMARRAGE MISSION REVIEW SENIOR - CODE EXPERT NIVEAU ENTREPRISE")
@@ -500,6 +521,48 @@ class Agent16PeerReviewerSenior:
             "validation_status": "✅ APPROUVÉ - QUALITÉ EXCEPTIONNELLE"
         }
 
+    def generate_signed_correction_plan(self, quality_report: Dict[str, Any], security_agent: 'Agent04ExpertSecuriteCrypto') -> Dict[str, Any]:
+        """
+        Analyse le rapport de qualité et délègue la correction sémantique à un agent spécialisé si nécessaire.
+        """
+        self.logger.info("⚙️ Analyse du rapport de qualité pour délégation...")
+        
+        # --- DEBUGGING: Afficher le rapport reçu ---
+        try:
+            self.logger.info(f"Rapport de qualité reçu pour analyse:\n{json.dumps(quality_report, indent=2, ensure_ascii=False)}")
+        except Exception as e:
+            self.logger.error(f"Impossible de sérialiser le rapport de qualité pour le logging: {e}")
+
+        plan = []
+        file_path = quality_report.get("file_path")
+        
+        if file_path and quality_report.get("issues"):
+            # Liste des codes de problème qui déclenchent une correction sémantique complète.
+            semantic_issue_codes = {"MISSING_FUNCTION_DOCSTRING", "MISSING_MODULE_DOCSTRING"}
+            
+            # Vérifier si l'un des problèmes justifie une correction sémantique
+            needs_semantic_correction = any(
+                issue.get("code") in semantic_issue_codes for issue in quality_report["issues"]
+            )
+
+            if needs_semantic_correction:
+                self.logger.info("Problèmes sémantiques détectés. Délégation à l'agent correcteur sémantique...")
+                plan.append({
+                    'action': 'DELEGATE_SEMANTIC_CORRECTION',
+                    'agent_type': 'correcteur_semantique', # Pour l'orchestrateur
+                    'file_path': file_path
+                })
+
+        if not plan:
+            self.logger.info("Aucune action de correction automatique n'a pu être déterminée à partir du rapport.")
+            return None
+
+        self.logger.info("Plan de délégation généré, envoi pour signature...")
+        # 3. Signature du plan
+        signed_plan = security_agent.sign_correction_plan(plan)
+        
+        return signed_plan
+
     def run(self, task_prompt: str):
         """Point d'entrée principal pour l'agent."""
         self.logger.info(f"Reçu une tâche de revue de code : {task_prompt}")
@@ -517,7 +580,7 @@ def main():
     print("🎖️ Agent 16 - Peer Reviewer Senior - DÉMARRAGE")
     
     # Initialiser agent
-    agent = Agent16PeerReviewerSenior()
+    agent = PeerReviewerSeniorAgent()
     
     # Exécuter mission review
     results = agent.run_senior_review_mission()

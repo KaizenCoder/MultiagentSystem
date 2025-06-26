@@ -11,15 +11,17 @@ from datetime import datetime
 from logging.handlers import RotatingFileHandler
 from typing import List, Dict, Any, Tuple
 import asyncio
+import json
 
-# --- Blocs d'import pour test en isolation ---
+# --- Blocs d'import pour Pattern Factory ---
 try:
-    from core.agent_factory_architecture import Agent as AgentCore, Task, Result, TaskStatus as Status
+    from core.agent_factory_architecture import Agent, Task, Result, TaskStatus
 except ImportError:
-    # Ce bloc ne devrait plus jamais être atteint en production.
-    # Il est conservé pour la lisibilité mais signale une erreur de configuration.
-    logger.error("Échec de l'import des modules principaux depuis core.agent_factory_architecture. L'agent ne peut pas fonctionner.")
-    raise
+    # En cas d'exécution CLI, ajouter le chemin parent
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    from core.agent_factory_architecture import Agent, Task, Result, TaskStatus
 
 # --- Configuration du Logging ---
 LOG_DIR = "logs/agents"
@@ -80,12 +82,12 @@ def _find_header_end(lines: list[str]) -> int:
         if s_line.startswith(('import ', 'from ')): last_import_line = i
     return last_import_line + 1
 
-class CorrecteurSemantique(AgentCore):
+class CorrecteurSemantique(Agent):
     """Agent 12 - Correcteur Sémantique (v6.5-SOP)"""
     COMMON_IMPORTS = {
         'Path': 'from pathlib import Path', 'Dict': 'from typing import Dict', 'List': 'from typing import List',
-        'Result': 'from core.models.result import Result', 'Task': 'from core.models.task import Task',
-        'Status': 'from core.models.result import Status', 'AgentCore': 'from core.agent_core import AgentCore',
+        'Result': 'from core.agent_factory_architecture import Result', 'Task': 'from core.agent_factory_architecture import Task',
+        'TaskStatus': 'from core.agent_factory_architecture import TaskStatus', 'Agent': 'from core.agent_factory_architecture import Agent',
     }
 
     def __init__(self, agent_name="CorrecteurSemantique", **kwargs):
@@ -101,7 +103,7 @@ class CorrecteurSemantique(AgentCore):
     def get_capabilities(self) -> List[str]: return ["correct_semantics"]
     async def health_check(self) -> Dict[str, Any]: return {"status": "ok", "timestamp": datetime.now().isoformat()}
 
-    async def execute_task(self, task: Task) -> Result:
+    def execute_task(self, task: Task) -> Result:
         correction_id = f"corr-{uuid.uuid4()}"
         self.logger.info(f"[{correction_id}] Début de l'analyse sémantique pour la tâche de type '{task.type}'")
         try:
@@ -117,7 +119,7 @@ class CorrecteurSemantique(AgentCore):
             for i in range(self.max_iterations):
                 self.logger.info(f"[{correction_id}] Itération {i + 1}/{self.max_iterations}")
                 metrics = self._gather_metrics(current_code)
-                corrections_this_iter = self._generate_corrections(metrics)
+                corrections_this_iter, score_improvement = self._generate_corrections(metrics)
                 if not corrections_this_iter: self.logger.info(f"[{correction_id}] Plus de corrections trouvées."); break
                 new_code, all_corrections = self._apply_corrections(current_code, corrections_this_iter), all_corrections + corrections_this_iter
                 new_metrics = self._gather_metrics(new_code)
@@ -166,11 +168,29 @@ class CorrecteurSemantique(AgentCore):
     def _apply_docstrings(self, code: str, corrections: List[Dict]) -> str:
         if not corrections: return code
         lines = code.split('\n')
-        for cor in sorted(corrections, key=lambda x: x['line'], reverse=True):
+        
+        module_doc_correction = None
+        other_corrections = []
+        for c in corrections:
+            if c.get('target') == 'module':
+                module_doc_correction = c
+            else:
+                other_corrections.append(c)
+
+        for cor in sorted(other_corrections, key=lambda x: x['line'], reverse=True):
             line_idx = cor['line'] - 1
             if 0 <= line_idx < len(lines):
-                indent = len(lines[line_idx]) - len(lines[line_idx].lstrip(' '))
-                lines.insert(line_idx + 1, ' ' * (indent + 4) + cor["suggestion"])
+                # Simplification: docstring de classe sans indentation complexe
+                if 'class' in lines[line_idx]:
+                    lines.insert(line_idx + 1, '    ' + cor["suggestion"])
+                else:
+                    lines.insert(line_idx + 1, '    ' + cor["suggestion"])
+        
+        if module_doc_correction:
+            # S'assurer qu'il n'y a pas de shebang
+            start_index = 1 if lines and lines[0].startswith('#!') else 0
+            lines.insert(start_index, module_doc_correction["suggestion"] + '\n')
+
         return '\n'.join(lines)
 
     def _gather_metrics(self, code: str) -> Dict[str, Any]:
@@ -186,25 +206,47 @@ class CorrecteurSemantique(AgentCore):
         return metrics
 
     def _calculate_score(self, metrics: Dict[str, Any]) -> float:
-        return 100.0 - len(self._generate_corrections(metrics)) * 5
+        """Calcule un score de qualité sémantique basé sur les métriques."""
+        # Note: Cette logique est une ébauche.
+        # Idéalement, le score serait plus nuancé.
+        corrections, _ = self._generate_corrections(metrics)
+        num_violations = len(corrections)
+        return max(0, 100 - num_violations * 5)
 
-    def _generate_corrections(self, metrics: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def _generate_corrections(self, metrics: Dict[str, Any]) -> Tuple[List[Dict[str, Any]], float]:
+        """Génère une liste de corrections basées sur les métriques du code."""
         corrections, violations = [], []
-        SNAKE, PASCAL, UPPER = re.compile(r'^[a-z_][a-z0-9_]*$'), re.compile(r'^[A-Z][a-zA-Z0-9]*$'), re.compile(r'^[A-Z_][A-Z0-9_]*$')
+        SNAKE = re.compile(r'^[a-z_][a-z0-9_]*$')
+        PASCAL = re.compile(r'^[A-Z][a-zA-Z0-9]*$')
+
+        if not ast.get_docstring(metrics["tree"]):
+            violations.append({
+                "type": "add_docstring", 
+                "target": "module", 
+                "suggestion": '"""TODO: Module docstring."""', 
+                "line": 0
+            })
+
         for node in metrics["nodes"]:
             if isinstance(node, ast.ClassDef):
-                if not PASCAL.match(node.name): violations.append({"type": "rename", "target": node.name, "suggestion": self._to_pascal_case(node.name), "line": node.lineno})
-                if not ast.get_docstring(node): violations.append({"type": "add_docstring", "target": node.name, "suggestion": '"""TODO: Class docstring."""', "line": node.lineno})
+                if not PASCAL.match(node.name):
+                    violations.append({"type": "rename", "target": node.name, "suggestion": self._to_pascal_case(node.name), "line": node.lineno})
+                if not ast.get_docstring(node):
+                    violations.append({"type": "add_docstring", "target": node.name, "suggestion": '"""TODO: Class docstring."""', "line": node.lineno})
+            
             elif isinstance(node, ast.FunctionDef):
-                if not node.name.startswith('__') and not SNAKE.match(node.name): violations.append({"type": "rename", "target": node.name, "suggestion": self._to_snake_case(node.name), "line": node.lineno})
-                if not ast.get_docstring(node) and node.name != "__init__": violations.append({"type": "add_docstring", "target": node.name, "suggestion": '"""TODO: Function docstring."""', "line": node.lineno})
-            elif isinstance(node, ast.Assign) and metrics.get("tree") and isinstance(metrics["tree"], ast.Module) and node in metrics["tree"].body:
-                for target in node.targets:
-                    if isinstance(target, ast.Name) and not UPPER.match(target.id): violations.append({"type": "rename", "target": target.id, "suggestion": self._to_upper_case(target.id), "line": node.lineno})
-        corrections.extend(violations)
-        undefined = metrics["used_names"] - metrics["defined_names"] - metrics["imported_names"] - set(dir(__builtins__))
-        corrections.extend([{"type": "add_import", "target": name, "line": 0, "suggestion": self.COMMON_IMPORTS[name]} for name in undefined if name in self.COMMON_IMPORTS])
-        return corrections
+                # Les méthodes "dunder" comme __init__ sont valides en snake_case
+                if not node.name.startswith('__') and not SNAKE.match(node.name):
+                    violations.append({"type": "rename", "target": node.name, "suggestion": self._to_snake_case(node.name), "line": node.lineno})
+                if not ast.get_docstring(node):
+                    violations.append({"type": "add_docstring", "target": node.name, "suggestion": '"""TODO: Function docstring."""', "line": node.lineno})
+
+        for v in violations:
+            if v['type'] == 'add_docstring':
+                corrections.append(v)
+        
+        score_improvement = len(violations) * 5.0
+        return corrections, score_improvement
 
     def _to_snake_case(self, name: str) -> str:
         s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name); return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
@@ -235,7 +277,7 @@ def anotherFunction():
     return my_list
 '''
         task = Task(type="correct_semantics", params={"code": test_code})
-        result = await agent.execute_task(task)
+        result = agent.execute_task(task)
         
         print(f"\nRésultat: {'Succès' if result.success else 'Échec'}")
         if result.success and result.data:

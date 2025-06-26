@@ -1,0 +1,34 @@
+#!/usr/bin/env python3
+"""
+Agent-006: Correcteur Logique Métier
+"""
+from core.agent_factory_architecture import Agent, Task, Result
+import logging
+
+class AgentMAINTENANCE06CorrecteurLogiqueMetier(Agent):
+    def __init__(self, **kwargs):
+        super().__init__(agent_type="correcteur_logique", **kwargs)
+        self.logger = logging.getLogger(self.__class__.__name__)
+        self.logger.info(f"Agent 'correcteur_logique' initialisé avec l'ID: {self.id}")
+
+    async def startup(self):
+        self.logger.info(f"Agent 'correcteur_logique' ({self.id}) démarré.")
+
+    async def shutdown(self):
+        self.logger.info(f"Agent 'correcteur_logique' ({self.id}) arrêté.")
+
+    async def health_check(self):
+        return {"status": "healthy"}
+
+    def get_capabilities(self):
+        return ["correct_business_logic"]
+
+    async def execute_task(self, task: Task) -> Result:
+        self.logger.info(f"Tâche reçue pour 'correcteur_logique': {task.type}")
+        if task.type == "correct_business_logic":
+            # Logique de correction à implémenter
+            return Result(success=True, data={"message": "Correction logique effectuée."})
+        return Result(success=False, error=f"Tâche non supportée: {task.type}")
+
+def create_agent_MAINTENANCE_06_correcteur_logique_metier(**kwargs) -> AgentMAINTENANCE06CorrecteurLogiqueMetier:
+    return AgentMAINTENANCE06CorrecteurLogiqueMetier(**kwargs) 

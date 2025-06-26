@@ -1,32 +1,35 @@
 #!/usr/bin/env python3
 """
-🔍 AGENT 11 - AUDITEUR QUALITÉ SPRINT 3
-Mission : Audit qualité Agent 09 + Validation DoD Sprint 3
+🔍 AGENT 111 - AUDITEUR QUALITÉ SPRINT 3 - PATTERN FACTORY COMPLIANT
+Mission : Audit qualité Agent 09 + Validation DoD Sprint 3 + Capacité Audit Universel
 
 Spécifications :
 - Audit Agent 09 (architecture Control/Data Plane)
 - Validation Definition of Done Sprint 3
 - Rapport détaillé avec métriques
 - Conformité standards et patterns
+- Capacité d'audit universel de modules Python
+- Intégration complète Pattern Factory
 """
 
 import asyncio
 import sys
 from pathlib import Path
-from core import logging_manager
 from datetime import datetime
 from typing import Dict, List, Optional, Any
-from pathlib import Path
 import json
 from dataclasses import dataclass
 from enum import Enum
-import sys
 import logging
-from core.manager import LoggingManager
+import ast
+import traceback
+import importlib.util
+import subprocess
 
 # Import Pattern Factory (OBLIGATOIRE selon guide)
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from core.agent_factory_architecture import Agent, Task, Result
+from core.manager import LoggingManager
 
 class QualityLevel(Enum):
     """Niveaux de qualité"""
@@ -48,116 +51,406 @@ class AuditResult:
     compliance_status: bool
     timestamp: datetime
 
-# Agent Pattern Factory conforme
-class AuditAgent(Agent):
-    """Agent d'audit conforme Pattern Factory"""
+# Agent Pattern Factory complètement conforme
+class Agent111AuditeurQualiteSprint3(Agent):
+    """🔍 Agent 111 - Auditeur Qualité Sprint 3 - Pattern Factory Full Compliant"""
     
-    def __init__(self, agent_type: str, **config):
+    def __init__(self, agent_type: str = "auditeur_qualite", **config):
         super().__init__(agent_type, **config)
-        self.audit_results = {}
-    
-    async def execute_task(self, task: Task) -> Result:
-        """Exécution tâche audit"""
-        if task.type == "audit_code":
-            audit_result = self._audit_code_quality(task.params)
-            return Result(
-                success=True,
-                data=audit_result
-            )
-        return Result(success=False, error="Unsupported task type")
-    
-    def _audit_code_quality(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """Audit qualité code"""
-        # Placeholder
-        return {"quality_score": 8.5, "issues": []}
-    
-    def get_capabilities(self) -> List[str]:
-        return ["audit_code", "validate_compliance", "generate_report"]
-    
-    # Implémentation méthodes abstraites OBLIGATOIRES
-    async def startup(self):
-        """Démarrage agent"""
-        self.logger.info(f"Agent audit {self.agent_id} - DÉMARRAGE")
-        
-    async def shutdown(self):
-        """Arrêt agent"""
-        self.logger.info(f"Agent audit {self.agent_id} - ARRÊT")
-        
-    async def health_check(self) -> Dict[str, Any]:
-        """Vérification santé agent"""
-        return {
-            "status": "healthy",
-            "timestamp": datetime.now().isoformat(),
-            "agent_id": self.agent_id
-        }
-
-class Agent11AuditeurQualiteSprint3:
-    """🔍 Agent 11 - Auditeur Qualité Sprint 3 (Pattern Factory)"""
-    
-    def __init__(self):
-        self.agent_id = "11"
-        self.specialite = "Auditeur Qualité + RBAC + Compliance"
-        self.mission = "Audit Agent 09 + Validation DoD Sprint 3"
+        self.agent_id = "111"
+        self.specialite = "Auditeur Qualité + RBAC + Compliance + Audit Universel"
+        self.mission = "Audit Agent 09 + Validation DoD Sprint 3 + Audit modules Python"
         self.sprint = "Sprint 3"
+        self.audit_results = {}
         
-        # Setup logging
-        logging_manager = LoggingManager()
-        custom_log_config = {
-            "logger_name": f"agent.{self.agent_id}",
-            "metadata": {
-                "agent_name": f"Agent11_{self.agent_id}",
-                "role": "ai_processor",
-                "domain": "quality_audit"
-            },
-            "async_enabled": True
-        }
-        self.logger = logging_manager.get_logger(config_name="default", custom_config=custom_log_config)
+        # Setup logging (Pattern Factory compatible)
         self.setup_logging()
-        
-        # Pattern Factory setup
-        self.audit_agent = None
         
         # Rapport
         self.rapport = {
             'agent_id': self.agent_id,
             'sprint': self.sprint,
-            'mission_status': 'DÉMARRAGE',
+            'mission_status': 'READY',
             'timestamp_debut': datetime.now().isoformat()
         }
-
+    
     def setup_logging(self):
-        """Configuration logging"""
-        log_dir = Path("agent_factory_implementation/logs")
-        log_dir.mkdir(parents=True, exist_ok=True)
+        """Configuration logging centralisé"""
+        try:
+            logging_manager = LoggingManager()
+            custom_log_config = {
+                "logger_name": f"agent.{self.agent_id}",
+                "metadata": {
+                    "agent_name": f"Agent111_{self.agent_id}",
+                    "role": "ai_processor",
+                    "domain": "quality_audit"
+                },
+                "async_enabled": True
+            }
+            self.logger = logging_manager.get_logger(config_name="default", custom_config=custom_log_config)
+        except Exception as e:
+            # Fallback logging si système centralisé indisponible
+            self.logger = logging.getLogger(f"agent_{self.agent_id}")
+            self.logger.setLevel(logging.INFO)
+            handler = logging.StreamHandler()
+            formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+            handler.setFormatter(formatter)
+            self.logger.addHandler(handler)
+            self.logger.warning(f"Fallback logging pour Agent {self.agent_id}: {e}")
+    
+    async def execute_task(self, task: Task) -> Result:
+        """🎯 Exécution des tâches Pattern Factory (version async)"""
+        start_time = datetime.now()
         
-        handler = logging.FileHandler(
-            log_dir / f"agent_{self.agent_id}_auditeur_qualite_sprint3_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
-        )
-        handler.setFormatter(logging.Formatter(
-            '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-        ))
-        self.logger.addHandler(handler)
-        self.logger.setLevel(logging.INFO)
-        self.logger.info(f"Agent {self.agent_id} - {self.specialite} - {self.sprint} DÉMARRÉ")
+        try:
+            self.logger.info(f"🎯 Exécution tâche: {task.type}")
+            
+            if task.type == "audit_code":
+                result_data = self._audit_code_quality(task.params)
+            elif task.type == "audit_module":
+                result_data = self.auditer_module_cible(task.params.get("module_path", ""))
+            elif task.type == "validate_dod":
+                result_data = await self.valider_definition_of_done_sprint3()
+            elif task.type == "audit_agent09":
+                audit_result = await self.auditer_agent09_architecture()
+                result_data = {
+                    "score": audit_result.score,
+                    "quality_level": audit_result.quality_level.value,
+                    "compliance": audit_result.compliance_status,
+                    "findings": audit_result.findings,
+                    "recommendations": audit_result.recommendations
+                }
+            elif task.type == "generate_report":
+                result_data = await self.generer_rapport_audit_sprint3()
+            else:
+                return Result(success=False, error=f"Type de tâche non supporté: {task.type}")
+            
+            execution_time = (datetime.now() - start_time).total_seconds()
+            
+            return Result(
+                success=True,
+                data=result_data,
+                execution_time_seconds=execution_time,
+                agent_id=self.id,
+                task_id=task.id
+            )
+            
+        except Exception as e:
+            self.logger.error(f"❌ Erreur exécution tâche {task.type}: {e}")
+            return Result(
+                success=False,
+                error=str(e),
+                agent_id=self.id,
+                task_id=task.id
+            )
+    
+    def auditer_module_cible(self, path_module: str) -> Dict[str, Any]:
+        """🔍 Audit universel d'un module Python (Nouvelle capacité)"""
+        self.logger.info(f"🔍 Audit universel du module: {path_module}")
+        
+        audit_result = {
+            "module_path": path_module,
+            "timestamp": datetime.now().isoformat(),
+            "analyses": {}
+        }
+        
+        try:
+            module_path = Path(path_module)
+            if not module_path.exists():
+                return {
+                    **audit_result,
+                    "success": False,
+                    "error": f"Module non trouvé: {path_module}"
+                }
+            
+            # Analyse structure
+            audit_result["analyses"]["structure"] = self._analyser_structure_module(module_path)
+            
+            # Analyse sécurité
+            audit_result["analyses"]["securite"] = self._analyser_securite_module(module_path)
+            
+            # Analyse API
+            audit_result["analyses"]["api"] = self._analyser_api_module(module_path)
+            
+            # Analyse tests
+            audit_result["analyses"]["tests"] = self._analyser_tests_module(module_path)
+            
+            # Analyse performance
+            audit_result["analyses"]["performance"] = self._analyser_performance_module(module_path)
+            
+            # Score global
+            scores = [analysis.get("score", 5.0) for analysis in audit_result["analyses"].values()]
+            audit_result["score_global"] = sum(scores) / len(scores) if scores else 5.0
+            audit_result["success"] = True
+            
+            self.logger.info(f"✅ Audit module terminé: {audit_result['score_global']:.1f}/10")
+            
+        except Exception as e:
+            audit_result["success"] = False
+            audit_result["error"] = str(e)
+            self.logger.error(f"❌ Erreur audit module: {e}")
+        
+        return audit_result
+    
+    def _analyser_structure_module(self, module_path: Path) -> Dict[str, Any]:
+        """Analyse structure du module"""
+        result = {"score": 5.0, "issues": [], "recommendations": []}
+        
+        try:
+            if module_path.is_file() and module_path.suffix == ".py":
+                with open(module_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                
+                # Parse AST
+                tree = ast.parse(content)
+                
+                # Compter classes, fonctions, imports
+                classes = [node for node in ast.walk(tree) if isinstance(node, ast.ClassDef)]
+                functions = [node for node in ast.walk(tree) if isinstance(node, ast.FunctionDef)]
+                imports = [node for node in ast.walk(tree) if isinstance(node, (ast.Import, ast.ImportFrom))]
+                
+                result["stats"] = {
+                    "classes": len(classes),
+                    "functions": len(functions),
+                    "imports": len(imports),
+                    "lines": len(content.splitlines())
+                }
+                
+                # Scoring basé sur la structure
+                if len(classes) > 0:
+                    result["score"] += 1.0
+                if len(functions) > 0:
+                    result["score"] += 1.0
+                if "__doc__" in content:
+                    result["score"] += 1.0
+                if "logging" in content:
+                    result["score"] += 0.5
+                if "async def" in content:
+                    result["score"] += 0.5
+                
+                result["score"] = min(result["score"], 10.0)
+                
+        except Exception as e:
+            result["error"] = str(e)
+            result["score"] = 2.0
+        
+        return result
+    
+    def _analyser_securite_module(self, module_path: Path) -> Dict[str, Any]:
+        """Analyse sécurité du module"""
+        result = {"score": 6.0, "vulnerabilities": [], "recommendations": []}
+        
+        try:
+            with open(module_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            # Recherche de patterns de sécurité
+            security_patterns = {
+                "eval(": -2.0,
+                "exec(": -2.0,
+                "__import__": -1.0,
+                "subprocess.call": -1.0,
+                "shell=True": -2.0,
+                "pickle.loads": -1.5,
+                "yaml.load": -1.0,
+                "hashlib": +1.0,
+                "secrets": +1.0,
+                "cryptography": +1.5
+            }
+            
+            for pattern, score_impact in security_patterns.items():
+                if pattern in content:
+                    result["score"] += score_impact
+                    if score_impact < 0:
+                        result["vulnerabilities"].append(f"Pattern risqué détecté: {pattern}")
+            
+            result["score"] = max(0.0, min(result["score"], 10.0))
+            
+        except Exception as e:
+            result["error"] = str(e)
+            result["score"] = 3.0
+        
+        return result
+    
+    def _analyser_api_module(self, module_path: Path) -> Dict[str, Any]:
+        """Analyse API du module"""
+        result = {"score": 7.0, "public_methods": [], "documentation": False}
+        
+        try:
+            with open(module_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            tree = ast.parse(content)
+            
+            # Recherche méthodes publiques
+            for node in ast.walk(tree):
+                if isinstance(node, ast.FunctionDef) and not node.name.startswith('_'):
+                    result["public_methods"].append(node.name)
+            
+            # Documentation
+            if '"""' in content or "'''" in content:
+                result["documentation"] = True
+                result["score"] += 1.0
+            
+            # Type hints
+            if "->" in content and ":" in content:
+                result["score"] += 1.0
+            
+            result["score"] = min(result["score"], 10.0)
+            
+        except Exception as e:
+            result["error"] = str(e)
+            result["score"] = 5.0
+        
+        return result
+    
+    def _analyser_tests_module(self, module_path: Path) -> Dict[str, Any]:
+        """Analyse tests du module"""
+        result = {"score": 4.0, "test_files": [], "coverage_estimated": 0}
+        
+        try:
+            # Recherche fichiers de tests associés
+            parent_dir = module_path.parent
+            module_name = module_path.stem
+            
+            test_patterns = [
+                f"test_{module_name}.py",
+                f"{module_name}_test.py",
+                f"tests/test_{module_name}.py"
+            ]
+            
+            for pattern in test_patterns:
+                test_file = parent_dir / pattern
+                if test_file.exists():
+                    result["test_files"].append(str(test_file))
+                    result["score"] += 2.0
+            
+            # Recherche dans le module lui-même
+            with open(module_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            if "unittest" in content or "pytest" in content:
+                result["score"] += 1.0
+            if "assert" in content:
+                result["score"] += 0.5
+            
+            result["score"] = min(result["score"], 10.0)
+            result["coverage_estimated"] = min(result["score"] * 10, 100)
+            
+        except Exception as e:
+            result["error"] = str(e)
+            result["score"] = 2.0
+        
+        return result
+    
+    def _analyser_performance_module(self, module_path: Path) -> Dict[str, Any]:
+        """Analyse performance du module"""
+        result = {"score": 6.0, "optimizations": [], "bottlenecks": []}
+        
+        try:
+            with open(module_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            # Patterns de performance
+            perf_patterns = {
+                "@lru_cache": +1.0,
+                "async def": +1.0,
+                "asyncio": +0.5,
+                "threading": +0.5,
+                "multiprocessing": +1.0,
+                "for i in range(len(": -1.0,  # Anti-pattern
+                "time.sleep(": -0.5,
+                "while True:": -0.5
+            }
+            
+            for pattern, score_impact in perf_patterns.items():
+                if pattern in content:
+                    result["score"] += score_impact
+                    if score_impact > 0:
+                        result["optimizations"].append(f"Optimisation détectée: {pattern}")
+                    else:
+                        result["bottlenecks"].append(f"Potentiel goulot: {pattern}")
+            
+            result["score"] = max(0.0, min(result["score"], 10.0))
+            
+        except Exception as e:
+            result["error"] = str(e)
+            result["score"] = 5.0
+        
+        return result
+    
+    def _audit_code_quality(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Audit qualité code (version améliorée)"""
+        module_path = data.get("module_path", "")
+        if module_path:
+            return self.auditer_module_cible(module_path)
+        else:
+            return {"quality_score": 8.5, "issues": [], "error": "Pas de module spécifié"}
+    
+    def get_capabilities(self) -> List[str]:
+        """📋 Capacités de l'agent"""
+        return [
+            "audit_code",
+            "audit_module", 
+            "validate_dod",
+            "audit_agent09",
+            "generate_report",
+            "validate_compliance",
+            "analyze_structure",
+            "analyze_security",
+            "analyze_performance",
+            "analyze_api",
+            "analyze_tests"
+        ]
+    
+    # Implémentation méthodes abstraites OBLIGATOIRES Pattern Factory
+    async def startup(self):
+        """🚀 Démarrage agent"""
+        self.logger.info(f"🚀 Agent {self.agent_id} - {self.specialite} - DÉMARRAGE")
+        self.rapport["mission_status"] = "ACTIVE"
+        
+    async def shutdown(self):
+        """🛑 Arrêt agent"""
+        self.logger.info(f"🛑 Agent {self.agent_id} - {self.specialite} - ARRÊT")
+        self.rapport["mission_status"] = "STOPPED"
+        
+    async def health_check(self) -> Dict[str, Any]:
+        """❤️ Vérification santé agent"""
+        return {
+            "status": "healthy",
+            "agent_id": self.id,
+            "agent_number": self.agent_id,
+            "specialite": self.specialite,
+            "mission": self.mission,
+            "capabilities": self.get_capabilities(),
+            "timestamp": datetime.now().isoformat(),
+            "tasks_executed": self.tasks_executed,
+            "success_rate": self.success_rate,
+            "last_activity": self.last_activity.isoformat()
+        }
+
 
     async def auditer_agent09_architecture(self) -> AuditResult:
         """🔍 Audit détaillé Agent 09 - Architecture Control/Data Plane"""
         self.logger.info("🔍 Audit Agent 09 - Control/Data Plane")
         
-        # Initialisation audit agent avec Pattern Factory
-        try:
-            self.audit_agent = AuditAgent("audit_quality", config={})
-            await self.audit_agent.startup()
-        except Exception as e:
-            self.logger.error(f"❌ Erreur initialisation audit agent: {e}")
-            # Fallback : créer résultat par défaut
-            return self._create_default_audit_result()
+        # Recherche fichier Agent 09 dans différents emplacements
+        possible_paths = [
+            Path("agents/agent_09_specialiste_planes.py"),
+            Path("agent_factory_implementation/agents/agent_09_specialiste_planes.py"),
+            Path("agents/agent_109_specialiste_planes.py"),
+            Path(f"{Path(__file__).parent}/agent_09_specialiste_planes.py"),
+            Path(f"{Path(__file__).parent}/agent_109_specialiste_planes.py")
+        ]
         
-        # Vérification fichier Agent 09
-        agent09_file = Path("agent_factory_implementation/agents/agent_09_specialiste_planes.py")
+        agent09_file = None
+        for path in possible_paths:
+            if path.exists():
+                agent09_file = path
+                break
         
-        if not agent09_file.exists():
-            self.logger.warning(f"⚠️ Fichier Agent 09 non trouvé: {agent09_file}")
+        if not agent09_file:
+            self.logger.warning(f"⚠️ Fichier Agent 09 non trouvé dans: {[str(p) for p in possible_paths]}")
             return self._create_default_audit_result()
         
         try:
@@ -189,7 +482,7 @@ class Agent11AuditeurQualiteSprint3:
                 timestamp=datetime.now()
             )
             
-            self.logger.info(f"✅ Audit Agent 09 terminé: {score_total:.1f}/10")
+            self.logger.info(f"✅ Audit Agent 09 terminé: {score_total:.1f}/10 (fichier: {agent09_file})")
             return audit_result
             
         except Exception as e:
@@ -553,28 +846,82 @@ class Agent11AuditeurQualiteSprint3:
         self.logger.info(f"📄 Rapport audit sauvegardé: {rapport_file}")
 
 
-# Point d'entrée principal
+# ==========================================
+# FACTORY FUNCTIONS (Pattern Factory)
+# ==========================================
+
+def create_agent_111_auditeur_qualite(**config) -> Agent111AuditeurQualiteSprint3:
+    """🏭 Factory function pour Agent 111 - Pattern Factory"""
+    return Agent111AuditeurQualiteSprint3(agent_type="auditeur_qualite", **config)
+
+# ==========================================
+# POINT D'ENTRÉE PRINCIPAL
+# ==========================================
+
 async def main():
-    """Point d'entrée principal Agent 11"""
-    agent11 = Agent11AuditeurQualiteSprint3()
+    """Point d'entrée principal Agent 111 - Pattern Factory compatible"""
+    # Création via Pattern Factory
+    agent111 = create_agent_111_auditeur_qualite()
     
-    print("🔍 Agent 11 - Auditeur Qualité Sprint 3 - DÉMARRAGE")
-    print("=" * 60)
+    print("🔍 Agent 111 - Auditeur Qualité Sprint 3 - DÉMARRAGE (Pattern Factory)")
+    print("=" * 70)
+    
+    # Startup Pattern Factory
+    await agent111.startup()
+    
+    # Health check
+    health = await agent111.health_check()
+    print(f"❤️ Health: {health['status']} - Capacités: {len(health['capabilities'])}")
+    
+    # Test capacité audit universel (nouvelle fonctionnalité)
+    print("\n🔍 Test capacité audit universel:")
+    task_audit = Task(
+        type="audit_module",
+        params={"module_path": str(Path(__file__).parent / "agent_111_auditeur_qualite_sprint3.py")}
+    )
+    result_audit = await agent111.execute_task(task_audit)
+    if result_audit.success:
+        print(f"   Score global: {result_audit.data.get('score_global', 'N/A'):.1f}/10")
     
     # Audit Agent 09
-    audit_result = await agent11.auditer_agent09_architecture()
-    print(f"🔍 Audit Agent 09: {audit_result.score:.1f}/10 - {audit_result.quality_level.value}")
+    print("\n🔍 Audit Agent 09:")
+    task_agent09 = Task(type="audit_agent09", params={})
+    result_agent09 = await agent111.execute_task(task_agent09)
+    if result_agent09.success:
+        print(f"   Score: {result_agent09.data.get('score', 'N/A'):.1f}/10 - {result_agent09.data.get('quality_level', 'N/A')}")
+    else:
+        print(f"   Erreur: {result_agent09.error}")
     
     # Validation DoD Sprint 3
-    dod_result = await agent11.valider_definition_of_done_sprint3()
-    print(f"✅ DoD Sprint 3: {dod_result['conformity_percentage']:.0f}% - {dod_result['dod_status']}")
+    print("\n✅ Validation DoD Sprint 3:")
+    task_dod = Task(type="validate_dod", params={})
+    result_dod = await agent111.execute_task(task_dod)
+    if result_dod.success:
+        print(f"   Conformité: {result_dod.data.get('conformity_percentage', 'N/A'):.0f}% - {result_dod.data.get('dod_status', 'N/A')}")
+    else:
+        print(f"   Erreur: {result_dod.error}")
     
     # Rapport final
-    rapport = await agent11.generer_rapport_audit_sprint3()
-    print(f"📊 Rapport audit généré - Status: {rapport['mission_status']}")
+    print("\n📊 Génération rapport:")
+    task_report = Task(type="generate_report", params={})
+    result_report = await agent111.execute_task(task_report)
+    if result_report.success:
+        print(f"   Status: {result_report.data.get('mission_status', 'N/A')}")
+    else:
+        print(f"   Erreur: {result_report.error}")
     
-    print("=" * 60)
-    print("🎯 Agent 11 - MISSION SPRINT 3 TERMINÉE ✅")
+    # Métriques finales
+    final_health = await agent111.health_check()
+    print(f"\n📈 Métriques finales:")
+    print(f"   Tâches exécutées: {final_health['tasks_executed']}")
+    print(f"   Taux de succès: {final_health['success_rate']:.1%}")
+    
+    # Shutdown Pattern Factory
+    await agent111.shutdown()
+    
+    print("=" * 70)
+    print("🎯 Agent 111 - MISSION SPRINT 3 TERMINÉE ✅ (Pattern Factory compliant)")
 
+# Point d'entrée CLI
 if __name__ == "__main__":
     asyncio.run(main()) 

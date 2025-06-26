@@ -1,0 +1,93 @@
+#!/usr/bin/env python3
+"""
+Agent Windows PostgreSQL - Configuration Windows pour PostgreSQL
+Développé par l'équipe de maintenance NextGeneration
+"""
+
+import os
+import subprocess
+from datetime import datetime
+
+class AgentWindowsPostgreSQL:
+    def __init__(self):
+    self.nom = "agent_POSTGRESQL_windows_postgres"
+    self.version = "1.0.0"
+    self.logs = []
+        
+    def diagnostiquer_windows(self):
+        """Diagnostic environnement Windows PostgreSQL."""
+    diagnostic = {
+        "postgresql_installe": False,
+        "services_windows": [],
+        "variables_env": {},
+        "problemes": []
+    }
+        
+    try:
+            # Test PostgreSQL installé
+        result = subprocess.run(['pg_config', '--version'], 
+                              capture_output=True, text=True)
+        if result.returncode == 0:
+            diagnostic["postgresql_installe"] = True
+            diagnostic["version"] = result.stdout.strip()
+            self.log("PostgreSQL détecté sur Windows")
+        else:
+            diagnostic["problemes"].append("PostgreSQL non trouvé dans PATH")
+                
+    except FileNotFoundError:
+        diagnostic["problemes"].append("PostgreSQL non installé")
+            
+        # Variables d'environnement
+    env_vars = ['PGDATA', 'PGUSER', 'PGHOST', 'PGPORT']
+    for var in env_vars:
+        diagnostic["variables_env"][var] = os.environ.get(var, "NON_DEFINI")
+            
+    return diagnostic
+        
+    def configurer_environnement_windows(self):
+        """Configure l'environnement Windows pour PostgreSQL."""
+    config = {
+        "PGHOST": "localhost",
+        "PGPORT": "5432",
+        "PGUSER": "postgres"
+    }
+        
+    for var, valeur in config.items():
+        if not os.environ.get(var):
+            os.environ[var] = valeur
+            self.log(f"Variable {var} configurée: {valeur}")
+                
+    return True
+        
+    def tester_connexion(self):
+        """Test connexion PostgreSQL."""
+    try:
+        cmd = ['psql', '-h', 'localhost', '-U', 'postgres', '-c', 'SELECT 1;']
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
+            
+        if result.returncode == 0:
+            self.log("Connexion PostgreSQL réussie")
+            return True
+        else:
+            self.log(f"Échec connexion: {result.stderr}")
+            return False
+                
+    except Exception as e:
+        self.log(f"Erreur test connexion: {e}")
+        return False
+            
+    def log(self, message):
+    entry = f"[{datetime.now().strftime('%H:%M:%S')}] {message}"
+    self.logs.append(entry)
+    print(f"🪟 {entry}")
+
+def create_agent_windows_postgresql():
+    return AgentWindowsPostgreSQL()
+
+if __name__ == "__main__":
+    agent = create_agent_windows_postgresql()
+    diagnostic = agent.diagnostiquer_windows()
+    agent.configurer_environnement_windows()
+    agent.tester_connexion()
+    print(f"Agent Windows PostgreSQL opérationnel - {len(agent.logs)} actions")
+

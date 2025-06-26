@@ -84,16 +84,9 @@
             }
         },
         "agent_05_maitre_tests_validation": {
-            "version": "1.0.0",
-            "mission": "Tests complets et validation de la performance.",
-            "description": "Agent 05 - Maître Tests & Validation. Exécute des tests complets et valide la performance du système, en s'appuyant sur le code expert pour la gestion des templates de test.",
-            "dependencies": [
-                "core.agent_factory_architecture",
-                "code_expert.enhanced_agent_templates",
-                "code_expert.optimized_template_manager"
-            ],
-            "status": "A_REPARER",
-            "agent_type": "test",
+            "module": "agents.agent_05_maitre_tests_validation",
+            "class": "Agent05MaitreTestsValidation",
+            "factory_function": "create_agent_05_maitre_tests_validation",
             "config": {
                 "cache_size": 100,
                 "ttl_seconds": 300,

@@ -19,7 +19,9 @@ class ElasticsearchHandler(logging.Handler):
             self.es_client = Elasticsearch(hosts=es_hosts)
             # Tenter une connexion pour valider rapidement la configuration
             if not self.es_client.ping():
-                raise ConnectionError("Ping vers Elasticsearch a échoué.")
+                # Ne plus lever d'exception ici, afficher un avertissement et continuer
+                print(f"AVERTISSEMENT: Ping vers Elasticsearch a échoué. L'envoi des logs vers Elasticsearch sera désactivé.")
+                self.es_client = None 
         except exceptions.ConnectionError as e:
             print(f"ERREUR CRITIQUE: Impossible de se connecter à Elasticsearch: {e}")
             self.es_client = None

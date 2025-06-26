@@ -1,0 +1,11 @@
+[2025-06-26T02:22:56.815600] ImportError: features.enterprise.fastapi_orchestration introuvable. Stubs utilisés.
+[2025-06-26T02:25:02.206798] ImportError: features.enterprise.fastapi_orchestration introuvable. Stubs utilisés.
+[2025-06-26T02:25:16.330853] ImportError: features.enterprise.fastapi_orchestration introuvable. Stubs utilisés.
+[2025-06-26 04:39:07] Backup créé : C:\Dev\backups\agents\agent_FASTAPI_23_orchestration_enterprise.py
+[2025-06-26T10:11:09.510064] ImportError: features.enterprise.fastapi_orchestration introuvable. Stubs utilisés.
+[2025-06-26T10:12:53.553813] ImportError: features.enterprise.fastapi_orchestration introuvable. Stubs utilisés.
+[2025-06-26T10:13:09.922579] Agent initialisé avec features STUBS.
+[2025-06-26T10:13:09.923584] execute_task refusé (features STUBS actifs).
+[2025-06-26T10:31:09.735475] ImportError: features.enterprise.fastapi_orchestration introuvable. Stubs utilisés.
+[2025-06-26T10:31:26.068893] Agent initialisé avec features STUBS.
+[2025-06-26T10:31:26.069893] execute_task refusé (features STUBS actifs).

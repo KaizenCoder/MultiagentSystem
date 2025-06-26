@@ -1,0 +1,476 @@
+{
+  "transfer_date": "2025-06-26T01:38:09.838730",
+  "source_directory": "C:\\Dev\\SuperWhisper_V6\\luxa",
+  "destination_directory": "C:\\Dev\\nextgeneration",
+  "total_files": 78,
+  "files": [
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_01_coordinateur_principal.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_01_coordinateur_principal.py",
+      "timestamp": "2025-06-26T01:38:09.754550"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_02_architecte_code_expert.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_02_architecte_code_expert.py",
+      "timestamp": "2025-06-26T01:38:09.756550"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_03_specialiste_configuration.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_03_specialiste_configuration.py",
+      "timestamp": "2025-06-26T01:38:09.757543"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_04_expert_securite_crypto.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_04_expert_securite_crypto.py",
+      "timestamp": "2025-06-26T01:38:09.757543"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_05_maitre_tests_validation.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_05_maitre_tests_validation.py",
+      "timestamp": "2025-06-26T01:38:09.759543"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_06_specialiste_monitoring_sprint4.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_06_specialiste_monitoring_sprint4.py",
+      "timestamp": "2025-06-26T01:38:09.760543"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_108_performance_optimizer.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_108_performance_optimizer.py",
+      "timestamp": "2025-06-26T01:38:09.761544"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_109_pattern_factory_version.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_109_pattern_factory_version.py",
+      "timestamp": "2025-06-26T01:38:09.762543"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_109_specialiste_planes.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_109_specialiste_planes.py",
+      "timestamp": "2025-06-26T01:38:09.763543"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_110_documentaliste_expert.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_110_documentaliste_expert.py",
+      "timestamp": "2025-06-26T01:38:09.764543"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_111_auditeur_qualite.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_111_auditeur_qualite.py",
+      "timestamp": "2025-06-26T01:38:09.765545"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_111_auditeur_qualite_sprint3.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_111_auditeur_qualite_sprint3.py",
+      "timestamp": "2025-06-26T01:38:09.766543"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_12_backup_manager.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_12_backup_manager.py",
+      "timestamp": "2025-06-26T01:38:09.768547"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_13_specialiste_documentation.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_13_specialiste_documentation.py",
+      "timestamp": "2025-06-26T01:38:09.769547"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_14_specialiste_workspace.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_14_specialiste_workspace.py",
+      "timestamp": "2025-06-26T01:38:09.770547"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_15_testeur_specialise.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_15_testeur_specialise.py",
+      "timestamp": "2025-06-26T01:38:09.771547"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_16_peer_reviewer_senior.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_16_peer_reviewer_senior.py",
+      "timestamp": "2025-06-26T01:38:09.772547"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_17_peer_reviewer_technique.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_17_peer_reviewer_technique.py",
+      "timestamp": "2025-06-26T01:38:09.773547"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_18_auditeur_securite.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_18_auditeur_securite.py",
+      "timestamp": "2025-06-26T01:38:09.773547"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_19_auditeur_performance.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_19_auditeur_performance.py",
+      "timestamp": "2025-06-26T01:38:09.775547"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_20_auditeur_conformite.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_20_auditeur_conformite.py",
+      "timestamp": "2025-06-26T01:38:09.776547"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_analyse_solution_chatgpt.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_analyse_solution_chatgpt.py",
+      "timestamp": "2025-06-26T01:38:09.777546"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_ARCHITECTURE_22_enterprise_consultant.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_ARCHITECTURE_22_enterprise_consultant.py",
+      "timestamp": "2025-06-26T01:38:09.778547"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_ASSISTANT_99_refactoring_helper.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_ASSISTANT_99_refactoring_helper.py",
+      "timestamp": "2025-06-26T01:38:09.779547"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_config.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_config.py",
+      "timestamp": "2025-06-26T01:38:09.780547"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_FASTAPI_23_orchestration_enterprise.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_FASTAPI_23_orchestration_enterprise.py",
+      "timestamp": "2025-06-26T01:38:09.781548"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_MAINTENANCE_00_chef_equipe_coordinateur.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_MAINTENANCE_00_chef_equipe_coordinateur.py",
+      "timestamp": "2025-06-26T01:38:09.782613"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_MAINTENANCE_01_analyseur_structure.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_MAINTENANCE_01_analyseur_structure.py",
+      "timestamp": "2025-06-26T01:38:09.784612"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_MAINTENANCE_02_evaluateur_utilite.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_MAINTENANCE_02_evaluateur_utilite.py",
+      "timestamp": "2025-06-26T01:38:09.785613"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_MAINTENANCE_03_adaptateur_code.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_MAINTENANCE_03_adaptateur_code.py",
+      "timestamp": "2025-06-26T01:38:09.787727"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_MAINTENANCE_04_testeur_anti_faux_agents.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_MAINTENANCE_04_testeur_anti_faux_agents.py",
+      "timestamp": "2025-06-26T01:38:09.789730"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_MAINTENANCE_05_documenteur_peer_reviewer.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_MAINTENANCE_05_documenteur_peer_reviewer.py",
+      "timestamp": "2025-06-26T01:38:09.790731"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_MAINTENANCE_06_correcteur_logique_metier.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_MAINTENANCE_06_correcteur_logique_metier.py",
+      "timestamp": "2025-06-26T01:38:09.791730"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_MAINTENANCE_06_validateur_final.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_MAINTENANCE_06_validateur_final.py",
+      "timestamp": "2025-06-26T01:38:09.792730"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_MAINTENANCE_07_gestionnaire_dependances.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_MAINTENANCE_07_gestionnaire_dependances.py",
+      "timestamp": "2025-06-26T01:38:09.793738"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_MAINTENANCE_08_analyseur_performance.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_MAINTENANCE_08_analyseur_performance.py",
+      "timestamp": "2025-06-26T01:38:09.796731"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_MAINTENANCE_09_analyseur_securite.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_MAINTENANCE_09_analyseur_securite.py",
+      "timestamp": "2025-06-26T01:38:09.797731"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_MAINTENANCE_10_auditeur_qualite_normes.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_MAINTENANCE_10_auditeur_qualite_normes.py",
+      "timestamp": "2025-06-26T01:38:09.799730"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_MAINTENANCE_11_harmonisateur_style.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_MAINTENANCE_11_harmonisateur_style.py",
+      "timestamp": "2025-06-26T01:38:09.799730"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_MAINTENANCE_12_correcteur_semantique.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_MAINTENANCE_12_correcteur_semantique.py",
+      "timestamp": "2025-06-26T01:38:09.800730"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_meta_strategique_scheduler.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_meta_strategique_scheduler.py",
+      "timestamp": "2025-06-26T01:38:09.802730"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_MONITORING_25_production_enterprise.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_MONITORING_25_production_enterprise.py",
+      "timestamp": "2025-06-26T01:38:09.803730"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_orchestrateur_audit.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_orchestrateur_audit.py",
+      "timestamp": "2025-06-26T01:38:09.804731"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_POSTGRESQL_diagnostic_postgres_final.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_POSTGRESQL_diagnostic_postgres_final.py",
+      "timestamp": "2025-06-26T01:38:09.805731"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_POSTGRESQL_docker_specialist.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_POSTGRESQL_docker_specialist.py",
+      "timestamp": "2025-06-26T01:38:09.806731"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_POSTGRESQL_documentation_manager.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_POSTGRESQL_documentation_manager.py",
+      "timestamp": "2025-06-26T01:38:09.807730"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_POSTGRESQL_resolution_finale.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_POSTGRESQL_resolution_finale.py",
+      "timestamp": "2025-06-26T01:38:09.808730"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_POSTGRESQL_sqlalchemy_fixer.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_POSTGRESQL_sqlalchemy_fixer.py",
+      "timestamp": "2025-06-26T01:38:09.809731"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_POSTGRESQL_testing_specialist.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_POSTGRESQL_testing_specialist.py",
+      "timestamp": "2025-06-26T01:38:09.810731"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_POSTGRESQL_web_researcher.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_POSTGRESQL_web_researcher.py",
+      "timestamp": "2025-06-26T01:38:09.811731"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_POSTGRESQL_windows_postgres.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_POSTGRESQL_windows_postgres.py",
+      "timestamp": "2025-06-26T01:38:09.813737"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_POSTGRESQL_workspace_organizer.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_POSTGRESQL_workspace_organizer.py",
+      "timestamp": "2025-06-26T01:38:09.814738"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_SECURITY_21_supply_chain_enterprise.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_SECURITY_21_supply_chain_enterprise.py",
+      "timestamp": "2025-06-26T01:38:09.815732"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_STORAGE_24_enterprise_manager.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_STORAGE_24_enterprise_manager.py",
+      "timestamp": "2025-06-26T01:38:09.816730"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_testeur_agents.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_testeur_agents.py",
+      "timestamp": "2025-06-26T01:38:09.817731"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\agent_test_models_integration.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\agent_test_models_integration.py",
+      "timestamp": "2025-06-26T01:38:09.818731"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\create_directories.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\create_directories.py",
+      "timestamp": "2025-06-26T01:38:09.820731"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\DEPRECATED_taskmaster_agent.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\DEPRECATED_taskmaster_agent.py",
+      "timestamp": "2025-06-26T01:38:09.821731"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\lancer_tache_taskmaster.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\lancer_tache_taskmaster.py",
+      "timestamp": "2025-06-26T01:38:09.822731"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\orchestrateur_agents.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\orchestrateur_agents.py",
+      "timestamp": "2025-06-26T01:38:09.823731"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\run_maintenance_team_DEPRECATED.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\run_maintenance_team_DEPRECATED.py",
+      "timestamp": "2025-06-26T01:38:09.824730"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\taskmaster_final.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\taskmaster_final.py",
+      "timestamp": "2025-06-26T01:38:09.825731"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\taskmaster_nextgen.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\taskmaster_nextgen.py",
+      "timestamp": "2025-06-26T01:38:09.826734"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\temp_runner_agent_pg_docker_spec.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\temp_runner_agent_pg_docker_spec.py",
+      "timestamp": "2025-06-26T01:38:09.827731"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\test_maintenance_team.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\test_maintenance_team.py",
+      "timestamp": "2025-06-26T01:38:09.828730"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\test_taskmaster_startup.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\test_taskmaster_startup.py",
+      "timestamp": "2025-06-26T01:38:09.829730"
+    },
+    {
+      "type": "agent",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\agents_docs\\xagent_12_adaptive_performance_monitor.py",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\xagent_12_adaptive_performance_monitor.py",
+      "timestamp": "2025-06-26T01:38:09.831730"
+    },
+    {
+      "type": "rapport",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\reports\\strategic\\analyse_agent_17_agent_01_coordinateur_principal_20250626_013439.json",
+      "destination": "C:\\Dev\\nextgeneration\\reports\\strategic\\analyse_agent_17_agent_01_coordinateur_principal_20250626_013439.json",
+      "timestamp": "2025-06-26T01:38:09.832731"
+    },
+    {
+      "type": "rapport",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\reports\\strategic\\analyse_agent_17_agent_01_coordinateur_principal_20250626_013439.md",
+      "destination": "C:\\Dev\\nextgeneration\\reports\\strategic\\analyse_agent_17_agent_01_coordinateur_principal_20250626_013439.md",
+      "timestamp": "2025-06-26T01:38:09.833730"
+    },
+    {
+      "type": "rapport",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\reports\\strategic\\analyse_agent_17_agent_01_coordinateur_principal_20250626_013630.json",
+      "destination": "C:\\Dev\\nextgeneration\\reports\\strategic\\analyse_agent_17_agent_01_coordinateur_principal_20250626_013630.json",
+      "timestamp": "2025-06-26T01:38:09.833730"
+    },
+    {
+      "type": "rapport",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\reports\\strategic\\analyse_agent_17_agent_01_coordinateur_principal_20250626_013630.md",
+      "destination": "C:\\Dev\\nextgeneration\\reports\\strategic\\analyse_agent_17_agent_01_coordinateur_principal_20250626_013630.md",
+      "timestamp": "2025-06-26T01:38:09.834730"
+    },
+    {
+      "type": "rapport",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\reports\\strategic\\rapport_strategique_agent_01_coordinateur_principal_20250626_012126.json",
+      "destination": "C:\\Dev\\nextgeneration\\reports\\strategic\\rapport_strategique_agent_01_coordinateur_principal_20250626_012126.json",
+      "timestamp": "2025-06-26T01:38:09.834730"
+    },
+    {
+      "type": "rapport",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\reports\\strategic\\rapport_strategique_agent_01_coordinateur_principal_20250626_012544.json",
+      "destination": "C:\\Dev\\nextgeneration\\reports\\strategic\\rapport_strategique_agent_01_coordinateur_principal_20250626_012544.json",
+      "timestamp": "2025-06-26T01:38:09.834730"
+    },
+    {
+      "type": "rapport",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\reports\\strategic\\rapport_strategique_agent_01_coordinateur_principal_20250626_012544.md",
+      "destination": "C:\\Dev\\nextgeneration\\reports\\strategic\\rapport_strategique_agent_01_coordinateur_principal_20250626_012544.md",
+      "timestamp": "2025-06-26T01:38:09.835730"
+    },
+    {
+      "type": "rapport",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\reports\\strategic\\test_markdown_complet_20250626_012841.md",
+      "destination": "C:\\Dev\\nextgeneration\\reports\\strategic\\test_markdown_complet_20250626_012841.md",
+      "timestamp": "2025-06-26T01:38:09.835730"
+    },
+    {
+      "type": "journal",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\Logs\\agents\\agent_01_coordinateur_principal_journal.md",
+      "destination": "C:\\Dev\\nextgeneration\\logs\\agents\\agent_01_coordinateur_principal_journal.md",
+      "timestamp": "2025-06-26T01:38:09.836731"
+    },
+    {
+      "type": "backup",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\backups\\agents\\agent_01_coordinateur_principal.py.backup_20250626_011645",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\backups\\agent_01_coordinateur_principal.py.backup_20250626_011645",
+      "timestamp": "2025-06-26T01:38:09.837739"
+    },
+    {
+      "type": "backup",
+      "source": "C:\\Dev\\SuperWhisper_V6\\luxa\\backups\\agents\\agent_01_coordinateur_principal.py.backup_20250626_011653",
+      "destination": "C:\\Dev\\nextgeneration\\agents\\backups\\agent_01_coordinateur_principal.py.backup_20250626_011653",
+      "timestamp": "2025-06-26T01:38:09.838730"
+    }
+  ]
+}

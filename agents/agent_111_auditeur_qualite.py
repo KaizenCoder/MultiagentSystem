@@ -21,6 +21,8 @@ import logging
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any, Optional
+import re
+import ast
 
 # Import Pattern Factory (OBLIGATOIRE selon guide)
 # Assurez-vous que le chemin vers 'core' est dans le PYTHONPATH
@@ -63,6 +65,24 @@ except ImportError as e:
             self.success = success
             self.data = data
             self.error = error
+
+# --- Helper Function pour une détection de docstring robuste ---
+def _has_module_docstring_manual(tree: ast.Module) -> bool:
+    """Vérifie manuellement la présence d'un docstring de module."""
+    if not hasattr(tree, 'body') or not tree.body:
+        return False
+    
+    first_node = tree.body[0]
+    
+    # Python < 3.8
+    if sys.version_info < (3, 8) and isinstance(first_node, ast.Expr) and isinstance(first_node.value, ast.Str):
+        return True
+        
+    # Python >= 3.8
+    if sys.version_info >= (3, 8) and isinstance(first_node, ast.Expr) and isinstance(first_node.value, ast.Constant) and isinstance(first_node.value.value, str):
+        return True
+        
+    return False
 
 class Agent111AuditeurQualite(Agent):
     """Agent111AuditeurQualite - Pattern Factory NextGeneration"""
@@ -118,32 +138,127 @@ class Agent111AuditeurQualite(Agent):
             "timestamp": datetime.now().isoformat()
         }
 
+    async def _audit_code(self, code: str, file_path: str) -> Dict[str, Any]:
+        """Effectue un audit de qualité robuste en utilisant l'AST."""
+        self.logger.info(f"Début de l'audit de qualité AST pour {file_path}")
+        
+        try:
+            tree = ast.parse(code)
+        except SyntaxError as e:
+            self.logger.error(f"Erreur de syntaxe dans {file_path}: {e}")
+            return {
+                "file_path": file_path,
+                "quality_score": 0,
+                "issues": [{"severity": "CRITICAL", "description": f"SyntaxError: {e}", "code": "SYNTAX_ERROR"}],
+                "error": f"SyntaxError: {e}"
+            }
+
+        score = 100
+        issues = []
+        
+        # 1. Vérification du docstring de module
+        has_module_docstring = _has_module_docstring_manual(tree)
+        if not has_module_docstring:
+            score -= 20
+            issues.append({
+                "severity": "HIGH", 
+                "description": "Docstring de module manquant.",
+                "code": "MISSING_MODULE_DOCSTRING"
+            })
+
+        # 2. Vérification des docstrings de fonction et de classe
+        total_funcs = 0
+        total_classes = 0
+        funcs_without_docstrings = []
+        
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ClassDef):
+                total_classes +=1
+                # On pourrait aussi vérifier les docstrings de classe ici
+            
+            if isinstance(node, ast.FunctionDef):
+                total_funcs += 1
+                if not ast.get_docstring(node):
+                    self.logger.warning(f"Fonction '{node.name}' sans docstring.")
+                    funcs_without_docstrings.append({"function": node.name})
+        
+        if funcs_without_docstrings:
+            score -= len(funcs_without_docstrings) * 5
+            issues.append({
+                "severity": "MEDIUM", 
+                "description": f"{len(funcs_without_docstrings)} fonction(s) sans docstring.",
+                "code": "MISSING_FUNCTION_DOCSTRING",
+                "details": funcs_without_docstrings
+            })
+
+        return {
+            "file_path": file_path,
+            "quality_score": max(0, score),
+            "metrics": {
+                "total_lines": len(code.splitlines()),
+                "total_functions": total_funcs,
+                "total_classes": total_classes,
+                "module_docstring": "✅ Oui" if has_module_docstring else "❌ Non",
+                "functions_no_docstring": len(funcs_without_docstrings),
+            },
+            "issues": issues
+        }
+
+    async def audit_code_quality(self, file_path: str) -> Dict[str, Any]:
+        """
+        Tâche publique pour auditer la qualité d'un fichier de code.
+        """
+        self.logger.info(f"Audit public de qualité demandé pour {file_path}")
+        try:
+            code = Path(file_path).read_text(encoding='utf-8')
+            report = await self._audit_code(code, file_path)
+            return report
+        except FileNotFoundError:
+            self.logger.error(f"Fichier non trouvé pour l'audit : {file_path}")
+            return {"error": "File not found", "quality_score": 0}
+        except Exception as e:
+            self.logger.error(f"Erreur durant l'audit de {file_path}: {e}", exc_info=True)
+            return {"error": str(e), "quality_score": 0}
+
     async def execute_task(self, task: Task) -> Result:
         """Exécution des tâches - Pattern Factory OBLIGATOIRE"""
-        self.logger.info(f"🎯 Exécution tâche: {task.task_id} - {task.description}")
+        self.logger.info(f"🎯 Exécution tâche: {task.type if hasattr(task, 'type') else task.description}")
         try:
-            if task.description == "execute_mission":
-                mission_data = task.data.get('mission_data', None)
+            task_type = task.type if hasattr(task, 'type') else task.description
+            task_params = task.params if hasattr(task, 'params') else task.data
+
+            if task_type == "audit_code_quality":
+                code = task_params.get('code')
+                file_path = task_params.get('file_path')
+                if not code or not file_path:
+                    return Result(success=False, error="Code et file_path sont requis pour audit_code_quality.")
+                
+                report = await self._audit_code(code, file_path)
+                return Result(success=True, data={"quality_report": report})
+
+            elif task_type == "execute_mission":
+                mission_data = task_params.get('mission_data', None)
                 results = await self.execute_mission(mission_data)
                 return Result(success=True, data={"mission_results": results})
 
-            elif task.description == "process_data":
-                data_to_process = task.data.get('data', None)
+            elif task_type == "process_data":
+                data_to_process = task_params.get('data', None)
                 if data_to_process is None:
                     return Result(success=False, error="Données requises pour 'process_data'")
                 processed = await self.process_data(data_to_process)
                 return Result(success=True, data=processed)
 
             else:
-                return Result(success=False, error=f"Tâche non reconnue: {task.description}")
+                return Result(success=False, error=f"Tâche non reconnue: {task_type}")
 
         except Exception as e:
-            self.logger.error(f"❌ Erreur exécution tâche {task.task_id}: {e}", exc_info=True)
+            self.logger.error(f"❌ Erreur exécution tâche {task.type if hasattr(task, 'type') else task.task_id}: {e}", exc_info=True)
             return Result(success=False, error=str(e))
 
     def get_capabilities(self) -> List[str]:
         """Retourne les capacités de l'agent"""
         return [
+            "audit_code_quality",
             "execute_mission",
             "process_data",
             "health_monitoring",
@@ -202,6 +317,18 @@ async def main():
         task = Task("test_mission_01", "execute_mission", data={'mission_data': None})
         result = await agent.execute_task(task)
         print(f"   Résultat: {'Succès' if result.success else 'Échec'} - {result.data or result.error}")
+
+        print("\n🔬 Test de la tâche 'audit_code_quality'...")
+        try:
+            with open(__file__, "r", encoding="utf-8") as f:
+                test_code = f.read()
+            audit_task = Task(type="audit_code_quality", params={"code": test_code, "file_path": __file__})
+            audit_result = await agent.execute_task(audit_task)
+            print(f"   Résultat: {'Succès' if audit_result.success else 'Échec'}")
+            if audit_result.success:
+                print(f"   Score de qualité de ce fichier: {audit_result.data['quality_report']['quality_score']}/100")
+        except Exception as e:
+            print(f"   Erreur durant le test d'audit: {e}")
 
     except Exception as e:
         print(f"❌ Erreur durant l'exécution de l'agent: {e}")

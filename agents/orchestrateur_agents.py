@@ -2,9 +2,10 @@ import os
 import shutil
 from pathlib import Path
 import sys
+from datetime import datetime
 
 AGENTS_DIR = Path('agents')
-BACKUP_DIR = Path('backups/agents')
+BACKUP_DIR = Path('../backups/agents').resolve() if not Path('backups/agents').is_absolute() else Path('backups/agents')
 SUIVI_MD = Path('agents/WORKFLOW_SUIVI_AGENTS.md')
 SYNTHESE_MD = Path('agents/SYNTHESE_SUIVI_AGENTS.md')
 
@@ -48,15 +49,33 @@ def update_suivi_md(agent, tache, ia, statut, backup_path='', rapport_path='', c
 # 4. Préparer la structure pour l'appel aux IA (à compléter)
 def traiter_lot(lot, ia_num):
     for agent_path in lot:
-        # Exemple : renseigner le suivi pour chaque agent au début
+        # 1. Création du backup
+        backup_path = BACKUP_DIR / agent_path.name
+        # Création du dossier backup si nécessaire (API native)
+        os.makedirs(BACKUP_DIR, exist_ok=True)
+        shutil.copy2(agent_path, backup_path)
+        
+        # 2. Création/complétion du journal de développement
+        log_dir = Path('logs/agents')
+        log_dir.mkdir(parents=True, exist_ok=True)
+        journal_path = log_dir / f"{agent_path.stem}_journal.md"
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        journal_entry = f"[{now}] Backup créé : {backup_path}\n"
+        if journal_path.exists():
+            journal_path.write_text(journal_path.read_text(encoding='utf-8') + journal_entry, encoding='utf-8')
+        else:
+            journal_path.write_text(f"# Journal de développement pour {agent_path.name}\n\n" + journal_entry, encoding='utf-8')
+
+        # 3. Mise à jour du tableau de suivi
+        commentaires = f"Backup créé et journal initialisé. En attente refactorisation."
         update_suivi_md(
             agent=agent_path.name,
             tache='À définir',
             ia=f'IA {ia_num}',
             statut='À faire',
-            backup_path=f'[backup]({BACKUP_DIR / agent_path.name})',
+            backup_path=f'[backup]({backup_path})',
             rapport_path='',
-            commentaires='',
+            commentaires=commentaires,
             validation='⬜'
         )
         # TODO : Appeler la logique de l'IA correspondante

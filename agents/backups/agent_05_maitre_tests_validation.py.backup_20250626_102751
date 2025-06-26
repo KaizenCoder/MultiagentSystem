@@ -1,0 +1,187 @@
+#!/usr/bin/env python3
+"""
+🧪 Agent 05 - Maître Tests & Validation
+Mission: Tests complets et validation de la performance.
+"""
+import sys
+from pathlib import Path
+
+# Ajout du répertoire parent au path pour résoudre les imports locaux
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+
+import os
+import json
+import time
+import asyncio
+from datetime import datetime
+from typing import Dict, List, Any, Optional
+import pydantic
+
+from core.agent_factory_architecture import Agent, Task, Result
+from core import logging_manager
+
+# Assumons que le code expert est dans un chemin accessible
+# Les imports relatifs complexes sont supprimés pour la clarté.
+# Si ces modules ne sont pas trouvés, cela lèvera une ImportError propre.
+# Cette partie sera gérée dynamiquement dans __init__
+
+class Agent05SpecificConfig(pydantic.BaseModel):
+    cache_size: int
+    ttl_seconds: int
+    enable_hot_reload: bool
+    num_workers: int
+    code_expert_dir: str
+    templates_subdir: str
+
+class Agent05Config(pydantic.BaseModel):
+    version: str
+    mission: str
+    description: str
+    dependencies: List[str]
+    status: str
+    agent_type: str
+    config: Agent05SpecificConfig
+
+
+class Agent05MaitreTestsValidation(Agent):
+    """
+    Agent 05 - Maître Tests & Validation.
+    Cette version est nettoyée et restructurée pour être fonctionnelle.
+    """
+    
+    def __init__(self, agent_id="agent_05_maitre_tests_validation"):
+        self.agent_id = agent_id
+        self.workspace = Path(__file__).resolve().parent.parent
+
+        # --- Configuration Loading ---
+        config_path = self.workspace / "config" / "maintenance_config.json"
+        with open(config_path, 'r', encoding='utf-8') as f:
+            full_config = json.load(f)
+        
+        agent_config_data = full_config["agents"].get(self.agent_id)
+        if not agent_config_data:
+            raise ValueError(f"Configuration for agent '{self.agent_id}' not found.")
+            
+        pydantic_config = Agent05Config(**agent_config_data)
+        
+        # --- Logger Initialization ---
+        custom_log_config = {
+            "logger_name": f"agent.{self.agent_id}",
+            "metadata": {
+                "agent_name": self.agent_id,
+                "role": "tester",
+                "domain": "validation",
+                "version": pydantic_config.version
+            }
+        }
+        self.logger = logging_manager.get_logger(
+            config_name="agent_default",
+            custom_config=custom_log_config
+        )
+
+        # --- Superclass Initialization ---
+        super().__init__(
+            agent_id=self.agent_id,
+            version=pydantic_config.version,
+            mission=pydantic_config.mission,
+            description=pydantic_config.description,
+            dependencies=pydantic_config.dependencies,
+            status=pydantic_config.status,
+            agent_type=pydantic_config.agent_type,
+            logger=self.logger
+        )
+        
+        # --- Set attributes from config ---
+        self.version = pydantic_config.version
+        self.mission = pydantic_config.mission
+        self.description = pydantic_config.description
+        self.dependencies = pydantic_config.dependencies
+        self.status = pydantic_config.status
+        self.agent_type = pydantic_config.agent_type
+        self.config = pydantic_config.config # Use the specific config part
+
+        self.tests_dir = self.workspace / "tests"
+        self.reports_dir = self.workspace / "reports"
+        self.logs_dir = self.workspace / "logs"
+        
+        self.template_manager = None
+        self.templates_loaded = False
+        
+        # --- Initialisation du code expert ---
+        try:
+            self.logger.info("🔧 Initialisation du code expert...")
+            
+            # Ajout dynamique du chemin du code expert
+            code_expert_path = self.workspace / self.config.code_expert_dir
+            if str(code_expert_path) not in sys.path:
+                sys.path.append(str(code_expert_path))
+            
+            from enhanced_agent_templates import AgentTemplate, TemplateValidationError
+            from optimized_template_manager import TemplateManager
+
+            templates_dir = code_expert_path / self.config.templates_subdir
+            templates_dir.mkdir(parents=True, exist_ok=True)
+            
+            self.template_manager = TemplateManager(
+                templates_dir=templates_dir,
+                cache_size=self.config.cache_size,
+                ttl_seconds=self.config.ttl_seconds,
+                enable_hot_reload=self.config.enable_hot_reload,
+                num_workers=self.config.num_workers
+            )
+            self.templates_loaded = True
+            self.logger.info("✅ Code expert initialisé avec succès.")
+        except ImportError as e:
+            self.logger.error(f"❌ Erreur d'importation du code expert: {e}. Vérifiez que les fichiers existent dans '{code_expert_path}' et que les dépendances sont installées.")
+            self.templates_loaded = False
+        except Exception as e:
+            self.logger.error(f"❌ Erreur initialisation code expert: {e}")
+            self.templates_loaded = False
+    
+    async def execute_task(self, task: Task) -> Result:
+        self.logger.info(f"🔥 Démarrage des tests pour la tâche: {task.id}")
+        
+        # Ici, nous pourrions choisir les tests à lancer en fonction de la tâche.
+        # Pour l'instant, nous lançons une suite de tests par défaut.
+        test_results = self.run_smoke_tests()
+        
+        return Result(success=True, data=test_results)
+
+    def run_smoke_tests(self) -> Dict[str, Any]:
+        """Exécute une série de tests de base."""
+        self.logger.info("🔥 Démarrage des tests smoke.")
+        
+        smoke_results = {
+            "test_suite": "smoke_tests_code_expert",
+            "timestamp": datetime.now().isoformat(),
+            "tests": [],
+            "summary": { "total": 0, "passed": 0, "failed": 0 }
+        }
+        
+        # Test 1: Initialisation (déjà faite dans __init__)
+        smoke_results["tests"].append({
+            "name": "template_manager_init",
+            "status": "PASSED" if self.templates_loaded else "FAILED"
+        })
+
+        # Mettez ici d'autres logiques de test...
+        
+        passed_count = sum(1 for t in smoke_results["tests"] if t["status"] == "PASSED")
+        smoke_results["summary"]["total"] = len(smoke_results["tests"])
+        smoke_results["summary"]["passed"] = passed_count
+        smoke_results["summary"]["failed"] = smoke_results["summary"]["total"] - passed_count
+        
+        return smoke_results
+
+    async def startup(self):
+        self.logger.info(f"🚀 {self.agent_id} v{self.version} - DÉMARRAGE")
+
+    async def shutdown(self):
+        self.logger.info(f"🧪 {self.agent_id} v{self.version} - ARRÊT")
+
+    def get_capabilities(self) -> list[str]:
+        return ["test_execution", "validation", "benchmark"]
+
+    async def health_check(self) -> dict:
+        return {"status": "ok", "expert_code_loaded": self.templates_loaded}
+

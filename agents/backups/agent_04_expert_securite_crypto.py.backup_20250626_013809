@@ -1,0 +1,219 @@
+#!/usr/bin/env python3
+"""
+🔒 Agent 04 - Expert Sécurité Cryptographique
+"""
+
+import os
+import sys
+import json
+import asyncio
+import base64
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, Any, Optional
+from dataclasses import dataclass
+
+# --- Imports Core & Factory ---
+try:
+    from core.agent_factory_architecture import Agent, Task, Result
+    from core.manager import LoggingManager
+except ImportError:
+    project_root = Path(__file__).resolve().parents[1]
+    if str(project_root) not in sys.path:
+        sys.path.insert(0, str(project_root))
+    from core.agent_factory_architecture import Agent, Task, Result
+    from core.manager import LoggingManager
+
+# --- Imports Specific Libraries ---
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import rsa, padding
+import jwt
+import hvac
+
+# --- NOUVELLE GESTION DE LA CONFIGURATION ---
+try:
+    from core.config_models_agent.config_models_maintenance import get_maintenance_config
+    CONFIG_SYSTEM_AVAILABLE = True
+except ImportError as e:
+    # Utiliser le logger de base s'il est disponible
+    try:
+        logging_manager.get_logger().error(f"Impossible d'importer le système de configuration: {e}")
+    except NameError:
+        print(f"ERREUR CRITIQUE: Impossible d'importer le système de configuration: {e}")
+    CONFIG_SYSTEM_AVAILABLE = False
+
+
+@dataclass
+class SecurityMetrics:
+    """Métriques sécurité temps réel pour Prometheus"""
+    signatures_created: int = 0
+    signatures_verified: int = 0
+    signature_failures: int = 0
+    key_rotations: int = 0
+    vault_operations: int = 0
+    policy_violations: int = 0
+    security_scans: int = 0
+    vulnerabilities_found: int = 0
+    templates_secured: int = 0
+    avg_signature_time: float = 0.0
+    avg_verification_time: float = 0.0
+    avg_policy_check_time: float = 0.0
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "signatures": {
+                "created": self.signatures_created,
+                "verified": self.signatures_verified,
+                "failures": self.signature_failures,
+                "avg_time_ms": self.avg_signature_time * 1000
+            },
+            "vault": {
+                "operations": self.vault_operations,
+                "key_rotations": self.key_rotations
+            },
+            "policy": {
+                "violations": self.policy_violations,
+                "avg_check_time_ms": self.avg_policy_check_time * 1000
+            },
+            "security": {
+                "scans": self.security_scans,
+                "vulnerabilities": self.vulnerabilities_found,
+                "templates_secured": self.templates_secured
+            }
+        }
+
+
+class Agent04ExpertSecuriteCrypto(Agent):
+    """🔒 Agent 04 - Expert Sécurité Cryptographique - v3.1"""
+
+    def __init__(self, **kwargs):
+        # On doit initialiser le logger AVANT super().__init__ pour que la classe de base puisse logger
+        self.logging_manager = LoggingManager()
+        self.logger = self.logging_manager.get_logger('agent_securite')
+        
+        kwargs['logger'] = self.logger # Passer le logger à la classe de base
+        
+        # Le type d'agent est un argument obligatoire pour la classe de base
+        kwargs.setdefault('agent_type', 'expert_securite_crypto')
+        
+        super().__init__(**kwargs)
+        
+        self.agent_id = kwargs.get('agent_id', 'agent_04_expert_securite_crypto')
+        self.name = "Expert Sécurité et Cryptographie"
+        self.status = "INITIALISATION"
+        self.version = "3.1.0"
+
+        if not CONFIG_SYSTEM_AVAILABLE:
+            self.status = "ERREUR_CONFIG"
+            self.logger.error("Dépendance manquante: `core.config_models_agent`. Agent inopérable.")
+            return
+
+        self.maintenance_config = get_maintenance_config()
+        self.config = self.maintenance_config.tools
+        self.logger.info("Configuration centralisée chargée.")
+
+        self.vault_client = None
+        self.jwt_secret_key = self.config.jwt.secret_key
+        self.private_key = None
+        self.public_key = None
+        self.metrics = SecurityMetrics()
+
+    async def startup(self):
+        if self.status == "ERREUR_CONFIG":
+            return
+        self.logger.info(f"Démarrage de {self.name} v{self.version}")
+        await self._initialize_vault_client()
+        await self._generate_rsa_keys()
+        self.status = "ACTIF"
+        self.logger.info(f"{self.name} est maintenant actif.")
+        await super().startup()
+
+    async def _initialize_vault_client(self):
+        vault_conf = self.config.hvac
+        try:
+            self.vault_client = hvac.Client(url=vault_conf.vault_url, token=vault_conf.vault_token)
+            if self.vault_client.is_authenticated():
+                self.logger.info("Client Vault initialisé et authentifié.")
+            else:
+                self.logger.error("Échec de l'authentification au client Vault.")
+        except Exception as e:
+            self.logger.error(f"Erreur init Vault: {e}", exc_info=True)
+
+    async def _generate_rsa_keys(self):
+        rsa_conf = self.config.rsa
+        try:
+            self.private_key = rsa.generate_private_key(
+                public_exponent=65537,
+                key_size=rsa_conf.key_size,
+            )
+            self.public_key = self.private_key.public_key()
+            self.logger.info(f"Paire de clés RSA de {rsa_conf.key_size} bits générée.")
+        except Exception as e:
+            self.logger.error(f"Erreur génération clés RSA: {e}", exc_info=True)
+
+    async def execute_task(self, task: Task) -> Result:
+        """Exécute une tâche de sécurité."""
+        # This agent is not designed to be called directly by the coordinator in this way yet.
+        # Its methods would be called by other agents requiring security services.
+        return Result(success=True, data={"message": "Agent de sécurité est en attente de tâches spécifiques."})
+
+    def _sign_data(self, data: bytes) -> Optional[bytes]:
+        """Signe des données avec la clé privée RSA."""
+        if not self.private_key:
+            self.logger.error("La clé privée n'est pas disponible pour la signature.")
+            return None
+        return self.private_key.sign(
+            data,
+            padding.PKCS1v15(),
+            hashes.SHA256()
+        )
+
+    # --- Méthodes Abstraites de la Classe de Base ---
+    
+    async def shutdown(self):
+        """Arrête l'agent proprement."""
+        self.logger.info(f"🛑 Agent {self.agent_id} ({self.name}) arrêté.")
+        self.status = "ARRETE"
+        await super().shutdown()
+
+    async def health_check(self) -> Dict[str, Any]:
+        """Vérifie l'état de santé de l'agent."""
+        is_healthy = self.vault_client is not None and self.vault_client.is_authenticated()
+        status = "SAIN" if is_healthy else "DÉGRADÉ"
+        return {
+            "status": status, 
+            "version": self.version, 
+            "vault_connected": is_healthy,
+            "timestamp": datetime.now().isoformat()
+        }
+
+    def get_capabilities(self) -> Dict[str, Any]:
+        """Retourne les capacités de l'agent."""
+        return {
+            "name": self.name,
+            "version": self.version,
+            "mission": "Fournir des services cryptographiques (signature, chiffrement, JWT) et interagir avec Vault.",
+            "tasks": [
+                {
+                    "name": "sign_data",
+                    "description": "Signe des données avec la clé privée de l'agent.",
+                },
+                {
+                    "name": "create_jwt",
+                    "description": "Crée un token JWT signé.",
+                }
+            ]
+        }
+
+def create_agent_04_expert_securite_crypto(**kwargs) -> Agent04ExpertSecuriteCrypto:
+    return Agent04ExpertSecuriteCrypto(**kwargs)
+
+if __name__ == '__main__':
+    async def main():
+        # Test d'exécution standalone
+        agent = create_agent_04_expert_securite_crypto()
+        await agent.startup()
+        print(f"Statut de l'agent: {agent.status}")
+        await agent.shutdown()
+
+    asyncio.run(main()) 

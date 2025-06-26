@@ -1,0 +1,458 @@
+#!/usr/bin/env python3
+"""
+🤖 AGENT11AUDITEURQUALITE - PATTERN FACTORY NEXTGENERATION
+========================================================
+
+Mission: [Mission extraite de l'agent original]
+
+Architecture Pattern Factory:
+- Hérite de Agent de base
+- Implémente méthodes abstraites obligatoires
+- Configuration NextGeneration intégrée
+- Logging Pattern Factory standardisé
+
+Transformé automatiquement par Agent 03 Adaptateur Code Upgraded
+Date: 2025-06-21 02:36:28
+"""
+
+import asyncio
+import sys
+import logging
+import ast
+import inspect
+import importlib.util
+from pathlib import Path
+from datetime import datetime
+from typing import Dict, List, Any, Optional, Union
+
+# Import Pattern Factory (OBLIGATOIRE selon guide)
+# Assurez-vous que le chemin vers 'core' est dans le PYTHONPATH
+try:
+    from core.agent_factory_architecture import Agent, Task, Result
+    from core import logging_manager
+    PATTERN_FACTORY_AVAILABLE = True
+except ImportError as e:
+    print(f"⚠️ Pattern Factory non disponible: {e}. Utilisation des classes de fallback.")
+    PATTERN_FACTORY_AVAILABLE = False
+    # Fallback classes si l'architecture centrale n'est pas disponible
+    class Agent:
+        def __init__(self, agent_type: str, **config):
+            self.agent_id = f"fallback_{agent_type}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            self.agent_type = agent_type
+            self.config = config
+            logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+            self.logger = logging.getLogger(self.agent_id)
+
+        async def startup(self):
+            self.logger.info(f"Agent {self.agent_id} démarré (fallback).")
+
+        async def shutdown(self):
+            self.logger.info(f"Agent {self.agent_id} arrêté (fallback).")
+
+        async def health_check(self):
+            return {"status": "healthy_fallback"}
+
+        def get_capabilities(self):
+            return []
+
+    class Result:
+        def __init__(self, success: bool, data: Any = None, error: str = None):
+            self.success = success
+            self.data = data
+            self.error = error
+
+class Agent111AuditeurQualite(Agent):
+    """Agent111AuditeurQualite - Pattern Factory NextGeneration"""
+
+    def __init__(self, **config):
+        # Pré-initialisation pour satisfaire les dépendances de la classe de base `Agent`
+        self.agent_id = config.get("agent_id", f"agent_111_auditeur_qualite_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
+        self.agent_type = "agent_111_auditeur_qualite"
+        self.logger = logging.getLogger(f"Agent111AuditeurQualite_{self.agent_id}")
+        
+        # L'appel à super() se fait APRÈS la création des attributs dont il dépend.
+        super().__init__(self.agent_type, **config)
+        
+        self.logger.info(f"🤖 Agent111AuditeurQualite initialisé - ID: {self.agent_id}")
+        
+        # Ce code était orphelin à la fin du fichier, je le déplace ici.
+        self.workspace_root = Path(__file__).resolve().parents[1]
+        self.code_expert_path = self.workspace_root / "code_expert"
+
+        try:
+            sys.path.insert(0, str(self.code_expert_path.parent))
+            from code_expert.enhanced_agent_templates import AgentTemplate
+            from code_expert.optimized_template_manager import OptimizedTemplateManager
+            self.code_expert_available = True
+            self.logger.info("[BOOT] Code expert Claude Phase 2 (templates, manager) chargé.")
+        except ImportError as e:
+            self.code_expert_available = False
+            self.logger.warning(f"[BOOT] Code expert non disponible: {e}")
+
+        self.quality_report = {}
+        self.dod_status = {}
+        
+        # Module d'audit universel
+        self.universal_auditor = UniversalAuditor(logger=self.logger)
+
+
+    async def startup(self):
+        """Démarrage agent_111_auditeur_qualite"""
+        self.logger.info(f"🚀 Agent111AuditeurQualite {self.agent_id} - DÉMARRAGE")
+        await super().startup()
+        self.logger.info("✅ Agent démarré avec succès")
+
+    async def shutdown(self):
+        """Arrêt agent_111_auditeur_qualite"""
+        self.logger.info(f"🛑 Agent111AuditeurQualite {self.agent_id} - ARRÊT")
+        await super().shutdown()
+
+    async def health_check(self) -> Dict[str, Any]:
+        """Vérification santé agent_111_auditeur_qualite"""
+        return {
+            "agent_id": self.agent_id,
+            "agent_type": self.agent_type,
+            "status": "healthy",
+            "ready": True,
+            "pattern_factory_available": PATTERN_FACTORY_AVAILABLE,
+            "timestamp": datetime.now().isoformat()
+        }
+
+    async def execute_task(self, task: Task) -> Result:
+        """Exécution des tâches - Pattern Factory OBLIGATOIRE"""
+        self.logger.info(f"🎯 Exécution tâche: type={getattr(task, 'type', None)} params={getattr(task, 'params', None)}")
+        try:
+            # Nouvelle logique compatible core
+            if hasattr(task, 'type') and task.type == "execute_mission":
+                mission_data = task.params.get('mission_data', None) if hasattr(task, 'params') else None
+                results = await self.execute_mission(mission_data)
+                return Result(success=True, data={"mission_results": results})
+
+            elif hasattr(task, 'type') and task.type == "process_data":
+                data_to_process = task.params.get('data', None) if hasattr(task, 'params') else None
+                if data_to_process is None:
+                    return Result(success=False, error="Données requises pour 'process_data'")
+                processed = await self.process_data(data_to_process)
+                return Result(success=True, data=processed)
+
+            elif hasattr(task, 'type') and task.type == "generate_strategic_report":
+                report_path = await self.generate_strategic_report(task.params)
+                return Result(success=True, data={"report_path": str(report_path)})
+                
+            elif hasattr(task, 'type') and task.type == "audit_module":
+                module_path = task.params.get('module_path') if hasattr(task, 'params') else None
+                if not module_path:
+                    return Result(success=False, error="Chemin du module requis pour l'audit")
+                audit_result = await self.audit_python_module(module_path)
+                return Result(success=True, data=audit_result)
+
+            else:
+                return Result(success=False, error=f"Tâche non reconnue: {getattr(task, 'type', None)}")
+
+        except Exception as e:
+            self.logger.error(f"❌ Erreur exécution tâche: {e}", exc_info=True)
+            return Result(success=False, error=str(e))
+
+    def get_capabilities(self) -> List[str]:
+        """Retourne les capacités de l'agent"""
+        return [
+            "execute_mission",
+            "process_data",
+            "health_monitoring",
+            "pattern_factory_compliance",
+            "audit_module",
+            "universal_audit"
+        ]
+
+    # Méthodes métier (à adapter selon l'agent original)
+    async def execute_mission(self, mission_data: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Exécution de la mission principale de l'agent"""
+        self.logger.info("🎯 Début exécution mission")
+        try:
+            # TODO: Implémenter la logique métier spécifique de l'agent original
+            result = {
+                "status": "completed",
+                "timestamp": datetime.now().isoformat(),
+                "agent_id": self.agent_id
+            }
+            self.logger.info("✅ Mission terminée avec succès")
+            return result
+        except Exception as e:
+            self.logger.error(f"❌ Erreur mission: {e}", exc_info=True)
+            return {"status": "error", "error": str(e)}
+
+    async def process_data(self, data: Any) -> Dict[str, Any]:
+        """Traitement des données spécifique à l'agent"""
+        self.logger.info("🔄 Traitement des données")
+        try:
+            # TODO: Implémenter le traitement spécifique
+            return {
+                "processed": True,
+                "data_type": type(data).__name__,
+                "timestamp": datetime.now().isoformat()
+            }
+        except Exception as e:
+            self.logger.error(f"❌ Erreur traitement données: {e}", exc_info=True)
+            return {"processed": False, "error": str(e)}
+
+    async def generate_strategic_report(self, params: dict = None) -> Path:
+        """Génère un rapport stratégique simple dans le dossier de l'agent"""
+        reports_dir = self.workspace_root / 'logs' / 'agents' / 'agent_111_auditeur_qualite' / 'reports'
+        reports_dir.mkdir(parents=True, exist_ok=True)
+        report_path = reports_dir / f"RAPPORT_STRATEGIQUE_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+        content = f"""# Rapport Stratégique - Agent 111 Auditeur Qualité
+
+Date : {datetime.now().isoformat()}
+
+Résumé :
+- Agent ID : {self.agent_id}
+- Paramètres : {params}
+- Statut : Succès
+"""
+        with open(report_path, 'w', encoding='utf-8') as f:
+            f.write(content)
+        self.logger.info(f"📝 Rapport stratégique généré : {report_path}")
+        self.logger.info(f"[DEBUG] Chemin absolu du rapport : {report_path.resolve()}")
+        return report_path
+
+    async def audit_python_module(self, module_path: Union[str, Path]) -> Dict[str, Any]:
+        """Audite un module Python de manière universelle"""
+        self.logger.info(f"🔍 Début audit universel du module : {module_path}")
+        try:
+            audit_result = self.universal_auditor.analyze_module(module_path)
+            self.logger.info(f"✅ Audit terminé pour : {module_path}")
+            return audit_result
+        except Exception as e:
+            self.logger.error(f"❌ Erreur audit module {module_path}: {e}", exc_info=True)
+            return {"error": str(e), "module_path": str(module_path)}
+
+class UniversalAuditor:
+    """Module d'audit universel pour analyser n'importe quel module Python"""
+    
+    def __init__(self, logger=None):
+        self.logger = logger or logging.getLogger("UniversalAuditor")
+        self.metrics = {}
+        self.issues = []
+        
+    def analyze_module(self, module_path: Union[str, Path]) -> Dict[str, Any]:
+        """Analyse complète d'un module Python"""
+        module_path = Path(module_path)
+        
+        if not module_path.exists():
+            return {"error": f"Module non trouvé : {module_path}"}
+            
+        try:
+            with open(module_path, 'r', encoding='utf-8') as f:
+                source_code = f.read()
+        except Exception as e:
+            return {"error": f"Erreur lecture fichier : {e}"}
+            
+        # Analyse AST
+        try:
+            tree = ast.parse(source_code, filename=str(module_path))
+        except SyntaxError as e:
+            return {"error": f"Erreur syntaxe : {e}"}
+            
+        # Collecte des métriques
+        self.metrics = self._calculate_metrics(tree, source_code)
+        self.issues = self._detect_issues(tree, source_code)
+        
+        return {
+            "module_path": str(module_path),
+            "timestamp": datetime.now().isoformat(),
+            "metrics": self.metrics,
+            "issues": self.issues,
+            "quality_score": self._calculate_quality_score(),
+            "recommendations": self._generate_recommendations()
+        }
+        
+    def _calculate_metrics(self, tree: ast.AST, source_code: str) -> Dict[str, Any]:
+        """Calcule les métriques de code"""
+        lines = source_code.split('\n')
+        
+        # Compteurs
+        visitor = MetricVisitor()
+        visitor.visit(tree)
+        
+        return {
+            "lines_of_code": len(lines),
+            "blank_lines": len([l for l in lines if not l.strip()]),
+            "comment_lines": len([l for l in lines if l.strip().startswith('#')]),
+            "functions": visitor.functions,
+            "classes": visitor.classes,
+            "complexity": visitor.complexity,
+            "imports": visitor.imports,
+            "docstrings": visitor.docstrings
+        }
+        
+    def _detect_issues(self, tree: ast.AST, source_code: str) -> List[Dict[str, Any]]:
+        """Détecte les problèmes de code"""
+        issues = []
+        visitor = IssueVisitor()
+        visitor.visit(tree)
+        
+        # Ajout des issues détectées
+        issues.extend(visitor.issues)
+        
+        # Vérifications supplémentaires
+        lines = source_code.split('\n')
+        for i, line in enumerate(lines, 1):
+            if len(line) > 120:
+                issues.append({
+                    "type": "line_too_long",
+                    "line": i,
+                    "message": f"Ligne trop longue ({len(line)} caractères)",
+                    "severity": "warning"
+                })
+                
+        return issues
+        
+    def _calculate_quality_score(self) -> float:
+        """Calcule un score de qualité global"""
+        score = 100.0
+        
+        # Pénalités basées sur les issues
+        critical_issues = len([i for i in self.issues if i.get('severity') == 'critical'])
+        warning_issues = len([i for i in self.issues if i.get('severity') == 'warning'])
+        
+        score -= critical_issues * 15
+        score -= warning_issues * 5
+        
+        # Bonus pour les docstrings
+        if self.metrics.get('docstrings', 0) > 0:
+            score += 10
+            
+        return max(0.0, min(100.0, score))
+        
+    def _generate_recommendations(self) -> List[str]:
+        """Génère des recommandations d'amélioration"""
+        recommendations = []
+        
+        if self.metrics.get('complexity', 0) > 10:
+            recommendations.append("Réduire la complexité cyclomatique des fonctions")
+            
+        if self.metrics.get('docstrings', 0) == 0:
+            recommendations.append("Ajouter des docstrings aux fonctions et classes")
+            
+        if len(self.issues) > 5:
+            recommendations.append("Corriger les issues détectées pour améliorer la qualité")
+            
+        return recommendations
+
+class MetricVisitor(ast.NodeVisitor):
+    """Visiteur AST pour collecter les métriques"""
+    
+    def __init__(self):
+        self.functions = 0
+        self.classes = 0
+        self.complexity = 0
+        self.imports = 0
+        self.docstrings = 0
+        
+    def visit_FunctionDef(self, node):
+        self.functions += 1
+        # Complexité cyclomatique simplifiée
+        self.complexity += self._count_branches(node)
+        if ast.get_docstring(node):
+            self.docstrings += 1
+        self.generic_visit(node)
+        
+    def visit_ClassDef(self, node):
+        self.classes += 1
+        if ast.get_docstring(node):
+            self.docstrings += 1
+        self.generic_visit(node)
+        
+    def visit_Import(self, node):
+        self.imports += len(node.names)
+        
+    def visit_ImportFrom(self, node):
+        self.imports += len(node.names)
+        
+    def _count_branches(self, node):
+        """Compte les branches pour la complexité"""
+        branches = 0
+        for child in ast.walk(node):
+            if isinstance(child, (ast.If, ast.For, ast.While, ast.Try, ast.With)):
+                branches += 1
+        return branches + 1  # +1 pour la fonction elle-même
+
+class IssueVisitor(ast.NodeVisitor):
+    """Visiteur AST pour détecter les issues"""
+    
+    def __init__(self):
+        self.issues = []
+        
+    def visit_FunctionDef(self, node):
+        # Fonction sans docstring
+        if not ast.get_docstring(node):
+            self.issues.append({
+                "type": "missing_docstring",
+                "line": node.lineno,
+                "message": f"Fonction '{node.name}' sans docstring",
+                "severity": "warning"
+            })
+            
+        # Fonction trop longue
+        if hasattr(node, 'end_lineno') and node.end_lineno:
+            length = node.end_lineno - node.lineno
+            if length > 50:
+                self.issues.append({
+                    "type": "function_too_long",
+                    "line": node.lineno,
+                    "message": f"Fonction '{node.name}' trop longue ({length} lignes)",
+                    "severity": "warning"
+                })
+                
+        self.generic_visit(node)
+        
+    def visit_ClassDef(self, node):
+        # Classe sans docstring
+        if not ast.get_docstring(node):
+            self.issues.append({
+                "type": "missing_docstring",
+                "line": node.lineno,
+                "message": f"Classe '{node.name}' sans docstring",
+                "severity": "warning"
+            })
+        self.generic_visit(node)
+
+# Fonction factory pour créer l'agent (Pattern Factory)
+def create_agent_111_auditeur_qualite(**config) -> 'Agent111AuditeurQualite':
+    """Factory function pour créer un Agent111AuditeurQualite conforme Pattern Factory"""
+    return Agent111AuditeurQualite(**config)
+
+# Test de l'agent si exécuté directement
+async def main():
+    """Test de l'agent Pattern Factory"""
+    print("🚀 Démarrage test agent_111_auditeur_qualite...")
+    agent = create_agent_111_auditeur_qualite()
+
+    try:
+        await agent.startup()
+        health = await agent.health_check()
+        print(f"\U0001F3E5 Health Check: {health}")
+
+        # Test d'une tâche
+        print("\n\U0001F52C Test de la tâche 'execute_mission'...")
+        task = Task(type="execute_mission", params={"mission_data": None})
+        result = await agent.execute_task(task)
+        print(f"   Résultat: {'Succès' if result.success else 'Échec'} - {result.data or result.error}")
+
+        # Test de la génération de rapport stratégique
+        print("\n\U0001F4C4 Test de la tâche 'generate_strategic_report'...")
+        report_task = Task(type="generate_strategic_report", params={"section": "stratégie", "auteur": "test_auto"})
+        report_result = await agent.execute_task(report_task)
+        print(f"   Rapport généré: {'Succès' if report_result.success else 'Échec'} - {report_result.data or report_result.error}")
+
+    except Exception as e:
+        print(f"❌ Erreur durant l'exécution de l'agent: {e}")
+    finally:
+        await agent.shutdown()
+        print("\n✅ Test terminé.")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+
+

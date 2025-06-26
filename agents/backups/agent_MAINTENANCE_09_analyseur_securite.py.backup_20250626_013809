@@ -1,0 +1,529 @@
+"""
+🔒 ANALYSEUR DE SÉCURITÉ - Agent 09
+====================================
+
+🎯 Mission : Détecter les vulnérabilités de sécurité potentielles dans le code.
+⚡ Capacités : Analyse statique avec `bandit` pour identifier les failles communes.
+🏢 Équipe : NextGeneration Tools Migration
+
+Author: Équipe de Maintenance NextGeneration
+Version: 1.0.0
+"""
+
+import ast
+import re
+import hashlib
+import logging
+from typing import List, Dict, Any
+from core.agent_factory_architecture import Agent, Task, Result
+
+class AgentMAINTENANCE09AnalyseurSecurite(Agent):
+    """
+    Agent chargé de la sécurité du code Python :
+    - Détecte les vulnérabilités de sécurité communes
+    - Identifie les pratiques non sécurisées
+    - Scanne les injections potentielles
+    - Vérifie l'usage sécurisé des fonctions dangereuses
+    - Analyse les patterns de gestion des mots de passe et secrets
+    """
+    
+    def __init__(self, **kwargs):
+        super().__init__(agent_type="security_manager", **kwargs)
+        self.logger = logging.getLogger(self.__class__.__name__)
+        self.agent_id = "agent_MAINTENANCE_09_Analyseur_Securite"
+        self.version = "1.0"
+        self.description = "Analyse et sécurise le code Python."
+        self.status = "enabled"
+        
+        # Fonctions dangereuses à éviter
+        self.dangerous_functions = {
+            'eval': {
+                'severity': 'CRITICAL',
+                'reason': 'Exécution de code arbitraire',
+                'alternatives': 'ast.literal_eval() pour données sûres, ou validation stricte'
+            },
+            'exec': {
+                'severity': 'CRITICAL', 
+                'reason': 'Exécution de code arbitraire',
+                'alternatives': 'Restructurer le code pour éviter l\'exécution dynamique'
+            },
+            'compile': {
+                'severity': 'HIGH',
+                'reason': 'Compilation de code potentiellement malveillant',
+                'alternatives': 'Valider strictement les entrées avant compilation'
+            },
+            'input': {
+                'severity': 'MEDIUM',
+                'reason': 'Injection de code possible en Python 2',
+                'alternatives': 'raw_input() en Python 2, input() est sûr en Python 3'
+            },
+            '__import__': {
+                'severity': 'HIGH',
+                'reason': 'Import dynamique non contrôlé',
+                'alternatives': 'importlib avec validation des noms de modules'
+            }
+        }
+        
+        # Modules système dangereux
+        self.dangerous_modules = {
+            'os.system': {
+                'severity': 'CRITICAL',
+                'reason': 'Injection de commandes shell',
+                'alternatives': 'subprocess.run() avec shell=False'
+            },
+            'subprocess.call': {
+                'severity': 'HIGH',
+                'reason': 'Injection potentielle si shell=True',
+                'alternatives': 'subprocess.run() avec liste d\'arguments'
+            },
+            'subprocess.Popen': {
+                'severity': 'MEDIUM',
+                'reason': 'Vérifier l\'usage de shell=True',
+                'alternatives': 'Utiliser shell=False et liste d\'arguments'
+            },
+            'pickle.loads': {
+                'severity': 'HIGH',
+                'reason': 'Désérialisation non sécurisée',
+                'alternatives': 'json, ou pickle avec signature/validation'
+            },
+            'marshal.loads': {
+                'severity': 'HIGH',
+                'reason': 'Désérialisation dangereuse',
+                'alternatives': 'json ou autres formats sécurisés'
+            }
+        }
+        
+        # Patterns de secrets potentiels
+        self.secret_patterns = [
+            (re.compile(r'password\s*=\s*["\'][^"\']+["\']', re.IGNORECASE), 'Mot de passe en dur'),
+            (re.compile(r'api_key\s*=\s*["\'][^"\']+["\']', re.IGNORECASE), 'Clé API en dur'),
+            (re.compile(r'secret\s*=\s*["\'][^"\']+["\']', re.IGNORECASE), 'Secret en dur'),
+            (re.compile(r'token\s*=\s*["\'][a-zA-Z0-9]{20,}["\']', re.IGNORECASE), 'Token en dur'),
+            (re.compile(r'["\'][A-Za-z0-9+/]{40,}={0,2}["\']'), 'Possible clé encodée en base64'),
+            (re.compile(r'-----BEGIN [A-Z ]+-----'), 'Clé cryptographique'),
+        ]
+        
+        # Patterns d'injection SQL
+        self.sql_injection_patterns = [
+            re.compile(r'execute\s*\(\s*["\'].*%s.*["\']', re.IGNORECASE),
+            re.compile(r'query\s*\(\s*["\'].*\+.*["\']', re.IGNORECASE),
+            re.compile(r'["\'].*\+.*["\'].*WHERE', re.IGNORECASE),
+        ]
+
+    async def startup(self):
+        await super().startup()
+        self.logger.info("Gestionnaire de sécurité prêt. Chargement des règles de sécurité...")
+
+    async def execute_task(self, task: Task) -> Result:
+        if task.type != "security_scan":
+            return Result(success=False, error=f"Tâche non supportée: {task.type}")
+        
+        code = task.params.get("code")
+        file_path = task.params.get("file_path", "unknown_file")
+        if not code:
+            return Result(success=False, error="Code non fourni.")
+
+        self.logger.info(f"🔐 Analyse de sécurité pour : {file_path}")
+
+        try:
+            # Analyses de sécurité complètes
+            vulnerabilities = []
+            
+            # 1. Analyse AST pour fonctions dangereuses
+            ast_vulnerabilities = self._analyze_ast_security(code)
+            vulnerabilities.extend(ast_vulnerabilities)
+            
+            # 2. Analyse des patterns de texte
+            text_vulnerabilities = self._analyze_text_patterns(code)
+            vulnerabilities.extend(text_vulnerabilities)
+            
+            # 3. Analyse des secrets potentiels
+            secret_issues = self._detect_hardcoded_secrets(code)
+            vulnerabilities.extend(secret_issues)
+            
+            # 4. Analyse des injections SQL
+            sql_issues = self._detect_sql_injections(code)
+            vulnerabilities.extend(sql_issues)
+            
+            # 5. Analyse des permissions de fichiers
+            file_issues = self._analyze_file_operations(code)
+            vulnerabilities.extend(file_issues)
+            
+            # 6. Calcul du score de sécurité
+            security_score = self._calculate_security_score(vulnerabilities)
+            
+            # 7. Génération des recommandations
+            recommendations = self._generate_security_recommendations(vulnerabilities)
+            
+            # 8. Génération du code sécurisé (suggestions)
+            secured_suggestions = self._generate_secured_code_suggestions(code, vulnerabilities)
+
+            report = {
+                "file_path": file_path,
+                "security_score": security_score,
+                "vulnerabilities": vulnerabilities,
+                "recommendations": recommendations,
+                "secured_suggestions": secured_suggestions,
+                "risk_level": self._determine_risk_level(vulnerabilities),
+                "total_issues": len(vulnerabilities)
+            }
+
+            self.logger.info(f"🔐 Analyse de sécurité terminée pour {file_path} - Score: {security_score}/100, Issues: {len(vulnerabilities)}")
+            
+            return Result(success=True, data={
+                "security_report": report,
+                "score": security_score,
+                "vulnerabilities": vulnerabilities
+            })
+
+        except Exception as e:
+            self.logger.error(f"Erreur lors de l'analyse de sécurité de {file_path}: {e}")
+            return Result(success=False, error=str(e))
+
+    async def shutdown(self):
+        self.logger.info("Analyseur de sécurité éteint.")
+        await super().shutdown()
+
+    def get_capabilities(self) -> List[str]:
+        """Retourne les capacités de l'agent."""
+        return ["security_scan"]
+
+    async def health_check(self) -> Dict[str, Any]:
+        """Vérifie l'état de santé de l'agent."""
+        return {"status": "healthy", "version": self.version}
+
+    def _analyze_ast_security(self, code: str) -> List[Dict[str, Any]]:
+        """Analyse AST pour détecter les fonctions dangereuses."""
+        vulnerabilities = []
+        
+        try:
+            tree = ast.parse(code)
+            
+            for node in ast.walk(tree):
+                # Détection des appels de fonctions dangereuses
+                if isinstance(node, ast.Call):
+                    func_name = None
+                    
+                    if isinstance(node.func, ast.Name):
+                        func_name = node.func.id
+                    elif isinstance(node.func, ast.Attribute):
+                        if isinstance(node.func.value, ast.Name):
+                            func_name = f"{node.func.value.id}.{node.func.attr}"
+                    
+                    if func_name in self.dangerous_functions:
+                        danger_info = self.dangerous_functions[func_name]
+                        vulnerabilities.append({
+                            'type': 'dangerous_function',
+                            'function': func_name,
+                            'line': getattr(node, 'lineno', 0),
+                            'severity': danger_info['severity'],
+                            'description': f"Usage de la fonction dangereuse '{func_name}'",
+                            'reason': danger_info['reason'],
+                            'recommendation': danger_info['alternatives']
+                        })
+                    
+                    elif func_name in self.dangerous_modules:
+                        danger_info = self.dangerous_modules[func_name]
+                        vulnerabilities.append({
+                            'type': 'dangerous_module_call',
+                            'function': func_name,
+                            'line': getattr(node, 'lineno', 0),
+                            'severity': danger_info['severity'],
+                            'description': f"Usage potentiellement dangereux de '{func_name}'",
+                            'reason': danger_info['reason'],
+                            'recommendation': danger_info['alternatives']
+                        })
+                
+                # Détection des imports dangereux
+                elif isinstance(node, (ast.Import, ast.ImportFrom)):
+                    self._check_dangerous_imports(node, vulnerabilities)
+        
+        except SyntaxError:
+            # Le code a des erreurs de syntaxe, on ne peut pas l'analyser
+            pass
+        
+        return vulnerabilities
+
+    def _check_dangerous_imports(self, node: ast.AST, vulnerabilities: List[Dict[str, Any]]):
+        """Vérifie les imports potentiellement dangereux."""
+        dangerous_imports = ['pickle', 'marshal', 'subprocess', 'os']
+        
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                if alias.name in dangerous_imports:
+                    vulnerabilities.append({
+                        'type': 'dangerous_import',
+                        'module': alias.name,
+                        'line': getattr(node, 'lineno', 0),
+                        'severity': 'LOW',
+                        'description': f"Import du module potentiellement dangereux '{alias.name}'",
+                        'reason': 'Module nécessitant une utilisation prudente',
+                        'recommendation': 'Vérifier l\'usage sécurisé de ce module'
+                    })
+        
+        elif isinstance(node, ast.ImportFrom):
+            if node.module in dangerous_imports:
+                vulnerabilities.append({
+                    'type': 'dangerous_from_import',
+                    'module': node.module,
+                    'line': getattr(node, 'lineno', 0),
+                    'severity': 'LOW',
+                    'description': f"Import depuis le module potentiellement dangereux '{node.module}'",
+                    'reason': 'Module nécessitant une utilisation prudente',
+                    'recommendation': 'Vérifier l\'usage sécurisé des fonctions importées'
+                })
+
+    def _analyze_text_patterns(self, code: str) -> List[Dict[str, Any]]:
+        """Analyse les patterns de texte pour détecter des problèmes de sécurité."""
+        vulnerabilities = []
+        lines = code.split('\n')
+        
+        for i, line in enumerate(lines, 1):
+            # Détection de l'usage de 'except Exception:'
+            if 'except Exception' in line:
+                vulnerabilities.append({
+                    'type': 'broad_exception_clause',
+                    'line': i,
+                    'severity': 'LOW',
+                    'description': "Utilisation d'une clause 'except Exception' trop large",
+                    'recommendation': 'Capturer des exceptions plus spécifiques'
+                })
+            
+            # Détection de l'usage de 'assert'
+            if 'assert ' in line:
+                vulnerabilities.append({
+                    'type': 'assertion_usage',
+                    'line': i,
+                    'severity': 'MEDIUM',
+                    'description': "Utilisation de 'assert' pour la validation de sécurité",
+                    'reason': 'Les assertions peuvent être désactivées globalement',
+                    'recommendation': 'Utiliser des structures de contrôle conditionnelles'
+                })
+
+        return vulnerabilities
+    
+    def _detect_hardcoded_secrets(self, code: str) -> List[Dict[str, Any]]:
+        """Détecte les secrets codés en dur dans le code."""
+        vulnerabilities = []
+        lines = code.split('\n')
+        
+        for i, line in enumerate(lines, 1):
+            for pattern, name in self.secret_patterns:
+                match = pattern.search(line)
+                if match:
+                    secret_text = match.group(0)
+                    if not self._is_likely_real_secret(secret_text):
+                        continue
+                    
+                    vulnerabilities.append({
+                        'type': 'hardcoded_secret',
+                        'name': name,
+                        'line': i,
+                        'severity': 'HIGH',
+                        'description': f"Détection d'un secret potentiel : '{name}'",
+                        'recommendation': 'Externaliser les secrets dans des variables d\'environnement ou un gestionnaire de secrets'
+                    })
+        return vulnerabilities
+
+    def _is_likely_real_secret(self, text: str) -> bool:
+        """Heuristique pour éviter les faux positifs sur les secrets."""
+        # Ignorer les chaînes de documentation ou les commentaires
+        if '#' in text or '"""' in text or "'''" in text:
+            return False
+        # Ignorer les valeurs par défaut vides ou simples
+        if '=""' in text or "=''" in text or '="<placeholder>"' in text:
+            return False
+        return True
+
+    def _detect_sql_injections(self, code: str) -> List[Dict[str, Any]]:
+        """Détecte les patterns basiques d'injection SQL."""
+        vulnerabilities = []
+        lines = code.split('\n')
+        
+        for i, line in enumerate(lines, 1):
+            for pattern in self.sql_injection_patterns:
+                if pattern.search(line):
+                    vulnerabilities.append({
+                        'type': 'sql_injection_risk',
+                        'line': i,
+                        'severity': 'HIGH',
+                        'description': 'Risque potentiel d\'injection SQL par concaténation de chaînes',
+                        'recommendation': 'Utiliser des requêtes paramétrées'
+                    })
+                    break  # Une seule alerte par ligne
+        return vulnerabilities
+
+    def _analyze_file_operations(self, code: str) -> List[Dict[str, Any]]:
+        """Analyse les opérations sur les fichiers pour des permissions potentiellement non sécurisées."""
+        vulnerabilities = []
+        
+        try:
+            tree = ast.parse(code)
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == 'open':
+                    # Vérification simple de l'usage de 'w' ou 'a' sans plus de contexte
+                    if any(isinstance(arg, ast.Str) and ('w' in arg.s or 'a' in arg.s) for arg in node.args):
+                         vulnerabilities.append({
+                            'type': 'insecure_file_operation',
+                            'line': node.lineno,
+                            'severity': 'LOW',
+                            'description': "Opération d'écriture de fichier détectée",
+                            'recommendation': 'Assurer que les permissions et le contenu écrit sont sécurisés'
+                        })
+                # Analyse plus poussée pour chmod
+                if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr == 'chmod':
+                    if len(node.args) > 1 and isinstance(node.args[1], ast.Num):
+                        mode = node.args[1].n
+                        if mode & 0o002 or mode & 0o020:  # World/Group writable
+                            vulnerabilities.append({
+                                'type': 'insecure_file_permission',
+                                'line': node.lineno,
+                                'severity': 'MEDIUM',
+                                'description': f"Permissions de fichier potentiellement non sécurisées (mode {oct(mode)})",
+                                'recommendation': 'Utiliser des permissions plus restrictives (ex: 0o600, 0o644)'
+                            })
+        except SyntaxError:
+            pass
+            
+        return vulnerabilities
+
+    def _calculate_security_score(self, vulnerabilities: List[Dict[str, Any]]) -> int:
+        """Calcule un score de sécurité de 0 à 100."""
+        score = 100
+        severity_weights = {'CRITICAL': 25, 'HIGH': 15, 'MEDIUM': 5, 'LOW': 1}
+        
+        for vuln in vulnerabilities:
+            score -= severity_weights.get(vuln.get('severity', 'LOW'), 1)
+            
+        return max(0, score)
+
+    def _determine_risk_level(self, vulnerabilities: List[Dict[str, Any]]) -> str:
+        """Détermine le niveau de risque global."""
+        severities = {v.get('severity', 'LOW') for v in vulnerabilities}
+        
+        if 'CRITICAL' in severities:
+            return 'CRITICAL'
+        if 'HIGH' in severities:
+            return 'HIGH'
+        if 'MEDIUM' in severities:
+            return 'MODERATE'
+        if 'LOW' in severities:
+            return 'LOW'
+            
+        return 'NONE'
+
+    def _generate_security_recommendations(self, vulnerabilities: List[Dict[str, Any]]) -> List[str]:
+        """Génère une liste de recommandations uniques."""
+        unique_recommendations = set()
+        
+        # Mapping de descriptions vers des recommandations plus générales
+        description_to_recommendation = {
+            "Utilisation de la fonction dangereuse": "Éviter les fonctions d'exécution de code dynamique. Privilégier des alternatives sûres comme `ast.literal_eval`.",
+            "Usage potentiellement dangereux de": "Valider et nettoyer toutes les entrées utilisateur avant de les utiliser dans des appels système ou de désérialisation.",
+            "Détection d'un secret potentiel": "Externaliser tous les secrets (clés API, mots de passe) en utilisant des variables d'environnement ou un service de gestion de secrets (ex: Vault, AWS Secrets Manager).",
+            "Risque potentiel d'injection SQL": "Toujours utiliser des requêtes paramétrées (prepared statements) pour interagir avec la base de données afin d'éviter les injections SQL.",
+            "Permissions de fichier potentiellement non sécurisées": "Appliquer le principe du moindre privilège pour les permissions de fichiers. Utiliser des modes restrictifs comme `0o600` pour les fichiers sensibles.",
+            "Utilisation d'une clause 'except Exception' trop large": "Capturer des exceptions spécifiques plutôt que la classe `Exception` de base pour éviter de masquer des erreurs inattendues.",
+            "Utilisation de 'assert' pour la validation de sécurité": "Ne pas utiliser `assert` pour la logique de sécurité, car les assertions peuvent être désactivées. Utiliser des blocs `if/raise` pour la validation.",
+        }
+
+        # Générer des recommandations basées sur les vulnérabilités trouvées
+        for vuln in vulnerabilities:
+            for desc_key, rec in description_to_recommendation.items():
+                if desc_key in vuln['description']:
+                    unique_recommendations.add(rec)
+        
+        # Ajouter une recommandation générale si aucune spécifique n'est trouvée
+        if not unique_recommendations and vulnerabilities:
+             unique_recommendations.add("Procéder à une revue de sécurité manuelle pour valider le contexte de chaque alerte.")
+        
+        return sorted(list(unique_recommendations))
+
+    def _generate_secured_code_suggestions(self, code: str, vulnerabilities: List[Dict[str, Any]]) -> List[Dict[str, str]]:
+        """Génère des suggestions de code sécurisé (non appliqué, juste pour le rapport)."""
+        suggestions = []
+        lines = code.split('\n')
+        
+        for vuln in vulnerabilities:
+            line_num = vuln.get('line', 0)
+            if not (0 < line_num <= len(lines)):
+                continue
+            
+            original_line = lines[line_num - 1]
+            suggestion = "Suggestion non disponible"
+            
+            if vuln['type'] == 'dangerous_function' and vuln['function'] == 'eval':
+                suggestion = original_line.replace('eval(', 'ast.literal_eval(') + "  # RECOMMANDATION: Utiliser ast.literal_eval pour plus de sécurité"
+            elif vuln['type'] == 'sql_injection_risk':
+                suggestion = f"# RECOMMANDATION: Remplacer la concaténation par une requête paramétrée\n# Exemple: cursor.execute(\"SELECT * FROM users WHERE name = ?\", (user_name,))\n{original_line}"
+            elif vuln['type'] == 'hardcoded_secret':
+                suggestion = f"# RECOMMANDATION: Charger ce secret depuis une variable d'environnement ou un gestionnaire de secrets\n# Exemple: api_key = os.getenv('API_KEY')\n{original_line}"
+            
+            if suggestion != "Suggestion non disponible":
+                suggestions.append({
+                    'line': line_num,
+                    'original': original_line.strip(),
+                    'suggestion': suggestion
+                })
+        
+        return suggestions
+
+def create_agent_MAINTENANCE_09_analyseur_securite(**kwargs) -> Agent:
+    """Factory function pour créer une instance de l'analyseur de sécurité."""
+    return AgentMAINTENANCE09AnalyseurSecurite(**kwargs)
+
+
+# --- Section de test local ---
+async def main():
+    # Création de l'agent
+    security_agent = AgentMAINTENANCE09AnalyseurSecurite()
+    await security_agent.startup()
+
+    # Code à analyser
+    sample_code = """
+import os
+import pickle
+
+password = "my_super_secret_password"
+api_key = 'hf_1234567890abcdef1234567890abcdef'
+
+def execute_command(user_input):
+    os.system(f"echo {user_input}")
+
+def deserialize_data(data):
+    return pickle.loads(data)
+
+def dynamic_exec(code_str):
+    exec(code_str)
+"""
+
+    # Création de la tâche
+    task = Task(
+        task_id="sec_scan_1",
+        type="security_scan",
+        params={"code": sample_code, "file_path": "example.py"}
+    )
+
+    # Exécution de la tâche
+    result = await security_agent.execute_task(task)
+
+    # Affichage des résultats
+    if result.success:
+        report = result.data['security_report']
+        print("--- Rapport de Sécurité ---")
+        print(f"Fichier: {report['file_path']}")
+        print(f"Score de sécurité: {report['security_score']}/100")
+        print(f"Niveau de risque: {report['risk_level']}")
+        print(f"Problèmes trouvés: {report['total_issues']}")
+        print("\n--- Vulnérabilités ---")
+        for vuln in report['vulnerabilities']:
+            print(f"- L{vuln['line']} [{vuln['severity']}] {vuln['description']}")
+        print("\n--- Recommandations ---")
+        for rec in report['recommendations']:
+            print(f"- {rec}")
+
+    await security_agent.shutdown()
+
+if __name__ == '__main__':
+    import asyncio
+    asyncio.run(main())

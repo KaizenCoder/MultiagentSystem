@@ -38,13 +38,45 @@ from dataclasses import dataclass
 from core.agent_factory_architecture import Agent, Task, Result
 
 # Import features enterprise modulaires
-from features.enterprise.architecture_patterns import (
-    DesignPatternsFeature,
-    MicroservicesFeature,
-    EventDrivenFeature,
-    DomainDrivenFeature,
-    CQRSEventSourcingFeature
-)
+try:
+    from features.enterprise.architecture_patterns import (
+        DesignPatternsFeature,
+        MicroservicesFeature,
+        EventDrivenFeature,
+        DomainDrivenFeature,
+        CQRSEventSourcingFeature
+    )
+    FEATURES_MISSING = False
+except ImportError:
+    print("AVERTISSEMENT: Le module \'features.enterprise.architecture_patterns\' est introuvable. Utilisation de stubs pour les features d'architecture.")
+    FEATURES_MISSING = True
+
+    @dataclass
+    class BaseFeatureStub:
+        name: str
+        config: Dict[str, Any]
+
+        def __post_init__(self):
+            print(f"[STUB] Initialisation de {self.name} avec config: {self.config}")
+
+        def can_handle(self, task: Task) -> bool:
+            print(f"[STUB] {self.name}.can_handle appelée pour la tâche {task.id if task else 'N/A'}. Retourne False.")
+            return False
+
+        async def execute(self, task: Task) -> Result:
+            print(f"[STUB] {self.name}.execute appelée pour la tâche {task.id if task else 'N/A'}. Retourne un échec.")
+            return Result(success=False, error=f"{self.name} non disponible (stub).", data={})
+
+    class DesignPatternsFeature(BaseFeatureStub):
+        def __init__(self, config: Dict[str, Any]): super().__init__("DesignPatternsFeature", config)
+    class MicroservicesFeature(BaseFeatureStub):
+        def __init__(self, config: Dict[str, Any]): super().__init__("MicroservicesFeature", config)
+    class EventDrivenFeature(BaseFeatureStub):
+        def __init__(self, config: Dict[str, Any]): super().__init__("EventDrivenFeature", config)
+    class DomainDrivenFeature(BaseFeatureStub):
+        def __init__(self, config: Dict[str, Any]): super().__init__("DomainDrivenFeature", config)
+    class CQRSEventSourcingFeature(BaseFeatureStub):
+        def __init__(self, config: Dict[str, Any]): super().__init__("CQRSEventSourcingFeature", config)
 
 @dataclass 
 class ArchitectureMetrics:
@@ -348,19 +380,28 @@ class CQRSEventSourcingFeature(BaseArchitectureFeature):
         )
 
 
-if __name__ == "__main__":
+async def main_test():
     print(f"🏗️ Test Agent 22 {__agent_name__} v{__version__}")
     
     # Démo Pattern Factory compliance
     agent = create_agent_22_architecture()
     task = Task(type="design_patterns", params={"analysis_depth": "advanced"})
-    result = agent.execute_task(task)
+    # Appel correct avec await
+    result = await agent.execute_task(task) 
     
     print(f"✅ Agent 22 Pattern Factory Compliant")
-    print(f"📊 Résultat: {result.success}")
+    if result: # Vérifier si result n'est pas None
+        print(f"📊 Résultat: {result.success}")
+    else:
+        print("📊 Résultat: N/A (la tâche n'a pas retourné de résultat valide)")
+
     print(f"🎯 Features: {len(agent.features)}")
     print(f"🏗️ Compliance: {__compliance_score__} ({__optimization_gain__})")
-    print(f"📏 Lignes de code: ~320 (vs 880 avant)")
-    print(f"🚀 Réduction: -64% de code !")
+    print(f"📏 Lignes de code: ~320 (vs 880 avant)") # Note: ce chiffre doit être mis à jour si le code change
+    print(f"🚀 Réduction: -64% de code !") # Note: ce chiffre doit être mis à jour
     print(f"🏆 Advanced Patterns + DDD + CQRS ACTIVE")
-    print(f"📋 Version: {__version__} | Claude: {__claude_recommendations__}") 
+    print(f"📋 Version: {__version__} | Claude: {__claude_recommendations__}")
+
+if __name__ == "__main__":
+    # Exécution de la fonction de test asynchrone
+    asyncio.run(main_test()) 

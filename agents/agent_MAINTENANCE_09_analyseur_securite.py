@@ -468,6 +468,27 @@ class AgentMAINTENANCE09AnalyseurSecurite(Agent):
         
         return suggestions
 
+    def export_security_report_md(self, report: dict, output_path: str):
+        """Génère un rapport Markdown à partir du rapport de sécurité."""
+        md = [
+            f"# Rapport de Sécurité - {report.get('file_path', '')}",
+            f"**Score de sécurité :** {report.get('security_score', 0)}/100",
+            f"**Niveau de risque :** {report.get('risk_level', '')}",
+            f"**Problèmes trouvés :** {report.get('total_issues', 0)}",
+            "",
+            "## Vulnérabilités détectées",
+        ]
+        for vuln in report.get('vulnerabilities', []):
+            md.append(f"- Ligne {vuln.get('line', '?')} [{vuln.get('severity', '')}] {vuln.get('description', '')}")
+        md.append("\n## Recommandations")
+        for rec in report.get('recommendations', []):
+            md.append(f"- {rec}")
+        md.append("\n## Suggestions de code sécurisé")
+        for sugg in report.get('secured_suggestions', []):
+            md.append(f"- Ligne {sugg.get('line', '?')}: {sugg.get('suggestion', '')}")
+        with open(output_path, "w", encoding="utf-8") as f:
+            f.write("\n".join(md))
+
 def create_agent_MAINTENANCE_09_analyseur_securite(**kwargs) -> Agent:
     """Factory function pour créer une instance de l'analyseur de sécurité."""
     return AgentMAINTENANCE09AnalyseurSecurite(**kwargs)

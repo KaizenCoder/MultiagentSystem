@@ -1,615 +1,1058 @@
-"""Agent 17 - Peer Reviewer Technique
-RÔLE : Review technique détaillée et validation code expert ligne par ligne
+#!/usr/bin/env python3
 """
-import json
+👨‍💻 AGENT 17 - PEER REVIEWER TECHNIQUE SPÉCIALISÉ - PATTERN FACTORY COMPLIANT
+Mission : Peer Review technique détaillée + Audit universel de modules Python
+
+Responsabilités :
+- Review technique ligne par ligne du code expert
+- Validation implémentation et optimisations
+- Contrôle sécurité et performance
+- Vérification standards de codage
+- Analyse architecture et design patterns
+- Capacité d'audit universel de modules Python
+- Rapport de review technique complet
+- Intégration complète Pattern Factory
+"""
+
+import asyncio
 import sys
 from pathlib import Path
+import hashlib
+import subprocess
+import tempfile
+import uuid
 from datetime import datetime
-from typing import Dict, List, Any
+from typing import Dict, List, Optional, Any
+import json
+import re
+from dataclasses import dataclass, asdict
+from enum import Enum
+import os
 import logging
 import ast
 
-class Agent17PeerReviewerTechnique:
+# Import Pattern Factory (OBLIGATOIRE)
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from core.agent_factory_architecture import Agent, Task, Result
+from core.manager import LoggingManager
+
+class ReviewSeverity(Enum):
+    """Niveaux de sévérité des findings de review"""
+    CRITICAL = "critique"
+    HIGH = "haut"
+    MEDIUM = "moyen"
+    LOW = "bas"
+    INFO = "info"
+
+class ReviewCategory(Enum):
+    """Catégories de review technique"""
+    ARCHITECTURE = "architecture"
+    SECURITY = "sécurité"
+    PERFORMANCE = "performance"
+    MAINTAINABILITY = "maintenabilité"
+    STANDARDS = "standards"
+    DESIGN_PATTERNS = "design_patterns"
+    ERROR_HANDLING = "gestion_erreurs"
+    TESTING = "tests"
+
+@dataclass
+class ReviewFinding:
+    """Résultat de review technique"""
+    finding_id: str
+    category: ReviewCategory
+    severity: ReviewSeverity
+    title: str
+    description: str
+    location: str
+    line_number: Optional[int]
+    recommendation: str
+    code_snippet: Optional[str]
+    impact: str
+
+@dataclass
+class TechnicalReviewReport:
+    """Rapport complet de review technique"""
+    review_id: str
+    target: str
+    timestamp: datetime
+    findings: List[ReviewFinding]
+    technical_score: float
+    architecture_analysis: Dict[str, Any]
+    security_analysis: Dict[str, Any]
+    performance_analysis: Dict[str, Any]
+    recommendations: List[str]
+    summary: Dict[str, int]
+
+class Agent17PeerReviewerTechnique(Agent):
     """
-    Agent 17 - Peer Reviewer Technique
-    
-    MISSION : Review technique détaillée ligne par ligne du code expert
-    FOCUS : Validation implémentation + optimisations + sécurité + performance
+    👨‍💻 AGENT 17 - PEER REVIEWER TECHNIQUE SPÉCIALISÉ - PATTERN FACTORY COMPLIANT
     """
     
-    def __init__(self):
-        self.logger = logging.getLogger(__name__)
-        self.workspace_root = Path.cwd()
-        self.reviews_dir = self.workspace_root / "reviews"
-        self.reviews_dir.mkdir(exist_ok=True)
+    def __init__(self, agent_type: str = "peer_reviewer_technique", **config):
+        """Initialise l'agent de peer review technique Pattern Factory."""
+        super().__init__(agent_type, **config)
+        self.agent_id = "17"
+        self.specialite = "Peer Reviewer Technique + Architecture + Sécurité + Performance + Audit Universel"
+        self.mission = "Review technique détaillée ligne par ligne + validation architecture + audit modules Python"
         
-        # Métriques de review technique
-        self.review_metrics = {
-            "start_time": datetime.now(),
-            "lines_reviewed": 0,
-            "files_analyzed": 0,
-            "issues_found": 0,
-            "optimizations_identified": 0,
-            "security_checks": 0,
-            "performance_validations": 0,
-            "code_quality_score": 0
+        # Setup logging Pattern Factory compatible
+        self.setup_logging()
+        
+        # Patterns de design critiques
+        self.design_patterns = {
+            'factory_pattern': r'def create_\w+|class \w+Factory',
+            'singleton_pattern': r'_instance\s*=|__new__.*cls',
+            'observer_pattern': r'add_observer|notify|subscribe',
+            'strategy_pattern': r'class \w+Strategy|def execute_strategy',
+            'decorator_pattern': r'@\w+|def decorator|wrapper'
         }
         
-        self.logger.info("🔍 Agent 17 - Peer Reviewer Technique v1.0.0 - MISSION REVIEW ACTIVÉE")
-    
-    def run_technical_review_mission(self) -> Dict[str, Any]:
-        """Mission principale : Review technique détaillée code expert"""
-        self.logger.info("🎯 DÉMARRAGE MISSION REVIEW TECHNIQUE - ANALYSE LIGNE PAR LIGNE")
+        # Métriques de code critique
+        self.critical_metrics = {
+            'cyclomatic_complexity': 10,  # Limite complexité cyclomatique
+            'function_length': 50,        # Limite longueur fonction
+            'class_length': 500,          # Limite longueur classe
+            'nesting_depth': 4,           # Limite profondeur imbrication
+            'parameter_count': 7          # Limite nombre paramètres
+        }
         
+        # Patterns de sécurité
+        self.security_patterns = {
+            'dangerous_functions': [
+                r'eval\(',
+                r'exec\(',
+                r'__import__',
+                r'getattr\(',
+                r'setattr\(',
+                r'open\(\s*[\'\"]\s*\w+\s*[\'\"]\s*,\s*[\'\"]\s*w'
+            ],
+            'crypto_patterns': [
+                r'hashlib\.(md5|sha1)\(',
+                r'random\.random\(',
+                r'secrets\.',
+                r'cryptography\.',
+                r'Crypto\.'
+            ]
+        }
+        
+        self.findings = []
+
+    def setup_logging(self):
+        """Configuration du logging Pattern Factory compatible."""
         try:
-            # Étape 1 : Analyse code enhanced_agent_templates.py
-            templates_review = self._review_enhanced_templates()
+            # Utiliser LoggingManager centralisé
+            logging_manager = LoggingManager()
+            custom_log_config = {
+                "logger_name": f"agent.{self.agent_id}",
+                "metadata": {
+                    "agent_name": f"Agent17_{self.agent_id}",
+                    "role": "ai_processor",
+                    "domain": "technical_review"
+                },
+                "async_enabled": True
+            }
+            self.logger = logging_manager.get_logger(config_name="default", custom_config=custom_log_config)
+        except Exception as e:
+            # Fallback sur logging standard
+            logging.basicConfig(level=logging.INFO)
+            self.logger = logging.getLogger(f"Agent{self.agent_id}")
+            self.logger.info(f"Fallback logging activé pour Agent {self.agent_id}: {e}")
+
+    async def execute_task(self, task: Task) -> Result:
+        """
+        Exécute une tâche de review technique (Pattern Factory).
+        
+        Args:
+            task: Tâche à exécuter
             
-            # Étape 2 : Analyse code optimized_template_manager.py
-            manager_review = self._review_template_manager()
+        Returns:
+            Result: Résultat de l'exécution
+        """
+        try:
+            self.logger.info(f"🚀 Agent {self.agent_id} exécute tâche: {task.type}")
             
-            # Étape 3 : Validation sécurité code
-            security_review = self._validate_code_security()
-            
-            # Étape 4 : Analyse performance optimisations
-            performance_review = self._analyze_performance_optimizations()
-            
-            # Étape 5 : Validation standards code
-            standards_review = self._validate_coding_standards()
-            
-            # Étape 6 : Recommandations techniques
-            technical_recommendations = self._generate_technical_recommendations()
-            
-            # Étape 7 : Rapport technique final
-            final_report = self._generate_technical_report(
-                templates_review, manager_review, security_review,
-                performance_review, standards_review, technical_recommendations
+            if task.type == "technical_review":
+                return await self._handle_technical_review(task)
+            elif task.type == "audit_module":
+                return await self._handle_audit_module(task)
+            elif task.type == "architecture_review":
+                return await self._handle_architecture_review(task)
+            elif task.type == "security_review":
+                return await self._handle_security_review(task)
+            elif task.type == "performance_review":
+                return await self._handle_performance_review(task)
+            elif task.type == "code_quality_review":
+                return await self._handle_code_quality_review(task)
+            else:
+                return Result(
+                    success=False,
+                    data={"error": f"Type de tâche non supporté: {task.type}"},
+                    error=f"Tâche {task.type} non reconnue par Agent {self.agent_id}"
+                )
+                
+        except Exception as e:
+            self.logger.error(f"Erreur lors de l'exécution de la tâche {task.type}: {e}")
+            return Result(
+                success=False,
+                data={"error": str(e)},
+                error=f"Erreur lors de l'exécution: {e}"
             )
-            
-            # Calcul métriques finales
-            performance = self._calculate_technical_metrics()
-            
-            self.logger.info("🏆 MISSION REVIEW TECHNIQUE ACCOMPLIE - CODE EXPERT CERTIFIÉ")
-            
+
+    async def _handle_technical_review(self, task: Task) -> Result:
+        """Gère la review technique complète."""
+        target_path = task.params.get("target_path")
+        if not target_path:
+            return Result(
+                success=False,
+                data={"error": "target_path requis"},
+                error="Paramètre target_path manquant"
+            )
+        
+        rapport = await self.review_technique_complete(target_path)
+        
+        return Result(
+            success=True,
+            data=rapport
+        )
+
+    async def _handle_audit_module(self, task: Task) -> Result:
+        """Gère l'audit universel d'un module (capacité universelle)."""
+        module_path = task.params.get("module_path")
+        if not module_path:
+            return Result(
+                success=False,
+                data={"error": "module_path requis"},
+                error="Paramètre module_path manquant"
+            )
+        
+        rapport = await self.auditer_module_cible(module_path)
+        
+        return Result(
+            success=True,
+            data=rapport
+        )
+
+    async def _handle_architecture_review(self, task: Task) -> Result:
+        """Gère la review architecture."""
+        file_path = task.params.get("file_path")
+        if not file_path:
+            return Result(
+                success=False,
+                data={"error": "file_path requis"},
+                error="Paramètre file_path manquant"
+            )
+        
+        analysis = await self._analyze_architecture_patterns(Path(file_path))
+        
+        return Result(
+            success=True,
+            data={"architecture_analysis": analysis}
+        )
+
+    async def _handle_security_review(self, task: Task) -> Result:
+        """Gère la review sécurité."""
+        file_path = task.params.get("file_path")
+        if not file_path:
+            return Result(
+                success=False,
+                data={"error": "file_path requis"},
+                error="Paramètre file_path manquant"
+            )
+        
+        analysis = await self._analyze_security_patterns(Path(file_path))
+        
+        return Result(
+            success=True,
+            data={"security_analysis": analysis}
+        )
+
+    async def _handle_performance_review(self, task: Task) -> Result:
+        """Gère la review performance."""
+        file_path = task.params.get("file_path")
+        if not file_path:
+            return Result(
+                success=False,
+                data={"error": "file_path requis"},
+                error="Paramètre file_path manquant"
+            )
+        
+        analysis = await self._analyze_performance_patterns(Path(file_path))
+        
+        return Result(
+            success=True,
+            data={"performance_analysis": analysis}
+        )
+
+    async def _handle_code_quality_review(self, task: Task) -> Result:
+        """Gère la review qualité code."""
+        file_path = task.params.get("file_path")
+        if not file_path:
+            return Result(
+                success=False,
+                data={"error": "file_path requis"},
+                error="Paramètre file_path manquant"
+            )
+        
+        analysis = await self._analyze_code_quality(Path(file_path))
+        
+        return Result(
+            success=True,
+            data={"code_quality_analysis": analysis}
+        )
+
+    async def auditer_module_cible(self, module_path: str) -> Dict[str, Any]:
+        """
+        AUDIT UNIVERSEL - Capacité d'auditer n'importe quel module Python.
+        Spécialisation: Review technique, architecture, sécurité, performance.
+        """
+        self.logger.info(f"🔍 AUDIT UNIVERSEL PEER REVIEW TECHNIQUE: {module_path}")
+        
+        target = Path(module_path)
+        if not target.exists():
             return {
-                "status": "✅ SUCCÈS - REVIEW TECHNIQUE TERMINÉE",
-                "templates_analysis": templates_review,
-                "manager_analysis": manager_review,
-                "security_validation": security_review,
-                "performance_analysis": performance_review,
-                "standards_validation": standards_review,
-                "technical_recommendations": technical_recommendations,
-                "final_report": final_report,
-                "performance": performance,
-                "certification": "🏆 CODE EXPERT NIVEAU ENTREPRISE CERTIFIÉ"
+                "error": f"Module non trouvé: {module_path}",
+                "success": False
             }
-            
-        except Exception as e:
-            self.logger.error(f"❌ Erreur mission review technique : {e}", exc_info=True)
-            return {
-                "status": f"❌ ERREUR : {str(e)}",
-                "error_details": str(e)
+        
+        # Réinitialiser les findings
+        self.findings = []
+        
+        # Analyse multi-axes spécialisée review technique
+        technical_analysis = {
+            "architecture_analysis": await self._analyze_architecture_patterns(target),
+            "security_analysis": await self._analyze_security_patterns(target),
+            "performance_analysis": await self._analyze_performance_patterns(target),
+            "code_quality_analysis": await self._analyze_code_quality(target),
+            "design_patterns_analysis": await self._analyze_design_patterns(target),
+            "complexity_analysis": await self._analyze_code_complexity(target)
+        }
+        
+        # Calcul score technique global
+        technical_score = self._calculate_technical_score()
+        
+        # Génération recommandations
+        recommendations = self._generate_technical_recommendations()
+        
+        # Rapport d'audit universel peer review
+        rapport = {
+            "review_id": f"TECH_UNIVERSAL_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+            "target_analyzed": str(target),
+            "timestamp": datetime.now().isoformat(),
+            "review_type": "universal_technical_review",
+            "specialization": "technical_review_architecture_security_performance",
+            "technical_analysis": technical_analysis,
+            "technical_score": technical_score,
+            "total_findings": len(self.findings),
+            "findings_by_severity": self._group_findings_by_severity(),
+            "findings_by_category": self._group_findings_by_category(),
+            "recommendations": recommendations,
+            "executive_summary": {
+                "overall_technical_score": technical_score,
+                "total_review_findings": len(self.findings),
+                "critical_findings": len([f for f in self.findings if f.severity == ReviewSeverity.CRITICAL]),
+                "review_quality_percentage": (technical_score / 10.0) * 100
             }
-    
-    def _review_enhanced_templates(self) -> Dict[str, Any]:
-        """Review détaillée enhanced_agent_templates.py (désactivée pour conformité)"""
-        return {"info": "L'analyse du fichier enhanced_agent_templates.py dans code_expert est désactivée pour conformité à la politique de sécurité."}
-    
-    def _review_template_manager(self) -> Dict[str, Any]:
-        """Review détaillée optimized_template_manager.py (désactivée pour conformité)"""
-        return {"info": "L'analyse du fichier optimized_template_manager.py dans code_expert est désactivée pour conformité à la politique de sécurité."}
-    
-    def _analyze_class_structure(self, content: str, class_name: str) -> Dict[str, Any]:
-        """Analyse structure de classe"""
-        analysis = {
-            "class_found": class_name in content,
-            "methods_count": 0,
-            "properties_count": 0,
-            "docstring_present": False,
-            "type_hints": False
         }
         
-        try:
-            tree = ast.parse(content)
-            for node in ast.walk(tree):
-                if isinstance(node, ast.ClassDef) and node.name == class_name:
-                    analysis["docstring_present"] = ast.get_docstring(node) is not None
+        # Sauvegarde du rapport
+        await self._save_review_report(rapport)
+        
+        self.logger.info(f"✅ Audit universel peer review terminé: {len(self.findings)} findings détectés")
+        return rapport
+
+    async def _analyze_architecture_patterns(self, target: Path) -> Dict[str, Any]:
+        """Analyse les patterns d'architecture."""
+        architecture_issues = []
+        
+        if target.is_file() and target.suffix == '.py':
+            try:
+                content = target.read_text(encoding='utf-8', errors='ignore')
+                
+                # Analyse avec AST pour patterns d'architecture
+                try:
+                    tree = ast.parse(content)
                     
-                    methods = [n for n in node.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]
-                    analysis["methods_count"] = len(methods)
+                    # Analyse des classes
+                    classes = [node for node in ast.walk(tree) if isinstance(node, ast.ClassDef)]
                     
-                    for method in methods:
-                        if method.returns or any(arg.annotation for arg in method.args.args):
-                            analysis["type_hints"] = True
-                            break
-        except Exception as e:
-            self.logger.warning(f"Erreur analyse AST : {e}")
-        
-        return analysis
-    
-    def _analyze_critical_methods(self, content: str) -> Dict[str, Any]:
-        """Analyse méthodes critiques"""
-        critical_methods = {
-            "validate": "validate" in content,
-            "from_dict": "from_dict" in content,
-            "to_dict": "to_dict" in content,
-            "merge": "merge" in content,
-            "create_agent": "create_agent" in content,
-            "error_handling": "try:" in content and "except" in content,
-            "logging": "logger" in content or "logging" in content
-        }
-        
-        score = sum(1 for v in critical_methods.values() if v)
-        critical_methods["completeness_score"] = f"{score}/{len(critical_methods)-1}"
-        
-        return critical_methods
-    
-    def _validate_json_schema_implementation(self, content: str) -> Dict[str, Any]:
-        """Validation implémentation JSON Schema"""
-        schema_features = {
-            "jsonschema_import": "jsonschema" in content,
-            "schema_validation": "validate(" in content,
-            "schema_definition": "schema" in content.lower(),
-            "error_handling": "ValidationError" in content,
-            "custom_validators": "validator" in content.lower()
-        }
-        
-        score = sum(1 for v in schema_features.values() if v)
-        schema_features["implementation_score"] = f"{score}/{len(schema_features)}"
-        
-        return schema_features
-    
-    def _analyze_template_inheritance(self, content: str) -> Dict[str, Any]:
-        """Analyse héritage templates"""
-        inheritance_features = {
-            "inheritance_support": "inherit" in content.lower() or "parent" in content.lower(),
-            "merge_logic": "merge" in content,
-            "override_handling": "override" in content.lower(),
-            "deep_copy": "copy" in content,
-            "conflict_resolution": "conflict" in content.lower() or "resolve" in content.lower()
-        }
-        
-        score = sum(1 for v in inheritance_features.values() if v)
-        inheritance_features["inheritance_score"] = f"{score}/{len(inheritance_features)}"
-        
-        return inheritance_features
-    
-    def _analyze_thread_safety(self, content: str) -> Dict[str, Any]:
-        """Analyse thread-safety"""
-        thread_safety = {
-            "rlock_usage": "RLock" in content,
-            "with_statement": "with self._lock:" in content,
-            "thread_local": "threading.local" in content or "_local" in content,
-            "atomic_operations": "atomic" in content.lower(),
-            "race_condition_protection": "lock" in content.lower()
-        }
-        
-        score = sum(1 for v in thread_safety.values() if v)
-        thread_safety["safety_score"] = f"{score}/{len(thread_safety)}"
-        
-        return thread_safety
-    
-    def _analyze_cache_implementation(self, content: str) -> Dict[str, Any]:
-        """Analyse implémentation cache"""
-        cache_features = {
-            "lru_cache": "LRU" in content or "lru" in content.lower(),
-            "ttl_support": "TTL" in content or "ttl" in content.lower(),
-            "size_limit": "maxsize" in content or "max_size" in content,
-            "cleanup_mechanism": "cleanup" in content.lower() or "evict" in content.lower(),
-            "cache_metrics": "hit" in content.lower() and "miss" in content.lower()
-        }
-        
-        score = sum(1 for v in cache_features.values() if v)
-        cache_features["cache_score"] = f"{score}/{len(cache_features)}"
-        
-        return cache_features
-    
-    def _analyze_watchdog_implementation(self, content: str) -> Dict[str, Any]:
-        """Analyse implémentation watchdog"""
-        watchdog_features = {
-            "watchdog_import": "watchdog" in content,
-            "file_observer": "Observer" in content,
-            "event_handler": "Handler" in content or "handler" in content.lower(),
-            "debounce_logic": "debounce" in content.lower() or "delay" in content,
-            "auto_reload": "reload" in content.lower()
-        }
-        
-        score = sum(1 for v in watchdog_features.values() if v)
-        watchdog_features["watchdog_score"] = f"{score}/{len(watchdog_features)}"
-        
-        return watchdog_features
-    
-    def _analyze_async_implementation(self, content: str) -> Dict[str, Any]:
-        """Analyse implémentation async/await"""
-        async_features = {
-            "async_methods": "async def" in content,
-            "await_usage": "await " in content,
-            "asyncio_import": "asyncio" in content,
-            "concurrent_futures": "concurrent" in content,
-            "async_context": "async with" in content
-        }
-        
-        score = sum(1 for v in async_features.values() if v)
-        async_features["async_score"] = f"{score}/{len(async_features)}"
-        
-        return async_features
-    
-    def _calculate_technical_score(self, class_analysis, methods_analysis, schema_validation, inheritance_analysis) -> int:
-        """Calcul score technique enhanced templates"""
-        scores = []
-        
-        # Structure classe (0-3 points)
-        if class_analysis.get("class_found") and class_analysis.get("docstring_present"):
-            scores.append(3)
-        elif class_analysis.get("class_found"):
-            scores.append(2)
-        else:
-            scores.append(0)
-        
-        # Méthodes critiques (0-3 points)
-        methods_score = methods_analysis.get("completeness_score", "0/7")
-        completed = int(methods_score.split("/")[0])
-        scores.append(min(3, completed // 2))
-        
-        # JSON Schema (0-2 points)
-        schema_score = schema_validation.get("implementation_score", "0/5")
-        completed = int(schema_score.split("/")[0])
-        scores.append(min(2, completed // 2))
-        
-        # Héritage (0-2 points)
-        inherit_score = inheritance_analysis.get("inheritance_score", "0/5")
-        completed = int(inherit_score.split("/")[0])
-        scores.append(min(2, completed // 2))
-        
-        return sum(scores)
-    
-    def _calculate_manager_score(self, thread_safety, cache_analysis, watchdog_analysis, async_analysis) -> int:
-        """Calcul score technique template manager"""
-        scores = []
-        
-        # Thread safety (0-3 points)
-        safety_score = thread_safety.get("safety_score", "0/5")
-        completed = int(safety_score.split("/")[0])
-        scores.append(min(3, completed // 1))
-        
-        # Cache (0-3 points)
-        cache_score = cache_analysis.get("cache_score", "0/5")
-        completed = int(cache_score.split("/")[0])
-        scores.append(min(3, completed // 1))
-        
-        # Watchdog (0-2 points)
-        watchdog_score = watchdog_analysis.get("watchdog_score", "0/5")
-        completed = int(watchdog_score.split("/")[0])
-        scores.append(min(2, completed // 2))
-        
-        # Async (0-2 points)
-        async_score = async_analysis.get("async_score", "0/5")
-        completed = int(async_score.split("/")[0])
-        scores.append(min(2, completed // 2))
-        
-        return sum(scores)
-    
-    def _validate_code_security(self) -> Dict[str, Any]:
-        """Validation sécurité du code"""
-        self.logger.info("🔒 ÉTAPE 3 : Validation sécurité code...")
-        
-        security_checks = {
-            "step": "3_security_validation",
-            "input_validation": "✅ JSON Schema validation présente",
-            "sql_injection": "✅ Pas d'exécution SQL directe",
-            "code_injection": "✅ Pas d'eval() ou exec() détecté",
-            "file_access": "✅ Accès fichiers contrôlé",
-            "error_disclosure": "✅ Gestion erreurs sécurisée",
-            "crypto_foundations": "✅ Préparé pour RSA 2048",
-            "security_score": "9/10",
-            "status": "✅ SÉCURITÉ VALIDÉE"
-        }
-        
-        self.review_metrics["security_checks"] = 6
-        return security_checks
-    
-    def _analyze_performance_optimizations(self) -> Dict[str, Any]:
-        """Analyse optimisations performance"""
-        self.logger.info("⚡ ÉTAPE 4 : Analyse optimisations performance...")
-        
-        performance_analysis = {
-            "step": "4_performance_analysis",
-            "cache_optimization": "✅ Cache LRU + TTL optimisé",
-            "memory_management": "✅ Cleanup automatique",
-            "lazy_loading": "✅ Chargement à la demande",
-            "batch_operations": "✅ Opérations par lot",
-            "thread_pool": "✅ ThreadPool configuré",
-            "async_support": "✅ Support async/await",
-            "target_performance": "✅ < 100ms garanti",
-            "performance_score": "10/10",
-            "status": "✅ PERFORMANCE OPTIMISÉE"
-        }
-        
-        self.review_metrics["performance_validations"] = 7
-        return performance_analysis
-    
-    def _validate_coding_standards(self) -> Dict[str, Any]:
-        """Validation standards de code"""
-        self.logger.info("📏 ÉTAPE 5 : Validation standards code...")
-        
-        standards_validation = {
-            "step": "5_coding_standards",
-            "pep8_compliance": "✅ PEP 8 respecté",
-            "type_hints": "✅ Type hints présents",
-            "docstrings": "✅ Documentation complète",
-            "naming_conventions": "✅ Conventions respectées",
-            "code_organization": "✅ Structure claire",
-            "imports_optimization": "✅ Imports optimisés",
-            "comments_quality": "✅ Commentaires pertinents",
-            "standards_score": "9/10",
-            "status": "✅ STANDARDS RESPECTÉS"
-        }
-        
-        return standards_validation
-    
-    def _generate_technical_recommendations(self) -> Dict[str, Any]:
-        """Génération recommandations techniques"""
-        self.logger.info("🎯 ÉTAPE 6 : Recommandations techniques...")
+                    for cls in classes:
+                        # Vérification pattern Factory
+                        if 'factory' in cls.name.lower():
+                            architecture_issues.append({
+                                "type": "factory_pattern_detected",
+                                "description": f"Pattern Factory détecté dans classe {cls.name}",
+                                "line": cls.lineno,
+                                "recommendation": "Valider implémentation pattern Factory"
+                            })
+                        
+                        # Vérification Single Responsibility
+                        methods = [n for n in cls.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]
+                        if len(methods) > 20:
+                            architecture_issues.append({
+                                "type": "srp_violation",
+                                "description": f"Classe {cls.name} a {len(methods)} méthodes - possible violation SRP",
+                                "line": cls.lineno,
+                                "recommendation": "Considérer division de la classe"
+                            })
+                        
+                        # Vérification héritage
+                        if len(cls.bases) > 2:
+                            architecture_issues.append({
+                                "type": "multiple_inheritance",
+                                "description": f"Classe {cls.name} hérite de {len(cls.bases)} classes",
+                                "line": cls.lineno,
+                                "recommendation": "Privilégier composition sur héritage multiple"
+                            })
+                
+                except SyntaxError:
+                    architecture_issues.append({
+                        "type": "syntax_error",
+                        "description": "Erreur syntaxe empêche analyse architecture",
+                        "line": None,
+                        "recommendation": "Corriger erreurs syntaxe"
+                    })
+                
+            except Exception as e:
+                architecture_issues.append({
+                    "type": "analysis_error",
+                    "description": f"Erreur analyse architecture: {e}",
+                    "line": None,
+                    "recommendation": "Vérifier accessibilité fichier"
+                })
         
         return {
-            "step": "6_technical_recommendations",
-            "immediate_actions": [
-                "✅ Code expert APPROUVÉ - Qualité exceptionnelle",
-                "🚀 Intégrer métriques monitoring (Sprint 4)",
-                "⚡ Préparer tests performance < 100ms"
-            ],
-            "optimization_opportunities": [
-                "📊 Ajouter métriques détaillées cache hits/miss",
-                "🔒 Intégrer signature cryptographique (Sprint 2)",
-                "🐳 Optimiser pour déploiement K8s (Sprint 5)"
-            ],
-            "technical_debt": [
-                "✅ AUCUNE dette technique identifiée",
-                "✅ Code production-ready dès maintenant",
-                "✅ Architecture évolutive validée"
-            ],
-            "next_sprint_prep": [
-                "🧪 Préparer tests intégration (Agent 05)",
-                "📊 Configurer monitoring (Agent 06)",
-                "🔒 Planifier sécurité crypto (Agent 04)"
-            ],
-            "status": "✅ RECOMMANDATIONS TECHNIQUES GÉNÉRÉES"
+            "architecture_issues": architecture_issues,
+            "architecture_score": max(0, 10 - len(architecture_issues) * 1.5)
         }
-    
-    def _generate_technical_report(self, templates_review, manager_review, security_review, 
-                                 performance_review, standards_review, recommendations) -> str:
-        """Génération rapport technique final"""
-        self.logger.info("📄 ÉTAPE 7 : Génération rapport technique...")
+
+    async def _analyze_security_patterns(self, target: Path) -> Dict[str, Any]:
+        """Analyse les patterns de sécurité."""
+        security_issues = []
         
-        report_path = self.reviews_dir / f"technical_review_agent_02_code_expert_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+        if target.is_file() and target.suffix == '.py':
+            try:
+                content = target.read_text(encoding='utf-8', errors='ignore')
+                lines = content.split('\n')
+                
+                # Recherche de patterns dangereux
+                for pattern in self.security_patterns['dangerous_functions']:
+                    matches = re.finditer(pattern, content)
+                    for match in matches:
+                        line_num = content[:match.start()].count('\n') + 1
+                        security_issues.append({
+                            "type": "dangerous_function",
+                            "description": f"Fonction dangereuse détectée: {match.group()}",
+                            "line": line_num,
+                            "recommendation": "Utiliser alternative sécurisée"
+                        })
+                
+                # Vérification crypto patterns
+                for pattern in self.security_patterns['crypto_patterns']:
+                    matches = re.finditer(pattern, content)
+                    for match in matches:
+                        line_num = content[:match.start()].count('\n') + 1
+                        if 'md5' in match.group() or 'sha1' in match.group():
+                            security_issues.append({
+                                "type": "weak_crypto",
+                                "description": f"Algorithme cryptographique faible: {match.group()}",
+                                "line": line_num,
+                                "recommendation": "Utiliser SHA-256 ou plus fort"
+                            })
+                
+                # Vérification gestion erreurs sensibles
+                for i, line in enumerate(lines):
+                    if 'except:' in line and 'pass' in lines[i+1:i+3]:
+                        security_issues.append({
+                            "type": "silent_exception",
+                            "description": "Exception silencieuse détectée",
+                            "line": i + 1,
+                            "recommendation": "Logger les exceptions pour audit"
+                        })
+                
+            except Exception as e:
+                security_issues.append({
+                    "type": "analysis_error",
+                    "description": f"Erreur analyse sécurité: {e}",
+                    "line": None,
+                    "recommendation": "Vérifier accessibilité fichier"
+                })
         
-        templates_score = templates_review.get("technical_score", "8/10")
-        manager_score = manager_review.get("technical_score", "9/10")
+        return {
+            "security_issues": security_issues,
+            "security_score": max(0, 10 - len(security_issues) * 2)
+        }
+
+    async def _analyze_performance_patterns(self, target: Path) -> Dict[str, Any]:
+        """Analyse les patterns de performance."""
+        performance_issues = []
         
-        report_content = f"""# 🔍 PEER REVIEW TECHNIQUE - AGENT 02 CODE EXPERT
-
-## 📋 INFORMATIONS REVIEW
-
-**Reviewer** : Agent 17 - Peer Reviewer Technique  
-**Cible** : Agent 02 - Architecte Code Expert  
-**Date** : {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}  
-**Scope** : Analyse technique détaillée ligne par ligne  
-**Lignes analysées** : {self.review_metrics['lines_reviewed']} lignes  
-**Fichiers analysés** : {self.review_metrics['files_analyzed']} fichiers  
-
-## 🏆 ÉVALUATION TECHNIQUE GLOBALE
-
-### 📊 SCORES DÉTAILLÉS
-- **Enhanced Templates** : {templates_score} ⚡ EXCELLENT
-- **Template Manager** : {manager_score} ⚡ EXCEPTIONNEL  
-- **Sécurité** : 9/10 🔒 VALIDÉE
-- **Performance** : 10/10 ⚡ OPTIMISÉE
-- **Standards** : 9/10 📏 RESPECTÉS
-- **Score Global** : **9.2/10** 🏆 NIVEAU ENTREPRISE
-
-### 🎯 SYNTHÈSE TECHNIQUE
-**L'analyse technique confirme que le code expert intégré par l'Agent 02 respecte TOUS les standards de qualité niveau entreprise avec des optimisations de performance exceptionnelles.**
-
-## 📝 ANALYSE ENHANCED_AGENT_TEMPLATES.PY
-
-### 🏗️ Structure Classe AgentTemplate
-- ✅ **Classe trouvée** : AgentTemplate complètement implémentée
-- ✅ **Documentation** : Docstrings complètes et détaillées
-- ✅ **Type hints** : Annotations de type présentes
-- ✅ **Méthodes** : Toutes les méthodes critiques implémentées
-
-### 🔧 Méthodes Critiques Validées (7/7)
-- ✅ **validate()** : Validation JSON Schema stricte
-- ✅ **from_dict()** : Désérialisation robuste
-- ✅ **to_dict()** : Sérialisation optimisée
-- ✅ **merge()** : Fusion intelligente templates
-- ✅ **create_agent()** : Factory method flexible
-- ✅ **Gestion erreurs** : Try/except complet
-- ✅ **Logging** : Traçabilité détaillée
-
-### 📋 JSON Schema Implementation (5/5)
-- ✅ **Import jsonschema** : Bibliothèque standard utilisée
-- ✅ **Validation stricte** : validate() implémenté
-- ✅ **Définition schémas** : Schémas complets
-- ✅ **Gestion erreurs** : ValidationError gérée
-- ✅ **Validators custom** : Validateurs personnalisés
-
-### 🔗 Héritage Templates (5/5)
-- ✅ **Support héritage** : Logique parent/enfant
-- ✅ **Logique merge** : Fusion intelligente
-- ✅ **Gestion override** : Surcharge contrôlée
-- ✅ **Deep copy** : Copie profonde sécurisée
-- ✅ **Résolution conflits** : Stratégies définies
-
-**Score Enhanced Templates : {templates_score} ⚡ EXCELLENT**
-
-## ⚙️ ANALYSE OPTIMIZED_TEMPLATE_MANAGER.PY
-
-### 🔒 Thread-Safety (5/5)
-- ✅ **RLock usage** : threading.RLock implémenté
-- ✅ **With statement** : Contexte lock sécurisé
-- ✅ **Protection races** : Conditions course évitées
-- ✅ **Opérations atomiques** : Atomicité garantie
-- ✅ **Thread-local storage** : Stockage par thread
-
-### 💾 Cache System (5/5)
-- ✅ **LRU Cache** : Least Recently Used implémenté
-- ✅ **TTL Support** : Time To Live configurable
-- ✅ **Size limit** : Limite taille mémoire
-- ✅ **Cleanup auto** : Nettoyage automatique
-- ✅ **Métriques** : Hit/miss ratio trackés
-
-### 👁️ Hot-Reload Watchdog (5/5)
-- ✅ **Watchdog import** : Bibliothèque watchdog
-- ✅ **File observer** : Observer fichiers
-- ✅ **Event handler** : Gestionnaire événements
-- ✅ **Debounce logic** : Anti-rebond intelligent
-- ✅ **Auto reload** : Rechargement automatique
-
-### ⚡ Async Support (5/5)
-- ✅ **Async methods** : Méthodes async def
-- ✅ **Await usage** : Utilisation await correcte
-- ✅ **Asyncio import** : Support asyncio natif
-- ✅ **Concurrent futures** : Exécution parallèle
-- ✅ **Async context** : Contexte async with
-
-**Score Template Manager : {manager_score} ⚡ EXCEPTIONNEL**
-
-## 🔒 VALIDATION SÉCURITÉ
-
-### 🛡️ Contrôles Sécurité (6/6)
-- ✅ **Validation input** : JSON Schema protection
-- ✅ **SQL injection** : Aucune exécution SQL directe
-- ✅ **Code injection** : Pas d'eval()/exec() détecté
-- ✅ **Accès fichiers** : Contrôlé et sécurisé
-- ✅ **Divulgation erreurs** : Gestion sécurisée
-- ✅ **Crypto foundations** : Préparé RSA 2048
-
-**Score Sécurité : 9/10 🔒 VALIDÉE**
-
-## ⚡ ANALYSE PERFORMANCE
-
-### 🚀 Optimisations Performance (7/7)
-- ✅ **Cache optimisé** : LRU + TTL efficace
-- ✅ **Gestion mémoire** : Cleanup automatique
-- ✅ **Lazy loading** : Chargement à la demande
-- ✅ **Batch operations** : Opérations groupées
-- ✅ **Thread pool** : Pool threads configuré
-- ✅ **Support async** : Async/await natif
-- ✅ **Target < 100ms** : Performance garantie
-
-**Score Performance : 10/10 ⚡ OPTIMISÉE**
-
-## 📏 STANDARDS DE CODE
-
-### ✅ Conformité Standards (7/7)
-- ✅ **PEP 8** : Style guide Python respecté
-- ✅ **Type hints** : Annotations complètes
-- ✅ **Docstrings** : Documentation détaillée
-- ✅ **Conventions** : Nommage cohérent
-- ✅ **Organisation** : Structure claire
-- ✅ **Imports** : Optimisés et ordonnés
-- ✅ **Commentaires** : Pertinents et utiles
-
-**Score Standards : 9/10 📏 RESPECTÉS**
-
-## 🎯 RECOMMANDATIONS TECHNIQUES
-
-### 🔥 Actions Immédiates
-1. **✅ APPROUVER** code expert - Qualité exceptionnelle
-2. **🚀 LANCER** Agent 05 pour tests avec architecture validée
-3. **⚡ PRÉPARER** tests performance < 100ms
-
-### ⚡ Optimisations Futures
-1. **📊 Métriques** : Ajouter cache hits/miss détaillés (Sprint 4)
-2. **🔒 Cryptographie** : Intégrer signature RSA (Sprint 2)
-3. **🐳 K8s** : Optimiser pour déploiement (Sprint 5)
-
-### 🏆 Validation Technique
-- **✅ AUCUNE** dette technique identifiée
-- **✅ CODE** production-ready immédiatement
-- **✅ ARCHITECTURE** évolutive et robuste
-
-## ✅ CERTIFICATION TECHNIQUE
-
-### 🔍 Statut Review Technique
-- [ ] ❌ À revoir
-- [ ] ⚠️ Approuvé avec réserves  
-- [x] **✅ APPROUVÉ - QUALITÉ EXCEPTIONNELLE**
-
-### 🏆 Certification Code Expert
-**JE CERTIFIE que le code expert intégré par l'Agent 02 respecte TOUS les standards techniques niveau entreprise et constitue une base solide pour le projet Agent Factory Pattern.**
-
-### 🚀 Validation Performance
-**PERFORMANCE GARANTIE < 100ms avec optimisations expertes validées techniquement.**
-
----
-
-**🎯 Review Technique terminée - Agent 02 CERTIFIÉ niveau ENTREPRISE** ⚡
-
-*Rapport généré automatiquement par Agent 17 - Peer Reviewer Technique*  
-*Performance review : {round((datetime.now() - self.review_metrics['start_time']).total_seconds(), 2)}s*  
-*Lignes analysées : {self.review_metrics['lines_reviewed']} lignes*
-"""
+        if target.is_file() and target.suffix == '.py':
+            try:
+                content = target.read_text(encoding='utf-8', errors='ignore')
+                
+                # Analyse avec AST pour performance
+                try:
+                    tree = ast.parse(content)
+                    
+                    # Analyse des boucles imbriquées
+                    for node in ast.walk(tree):
+                        if isinstance(node, (ast.For, ast.While)):
+                            nested_loops = [n for n in ast.walk(node) if isinstance(n, (ast.For, ast.While))]
+                            if len(nested_loops) > 3:  # Plus de 2 niveaux d'imbrication
+                                performance_issues.append({
+                                    "type": "nested_loops",
+                                    "description": f"Boucles imbriquées détectées ({len(nested_loops)} niveaux)",
+                                    "line": node.lineno,
+                                    "recommendation": "Optimiser algorithme ou utiliser comprehensions"
+                                })
+                    
+                    # Analyse des fonctions longues
+                    for node in ast.walk(tree):
+                        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                            if hasattr(node, 'end_lineno') and node.end_lineno:
+                                length = node.end_lineno - node.lineno
+                                if length > self.critical_metrics['function_length']:
+                                    performance_issues.append({
+                                        "type": "long_function",
+                                        "description": f"Fonction {node.name} trop longue ({length} lignes)",
+                                        "line": node.lineno,
+                                        "recommendation": "Diviser en fonctions plus petites"
+                                    })
+                    
+                    # Vérification imports dans boucles
+                    for node in ast.walk(tree):
+                        if isinstance(node, (ast.For, ast.While)):
+                            imports = [n for n in ast.walk(node) if isinstance(n, (ast.Import, ast.ImportFrom))]
+                            if imports:
+                                performance_issues.append({
+                                    "type": "import_in_loop",
+                                    "description": "Import dans boucle détecté",
+                                    "line": node.lineno,
+                                    "recommendation": "Déplacer imports en début de fichier"
+                                })
+                
+                except SyntaxError:
+                    performance_issues.append({
+                        "type": "syntax_error",
+                        "description": "Erreur syntaxe empêche analyse performance",
+                        "line": None,
+                        "recommendation": "Corriger erreurs syntaxe"
+                    })
+                
+            except Exception as e:
+                performance_issues.append({
+                    "type": "analysis_error",
+                    "description": f"Erreur analyse performance: {e}",
+                    "line": None,
+                    "recommendation": "Vérifier accessibilité fichier"
+                })
         
+        return {
+            "performance_issues": performance_issues,
+            "performance_score": max(0, 10 - len(performance_issues) * 1.5)
+        }
+
+    async def _analyze_code_quality(self, target: Path) -> Dict[str, Any]:
+        """Analyse la qualité du code."""
+        quality_issues = []
+        
+        if target.is_file() and target.suffix == '.py':
+            try:
+                content = target.read_text(encoding='utf-8', errors='ignore')
+                lines = content.split('\n')
+                
+                # Analyse ligne par ligne
+                for i, line in enumerate(lines):
+                    line_num = i + 1
+                    
+                    # Variables à une lettre (sauf exceptions)
+                    if re.search(r'\b[a-z]\s*=', line) and not re.search(r'\b[ijkxy]\s*=', line):
+                        quality_issues.append({
+                            "type": "single_letter_variable",
+                            "description": "Variable à une lettre détectée",
+                            "line": line_num,
+                            "recommendation": "Utiliser nom descriptif"
+                        })
+                    
+                    # TODO/FIXME non résolus
+                    if re.search(r'#\s*(TODO|FIXME|HACK)', line, re.IGNORECASE):
+                        quality_issues.append({
+                            "type": "todo_comment",
+                            "description": "Commentaire TODO/FIXME non résolu",
+                            "line": line_num,
+                            "recommendation": "Résoudre ou créer issue"
+                        })
+                    
+                    # Magic numbers
+                    if re.search(r'\b\d{2,}\b', line) and 'line' not in line.lower():
+                        quality_issues.append({
+                            "type": "magic_number",
+                            "description": "Magic number détecté",
+                            "line": line_num,
+                            "recommendation": "Utiliser constante nommée"
+                        })
+                
+                # Analyse AST pour qualité
+                try:
+                    tree = ast.parse(content)
+                    
+                    # Fonctions sans docstring
+                    for node in ast.walk(tree):
+                        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                            if not node.name.startswith('_') and not ast.get_docstring(node):
+                                quality_issues.append({
+                                    "type": "missing_docstring",
+                                    "description": f"Fonction {node.name} sans docstring",
+                                    "line": node.lineno,
+                                    "recommendation": "Ajouter docstring descriptive"
+                                })
+                    
+                    # Classes sans docstring
+                    for node in ast.walk(tree):
+                        if isinstance(node, ast.ClassDef):
+                            if not ast.get_docstring(node):
+                                quality_issues.append({
+                                    "type": "missing_class_docstring",
+                                    "description": f"Classe {node.name} sans docstring",
+                                    "line": node.lineno,
+                                    "recommendation": "Ajouter docstring de classe"
+                                })
+                
+                except SyntaxError:
+                    quality_issues.append({
+                        "type": "syntax_error",
+                        "description": "Erreur syntaxe empêche analyse qualité",
+                        "line": None,
+                        "recommendation": "Corriger erreurs syntaxe"
+                    })
+                
+            except Exception as e:
+                quality_issues.append({
+                    "type": "analysis_error",
+                    "description": f"Erreur analyse qualité: {e}",
+                    "line": None,
+                    "recommendation": "Vérifier accessibilité fichier"
+                })
+        
+        return {
+            "quality_issues": quality_issues,
+            "quality_score": max(0, 10 - len(quality_issues) * 0.5)
+        }
+
+    async def _analyze_design_patterns(self, target: Path) -> Dict[str, Any]:
+        """Analyse les design patterns utilisés."""
+        patterns_found = {}
+        
+        if target.is_file() and target.suffix == '.py':
+            try:
+                content = target.read_text(encoding='utf-8', errors='ignore')
+                
+                for pattern_name, pattern_regex in self.design_patterns.items():
+                    matches = re.findall(pattern_regex, content)
+                    if matches:
+                        patterns_found[pattern_name] = {
+                            "detected": True,
+                            "instances": len(matches),
+                            "examples": matches[:3]  # Premier 3 exemples
+                        }
+                    else:
+                        patterns_found[pattern_name] = {
+                            "detected": False,
+                            "instances": 0,
+                            "examples": []
+                        }
+                
+            except Exception as e:
+                patterns_found["analysis_error"] = f"Erreur analyse patterns: {e}"
+        
+        return {
+            "design_patterns": patterns_found,
+            "patterns_score": len([p for p in patterns_found.values() if isinstance(p, dict) and p.get("detected")])
+        }
+
+    async def _analyze_code_complexity(self, target: Path) -> Dict[str, Any]:
+        """Analyse la complexité du code."""
+        complexity_metrics = {
+            "functions": [],
+            "classes": [],
+            "overall_complexity": 0
+        }
+        
+        if target.is_file() and target.suffix == '.py':
+            try:
+                content = target.read_text(encoding='utf-8', errors='ignore')
+                
+                try:
+                    tree = ast.parse(content)
+                    
+                    # Analyse fonctions
+                    for node in ast.walk(tree):
+                        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                            complexity = self._calculate_cyclomatic_complexity(node)
+                            complexity_metrics["functions"].append({
+                                "name": node.name,
+                                "line": node.lineno,
+                                "complexity": complexity,
+                                "parameters": len(node.args.args),
+                                "is_complex": complexity > self.critical_metrics['cyclomatic_complexity']
+                            })
+                    
+                    # Analyse classes
+                    for node in ast.walk(tree):
+                        if isinstance(node, ast.ClassDef):
+                            methods = [n for n in node.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]
+                            class_complexity = sum(self._calculate_cyclomatic_complexity(m) for m in methods)
+                            complexity_metrics["classes"].append({
+                                "name": node.name,
+                                "line": node.lineno,
+                                "methods_count": len(methods),
+                                "total_complexity": class_complexity,
+                                "average_complexity": class_complexity / max(1, len(methods))
+                            })
+                    
+                    # Complexité globale
+                    total_complexity = sum(f["complexity"] for f in complexity_metrics["functions"])
+                    complexity_metrics["overall_complexity"] = total_complexity
+                
+                except SyntaxError:
+                    complexity_metrics["error"] = "Erreur syntaxe empêche analyse complexité"
+                
+            except Exception as e:
+                complexity_metrics["error"] = f"Erreur analyse complexité: {e}"
+        
+        return complexity_metrics
+
+    def _calculate_cyclomatic_complexity(self, node: ast.AST) -> int:
+        """Calcule la complexité cyclomatique d'un nœud AST."""
+        complexity = 1  # Base complexity
+        
+        for child in ast.walk(node):
+            if isinstance(child, (ast.If, ast.While, ast.For, ast.AsyncFor)):
+                complexity += 1
+            elif isinstance(child, ast.Try):
+                complexity += len(child.handlers)
+            elif isinstance(child, (ast.BoolOp, ast.Compare)):
+                complexity += 1
+        
+        return complexity
+
+    async def review_technique_complete(self, target_path: str) -> Dict[str, Any]:
+        """Review technique complète d'un projet ou fichier."""
+        self.logger.info(f"👨‍💻 Review technique complète: {target_path}")
+        
+        target = Path(target_path)
+        self.findings = []
+        
+        # Review selon le type de cible
+        if target.is_file():
+            await self._review_file_technique(str(target))
+        elif target.is_dir():
+            await self._review_project_technique(target)
+        
+        # Compilation du rapport
+        rapport = {
+            'review_id': f"TECH_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+            'target': target_path,
+            'timestamp': datetime.now().isoformat(),
+            'findings': [self._serialize_finding(finding) for finding in self.findings],
+            'technical_score': self._calculate_technical_score(),
+            'architecture_analysis': await self._analyze_architecture_patterns(target),
+            'security_analysis': await self._analyze_security_patterns(target),
+            'performance_analysis': await self._analyze_performance_patterns(target),
+            'recommendations': self._generate_technical_recommendations(),
+            'summary': self._generate_summary()
+        }
+        
+        await self._save_review_report(rapport)
+        return rapport
+
+    async def _review_project_technique(self, project_path: Path):
+        """Review technique d'un projet complet."""
+        
+        # Review tous les fichiers Python
+        for py_file in project_path.rglob('*.py'):
+            if not self._should_skip_file(py_file):
+                await self._review_file_technique(str(py_file))
+
+    async def _review_file_technique(self, file_path: str):
+        """Review technique d'un fichier."""
         try:
+            content = Path(file_path).read_text(encoding='utf-8', errors='ignore')
+            
+            if file_path.endswith('.py'):
+                await self._review_python_file(content, file_path)
+            
+        except Exception as e:
+            self.logger.error(f"Erreur review technique {file_path}: {e}")
+
+    async def _review_python_file(self, content: str, file_path: str):
+        """Review technique spécialisée Python."""
+        lines = content.split('\n')
+        
+        # Review ligne par ligne
+        for i, line in enumerate(lines):
+            line_num = i + 1
+            
+            # Détection code complexe
+            if len(line) > 120:
+                self.findings.append(ReviewFinding(
+                    finding_id=f"TECH_{uuid.uuid4().hex[:8]}",
+                    category=ReviewCategory.MAINTAINABILITY,
+                    severity=ReviewSeverity.LOW,
+                    title="Ligne trop longue",
+                    description=f"Ligne {line_num}: {len(line)} caractères (> 120)",
+                    location=file_path,
+                    line_number=line_num,
+                    recommendation="Diviser la ligne ou refactoriser",
+                    code_snippet=line.strip(),
+                    impact="Lisibilité réduite"
+                ))
+
+    def _should_skip_file(self, file_path: Path) -> bool:
+        """Détermine si un fichier doit être ignoré."""
+        skip_patterns = [
+            '__pycache__', '.git', '.pytest_cache', 
+            'node_modules', '.venv', 'venv', 'build', 'dist'
+        ]
+        
+        return any(pattern in str(file_path) for pattern in skip_patterns)
+
+    def _calculate_technical_score(self) -> float:
+        """Calcule le score technique global (0-10)."""
+        if not self.findings:
+            return 10.0
+        
+        # Pondération par sévérité
+        weights = {
+            ReviewSeverity.CRITICAL: 3.0,
+            ReviewSeverity.HIGH: 2.0,
+            ReviewSeverity.MEDIUM: 1.0,
+            ReviewSeverity.LOW: 0.5,
+            ReviewSeverity.INFO: 0.1
+        }
+        
+        total_penalty = sum(weights.get(finding.severity, 1.0) for finding in self.findings)
+        score = max(0.0, 10.0 - (total_penalty * 0.3))
+        
+        return round(score, 2)
+
+    def _group_findings_by_severity(self) -> Dict[str, int]:
+        """Groupe les findings par sévérité."""
+        return {
+            "critical": len([f for f in self.findings if f.severity == ReviewSeverity.CRITICAL]),
+            "high": len([f for f in self.findings if f.severity == ReviewSeverity.HIGH]),
+            "medium": len([f for f in self.findings if f.severity == ReviewSeverity.MEDIUM]),
+            "low": len([f for f in self.findings if f.severity == ReviewSeverity.LOW]),
+            "info": len([f for f in self.findings if f.severity == ReviewSeverity.INFO])
+        }
+
+    def _group_findings_by_category(self) -> Dict[str, int]:
+        """Groupe les findings par catégorie."""
+        categories = {}
+        for category in ReviewCategory:
+            categories[category.value] = len([f for f in self.findings if f.category == category])
+        return categories
+
+    def _generate_technical_recommendations(self) -> List[str]:
+        """Génère des recommandations techniques."""
+        recommendations = []
+        
+        critical_findings = [f for f in self.findings if f.severity == ReviewSeverity.CRITICAL]
+        high_findings = [f for f in self.findings if f.severity == ReviewSeverity.HIGH]
+        
+        if critical_findings:
+            recommendations.append("CRITIQUE: Résoudre immédiatement les findings critiques de review.")
+        
+        if high_findings:
+            recommendations.append("IMPORTANT: Traiter les findings haute priorité.")
+        
+        # Recommandations par catégorie
+        security_findings = [f for f in self.findings if f.category == ReviewCategory.SECURITY]
+        if security_findings:
+            recommendations.append("Renforcer la sécurité selon les findings détectés.")
+        
+        performance_findings = [f for f in self.findings if f.category == ReviewCategory.PERFORMANCE]
+        if performance_findings:
+            recommendations.append("Optimiser les performances selon l'analyse.")
+        
+        return recommendations
+
+    def _generate_summary(self) -> Dict[str, int]:
+        """Génère un résumé des findings."""
+        summary = {severity.value: 0 for severity in ReviewSeverity}
+        
+        for finding in self.findings:
+            summary[finding.severity.value] += 1
+        
+        summary['total'] = len(self.findings)
+        return summary
+
+    def _serialize_finding(self, finding: ReviewFinding) -> Dict[str, Any]:
+        """Sérialise un finding en dictionnaire."""
+        return {
+            "finding_id": finding.finding_id,
+            "category": finding.category.value,
+            "severity": finding.severity.value,
+            "title": finding.title,
+            "description": finding.description,
+            "location": finding.location,
+            "line_number": finding.line_number,
+            "recommendation": finding.recommendation,
+            "code_snippet": finding.code_snippet,
+            "impact": finding.impact
+        }
+
+    async def _save_review_report(self, rapport: Dict[str, Any]):
+        """Sauvegarde le rapport de review."""
+        try:
+            reports_dir = Path("reports")
+            reports_dir.mkdir(exist_ok=True)
+            
+            # Nom de fichier avec timestamp
+            filename = f"agent_17_technical_review_{rapport['review_id']}.json"
+            report_path = reports_dir / filename
+            
+            # Sauvegarde JSON
             with open(report_path, 'w', encoding='utf-8') as f:
-                f.write(report_content)
-            self.logger.info(f"✅ Rapport technique généré : {report_path}")
+                json.dump(rapport, f, indent=2, ensure_ascii=False, default=str)
+            
+            self.logger.info(f"📄 Rapport de review technique sauvegardé: {report_path}")
+            
         except Exception as e:
-            self.logger.error(f"Impossible de sauvegarder le rapport: {e}", exc_info=True)
-            return None
-        
-        return str(report_path)
-    
-    def _calculate_technical_metrics(self) -> Dict[str, Any]:
-        """Calcul métriques de review techniques finales"""
-        end_time = datetime.now()
-        duration = (end_time - self.review_metrics["start_time"]).total_seconds()
-        
-        # Score qualité global technique
-        quality_score = 9.2
-        
+            self.logger.error(f"Erreur sauvegarde rapport review: {e}")
+
+    async def startup(self) -> bool:
+        """Démarrage de l'agent (Pattern Factory)."""
+        try:
+            self.logger.info(f"🚀 Démarrage Agent {self.agent_id} - Peer Reviewer Technique")
+            # Initialisation des ressources si nécessaire
+            return True
+        except Exception as e:
+            self.logger.error(f"Erreur démarrage Agent {self.agent_id}: {e}")
+            return False
+
+    async def shutdown(self) -> bool:
+        """Arrêt de l'agent (Pattern Factory)."""
+        try:
+            self.logger.info(f"🔌 Arrêt Agent {self.agent_id} - Peer Reviewer Technique")
+            # Nettoyage des ressources si nécessaire
+            return True
+        except Exception as e:
+            self.logger.error(f"Erreur arrêt Agent {self.agent_id}: {e}")
+            return False
+
+    async def health_check(self) -> Dict[str, Any]:
+        """Vérification de l'état de l'agent (Pattern Factory)."""
         return {
-            "duration_seconds": round(duration, 2),
-            "lines_reviewed": self.review_metrics["lines_reviewed"],
-            "files_analyzed": self.review_metrics["files_analyzed"],
-            "security_checks": self.review_metrics["security_checks"],
-            "performance_validations": self.review_metrics["performance_validations"],
-            "technical_quality": f"{quality_score}/10",
-            "review_rating": "⚡ EXCEPTIONNEL" if quality_score >= 9 else "✅ EXCELLENT",
-            "certification_status": "✅ CERTIFIÉ NIVEAU ENTREPRISE"
+            "agent_id": self.agent_id,
+            "status": "healthy",
+            "specialite": self.specialite,
+            "capabilities": self.get_capabilities(),
+            "timestamp": datetime.now().isoformat()
         }
 
-def main():
-    """Fonction principale d'exécution de l'Agent 17"""
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    print("🔍 Agent 17 - Peer Reviewer Technique - DÉMARRAGE")
-    
-    # Initialiser agent
-    agent = Agent17PeerReviewerTechnique()
-    
-    # Exécuter mission review
-    results = agent.run_technical_review_mission()
-    
-    # Afficher résultats
-    print(f"\n📋 MISSION {results.get('status', 'INCONNU')}")
-    if "certification" in results:
-        print(f"🎯 Certification: {results['certification']}")
-    
-    if "performance" in results:
-        perf = results["performance"]
-        print(f"⏱️ Durée: {perf.get('duration_seconds')}s")
-        print(f"📝 Lignes analysées: {perf.get('lines_reviewed')}")
-        print(f"📁 Fichiers analysés: {perf.get('files_analyzed')}")
-        print(f"🏆 Qualité technique: {perf.get('technical_quality')}")
-        print(f"⚡ Rating: {perf.get('review_rating')}")
-        print(f"✅ Certification: {perf.get('certification_status')}")
-    
-    if "final_report" in results:
-        print(f"\n📄 Rapport technique généré: {results['final_report']}")
-    
-    print("✅ Agent 17 - Review Technique terminée avec succès")
+    def get_capabilities(self) -> List[str]:
+        """Retourne les capacités de l'agent (Pattern Factory)."""
+        return [
+            "review_technique_complete",
+            "audit_universel_module",
+            "analyse_architecture_patterns",
+            "validation_securite_code",
+            "analyse_performance_patterns",
+            "evaluation_qualite_code",
+            "detection_design_patterns",
+            "analyse_complexite_cyclomatique",
+            "generation_rapports_review",
+            "recommandations_techniques",
+            "scoring_technique_global"
+        ]
 
+
+# Factory function pour créer l'agent
+def create_agent_17_peer_reviewer_technique(**config) -> Agent17PeerReviewerTechnique:
+    """Factory function pour créer une instance de l'Agent 17."""
+    return Agent17PeerReviewerTechnique(**config)
+
+
+# Point d'entrée CLI pour tests
 if __name__ == "__main__":
-    main()
+    async def test_agent_cli():
+        """Test CLI de l'agent."""
+        print("🧪 Test Agent 17 - Peer Reviewer Technique")
+        
+        # Création agent
+        agent = create_agent_17_peer_reviewer_technique()
+        
+        # Test démarrage
+        if not await agent.startup():
+            print("❌ Échec démarrage agent")
+            return
+        
+        print(f"✅ Agent {agent.agent_id} démarré avec succès")
+        print(f"👨‍💻 Spécialité: {agent.specialite}")
+        print(f"🎯 Mission: {agent.mission}")
+        
+        # Test health check
+        health = await agent.health_check()
+        print(f"💚 Santé agent: {health['status']}")
+        
+        # Test capacités
+        capabilities = agent.get_capabilities()
+        print(f"🔧 Capacités ({len(capabilities)}):")
+        for cap in capabilities:
+            print(f"  - {cap}")
+        
+        # Test audit universel sur lui-même
+        print("\n🔍 Test audit universel sur agent_17_peer_reviewer_technique.py...")
+        
+        current_file = __file__
+        audit_task = Task(
+            type="audit_module",
+            params={"module_path": current_file}
+        )
+        
+        result = await agent.execute_task(audit_task)
+        
+        if result.success:
+            print("✅ Audit universel réussi!")
+            report = result.data
+            print(f"📊 Score technique: {report.get('technical_score', 'N/A')}/10")
+            print(f"🔍 Findings détectés: {report.get('total_findings', 0)}")
+            
+            if 'executive_summary' in report:
+                summary = report['executive_summary']
+                print(f"📈 Pourcentage qualité: {summary.get('review_quality_percentage', 0):.1f}%")
+                print(f"⚠️  Findings critiques: {summary.get('critical_findings', 0)}")
+            
+            print("\n📋 Recommandations:")
+            for rec in report.get('recommendations', []):
+                print(f"  - {rec}")
+        else:
+            print(f"❌ Échec audit: {result.error}")
+        
+        # Test review technique complète
+        print("\n👨‍💻 Test review technique du fichier actuel...")
+        
+        review_task = Task(
+            type="technical_review",
+            params={"target_path": current_file}
+        )
+        
+        result = await agent.execute_task(review_task)
+        
+        if result.success:
+            print("✅ Review technique réussie!")
+            report = result.data
+            print(f"📊 Score technique: {report.get('technical_score', 'N/A')}/10")
+            print(f"🔍 Findings détectés: {report.get('summary', {}).get('total', 0)}")
+        else:
+            print(f"❌ Échec review technique: {result.error}")
+        
+        # Test arrêt
+        if await agent.shutdown():
+            print("✅ Agent arrêté proprement")
+        else:
+            print("⚠️  Problème lors de l'arrêt")
+    
+    # Exécution du test
+    asyncio.run(test_agent_cli())
