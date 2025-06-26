@@ -221,42 +221,47 @@ class Agent01CoordinateurPrincipal(Agent):
         }
 
     async def execute_task(self, task: Task) -> Result:
-        self.logger.info(f"Tâche reçue: {task.task_id} - {task.description}")
-        if task.description == "EVALUER_PROGRESSION_SPRINT_3":
+        """Exécute une tâche spécifique."""
+        if task.name == "GENERATE_STRATEGIC_REPORT":
+            try:
+                # Extraire les paramètres de la tâche
+                context = getattr(task, 'context', {})
+                type_rapport = getattr(task, 'type_rapport', 'global')
+                format_sortie = getattr(task, 'format_sortie', 'json') # 'json' ou 'markdown'
+
+                rapport = await self.generer_rapport_strategique(context, type_rapport)
+
+                # Génération format markdown si demandé
+                if format_sortie == 'markdown':
+                    rapport_md = await self.generer_rapport_markdown(rapport, type_rapport, context)
+
+                    # Sauvegarde dans /reports/agent_id/
+                    # Utiliser self.id ou self.agent_id si disponible et correct, sinon hardcoder le nom.
+                    # Pour cet agent, self.id est "agent_01_coordinateur_principal"
+                    agent_specific_reports_dir = Path("/mnt/c/Dev/nextgeneration/reports") / self.id
+                    agent_specific_reports_dir.mkdir(parents=True, exist_ok=True)
+
+                    timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
+                    # Le nom de l'agent est déjà dans le nom du répertoire, on peut le simplifier ici.
+                    filename = f"strategic_report_{type_rapport}_{timestamp}.md"
+                    filepath = agent_specific_reports_dir / filename
+
+                    with open(filepath, 'w', encoding='utf-8') as f:
+                        f.write(rapport_md)
+
+                    return Result(success=True, data={
+                        'rapport_json': rapport, 
+                        'rapport_markdown': rapport_md,
+                        'fichier_sauvegarde': str(filepath) # Convertir Path en str
+                    })
+
+                return Result(success=True, data=rapport)
+            except Exception as e:
+                self.logger.error(f"Erreur lors de la génération du rapport: {e}")
+                return Result(success=False, error=str(e))
+        elif task.description == "EVALUER_PROGRESSION_SPRINT_3":
             metrics = await self.evaluer_progression_sprint3()
             return Result(success=True, data=metrics)
-        elif task.description == "GENERATE_STRATEGIC_REPORT":
-            # Extraire les paramètres de la tâche
-            context = getattr(task, 'context', {})
-            type_rapport = getattr(task, 'type_rapport', 'global')
-            format_sortie = getattr(task, 'format_sortie', 'json')  # 'json' ou 'markdown'
-            
-            rapport = await self.generer_rapport_strategique(context, type_rapport)
-            
-            # Génération format markdown si demandé
-            if format_sortie == 'markdown':
-                rapport_md = await self.generer_rapport_markdown(rapport, type_rapport, context)
-                
-                # Sauvegarde dans /reports/
-                import os
-                from datetime import datetime
-                reports_dir = "/mnt/c/Dev/nextgeneration/reports"
-                os.makedirs(reports_dir, exist_ok=True)
-                
-                timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
-                filename = f"strategic_report_agent_01_coordinateur_{type_rapport}_{timestamp}.md"
-                filepath = os.path.join(reports_dir, filename)
-                
-                with open(filepath, 'w', encoding='utf-8') as f:
-                    f.write(rapport_md)
-                
-                return Result(success=True, data={
-                    'rapport_json': rapport, 
-                    'rapport_markdown': rapport_md,
-                    'fichier_sauvegarde': filepath
-                })
-            
-            return Result(success=True, data=rapport)
         else:
             return Result(success=False, error="Tâche non reconnue")
 
@@ -753,9 +758,27 @@ class Agent01CoordinateurPrincipal(Agent):
         self.logger.info(f"Agent {self.agent_id} arrêté.")
 
     async def health_check(self) -> Dict[str, Any]:
-        return {"status": "healthy", "sprint_actuel": self.sprint_actuel}
+        """Vérifie la santé de l'agent."""
+        status = "healthy" if self.status == "operational" else "unhealthy"
+        return {"status": status, "agent_id": self.agent_id, "version": self.version}
 
+    async def run(self):
+        """Boucle d'exécution principale de l'agent."""
+        self.logger.info(f"👑 Agent {self.agent_id} DÉMARRAGE de la boucle d'exécution.")
+        await self.startup()
+        try:
+            # Simuler une exécution continue ou attendre des tâches
+            while True:
+                await asyncio.sleep(1) # Attendre 1 seconde pour éviter une boucle serrée
+                # Ici, on pourrait ajouter la logique pour vérifier les nouvelles tâches ou les événements
+                # Par exemple, si l'agent attend des messages via une queue ou un événement.
+        except asyncio.CancelledError:
+            self.logger.info(f"👑 Agent {self.agent_id} boucle d'exécution annulée.")
+        finally:
+            await self.shutdown()
+        self.logger.info(f"👑 Agent {self.agent_id} ARRÊT de la boucle d'exécution.")
 
 def create_agent_01_coordinateur_principal(**config) -> "Agent01CoordinateurPrincipal":
-    """Factory function pour créer l'agent."""
-    return Agent01CoordinateurPrincipal(**config)
+    # Assurer que le logger est passé à l'instance de l'agent
+    agent_instance = Agent01CoordinateurPrincipal(logger=logging_manager.get_logger(), **config)
+    return agent_instance

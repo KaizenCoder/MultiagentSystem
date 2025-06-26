@@ -20,15 +20,42 @@ Responsabilités :
 import asyncio
 import sys
 from pathlib import Path
-from core import logging_manager
 from datetime import datetime
 from typing import Dict, List, Optional, Any
-from pathlib import Path
 import json
-import sys
 from dataclasses import dataclass
 from enum import Enum
 import logging
+
+# Import Pattern Factory (OBLIGATOIRE)
+try:
+    from core.agent_factory_architecture import Agent, Task, Result
+    PATTERN_FACTORY_AVAILABLE = True
+except ImportError:
+    print("⚠️ Pattern Factory non disponible. Utilisation des classes de fallback.")
+    PATTERN_FACTORY_AVAILABLE = False
+    
+    class Agent:
+        def __init__(self, agent_type: str, **config):
+            self.agent_id = f"fallback_{agent_type}"
+            self.agent_type = agent_type
+            self.logger = logging.getLogger(self.agent_id)
+        async def startup(self): pass
+        async def shutdown(self): pass
+        async def health_check(self): return {"status": "healthy"}
+        def get_capabilities(self): return []
+
+    class Task:
+        def __init__(self, task_id: str, description: str, **kwargs):
+            self.task_id = task_id
+            self.description = description
+            self.data = kwargs
+
+    class Result:
+        def __init__(self, success: bool, data: Any = None, error: str = None):
+            self.success = success
+            self.data = data
+            self.error = error
 
 # Import des agents auditeurs
 sys.path.insert(0, str(Path(__file__).parent))
@@ -67,15 +94,16 @@ class AuditTask:
     status: str
     result: Optional[Dict[str, Any]] = None
 
-class AgentOrchestrateurAudit:
+class AgentOrchestrateurAudit(Agent):
     """
-    🎯 Agent Orchestrateur Audit
+    🎯 Agent Orchestrateur Audit - Pattern Factory Compliant
     
     Coordonne l'équipe complète d'agents auditeurs spécialisés
     pour des audits complets et coordonnés
     """
     
-    def __init__(self, workspace_root: Path = None):
+    def __init__(self, workspace_root: Path = None, **config):
+        super().__init__(agent_type="orchestrateur_audit", **config)
         self.agent_id = "ORCHESTRATEUR_AUDIT"
         self.specialite = "Orchestration Audit Multi-Agents"
         self.workspace_root = workspace_root if workspace_root else Path(__file__).parent.parent
@@ -150,6 +178,97 @@ class AgentOrchestrateurAudit:
             logger.addHandler(console_handler)
             
         return logger
+
+    # === MÉTHODES PATTERN FACTORY OBLIGATOIRES ===
+    
+    async def startup(self) -> bool:
+        """Démarrage de l'orchestrateur audit"""
+        try:
+            self.logger.info("🚀 Démarrage Orchestrateur Audit")
+            await self._initialize_agents_async()
+            self.logger.info(f"✅ Orchestrateur audit démarré avec {len(self.agents)} agents")
+            return True
+        except Exception as e:
+            self.logger.error(f"❌ Erreur démarrage orchestrateur: {e}")
+            return False
+    
+    async def shutdown(self) -> bool:
+        """Arrêt de l'orchestrateur audit"""
+        try:
+            self.logger.info("🛑 Arrêt Orchestrateur Audit")
+            # Arrêt des agents si ils supportent shutdown
+            for agent_name, agent in self.agents.items():
+                if hasattr(agent, 'shutdown'):
+                    try:
+                        await agent.shutdown()
+                    except Exception as e:
+                        self.logger.warning(f"⚠️ Erreur arrêt agent {agent_name}: {e}")
+            self.logger.info("✅ Orchestrateur audit arrêté")
+            return True
+        except Exception as e:
+            self.logger.error(f"❌ Erreur arrêt orchestrateur: {e}")
+            return False
+    
+    async def health_check(self) -> Dict[str, Any]:
+        """Vérification de l'état de l'orchestrateur"""
+        return {
+            "status": "healthy",
+            "agent_id": self.agent_id,
+            "specialite": self.specialite,
+            "agents_disponibles": len(self.agents),
+            "phase_actuelle": self.current_phase.value,
+            "timestamp": datetime.now().isoformat()
+        }
+    
+    def get_capabilities(self) -> List[str]:
+        """Liste des capacités de l'orchestrateur"""
+        return [
+            "orchestration_audit_multi_agents",
+            "coordination_agents_securite_performance_conformite",
+            "execution_audits_paralleles",
+            "consolidation_rapports_audit",
+            "generation_rapport_executif",
+            "priorisation_actions_correctives",
+            "suivi_ameliorations"
+        ]
+    
+    async def execute_task(self, task: Task) -> Result:
+        """Exécution d'une tâche d'orchestration d'audit"""
+        try:
+            self.logger.info(f"🎯 Exécution tâche: {task.task_id}")
+            
+            if hasattr(task, 'description') and 'audit_complet' in task.description:
+                # Tâche d'audit complet
+                targets = task.data.get('targets', [])
+                if not targets:
+                    return Result(success=False, error="Aucune cible d'audit spécifiée")
+                
+                rapport = await self.executer_audit_complet(targets)
+                
+                return Result(success=True, data={
+                    "type": "audit_complet",
+                    "rapport": rapport,
+                    "targets": targets,
+                    "agents_utilises": len(self.agents)
+                })
+            
+            else:
+                return Result(success=False, error=f"Type de tâche non supporté: {task.description}")
+                
+        except Exception as e:
+            self.logger.error(f"❌ Erreur exécution tâche: {e}")
+            return Result(success=False, error=str(e))
+    
+    async def _initialize_agents_async(self):
+        """Initialisation asynchrone des agents"""
+        # Initialisation des agents disponibles avec gestion async
+        for agent_name, agent in self.agents.items():
+            if hasattr(agent, 'startup'):
+                try:
+                    await agent.startup()
+                    self.logger.info(f"✅ Agent {agent_name} initialisé")
+                except Exception as e:
+                    self.logger.warning(f"⚠️ Erreur initialisation agent {agent_name}: {e}")
 
     async def executer_audit_complet(self, targets: List[str]) -> Dict[str, Any]:
         """
@@ -625,6 +744,11 @@ async def main():
         
     except Exception as e:
     print(f"❌ Erreur durant l'audit: {e}")
+
+# === FACTORY FUNCTION PATTERN FACTORY ===
+def create_agent(**kwargs) -> AgentOrchestrateurAudit:
+    """Fonction factory pour créer une instance de l'orchestrateur audit"""
+    return AgentOrchestrateurAudit(**kwargs)
 
 if __name__ == "__main__":
     asyncio.run(main()) 

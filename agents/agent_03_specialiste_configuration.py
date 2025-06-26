@@ -25,6 +25,7 @@ from typing import Dict, Any, Optional, List
 from datetime import datetime
 import json
 import logging
+import asyncio
 
 # --- Configuration Robuste du Chemin d'Importation ---
 try:
@@ -403,7 +404,26 @@ Pour modifier la composition de l'équipe, ré-exécutez la mission de l'Agent 0
         pass
 
     async def health_check(self) -> Dict[str, Any]:
-        return {"status": "healthy", "agent_id": self.agent_id}
+        """Vérifie la santé de l'agent."""
+        status = "healthy" if self.mission_status == "COMPLETED" else "unhealthy"
+        return {"status": status, "agent_id": self.agent_id, "version": self.version}
+
+    async def run(self):
+        """Boucle d'exécution principale de l'agent."""
+        self.log(f"[START] Agent {self.agent_id} DÉMARRAGE de la boucle d'exécution.")
+        await self.startup()
+        try:
+            # Simuler une exécution continue ou attendre des tâches
+            while True:
+                # L'agent de configuration pourrait écouter des demandes de rechargement de config
+                # Ou simplement exécuter sa mission de génération de config une fois et se terminer.
+                # Pour l'instant, une simple attente.
+                await asyncio.sleep(1) # Attendre 1 seconde pour éviter une boucle serrée
+        except asyncio.CancelledError:
+            self.log(f"[STOP] Agent {self.agent_id} boucle d'exécution annulée.")
+        finally:
+            await self.shutdown()
+        self.log(f"[END] Agent {self.agent_id} ARRÊT de la boucle d'exécution.")
 
     # === MISSION IA 2: GÉNÉRATION DE RAPPORTS STRATÉGIQUES ===
     
@@ -757,56 +777,58 @@ Aucun issue critique détecté - Configuration système excellente.
         
         return md_content
 
-    async def execute_task(self, task: Any) -> Any:
-        self.log(f"Tâche reçue : {getattr(task, 'id', 'N/A')}")
-        
-        # Support pour génération de rapports stratégiques - Mission IA 2
-        if hasattr(task, 'name') and task.name == "generate_strategic_report":
+    async def execute_task(self, task: Task) -> Result:
+        """Exécute une tâche spécifique."""
+        if task.name == "generate_strategic_report":
             try:
                 context = getattr(task, 'context', {})
-                type_rapport = getattr(task, 'type_rapport', 'configuration')
+                type_rapport = getattr(task, 'type_rapport', 'global_config')
                 format_sortie = getattr(task, 'format_sortie', 'json')
-                
-                rapport = await self.generer_rapport_strategique(context, type_rapport)
-                
+
+                rapport_json = await self.generer_rapport_strategique(context, type_rapport)
+
                 if format_sortie == 'markdown':
-                    rapport_md = await self.generer_rapport_markdown(rapport, type_rapport, context)
+                    rapport_md = await self.generer_rapport_markdown(rapport_json, type_rapport, context)
                     
-                    # Sauvegarde dans /reports/
-                    import os
-                    from datetime import datetime
-                    reports_dir = "/mnt/c/Dev/nextgeneration/reports"
-                    os.makedirs(reports_dir, exist_ok=True)
+                    # Standardisation de la sauvegarde des rapports Markdown
+                    # Utiliser self.id qui est défini dans __init__
+                    # Et récupérer le chemin de base des rapports depuis la config de l'agent
+                    base_reports_dir = Path(self.config.get("paths", {}).get("reports_path", "/mnt/c/Dev/nextgeneration/reports"))
+                    agent_specific_reports_dir = base_reports_dir / self.id
+                    agent_specific_reports_dir.mkdir(parents=True, exist_ok=True)
                     
-                    timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
-                    filename = f"strategic_report_agent_03_configuration_{type_rapport}_{timestamp}.md"
-                    filepath = os.path.join(reports_dir, filename)
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    # Nom de fichier simplifié car l'ID de l'agent est dans le nom du répertoire
+                    filename = f"strategic_report_{type_rapport}_{timestamp}.md"
+                    filepath = agent_specific_reports_dir / filename
                     
                     with open(filepath, 'w', encoding='utf-8') as f:
                         f.write(rapport_md)
                     
                     return Result(success=True, data={
-                        'rapport_json': rapport, 
+                        'rapport_json': rapport_json,
                         'rapport_markdown': rapport_md,
-                        'fichier_sauvegarde': filepath
+                        'fichier_sauvegarde': str(filepath) # Convertir Path en str
                     })
                 
-                return Result(success=True, data=rapport)
+                return Result(success=True, data=rapport_json)
             except Exception as e:
                 self.log(f"Erreur génération rapport stratégique: {e}", level="critical")
                 return Result(success=False, error=f"Exception rapport: {str(e)}")
         
-        # Tâche de configuration originale
+        # Tâche de configuration originale (mission principale de l'agent)
         elif hasattr(task, 'type') and task.type == "generate_maintenance_config":
-            success = self.execute_mission()
+            # Note: execute_mission et generate_agent_03_report sont synchrones
+            success = self.execute_mission() 
             
             if success:
-                report = self.generate_agent_03_report()
-                return Result(success=True, data={"report_summary": report, "config_file": str(self.config_file_path)})
+                report_summary = self.generate_agent_03_report()
+                return Result(success=True, data={"report_summary": report_summary, "config_file": str(self.config_file_path)})
             else:
                 return Result(success=False, error=f"Échec de la mission. Statut: {self.mission_status}")
         else:
-            error_msg = "Type de tâche non supporté. Attendu: 'generate_maintenance_config' ou 'generate_strategic_report'"
+            # Conserver la gestion des tâches non supportées
+            error_msg = f"Type de tâche non supporté: {getattr(task, 'name', 'N/A')} / {getattr(task, 'type', 'N/A')}. Attendu: 'generate_strategic_report' (via task.name) ou 'generate_maintenance_config' (via task.type)"
             self.log(error_msg, level="warning")
             return Result(success=False, error=error_msg)
 
@@ -815,7 +837,8 @@ Aucun issue critique détecté - Configuration système excellente.
 
 def create_agent_03_specialiste_configuration(**config) -> "Agent03SpecialisteConfiguration":
     # La nouvelle signature de __init__ gère le type par défaut.
-    return Agent03SpecialisteConfiguration(**config)
+    agent_instance = Agent03SpecialisteConfiguration(logger=logging.getLogger("Agent03Logger"), **config) # Utiliser un nom de logger spécifique
+    return agent_instance
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')

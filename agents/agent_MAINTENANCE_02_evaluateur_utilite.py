@@ -7,7 +7,7 @@
 🏢 Équipe : NextGeneration Tools Migration
 
 Author: Équipe de Maintenance NextGeneration
-Version: 2.1.0
+Version: 2.2.0 - Harmonisation Standards Pattern Factory NextGeneration
 """
 import ast
 from pathlib import Path
@@ -17,8 +17,27 @@ import logging
 
 class AgentMAINTENANCE02EvaluateurUtilite(Agent):
     """
-    Évalue l'utilité d'un script Python en se basant sur une analyse statique
-    de son arbre syntaxique abstrait (AST).
+    ⚖️ Agent MAINTENANCE 02 - Évaluateur d'Utilité NextGeneration
+    
+    Agent spécialisé dans l'évaluation quantitative de la pertinence et de la qualité
+    fonctionnelle des scripts Python via analyse AST avancée avec système de scoring.
+    
+    Capacités principales :
+    - Évaluation quantitative par analyse AST (imports, classes, fonctions)
+    - Scoring heuristique basé sur complexité et structure du code
+    - Détection d'éléments obsolètes (fonctions/classes vides)
+    - Classification binaire utilité (score >= seuil configurable)
+    - Support fichiers individuels avec gestion erreurs syntaxiques
+    
+    Métriques de scoring :
+    - Imports : +1 point par import
+    - Classes : +10 points + longueur body
+    - Fonctions : +5 points + longueur body  
+    - Structures contrôle : +2 points (if/for/while/try)
+    - Bonus classe+fonction : +5 points
+    - Malus éléments vides : -5 points
+    
+    Conformité : Pattern Factory NextGeneration v2.2.0
     """
 
     def __init__(self, **kwargs):
@@ -102,7 +121,16 @@ class AgentMAINTENANCE02EvaluateurUtilite(Agent):
         pass
 
     def get_capabilities(self) -> List[str]:
-        return ["evaluate_utility", "ast_evaluation"]
+        """Retourne les capacités spécialisées de l'Évaluateur d'Utilité."""
+        return [
+            "evaluate_utility",
+            "ast_evaluation", 
+            "scoring_heuristique_code",
+            "detection_elements_obsoletes",
+            "classification_binaire_utilite",
+            "analyse_complexite_structurelle",
+            "gestion_erreurs_syntaxiques"
+        ]
 
     async def health_check(self) -> Dict[str, Any]:
         return {"status": "ok"}

@@ -17,6 +17,7 @@ from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
 import jwt
 import hvac
+import logging
 
 # --- Imports Core & Factory ---
 try:
@@ -81,16 +82,45 @@ class SecurityMetrics:
 class Agent04ExpertSecuriteCrypto(Agent):
     """🔒 Agent 04 - Expert Sécurité Cryptographique - v3.1"""
 
-    def __init__(self, **config):
+    def __init__(self, **config_params):
         """Initialise l'agent de sécurité."""
-        super().__init__("expert_securite_crypto", **config)
-        self.logging_manager = LoggingManager()
-        self.logger = self.logging_manager.get_logger("agent_securite")
-        self.version = "3.1.0"
-        self.name = "Expert Sécurité et Cryptographie"
-        self.logger.info(f"Agent {self.name} v{self.version} en cours d'initialisation.")
         
+        agent_id_arg = config_params.pop('id', 'expert_securite_crypto_default_id')
+        version_arg = config_params.pop('version', '3.1.0') 
+        description_arg = config_params.pop('description', "Expert Sécurité et Cryptographie")
+        agent_type_arg = config_params.pop('agent_type', 'expert_securite')
+        status_arg = config_params.pop('status', 'operational')
+        
+        super().__init__(
+            agent_id=agent_id_arg,
+            version=version_arg,
+            description=description_arg,
+            agent_type=agent_type_arg,
+            status=status_arg,
+            **config_params
+        )
+        
+        # Assurer la présence des attributs après l'appel à super()
+        self.version = version_arg
+        self.description = description_arg
+        # self.id est déjà défini par super()
+
+        if not hasattr(self, 'logger') or self.logger is None:
+            log_level_to_use = self.config.get('log_level_override', 'INFO').upper()
+            try:
+                current_logging_manager = LoggingManager()
+                # Obtenir le logger sans l'argument level
+                self.logger = current_logging_manager.get_logger(f"agent.{self.id}")
+                # Définir le niveau séparément
+                self.logger.setLevel(log_level_to_use)
+                self.logger.info(f"Logger pour {self.id} (Agent04) initialisé avec niveau {log_level_to_use}.")
+            except Exception as e_logger_init:
+                self.logger = logging.getLogger(f"agent.{self.id}_fallback")
+                self.logger.setLevel(log_level_to_use)
+                self.logger.error(f"Erreur init logger Agent04 via LoggingManager: {e_logger_init}. Utilisation fallback.")
+
         if not CONFIG_SYSTEM_AVAILABLE:
+            self.logger.critical("Le système de configuration centralisé n'est pas disponible.")
             raise RuntimeError("Le système de configuration centralisé n'est pas disponible.")
         
         self.maintenance_config = get_maintenance_config()
@@ -104,7 +134,7 @@ class Agent04ExpertSecuriteCrypto(Agent):
 
     async def startup(self):
         """Démarre l'agent et initialise les services externes comme Vault."""
-        self.logger.info(f"Démarrage de {self.name} v{self.version}")
+        self.logger.info(f"Démarrage de {self.description} v{self.version}")
         await super().startup()
 
         try:
@@ -113,7 +143,7 @@ class Agent04ExpertSecuriteCrypto(Agent):
             self.logger.warning(f"[VAULT] Impossible d'initialiser le client Vault : {e}. L'agent continuera sans les fonctionnalités de Vault.")
 
         self._generate_rsa_keys()
-        self.logger.info(f"{self.name} est maintenant actif.")
+        self.logger.info(f"{self.description} est maintenant actif.")
 
     async def _initialize_vault_client(self):
         """Initialise le client Vault de manière asynchrone."""
@@ -537,50 +567,74 @@ class Agent04ExpertSecuriteCrypto(Agent):
         return md_content
 
     async def execute_task(self, task: Task) -> Result:
-        """Exécute une tâche de sécurité."""
-        
-        # Support pour génération de rapports stratégiques sécurisés - Mission IA 2
-        if hasattr(task, 'name') and task.name == "generate_strategic_report":
+        """Exécute une tâche spécifique."""
+        self.logger.debug(f"Agent {self.id} - execute_task reçue: {task.name}") # Log de niveau agent
+        if task.name == "generate_security_report":
             try:
                 context = getattr(task, 'context', {})
-                type_rapport = getattr(task, 'type_rapport', 'securite')
+                type_rapport = getattr(task, 'type_rapport', 'global_security') # Default type
                 format_sortie = getattr(task, 'format_sortie', 'json')
                 
-                rapport = await self.generer_rapport_strategique(context, type_rapport)
+                self.logger.debug(f"Début génération rapport de sécurité. Type: {type_rapport}, Format: {format_sortie}")
+
+                # Générer le rapport JSON (qui inclut la signature si applicable)
+                rapport_json_signed = await self.generer_rapport_strategique(context, type_rapport)
                 
                 if format_sortie == 'markdown':
-                    rapport_md = await self.generer_rapport_markdown(rapport, type_rapport, context)
+                    self.logger.debug("Format Markdown demandé. Génération du MD...")
+                    rapport_data_for_md = rapport_json_signed.get("rapport", rapport_json_signed)
+                    rapport_md = await self.generer_rapport_markdown(rapport_data_for_md, type_rapport, context)
                     
-                    # Sauvegarde sécurisée dans /reports/
-                    import os
-                    from datetime import datetime
-                    reports_dir = "/mnt/c/Dev/nextgeneration/reports"
-                    os.makedirs(reports_dir, exist_ok=True)
+                    base_reports_dir = Path(self.config.get("paths", {}).get("reports_path", "/mnt/c/Dev/nextgeneration/reports"))
+                    agent_specific_reports_dir = base_reports_dir / self.id
                     
-                    timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
-                    filename = f"strategic_report_agent_04_securite_{type_rapport}_{timestamp}.md"
-                    filepath = os.path.join(reports_dir, filename)
+                    self.logger.debug(f"Chemin de base des rapports: {base_reports_dir}")
+                    self.logger.debug(f"Chemin spécifique agent pour rapports: {agent_specific_reports_dir}")
+
+                    try:
+                        agent_specific_reports_dir.mkdir(parents=True, exist_ok=True)
+                        self.logger.debug(f"Répertoire {agent_specific_reports_dir} créé/vérifié.")
+                    except Exception as e_mkdir:
+                        self.logger.error(f"Erreur lors de la création de {agent_specific_reports_dir}: {e_mkdir}", exc_info=True)
+                        # Continuer sans sauvegarde MD si la création du répertoire échoue, mais logguer l'erreur
+                        return Result(success=False, error=f"Erreur création répertoire rapport: {str(e_mkdir)}")
+
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    filename = f"security_report_{type_rapport}_{timestamp}.md"
+                    filepath = agent_specific_reports_dir / filename
+                    self.logger.debug(f"Chemin complet du fichier rapport MD: {filepath}")
                     
-                    with open(filepath, 'w', encoding='utf-8') as f:
-                        f.write(rapport_md)
+                    try:
+                        with open(filepath, 'w', encoding='utf-8') as f:
+                            f.write(rapport_md)
+                        self.logger.info(f"Rapport Markdown sauvegardé avec succès : {filepath}")
+                    except Exception as e_write:
+                        self.logger.error(f"Erreur lors de l'écriture du fichier {filepath}: {e_write}", exc_info=True)
+                        return Result(success=False, error=f"Erreur écriture fichier rapport: {str(e_write)}")
                     
                     return Result(success=True, data={
-                        'rapport_json': rapport, 
+                        'rapport_json_signed': rapport_json_signed,
                         'rapport_markdown': rapport_md,
-                        'fichier_sauvegarde': filepath,
-                        'security_signature': True  # Rapport sécurisé signé
+                        'fichier_sauvegarde_md': str(filepath)
                     })
                 
-                return Result(success=True, data=rapport)
+                self.logger.debug("Format JSON demandé (ou défaut). Retour du rapport JSON signé.")
+                return Result(success=True, data=rapport_json_signed)
             except Exception as e:
-                self.logger.error(f"Erreur génération rapport sécurisé: {e}")
+                self.logger.error(f"Erreur génération rapport de sécurité: {e}", level="critical", exc_info=True)
                 return Result(success=False, error=f"Exception rapport sécurité: {str(e)}")
-        
-        # Tâches sécuritaires originales
-        else:
-            # This agent is not designed to be called directly by the coordinator in this way yet.
-            # Its methods would be called by other agents requiring security services.
-            return Result(success=True, data={"message": "Agent de sécurité est en attente de tâches spécifiques."})
+        elif task.name == "perform_security_audit":
+            # Logique pour perform_security_audit (si elle existe et est différente)
+            # Pour l'instant, on assume que c'est géré ailleurs ou non pertinent pour la sauvegarde des rapports MD
+            pass # Placeholder si cette tâche doit être gérée différemment
+
+        # Gérer les autres tâches spécifiques à l'Agent 04 si nécessaire
+        # Par exemple, si l'agent a une mission principale déclenchée par un autre nom de tâche.
+        # La structure actuelle de l'agent (basée sur le __main__) exécute self.run_full_mission()
+        # qui ne semble pas être une "tâche" au sens de execute_task ici.
+
+        # Fallback pour tâches non reconnues ou si la structure est différente
+        return await super().execute_task(task) # Ou une gestion d'erreur plus spécifique
 
     def _sign_data(self, data: bytes) -> Optional[bytes]:
         """Signe des données avec la clé privée RSA."""
@@ -650,7 +704,7 @@ class Agent04ExpertSecuriteCrypto(Agent):
     
     async def shutdown(self):
         """Arrête l'agent proprement."""
-        self.logger.info(f"🛑 Agent {self.id} ({self.name}) arrêté.")
+        self.logger.info(f"🛑 Agent {self.id} ({self.description}) arrêté.")
         self.status = "ARRETE"
         await super().shutdown()
 
@@ -668,7 +722,7 @@ class Agent04ExpertSecuriteCrypto(Agent):
     def get_capabilities(self) -> Dict[str, Any]:
         """Retourne les capacités de l'agent."""
         return {
-            "name": self.name,
+            "name": self.description,
             "version": self.version,
             "mission": "Fournir des services cryptographiques (signature, chiffrement, JWT) et interagir avec Vault.",
             "tasks": [
@@ -691,15 +745,105 @@ class Agent04ExpertSecuriteCrypto(Agent):
             ]
         }
 
+    async def run(self):
+        """Boucle d'exécution principale de l'agent de sécurité."""
+        self.logger.info(f"🔒 Agent {self.agent_id} DÉMARRAGE de la boucle d'exécution.")
+        await self.startup()
+        try:
+            while True:
+                await asyncio.sleep(1)
+                # Ici, on pourrait ajouter la logique de surveillance ou de traitement d'événements sécurité
+        except asyncio.CancelledError:
+            self.logger.info(f"🔒 Agent {self.agent_id} boucle d'exécution annulée.")
+        finally:
+            await self.shutdown()
+        self.logger.info(f"🔒 Agent {self.agent_id} ARRÊT de la boucle d'exécution.")
+
 def create_agent_04_expert_securite_crypto(**kwargs) -> Agent04ExpertSecuriteCrypto:
     return Agent04ExpertSecuriteCrypto(**kwargs)
 
 if __name__ == '__main__':
     async def main():
         # Test d'exécution standalone
-        agent = create_agent_04_expert_securite_crypto()
-        await agent.startup()
-        print(f"Statut de l'agent: {agent.status}")
-        await agent.shutdown()
+        # Configuration du logging spécifique pour ce test
+        logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        logger = logging.getLogger("test_main_agent04")
+        logger.setLevel(logging.DEBUG) # Forcer le niveau DEBUG pour ce logger
+
+        logger.info("--- DÉMARRAGE TEST STANDALONE AGENT 04 ---")
+        
+        agent_config_test = {
+            "id": "expert_securite_crypto_test_main",
+            "version": "3.1-test",
+            "description": "Test Agent 04",
+            "agent_type": "expert_securite",
+            "status": "testing",
+            "paths": { 
+                "reports_path": "./reports_test_agent04",
+                "keys_path": "./keys_test_agent04" 
+            },
+            "log_level_override": "DEBUG"
+        }
+
+        agent = None
+        try:
+            logger.debug(f"Configuration pour create_agent_04: {agent_config_test}")
+            agent = create_agent_04_expert_securite_crypto(**agent_config_test)
+            logger.info(f"Agent {agent.id} v{agent.version} créé.")
+            
+            await agent.startup()
+            logger.info(f"Agent {agent.id} démarré. Statut: {await agent.health_check()}")
+
+            # Test de génération de rapport stratégique sécurisé (Markdown)
+            logger.info("--- TEST: Génération rapport stratégique global (Markdown) ---")
+            task_report_md = Task(
+                type="generate_security_report" # Utilisation de 'type' pour l'init de Task
+            )
+            # Définition manuelle des attributs attendus par execute_task
+            task_report_md.name = "generate_security_report" 
+            task_report_md.context = {"cible": "Système NextGen Global - Test Main"}
+            task_report_md.type_rapport = "securite_globale_test"
+            task_report_md.format_sortie = "markdown"
+            
+            logger.debug(f"Création de la tâche de rapport MD: type='{task_report_md.type}', name='{task_report_md.name}', type_rapport='{task_report_md.type_rapport}', format='{task_report_md.format_sortie}'")
+            
+            result_report_md = await agent.execute_task(task_report_md)
+            logger.info(f"Résultat de la tâche de rapport MD: Success={result_report_md.success}")
+            if result_report_md.success:
+                logger.debug(f"Données du résultat MD: {result_report_md.data}")
+                if 'fichier_sauvegarde_md' in result_report_md.data:
+                    logger.info(f"Fichier rapport Markdown généré (attendu): {result_report_md.data['fichier_sauvegarde_md']}")
+                else:
+                    logger.warning("Aucun chemin de fichier de sauvegarde MD trouvé dans le résultat.")
+            else:
+                logger.error(f"Erreur lors de la génération du rapport MD: {result_report_md.error}")
+
+            # Test pour JSON
+            logger.info("--- TEST: Génération rapport stratégique global (JSON) ---")
+            task_report_json = Task(
+                type="generate_security_report" # Utilisation de 'type' pour l'init de Task
+            )
+            # Définition manuelle des attributs
+            task_report_json.name = "generate_security_report"
+            task_report_json.context = {"cible": "Système NextGen Global - Test Main JSON"}
+            task_report_json.type_rapport = "securite_json_test"
+            task_report_json.format_sortie = "json"
+
+            logger.debug(f"Création de la tâche de rapport JSON: type='{task_report_json.type}', name='{task_report_json.name}', type_rapport='{task_report_json.type_rapport}', format='{task_report_json.format_sortie}'")
+            result_report_json = await agent.execute_task(task_report_json)
+            logger.info(f"Résultat de la tâche de rapport JSON: Success={result_report_json.success}")
+            if result_report_json.success:
+                logger.debug(f"Données du résultat JSON: {result_report_json.data}")
+            else:
+                logger.error(f"Erreur lors de la génération du rapport JSON: {result_report_json.error}")
+
+        except Exception as e:
+            logger.error(f"Erreur majeure dans le test standalone: {e}", exc_info=True)
+        finally:
+            if agent:
+                logger.info(f"Arrêt de l'agent {agent.id}...")
+                await agent.shutdown()
+                logger.info(f"Agent {agent.id} arrêté.")
+            logger.info("--- FIN TEST STANDALONE AGENT 04 ---")
 
     asyncio.run(main()) 

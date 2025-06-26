@@ -442,7 +442,7 @@ class Agent06AdvancedMonitoring(Agent):
         return {
             'agent_id': self.agent_id,
             'agent_file_name': agent_filename,
-            'type_rapport': 'performance_monitoring',
+            'type_rapport': 'performance',
             'timestamp': timestamp.isoformat(),
             'specialisation': 'Analyse & Optimisation de Performance des Systèmes de Monitoring',
             'score_global': score_performance_global,
@@ -775,7 +775,7 @@ class Agent06AdvancedMonitoring(Agent):
         outils_analyse_list = details_tech.get('outils_analyse_performance_simules', [])
         outils_analyse_str = ", ".join(outils_analyse_list) if outils_analyse_list else "Non spécifiés"
 
-        md_content = f\"\"\"# 🚀 **RAPPORT PERFORMANCE DU SYSTÈME DE MONITORING : {rapport.get('agent_id', 'N/A')}**
+        md_content = f"""# 🚀 **RAPPORT PERFORMANCE DU SYSTÈME DE MONITORING : {rapport.get('agent_id', 'N/A')}**
 
 **Date :** {timestamp.strftime('%Y-%m-%d %H:%M:%S')}
 **Module :** {agent_file_name}
@@ -818,7 +818,7 @@ class Agent06AdvancedMonitoring(Agent):
 *Rapport Performance Monitoring généré par {rapport.get('agent_id', 'Agent Inconnu')} - {timestamp.strftime('%Y-%m-%d %H:%M:%S')}*
 *🚀 {rapport.get('specialisation', 'Analyse & Optimisation de Performance des Systèmes de Monitoring')}*
 *📂 Sauvegardé dans : reports/*
-\"\"\"
+"""
         return md_content
 
     async def _generer_markdown_alertes(self, rapport: Dict, context: Dict, timestamp) -> str:

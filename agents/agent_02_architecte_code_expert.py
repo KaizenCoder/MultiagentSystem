@@ -216,15 +216,15 @@ class Agent02ArchitecteCodeExpert(Agent):
                 if format_sortie == 'markdown':
                     rapport_md = await self.generer_rapport_markdown(rapport, type_rapport, context)
                     
-                    # Sauvegarde dans /reports/
-                    import os
-                    from datetime import datetime
-                    reports_dir = "/mnt/c/Dev/nextgeneration/reports"
-                    os.makedirs(reports_dir, exist_ok=True)
+                    # Sauvegarde dans /reports/<self.id>/
+                    # Assumant que self.id est l'identifiant unique de l'agent (ex: "agent_02_architecte_code_expert")
+                    agent_specific_reports_dir = Path("/mnt/c/Dev/nextgeneration/reports") / self.id
+                    agent_specific_reports_dir.mkdir(parents=True, exist_ok=True)
                     
-                    timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
-                    filename = f"strategic_report_agent_02_architecte_{type_rapport}_{timestamp}.md"
-                    filepath = os.path.join(reports_dir, filename)
+                    timestamp_str = datetime.now().strftime("%Y-%m-%d_%H%M%S")
+                    # Nom de fichier simplifié car l'ID de l'agent est dans le nom du répertoire
+                    filename = f"strategic_report_{type_rapport}_{timestamp_str}.md"
+                    filepath = agent_specific_reports_dir / filename
                     
                     with open(filepath, 'w', encoding='utf-8') as f:
                         f.write(rapport_md)
@@ -232,7 +232,7 @@ class Agent02ArchitecteCodeExpert(Agent):
                     return Result(success=True, data={
                         'rapport_json': rapport, 
                         'rapport_markdown': rapport_md,
-                        'fichier_sauvegarde': filepath
+                        'fichier_sauvegarde': str(filepath) # Convertir Path en str
                     })
                 
                 return Result(success=True, data=rapport)

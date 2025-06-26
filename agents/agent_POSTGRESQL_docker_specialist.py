@@ -7,122 +7,219 @@ Développé par l'équipe de maintenance NextGeneration
 import os
 import subprocess
 from datetime import datetime
+import logging
+from pathlib import Path
+import docker
+import json
 
-class AgentDockerSpecialist:
-    def __init__(self):
-        self.nom = "agent_POSTGRESQL_docker_specialist"
-        self.version = "1.0.0"
-        self.logs = []
+from .agent_POSTGRESQL_base import AgentPostgreSQLBase
+from core.agent_factory_architecture import Task, Result
+
+class AgentPostgresqlDockerSpecialist(AgentPostgreSQLBase):
+    """Agent spécialisé pour la gestion des conteneurs Docker PostgreSQL"""
+    
+    def __init__(self, workspace_root: Path = None):
+        super().__init__(
+            agent_type="postgresql_docker",
+            name="Agent Docker PostgreSQL"
+        )
+        self.workspace_root = workspace_root if workspace_root else Path(__file__).parent.parent
+        self.docker_client = docker.from_env()
         
-    def diagnostiquer_docker(self):
-        """Diagnostic environnement Docker."""
-        diagnostic = {
-            "docker_disponible": False,
-            "containers_postgresql": [],
-        }
-        
+    def get_capabilities(self) -> list:
+        """Liste des capacités spécifiques de l'agent"""
+        return [
+            "inspect_container",
+            "create_container",
+            "start_container",
+            "stop_container",
+            "remove_container",
+            "check_logs"
+        ]
+
+    async def execute_task(self, task: Task) -> Result:
+        """Exécution d'une tâche selon le Pattern Factory"""
         try:
-            # Test Docker disponible et daemon actif
-            result = subprocess.run(['docker', 'info'], capture_output=True, text=True)
-            if result.returncode == 0:
-                diagnostic["docker_disponible"] = True
-                self.log("Docker détecté et daemon actif")
+            if task.type == "inspect_container":
+                container_name = task.params.get("container_name")
+                if not container_name:
+                    return Result(success=False, error="Nom du conteneur requis")
+                resultats = await self.inspect_container(container_name)
+                return Result(success=True, data=resultats)
                 
-                # Recherche containers PostgreSQL
-                result_ps = subprocess.run(['docker', 'ps', '-a', '--filter', 'ancestor=postgres'], 
-                                          capture_output=True, text=True)
-                if result_ps.stdout.strip() and "CONTAINER ID" in result_ps.stdout:
-                    lines = result_ps.stdout.strip().split('\\n')[1:]
-                    diagnostic["containers_postgresql"] = [line.split()[-1] for line in lines]
-                    if diagnostic["containers_postgresql"]:
-                        self.log(f"Containers PostgreSQL détectés: {', '.join(diagnostic['containers_postgresql'])}")
-
-            else:
-                diagnostic["erreur"] = "Le daemon Docker ne semble pas être en cours d'exécution."
-                self.log("Docker non disponible ou daemon arrêté.")
+            elif task.type == "create_container":
+                config = task.params.get("config", {})
+                resultats = await self.create_container(config)
+                return Result(success=True, data=resultats)
                 
-        except FileNotFoundError:
-            diagnostic["erreur"] = "La commande 'docker' est introuvable. Docker n'est probablement pas installé."
-            self.log("Docker non installé.")
-            
-        return diagnostic
-        
-    def creer_docker_compose(self, directory="."):
-        """Crée configuration Docker Compose PostgreSQL dans un répertoire spécifié."""
-        compose_content = """services:
-  nextgeneration-postgres:
-    image: postgres:15-alpine
-    container_name: nextgeneration-postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: nextgen_password
-      POSTGRES_DB: nextgeneration
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      
-volumes:
-  postgres_data:
-"""
-        
-        compose_path = os.path.join(directory, "docker-compose.postgresql.yml")
-        
-        try:
-            with open(compose_path, "w") as f:
-                f.write(compose_content)
-            self.log(f"Docker Compose PostgreSQL créé : {compose_path}")
-            return compose_path
-        except Exception as e:
-            self.log(f"Erreur création Docker Compose: {e}")
-            return None
-            
-    def demarrer_postgresql_docker(self, compose_file="docker-compose.postgresql.yml"):
-        """Démarre PostgreSQL via Docker en utilisant un fichier compose."""
-        if not os.path.exists(compose_file):
-            self.log(f"Fichier compose non trouvé: {compose_file}. Tentative de création.")
-            compose_file_path = os.path.dirname(compose_file) or "."
-            compose_file = self.creer_docker_compose(directory=compose_file_path)
-            if not compose_file:
-                self.log("Échec de la création du fichier compose. Démarrage annulé.")
-                return False
-
-        try:
-            cmd = ["docker-compose", "-f", compose_file, "up", "-d"]
-            result = subprocess.run(cmd, capture_output=True, text=True)
-            
-            if result.returncode == 0:
-                self.log("PostgreSQL Docker démarré avec succès")
-                return True
+            elif task.type == "start_container":
+                container_name = task.params.get("container_name")
+                if not container_name:
+                    return Result(success=False, error="Nom du conteneur requis")
+                resultats = await self.start_container(container_name)
+                return Result(success=True, data=resultats)
+                
+            elif task.type == "stop_container":
+                container_name = task.params.get("container_name")
+                if not container_name:
+                    return Result(success=False, error="Nom du conteneur requis")
+                resultats = await self.stop_container(container_name)
+                return Result(success=True, data=resultats)
+                
+            elif task.type == "remove_container":
+                container_name = task.params.get("container_name")
+                if not container_name:
+                    return Result(success=False, error="Nom du conteneur requis")
+                resultats = await self.remove_container(container_name)
+                return Result(success=True, data=resultats)
+                
+            elif task.type == "check_logs":
+                container_name = task.params.get("container_name")
+                if not container_name:
+                    return Result(success=False, error="Nom du conteneur requis")
+                resultats = await self.check_logs(container_name)
+                return Result(success=True, data=resultats)
+                
             else:
-                error_message = result.stderr or result.stdout
-                self.log(f"Erreur démarrage conteneur: {error_message.strip()}")
-                return False
-
-        except FileNotFoundError:
-            self.log("La commande 'docker-compose' est introuvable. Est-elle installée et dans le PATH ?")
-            return False
+                return Result(
+                    success=False,
+                    error=f"Type de tâche non supporté: {task.type}"
+                )
+                
         except Exception as e:
-            self.log(f"Erreur Docker: {e}")
-            return False
-            
-    def log(self, message):
-        entry = f"[{datetime.now().strftime('%H:%M:%S')}] {message}"
-        self.logs.append(entry)
-        print(f"🐳 {entry}")
+            self.logger.error(f"Erreur lors de l'exécution de la tâche: {e}")
+            return Result(
+                success=False,
+                error=str(e),
+                error_code="EXECUTION_ERROR"
+            )
 
-def create_agent_docker_specialist():
-    return AgentDockerSpecialist()
+    async def inspect_container(self, container_name: str) -> dict:
+        """Inspecte un conteneur Docker"""
+        try:
+            container = self.docker_client.containers.get(container_name)
+            inspection = container.attrs
+            
+            return {
+                "status": "success",
+                "container_info": {
+                    "id": inspection["Id"],
+                    "name": inspection["Name"],
+                    "status": inspection["State"]["Status"],
+                    "created": inspection["Created"],
+                    "ports": inspection["NetworkSettings"]["Ports"],
+                    "volumes": inspection["Mounts"],
+                    "env": inspection["Config"]["Env"]
+                }
+            }
+            
+        except Exception as e:
+            self.logger.error(f"Erreur lors de l'inspection du conteneur {container_name}: {e}")
+            return {
+                "status": "error",
+                "error": str(e)
+            }
+
+    async def create_container(self, config: dict) -> dict:
+        """Crée un nouveau conteneur Docker"""
+        try:
+            container = self.docker_client.containers.create(
+                image=config.get("image", "postgres:latest"),
+                name=config.get("name"),
+                environment=config.get("environment", {}),
+                ports=config.get("ports", {}),
+                volumes=config.get("volumes", [])
+            )
+            
+            return {
+                "status": "success",
+                "container_id": container.id,
+                "container_name": container.name
+            }
+            
+        except Exception as e:
+            self.logger.error(f"Erreur lors de la création du conteneur: {e}")
+            return {
+                "status": "error",
+                "error": str(e)
+            }
+
+    async def start_container(self, container_name: str) -> dict:
+        """Démarre un conteneur Docker"""
+        try:
+            container = self.docker_client.containers.get(container_name)
+            container.start()
+            
+            return {
+                "status": "success",
+                "container_id": container.id,
+                "container_status": container.status
+            }
+            
+        except Exception as e:
+            self.logger.error(f"Erreur lors du démarrage du conteneur {container_name}: {e}")
+            return {
+                "status": "error",
+                "error": str(e)
+            }
+
+    async def stop_container(self, container_name: str) -> dict:
+        """Arrête un conteneur Docker"""
+        try:
+            container = self.docker_client.containers.get(container_name)
+            container.stop()
+            
+            return {
+                "status": "success",
+                "container_id": container.id,
+                "container_status": container.status
+            }
+            
+        except Exception as e:
+            self.logger.error(f"Erreur lors de l'arrêt du conteneur {container_name}: {e}")
+            return {
+                "status": "error",
+                "error": str(e)
+            }
+
+    async def remove_container(self, container_name: str) -> dict:
+        """Supprime un conteneur Docker"""
+        try:
+            container = self.docker_client.containers.get(container_name)
+            container.remove(force=True)
+            
+            return {
+                "status": "success",
+                "container_id": container.id
+            }
+            
+        except Exception as e:
+            self.logger.error(f"Erreur lors de la suppression du conteneur {container_name}: {e}")
+            return {
+                "status": "error",
+                "error": str(e)
+            }
+
+    async def check_logs(self, container_name: str) -> dict:
+        """Récupère les logs d'un conteneur Docker"""
+        try:
+            container = self.docker_client.containers.get(container_name)
+            logs = container.logs().decode('utf-8')
+            
+            return {
+                "status": "success",
+                "logs": logs
+            }
+            
+        except Exception as e:
+            self.logger.error(f"Erreur lors de la récupération des logs du conteneur {container_name}: {e}")
+            return {
+                "status": "error",
+                "error": str(e)
+            }
 
 if __name__ == "__main__":
-    agent = create_agent_docker_specialist()
-    diagnostic = agent.diagnostiquer_docker()
-    print(f"Rapport de diagnostic: {diagnostic}")
-    
-    if diagnostic.get("docker_disponible"):
-        compose_file_path = agent.creer_docker_compose()
-        if compose_file_path:
-            agent.demarrer_postgresql_docker(compose_file_path)
-    
-    print(f"Agent Docker Specialist opérationnel - {len(agent.logs)} actions")
+    agent = AgentPostgresqlDockerSpecialist()
+    # Test des capacités
+    print("Capacités de l'agent:", agent.get_capabilities())
 

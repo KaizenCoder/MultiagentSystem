@@ -88,6 +88,12 @@
             "class": "Agent05MaitreTestsValidation",
             "factory_function": "create_agent_05_maitre_tests_validation",
             "config": {
+                "version": "1.0.0",
+                "mission": "Assurer la qualité et la robustesse des livrables par des tests et validations rigoureux.",
+                "description": "Agent spécialisé dans l'exécution de suites de tests, la validation fonctionnelle et de performance, et la génération de rapports de qualité.",
+                "dependencies": ["core.agent_factory_architecture", "code_expert.enhanced_agent_templates", "code_expert.optimized_template_manager"],
+                "status": "active",
+                "agent_type": "tester",
                 "cache_size": 100,
                 "ttl_seconds": 300,
                 "enable_hot_reload": true,

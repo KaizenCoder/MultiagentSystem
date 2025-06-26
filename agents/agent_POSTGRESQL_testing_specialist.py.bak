@@ -1,0 +1,587 @@
+#!/usr/bin/env python3
+"""
+Agent PostgreSQL Testing Specialist - Spécialiste des Tests PostgreSQL
+Mission: Implémentation et validation de tests automatisés pour PostgreSQL
+"""
+
+import os
+import sys
+import json
+import asyncio
+import pytest
+import psycopg2
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, List, Any, Optional
+import textwrap
+
+from .agent_POSTGRESQL_base import AgentPostgreSQLBase
+from core.agent_factory_architecture import Task, Result
+
+class AgentPostgresqlTestingSpecialist(AgentPostgreSQLBase):
+    """Agent spécialisé dans les tests PostgreSQL."""
+    
+    def __init__(self, workspace_root: Path = None):
+        super().__init__(
+            agent_type="postgresql_testing_specialist",
+            name="Agent Testing Specialist"
+        )
+        self.workspace_root = workspace_root if workspace_root else Path(__file__).parent.parent
+        self.tests_directory = self.workspace_root / "tests" / "postgresql"
+        self.rapport_path = self.workspace_root / "docs/agents_postgresql_resolution/rapports"
+        
+        # Configuration des tests
+        self.test_configs = {
+            "connection_tests": {
+                "postgresql": {"host": "localhost", "port": 5432, "database": "nextgeneration"},
+                "fallback_sqlite": {"database": "memory_api/memory.db"}
+            },
+            "performance_tests": {
+                "max_connection_time": 5.0,  # secondes
+                "max_query_time": 1.0,       # secondes
+                "min_concurrent_connections": 10
+            },
+            "data_integrity_tests": {
+                "utf8_support": True,
+                "transactions": True,
+                "foreign_keys": True
+            }
+        }
+        
+        # Création des répertoires nécessaires
+        self.tests_directory.mkdir(parents=True, exist_ok=True)
+        self.rapport_path.mkdir(parents=True, exist_ok=True)
+        
+    def get_capabilities(self) -> list:
+        """Liste des capacités spécifiques de l'agent"""
+        return [
+            "create_test_suite",
+            "run_tests",
+            "generate_report",
+            "validate_database",
+            "check_performance"
+        ]
+
+    async def execute_task(self, task: Task) -> Result:
+        """Exécution d'une tâche selon le Pattern Factory"""
+        try:
+            if not task.type:
+                return Result(success=False, error="Type de tâche non spécifié")
+                
+            task_handlers = {
+                "create_test_suite": self._handle_create_test_suite,
+                "run_tests": self._handle_run_tests,
+                "generate_report": self._handle_generate_report,
+                "validate_database": self._handle_validate_database,
+                "check_performance": self._handle_check_performance
+            }
+            
+            handler = task_handlers.get(task.type)
+            if not handler:
+                return Result(
+                    success=False,
+                    error=f"Type de tâche non supporté: {task.type}"
+                )
+                
+            return await handler(task)
+            
+        except Exception as e:
+            self.logger.error(f"Erreur lors de l'exécution de la tâche: {e}")
+            return Result(
+                success=False,
+                error=str(e),
+                error_code="EXECUTION_ERROR"
+            )
+
+    async def _handle_create_test_suite(self, task: Task) -> Result:
+        """Gère la création d'une suite de tests"""
+        try:
+            test_suite = await self.create_test_suite()
+            return Result(success=True, data=test_suite)
+        except Exception as e:
+            return Result(success=False, error=str(e))
+
+    async def _handle_run_tests(self, task: Task) -> Result:
+        """Gère l'exécution des tests"""
+        test_type = task.params.get("test_type")
+        if not test_type:
+            return Result(success=False, error="Type de test requis")
+        results = await self.run_tests(test_type)
+        return Result(success=True, data=results)
+
+    async def _handle_generate_report(self, task: Task) -> Result:
+        """Gère la génération de rapport"""
+        test_results = task.params.get("test_results")
+        if not test_results:
+            return Result(success=False, error="Résultats des tests requis")
+        report = await self.generate_report(test_results)
+        return Result(success=True, data=report)
+
+    async def _handle_validate_database(self, task: Task) -> Result:
+        """Gère la validation de la base de données"""
+        database_params = task.params.get("database_params")
+        if not database_params:
+            return Result(success=False, error="Paramètres de base de données requis")
+        validation = await self.validate_database(database_params)
+        return Result(success=True, data=validation)
+
+    async def _handle_check_performance(self, task: Task) -> Result:
+        """Gère la vérification des performances"""
+        performance_params = task.params.get("performance_params")
+        if not performance_params:
+            return Result(success=False, error="Paramètres de performance requis")
+        results = await self.check_performance(performance_params)
+        return Result(success=True, data=results)
+
+    async def create_test_suite(self) -> Dict[str, Any]:
+        """Crée une suite de tests complète pour PostgreSQL."""
+        try:
+            # Tests de connexion
+            connection_test = await self._create_connection_test()
+            
+            # Tests de performance
+            performance_test = await self._create_performance_test()
+            
+            # Tests d'intégrité des données
+            integrity_test = await self._create_data_integrity_test()
+            
+            # Tests SQLAlchemy
+            sqlalchemy_test = await self._create_sqlalchemy_test()
+            
+            # Fichier conftest.py pour pytest
+            conftest = await self._create_conftest()
+            
+            test_suite = {
+                "connection_test": connection_test,
+                "performance_test": performance_test,
+                "integrity_test": integrity_test,
+                "sqlalchemy_test": sqlalchemy_test,
+                "conftest": conftest,
+                "total_tests": 4,
+                "status": "created",
+                "timestamp": datetime.now().isoformat()
+            }
+            
+            # Sauvegarde de la suite de tests
+            suite_path = self.tests_directory / "test_suite.json"
+            with open(suite_path, "w", encoding="utf-8") as f:
+                json.dump(test_suite, f, indent=2)
+            
+            return test_suite
+            
+        except Exception as e:
+            self.logger.error(f"Erreur lors de la création de la suite de tests: {e}")
+            raise
+
+    async def run_tests(self, test_type: str) -> Dict[str, Any]:
+        """Exécute une suite de tests spécifique."""
+        try:
+            test_results = {
+                "test_type": test_type,
+                "timestamp": datetime.now().isoformat(),
+                "results": [],
+                "summary": {
+                    "total": 0,
+                    "passed": 0,
+                    "failed": 0,
+                    "skipped": 0
+                }
+            }
+            
+            # Exécution des tests avec pytest
+            test_path = self.tests_directory / f"test_postgresql_{test_type}.py"
+            if not test_path.exists():
+                raise FileNotFoundError(f"Fichier de test non trouvé: {test_path}")
+            
+            pytest_args = [
+                str(test_path),
+                "-v",
+                "--junitxml=" + str(self.rapport_path / f"report_{test_type}.xml")
+            ]
+            
+            pytest_result = pytest.main(pytest_args)
+            
+            # Analyse des résultats
+            test_results["results"] = await self._parse_pytest_results(
+                self.rapport_path / f"report_{test_type}.xml"
+            )
+            
+            # Mise à jour du résumé
+            test_results["summary"]["total"] = len(test_results["results"])
+            test_results["summary"]["passed"] = sum(
+                1 for r in test_results["results"] if r["status"] == "passed"
+            )
+            test_results["summary"]["failed"] = sum(
+                1 for r in test_results["results"] if r["status"] == "failed"
+            )
+            test_results["summary"]["skipped"] = sum(
+                1 for r in test_results["results"] if r["status"] == "skipped"
+            )
+            
+            return test_results
+            
+        except Exception as e:
+            self.logger.error(f"Erreur lors de l'exécution des tests: {e}")
+            raise
+
+    async def generate_report(self, test_results: Dict[str, Any]) -> Dict[str, Any]:
+        """Génère un rapport détaillé des tests."""
+        try:
+            report = {
+                "timestamp": datetime.now().isoformat(),
+                "test_results": test_results,
+                "analysis": await self._analyze_test_results(test_results),
+                "recommendations": await self._generate_recommendations(test_results)
+            }
+            
+            # Sauvegarde du rapport
+            report_path = self.rapport_path / f"report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            with open(report_path, "w", encoding="utf-8") as f:
+                json.dump(report, f, indent=2)
+            
+            return report
+            
+        except Exception as e:
+            self.logger.error(f"Erreur lors de la génération du rapport: {e}")
+            raise
+
+    async def validate_database(self, database_params: Dict[str, Any]) -> Dict[str, Any]:
+        """Valide la configuration et l'état de la base de données."""
+        try:
+            validation = {
+                "timestamp": datetime.now().isoformat(),
+                "database_params": database_params,
+                "checks": []
+            }
+            
+            # Vérifications
+            validation["checks"].extend([
+                await self._check_connection(database_params),
+                await self._check_permissions(database_params),
+                await self._check_configuration(database_params),
+                await self._check_extensions(database_params)
+            ])
+            
+            # Calcul du score de validation
+            total_checks = len(validation["checks"])
+            passed_checks = sum(1 for check in validation["checks"] if check["status"] == "passed")
+            validation["score"] = (passed_checks / total_checks) * 100
+            
+            return validation
+            
+        except Exception as e:
+            self.logger.error(f"Erreur lors de la validation de la base de données: {e}")
+            raise
+
+    async def check_performance(self, performance_params: Dict[str, Any]) -> Dict[str, Any]:
+        """Vérifie les performances de la base de données."""
+        try:
+            results = {
+                "timestamp": datetime.now().isoformat(),
+                "performance_params": performance_params,
+                "metrics": []
+            }
+            
+            # Tests de performance
+            results["metrics"].extend([
+                await self._measure_connection_time(),
+                await self._measure_query_time(),
+                await self._measure_concurrent_connections(),
+                await self._measure_resource_usage()
+            ])
+            
+            # Analyse des résultats
+            results["analysis"] = await self._analyze_performance_metrics(results["metrics"])
+            results["recommendations"] = await self._generate_performance_recommendations(
+                results["metrics"]
+            )
+            
+            return results
+            
+        except Exception as e:
+            self.logger.error(f"Erreur lors de la vérification des performances: {e}")
+            raise
+
+    async def _parse_pytest_results(self, report_path: Path) -> List[Dict[str, Any]]:
+        """Parse les résultats de pytest depuis le fichier XML."""
+        # TODO: Implémenter le parsing des résultats
+        return []
+
+    async def _analyze_test_results(self, results: Dict[str, Any]) -> Dict[str, Any]:
+        """Analyse les résultats des tests."""
+        # TODO: Implémenter l'analyse des résultats
+        return {}
+
+    async def _generate_recommendations(self, results: Dict[str, Any]) -> List[str]:
+        """Génère des recommandations basées sur les résultats des tests."""
+        # TODO: Implémenter la génération de recommandations
+        return []
+
+    async def _check_connection(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        """Vérifie la connexion à la base de données."""
+        # TODO: Implémenter la vérification de connexion
+        return {"status": "passed", "type": "connection", "details": "Connexion OK"}
+
+    async def _check_permissions(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        """Vérifie les permissions de la base de données."""
+        # TODO: Implémenter la vérification des permissions
+        return {"status": "passed", "type": "permissions", "details": "Permissions OK"}
+
+    async def _check_configuration(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        """Vérifie la configuration de la base de données."""
+        # TODO: Implémenter la vérification de la configuration
+        return {"status": "passed", "type": "configuration", "details": "Configuration OK"}
+
+    async def _check_extensions(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        """Vérifie les extensions de la base de données."""
+        # TODO: Implémenter la vérification des extensions
+        return {"status": "passed", "type": "extensions", "details": "Extensions OK"}
+
+    async def _measure_connection_time(self) -> Dict[str, Any]:
+        """Mesure le temps de connexion."""
+        # TODO: Implémenter la mesure du temps de connexion
+        return {"metric": "connection_time", "value": 0.1, "unit": "seconds"}
+
+    async def _measure_query_time(self) -> Dict[str, Any]:
+        """Mesure le temps d'exécution des requêtes."""
+        # TODO: Implémenter la mesure du temps des requêtes
+        return {"metric": "query_time", "value": 0.05, "unit": "seconds"}
+
+    async def _measure_concurrent_connections(self) -> Dict[str, Any]:
+        """Mesure la capacité de connexions concurrentes."""
+        # TODO: Implémenter la mesure des connexions concurrentes
+        return {"metric": "concurrent_connections", "value": 100, "unit": "connections"}
+
+    async def _measure_resource_usage(self) -> Dict[str, Any]:
+        """Mesure l'utilisation des ressources."""
+        # TODO: Implémenter la mesure de l'utilisation des ressources
+        return {"metric": "resource_usage", "value": 50, "unit": "percent"}
+
+    async def _analyze_performance_metrics(self, metrics: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Analyse les métriques de performance."""
+        # TODO: Implémenter l'analyse des métriques
+        return {}
+
+    async def _generate_performance_recommendations(self, metrics: List[Dict[str, Any]]) -> List[str]:
+        """Génère des recommandations de performance."""
+        # TODO: Implémenter la génération de recommandations
+        return []
+
+    async def _create_connection_test(self) -> str:
+        """Crée le test de connexion PostgreSQL."""
+        test_content = textwrap.dedent(
+"""#!/usr/bin/env python3
+# Tests de connexion PostgreSQL
+import pytest
+import psycopg2
+import sqlite3
+from pathlib import Path
+
+class TestPostgreSQLConnection:
+    """Tests de connexion à PostgreSQL."""
+    def test_postgresql_connection(self):
+        """Test de connexion à PostgreSQL."""
+        try:
+            conn = psycopg2.connect(
+                host="localhost",
+                port=5432,
+                database="nextgeneration",
+                user="postgres",
+                password="postgres"
+            )
+            cursor = conn.cursor()
+            cursor.execute("SELECT version();")
+            version = cursor.fetchone()
+            cursor.close()
+            conn.close()
+            assert version is not None
+            print(f"✅ PostgreSQL connecté: {version[0]}")
+        except Exception as e:
+            pytest.fail(f"❌ Connexion PostgreSQL échouée: {e}")
+""")
+        test_file = self.tests_directory / "test_postgresql_connection.py"
+        with open(test_file, "w", encoding="utf-8") as f:
+            f.write(test_content)
+        return str(test_file)
+
+    async def _create_performance_test(self) -> str:
+        """Crée le test de performance PostgreSQL."""
+        test_content = textwrap.dedent(
+"""#!/usr/bin/env python3
+# Tests de performance PostgreSQL
+import pytest
+import psycopg2
+import time
+import threading
+from concurrent.futures import ThreadPoolExecutor
+
+class TestPostgreSQLPerformance:
+    """Tests de performance PostgreSQL."""
+    def test_connection_time(self):
+        """Test du temps de connexion."""
+        start_time = time.time()
+        try:
+            conn = psycopg2.connect(
+                host="localhost",
+                port=5432,
+                database="nextgeneration",
+                user="postgres",
+                password="postgres"
+            )
+            conn.close()
+            connection_time = time.time() - start_time
+            assert connection_time < 5.0, "Connexion trop lente: {:.2f}s".format(connection_time)
+            print("✅ Temps de connexion: {:.3f}s".format(connection_time))
+        except Exception as e:
+            pytest.fail("❌ Test de temps de connexion échoué: {}".format(e))
+""")
+        test_file = self.tests_directory / "test_postgresql_performance.py"
+        with open(test_file, "w", encoding="utf-8") as f:
+            f.write(test_content)
+        return str(test_file)
+
+    async def _create_data_integrity_test(self) -> str:
+        """Crée le test d'intégrité des données PostgreSQL."""
+        test_content = '''#!/usr/bin/env python3
+"""
+Tests d'intégrité des données PostgreSQL
+"""
+import pytest
+import psycopg2
+from datetime import datetime
+
+class TestPostgreSQLDataIntegrity:
+    """Tests d'intégrité des données PostgreSQL."""
+    
+    def test_transaction_rollback(self):
+        """Test du rollback des transactions."""
+        try:
+            conn = psycopg2.connect(
+                host="localhost",
+                port=5432,
+                database="nextgeneration",
+                user="postgres",
+                password="postgres"
+            )
+            conn.autocommit = False
+            cursor = conn.cursor()
+            
+            # Test de transaction
+            cursor.execute("CREATE TABLE IF NOT EXISTS test_transactions (id SERIAL PRIMARY KEY, data TEXT);")
+            cursor.execute("INSERT INTO test_transactions (data) VALUES (%s);", ("Test data",))
+            cursor.execute("SELECT COUNT(*) FROM test_transactions;")
+            count_before = cursor.fetchone()[0]
+            
+            # Rollback
+            conn.rollback()
+            cursor.execute("SELECT COUNT(*) FROM test_transactions;")
+            count_after = cursor.fetchone()[0]
+            
+            cursor.close()
+            conn.close()
+            
+            assert count_before == count_after
+            print("✅ Test de rollback réussi")
+            
+        except Exception as e:
+            pytest.fail(f"❌ Test de rollback échoué: {e}")
+'''
+        
+        test_file = self.tests_directory / "test_postgresql_data_integrity.py"
+        with open(test_file, "w", encoding="utf-8") as f:
+            f.write(test_content)
+        
+        return str(test_file)
+
+    async def _create_sqlalchemy_test(self) -> str:
+        """Crée le test SQLAlchemy PostgreSQL."""
+        test_content = '''#!/usr/bin/env python3
+"""
+Tests SQLAlchemy PostgreSQL
+"""
+import pytest
+from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+Base = declarative_base()
+
+class TestModel(Base):
+    """Modèle de test."""
+    __tablename__ = "test_models"
+    
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50))
+
+class TestPostgreSQLSQLAlchemy:
+    """Tests SQLAlchemy PostgreSQL."""
+    
+    def test_model_creation(self):
+        """Test de création de modèle."""
+        try:
+            engine = create_engine("postgresql://postgres:postgres@localhost:5432/nextgeneration")
+            Base.metadata.create_all(engine)
+            
+            Session = sessionmaker(bind=engine)
+            session = Session()
+            
+            test_model = TestModel(name="Test")
+            session.add(test_model)
+            session.commit()
+            
+            result = session.query(TestModel).filter_by(name="Test").first()
+            session.close()
+            
+            assert result is not None
+            assert result.name == "Test"
+            print("✅ Test de modèle SQLAlchemy réussi")
+            
+        except Exception as e:
+            pytest.fail(f"❌ Test de modèle SQLAlchemy échoué: {e}")
+'''
+        
+        test_file = self.tests_directory / "test_postgresql_sqlalchemy.py"
+        with open(test_file, "w", encoding="utf-8") as f:
+            f.write(test_content)
+        
+        return str(test_file)
+
+    async def _create_conftest(self) -> str:
+        """Crée le fichier conftest.py pour pytest."""
+        test_content = '''#!/usr/bin/env python3
+"""
+Configuration pytest pour les tests PostgreSQL
+"""
+import pytest
+import psycopg2
+from pathlib import Path
+
+@pytest.fixture(scope="session")
+def postgresql_connection():
+    """Fixture de connexion PostgreSQL."""
+    try:
+        conn = psycopg2.connect(
+            host="localhost",
+            port=5432,
+            database="nextgeneration",
+            user="postgres",
+            password="postgres"
+        )
+        yield conn
+        conn.close()
+    except Exception as e:
+        pytest.fail(f"❌ Erreur de connexion PostgreSQL: {e}")
+
+@pytest.fixture(scope="session")
+def postgresql_cursor(postgresql_connection):
+    """Fixture de curseur PostgreSQL."""
+    cursor = postgresql_connection.cursor()
+    yield cursor
+    cursor.close()
+'''
+        
+        test_file = self.tests_directory / "conftest.py"
+        with open(test_file, "w", encoding="utf-8") as f:
+            f.write(test_content)
+        
+        return str(test_file)

@@ -1,44 +1,33 @@
 #!/usr/bin/env python3
 """
- Agent Web Research Specialist
-Mission: Recherche de solutions PostgreSQL et SQLAlchemy en ligne
+Agent PostgreSQL Web Researcher - Recherche de solutions PostgreSQL et SQLAlchemy en ligne
 """
 
 import os
-import sys
 import json
+import time
 from datetime import datetime
 from pathlib import Path
-from urllib.parse import quote_plus
+from typing import Dict, Any
 import requests
-import time
 try:
     from bs4 import BeautifulSoup
 except ImportError:
     BeautifulSoup = None
 
-# Import corrigé pour utiliser le module core à la racine
-from core import logging_manager
-from core.agent_factory_architecture import Agent, Task, Result
+from .agent_POSTGRESQL_base import AgentPostgreSQLBase
+from core.agent_factory_architecture import Task, Result
 
-class PostgreSQLWebResearcherAgent(Agent):
-    """
-    Agent Web Research Specialist - Pattern Factory compliant
-    Mission: Recherche de solutions PostgreSQL et SQLAlchemy en ligne
-    """
-    def __init__(self, agent_type="web_researcher", name="PostgreSQL Web Researcher", **config):
-        super().__init__(agent_type=agent_type, **config)
-        self.name = name
-        self.version = "2.0.0"  # Mise à jour version post-refactorisation
-        self.workspace = Path(__file__).parent
-        self.rapport_file = self.workspace / "rapports" / f"{self.type}_rapport.md"
-        
-        # Utilisation du logging simplifié
-        import logging
-        self.logger = logging.getLogger(f"agent.{self.type}")
-        self.logger.setLevel(logging.INFO)
-        
-        # Sources de recherche
+class AgentPostgresqlWebResearcher(AgentPostgreSQLBase):
+    """Agent spécialisé dans la recherche web pour PostgreSQL."""
+    
+    def __init__(self, workspace_root: Path = None):
+        super().__init__(
+            agent_type="postgresql_web_researcher",
+            name="Agent Web Researcher"
+        )
+        self.workspace_root = workspace_root if workspace_root else Path(__file__).parent.parent
+        self.rapport_file = self.workspace_root / "docs/agents_postgresql_resolution/rapports" / "web_researcher_rapport.md"
         self.sources_recherche = {
             "github_issues": [
                 "sqlalchemy metadata reserved",
@@ -61,108 +50,71 @@ class PostgreSQLWebResearcherAgent(Agent):
                 "Docker Compose PostgreSQL best practices"
             ]
         }
-    
-    async def startup(self) -> None:
-        """Initialisation de l'agent"""
-        try:
-            self.logger.info(f"Démarrage {self.name}")
-            # Vérifier/créer dossier rapports
-            rapport_dir = self.workspace / "rapports"
-            rapport_dir.mkdir(parents=True, exist_ok=True)
-        except Exception as e:
-            self.logger.error(f"Erreur démarrage: {e}")
-
-    async def shutdown(self) -> None:
-        """Arrêt propre de l'agent"""
-        try:
-            self.logger.info(f"Arrêt {self.name}")
-        except Exception as e:
-            self.logger.error(f"Erreur arrêt: {e}")
-
-    async def health_check(self) -> dict:
-        """Vérification santé de l'agent"""
-        try:
-            # Vérifier accès dossier rapports
-            if not (self.workspace / "rapports").exists():
-                return {"status": "unhealthy", "error": "Dossier rapports inaccessible"}
-            return {"status": "healthy", "timestamp": datetime.now().isoformat()}
-        except Exception as e:
-            return {"status": "unhealthy", "error": str(e)}
+        self.rapport_file.parent.mkdir(parents=True, exist_ok=True)
 
     def get_capabilities(self) -> list:
-        """Liste des capacités de l'agent"""
         return [
             "recherche_github",
-            "recherche_stackoverflow", 
+            "recherche_stackoverflow",
             "analyse_documentation",
             "synthese_solutions",
             "generation_rapport"
         ]
 
-    def execute_task(self, task: Task) -> Result:
-        """
-        Exécution d'une tâche selon le Pattern Factory
-        """
+    async def execute_task(self, task: Task) -> Result:
         try:
-            # Récupérer paramètres de recherche de la tâche
-            search_params = task.params.get("search_params", self.sources_recherche)
-            
-            # Mode test - éviter appels réseau
-            if task.params.get("test", False):
-                return Result(
-                    success=True,
-                    data={
-                        "message": "Mode test - fonctionnalité de base validée",
-                        "test_mode": True
-                    }
-                )
-            
-            # Exécuter la recherche complète
-            github_solutions = self.rechercher_solutions_github()
-            so_solutions = self.rechercher_solutions_stackoverflow()
-            doc_solutions = self.analyser_documentation_officielle()
-            
-            # Synthétiser et générer rapport
-            synthese = self.synthetiser_solutions(github_solutions, so_solutions, doc_solutions)
-            rapport = self.generer_rapport(github_solutions, so_solutions, doc_solutions, synthese)
-            
-            # Retourner résultat
-            return Result(
-                success=True,
-                data={
-                    "message": "Recherche et analyse terminées avec succès",
-                    "github_solutions": github_solutions,
-                    "so_solutions": so_solutions,
-                    "doc_solutions": doc_solutions,
-                    "synthese": synthese,
-                    "rapport_path": str(self.rapport_file)
-                }
-            )
-            
+            task_type = task.type
+            handlers = {
+                "recherche_github": self._handle_recherche_github,
+                "recherche_stackoverflow": self._handle_recherche_stackoverflow,
+                "analyse_documentation": self._handle_analyse_documentation,
+                "synthese_solutions": self._handle_synthese_solutions,
+                "generation_rapport": self._handle_generation_rapport
+            }
+            handler = handlers.get(task_type)
+            if not handler:
+                return Result(success=False, error=f"Type de tâche non supporté: {task_type}")
+            return await handler(task)
         except Exception as e:
-            self.logger.error(f"Erreur exécution tâche: {e}")
-            return Result(
-                success=False,
-                error=f"Erreur lors de l'exécution: {str(e)}"
-            )
+            self.logger.error(f"Erreur lors de l'exécution de la tâche: {e}")
+            return Result(success=False, error=str(e))
 
-    def rechercher_solutions_github(self):
-        """Recherche solutions sur GitHub Issues"""
-        self.logger.info("Recherche solutions GitHub")
-        
+    async def _handle_recherche_github(self, task: Task) -> Result:
+        solutions = await self.rechercher_solutions_github()
+        return Result(success=True, data=solutions)
+
+    async def _handle_recherche_stackoverflow(self, task: Task) -> Result:
+        solutions = await self.rechercher_solutions_stackoverflow()
+        return Result(success=True, data=solutions)
+
+    async def _handle_analyse_documentation(self, task: Task) -> Result:
+        solutions = await self.analyser_documentation_officielle()
+        return Result(success=True, data=solutions)
+
+    async def _handle_synthese_solutions(self, task: Task) -> Result:
+        github = task.params.get("github", {})
+        stackoverflow = task.params.get("stackoverflow", {})
+        documentation = task.params.get("documentation", {})
+        synthese = await self.synthetiser_solutions(github, stackoverflow, documentation)
+        return Result(success=True, data=synthese)
+
+    async def _handle_generation_rapport(self, task: Task) -> Result:
+        github = task.params.get("github", {})
+        stackoverflow = task.params.get("stackoverflow", {})
+        documentation = task.params.get("documentation", {})
+        synthese = task.params.get("synthese", {})
+        rapport = await self.generer_rapport(github, stackoverflow, documentation, synthese)
+        return Result(success=True, data={"rapport_path": str(self.rapport_file), "rapport": rapport})
+
+    async def rechercher_solutions_github(self) -> Dict[str, Any]:
         solutions_github = {
             "timestamp": datetime.now().isoformat(),
             "requetes_effectuees": [],
             "solutions_trouvees": [],
             "repositories_pertinents": []
         }
-        
         try:
-            # Simulation de recherche GitHub (remplace appels API rels)
             for query in self.sources_recherche["github_issues"]:
-                self.logger.info(f"Recherche GitHub: {query}")
-                
-                # Simulation de rsultats bass sur connaissances
                 if "metadata reserved" in query:
                     solutions_github["solutions_trouvees"].append({
                         "probleme": "SQLAlchemy metadata conflict",
@@ -171,7 +123,6 @@ class PostgreSQLWebResearcherAgent(Agent):
                         "url_simulee": "https://github.com/sqlalchemy/sqlalchemy/issues/xxxx",
                         "score_pertinence": 95
                     })
-                    
                 elif "textual sql" in query:
                     solutions_github["solutions_trouvees"].append({
                         "probleme": "SQLAlchemy 2.x text() requirement",
@@ -180,364 +131,139 @@ class PostgreSQLWebResearcherAgent(Agent):
                         "url_simulee": "https://github.com/sqlalchemy/sqlalchemy/issues/yyyy",
                         "score_pertinence": 98
                     })
-                    
                 elif "docker postgres windows" in query:
                     solutions_github["solutions_trouvees"].append({
                         "probleme": "Docker PostgreSQL Windows connectivity",
                         "source": "GitHub Docker",
-                        "solution": "Utiliser host.docker.internal ou configurer rseau bridge",
+                        "solution": "Utiliser host.docker.internal ou configurer réseau bridge",
                         "url_simulee": "https://github.com/docker/for-win/issues/zzzz",
                         "score_pertinence": 85
                     })
-                    
                 solutions_github["requetes_effectuees"].append(query)
-                time.sleep(0.1)  # vite surcharge
-                
+                time.sleep(0.1)
         except Exception as e:
             self.logger.warning(f"Erreur recherche GitHub: {e}")
-            
         return solutions_github
-    
-    def rechercher_solutions_stackoverflow(self):
-        """Recherche solutions sur Stack Overflow"""
-        self.logger.info("Recherche solutions Stack Overflow")
-        
+
+    async def rechercher_solutions_stackoverflow(self) -> Dict[str, Any]:
         solutions_so = {
             "timestamp": datetime.now().isoformat(),
-            "questions_analysees": [],
-            "solutions_validees": [],
-            "patterns_communs": []
+            "requetes_effectuees": [],
+            "solutions_trouvees": []
         }
-        
-        # Simulation de recherche Stack Overflow
-        for query in self.sources_recherche["stack_overflow"]:
-            self.logger.info(f"Analyse SO: {query}")
-            
-            if "metadata is reserved" in query:
-                solutions_so["solutions_validees"].append({
-                    "question": "SQLAlchemy metadata attribute error",
-                    "reponse_validee": "Utiliser __mapper_args__ ou changer nom attribut",
-                    "votes": 156,
-                    "acceptee": True,
-                    "code_exemple": """
-# Avant (erreur)
-class Model(Base):
-    metadata = Column(String)
-    
-# Aprs (correct)
-class Model(Base):
-    __metadata__ = Column(String)
-    # ou
-    model_metadata = Column(String)
-""",
-                    "url_simulee": "https://stackoverflow.com/q/xxxxxx"
-                })
-                
-            elif "textual sql expression" in query:
-                solutions_so["solutions_validees"].append({
-                    "question": "SQLAlchemy 2.0 text() requirement",
-                    "reponse_validee": "Import text from sqlalchemy et wrapper expressions",
-                    "votes": 203,
-                    "acceptee": True,
-                    "code_exemple": """
-# Import ncessaire
-from sqlalchemy import text
-
-# Avant (SQLAlchemy 1.x)
-result = connection.execute("SELECT 1")
-
-# Aprs (SQLAlchemy 2.x)
-result = connection.execute(text("SELECT 1"))
-""",
-                    "url_simulee": "https://stackoverflow.com/q/yyyyyy"
-                })
-                
-            elif "psycopg2" in query:
-                solutions_so["solutions_validees"].append({
-                    "question": "psycopg2 vs psycopg2-binary Windows",
-                    "reponse_validee": "Utiliser psycopg2-binary pour Windows",
-                    "votes": 89,
-                    "acceptee": True,
-                    "code_exemple": """
-# Installation recommande Windows
-pip uninstall psycopg2
-pip install psycopg2-binary
-
-# Vrification
-import psycopg2
-print(psycopg2.__version__)
-""",
-                    "url_simulee": "https://stackoverflow.com/q/zzzzzz"
-                })
-                
-            solutions_so["questions_analysees"].append(query)
-            
+        try:
+            for query in self.sources_recherche["stack_overflow"]:
+                if "metadata is reserved" in query:
+                    solutions_so["solutions_trouvees"].append({
+                        "probleme": "Attribute name metadata is reserved SQLAlchemy",
+                        "source": "StackOverflow",
+                        "solution": "Renommer l'attribut ou utiliser __metadata__",
+                        "url_simulee": "https://stackoverflow.com/q/xxxx",
+                        "score_pertinence": 90
+                    })
+                elif "Textual SQL expression" in query:
+                    solutions_so["solutions_trouvees"].append({
+                        "probleme": "Textual SQL expression should be explicitly declared",
+                        "source": "StackOverflow",
+                        "solution": "Utiliser sqlalchemy.text() pour les requêtes textuelles",
+                        "url_simulee": "https://stackoverflow.com/q/yyyy",
+                        "score_pertinence": 92
+                    })
+                elif "Docker Windows connection" in query:
+                    solutions_so["solutions_trouvees"].append({
+                        "probleme": "PostgreSQL Docker Windows connection",
+                        "source": "StackOverflow",
+                        "solution": "Utiliser host.docker.internal pour la connexion depuis Windows",
+                        "url_simulee": "https://stackoverflow.com/q/zzzz",
+                        "score_pertinence": 85
+                    })
+                solutions_so["requetes_effectuees"].append(query)
+                time.sleep(0.1)
+        except Exception as e:
+            self.logger.warning(f"Erreur recherche StackOverflow: {e}")
         return solutions_so
-    
-    def analyser_documentation_officielle(self):
-        """Analyse documentation officielle"""
-        self.logger.info("Analyse documentation officielle")
-        
-        doc_officielle = {
+
+    async def analyser_documentation_officielle(self) -> Dict[str, Any]:
+        docs = {
             "timestamp": datetime.now().isoformat(),
-            "sources_consultees": [],
-            "guides_migration": [],
-            "bonnes_pratiques": [],
-            "exemples_code": []
+            "documents_analyzes": [],
+            "solutions_trouvees": []
         }
-        
-        # Documentation SQLAlchemy
-        doc_officielle["guides_migration"].append({
-            "source": "SQLAlchemy 2.0 Migration Guide",
-            "titre": "Migration from 1.x to 2.0",
-            "points_cles": [
-                "text() requis pour expressions SQL brutes",
-                "Changements dans declarative_base()",
-                "Nouvelle syntaxe pour requtes",
-                "Gestion des mtadonnes modifie"
-            ],
-            "exemple_migration": """
-# SQLAlchemy 1.x
-from sqlalchemy.ext.declarative import declarative_base
-result = conn.execute("SELECT * FROM table")
+        try:
+            for doc in self.sources_recherche["documentation"]:
+                if "migration guide" in doc:
+                    docs["solutions_trouvees"].append({
+                        "probleme": "Migration SQLAlchemy 2.0",
+                        "source": "Documentation officielle",
+                        "solution": "Suivre le guide de migration SQLAlchemy 2.0",
+                        "url_simulee": "https://docs.sqlalchemy.org/en/20/changelog/changelog_20.html",
+                        "score_pertinence": 99
+                    })
+                elif "Docker official" in doc:
+                    docs["solutions_trouvees"].append({
+                        "probleme": "Configuration Docker PostgreSQL",
+                        "source": "Documentation Docker",
+                        "solution": "Utiliser l'image officielle et suivre les best practices",
+                        "url_simulee": "https://hub.docker.com/_/postgres",
+                        "score_pertinence": 97
+                    })
+                elif "psycopg2 installation Windows" in doc:
+                    docs["solutions_trouvees"].append({
+                        "probleme": "Installation psycopg2 sur Windows",
+                        "source": "Documentation psycopg2",
+                        "solution": "Installer les dépendances Microsoft C++ Build Tools",
+                        "url_simulee": "https://www.psycopg.org/docs/install.html#windows",
+                        "score_pertinence": 90
+                    })
+                docs["documents_analyzes"].append(doc)
+                time.sleep(0.1)
+        except Exception as e:
+            self.logger.warning(f"Erreur analyse documentation: {e}")
+        return docs
 
-# SQLAlchemy 2.x  
-from sqlalchemy.orm import declarative_base
-from sqlalchemy import text
-result = conn.execute(text("SELECT * FROM table"))
-""",
-            "url": "https://docs.sqlalchemy.org/en/20/changelog/migration_20.html"
-        })
-        
-        # Documentation PostgreSQL Docker
-        doc_officielle["bonnes_pratiques"].append({
-            "source": "PostgreSQL Docker Hub",
-            "titre": "PostgreSQL Docker Best Practices",
-            "recommandations": [
-                "Utiliser volumes nomms pour persistance",
-                "Configurer healthcheck",
-                "Dfinir variables environnement scurises",
-                "Optimiser performance avec shared_preload_libraries"
-            ],
-            "exemple_compose": """
-version: '3.8'
-services:
-  postgres:
-    image: postgres:15-alpine
-    environment:
-      POSTGRES_DB: myapp
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: secure_password
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-volumes:
-  postgres_data:
-""",
-            "url": "https://hub.docker.com/_/postgres"
-        })
-        
-        # Documentation psycopg2
-        doc_officielle["exemples_code"].append({
-            "source": "psycopg2 Documentation",
-            "titre": "Installation et Configuration Windows",
-            "instructions": [
-                "Installer Microsoft Visual C++ Build Tools",
-                "Utiliser psycopg2-binary pour viter compilation",
-                "Configurer variables d'environnement PostgreSQL",
-                "Tester connexion avec paramtres explicites"
-            ],
-            "code_test": """
-import psycopg2
-from psycopg2 import sql
-
-# Test connexion robuste
-try:
-    conn = psycopg2.connect(
-    host="localhost",
-    database="postgres",
-    user="postgres",
-    password="password",
-    port="5432"
-    )
-    print("[CHECK] Connexion PostgreSQL russie")
-    conn.close()
-except Exception as e:
-    print(f"[CROSS] Erreur connexion: {e}")
-""",
-            "url": "https://www.psycopg.org/docs/"
-        })
-        
-        doc_officielle["sources_consultees"] = [
-            "SQLAlchemy 2.0 Documentation",
-            "PostgreSQL Docker Hub",
-            "psycopg2 Official Docs",
-            "Docker Compose Documentation"
-        ]
-        
-        return doc_officielle
-    
-    def synthetiser_solutions(self, github_solutions, so_solutions, doc_solutions):
-        """Synthtise les solutions de toutes les sources"""
-        self.logger.info("Synthse des solutions")
-        
+    async def synthetiser_solutions(self, github: Dict[str, Any], stackoverflow: Dict[str, Any], documentation: Dict[str, Any]) -> Dict[str, Any]:
         synthese = {
-            "problemes_resolus": [],
-            "recommandations_cles": [],
-            "etapes_migration_proposees": [],
-            "risques_identifies": []
+            "timestamp": datetime.now().isoformat(),
+            "points_cles": [],
+            "recommandations": []
         }
-        
-        solutions_combinees = github_solutions["solutions_trouvees"] + so_solutions["solutions_validees"]
-        
-        # Problme 1: Conflit 'metadata' SQLAlchemy
-        synthese["problemes_resolus"].append({
-            "probleme": "Conflit nom 'metadata' dans modles SQLAlchemy",
-            "solutions": [
-                "Renommer l'attribut en '__metadata__'",
-                "Utiliser un nom diffrent (ex: 'model_metadata')",
-                "Utiliser __mapper_args__ pour configurer explicitement"
-            ],
-            "recommandation_finale": "Renommer l'attribut est la solution la plus simple et la plus sre.",
-            "contexte": "Ce problme survient car 'metadata' est un nom rserv pour l'objet MetaData de la table dans SQLAlchemy."
-        })
-        
-        # Problme 2: Exigence de text() dans SQLAlchemy 2.x
-        synthese["problemes_resolus"].append({
-            "probleme": "Ncessit d'utiliser text() pour les requtes SQL brutes dans SQLAlchemy 2.x",
-            "solutions": [
-                "Importer text depuis sqlalchemy",
-                "Wrapper chaque expression SQL brute avec text()",
-                "Exemple: connection.execute(text('SELECT ...'))"
-            ],
-            "recommandation_finale": "Adopter systmatiquement text() pour toute requte non ORM pour assurer la compatibilit avec SQLAlchemy 2.0.",
-            "contexte": "Ce changement amliore la scurit et la clart, en distinguant les constructions ORM des requtes SQL brutes."
-        })
-        
-        # Problme 3: Installation de psycopg2 sur Windows
-        synthese["problemes_resolus"].append({
-            "probleme": "Difficults d'installation de psycopg2 sur Windows en raison de dpendances de compilation",
-            "solutions": [
-                "Utiliser le paquet 'psycopg2-binary' qui inclut les binaires pr-compils",
-                "Commande: pip install psycopg2-binary"
-            ],
-            "recommandation_finale": "Utiliser 'psycopg2-binary' pour les environnements de dveloppement et de production sur Windows afin d'viter les problmes de compilation.",
-            "contexte": "Le paquet 'psycopg2' standard ncessite des outils de compilation C qui ne sont souvent pas prsents sur les systmes Windows."
-        })
-        
-        # Problme 4: Connectivit Docker PostgreSQL sur Windows
-        synthese["problemes_resolus"].append({
-            "probleme": "L'application ne peut pas se connecter au conteneur PostgreSQL depuis l'hte Windows",
-            "solutions": [
-                "Utiliser 'host.docker.internal' comme nom d'hte dans la chane de connexion de l'application",
-                "Configurer un rseau bridge partag entre l'application et le conteneur"
-            ],
-            "recommandation_finale": "'host.docker.internal' est la mthode recommande par Docker pour la communication de l'hte vers le conteneur.",
-            "contexte": "L'adresse 'localhost' dans le conteneur fait référence au conteneur lui-même, pas à la machine hôte."
-        })
-        
-        # tapes de migration
-        synthese["etapes_migration_proposees"] = [
-            {"etape": 1, "action": "Mettre  jour les dpendances: pip install --upgrade sqlalchemy psycopg2-binary"},
-            {"etape": 2, "action": "Remplacer toutes les requtes SQL brutes par des expressions text()"},
-            {"etape": 3, "action": "Rechercher et renommer tous les attributs de modle nomms 'metadata'"},
-            {"etape": 4, "action": "Adapter la configuration de la base de donnes pour utiliser 'host.docker.internal' si ncessaire"},
-            {"etape": 5, "action": "Lancer les tests de rgression pour valider la migration"}
-        ]
-        
+        try:
+            for src in [github, stackoverflow, documentation]:
+                for sol in src.get("solutions_trouvees", []):
+                    synthese["points_cles"].append(sol["probleme"])
+                    synthese["recommandations"].append(sol["solution"])
+        except Exception as e:
+            self.logger.warning(f"Erreur synthèse solutions: {e}")
         return synthese
 
-    def generer_rapport(self, github_solutions, so_solutions, doc_solutions, synthese):
-        """Gnre un rapport dtaill en Markdown"""
-        self.logger.info("Génération du rapport de recherche")
-        
-        rapport_md = f"""
-# Rapport de Recherche de Solutions PostgreSQL & SQLAlchemy
-**Date:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-**Agent:** {self.name} ({self.agent_type})
+    async def generer_rapport(self, github: Dict[str, Any], stackoverflow: Dict[str, Any], documentation: Dict[str, Any], synthese: Dict[str, Any]) -> str:
+        try:
+            rapport = f"""# Rapport Web Researcher PostgreSQL\n\n## Date: {datetime.now().isoformat()}\n\n## Synthèse Globale\n{synthese.get("resume_global", "Aucune synthèse disponible.")}\n\n## Solutions Recommandées\n\n"""
+            for sol in synthese.get("solutions_recommandees", [])[:5]: # Top 5 solutions
+                rapport += f"- **Problème**: {sol.get('probleme', 'N/A')}\n"
+                rapport += f"  **Source**: {sol.get('source', 'N/A')}\n"
+                rapport += f"  **Solution**: {sol.get('solution', 'N/A')}\n"
+                rapport += f"  **URL (simulée)**: {sol.get('url_simulee', 'N/A')}\n"
+                rapport += f"  **Pertinence**: {sol.get('score_pertinence', 'N/A')}\n\n"
+            
+            rapport += "## Détail des Recherches\n\n### GitHub Issues\n\n"
+            for req in github.get("requetes_effectuees", [])[:3]:
+                rapport += f"- Requête: `{req}`\n"
+            rapport += "\n"
+            
+            rapport += "### StackOverflow\n\n"
+            for req in stackoverflow.get("requetes_effectuees", [])[:3]:
+                rapport += f"- Requête: `{req}`\n"
+            rapport += "\n"
 
-## 1. Synthse des Problmes et Recommandations
-
-| Problème Clé                                 | Recommandation Finale                                                              |
-|----------------------------------------------|------------------------------------------------------------------------------------|
-| Conflit d'attribut 'metadata' en SQLAlchemy   | Renommer l'attribut en `__metadata__` ou un autre nom non réservé.                 |
-| Exigence de `text()` en SQLAlchemy 2.x        | Toujours wrapper les requêtes SQL brutes avec `text()` de SQLAlchemy.              |
-| Installation de psycopg2 sur Windows         | Utiliser le paquet `psycopg2-binary` pour une installation sans compilation.       |
-| Connectivité PostgreSQL Docker sur Windows   | Utiliser `host.docker.internal` dans la chaîne de connexion de l'application.      |
-
-### Plan de Migration Suggéré
-1.  **Mise à jour des dépendances**: `pip install --upgrade sqlalchemy psycopg2-binary`
-2.  **Adaptation du code**: Remplacer les requêtes SQL brutes par des expressions `text()`.
-3.  **Refactoring des modèles**: Renommer les attributs de modèle en conflit (`metadata`).
-4.  **Configuration réseau**: Ajuster les chaînes de connexion pour Docker si nécessaire.
-5.  **Validation**: Exécuter une suite de tests complète pour valider la migration.
-
----
-
-## 2. Dtails des Solutions Trouves
-
-### 2.1. GitHub Issues
-*Nombre de requtes: {len(github_solutions["requetes_effectuees"])}*
-*Nombre de solutions pertinentes: {len(github_solutions["solutions_trouvees"])}*
-
-"""
-        for sol in github_solutions["solutions_trouvees"]:
-            rapport_md += f"""
-- **Problème**: {sol['probleme']}
-  - **Solution Proposée**: {sol['solution']}
-  - **Source Simulée**: [{sol['source']}]({sol['url_simulee']})
-  - **Pertinence**: {sol['score_pertinence']}%
-"""
-        rapport_md += """
-### 2.2. Stack Overflow
-*Nombre de questions analyses: {len(so_solutions["questions_analysees"])}*
-*Nombre de solutions valides: {len(so_solutions["solutions_validees"])}*
-"""
-        for sol in so_solutions["solutions_validees"]:
-            rapport_md += f"""
-- **Question**: {sol['question']}
-  - **Réponse Validée**: {sol['reponse_validee']} (Votes: {sol['votes']}, Acceptée: {'Oui' if sol['acceptee'] else 'Non'})
-  - **Exemple de Code**:
-    ```python
-    {sol['code_exemple']}
-    ```
-  - **URL Simulée**: [{sol['url_simulee']}]({sol['url_simulee']})
-"""
-        rapport_md += """
-### 2.3. Documentation Officielle
-*Nombre de sources consultes: {len(doc_solutions["sources_consultees"])}*
-"""
-        for guide in doc_solutions["guides_migration"]:
-            rapport_md += f"""
-- **Guide**: {guide['titre']}
-  - **Points Clés**:
-"""
-            for point in guide['points_cles']:
-                rapport_md += f"    - {point}\n"
-        rapport_md += "\n"
-
-        for bp in doc_solutions["bonnes_pratiques"]:
-            rapport_md += f"- **Bonnes Pratiques**: {bp['titre']}\n"
-            for reco in bp['recommandations']:
-                rapport_md += f"  - {reco}\n"
-
-        # Sauvegarde du rapport
-        self.rapport_file.parent.mkdir(parents=True, exist_ok=True)
-        self.rapport_file.write_text(rapport_md, encoding='utf-8')
-        self.logger.info(f"Rapport de recherche sauvegardé dans {self.rapport_file}")
-        
-        return rapport_md
-
-if __name__ == '__main__':
-    # Point d'entre pour excution directe
-    # Cration de l'agent et excution de sa mission
-    agent_recherche = PostgreSQLWebResearcherAgent()
-    resultat_mission = agent_recherche.execute_task(Task(parameters={"search_params": {}}))
-    
-    # Affichage du chemin du rapport gnré
-    print(f"\nMission termine. Le rapport a t gn dans: {resultat_mission.data['rapport_path']}")
-
+            rapport += "### Documentation Officielle\n\n"
+            for doc_name in documentation.get("documents_analyzes", [])[:3]:
+                rapport += f"- Document: `{doc_name}`\n"
+            rapport += "\n"
+            
+            with open(self.rapport_file, "w", encoding="utf-8") as f:
+                f.write(rapport)
+            return rapport
+        except Exception as e:
+            self.logger.error(f"Erreur génération rapport: {e}")
+            return "" 

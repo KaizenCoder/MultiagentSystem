@@ -5,7 +5,7 @@
 ⚡ Capacités : Exécution de tests basiques (importation, instanciation, appels de méthodes).
 🏢 Équipe : NextGeneration Tools Migration
 Author: Équipe de Maintenance NextGeneration
-Version: 4.0.0
+Version: 4.1.0 - Harmonisation Standards Pattern Factory NextGeneration
 """
 
 import sys
@@ -52,7 +52,34 @@ class FakeAgentDetection:
 
 class AgentMAINTENANCE04TesteurAntiFauxAgents(Agent):
     """
-    Agent spécialisé dans le test dynamique des agents pour s'assurer qu'ils ne sont pas des 'faux' agents.
+    🛡️ Agent MAINTENANCE 04 - Testeur Anti-Faux Agents NextGeneration
+    
+    Agent spécialisé dans la validation dynamique et l'authentification d'agents,
+    détection de faux agents via tests d'instanciation et vérification conformité Pattern Factory.
+    
+    Capacités principales :
+    - Tests dynamiques d'importation et instanciation sécurisée
+    - Introspection avancée de signatures de méthodes et constructeurs
+    - Détection automatique violations Pattern Factory (sync/async)
+    - Validation conformité Agent avec health_check, startup, shutdown
+    - Scoring de compliance et recommandations d'amélioration
+    - Tests d'exécution factice avec arguments déduits dynamiquement
+    
+    Technologies avancées :
+    - Importation dynamique avec spec_from_file_location
+    - Introspection via inspect.signature pour instanciation adaptative
+    - Dataclass FakeAgentDetection pour résultats structurés
+    - Tests isolés en fichiers temporaires sécurisés
+    - Classification violations (sync/async/pattern-factory)
+    
+    Workflow type :
+    1. Chargement dynamique module agent cible
+    2. Introspection signatures et instanciation factice
+    3. Tests conformité async/sync et Pattern Factory
+    4. Calcul score compliance et détection faux agents
+    5. Génération recommandations d'amélioration
+    
+    Conformité : Pattern Factory NextGeneration v4.1.0
     """
 
     def __init__(self, **kwargs):
@@ -179,8 +206,19 @@ class AgentMAINTENANCE04TesteurAntiFauxAgents(Agent):
 
 
     def get_capabilities(self) -> List[str]:
-        """Retourne les capacités de l'agent."""
-        return ["dynamic_test"]
+        """Retourne les capacités spécialisées du Testeur Anti-Faux Agents."""
+        return [
+            "dynamic_agent_testing",
+            "fake_agent_detection",
+            "pattern_factory_validation",
+            "dynamic_instantiation",
+            "signature_introspection",
+            "compliance_scoring",
+            "async_sync_validation",
+            "isolated_execution",
+            "factory_method_testing",
+            "violation_classification"
+        ]
 
     async def health_check(self) -> Dict[str, Any]:
         return {"status": "healthy"}

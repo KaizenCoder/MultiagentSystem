@@ -104,7 +104,7 @@ class Agent23FastAPIOrchestrationEnterprise(Agent):
             MonitoringFeature(config.get('monitoring', {})),
             SecurityFeature(config.get('security', {}))
         ]
-        self.logger = logging_manager.get_logger("default", custom_config={
+        self.logger = logging_manager.get_logger(config_name="default", custom_config={
             "logger_name": "Agent23FastAPIOrchestrationEnterprise",
             "log_level": "INFO",
             "elasticsearch_enabled": True,

@@ -98,7 +98,7 @@ L'agent respecte le Pattern Factory de base et expose les méthodes suivantes po
     "run_smoke_tests:internal",
     "get_internal_metrics"
   ]
-  ```
+```
 
 ## 6. Dépendances et Prérequis
 

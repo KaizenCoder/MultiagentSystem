@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Agent Diagnostic PostgreSQL - Spcialis rsolution encodage
-Mission: Diagnostiquer et rsoudre dfinitivement le problme d'encodage UTF-8
+Agent Diagnostic PostgreSQL - Spécialisé résolution encodage
+Mission: Diagnostiquer et résoudre définitivement le problème d'encodage UTF-8
 """
 
 import subprocess
@@ -10,21 +10,22 @@ import os
 import sys
 import time
 from pathlib import Path
-from core import logging_manager
 from datetime import datetime
 import logging
 
-class AgentDiagnosticPostgreSQL:
-    """Agent spcialis diagnostic et rsolution PostgreSQL encodage"""
+from .agent_POSTGRESQL_base import AgentPostgreSQLBase
+from core.agent_factory_architecture import Task, Result
+
+class AgentPostgresqlDiagnosticPostgresFinal(AgentPostgreSQLBase):
+    """Agent spécialisé diagnostic et résolution PostgreSQL encodage"""
     
     def __init__(self, workspace_root: Path = None):
-        self.name = "Agent Diagnostic PostgreSQL"
-        self.version = "2.0.0"
-        self.mission = "Rsolution dfinitive encodage PostgreSQL"
+        super().__init__(
+            agent_type="postgresql_diagnostic",
+            name="Agent Diagnostic PostgreSQL"
+        )
+        self.mission = "Résolution définitive encodage PostgreSQL"
         self.workspace_root = workspace_root if workspace_root else Path(__file__).parent.parent
-        
-        # Configuration logging
-        self.logger = self._setup_logging()
         
         self.rapport_data = {
             "agent": self.name,
@@ -36,20 +37,57 @@ class AgentDiagnosticPostgreSQL:
             "status": "EN_COURS"
         }
     
-    def _setup_logging(self):
-        """Configuration du logging pour l'agent."""
-        logger = logging.getLogger(self.name)
-        logger.setLevel(logging.INFO)
-        if not logger.handlers:
-            log_dir = self.workspace_root / "logs" / "agents" / "postgres_diagnostic"
-            log_dir.mkdir(parents=True, exist_ok=True)
-            log_file = log_dir / 'diagnostic.log'
-            
-            file_handler = logging.FileHandler(log_file, encoding='utf-8')
-            formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-            file_handler.setFormatter(formatter)
-            logger.addHandler(file_handler)
-        return logger
+    def get_capabilities(self) -> list:
+        """Liste des capacités spécifiques de l'agent"""
+        return [
+            "diagnostic_conteneur",
+            "diagnostic_encodage",
+            "diagnostic_python",
+            "generation_solution",
+            "execution_mission"
+        ]
+
+    async def execute_task(self, task: Task) -> Result:
+        """Exécution d'une tâche selon le Pattern Factory"""
+        try:
+            if task.type == "diagnostic_complet":
+                # Exécuter la mission complète
+                resultats = await self.executer_mission()
+                return Result(
+                    success=True,
+                    data=resultats,
+                    metrics={
+                        "diagnostics_count": len(resultats["diagnostics"]),
+                        "solutions_count": len(resultats["solutions"])
+                    }
+                )
+            elif task.type == "diagnostic_conteneur":
+                resultats = self.diagnostic_conteneur_postgres()
+                return Result(success=True, data=resultats)
+            elif task.type == "diagnostic_encodage":
+                container = task.params.get("container_name")
+                if not container:
+                    return Result(success=False, error="Nom du conteneur requis")
+                resultats = self.diagnostic_encodage_conteneur(container)
+                return Result(success=True, data=resultats)
+            elif task.type == "diagnostic_python":
+                resultats = self.diagnostic_python_psycopg2()
+                return Result(success=True, data=resultats)
+            elif task.type == "generer_solution":
+                resultats = self.generer_solution_encodage_definitive()
+                return Result(success=True, data=resultats)
+            else:
+                return Result(
+                    success=False,
+                    error=f"Type de tâche non supporté: {task.type}"
+                )
+        except Exception as e:
+            self.logger.error(f"Erreur lors de l'exécution de la tâche: {e}")
+            return Result(
+                success=False,
+                error=str(e),
+                error_code="EXECUTION_ERROR"
+            )
     
     def diagnostic_conteneur_postgres(self):
         """Diagnostic approfondi du conteneur PostgreSQL"""
@@ -365,7 +403,7 @@ networks:
         
         return solution
     
-    def executer_mission(self):
+    async def executer_mission(self):
         """Excution de la mission complte"""
         
         self.logger.info(f"[ROCKET] {self.name} - Dmarrage mission diagnostic PostgreSQL")
@@ -454,7 +492,7 @@ networks:
         self.logger.info(f"[CLIPBOARD] Rapport final: {rapport_md_path}")
 
 if __name__ == "__main__":
-    agent = AgentDiagnosticPostgreSQL()
+    agent = AgentPostgresqlDiagnosticPostgresFinal()
     resultat = agent.executer_mission()
     
     print(f"\n[TARGET] Mission termine: {resultat['status']}")

@@ -540,3 +540,15 @@ Ceci est un exemple simplifié. Un test CLI complet vérifierait tous les types 
 | 2025-06-26 18:32:00 | `agent_MAINTENANCE_00_chef_equipe_coordinateur.py` & `docs/.../agent_MAINTENANCE_00_chef_equipe_coordinateur.md` | Étape 3 (Modif) | Code: Version 4.3.0, docstrings classe enrichie, get_capabilities() 5 capacités. Doc .md: Création complète (11 sections, 200+ lignes). | IA     | ⬜                          |
 | 2025-06-26 18:33:00 | `agent_MAINTENANCE_00_chef_equipe_coordinateur.py` | Étape 4 & 4.5 (Tests) | Tests structure AST réussis (5/6 vérifications). Syntaxe Python validée. Pattern Factory conforme. Tests CLI OK. | IA     | ⬜                          |
 
+
+ < /dev/null |  2025-06-26 18:35:00 | `agent_MAINTENANCE_01_analyseur_structure.py` | Étape 1 (Sauvegarde) | Sauvegarde automatique créée. Début du cycle de traitement standard. | IA     | ⬜                          |
+| 2025-06-26 18:36:00 | `agent_MAINTENANCE_01_analyseur_structure.py` | Étape 2 (Analyse) | **Analyse :** Code v1.2.0 conforme PF, doc obsolète. **Plan :** 1. Upgrade v1.3.0, enrichir docstrings/capabilities. 2. Synchroniser doc .md. 3. Tests AST. | IA     | ⬜                          |
+| 2025-06-26 18:37:00 | `agent_MAINTENANCE_01_analyseur_structure.py` & `docs/.../agent_MAINTENANCE_01_analyseur_structure.md` | Étape 3 (Modif) | Code: Version 1.3.0, docstrings enrichie, get_capabilities() 6 capacités. Doc .md: Refonte complète avec exemples AST, workflow détaillé. | IA     | ⬜                          |
+| 2025-06-26 18:38:00 | `agent_MAINTENANCE_01_analyseur_structure.py` | Étape 4 & 4.5 (Tests) | Tests AST et structure réussis (7/8 vérifications). Auto-analyse simulée OK. Capacités d'analyse validées. | IA     | ⬜                          |
+
+
+ < /dev/null |  2025-06-26 18:40:00 | `agent_MAINTENANCE_02_evaluateur_utilite.py` | Étape 1 (Sauvegarde) | Sauvegarde automatique créée. Début du cycle de traitement standard. | IA     | ⬜                          |
+| 2025-06-26 18:41:00 | `agent_MAINTENANCE_02_evaluateur_utilite.py` | Étape 2 (Analyse) | **Analyse :** Code v2.1.0 conforme PF, doc obsolète. **Plan :** 1. Upgrade v2.2.0, enrichir docstrings/capabilities. 2. Synchroniser doc .md. 3. Tests scoring. | IA     | ⬜                          |
+| 2025-06-26 18:42:00 | `agent_MAINTENANCE_02_evaluateur_utilite.py` & `docs/.../agent_MAINTENANCE_02_evaluateur_utilite.md` | Étape 3 (Modif) | Code: Version 2.2.0, docstrings enrichie, get_capabilities() 7 capacités. Doc .md: Refonte complète avec système scoring détaillé, exemples. | IA     | ⬜                          |
+| 2025-06-26 18:43:00 | `agent_MAINTENANCE_02_evaluateur_utilite.py` | Étape 4 & 4.5 (Tests) | Tests scoring et structure PARFAITS (9/9 vérifications). Auto-évaluation: 140 points (très utile). Capacités validées. | IA     | ⬜                          |
+

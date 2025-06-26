@@ -11,13 +11,15 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 from agents.agent_06_specialiste_monitoring_sprint4 import Agent06AdvancedMonitoring
 from core.agent_factory_architecture import Task
 
-async def run_single_test(agent: Agent06AdvancedMonitoring, report_type: str, output_format: str, logger: logging.Logger):
+async def run_single_test(agent: Agent06AdvancedMonitoring, report_type: str, output_format: str, logger: logging.Logger, custom_target: str = None):
     """Exécute un seul test pour un type de rapport et un format donnés."""
-    logger.info(f"--- DÉBUT TEST: Type='{report_type}', Format='{output_format}' ---")
+    logger.info(f"--- DÉBUT TEST: Type='{report_type}', Format='{output_format}', Cible='{custom_target if custom_target else 'par défaut'}' ---")
     
+    target_value = custom_target if custom_target else f"systeme_test_{report_type.lower()}"
+
     task_params = {
-        "cible": f"systeme_test_{report_type.lower()}",
-        "objectifs_specifiques": [f"Générer rapport {report_type} en {output_format}"],
+        "cible": target_value,
+        "objectifs_specifiques": [f"Générer rapport {report_type} en {output_format} pour {target_value}"],
         "type_rapport": report_type,
         "format_sortie": output_format
     }
@@ -95,13 +97,9 @@ async def main():
         logger.error(f"Erreur lors de l'instanciation ou startup de l'agent : {e}", exc_info=True)
         return
 
-    report_types = ["monitoring", "observabilite", "performance", "alertes"]
-    output_formats = ["markdown", "json"]
-
-    for r_type in report_types:
-        for o_format in output_formats:
-            await run_single_test(agent, r_type, o_format, logger)
-            await asyncio.sleep(1) # Petite pause pour éviter de surcharger les logs ou I/O
+    # Exécution du test spécifique demandé
+    await run_single_test(agent, "monitoring", "markdown", logger, custom_target="agents/agent_MAINTENANCE_09_analyseur_securite.py")
+    await asyncio.sleep(1)
 
     # Test final shutdown
     try:

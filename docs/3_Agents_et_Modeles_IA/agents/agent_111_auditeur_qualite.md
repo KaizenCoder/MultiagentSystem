@@ -21,6 +21,7 @@ L’Agent 111, **Auditeur Qualité**, est chargé de l’audit qualité des modu
 - Génération de rapports détaillés et synthétiques.
 - Suivi des corrections et validation finale.
 - Coordination avec l’auditeur conformité et performance.
+- **Audit universel de la qualité du code (PEP8, docstrings, complexité AST) sur un fichier spécifié.**
 
 ## 3. Architecture et Concepts Clés
 
@@ -33,14 +34,21 @@ L’Agent 111, **Auditeur Qualité**, est chargé de l’audit qualité des modu
 
 ### a. Instanciation de l’Agent
 ```python
-from agents.agent_111_auditeur_qualite import Agent111AuditeurQualite
+from agents.agent_111_auditeur_qualite import Agent111AuditeurQualite, Task
 agent = Agent111AuditeurQualite()
 ```
 
 ### b. Lancement d’un Audit Qualité
 ```python
-result = agent.run_quality_audit("module_critique")
-print(result)
+# Pour l'audit universel d'un fichier spécifique
+task_params = {"file_path": "chemin/vers/votre/fichier.py"}
+audit_task = Task(id="audit_01", type="audit_universal_quality", description="Audit universel du fichier spécifié", params=task_params)
+# Assurez-vous d'exécuter l'agent dans une boucle asyncio si vous appelez directement execute_task
+# import asyncio
+# result = asyncio.run(agent.execute_task(audit_task))
+# print(result)
+
+# L'agent peut aussi être piloté par un orchestrateur qui gère l'appel à execute_task.
 ```
 
 ## 5. Guide d’Extension
@@ -54,6 +62,7 @@ print(result)
 - Passage à l’audit automatisé (Sprint 3).
 - Ajout de la validation proactive des critères d’excellence.
 - Intégration avec le reporting détaillé.
+- **Ajout de la capacité d'audit universel (PEP8, docstrings, complexité AST) via la tâche `audit_universal_quality`.**
 
 ## 7. Recommandations d’Amélioration
 

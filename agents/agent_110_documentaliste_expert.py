@@ -187,6 +187,11 @@ class Agent110DocumentalisteExpert(Agent):
         # L'appel à super() se fait APRÈS la création des attributs dont il dépend.
         super().__init__(self.agent_type, **config)
         self.logger.info(f"Agent {self.name} initialisé.")
+
+        # Créer le répertoire des rapports pour cet agent s'il n'existe pas
+        self.reports_path = Path(config.get("reports_dir", "reports")) / self.agent_id
+        self.reports_path.mkdir(parents=True, exist_ok=True)
+        self.logger.info(f"Répertoire des rapports configuré : {self.reports_path}")
         
     async def startup(self):
         self.logger.info(f"🚀 Agent {self.agent_id} démarré.")
@@ -211,29 +216,47 @@ class Agent110DocumentalisteExpert(Agent):
         }
 
     async def execute_task(self, task: Task) -> Result:
-        self.logger.info(f"Exécution de la tâche : {task.type}")
-        task_params = task.params
+        self.logger.info(f"Exécution de la tâche : {task.task_id}")
+        task_params = task.data if hasattr(task, 'data') else (task.payload if hasattr(task, 'payload') else {})
         
         try:
-            if task.type == "generer_doc_code":
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            report_file_path = None
+
+            if task.task_id == "generer_doc_code" or task.description == "generer_doc_code":
                 source_path_str = task_params.get("path")
                 if not source_path_str:
                     return Result(success=False, error="Le chemin ('path') du code source est manquant.")
                 
+                source_name = Path(source_path_str).name
                 generator = CodeDocumentationGenerator(Path(source_path_str), self.logger)
                 doc_content = generator.generate()
-                return Result(success=True, data={"format": "markdown", "content": doc_content})
+                
+                report_filename = f"rapport_doc_code_{source_name}_{timestamp}.md"
+                report_file_path = self.reports_path / report_filename
+                
+                with open(report_file_path, "w", encoding="utf-8") as f:
+                    f.write(doc_content)
+                self.logger.info(f"Rapport de documentation du code sauvegardé : {report_file_path}")
+                return Result(success=True, data={"format": "markdown", "content_file_path": str(report_file_path), "message": f"Documentation du code générée et sauvegardée dans {report_file_path}"})
                     
-            elif task.type == "generer_guide_demarrage":
+            elif task.task_id == "generer_guide_demarrage" or task.description == "generer_guide_demarrage":
                 generator = UserGuideGenerator()
                 guide_content = generator.generate_quick_start()
-                return Result(success=True, data={"format": "markdown", "content": guide_content})
+
+                report_filename = f"rapport_guide_demarrage_{timestamp}.md"
+                report_file_path = self.reports_path / report_filename
+
+                with open(report_file_path, "w", encoding="utf-8") as f:
+                    f.write(guide_content)
+                self.logger.info(f"Rapport du guide de démarrage sauvegardé : {report_file_path}")
+                return Result(success=True, data={"format": "markdown", "content_file_path": str(report_file_path), "message": f"Guide de démarrage généré et sauvegardé dans {report_file_path}"})
             
             else:
-                return Result(success=False, error=f"Tâche inconnue: {task.type}")
+                return Result(success=False, error=f"Tâche inconnue: {task.task_id}")
 
         except Exception as e:
-            self.logger.error(f"Erreur lors de l'exécution de la tâche '{task.type}': {e}", exc_info=True)
+            self.logger.error(f"Erreur lors de l'exécution de la tâche '{task.task_id}': {e}", exc_info=True)
             return Result(success=False, error=str(e))
 
 # ===== POINT D'ENTRÉE POUR TEST =====
@@ -242,24 +265,26 @@ async def main():
     """Point d'entrée pour tester l'agent 110."""
     print("--- DÉMARRAGE DU TEST DE L'AGENT 110 ---")
     agent = None
+    # Définir un répertoire de rapports spécifique pour les tests
+    test_reports_dir = Path("reports_test_agent110") 
     try:
-        # Instanciation directe de l'agent
-        agent = Agent110DocumentalisteExpert()
+        # Instanciation directe de l'agent avec le répertoire de test
+        agent = Agent110DocumentalisteExpert(reports_dir=str(test_reports_dir))
         await agent.startup()
 
         print("\n🔬 Test 1: Génération du guide de démarrage...")
-        task1 = Task(type="generer_guide_demarrage")
+        task1 = Task(task_id="generer_guide_demarrage", description="generer_guide_demarrage")
         result1 = await agent.execute_task(task1)
         if result1.success:
-            print("[✅ SUCCÈS] Guide généré.")
+            print(f"[✅ SUCCÈS] Guide généré. Chemin: {result1.data.get('content_file_path')}")
         else:
             print(f"[❌ ERREUR] {result1.error}")
 
         print("\n🔬 Test 2: Génération de la documentation pour le répertoire './core'...")
-        task2 = Task(type="generer_doc_code", params={"path": "./core"})
+        task2 = Task(task_id="generer_doc_code", description="generer_doc_code", payload={"path": "./core"})
         result2 = await agent.execute_task(task2)
         if result2.success:
-            print("[✅ SUCCÈS] Documentation du code générée.")
+            print(f"[✅ SUCCÈS] Documentation du code générée. Chemin: {result2.data.get('content_file_path')}")
         else:
             print(f"[❌ ERREUR] {result2.error}")
 
@@ -271,6 +296,11 @@ async def main():
     finally:
         if agent:
             await agent.shutdown()
+        # Optionnel: Nettoyer le répertoire de rapports de test si nécessaire
+        # import shutil
+        # if test_reports_dir.exists():
+        # shutil.rmtree(test_reports_dir)
+        # print(f"Répertoire de test {test_reports_dir} supprimé.")
         print("\n--- FIN DU TEST DE L'AGENT 110 ---")
 
 if __name__ == "__main__":

@@ -9,7 +9,7 @@ AGENT 1 - ANALYSEUR DE STRUCTURE (Pattern Factory)
 🏢 Équipe : NextGeneration Tools Migration
 
 Author: Équipe de Maintenance NextGeneration
-Version: 1.2.0
+Version: 1.3.0 - Harmonisation Standards Pattern Factory NextGeneration
 """
 import asyncio
 import ast
@@ -39,7 +39,25 @@ PATTERN_FACTORY_AVAILABLE = True
 
 class AgentMAINTENANCE01AnalyseurStructure(Agent):
     """
-    Agent spécialisé dans l'analyse de la structure des fichiers de code.
+    🏗️ Agent MAINTENANCE 01 - Analyseur de Structure NextGeneration
+    
+    Agent spécialisé dans l'analyse automatique de la structure des fichiers Python,
+    détection d'incohérences syntaxiques et génération de rapports d'audit structurel.
+    
+    Capacités principales :
+    - Analyse statique via AST (imports, classes, fonctions, async)
+    - Détection d'erreurs syntaxiques et structurelles  
+    - Analyse de fichiers individuels ou répertoires complets
+    - Génération de rapports structurés pour maintenance
+    - Compatibilité avec coordinateur d'équipe maintenance
+    
+    Workflow type :
+    1. Réception tâche "analyse_structure" avec directory/file_path
+    2. Parsing AST des fichiers Python ciblés
+    3. Extraction structure (imports, classes, fonctions)
+    4. Retour rapport complet ou erreurs détectées
+    
+    Conformité : Pattern Factory NextGeneration v1.3.0
     """
     def __init__(self, **kwargs):
         """Initialisation standardisée."""
@@ -132,7 +150,15 @@ class AgentMAINTENANCE01AnalyseurStructure(Agent):
         return analysis_report
 
     def get_capabilities(self) -> List[str]:
-        return ["analyse_structure"]
+        """Retourne les capacités spécialisées de l'Analyseur de Structure."""
+        return [
+            "analyse_structure",
+            "analyse_ast_python",
+            "detection_erreurs_syntaxiques", 
+            "extraction_imports_classes_fonctions",
+            "analyse_repertoire_complet",
+            "compatibilite_coordinateur_maintenance"
+        ]
 
     async def health_check(self) -> Dict[str, Any]:
         return {"status": "healthy"}

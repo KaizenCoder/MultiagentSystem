@@ -1,0 +1,142 @@
+#!/usr/bin/env python3
+"""
+Orchestrateur de cartographie et migration des agents PostgreSQL
+"""
+
+import logging
+from pathlib import Path
+from typing import Dict, List, Optional
+import importlib
+import sys
+
+from core.agent_factory_architecture import Task, Result
+
+class OrchestratorPostgreSQL:
+    """Orchestrateur pour la cartographie et migration des agents PostgreSQL"""
+
+    def __init__(self):
+        self.logger = self._setup_logging()
+        self.agents: Dict[str, object] = {}
+        self.workspace_root = Path(__file__).parent.parent
+
+    def _setup_logging(self) -> logging.Logger:
+        """Configuration du logging"""
+        logger = logging.getLogger('OrchestratorPostgreSQL')
+        logger.setLevel(logging.INFO)
+        
+        if not logger.handlers:
+            handler = logging.StreamHandler()
+            formatter = logging.Formatter(
+                '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+            )
+            handler.setFormatter(formatter)
+            logger.addHandler(handler)
+            
+            # Ajout d'un handler fichier
+            log_file = Path('logs/orchestrator_postgresql.log')
+            log_file.parent.mkdir(parents=True, exist_ok=True)
+            file_handler = logging.FileHandler(log_file)
+            file_handler.setFormatter(formatter)
+            logger.addHandler(file_handler)
+        
+        return logger
+
+    def discover_agents(self) -> List[str]:
+        """Découverte des agents PostgreSQL dans le workspace"""
+        agents_found = []
+        
+        try:
+            agents_dir = self.workspace_root / 'agents'
+            for file in agents_dir.glob('agent_POSTGRESQL_*.py'):
+                if file.stem != 'agent_POSTGRESQL_base':
+                    agents_found.append(file.stem)
+                    self.logger.info(f'Agent PostgreSQL découvert: {file.stem}')
+        except Exception as e:
+            self.logger.error(f'Erreur lors de la découverte des agents: {e}')
+        
+        return agents_found
+
+    def load_agent(self, agent_name: str) -> bool:
+        """Chargement d'un agent PostgreSQL"""
+        try:
+            # Import dynamique du module
+            module_name = f'agents.{agent_name}'
+            module = importlib.import_module(module_name)
+            
+            # Récupération de la classe d'agent
+            class_name = ''.join(part.capitalize() for part in agent_name.split('_'))
+            agent_class = getattr(module, class_name)
+            
+            # Instanciation de l'agent
+            agent = agent_class(workspace_root=self.workspace_root)
+            self.agents[agent_name] = agent
+            
+            self.logger.info(f'Agent {agent_name} chargé avec succès')
+            return True
+            
+        except Exception as e:
+            self.logger.error(f'Erreur lors du chargement de l\'agent {agent_name}: {e}')
+            return False
+
+    def execute_task(self, agent_name: str, task: Task) -> Optional[Result]:
+        """Exécution d'une tâche sur un agent spécifique"""
+        if agent_name not in self.agents:
+            self.logger.error(f'Agent {agent_name} non trouvé')
+            return None
+            
+        try:
+            agent = self.agents[agent_name]
+            result = agent.execute_task(task)
+            return result
+        except Exception as e:
+            self.logger.error(f'Erreur lors de l\'exécution de la tâche sur {agent_name}: {e}')
+            return None
+
+    def get_agent_capabilities(self, agent_name: str) -> List[str]:
+        """Récupération des capacités d'un agent"""
+        if agent_name not in self.agents:
+            self.logger.error(f'Agent {agent_name} non trouvé')
+            return []
+            
+        try:
+            agent = self.agents[agent_name]
+            return agent.get_capabilities()
+        except Exception as e:
+            self.logger.error(f'Erreur lors de la récupération des capacités de {agent_name}: {e}')
+            return []
+
+    def initialize(self) -> bool:
+        """Initialisation de l'orchestrateur"""
+        try:
+            # Découverte des agents
+            agents_found = self.discover_agents()
+            self.logger.info(f'Agents découverts: {agents_found}')
+            
+            # Chargement des agents
+            for agent_name in agents_found:
+                success = self.load_agent(agent_name)
+                if not success:
+                    self.logger.warning(f'Échec du chargement de {agent_name}')
+            
+            return True
+        except Exception as e:
+            self.logger.error(f'Erreur lors de l\'initialisation: {e}')
+            return False
+
+def main():
+    """Point d'entrée principal"""
+    orchestrator = OrchestratorPostgreSQL()
+    
+    if not orchestrator.initialize():
+        sys.exit(1)
+    
+    # Affichage des agents chargés et leurs capacités
+    for agent_name in orchestrator.agents:
+        capabilities = orchestrator.get_agent_capabilities(agent_name)
+        print(f'\nAgent: {agent_name}')
+        print('Capacités:')
+        for cap in capabilities:
+            print(f'  - {cap}')
+
+if __name__ == '__main__':
+    main()

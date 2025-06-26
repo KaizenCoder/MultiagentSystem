@@ -12,6 +12,7 @@ from logging.handlers import RotatingFileHandler
 from typing import List, Dict, Any, Tuple
 import asyncio
 import json
+import textwrap
 
 # --- Blocs d'import pour Pattern Factory ---
 try:
@@ -58,12 +59,12 @@ def _safe_rename(source: str, mapping: dict[str, str]) -> str:
 def _sort_imports_block(import_lines: List[str]) -> List[str]:
     std_libs = set(sys.stdlib_module_names)
     buckets = {'std': set(), 'third': set(), 'local': set()}
-    for line in import_lines:
+    for line_content in import_lines:
         try:
-            root = line.split()[1].split('.')[0]
-            if root in std_libs: buckets['std'].add(line)
-            elif root.startswith('core') or root.startswith('agents'): buckets['local'].add(line)
-            else: buckets['third'].add(line)
+            root = line_content.split()[1].split('.')[0]
+            if root in std_libs: buckets['std'].add(line_content)
+            elif root.startswith('core') or root.startswith('agents'): buckets['local'].add(line_content)
+            else: buckets['third'].add(line_content)
         except IndexError: continue
     output = []
     for key in ('std', 'third', 'local'):
@@ -74,8 +75,8 @@ def _sort_imports_block(import_lines: List[str]) -> List[str]:
 def _find_header_end(lines: list[str]) -> int:
     last_import_line = 0
     in_docstring = False
-    for i, line in enumerate(lines):
-        s_line = line.strip()
+    for i, line_content in enumerate(lines):
+        s_line = line_content.strip()
         if i == 0 and s_line.startswith('#!'): continue
         if s_line.startswith(('"""', "'''")) and s_line.count(s_line[:3]) == 1: in_docstring = not in_docstring
         if in_docstring: continue
@@ -154,44 +155,109 @@ class CorrecteurSemantique(Agent):
         return _safe_rename(code, mapping)
         
     def _apply_imports(self, code: str, corrections: List[Dict]) -> str:
-        if not corrections: return code + '\n'
-        lines = code.split('\n')
+        if not corrections: return code + '\r\n'
+        lines = code.split('\r\n')
         existing_imports = {line.strip() for line in lines if line.strip().startswith(('import ', 'from '))}
         imports_to_add = {c['suggestion'] for c in corrections} - existing_imports
-        if not imports_to_add: return '\n'.join(lines) + '\n'
+        if not imports_to_add: return '\r\n'.join(lines) + '\r\n'
         sorted_new_imports = _sort_imports_block(list(imports_to_add))
         insert_pos = _find_header_end(lines)
         blank = [''] if lines and insert_pos < len(lines) and lines[insert_pos].strip() else []
         lines[insert_pos:insert_pos] = sorted_new_imports + blank
-        return '\n'.join(lines) + '\n'
+        return '\r\n'.join(lines) + '\r\n'
 
     def _apply_docstrings(self, code: str, corrections: List[Dict]) -> str:
         if not corrections: return code
-        lines = code.split('\n')
-        
-        module_doc_correction = None
-        other_corrections = []
+        lines = code.splitlines() # Handles \n and \r\n
+        # Separate module docstring from others
+        module_doc_correction_obj = None
+        other_doc_corrections = []
         for c in corrections:
-            if c.get('target') == 'module':
-                module_doc_correction = c
-            else:
-                other_corrections.append(c)
-
-        for cor in sorted(other_corrections, key=lambda x: x['line'], reverse=True):
-            line_idx = cor['line'] - 1
-            if 0 <= line_idx < len(lines):
-                # Simplification: docstring de classe sans indentation complexe
-                if 'class' in lines[line_idx]:
-                    lines.insert(line_idx + 1, '    ' + cor["suggestion"])
+            if c.get('type') == 'add_docstring': # Ensure we only process docstring corrections
+                if c.get('target') == 'module':
+                    module_doc_correction_obj = c
                 else:
-                    lines.insert(line_idx + 1, '    ' + cor["suggestion"])
-        
-        if module_doc_correction:
-            # S'assurer qu'il n'y a pas de shebang
-            start_index = 1 if lines and lines[0].startswith('#!') else 0
-            lines.insert(start_index, module_doc_correction["suggestion"] + '\n')
+                    other_doc_corrections.append(c)
 
-        return '\n'.join(lines)
+        # Apply module docstring first if present
+        if module_doc_correction_obj:
+            suggestion = module_doc_correction_obj["suggestion"]
+            # Ensure it's a valid triple-quoted string
+            if not (suggestion.startswith('"""') and suggestion.endswith('"""')) and \
+               not (suggestion.startswith("'''") and suggestion.endswith("'''")):
+                suggestion = f'"""{suggestion}"""'
+
+            start_index = 0
+            if lines and lines[0].startswith('#!'): # Handle shebang
+                start_index = 1
+            
+            has_existing_module_doc = False
+            if len(lines) > start_index:
+                line_to_check = lines[start_index].strip()
+                if line_to_check.startswith('"""') or line_to_check.startswith("'''"): # Basic check
+                    if (line_to_check.count('"""') % 2 == 0 and line_to_check.count('"""') > 0) or \
+                       (line_to_check.count("'''") % 2 == 0 and line_to_check.count("'''") > 0) or \
+                       (line_to_check.count('"""') == 1 and not line_to_check.endswith('"""')) or \
+                       (line_to_check.count("'''") == 1 and not line_to_check.endswith("'''")):
+                        has_existing_module_doc = True
+            
+            if not has_existing_module_doc:
+                lines.insert(start_index, suggestion)
+                if start_index + 1 < len(lines) and lines[start_index+1].strip() != "" and not lines[start_index+1].strip().startswith('#'):
+                     lines.insert(start_index + 1, "")
+                elif start_index + 1 == len(lines):
+                     lines.insert(start_index + 1, "")
+
+
+        current_code_for_ast = "\n".join(lines) # ast.parse expects \n newlines
+        try:
+            current_ast = ast.parse(current_code_for_ast)
+        except SyntaxError as e:
+            self.logger.error(f"Syntax error after module docstring (or before func/class docstrings): {e}. Code snippet:\n{current_code_for_ast[:500]}")
+            return "\n".join(lines) # Return current lines (which use \n now)
+
+        node_map = {}
+        for node in ast.walk(current_ast):
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                if hasattr(node, 'name'): 
+                    node_map[node.name] = node
+        
+        sorted_other_corrections = sorted(
+            [c for c in other_doc_corrections if c.get('target') in node_map], # Filter for existing targets
+            key=lambda c: node_map[c['target']].lineno,
+            reverse=True
+        )
+
+        for cor in sorted_other_corrections:
+            target_name = cor['target']
+            node = node_map[target_name] 
+
+            if ast.get_docstring(node, clean=False): # Check if docstring already exists in AST
+                continue
+
+            line_idx_in_ast_lines = node.lineno - 1 
+
+            if 0 <= line_idx_in_ast_lines < len(lines):
+                original_line_content = lines[line_idx_in_ast_lines]
+                
+                leading_whitespace = ""
+                for char_idx, char_in_line in enumerate(original_line_content):
+                    if not char_in_line.isspace():
+                        leading_whitespace = original_line_content[:char_idx]
+                        break
+                else: 
+                    leading_whitespace = "" # Should not happen for a def/class line
+                    
+                docstring_indent = leading_whitespace + '    ' # Standard 4-space indent
+
+                suggestion = cor["suggestion"]
+                if not (suggestion.startswith('"""') and suggestion.endswith('"""')) and \
+                   not (suggestion.startswith("'''") and suggestion.endswith("'''")):
+                    suggestion = f'"""{suggestion}"""' # Ensure triple quotes
+                
+                lines.insert(line_idx_in_ast_lines + 1, docstring_indent + suggestion)
+        
+        return "\n".join(lines)
 
     def _gather_metrics(self, code: str) -> Dict[str, Any]:
         tree = ast.parse(code)
@@ -264,20 +330,20 @@ if __name__ == '__main__':
         logger.info("=== DÉMONSTRATION DE L'AGENT CORRECTEUR SÉMANTIQUE V6.5-SOP ===")
         agent = CorrecteurSemantique(enable_auto_rename=True)
         await agent.startup()
-        test_code = '''
-import os
-class my_calculator:
-    def calculateSum(self, x, y):
-        some_value = x + y
-        return some_value
-api_key = "secret_key"
-def anotherFunction():
-    my_list = List()
-    a_task = Task(1, "d", {})
-    return my_list
-'''
+        test_code = textwrap.dedent('''\
+            import os
+            class my_calculator:
+                def calculateSum(self, x, y):
+                    some_value = x + y
+                    return some_value
+            api_key = "secret_key"
+            def anotherFunction():
+                my_list = []
+                a_task = Task(1, "d", {})
+                return my_list
+            ''')
         task = Task(type="correct_semantics", params={"code": test_code})
-        result = agent.execute_task(task)
+        result = agent.execute_task(task) # execute_task is synchronous
         
         print(f"\nRésultat: {'Succès' if result.success else 'Échec'}")
         if result.success and result.data:

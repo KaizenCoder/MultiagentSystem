@@ -9,7 +9,7 @@ AGENT 3 - ADAPTATEUR DE CODE (LibCST)
 🏢 Équipe : NextGeneration Tools Migration
 
 Author: Équipe de Maintenance NextGeneration
-Version: 3.0.0
+Version: 3.1.0 - Harmonisation Standards Pattern Factory NextGeneration
 """
 import sys
 from pathlib import Path
@@ -185,7 +185,32 @@ class CstComplexImportAdder(cst.CSTTransformer):
 
 class AgentMAINTENANCE03AdaptateurCode(Agent):
     """
-    Agent qui utilise LibCST pour une réparation de code robuste et multi-niveaux.
+    🔧 Agent MAINTENANCE 03 - Adaptateur de Code NextGeneration
+    
+    Agent spécialisé dans l'adaptation et la réparation de code Python via LibCST,
+    manipulation sécurisée de l'AST et stratégies de réparation multi-niveaux.
+    
+    Capacités principales :
+    - Réparation d'erreurs d'indentation avec stratégies ciblées
+    - Manipulation sécurisée AST via LibCST (blocs vides, imports)
+    - Correction automatique NameError avec mapping intelligent
+    - Insertion robuste 'pass' dans blocs vides (try/except, functions)
+    - Gestion imports complexes avec évitement doublons
+    - Classification erreurs pour stratégies adaptées
+    
+    Technologies avancées :
+    - LibCST : Transformations AST préservant formatage
+    - Pyflakes : Détection erreurs statiques
+    - CSTTransformer : Classes personnalisées insertion/adaptation
+    - Multi-level repair : Stratégies en cascade selon type erreur
+    
+    Workflow type :
+    1. Classification erreur (indentation/import/name/generic)
+    2. Application stratégie ciblée
+    3. Transformation LibCST sécurisée
+    4. Validation et traçabilité adaptations
+    
+    Conformité : Pattern Factory NextGeneration v3.1.0
     """
     def __init__(self, **kwargs):
         super().__init__(agent_type="adaptateur", **kwargs)
@@ -206,7 +231,19 @@ class AgentMAINTENANCE03AdaptateurCode(Agent):
         }
 
     def get_capabilities(self) -> List[str]:
-        return ["code_adaptation", "import_fixing", "indentation_error_fix"]
+        """Retourne les capacités spécialisées de l'Adaptateur de Code."""
+        return [
+            "code_adaptation",
+            "import_fixing",
+            "indentation_error_fix",
+            "libcst_ast_transformation",
+            "pyflakes_static_analysis",
+            "multi_level_repair_strategy",
+            "complex_import_management",
+            "empty_block_correction",
+            "name_error_resolution",
+            "formatting_preservation"
+        ]
         
     def _fix_indentation_errors(self, code: str, error: Exception) -> Tuple[str, List[str]]:
         """

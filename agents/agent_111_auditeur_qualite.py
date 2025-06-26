@@ -91,15 +91,36 @@ class Agent111AuditeurQualite(Agent):
         # Pré-initialisation pour satisfaire les dépendances de la classe de base `Agent`
         self.agent_id = config.get("agent_id", f"agent_111_auditeur_qualite_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
         self.agent_type = "agent_111_auditeur_qualite"
+        # Définir self.workspace_root tôt car il est utilisé pour le logger fallback
+        self.workspace_root = Path(__file__).resolve().parents[1]
+        
         self.logger = logging.getLogger(f"Agent111AuditeurQualite_{self.agent_id}")
         
+        if not PATTERN_FACTORY_AVAILABLE:
+            # Configuration du logger fichier en mode fallback
+            log_file_dir = self.workspace_root / "logs" / "agents"
+            log_file_dir.mkdir(parents=True, exist_ok=True)
+            # Utiliser self.agent_id qui est déjà défini et unique en mode fallback
+            log_file_path = log_file_dir / f"{self.agent_id}_execution.log"
+            
+            file_handler = logging.FileHandler(log_file_path, encoding='utf-8')
+            formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+            file_handler.setFormatter(formatter)
+            
+            # S'assurer que le logger n'a pas déjà ce handler (évite duplication si __init__ est appelé plusieurs fois)
+            if not any(isinstance(h, logging.FileHandler) and h.baseFilename == str(log_file_path) for h in self.logger.handlers):
+                self.logger.addHandler(file_handler)
+            
+            self.logger.setLevel(logging.INFO) # Assurer que le niveau du logger est INFO
+            self.logger.propagate = False # Éviter que les messages remontent au root logger si basicConfig a été appelé
+            self.logger.info(f"Logger fallback configuré. Journalisation fichier activée: {log_file_path}")
+
         # L'appel à super() se fait APRÈS la création des attributs dont il dépend.
         super().__init__(self.agent_type, **config)
         
         self.logger.info(f"🤖 Agent111AuditeurQualite initialisé - ID: {self.agent_id}")
         
         # Ce code était orphelin à la fin du fichier, je le déplace ici.
-        self.workspace_root = Path(__file__).resolve().parents[1]
         self.code_expert_path = self.workspace_root / "code_expert"
 
         try:
@@ -225,24 +246,32 @@ class Agent111AuditeurQualite(Agent):
         self.logger.info(f"🎯 Exécution tâche: {task.type if hasattr(task, 'type') else task.description}")
         try:
             task_type = task.type if hasattr(task, 'type') else task.description
-            task_params = task.params if hasattr(task, 'params') else task.data
+            # raw_params sera task.params si l'attribut existe, sinon task.data
+            raw_params = task.params if hasattr(task, 'params') else task.data
 
-            if task_type == "audit_code_quality":
-                code = task_params.get('code')
-                file_path = task_params.get('file_path')
-                if not code or not file_path:
-                    return Result(success=False, error="Code et file_path sont requis pour audit_code_quality.")
+            if task_type == "audit_universal_quality":
+                file_path = None
+                if isinstance(raw_params, dict):
+                    # Essayer d'accéder directement à file_path
+                    file_path = raw_params.get('file_path')
+                    # Si non trouvé, et si 'params' est une clé dans raw_params (cas du fallback Task)
+                    if not file_path and 'params' in raw_params and isinstance(raw_params['params'], dict):
+                        file_path = raw_params['params'].get('file_path')
                 
-                report = await self._audit_code(code, file_path)
-                return Result(success=True, data={"quality_report": report})
+                if not file_path:
+                    self.logger.error(f"DEBUG execute_task - raw_params pour audit: {raw_params}")
+                    return Result(success=False, error="file_path est requis pour audit_universal_quality (n'a pas pu être extrait des paramètres).")
+                
+                report_obj = await self.audit_code_quality(file_path=file_path)
+                return Result(success=True, data={"audit_report": report_obj})
 
             elif task_type == "execute_mission":
-                mission_data = task_params.get('mission_data', None)
+                mission_data = raw_params.get('mission_data', None)
                 results = await self.execute_mission(mission_data)
                 return Result(success=True, data={"mission_results": results})
 
             elif task_type == "process_data":
-                data_to_process = task_params.get('data', None)
+                data_to_process = raw_params.get('data', None)
                 if data_to_process is None:
                     return Result(success=False, error="Données requises pour 'process_data'")
                 processed = await self.process_data(data_to_process)
@@ -258,7 +287,7 @@ class Agent111AuditeurQualite(Agent):
     def get_capabilities(self) -> List[str]:
         """Retourne les capacités de l'agent"""
         return [
-            "audit_code_quality",
+            "audit_universal_quality",
             "execute_mission",
             "process_data",
             "health_monitoring",
@@ -305,33 +334,67 @@ def create_agent_111_auditeur_qualite(**config) -> 'Agent111AuditeurQualite':
 async def main():
     """Test de l'agent Pattern Factory"""
     print("🚀 Démarrage test agent_111_auditeur_qualite...")
-    agent = create_agent_111_auditeur_qualite()
+    # Passer un agent_id fixe pour des noms de log prévisibles pendant le test
+    agent = create_agent_111_auditeur_qualite(agent_id="test_agent_111")
 
     try:
         await agent.startup()
         health = await agent.health_check()
         print(f"🏥 Health Check: {health}")
+        agent.logger.info(f"MAIN_TEST - Health Check: {health}")
 
         # Test d'une tâche
         print("\n🔬 Test de la tâche 'execute_mission'...")
-        task = Task("test_mission_01", "execute_mission", data={'mission_data': None})
-        result = await agent.execute_task(task)
-        print(f"   Résultat: {'Succès' if result.success else 'Échec'} - {result.data or result.error}")
+        task_mission = Task(task_id="test_mission_01", description="execute_mission", params={'mission_data': None})
+        result_mission = await agent.execute_task(task_mission)
+        print(f"   Résultat de la mission: {'Succès' if result_mission.success else 'Échec'}")
+        if not result_mission.success:
+            print(f"   Erreur mission: {result_mission.error}")
+        agent.logger.info(f"MAIN_TEST - Mission Task ID: {task_mission.task_id}, Description: {task_mission.description}")
+        agent.logger.info(f"MAIN_TEST - Mission Result Success: {result_mission.success}")
+        agent.logger.info(f"MAIN_TEST - Mission Result Data: {result_mission.data}")
+        if result_mission.error:
+            agent.logger.error(f"MAIN_TEST - Mission Result Error: {result_mission.error}")
 
-        print("\n🔬 Test de la tâche 'audit_code_quality'...")
+        print("\n🔬 Test de la tâche 'audit_universal_quality'...")
         try:
             with open(__file__, "r", encoding="utf-8") as f:
-                test_code = f.read()
-            audit_task = Task(type="audit_code_quality", params={"code": test_code, "file_path": __file__})
+                # test_code n'est plus lu ici car la méthode d'audit s'en charge
+                pass # Garder le bloc with open pour ne pas trop changer la structure, même si test_code n'est plus utilisé ici
+            
+            # Mettre à jour la création de la tâche pour ne plus passer 'code'
+            audit_task = Task(task_id="audit_quality_test_01", description="audit_universal_quality", params={"file_path": __file__})
+            
+            agent.logger.info(f"MAIN_TEST - Lancement de la tâche d'audit pour: {__file__}")
             audit_result = await agent.execute_task(audit_task)
-            print(f"   Résultat: {'Succès' if audit_result.success else 'Échec'}")
-            if audit_result.success:
-                print(f"   Score de qualité de ce fichier: {audit_result.data['quality_report']['quality_score']}/100")
+
+            # Log détaillé des résultats de l'audit
+            agent.logger.info(f"MAIN_TEST - Audit Task ID: {audit_task.task_id}, Description: {audit_task.description}")
+            agent.logger.info(f"MAIN_TEST - Audit Result Success: {audit_result.success}")
+            agent.logger.info(f"MAIN_TEST - Audit Result Data: {audit_result.data}")
+            if audit_result.error:
+                agent.logger.error(f"MAIN_TEST - Audit Result Error: {audit_result.error}")
+
+            print(f"   Résultat de l'audit: {'Succès' if audit_result.success else 'Échec'}")
+            if audit_result.success and audit_result.data:
+                report_data = audit_result.data.get('audit_report', {})
+                print(f"   Score de qualité de ce fichier: {report_data.get('quality_score', 'N/A')}/100")
+                if report_data.get('issues'):
+                    print("   Problèmes trouvés:")
+                    for issue_dict in report_data.get('issues', []):
+                        print(f"     - L{issue_dict.get('line', 'N/A')}:{issue_dict.get('column', 'N/A')} [{issue_dict.get('code', 'N/A')}] {issue_dict.get('description', 'N/A')} ({issue_dict.get('severity', 'N/A')})")
+                else:
+                    print("   Aucun problème substantiel trouvé par l'audit.") # Message plus précis
+            elif not audit_result.success:
+                print(f"   Erreur audit: {audit_result.error}")
+
         except Exception as e:
-            print(f"   Erreur durant le test d'audit: {e}")
+            print(f"   Erreur durant le test d'audit (bloc try/except externe): {e}")
+            agent.logger.error(f"MAIN_TEST - Erreur Exception dans le bloc de test d'audit: {e}", exc_info=True)
 
     except Exception as e:
-        print(f"❌ Erreur durant l'exécution de l'agent: {e}")
+        print(f"❌ Erreur durant l'exécution de l'agent (bloc try/except principal): {e}")
+        agent.logger.error(f"MAIN_TEST - Erreur Exception dans main(): {e}", exc_info=True)
     finally:
         await agent.shutdown()
         print("\n✅ Test terminé.")

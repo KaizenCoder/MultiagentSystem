@@ -1,0 +1,842 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+📊 AGENT 06 - MONITORING AVANCÉ
+Mission: Observabilité distribuée avec OpenTelemetry et Prometheus.
+"""
+import sys
+from pathlib import Path
+
+# Ajout du répertoire parent au path pour résoudre les imports locaux
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+
+import asyncio
+import logging
+from typing import Dict, List, Optional, Any
+from core.manager import LoggingManager
+
+from core.agent_factory_architecture import Agent, Task, Result
+
+try:
+    from opentelemetry import trace, metrics
+    from opentelemetry.sdk.trace import TracerProvider
+    from opentelemetry.sdk.metrics import MeterProvider
+    OPENTELEMETRY_AVAILABLE = True
+except ImportError:
+    OPENTELEMETRY_AVAILABLE = False
+
+
+class Agent06AdvancedMonitoring(Agent):
+    """
+    📊 AGENT 06 - MONITORING AVANCÉ - Version restructurée et fonctionnelle.
+    """
+    
+    def __init__(self, agent_id="agent_06_specialiste_monitoring", agent_type="monitoring", **kwargs):
+        # Initialisation du logger spécifique à l'agent
+        logging_manager = LoggingManager()
+        custom_log_config = {
+            "logger_name": f"agent.{agent_id}",
+            "metadata": {
+                "agent_name": agent_id,
+                "role": "monitoring",
+                "domain": "observability"
+            }
+        }
+        logger = logging_manager.get_logger(config_name="default", custom_config=custom_log_config)
+        super().__init__(agent_id=agent_id, agent_type=agent_type, logger=logger, **kwargs)
+        self.logger = logger
+        
+        self.tracer_provider = None
+        self.meter_provider = None
+        self.tracer = None
+        self.meter = None
+        
+        if OPENTELEMETRY_AVAILABLE:
+            self._setup_opentelemetry()
+        else:
+            self.logger.warning("⚠️ OpenTelemetry non disponible - mode dégradé.")
+
+    def _setup_opentelemetry(self):
+        """Initialisation propre d'OpenTelemetry."""
+        try:
+            self.tracer_provider = TracerProvider()
+            trace.set_tracer_provider(self.tracer_provider)
+            self.tracer = trace.get_tracer(__name__)
+            
+            self.meter_provider = MeterProvider()
+            metrics.set_meter_provider(self.meter_provider)
+            self.meter = metrics.get_meter(__name__)
+            
+            self.logger.info("✅ OpenTelemetry initialisé avec succès.")
+        except Exception as e:
+            self.logger.error(f"❌ Erreur initialisation OpenTelemetry: {e}")
+            global OPENTELEMETRY_AVAILABLE
+            OPENTELEMETRY_AVAILABLE = False
+
+    async def execute_task(self, task: Task) -> Result:
+        # Support pour génération de rapports stratégiques monitoring - Mission IA 2
+        if hasattr(task, 'name') and task.name == "generate_strategic_report":
+            try:
+                context = getattr(task, 'context', {})
+                type_rapport = getattr(task, 'type_rapport', 'monitoring')
+                format_sortie = getattr(task, 'format_sortie', 'json')
+                
+                rapport = await self.generer_rapport_strategique(context, type_rapport)
+                
+                if format_sortie == 'markdown':
+                    rapport_md = await self.generer_rapport_markdown(rapport, type_rapport, context)
+                    
+                    # Sauvegarde dans /reports/
+                    import os
+                    from datetime import datetime 
+                    reports_dir = "/mnt/c/Dev/nextgeneration/reports" 
+                    os.makedirs(reports_dir, exist_ok=True)
+                    
+                    timestamp_val = datetime.now() 
+                    filename = f"strategic_report_agent_06_monitoring_{type_rapport}_{timestamp_val.strftime('%Y-%m-%d_%H%M%S')}.md"
+                    filepath = os.path.join(reports_dir, filename)
+                    
+                    with open(filepath, 'w', encoding='utf-8') as f:
+                        f.write(rapport_md)
+                    
+                    return Result(success=True, data={
+                        'rapport_json': rapport, 
+                        'rapport_markdown': rapport_md,
+                        'fichier_sauvegarde': filepath
+                    })
+                
+                return Result(success=True, data=rapport)
+            except Exception as e:
+                self.logger.error(f"Erreur génération rapport monitoring: {e}")
+                return Result(success=False, error=f"Exception rapport monitoring: {str(e)}")
+        
+        # Tâches de monitoring originales
+        else:
+            self.logger.info(f"⚙️ Exécution de la tâche de monitoring: {task.task_id}")
+
+            if self.tracer and OPENTELEMETRY_AVAILABLE:
+                with self.tracer.start_as_current_span("monitoring_task") as span:
+                    span.set_attribute("task.id", task.task_id)
+                    status = self.get_system_status()
+                    span.set_attribute("system.status", "ok" if status.get("success") else "error")
+                    return Result(success=True, data=status)
+            else:
+                status = self.get_system_status()
+                return Result(success=True, data=status)
+
+    def get_system_status(self) -> Dict[str, Any]:
+        """Retourne un rapport d'état simple."""
+        return {
+            "success": True,
+            "timestamp": asyncio.get_event_loop().time(),
+            "opentelemetry_enabled": OPENTELEMETRY_AVAILABLE,
+        }
+
+    async def startup(self):
+        self.logger.info(f"📊 {self.agent_id} v{self.version} - DÉMARRAGE")
+
+    async def shutdown(self):
+        self.logger.info(f"📊 {self.agent_id} v{self.version} - ARRÊT")
+
+    # === MISSION IA 2: GÉNÉRATION DE RAPPORTS STRATÉGIQUES MONITORING ===
+    
+    async def generer_rapport_strategique(self, context: Dict[str, Any], type_rapport: str = 'monitoring') -> Dict[str, Any]:
+        """
+        📊 Génération de rapports stratégiques pour monitoring et observabilité
+        
+        Args:
+            context: Contexte d'analyse (cible, objectifs, etc.)
+            type_rapport: Type de rapport ('monitoring', 'observabilite', 'performance', 'alertes')
+        
+        Returns:
+            Rapport stratégique JSON avec métriques de monitoring et recommandations
+        """
+        self.logger.info(f"Génération rapport monitoring/observabilité: {type_rapport}")
+        
+        # Collecte des métriques de monitoring
+        metriques_base = await self._collecter_metriques_monitoring()
+        
+        from datetime import datetime 
+        timestamp_val = datetime.now() 
+        
+        if type_rapport == 'monitoring':
+            return await self._generer_rapport_monitoring(context, metriques_base, timestamp_val)
+        elif type_rapport == 'observabilite':
+            return await self._generer_rapport_observabilite(context, metriques_base, timestamp_val)
+        elif type_rapport == 'performance': 
+            return await self._generer_rapport_performance_monitoring(context, metriques_base, timestamp_val)
+        elif type_rapport == 'alertes':
+            return await self._generer_rapport_alertes(context, metriques_base, timestamp_val)
+        else: 
+            return await self._generer_rapport_monitoring(context, metriques_base, timestamp_val)
+
+    async def _collecter_metriques_monitoring(self) -> Dict[str, Any]:
+        """Collecte les métriques de monitoring et observabilité"""
+        try:
+            # Métriques système de monitoring
+            system_status = self.get_system_status()
+            from datetime import datetime 
+            current_iso_timestamp = datetime.now().isoformat()
+
+            # Métriques monitoring
+            monitoring_metrics = {
+                'opentelemetry_enabled': OPENTELEMETRY_AVAILABLE,
+                'tracer_provider_active': self.tracer_provider is not None,
+                'meter_provider_active': self.meter_provider is not None,
+                'monitoring_active': system_status.get('success', False)
+            }
+
+            # Métriques observabilité (simulées)
+            observability_metrics = {
+                'traces_collected': 245,  
+                'metrics_collected': 128,  
+                'logs_processed': 1024,    
+                'alert_rules': 15,         
+                'dashboards_active': 8     
+            }
+
+            # Évaluation santé monitoring
+            monitoring_health = {
+                'telemetry_operational': OPENTELEMETRY_AVAILABLE,
+                'tracing_enabled': self.tracer is not None,
+                'metrics_enabled': self.meter is not None,
+                'system_responsive': system_status.get('success', False)
+            }
+
+            return {
+                'monitoring_metrics': monitoring_metrics,
+                'observability_metrics': observability_metrics,
+                'monitoring_health': monitoring_health,
+                'system_status': system_status,
+                'derniere_maj': current_iso_timestamp
+            }
+
+        except Exception as e:
+            self.logger.error(f"Erreur collecte métriques monitoring: {e}")
+            return {'erreur': str(e), 'metriques_partielles': True}
+
+    async def _generer_rapport_monitoring(self, context: Dict, metriques: Dict, timestamp) -> Dict[str, Any]:
+        """Génère un rapport stratégique centré monitoring"""
+
+        monitoring_metrics = metriques.get('monitoring_metrics', {})
+        observability_metrics = metriques.get('observability_metrics', {})
+        monitoring_health = metriques.get('monitoring_health', {})
+
+        score_monitoring = 0
+        issues_critiques_details_list = [] 
+        if monitoring_health.get('telemetry_operational'): score_monitoring += 30
+        else: issues_critiques_details_list.append("OpenTelemetry indisponible")
+        if monitoring_health.get('tracing_enabled'): score_monitoring += 25
+        else: issues_critiques_details_list.append("Tracing inactif")
+        if monitoring_health.get('metrics_enabled'): score_monitoring += 25
+        else: issues_critiques_details_list.append("Collecte de métriques inactive")
+        if monitoring_health.get('system_responsive'): score_monitoring += 20
+        else: issues_critiques_details_list.append("Système de monitoring non réactif")
+
+        niveau_qualite_val = "OPTIMAL" if score_monitoring >= 90 else "ACCEPTABLE" if score_monitoring >= 70 else "CRITIQUE"
+        conformite_val = "✅ CONFORME" if score_monitoring >= 70 else "❌ NON CONFORME"
+        issues_critiques_count_val = len(issues_critiques_details_list)
+
+        return {
+            'agent_id': 'agent_06_specialiste_monitoring_sprint4',
+            'type_rapport': 'monitoring',
+            'timestamp': timestamp.isoformat(),
+            'specialisation': 'Spécialiste Monitoring & Observabilité',
+            'score_global': score_monitoring, 
+            'niveau_qualite': niveau_qualite_val, 
+            'conformite': conformite_val, 
+            'issues_critiques_identifies': issues_critiques_count_val, 
+            'architecture_monitoring': { 
+                'description': "Système de monitoring stratégique basé sur OpenTelemetry pour une visibilité complète.",
+                'objectifs_principaux': [
+                    "Collecte exhaustive des traces distribuées",
+                    "Surveillance en temps réel des métriques de performance clés",
+                    "Agrégation et analyse centralisée des logs applicatifs et système",
+                    "Configuration et gestion proactive des alertes critiques"
+                ],
+                'technologies_cles': ["OpenTelemetry", "Prometheus (simulation pour métriques)", "Grafana (simulation pour dashboards)"]
+            },
+            'recommandations_monitoring': [
+                f"📊 TELEMETRY: {'✅ OpenTelemetry opérationnel' if monitoring_health.get('telemetry_operational') else '❌ OpenTelemetry indisponible. Investiguer immédiatement.'}",
+                f"🔍 TRACING: {'✅ Tracing actif et configuré.' if monitoring_health.get('tracing_enabled') else '❌ Tracing inactif. Vérifier la configuration du provider.'}",
+                f"📈 METRICS: {'✅ Collecte de métriques active.' if monitoring_health.get('metrics_enabled') else '❌ Collecte de métriques inactive. Vérifier le meter provider.'}",
+                f"⚡ SYSTÈME: {'✅ Système de monitoring réactif.' if monitoring_health.get('system_responsive') else '❌ Système de monitoring non réactif. Investiguer la cause.'}"
+            ],
+            'issues_critiques_monitoring_details': issues_critiques_details_list if issues_critiques_count_val > 0 else ["Aucun issue critique de monitoring majeur détecté."], 
+             'details_techniques_monitoring': { 
+                'opentelemetry_disponible': monitoring_metrics.get('opentelemetry_enabled', False),
+                'tracer_provider_actif': monitoring_metrics.get('tracer_provider_active', False),
+                'meter_provider_actif': monitoring_metrics.get('meter_provider_active', False),
+                'traces_collectees': observability_metrics.get('traces_collected', 0),
+                'metriques_collectees': observability_metrics.get('metrics_collected', 0),
+                'logs_traites': observability_metrics.get('logs_processed', 0),
+                'alert_rules_configurees': observability_metrics.get('alert_rules', 0),
+                'dashboards_actifs': observability_metrics.get('dashboards_active', 0)
+            },
+            'metriques_monitoring_detaillees': { 
+                'score_monitoring_global': score_monitoring,
+                'system_responsive': monitoring_health.get('system_responsive', False),
+                'services_monitores_ok': 10, 
+                'total_services': 12, 
+                'alert_rules': observability_metrics.get('alert_rules', 0)
+            },
+            'metadonnees': { 
+                'version_agent': 'monitoring_specialist_v1.1', 
+                'specialisation_confirmee': True,
+                'context_analyse': context.get('cible', 'analyse_monitoring_generale')
+            }
+        }
+
+    async def _generer_rapport_observabilite(self, context: Dict, metriques: Dict, timestamp) -> Dict[str, Any]:
+        """Génère un rapport stratégique centré observabilité"""
+
+        observability_metrics = metriques.get('observability_metrics', {})
+
+        score = 0
+        issues_details = []
+        if observability_metrics.get('traces_collected', 0) > 100: score += 25
+        else: issues_details.append("Nombre de traces collectées faible (<100)")
+        if observability_metrics.get('metrics_collected', 0) > 50: score += 25
+        else: issues_details.append("Nombre de métriques collectées faible (<50)")
+        if observability_metrics.get('logs_processed', 0) > 500: score += 25
+        else: issues_details.append("Nombre de logs traités faible (<500)")
+        if observability_metrics.get('dashboards_active', 0) > 5: score += 25
+        else: issues_details.append("Peu de dashboards actifs (<5)")
+
+        score_observabilite_global = score
+
+        niveau_qualite = "OPTIMAL" if score_observabilite_global >= 90 else "ACCEPTABLE" if score_observabilite_global >= 70 else "CRITIQUE"
+        conformite = "✅ CONFORME" if score_observabilite_global >= 70 else "❌ NON CONFORME"
+        issues_critiques_count = len(issues_details)
+
+        return {
+            'agent_id': 'agent_06_specialiste_monitoring_sprint4',
+            'type_rapport': 'observabilite',
+            'timestamp': timestamp.isoformat(),
+            'specialisation': 'Observabilité Distribuée',
+            'score_global': score_observabilite_global,
+            'niveau_qualite': niveau_qualite,
+            'conformite': conformite,
+            'issues_critiques_identifies': issues_critiques_count,
+            'architecture_observabilite': {
+                'description': "Système d'observabilité conçu pour fournir une vue complète de la santé et de la performance applicative.",
+                'piliers': ['Traces distribuées', 'Métriques applicatives et système', 'Logs centralisés', 'Tableaux de bord interactifs'],
+                'outils_simules': ['OpenTelemetry', 'Prometheus', 'Grafana', 'ELK Stack']
+            },
+            'recommandations_observabilite': [
+                f"🔍 TRACES: {observability_metrics.get('traces_collected', 0)} collectées. Viser une couverture complète des flux critiques.",
+                f"📊 MÉTRIQUES: {observability_metrics.get('metrics_collected', 0)} collectées. Enrichir avec des métriques métiers clés.",
+                f"📝 LOGS: {observability_metrics.get('logs_processed', 0)} traités. Standardiser les formats de logs pour une meilleure analyse.",
+                f"📋 DASHBOARDS: {observability_metrics.get('dashboards_active', 0)} actifs. Créer des dashboards spécifiques par service/équipe."
+            ],
+            'issues_critiques_observabilite_details': issues_details if issues_critiques_count > 0 else ["Aucun issue critique d'observabilité majeur détecté."],
+            'details_techniques_observabilite': {
+                'collecte_traces': f"{observability_metrics.get('traces_collected', 0)} traces/jour (simulé)",
+                'granularite_metriques': '1 minute (simulé)',
+                'retention_logs': '30 jours (simulé)',
+                'utilisateurs_dashboards': f"{observability_metrics.get('dashboards_active', 0) * 3} utilisateurs (simulé)"
+            },
+            'metriques_observabilite_detaillees': {
+                'score_observabilite_global': score_observabilite_global,
+                'traces_collectees_val': observability_metrics.get('traces_collected', 0),
+                'metriques_collectees_val': observability_metrics.get('metrics_collected', 0),
+                'logs_traites_val': observability_metrics.get('logs_processed', 0),
+                'dashboards_actifs_val': observability_metrics.get('dashboards_active', 0),
+                'score_traces': 25 if observability_metrics.get('traces_collected', 0) > 100 else 5,
+                'score_metriques': 25 if observability_metrics.get('metrics_collected', 0) > 50 else 5,
+                'score_logs': 25 if observability_metrics.get('logs_processed', 0) > 500 else 5,
+                'score_dashboards': 25 if observability_metrics.get('dashboards_active', 0) > 5 else 5
+            },
+            'metadonnees': {
+                'specialisation_agent': 'observabilite_distribuee',
+                'context_analyse': context.get('cible', 'analyse_observabilite_systeme')
+            }
+        }
+
+    async def _generer_rapport_performance_monitoring(self, context: Dict, metriques: Dict, timestamp) -> Dict[str, Any]:
+        """Génère un rapport stratégique centré performance monitoring"""
+
+        observability_metrics = metriques.get('observability_metrics', {})
+        monitoring_health = metriques.get('monitoring_health', {})
+
+        score = 0
+        issues_details = []
+        latence_collecte_ms_simule = 8 
+        throughput_metriques_simule = observability_metrics.get('metrics_collected', 0) * 60 
+
+        if latence_collecte_ms_simule < 10: score += 30
+        else: issues_details.append(f"Latence de collecte élevée: {latence_collecte_ms_simule}ms")
+        if throughput_metriques_simule > 1000 : score += 30 
+        else: issues_details.append(f"Throughput métriques faible: {throughput_metriques_simule}/min")
+        if monitoring_health.get('system_responsive'): score += 40
+        else: issues_details.append("Système de monitoring non réactif, impactant la performance perçue.")
+
+        score_performance_global = score
+
+        niveau_qualite = "OPTIMAL" if score_performance_global >= 90 else "ACCEPTABLE" if score_performance_global >= 70 else "CRITIQUE"
+        conformite = "✅ CONFORME" if score_performance_global >= 70 else "❌ NON CONFORME"
+        issues_critiques_count = len(issues_details)
+
+        efficacite_monitoring = "HAUTE" if score_performance_global >= 80 else "MOYENNE" if score_performance_global >= 60 else "BASSE"
+
+        return {
+            'agent_id': 'agent_06_specialiste_monitoring_sprint4',
+            'type_rapport': 'performance_monitoring',
+            'timestamp': timestamp.isoformat(),
+            'specialisation': 'Performance du Monitoring Distribué',
+            'score_global': score_performance_global,
+            'niveau_qualite': niveau_qualite,
+            'conformite': conformite,
+            'issues_critiques_identifies': issues_critiques_count,
+            'architecture_performance_monitoring': {
+                'description': "Analyse de la performance du système de monitoring lui-même, incluant latence de collecte, throughput des métriques et réactivité globale.",
+                'indicateurs_cles': ['Latence de collecte des données', 'Débit de traitement des métriques', 'Consommation des ressources par les agents de monitoring', 'Impact sur les applications monitorées']
+            },
+            'recommandations_performance': [
+                f"⚡ LATENCE COLLECTE: {latence_collecte_ms_simule}ms. Maintenir sous 10ms.",
+                f"🚀 THROUGHPUT MÉTRIQUES: {throughput_metriques_simule}/min. Évaluer la capacité par rapport à la charge.",
+                f"📊 EFFICACITÉ MONITORING: {efficacite_monitoring}. Optimiser si nécessaire.",
+                f"💻 RÉACTIVITÉ SYSTÈME: {'✅ Optimal' if monitoring_health.get('system_responsive') else '⚠️ À investiguer'}. Crucial pour la fiabilité."
+            ],
+            'issues_critiques_performance_monitoring_details': issues_details if issues_critiques_count > 0 else ["Aucun issue critique de performance monitoring majeur détecté."],
+            'details_techniques_performance_monitoring': {
+                'latence_collecte_cible': '< 10ms',
+                'latence_collecte_actuelle': f'{latence_collecte_ms_simule}ms',
+                'throughput_metriques_actuel': f'{throughput_metriques_simule}/min',
+                'ressources_agents_monitoring': 'Faible (simulé)',
+                'impact_applicatif': 'Négligeable (simulé)'
+            },
+            'metriques_performance_monitoring_detaillees': {
+                'score_performance_global': score_performance_global,
+                'latence_collecte_ms': latence_collecte_ms_simule,
+                'throughput_metriques_par_min': throughput_metriques_simule,
+                'efficacite_monitoring_eval': efficacite_monitoring,
+                'reactivite_systeme_monitoring': 100 if monitoring_health.get('system_responsive') else 30,
+                'score_latence': 30 if latence_collecte_ms_simule < 10 else 10,
+                'score_throughput': 30 if throughput_metriques_simule > 1000 else 10,
+                'score_reactivite': 40 if monitoring_health.get('system_responsive') else 10
+            },
+            'metadonnees': {
+                'specialisation_agent': 'performance_monitoring',
+                'context_analyse': context.get('cible', 'analyse_performance_systeme_monitoring')
+            }
+        }
+
+    async def _generer_rapport_alertes(self, context: Dict, metriques: Dict, timestamp) -> Dict[str, Any]:
+        """Génère un rapport stratégique centré alertes"""
+
+        observability_metrics = metriques.get('observability_metrics', {})
+
+        score = 0
+        issues_details = []
+        regles_alertes_simule = observability_metrics.get('alert_rules', 0)
+        alertes_actives_simule = 3 
+        couverture_alertes_simule = 95 
+
+        if regles_alertes_simule >= 10: score += 30
+        else: issues_details.append(f"Nombre de règles d'alertes faible: {regles_alertes_simule}")
+        if alertes_actives_simule <= 5: score += 30 
+        else: issues_details.append(f"Nombre élevé d'alertes actives: {alertes_actives_simule}")
+        if couverture_alertes_simule >= 90: score += 40
+        else: issues_details.append(f"Couverture des alertes insuffisante: {couverture_alertes_simule}%")
+
+        score_alertes_global = score
+
+        niveau_qualite = "OPTIMAL" if score_alertes_global >= 90 else "ACCEPTABLE" if score_alertes_global >= 70 else "CRITIQUE"
+        conformite = "✅ CONFORME" if score_alertes_global >= 70 else "❌ NON CONFORME"
+        issues_critiques_count = len(issues_details)
+
+        return {
+            'agent_id': 'agent_06_specialiste_monitoring_sprint4',
+            'type_rapport': 'alertes',
+            'timestamp': timestamp.isoformat(),
+            'specialisation': 'Gestion Stratégique des Alertes',
+            'score_global': score_alertes_global,
+            'niveau_qualite': niveau_qualite,
+            'conformite': conformite,
+            'issues_critiques_identifies': issues_critiques_count,
+            'architecture_alertes': {
+                'description': "Système de gestion des alertes conçu pour une détection proactive et une notification rapide des incidents.",
+                'composants_cles': ['Moteur de règles d'alertes', 'Système de notification multi-canal', 'Tableau de bord de suivi des alertes', 'Processus d\'escalade']
+            },
+            'recommandations_alertes': [
+                f"🚨 RÈGLES D'ALERTES: {regles_alertes_simule} configurées. Réviser et affiner régulièrement.",
+                f"⚠️ ALERTES ACTIVES: {alertes_actives_simule} en cours. Prioriser et traiter.",
+                f"🎯 COUVERTURE DES ALERTES: {couverture_alertes_simule}%. Viser une couverture de 99%+ des services critiques.",
+                f"📚 DOCUMENTATION: S'assurer que chaque alerte a une procédure de réponse documentée (runbook)."
+            ],
+            'issues_critiques_alertes_details': issues_details if issues_critiques_count > 0 else ["Aucun issue critique majeur dans la gestion des alertes détecté."],
+            'details_techniques_alertes': {
+                'nombre_regles_actives': regles_alertes_simule,
+                'temps_moyen_detection': '< 1 min (simulé)',
+                'canaux_notification': ['Email', 'Slack', 'PagerDuty (simulé)'],
+                'severite_niveaux': ['Critique', 'Avertissement', 'Information']
+            },
+            'metriques_alertes_detaillees': {
+                'score_alertes_global': score_alertes_global,
+                'nombre_regles_configurees': regles_alertes_simule,
+                'alertes_actives_en_cours': alertes_actives_simule,
+                'pourcentage_couverture_alertes': couverture_alertes_simule,
+                'score_nombre_regles': 30 if regles_alertes_simule >= 10 else 5,
+                'score_alertes_actives': 30 if alertes_actives_simule <= 5 else 5,
+                'score_couverture': 40 if couverture_alertes_simule >= 90 else 10
+            },
+            'metadonnees': {
+                'specialisation_agent': 'gestion_alertes_intelligentes',
+                'context_analyse': context.get('cible', 'analyse_systeme_alertes')
+            }
+        }
+
+    async def generer_rapport_markdown(self, rapport_json: Dict[str, Any], type_rapport: str, context: Dict[str, Any]) -> str:
+        """Génère un rapport de monitoring au format Markdown"""
+
+        from datetime import datetime 
+        timestamp_val = datetime.now() 
+
+        if type_rapport == 'monitoring':
+            return await self._generer_markdown_monitoring(rapport_json, context, timestamp_val)
+        elif type_rapport == 'observabilite':
+            return await self._generer_markdown_observabilite(rapport_json, context, timestamp_val)
+        elif type_rapport == 'performance': 
+            return await self._generer_markdown_performance_monitoring(rapport_json, context, timestamp_val)
+        elif type_rapport == 'alertes':
+            return await self._generer_markdown_alertes(rapport_json, context, timestamp_val)
+        else:
+            self.logger.warning(f"Type de rapport Markdown inconnu: {type_rapport}. Utilisation du rapport monitoring par défaut.")
+            return await self._generer_markdown_monitoring(rapport_json, context, timestamp_val) # Fallback
+
+    async def _generer_markdown_monitoring(self, rapport: Dict, context: Dict, timestamp) -> str:
+        """Génère un rapport monitoring au format Markdown"""
+
+        score = rapport.get('score_global', 0)
+        niveau_qualite = rapport.get('niveau_qualite', 'N/A')
+        conformite = rapport.get('conformite', 'N/A')
+        issues_count = rapport.get('issues_critiques_identifies', 0)
+
+        architecture = rapport.get('architecture_monitoring', {})
+        recommandations = rapport.get('recommandations_monitoring', [])
+        issues_details = rapport.get('issues_critiques_monitoring_details', [])
+        details_tech = rapport.get('details_techniques_monitoring', {})
+        metriques_detaillees = rapport.get('metriques_monitoring_detaillees', {})
+
+        # Pré-calcul des blocs de texte pour les listes
+        objectifs_str_list = []
+        for objectif in architecture.get('objectifs_principaux', []):
+            objectifs_str_list.append(f"- {objectif}")
+        objectifs_block = "\n".join(objectifs_str_list)
+
+        tech_cles_list = architecture.get('technologies_cles', [])
+        tech_cles_str = ", ".join(tech_cles_list)
+
+        recommandations_str_list = []
+        for rec in recommandations:
+            recommandations_str_list.append(f"- {rec}")
+        recommandations_block = "\n".join(recommandations_str_list)
+
+        issues_critiques_str_list = []
+        if issues_count > 0:
+            for issue in issues_details:
+                issues_critiques_str_list.append(f"- 🔴 {issue}")
+        else:
+            issues_critiques_str_list.append("- Aucun issue critique majeur de monitoring détecté.")
+        issues_block = "\n".join(issues_critiques_str_list)
+
+        md_content = f"""# 📈 **RAPPORT MONITORING STRATÉGIQUE : {rapport.get('agent_id', 'N/A')}**
+
+**Date :** {timestamp.strftime('%Y-%m-%d %H:%M:%S')}
+**Module :** {rapport.get('agent_id', 'N/A')}
+**Score Global** : {score/10:.1f}/10
+**Niveau Qualité** : {niveau_qualite}
+**Conformité** : {conformite}
+**Issues Critiques** : {issues_count}
+
+## 🏗️ Architecture Monitoring
+{architecture.get('description', 'Description non disponible.')}
+**Objectifs principaux :**
+{objectifs_block}
+**Technologies clés (simulées) :** {tech_cles_str}
+
+## 🔧 Recommandations Monitoring
+{recommandations_block}
+
+## 🚨 Issues Critiques Monitoring
+{issues_block}
+
+## 📋 Détails Techniques Monitoring
+- OpenTelemetry disponible : {'✅' if details_tech.get('opentelemetry_disponible') else '❌'}
+- Tracer Provider : {'✅ actif' if details_tech.get('tracer_provider_actif') else '❌ inactif'}
+- Meter Provider : {'✅ actif' if details_tech.get('meter_provider_actif') else '❌ inactif'}
+- Traces collectées : {details_tech.get('traces_collectees', 0)}
+- Métriques collectées : {details_tech.get('metriques_collectees', 0)}
+- Logs traités : {details_tech.get('logs_traites', 0)}
+- Règles d'alertes configurées : {details_tech.get('alert_rules_configurees', 0)}
+- Dashboards actifs : {details_tech.get('dashboards_actifs', 0)}
+
+## 📊 Métriques Monitoring Détaillées
+- Score Monitoring Global : {metriques_detaillees.get('score_monitoring_global', 0)}/100
+- Réactivité Système : {'✅ Réactif' if metriques_detaillees.get('system_responsive') else '❌ Non Réactif'}
+- Services Monitorés OK : {metriques_detaillees.get('services_monitores_ok', 0)}/{metriques_detaillees.get('total_services', 0)}
+
+## 🚨 Gestion Alertes
+- Règles : {metriques_detaillees.get('alert_rules', 0)} configurées
+- Actives : 3 (simulé)
+- Couverture : 95% (simulé)
+
+--- 
+
+*Rapport Monitoring généré par {rapport.get('agent_id', 'Agent Inconnu')} - {timestamp.strftime('%Y-%m-%d %H:%M:%S')}*
+*📊 Spécialiste Monitoring & Observabilité*
+*📂 Sauvegardé dans : /mnt/c/Dev/nextgeneration/reports/*
+"""
+        return md_content
+
+    async def _generer_markdown_observabilite(self, rapport: Dict, context: Dict, timestamp) -> str:
+        """Génère un rapport observabilité au format Markdown"""
+
+        score = rapport.get('score_global', 0)
+        niveau_qualite = rapport.get('niveau_qualite', 'N/A')
+        conformite = rapport.get('conformite', 'N/A')
+        issues_count = rapport.get('issues_critiques_identifies', 0)
+
+        architecture = rapport.get('architecture_observabilite', {})
+        recommandations = rapport.get('recommandations_observabilite', [])
+        issues_details = rapport.get('issues_critiques_observabilite_details', [])
+        details_tech = rapport.get('details_techniques_observabilite', {})
+        metriques_detaillees = rapport.get('metriques_observabilite_detaillees', {})
+
+        # Pré-calcul des blocs de texte pour les listes
+        piliers_str_list = []
+        for pilier in architecture.get('piliers', []):
+            piliers_str_list.append(f"- {pilier}")
+        piliers_block = "\n".join(piliers_str_list)
+
+        outils_simules_list = architecture.get('outils_simules', [])
+        outils_simules_str = ", ".join(outils_simules_list)
+
+        recommandations_str_list = []
+        for rec in recommandations:
+            recommandations_str_list.append(f"- {rec}")
+        recommandations_block = "\n".join(recommandations_str_list)
+
+        issues_critiques_str_list = []
+        if issues_count > 0:
+            for issue in issues_details:
+                issues_critiques_str_list.append(f"- 🔴 {issue}")
+        else:
+            issues_critiques_str_list.append("- Aucun issue critique majeur détecté.")
+        issues_block = "\n".join(issues_critiques_str_list)
+
+        md_content = f"""# 🔍 **RAPPORT OBSERVABILITÉ : {rapport.get('agent_id', 'N/A')}**
+
+**Date :** {timestamp.strftime('%Y-%m-%d %H:%M:%S')}
+**Module :** {rapport.get('agent_id', 'N/A')}
+**Score Global** : {score/10:.1f}/10
+**Niveau Qualité** : {niveau_qualite}
+**Conformité** : {conformite}
+**Issues Critiques** : {issues_count}
+
+## 🏗️ Architecture Observabilité
+{architecture.get('description', 'Description non disponible.')}
+**Piliers clés :**
+{piliers_block}
+**Outils (simulés) :** {outils_simules_str}
+
+## 🔧 Recommandations Observabilité
+{recommandations_block}
+
+## 🚨 Issues Critiques Observabilité
+{issues_block}
+
+## 📋 Détails Techniques Observabilité
+- Collecte des traces : {details_tech.get('collecte_traces', 'N/A')}
+- Granularité des métriques : {details_tech.get('granularite_metriques', 'N/A')}
+- Rétention des logs : {details_tech.get('retention_logs', 'N/A')}
+- Utilisateurs dashboards : {details_tech.get('utilisateurs_dashboards', 'N/A')}
+
+## 📊 Métriques Observabilité Détaillées
+- Score Observabilité Global : {metriques_detaillees.get('score_observabilite_global', 0)}/100
+- Traces Collectées : {metriques_detaillees.get('traces_collectees_val', 0)}
+- Métriques Collectées : {metriques_detaillees.get('metriques_collectees_val', 0)}
+- Logs Traités : {metriques_detaillees.get('logs_traites_val', 0)}
+- Dashboards Actifs : {metriques_detaillees.get('dashboards_actifs_val', 0)}
+- Score Traces : {metriques_detaillees.get('score_traces', 0)}/25
+- Score Métriques : {metriques_detaillees.get('score_metriques', 0)}/25
+- Score Logs : {metriques_detaillees.get('score_logs', 0)}/25
+- Score Dashboards : {metriques_detaillees.get('score_dashboards', 0)}/25
+
+--- 
+
+*Rapport Observabilité généré par {rapport.get('agent_id', 'Agent Inconnu')} - {timestamp.strftime('%Y-%m-%d %H:%M:%S')}*
+*📂 Sauvegardé dans : /mnt/c/Dev/nextgeneration/reports/*
+"""
+
+        return md_content
+
+    async def _generer_markdown_performance_monitoring(self, rapport: Dict, context: Dict, timestamp) -> str:
+        """Génère un rapport performance monitoring au format Markdown"""
+
+        score = rapport.get('score_global', 0)
+        niveau_qualite = rapport.get('niveau_qualite', 'N/A')
+        conformite = rapport.get('conformite', 'N/A')
+        issues_count = rapport.get('issues_critiques_identifies', 0)
+
+        architecture = rapport.get('architecture_performance_monitoring', {})
+        recommandations = rapport.get('recommandations_performance', [])
+        issues_details = rapport.get('issues_critiques_performance_monitoring_details', [])
+        details_tech = rapport.get('details_techniques_performance_monitoring', {})
+        metriques_detaillees = rapport.get('metriques_performance_monitoring_detaillees', {})
+
+        # Pré-calcul des blocs de texte pour les listes
+        indicateurs_cles_str_list = []
+        for indicateur in architecture.get('indicateurs_cles', []):
+            indicateurs_cles_str_list.append(f"- {indicateur}")
+        indicateurs_cles_block = "\n".join(indicateurs_cles_str_list)
+
+        recommandations_str_list = []
+        for rec in recommandations:
+            recommandations_str_list.append(f"- {rec}")
+        recommandations_block = "\n".join(recommandations_str_list)
+
+        issues_critiques_str_list = []
+        if issues_count > 0:
+            for issue in issues_details:
+                issues_critiques_str_list.append(f"- 🔴 {issue}")
+        else:
+            issues_critiques_str_list.append("- Aucun issue critique majeur de performance monitoring détecté.")
+        issues_block = "\n".join(issues_critiques_str_list)
+
+        md_content = f"""# ⚡ **RAPPORT PERFORMANCE MONITORING : {rapport.get('agent_id', 'N/A')}**
+
+**Date :** {timestamp.strftime('%Y-%m-%d %H:%M:%S')}
+**Module :** {rapport.get('agent_id', 'N/A')}
+**Score Global** : {score/10:.1f}/10
+**Niveau Qualité** : {niveau_qualite}
+**Conformité** : {conformite}
+**Issues Critiques** : {issues_count}
+
+## 🏗️ Architecture Performance Monitoring
+{architecture.get('description', 'Description non disponible.')}
+**Indicateurs clés :**
+{indicateurs_cles_block}
+
+## 🔧 Recommandations Performance
+{recommandations_block}
+
+## 🚨 Issues Critiques Performance Monitoring
+{issues_block}
+
+## 📋 Détails Techniques Performance Monitoring
+- Latence de collecte (cible) : {details_tech.get('latence_collecte_cible', 'N/A')}
+- Latence de collecte (actuelle) : {details_tech.get('latence_collecte_actuelle', 'N/A')}
+- Throughput métriques (actuel) : {details_tech.get('throughput_metriques_actuel', 'N/A')}
+- Consommation ressources agents : {details_tech.get('ressources_agents_monitoring', 'N/A')}
+- Impact applicatif (monitoring) : {details_tech.get('impact_applicatif', 'N/A')}
+
+## 📊 Métriques Performance Monitoring Détaillées
+- Score Performance Global : {metriques_detaillees.get('score_performance_global', 0)}/100
+- Latence collecte (ms) : {metriques_detaillees.get('latence_collecte_ms', 'N/A')}
+- Throughput métriques (/min) : {metriques_detaillees.get('throughput_metriques_par_min', 'N/A')}
+- Évaluation efficacité monitoring : {metriques_detaillees.get('efficacite_monitoring_eval', 'N/A')}
+- Réactivité système monitoring (score) : {metriques_detaillees.get('reactivite_systeme_monitoring', 0)}/100
+- Score Latence : {metriques_detaillees.get('score_latence', 0)}/30
+- Score Throughput : {metriques_detaillees.get('score_throughput', 0)}/30
+- Score Réactivité : {metriques_detaillees.get('score_reactivite', 0)}/40
+
+--- 
+
+*Rapport Performance Monitoring généré par {rapport.get('agent_id', 'Agent Inconnu')} - {timestamp.strftime('%Y-%m-%d %H:%M:%S')}*
+*📂 Sauvegardé dans : /mnt/c/Dev/nextgeneration/reports/*
+"""
+
+        return md_content
+
+    async def _generer_markdown_alertes(self, rapport: Dict, context: Dict, timestamp) -> str:
+        """Génère un rapport alertes au format Markdown"""
+
+        score = rapport.get('score_global', 0)
+        niveau_qualite = rapport.get('niveau_qualite', 'N/A')
+        conformite = rapport.get('conformite', 'N/A')
+        issues_count = rapport.get('issues_critiques_identifies', 0)
+
+        architecture = rapport.get('architecture_alertes', {})
+        recommandations = rapport.get('recommandations_alertes', [])
+        issues_details = rapport.get('issues_critiques_alertes_details', [])
+        details_tech = rapport.get('details_techniques_alertes', {})
+        metriques_detaillees = rapport.get('metriques_alertes_detaillees', {})
+
+        # Pré-calcul des blocs de texte pour les listes
+        composants_cles_str_list = []
+        for composant in architecture.get('composants_cles', []):
+            composants_cles_str_list.append(f"- {composant}")
+        composants_cles_block = "\n".join(composants_cles_str_list)
+
+        recommandations_str_list = []
+        for rec in recommandations:
+            recommandations_str_list.append(f"- {rec}")
+        recommandations_block = "\n".join(recommandations_str_list)
+
+        issues_critiques_str_list = []
+        if issues_count > 0:
+            for issue in issues_details:
+                issues_critiques_str_list.append(f"- 🔴 {issue}")
+        else:
+            issues_critiques_str_list.append("- Aucun issue critique majeur dans la gestion des alertes détecté.")
+        issues_block = "\n".join(issues_critiques_str_list)
+
+        canaux_notification_list = details_tech.get('canaux_notification', [])
+        canaux_notification_str = ", ".join(canaux_notification_list)
+
+        severite_niveaux_list = details_tech.get('severite_niveaux', [])
+        severite_niveaux_str = ", ".join(severite_niveaux_list)
+
+        md_content = f"""# 🚨 **RAPPORT ALERTES : {rapport.get('agent_id', 'N/A')}**
+
+**Date :** {timestamp.strftime('%Y-%m-%d %H:%M:%S')}
+**Module :** {rapport.get('agent_id', 'N/A')}
+**Score Global** : {score/10:.1f}/10
+**Niveau Qualité** : {niveau_qualite}
+**Conformité** : {conformite}
+**Issues Critiques** : {issues_count}
+
+## 🏗️ Architecture Alertes
+{architecture.get('description', 'Description non disponible.')}
+**Composants clés :**
+{composants_cles_block}
+
+## 🔧 Recommandations Alertes
+{recommandations_block}
+
+## 🚨 Issues Critiques Alertes
+{issues_block}
+
+## 📋 Détails Techniques Alertes
+- Nombre de règles actives : {details_tech.get('nombre_regles_actives', 'N/A')}
+- Temps moyen de détection : {details_tech.get('temps_moyen_detection', 'N/A')}
+- Canaux de notification : {canaux_notification_str}
+- Niveaux de sévérité : {severite_niveaux_str}
+
+## 📊 Métriques Alertes Détaillées
+- Score Alertes Global : {metriques_detaillees.get('score_alertes_global', 0)}/100
+- Nombre de Règles Configurées : {metriques_detaillees.get('nombre_regles_configurees', 0)}
+- Alertes Actives en Cours : {metriques_detaillees.get('alertes_actives_en_cours', 0)}
+- Pourcentage Couverture Alertes : {metriques_detaillees.get('pourcentage_couverture_alertes', 0)}%
+- Score Nombre de Règles : {metriques_detaillees.get('score_nombre_regles', 0)}/30
+- Score Alertes Actives : {metriques_detaillees.get('score_alertes_actives', 0)}/30
+- Score Couverture : {metriques_detaillees.get('score_couverture', 0)}/40
+
+--- 
+
+*Rapport Alertes généré par {rapport.get('agent_id', 'Agent Inconnu')} - {timestamp.strftime('%Y-%m-%d %H:%M:%S')}*
+*📂 Sauvegardé dans : /mnt/c/Dev/nextgeneration/reports/*
+"""
+
+        return md_content
+
+    def get_capabilities(self) -> list[str]: 
+        return ["monitoring", "observability", "opentelemetry", "generate_strategic_report"]
+
+    async def health_check(self) -> dict: 
+        return {"status": "ok", "opentelemetry_available": OPENTELEMETRY_AVAILABLE}
+
+def create_agent_06_specialiste_monitoring_sprint4(**config):
+    return Agent06AdvancedMonitoring(**config)

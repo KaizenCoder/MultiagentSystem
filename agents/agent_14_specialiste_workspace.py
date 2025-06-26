@@ -5,7 +5,7 @@
 # Date: 2025-06-19 19h35 - Correction architecture Pattern Factory
 # Raison: Harmonisation async/sync avec core/agent_factory_architecture.py
 
- AGENT 14 - SPCIALISTE WORKSPACE
+🎖️ AGENT 14 - SPÉCIALISTE WORKSPACE
 ===================================
 
 RLE : Organisation et gestion workspace pour Agent Factory Pattern
@@ -33,26 +33,57 @@ DELIVERABLES :
 - Outils organisation dploys et oprationnels
 """
 
+import asyncio
 import os
 import sys
-from pathlib import Path
-from core import logging_manager
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any
 import json
 import logging
 
-class Agent14SpecialisteWorkspace:
+# Pattern Factory imports
+try:
+    from core.agent_factory_architecture import Agent, Task, Result
+    PATTERN_FACTORY_AVAILABLE = True
+except ImportError:
+    print("⚠️ Pattern Factory non disponible. Utilisation des classes de fallback.")
+    PATTERN_FACTORY_AVAILABLE = False
+    class Agent:
+        def __init__(self, agent_type: str, **config):
+            self.agent_id = f"fallback_{agent_type}"
+            self.name = f"Fallback {agent_type}"
+            self.logger = logging.getLogger(self.agent_id)
+        async def startup(self): pass
+        async def shutdown(self): pass
+
+    class Task:
+        def __init__(self, task_id: str, description: str, **kwargs):
+            self.task_id = task_id
+            self.description = description
+            self.data = kwargs.get('payload', {})
+            self.payload = self.data
+
+    class Result:
+        def __init__(self, success: bool, data: Any = None, error: str = None):
+            self.success = success
+            self.data = data
+            self.error = error
+
+class Agent14SpecialisteWorkspace(Agent):
     """Agent 14 - Spcialiste Workspace pour Agent Factory Implementation"""
     
     CAPABILITIES = ["workspace_creation", "workspace_management"]
     
-    def __init__(self):
-        self.name = "Agent 14 - Spcialiste Workspace"
+    def __init__(self, **config):
+        self.agent_type = "agent_14_specialiste_workspace"
+        self.agent_id = config.get("agent_id", f"{self.agent_type}_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
+        self.name = "Agent 14 - Spécialiste Workspace"
         self.role = "specialist"
         self.domain = "workspace_organization"
         self.base_path = Path("nextgeneration/agent_factory_implementation")
+        
+        super().__init__(self.agent_type, **config)
         
         # Configuration du logging
         self._setup_logging()
@@ -89,13 +120,53 @@ class Agent14SpecialisteWorkspace:
             sh.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
             self.logger.addHandler(sh)
 
-    def shutdown(self):
+    async def startup(self):
+        self.logger.info(f"🚀 Agent {self.agent_id} démarré.")
+        await super().startup()
+
+    async def shutdown(self):
         """Ferme les handlers de logging pour libérer les fichiers."""
         self.logger.info(f"Arrêt de l'agent {self.name} et libération des logs.")
         handlers = self.logger.handlers[:]
         for handler in handlers:
             handler.close()
             self.logger.removeHandler(handler)
+        await super().shutdown()
+
+    async def health_check(self) -> Dict[str, Any]:
+        return {"status": "healthy", "timestamp": datetime.now().isoformat()}
+
+    def get_capabilities(self) -> Dict[str, Any]:
+        return {
+            "name": self.name,
+            "version": "2.0.0",
+            "description": "Organisation et gestion workspace pour Agent Factory Pattern",
+            "tasks": [
+                {"name": "create_workspace", "description": "Créer structure workspace"},
+                {"name": "establish_standards", "description": "Établir standards nommage"},
+                {"name": "generate_workflow", "description": "Générer documentation workflow"}
+            ]
+        }
+
+    async def execute_task(self, task: Task) -> Result:
+        task_id = task.task_id if hasattr(task, 'task_id') else task.description
+        self.logger.info(f"Exécution de la tâche : {task_id}")
+        
+        try:
+            if task_id == "create_workspace" or task.description == "create_workspace":
+                result = self.create_workspace_structure()
+                return Result(success=True, data=result)
+            elif task_id == "establish_standards" or task.description == "establish_standards":
+                result = self.establish_naming_standards()
+                return Result(success=True, data=result)
+            elif task_id == "generate_workflow" or task.description == "generate_workflow":
+                result = self.create_workflow_documentation()
+                return Result(success=True, data=result)
+            else:
+                return Result(success=False, error=f"Tâche inconnue: {task_id}")
+        except Exception as e:
+            self.logger.error(f"Erreur lors de l'exécution de la tâche '{task_id}': {e}", exc_info=True)
+            return Result(success=False, error=str(e))
 
     def create_workspace_structure(self) -> Dict[str, Any]:
         """Cre la structure workspace complte selon contraintes strictes"""
@@ -361,41 +432,54 @@ class Agent14SpecialisteWorkspace:
         }
 
 # Excution automatique Agent 14
-if __name__ == "__main__":
-    print(" AGENT 14 - SPCIALISTE WORKSPACE - INITIALISATION")
+async def main():
+    """Point d'entrée pour test Agent 14"""
+    print("🎖️ AGENT 14 - SPÉCIALISTE WORKSPACE - INITIALISATION")
     print("=" * 60)
     
-    agent_14 = Agent14SpecialisteWorkspace()
-    
-    # tape 1 : Cration structure
-    print("\n[FOLDER] tape 1 : Cration structure workspace...")
-    result_structure = agent_14.create_workspace_structure()
-    if result_structure["status"] == "success":
-        print(f"[CHECK] Succs : {result_structure['message']}")
-        print(f"[CHART] Mtriques : {result_structure['metrics']}")
-    else:
-        print(f"[CROSS] Erreur : {result_structure['message']}")
-        exit(1)
-    
-    # tape 2 : Standards nommage
-    print("\n[CLIPBOARD] tape 2 : tablissement standards...")
-    result_standards = agent_14.establish_naming_standards()
-    if result_standards["status"] == "success":
-        print("[CHECK] Standards de nommage tablis")
-    
-    # tape 3 : Workflow documentation
-    print("\n tape 3 : Documentation workflow...")
-    result_workflow = agent_14.create_workflow_documentation()
-    if result_workflow["status"] == "success":
-        print("[CHECK] Workflow quipe document")
-    
-    # tape 4 : Rapport Agent 14
-    print("\n[DOCUMENT] tape 4 : Gnration rapport Sprint 0...")
-    result_report = agent_14.generate_agent_14_report()
-    if result_report["status"] == "success":
-        print("[CHECK] Rapport Agent 14 gnr")
-    
-    print("\n[TARGET] AGENT 14 - MISSION WORKSPACE ACCOMPLIE")
-    print("[CHECK] Workspace Agent Factory Implementation oprationnel")
-    print("[CHECK] Prt pour Sprint 1 avec Agent 02 (Architecte Code Expert)")
-    print("=" * 60) 
+    agent_14 = None
+    try:
+        agent_14 = Agent14SpecialisteWorkspace()
+        await agent_14.startup()
+        
+        # Étape 1 : Création structure
+        print("\n📁 Étape 1 : Création structure workspace...")
+        result_structure = agent_14.create_workspace_structure()
+        if result_structure["status"] == "success":
+            print(f"✅ Succès : {result_structure['message']}")
+            print(f"📊 Métriques : {result_structure['metrics']}")
+        else:
+            print(f"❌ Erreur : {result_structure['message']}")
+            return
+        
+        # Étape 2 : Standards nommage
+        print("\n📋 Étape 2 : Établissement standards...")
+        result_standards = agent_14.establish_naming_standards()
+        if result_standards["status"] == "success":
+            print("✅ Standards de nommage établis")
+        
+        # Étape 3 : Workflow documentation
+        print("\n📝 Étape 3 : Documentation workflow...")
+        result_workflow = agent_14.create_workflow_documentation()
+        if result_workflow["status"] == "success":
+            print("✅ Workflow équipe documenté")
+        
+        # Étape 4 : Rapport Agent 14
+        print("\n📄 Étape 4 : Génération rapport Sprint 0...")
+        result_report = agent_14.generate_agent_14_report()
+        if result_report["status"] == "success":
+            print("✅ Rapport Agent 14 généré")
+        
+        print("\n🎯 AGENT 14 - MISSION WORKSPACE ACCOMPLIE")
+        print("✅ Workspace Agent Factory Implementation opérationnel")
+        print("✅ Prêt pour Sprint 1 avec Agent 02 (Architecte Code Expert)")
+        print("=" * 60)
+        
+    except Exception as e:
+        print(f"❌ Erreur : {e}")
+    finally:
+        if agent_14:
+            await agent_14.shutdown()
+
+if __name__ == "__main__":
+    asyncio.run(main()) 

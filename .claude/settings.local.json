@@ -10,7 +10,11 @@
       "Bash(python:*)",
       "Bash(ls:*)",
       "Bash(touch:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(git add:*)",
+      "Bash(rm:*)",
+      "Bash(git commit:*)",
+      "Bash(cp:*)"
     ],
     "deny": []
   }

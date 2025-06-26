@@ -8,22 +8,44 @@ from datetime import datetime
 from typing import Dict, List, Any, Optional
 import logging
 
-# Gestion des imports selon le contexte d'exécution
+# Pattern Factory imports
 try:
     from core.agent_factory_architecture import Agent, Task, Result
+    PATTERN_FACTORY_AVAILABLE = True
 except ImportError:
-    # En cas d'exécution CLI, ajouter le chemin parent
-    sys.path.insert(0, str(Path(__file__).parent.parent))
-    from core.agent_factory_architecture import Agent, Task, Result
+    print("⚠️ Pattern Factory non disponible. Utilisation des classes de fallback.")
+    PATTERN_FACTORY_AVAILABLE = False
+    # Fallback classes si l'architecture centrale n'est pas disponible
+    class Agent:
+        def __init__(self, agent_type: str, **config):
+            self.agent_id = f"fallback_{agent_type}"
+            self.name = f"Fallback {agent_type}"
+            self.logger = logging.getLogger(self.agent_id)
+        async def startup(self): pass
+        async def shutdown(self): pass
+
+    class Task:
+        def __init__(self, task_id: str, description: str, **kwargs):
+            self.task_id = task_id
+            self.description = description
+            self.data = kwargs.get('payload', {})
+            self.payload = self.data
+
+    class Result:
+        def __init__(self, success: bool, data: Any = None, error: str = None):
+            self.success = success
+            self.data = data
+            self.error = error
 
 class PeerReviewerSeniorAgent(Agent):
     """
     Agent 16 - Peer Reviewer Senior (Pattern Factory compliant)
     """
     def __init__(self, agent_type="peer_reviewer_senior", **config):
+        self.agent_type = agent_type
         super().__init__(agent_type, **config)
         self.name = "Agent 16 - Peer Reviewer Senior"
-        self.logger = logging.getLogger(f"agent.{self.type}")
+        self.logger = logging.getLogger(f"agent.{self.agent_type}")
         self.workspace_root = Path.cwd()
         self.reviews_dir = self.workspace_root / "reviews"
         self.reviews_dir.mkdir(exist_ok=True)
@@ -55,19 +77,20 @@ class PeerReviewerSeniorAgent(Agent):
     async def health_check(self) -> Dict[str, Any]:
         return {"status": "healthy", "agent": self.name, "timestamp": datetime.now().isoformat()}
 
-    def execute_task(self, task: Task) -> Result:
+    async def execute_task(self, task: Task) -> Result:
         """
         Exécute une tâche de review ou d'audit selon le type de task.
         """
         try:
-            if task.type == "code_review":
+            task_id = task.task_id if hasattr(task, 'task_id') else task.description
+            if task_id == "code_review" or task.description == "code_review":
                 review_result = self.run_senior_review_mission()
                 return Result(success=True, data=review_result)
-            elif task.type == "quality_assessment":
+            elif task_id == "quality_assessment" or task.description == "quality_assessment":
                 review_result = self.run_senior_review_mission()
                 return Result(success=True, data=review_result)
             else:
-                return Result(success=False, error=f"Task type {task.type} non supporté")
+                return Result(success=False, error=f"Task type {task_id} non supporté")
         except Exception as e:
             self.logger.error(f"Erreur execute_task : {e}", exc_info=True)
             return Result(success=False, error=str(e))
@@ -574,34 +597,44 @@ class PeerReviewerSeniorAgent(Agent):
         # Implementation of _get_file_content method
         pass
 
-def main():
+async def main():
     """Fonction principale d'exécution de l'Agent 16"""
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     print("🎖️ Agent 16 - Peer Reviewer Senior - DÉMARRAGE")
     
-    # Initialiser agent
-    agent = PeerReviewerSeniorAgent()
-    
-    # Exécuter mission review
-    results = agent.run_senior_review_mission()
-    
-    # Afficher résultats
-    print(f"\n📋 MISSION {results.get('status', 'INCONNU')}")
-    if "expert_validation" in results:
-        print(f"🎯 Expert Validation: {results['expert_validation']}")
-    
-    if "performance" in results:
-        perf = results["performance"]
-        print(f"⏱️ Durée: {perf.get('duration_seconds')}s")
-        print(f"📊 Éléments reviewés: {perf.get('elements_reviewed')}")
-        print(f"🏆 Qualité globale: {perf.get('overall_quality')}")
-        print(f"⚡ Rating: {perf.get('review_rating')}")
-        print(f"✅ Validation: {perf.get('validation_status')}")
-    
-    if "final_report" in results:
-        print(f"\n📄 Rapport senior généré: {results['final_report']}")
-    
-    print("✅ Agent 16 - Review Senior terminée avec succès")
+    agent = None
+    try:
+        # Initialiser agent
+        agent = PeerReviewerSeniorAgent()
+        await agent.startup()
+        
+        # Exécuter mission review
+        results = agent.run_senior_review_mission()
+        
+        # Afficher résultats
+        print(f"\n📋 MISSION {results.get('status', 'INCONNU')}")
+        if "expert_validation" in results:
+            print(f"🎯 Expert Validation: {results['expert_validation']}")
+        
+        if "performance" in results:
+            perf = results["performance"]
+            print(f"⏱️ Durée: {perf.get('duration_seconds')}s")
+            print(f"📊 Éléments reviewés: {perf.get('elements_reviewed')}")
+            print(f"🏆 Qualité globale: {perf.get('overall_quality')}")
+            print(f"⚡ Rating: {perf.get('review_rating')}")
+            print(f"✅ Validation: {perf.get('validation_status')}")
+        
+        if "final_report" in results:
+            print(f"\n📄 Rapport senior généré: {results['final_report']}")
+        
+        print("✅ Agent 16 - Review Senior terminée avec succès")
+        
+    except Exception as e:
+        print(f"❌ Erreur : {e}")
+    finally:
+        if agent:
+            await agent.shutdown()
 
 if __name__ == "__main__":
-    main()
+    import asyncio
+    asyncio.run(main())

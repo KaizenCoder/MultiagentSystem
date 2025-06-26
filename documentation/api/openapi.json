@@ -37,170 +37,83 @@
     "/health": {
       "get": {
         "summary": "Health check syst\u00e8me",
-        "parameters": [],
         "responses": {
           "200": {
-            "description": "Syst\u00e8me op\u00e9rationnel",
-            "schema": {
-              "status": "healthy"
-            }
-          },
-          "503": {
-            "description": "Syst\u00e8me d\u00e9grad\u00e9",
-            "schema": {
-              "status": "unhealthy",
-              "issues": [
-                "string"
-              ]
-            }
+            "description": "Success"
           }
-        }
+        },
+        "security": [],
+        "parameters": null
       }
     },
     "/metrics": {
       "get": {
         "summary": "M\u00e9triques Prometheus",
-        "parameters": [],
         "responses": {
           "200": {
-            "description": "M\u00e9triques format Prometheus",
-            "content_type": "text/plain"
+            "description": "Success"
           }
-        }
+        },
+        "security": [],
+        "parameters": null
       }
     },
     "/factory/create": {
       "post": {
         "summary": "Cr\u00e9ation template optimis\u00e9e",
-        "parameters": [
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
           {
-            "name": "id",
-            "in": "body",
-            "required": true,
-            "description": "ID unique template",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "name",
-            "in": "body",
-            "required": true,
-            "description": "Nom template",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "description",
-            "in": "body",
-            "required": false,
-            "description": "Description",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "type",
-            "in": "body",
-            "required": false,
-            "description": "",
-            "schema": {
-              "type": "string"
-            }
+            "BearerAuth": []
           }
         ],
-        "responses": {
-          "201": {
-            "description": "Template cr\u00e9\u00e9 avec succ\u00e8s",
-            "schema": {
-              "template_id": "string",
-              "performance_ms": "number"
-            }
-          },
-          "400": {
-            "description": "Param\u00e8tres invalides",
-            "schema": {
-              "error": "string"
-            }
-          },
-          "500": {
-            "description": "Erreur interne",
-            "schema": {
-              "error": "string"
-            }
-          }
-        }
+        "parameters": null
       }
     },
     "/factory/templates/{id}": {
       "get": {
         "summary": "R\u00e9cup\u00e9ration template par ID",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "description": "ID template",
+            "description": "Identifier: id",
             "schema": {
               "type": "string"
             }
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "Template trouv\u00e9",
-            "schema": {
-              "template": "object"
-            }
-          },
-          "404": {
-            "description": "Template non trouv\u00e9",
-            "schema": {
-              "error": "string"
-            }
-          }
-        }
+        ]
       }
     },
     "/backup/create": {
       "post": {
         "summary": "Cr\u00e9ation backup via Agent 12",
-        "parameters": [
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
           {
-            "name": "source_path",
-            "in": "body",
-            "required": true,
-            "description": "Chemin source",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "backup_type",
-            "in": "body",
-            "required": false,
-            "description": "",
-            "schema": {
-              "type": "string"
-            }
+            "BearerAuth": []
           }
         ],
-        "responses": {
-          "201": {
-            "description": "Backup cr\u00e9\u00e9",
-            "schema": {
-              "backup_id": "string",
-              "size_bytes": "number"
-            }
-          },
-          "400": {
-            "description": "Param\u00e8tres invalides",
-            "schema": {
-              "error": "string"
-            }
-          }
-        }
+        "parameters": null
       }
     }
   }

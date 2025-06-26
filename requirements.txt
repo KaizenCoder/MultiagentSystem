@@ -6,4 +6,7 @@ libcst==1.1.0
 
 # Bibliothèque pour convertir un AST en code source Python
 # Utilisé comme fallback ou alternative à ast.unparse
-astor==0.8.1 
+astor==0.8.1
+
+# Bibliothèque pour charger les variables d'environnement depuis un fichier .env
+python-dotenv==1.1.1 

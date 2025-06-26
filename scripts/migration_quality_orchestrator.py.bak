@@ -1,0 +1,174 @@
+import asyncio
+import sys
+from pathlib import Path
+import logging
+import json
+from datetime import datetime
+
+# --- Configuration ---
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+log = logging.getLogger(__name__)
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PROJECT_ROOT))
+
+try:
+    # Agents principaux pour la migration
+    from agents.agent_111_auditeur_qualite import Agent111AuditeurQualite  # Validation qualité
+    from agents.agent_110_documentaliste_expert import Agent110DocumentalisteExpert  # Documentation
+    from agents.agent_04_expert_securite_crypto import Agent04ExpertSecuriteCrypto  # Sécurité
+    from agents.agent_13_specialiste_documentation import Agent13SpecialisteDocumentation  # Docs spécialisées
+    from agents.agent_14_expert_tests import Agent14ExpertTests  # Tests
+    from agents.agent_05_expert_integration import Agent05ExpertIntegration  # Intégration
+    from core.models import Task, TaskResult, Status
+except ImportError as e:
+    log.error(f"Erreur d'importation critique. Assurez-vous que les agents sont accessibles. Erreur: {e}", exc_info=True)
+    sys.exit(1)
+
+# --- Paramètres de Migration ---
+AGENTS_DIR = PROJECT_ROOT / "agents"
+REPORTS_DIR = PROJECT_ROOT / "reports" / "migration_validation"
+REPORTS_DIR.mkdir(exist_ok=True, parents=True)
+
+QUALITY_THRESHOLD = 85  # Score minimum requis
+MAX_VALIDATION_ATTEMPTS = 3
+
+async def validate_agent(agent_path: Path, agents):
+    """Valide un agent spécifique avec l'équipe d'agents."""
+    
+    log.info(f"\n🔍 Validation de l'agent: {agent_path.name}")
+    
+    validation_results = {
+        "agent_name": agent_path.name,
+        "timestamp": datetime.now().isoformat(),
+        "validations": []
+    }
+
+    # 1. Audit Qualité (Agent 111)
+    quality_report = await agents["auditeur"].audit_code_quality(str(agent_path))
+    quality_score = quality_report.get("quality_score", 0)
+    validation_results["validations"].append({
+        "type": "quality",
+        "score": quality_score,
+        "details": quality_report
+    })
+    
+    # 2. Validation Sécurité (Agent 04)
+    security_task = Task(
+        type="security_audit",
+        params={"file_path": str(agent_path)}
+    )
+    security_result = await agents["securite"].execute_task(security_task)
+    validation_results["validations"].append({
+        "type": "security",
+        "success": security_result.success,
+        "details": security_result.data
+    })
+
+    # 3. Tests (Agent 14)
+    test_task = Task(
+        type="run_agent_tests",
+        params={"agent_path": str(agent_path)}
+    )
+    test_result = await agents["testeur"].execute_task(test_task)
+    validation_results["validations"].append({
+        "type": "tests",
+        "success": test_result.success,
+        "details": test_result.data
+    })
+
+    # 4. Intégration (Agent 05)
+    integration_task = Task(
+        type="validate_integration",
+        params={"agent_path": str(agent_path)}
+    )
+    integration_result = await agents["integration"].execute_task(integration_task)
+    validation_results["validations"].append({
+        "type": "integration",
+        "success": integration_result.success,
+        "details": integration_result.data
+    })
+
+    # 5. Documentation (Agents 110 et 13)
+    doc_task = Task(
+        type="generate_documentation",
+        params={"agent_path": str(agent_path)}
+    )
+    doc_result = await agents["documentaliste"].execute_task(doc_task)
+    validation_results["validations"].append({
+        "type": "documentation",
+        "success": doc_result.success,
+        "details": doc_result.data
+    })
+
+    # Documentation spécialisée si nécessaire
+    if quality_score >= QUALITY_THRESHOLD:
+        spec_doc_task = Task(
+            type="generate_specialized_docs",
+            params={"agent_path": str(agent_path)}
+        )
+        spec_doc_result = await agents["doc_specialiste"].execute_task(spec_doc_task)
+        validation_results["validations"].append({
+            "type": "specialized_documentation",
+            "success": spec_doc_result.success,
+            "details": spec_doc_result.data
+        })
+
+    return validation_results
+
+async def main():
+    """Orchestrateur principal de la validation de migration."""
+    
+    log.info("🚀 Démarrage de la VALIDATION DE MIGRATION DES AGENTS")
+    
+    # Instanciation des agents
+    agents = {
+        "auditeur": Agent111AuditeurQualite(),
+        "documentaliste": Agent110DocumentalisteExpert(),
+        "securite": Agent04ExpertSecuriteCrypto(),
+        "doc_specialiste": Agent13SpecialisteDocumentation(),
+        "testeur": Agent14ExpertTests(),
+        "integration": Agent05ExpertIntegration()
+    }
+
+    # Démarrage des agents
+    for agent in agents.values():
+        await agent.startup()
+
+    try:
+        # Liste des agents à valider
+        agents_to_validate = list(AGENTS_DIR.glob("agent_*.py"))
+        
+        all_results = []
+        for agent_path in agents_to_validate:
+            attempt = 1
+            while attempt <= MAX_VALIDATION_ATTEMPTS:
+                log.info(f"\n--- 🔄 Tentative {attempt}/{MAX_VALIDATION_ATTEMPTS} pour {agent_path.name} ---")
+                
+                results = await validate_agent(agent_path, agents)
+                all_results.append(results)
+                
+                # Vérification du succès
+                quality_score = next(v["score"] for v in results["validations"] if v["type"] == "quality")
+                if quality_score >= QUALITY_THRESHOLD:
+                    log.info(f"✅ {agent_path.name} validé avec succès (Score: {quality_score}/100)")
+                    break
+                    
+                attempt += 1
+                if attempt <= MAX_VALIDATION_ATTEMPTS:
+                    log.info(f"⚠️ Nouvelle tentative pour {agent_path.name}...")
+
+        # Génération du rapport final
+        report_path = REPORTS_DIR / f"migration_validation_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        with open(report_path, 'w', encoding='utf-8') as f:
+            json.dump(all_results, f, indent=2, ensure_ascii=False)
+        
+        log.info(f"\n📊 Rapport de validation généré: {report_path}")
+
+    finally:
+        # Arrêt propre des agents
+        for agent in agents.values():
+            await agent.shutdown()
+
+if __name__ == "__main__":
+    asyncio.run(main()) 
