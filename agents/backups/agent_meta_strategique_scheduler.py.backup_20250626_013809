@@ -36,28 +36,38 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import logging
 import time
+import importlib.util
 import importlib
 
 # Import de notre agent méta-stratégique
-sys.path.insert(0, str(Path(__file__).parent.parent / '20250621_1527_agent_racine_repertoire'))
-try:
-    from agent_meta_strategique import AgentMetaStrategique
-except ImportError as e:
-    print(f"ERREUR CRITIQUE: Impossible d'importer AgentMetaStrategique. Vérifiez le chemin. {e}")
+AGENT_META_PATH = Path(__file__).parent.parent / '20250621_1527_agent_racine_repertoire' / 'agent_meta_strategique.py'
+if AGENT_META_PATH.exists():
+    spec = importlib.util.spec_from_file_location('agent_meta_strategique', str(AGENT_META_PATH))
+    agent_meta_module = importlib.util.module_from_spec(spec)
+    sys.modules['agent_meta_strategique'] = agent_meta_module
+    try:
+        spec.loader.exec_module(agent_meta_module)
+        AgentMetaStrategique = agent_meta_module.AgentMetaStrategique
+    except Exception as e:
+        print(f"ERREUR CRITIQUE: L'import de AgentMetaStrategique a échoué malgré la détection du fichier. Détail: {e}")
+        sys.exit(1)
+else:
+    print(f"ERREUR CRITIQUE: Le fichier agent_meta_strategique.py est introuvable à l'emplacement attendu: {AGENT_META_PATH}")
     sys.exit(1)
 
 class AgentMetaStrategiqueScheduler:
-    """Planificateur pour l'exécution périodique de l'Agent Méta-Stratégique"""
-    
+    """Planificateur universel pour agents Pattern Factory"""
     def __init__(self, workspace_root: Path = None, config_path: str = "config/meta_strategique_config.json", agent_class_name: str = "Agent111AuditeurQualite", agent_module_path: str = "agents.agent_111_auditeur_qualite", task_method: str = "execute_task", task_params: dict = None):
         self.workspace_root = workspace_root if workspace_root else Path(__file__).parent.parent
         self.config_path = self.workspace_root / config_path
         self.logger = self._setup_logging()
+        
+        # Configuration par défaut
         self.default_config = {
             "execution_schedule": {
                 "daily_report": "09:00",
                 "weekly_deep_analysis": "MON:08:00",
-                "critical_monitoring": 30
+                "critical_monitoring": 30  # minutes
             },
             "notifications": {
                 "email_enabled": False,
@@ -78,9 +88,11 @@ class AgentMetaStrategiqueScheduler:
                 "archive_reports": True
             }
         }
+        
         self.config = self.load_config()
         self.task_method = task_method
         self.task_params = task_params or {"task": None}
+        # Import dynamique de l'agent
         try:
             agent_module = importlib.import_module(agent_module_path)
             agent_class = getattr(agent_module, agent_class_name)
@@ -88,6 +100,7 @@ class AgentMetaStrategiqueScheduler:
         except Exception as e:
             self.logger.critical(f"Impossible d'instancier {agent_class_name} depuis {agent_module_path}: {e}")
             sys.exit(1)
+            
         self.last_analysis_results = None
 
     def _setup_logging(self):
@@ -137,118 +150,132 @@ class AgentMetaStrategiqueScheduler:
         with open(self.config_path, 'w', encoding='utf-8') as f:
             json.dump(config, f, indent=2, ensure_ascii=False)
     
-    def start_scheduler(self):
-        """Démarrage du planificateur"""
-        self.logger.info("🚧 Démarrage du planificateur Agent Méta-Stratégique DRAFT/PROTOTYPE")
-        
-        # Planification des tâches
+    async def run_scheduler(self):
+        """Démarrage du planificateur en mode asynchrone"""
+        self.logger.info("🚧 Démarrage du planificateur Agent Méta-Stratégique ASYNC")
         self.setup_schedules()
-        
-        # Exécution immédiate pour test
         self.logger.info("🔍 Exécution d'analyse initiale...")
-        self.execute_daily_analysis()
-        
-        # Boucle principale
+        await self.execute_daily_analysis()
         try:
             while True:
-                schedule.run_pending()
-                time.sleep(60)  # Vérification chaque minute
+                await self.run_pending_async()
+                await asyncio.sleep(60)
         except KeyboardInterrupt:
             self.logger.info("🛑 Arrêt du planificateur")
-    
+
     def setup_schedules(self):
-        """Configuration des planifications"""
+        """Configuration des planifications (async compatible)"""
         config = self.config["execution_schedule"]
-        
+        self.schedules = []
         # Rapport quotidien
         daily_time = config["daily_report"]
-        schedule.every().day.at(daily_time).do(self.execute_daily_analysis)
+        self.schedules.append((self.parse_time(daily_time), self.execute_daily_analysis))
         self.logger.info(f"📅 Rapport quotidien planifié à {daily_time}")
-        
         # Analyse hebdomadaire approfondie
         weekly_schedule = config["weekly_deep_analysis"]
         if ":" in weekly_schedule:
             day, time_str = weekly_schedule.split(":")
-            getattr(schedule.every(), day.lower()).at(time_str).do(self.execute_weekly_deep_analysis)
+            self.schedules.append((self.parse_time(time_str, day=day), self.execute_weekly_deep_analysis))
             self.logger.info(f"📊 Analyse hebdomadaire planifiée {day} à {time_str}")
-        
         # Monitoring critique
         critical_interval = config["critical_monitoring"]
-        schedule.every(critical_interval).minutes.do(self.execute_critical_monitoring)
+        self.critical_monitoring_interval = critical_interval
+        self.last_critical_monitoring = datetime.now()
         self.logger.info(f"🚨 Monitoring critique toutes les {critical_interval} minutes")
-    
-    def execute_daily_analysis(self):
-        """Exécution de l'analyse quotidienne"""
-        self.logger.info("📊 Début analyse quotidienne")
-        
+
+    def parse_time(self, time_str, day=None):
+        # Retourne un tuple (heure, minute, jour) pour la planification
+        h, m = map(int, time_str.split(":"))
+        return (h, m, day)
+
+    async def run_pending_async(self):
+        now = datetime.now()
+        for sched in self.schedules:
+            h, m, day = sched[0]
+            if (now.hour, now.minute) == (h, m):
+                if day is None or now.strftime("%a").upper().startswith(day.upper()[:3]):
+                    await self._maybe_async_call(sched[1])
+        # Monitoring critique
+        if (datetime.now() - self.last_critical_monitoring).total_seconds() > self.critical_monitoring_interval * 60:
+            await self._maybe_async_call(self.execute_critical_monitoring)
+            self.last_critical_monitoring = datetime.now()
+
+    async def _maybe_async_call(self, func):
+        if asyncio.iscoroutinefunction(func):
+            await func()
+        else:
+            func()
+
+    async def execute_daily_analysis(self):
+        self.logger.info("📊 Début analyse quotidienne (universel)")
         try:
-            # Exécution de l'analyse
-            results = self.agent.analyser_performance_globale()
-            self.last_analysis_results = results
-            
-            # Sauvegarde du rapport
-            rapport_path = self.agent.sauvegarder_rapport_strategique()
-            
-            # Vérification des insights critiques
-            critical_insights = [i for i in results["strategic_insights"] 
-                               if i["severity"] in ["HIGH", "CRITICAL"]]
-            
-            if critical_insights:
-                self.handle_critical_insights(critical_insights)
-            
-            # Nettoyage des anciens rapports
-            self.cleanup_old_reports()
-            
-            self.logger.info(f"✅ Analyse quotidienne terminée - Rapport: {rapport_path}")
-            
+            # Exécution de la tâche générique
+            if hasattr(self.agent, self.task_method):
+                method = getattr(self.agent, self.task_method)
+                task_obj = self.task_params.get("task")
+                if not task_obj:
+                    # Construction dynamique si paramètres individuels fournis
+                    from core.agent_factory_architecture import Task
+                    task_type = self.task_params.get("type")
+                    task_params = self.task_params.get("params", {})
+                    if task_type:
+                        task_obj = Task(type=task_type, params=task_params)
+                        self.logger.info(f"[DEBUG] Tâche construite dynamiquement : type={task_type}, params={task_params}")
+                    else:
+                        self.logger.error("❌ Aucun objet tâche ni type de tâche fourni dans task_params !")
+                        return
+                else:
+                    self.logger.info(f"[DEBUG] Tâche reçue directement dans task_params : {task_obj}")
+                # DEBUG : log du type et des attributs de la tâche
+                self.logger.info(f"[DEBUG] Type de la tâche : {type(task_obj)}")
+                self.logger.info(f"[DEBUG] Attributs de la tâche : {dir(task_obj)}")
+                if hasattr(task_obj, '__dict__'):
+                    self.logger.info(f"[DEBUG] __dict__ de la tâche : {task_obj.__dict__}")
+                result = await method(task_obj)
+                self.logger.info(f"✅ Tâche '{self.task_method}' exécutée avec succès. Résultat: {result}")
+                # Génération d'un artefact JSON sérialisable
+                artefacts_dir = self.workspace_root / 'logs' / 'agents' / 'meta_strategique_scheduler' / 'artefacts'
+                artefacts_dir.mkdir(parents=True, exist_ok=True)
+                artefact_path = artefacts_dir / f"artefact_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+                # Conversion du résultat en dict si possible
+                if hasattr(result, 'to_dict'):
+                    result_data = result.to_dict()
+                elif hasattr(result, '__dict__'):
+                    result_data = dict(result.__dict__)
+                else:
+                    result_data = result
+                with open(artefact_path, 'w', encoding='utf-8') as f:
+                    json.dump(result_data, f, ensure_ascii=False, indent=2, default=str)
+            else:
+                self.logger.error(f"❌ Méthode '{self.task_method}' non trouvée sur l'agent.")
         except Exception as e:
-            self.logger.error(f"❌ Erreur analyse quotidienne: {e}")
-    
-    def execute_weekly_deep_analysis(self):
-        """Exécution de l'analyse hebdomadaire approfondie"""
-        self.logger.info("🔍 Début analyse hebdomadaire approfondie")
-        
+            self.logger.error(f"❌ Erreur exécution tâche universelle: {e}", exc_info=True)
+
+    async def execute_weekly_deep_analysis(self):
+        self.logger.info("🔍 Début analyse hebdomadaire approfondie (async)")
         try:
-            # Analyse standard
-            self.execute_daily_analysis()
-            
-            # Analyse des tendances sur 7 jours
-            trends_analysis = self.analyze_weekly_trends()
-            
-            # Génération du rapport hebdomadaire
-            weekly_report = self.generate_weekly_executive_report(trends_analysis)
-            
-            # Sauvegarde du rapport hebdomadaire
+            await self.execute_daily_analysis()
+            trends_analysis = await asyncio.to_thread(self.analyze_weekly_trends)
+            weekly_report = await asyncio.to_thread(self.generate_weekly_executive_report, trends_analysis)
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
             weekly_report_path = self.agent.reports_path / f"RAPPORT_HEBDOMADAIRE_{timestamp}.md"
-            
             with open(weekly_report_path, 'w', encoding='utf-8') as f:
                 f.write(weekly_report)
-            
             self.logger.info(f"✅ Analyse hebdomadaire terminée - Rapport: {weekly_report_path}")
-            
         except Exception as e:
             self.logger.error(f"❌ Erreur analyse hebdomadaire: {e}")
-    
-    def execute_critical_monitoring(self):
-        """Monitoring critique pour détection rapide des problèmes"""
+
+    async def execute_critical_monitoring(self):
         try:
-            # Vérification rapide des métriques critiques
-            critical_metrics = self.check_critical_metrics()
-            
+            critical_metrics = await asyncio.to_thread(self.check_critical_metrics)
             if critical_metrics["alerts"]:
                 self.logger.warning(f"🚨 {len(critical_metrics['alerts'])} alertes critiques détectées")
-                
-                # Notification immédiate si configurée
                 if self.config["notifications"]["email_enabled"]:
-                    self.send_critical_alert(critical_metrics["alerts"])
-                
-                # Exécution d'une analyse d'urgence
-                self.execute_emergency_analysis(critical_metrics)
-            
+                    await asyncio.to_thread(self.send_critical_alert, critical_metrics["alerts"])
+                await asyncio.to_thread(self.execute_emergency_analysis, critical_metrics)
         except Exception as e:
             self.logger.error(f"❌ Erreur monitoring critique: {e}")
-    
+
     def check_critical_metrics(self) -> Dict[str, Any]:
         """Vérification rapide des métriques critiques"""
         alerts = []
@@ -471,11 +498,10 @@ Alerte générée automatiquement par l'Agent Méta-Stratégique
             self.logger.error(f"❌ Erreur analyse d'urgence: {e}")
 
 def main():
-    """Fonction principale"""
-    # Création et démarrage du planificateur
+    """Fonction principale asynchrone"""
     try:
         scheduler = AgentMetaStrategiqueScheduler()
-        scheduler.start_scheduler()
+        asyncio.run(scheduler.run_scheduler())
     except Exception as e:
         print(f"Une erreur fatale est survenue: {e}")
 

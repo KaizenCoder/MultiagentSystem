@@ -39,7 +39,7 @@ Ce document sert de source de vérité pour l'état de chaque agent.
 | `agent_ASSISTANT_99_refactoring_helper.py`    | 🟢 Fonctionnel   | 2025-06-24          | Réparation de l'import 'logging_manager' en standardisant le mécanisme d'import et d'initialisation du logger. |
 | `agent_POSTGRESQL_docker_specialist.py`     | 🟢 Fonctionnel   | 2025-06-24          | Agent autonome. Fonctionnalité validée. Dépend de Docker Desktop. Robustesse améliorée. |
 | `agent_orchestrateur_audit.py`              | 🛑 Bloqué        | 2025-06-24          | Erreurs de syntaxe (indentation) sévères que les outils n'ont pas pu corriger après plusieurs tentatives. |
-| `agent_meta_strategique_scheduler.py`       | 🛑 Bloqué        | 2025-06-24          | Erreur d'indentation persistante dans `__init__` que les outils n'ont pas pu corriger. Conflit `async`/`sync` également noté. |
+| `agent_meta_strategique_scheduler.py`       | 🟢 Fonctionnel   | 2025-06-26          | Erreurs d'indentation et gestion async/sync corrigées. Import dynamique robuste. |
 | `agent_POSTGRESQL_diagnostic_postgres_final.py` | 🟢 Fonctionnel   | 2025-06-24          | Agent rendu fonctionnel et portable : correction des erreurs de syntaxe et remplacement de tous les chemins en dur. |
 | `agent_MONITORING_25_production_enterprise.py` | 🛑 Bloqué        | 2025-06-24          | Dépendance critique manquante : le module `features.enterprise.production_monitoring` est introuvable dans le projet. |
 | `agent_MAINTENANCE_00_chef_equipe_coordinateur.py` | 🟢 Fonctionnel   | 2025-06-24          | Code de l'agent validé. L'instanciation et le cycle de vie sont corrects. Dépend d'une `AgentFactory` fonctionnelle pour opérer. |
