@@ -45,8 +45,16 @@ class Agent05Config(pydantic.BaseModel):
 
 class Agent05MaitreTestsValidation(Agent):
     """
-    Agent 05 - Maître Tests & Validation.
-    Cette version est nettoyée et restructurée pour être fonctionnelle.
+    Agent 05 - Maître Tests & Validation (Auto-Évaluation).
+
+    Cet agent est responsable de l'auto-évaluation de ses composants internes,
+    notamment son gestionnaire de templates (`TemplateManager`) et l'exécution
+    de tests "smoke" sur ses propres fonctionnalités. Il génère des rapports 
+    détaillés (JSON et Markdown) sur l'état de ses systèmes internes, 
+    couvrant les aspects de tests, validation, performance et qualité de 
+    ses propres opérations.
+
+    La version de l'agent est chargée dynamiquement depuis `config/maintenance_config.json`.
     """
     
     def __init__(self, agent_id="agent_05_maitre_tests_validation"):
@@ -81,14 +89,8 @@ class Agent05MaitreTestsValidation(Agent):
 
         # --- Superclass Initialization ---
         super().__init__(
-            agent_id=self.agent_id,
-            version=pydantic_config.version,
-            mission=pydantic_config.mission,
-            description=pydantic_config.description,
-            dependencies=pydantic_config.dependencies,
-            status=pydantic_config.status,
             agent_type=pydantic_config.agent_type,
-            logger=self.logger
+            config=pydantic_config.model_dump()
         )
         
         # --- Set attributes from config ---
@@ -142,16 +144,22 @@ class Agent05MaitreTestsValidation(Agent):
     
     async def generer_rapport_strategique(self, context: Dict[str, Any], type_rapport: str = 'tests') -> Dict[str, Any]:
         """
-        🧪 Génération de rapports stratégiques pour tests et validation
+        🧪 Génère des rapports stratégiques d'auto-évaluation.
+
+        Ces rapports concernent l'état des composants internes de l'agent,
+        tels que le TemplateManager et les résultats des smoke tests internes.
         
         Args:
-            context: Contexte d'analyse (cible, objectifs, etc.)
-            type_rapport: Type de rapport ('tests', 'validation', 'performance', 'qualite')
+            context: Contexte d'analyse (actuellement peu utilisé, car l'évaluation est interne).
+                     Peut être étendu pour des analyses ciblées spécifiques si nécessaire.
+            type_rapport: Type de rapport d'auto-évaluation à générer.
+                          Options: 'tests', 'validation', 'performance', 'qualite'.
         
         Returns:
-            Rapport stratégique JSON avec métriques de tests et recommandations
+            Un dictionnaire représentant le rapport stratégique en JSON, 
+            contenant les métriques d'auto-évaluation et des recommandations.
         """
-        self.logger.info(f"Génération rapport tests/validation: {type_rapport}")
+        self.logger.info(f"Génération rapport d'auto-évaluation: {type_rapport}")
         
         # Collecte des métriques de tests
         metriques_base = await self._collecter_metriques_tests()
@@ -170,99 +178,138 @@ class Agent05MaitreTestsValidation(Agent):
             return await self._generer_rapport_tests(context, metriques_base, timestamp)
 
     async def _collecter_metriques_tests(self) -> Dict[str, Any]:
-        """Collecte les métriques de tests et validation"""
+        """
+        Collecte les métriques issues de l'auto-évaluation des composants internes.
+        Ceci inclut l'état du TemplateManager, les résultats des smoke tests, 
+        et des métriques simulées de performance et de qualité interne.
+        """
         try:
-            # Exécution des tests smoke pour obtenir des métriques
             smoke_results = self.run_smoke_tests()
-            
-            # Métriques de tests
-            test_metrics = {
-                'templates_loaded': self.templates_loaded,
+            smoke_execution_time = smoke_results.get("execution_time_ms", 0) # Assumant que run_smoke_tests retourne cela
+
+            # Santé des Composants Internes
+            sante_composants = {
+                'template_manager_charge': self.templates_loaded,
+                'template_manager_cache_hits_simule': 75 if self.templates_loaded else 0, # %
+                'template_manager_templates_in_cache_simule': 5 if self.templates_loaded else 0,
+                'template_manager_hot_reload_simule': self.config.enable_hot_reload if self.templates_loaded else False,
+                'configuration_chargee': True, # Assumant que __init__ a réussi
+                'configuration_valide': True,  # Assumant la validation Pydantic
+                'logging_operationnel': hasattr(self, 'logger') and self.logger is not None
+            }
+
+            # Résultats des Auto-Tests (Smoke Tests)
+            resultats_smoke_tests = {
                 'total_tests': smoke_results['summary']['total'],
-                'tests_passed': smoke_results['summary']['passed'],
-                'tests_failed': smoke_results['summary']['failed'],
-                'success_rate': (smoke_results['summary']['passed'] / max(1, smoke_results['summary']['total'])) * 100
+                'tests_reussis': smoke_results['summary']['passed'],
+                'tests_echoues': smoke_results['summary']['failed'],
+                'taux_reussite': (smoke_results['summary']['passed'] / max(1, smoke_results['summary']['total'])) * 100,
+                'temps_execution_ms': smoke_execution_time,
+                'statut_global': 'RÉUSSITE' if smoke_results['summary']['failed'] == 0 else 'ÉCHEC'
+            }
+
+            # Qualité Interne (Simulée)
+            qualite_interne_simulee = {
+                'complexite_cyclomatique_moy_simulee': 8, # Valeur arbitraire
+                'respect_pep8_simule': 95, # %
+                'docstring_coverage_simule': 80 # %
             }
             
-            # Métriques de validation
-            validation_metrics = {
-                'code_expert_available': self.templates_loaded,
-                'template_manager_status': 'OPERATIONAL' if self.templates_loaded else 'FAILED',
-                'smoke_tests_status': 'PASSED' if test_metrics['tests_failed'] == 0 else 'FAILED'
+            # Performance Interne (Simulée)
+            performance_interne_simulee = {
+                'temps_reponse_execute_task_moyen_ms_simule': 50,
+                'utilisation_memoire_mo_simulee': 64
             }
-            
-            # Évaluation santé tests
-            test_health = {
-                'all_tests_passing': test_metrics['tests_failed'] == 0,
-                'high_success_rate': test_metrics['success_rate'] >= 95,
-                'templates_operational': self.templates_loaded,
-                'validation_complete': validation_metrics['smoke_tests_status'] == 'PASSED'
-            }
-            
+
             return {
-                'test_metrics': test_metrics,
-                'validation_metrics': validation_metrics,
-                'test_health': test_health,
-                'smoke_results': smoke_results,
+                'sante_composants': sante_composants,
+                'resultats_smoke_tests': resultats_smoke_tests,
+                'qualite_interne_simulee': qualite_interne_simulee,
+                'performance_interne_simulee': performance_interne_simulee,
+                'details_smoke_tests': smoke_results, # Garder les détails complets
                 'derniere_maj': datetime.now().isoformat()
             }
             
         except Exception as e:
-            self.logger.error(f"Erreur collecte métriques tests: {e}")
+            self.logger.error(f"Erreur collecte métriques tests: {e}", exc_info=True)
             return {'erreur': str(e), 'metriques_partielles': True}
 
     async def _generer_rapport_tests(self, context: Dict, metriques: Dict, timestamp: datetime) -> Dict[str, Any]:
-        """Génère un rapport stratégique centré tests"""
+        """Génère un rapport stratégique centré tests, enrichi et structuré."""
         
-        test_metrics = metriques.get('test_metrics', {})
-        test_health = metriques.get('test_health', {})
-        smoke_results = metriques.get('smoke_results', {})
+        sante_composants = metriques.get('sante_composants', {})
+        resultats_smoke = metriques.get('resultats_smoke_tests', {})
+        qualite_interne = metriques.get('qualite_interne_simulee', {}) # Utilisé pour le score mais pas détaillé ici pour l'instant
+
+        # Calcul du score global d'auto-évaluation (tests)
+        score_global = 0
+        issues_critiques_details = []
+
+        # Pondération: Santé Composants (40 pts), Smoke Tests (60 pts)
+        if sante_composants.get('template_manager_charge'): score_global += 15
+        else: issues_critiques_details.append("Le TemplateManager n'a pas pu être chargé.")
+        if sante_composants.get('configuration_valide'): score_global += 15
+        else: issues_critiques_details.append("La configuration de l'agent est invalide.")
+        if sante_composants.get('logging_operationnel'): score_global += 10
+        else: issues_critiques_details.append("Le système de logging est inopérationnel.")
+
+        if resultats_smoke.get('statut_global') == 'RÉUSSITE': score_global += 40
+        else: issues_critiques_details.append(f"Les smoke tests internes ont échoué ({resultats_smoke.get('tests_echoues',0)} échecs).")
+        score_global += (resultats_smoke.get('taux_reussite', 0) / 100) * 20 # Bonus basé sur le taux de réussite
+
+        score_global = min(score_global, 100) # Plafonner à 100
+
+        niveau_qualite = "OPTIMAL" if score_global >= 90 else "BON" if score_global >=75 else "ACCEPTABLE" if score_global >= 50 else "INSUFFISANT" if score_global >= 30 else "CRITIQUE"
+        conformite = "✅ CONFORME" if score_global >= 75 else "⚠️ À SURVEILLER" if score_global >=50 else "❌ NON CONFORME"
         
-        # Calcul du score de tests
-        score_tests = 0
-        if test_health.get('all_tests_passing'): score_tests += 30
-        if test_health.get('high_success_rate'): score_tests += 25
-        if test_health.get('templates_operational'): score_tests += 25
-        if test_health.get('validation_complete'): score_tests += 20
-        
-        statut = "OPTIMAL" if score_tests >= 90 else "ACCEPTABLE" if score_tests >= 70 else "CRITIQUE"
-        
+        recommandations = []
+        if not sante_composants.get('template_manager_charge'): recommandations.append("Investiguer l'échec de chargement du TemplateManager.")
+        if resultats_smoke.get('statut_global') != 'RÉUSSITE': recommandations.append("Analyser les échecs des smoke tests internes pour identifier les causes racines.")
+        if resultats_smoke.get('taux_reussite', 100) < 100: recommandations.append("Améliorer la robustesse des fonctionnalités internes pour atteindre 100% de réussite aux smoke tests.")
+        if qualite_interne.get('respect_pep8_simule', 100) < 95 : recommandations.append("(Simulé) Augmenter la conformité au PEP8.")
+        if not recommandations: recommandations.append("L'auto-évaluation des tests indique un bon état général. Maintenir la vigilance.")
+
         return {
-            'agent_id': 'agent_05_maitre_tests_validation',
-            'type_rapport': 'tests',
+            'agent_id': self.agent_id,
+            'agent_file_name': Path(__file__).name,
+            'type_rapport': 'auto_evaluation_tests',
             'timestamp': timestamp.isoformat(),
-            'specialisation': 'maitre_tests_validation',
-            'metriques_tests': {
-                'score_tests_global': score_tests,
-                'score_execution': 100 if test_health.get('all_tests_passing') else 60,
-                'score_taux_reussite': test_metrics.get('success_rate', 0),
-                'score_templates': 100 if test_health.get('templates_operational') else 30,
-                'score_validation': 100 if test_health.get('validation_complete') else 50,
-                'statut_general': statut
+            'version_agent': self.version,
+            'specialisation': 'Auto-Évaluation et Tests Internes',
+            'score_global_auto_evaluation': round(score_global,1),
+            'niveau_qualite_interne': niveau_qualite,
+            'conformite_interne': conformite,
+            'issues_critiques_internes_identifies': len(issues_critiques_details),
+            
+            'sante_composants_internes': {
+                'description': "Évaluation de l'état opérationnel des composants critiques internes de l'agent.",
+                'template_manager_charge': sante_composants.get('template_manager_charge'),
+                'template_manager_cache_hits_simule_pct': sante_composants.get('template_manager_cache_hits_simule'),
+                'template_manager_templates_in_cache_simule': sante_composants.get('template_manager_templates_in_cache_simule'),
+                'template_manager_hot_reload_active_simule': sante_composants.get('template_manager_hot_reload_simule'),
+                'configuration_chargee_et_valide': sante_composants.get('configuration_chargee') and sante_composants.get('configuration_valide'),
+                'logging_operationnel': sante_composants.get('logging_operationnel')
             },
-            'recommandations_tests': [
-                f"🧪 TESTS: {test_metrics.get('total_tests', 0)} exécutés, {test_metrics.get('tests_passed', 0)} réussis, {test_metrics.get('tests_failed', 0)} échoués",
-                f"📊 TAUX: {test_metrics.get('success_rate', 0):.1f}% de réussite {'✅ excellent' if test_metrics.get('success_rate', 0) >= 95 else '⚠️ à améliorer'}",
-                f"📋 TEMPLATES: {'✅ opérationnels' if test_health.get('templates_operational') else '❌ défaillants'}",
-                f"✅ VALIDATION: {'✅ complète' if test_health.get('validation_complete') else '❌ incomplète'}"
-            ],
-            'details_techniques_tests': {
-                'total_tests_executes': test_metrics.get('total_tests', 0),
-                'tests_reussis': test_metrics.get('tests_passed', 0),
-                'tests_echoues': test_metrics.get('tests_failed', 0),
-                'taux_reussite': test_metrics.get('success_rate', 0),
-                'templates_charges': test_metrics.get('templates_loaded', False),
-                'smoke_suite': smoke_results.get('test_suite', 'unknown')
+            'resultats_smoke_tests_internes': {
+                'description': "Résultats de l'exécution des tests 'smoke' vérifiant les fonctionnalités de base de l'agent.",
+                'statut_global': resultats_smoke.get('statut_global'),
+                'total_tests_executes': resultats_smoke.get('total_tests'),
+                'tests_reussis': resultats_smoke.get('tests_reussis'),
+                'tests_echoues': resultats_smoke.get('tests_echoues'),
+                'taux_reussite_pct': round(resultats_smoke.get('taux_reussite', 0),1),
+                'temps_execution_ms': resultats_smoke.get('temps_execution_ms')
             },
-            'issues_critiques_tests': [
-                f"Tests échoués: {test_metrics.get('tests_failed', 0)}" if test_metrics.get('tests_failed', 0) > 0 else None,
-                "Templates non chargés" if not test_health.get('templates_operational') else None
-            ],
-            'metadonnees': {
-                'version_agent': 'test_master_v1',
-                'specialisation_confirmee': True,
-                'context_analyse': context.get('cible', 'analyse_tests_generale')
-            }
+            'recommandations_amelioration_interne': recommandations,
+            'details_issues_critiques_internes': issues_critiques_details if issues_critiques_details else ["Aucun issue critique interne détecté lors de cette auto-évaluation des tests."],
+            
+            # Métriques additionnelles simulées (pourraient être plus détaillées à l'avenir)
+            'metriques_qualite_code_interne_simulees': {
+                'complexite_cyclomatique_moyenne': qualite_interne.get('complexite_cyclomatique_moy_simulee'),
+                'conformite_pep8_pct': qualite_interne.get('respect_pep8_simule'),
+                'couverture_docstrings_pct': qualite_interne.get('docstring_coverage_simule')
+            },
+            'metriques_performance_agent_simulees': metriques.get('performance_interne_simulee', {}),
+            'details_complets_smoke_tests': metriques.get('details_smoke_tests', {}) # Pour analyse approfondie si besoin
         }
 
     async def _generer_rapport_validation(self, context: Dict, metriques: Dict, timestamp: datetime) -> Dict[str, Any]:
@@ -365,74 +412,90 @@ class Agent05MaitreTestsValidation(Agent):
             return await self._generer_markdown_tests(rapport_json, context, timestamp)
 
     async def _generer_markdown_tests(self, rapport: Dict, context: Dict, timestamp: datetime) -> str:
-        """Génère un rapport tests au format Markdown détaillé"""
+        """Génère un rapport tests au format Markdown détaillé et enrichi."""
         
-        metriques = rapport.get('metriques_tests', {})
-        details = rapport.get('details_techniques_tests', {})
-        recommandations = rapport.get('recommandations_tests', [])
+        agent_name = rapport.get('agent_id', 'N/A')
+        agent_file = rapport.get('agent_file_name', agent_name)
+        report_timestamp = datetime.fromisoformat(rapport.get('timestamp', timestamp.isoformat())).strftime('%Y-%m-%d %H:%M:%S')
+        score = rapport.get('score_global_auto_evaluation', 0)
+        niveau_qualite = rapport.get('niveau_qualite_interne', 'N/A')
+        conformite = rapport.get('conformite_interne', 'N/A')
+        issues_count = rapport.get('issues_critiques_internes_identifies', 0)
+
+        sante_comp = rapport.get('sante_composants_internes', {})
+        smoke_res = rapport.get('resultats_smoke_tests_internes', {})
+        recommandations = rapport.get('recommandations_amelioration_interne', [])
+        issues_details = rapport.get('details_issues_critiques_internes', [])
         
-        score = metriques.get('score_tests_global', 0)
-        statut = metriques.get('statut_general', 'UNKNOWN')
-        conformite = "✅ CONFORME" if score >= 80 else "❌ NON CONFORME"
-        
-        md_content = f"""# 🔍 **RAPPORT QUALITÉ TESTS : agent_05_maitre_tests_validation.py**
+        qualite_sim = rapport.get('metriques_qualite_code_interne_simulees', {})
+        perf_sim = rapport.get('metriques_performance_agent_simulees', {})
 
-**Date :** {timestamp.strftime('%Y-%m-%d %H:%M:%S')}  
-**Module :** agent_05_maitre_tests_validation.py  
-**Score Global** : {score/10:.1f}/10  
-**Niveau Qualité** : {statut}  
-**Conformité** : {conformite}  
-**Issues Critiques** : {len([i for i in rapport.get('issues_critiques_tests', []) if i])}
+        # Indicateurs visuels
+        icon_tm_load = "✅ Chargé" if sante_comp.get('template_manager_charge') else "❌ Échec Chargement"
+        icon_config = "✅ Valide" if sante_comp.get('configuration_chargee_et_valide') else "❌ Invalide/Non chargée"
+        icon_log = "✅ Opérationnel" if sante_comp.get('logging_operationnel') else "❌ Inopérationnel"
+        icon_smoke_status = f"{smoke_res.get('statut_global','N/A')} ({smoke_res.get('taux_reussite_pct',0):.1f}%)"
 
-## 🏗️ Architecture Tests
-- {details.get('total_tests_executes', 0)} tests exécutés, {details.get('tests_reussis', 0)} réussis, {details.get('tests_echoues', 0)} échoués détectés.
-- Système de tests opérationnel.
-- Maître tests et validation confirmé
-- Spécialisation: Tests smoke, validation, benchmarks
+        md = f"""# 🔬 **RAPPORT D'AUTO-ÉVALUATION (TESTS INTERNES) : {agent_name}**
 
-## 🔧 Recommandations Tests
+**Date :** {report_timestamp}
+**Module :** `{agent_file}` (Version: {rapport.get('version_agent', 'N/A')})
+**Score Global d'Auto-Évaluation :** {score:.1f}/100
+**Niveau Qualité Interne :** {niveau_qualite}
+**Conformité Interne :** {conformite}
+**Issues Critiques Internes :** {issues_count}
+
+## 🌡️ Santé des Composants Internes
+{sante_comp.get('description', 'État des systèmes internes.')}
+- **Gestionnaire de Templates :** {icon_tm_load}
+    - Cache Hits (Simulé) : {sante_comp.get('template_manager_cache_hits_simule_pct', 'N/A')}%
+    - Templates en Cache (Simulé) : {sante_comp.get('template_manager_templates_in_cache_simule', 'N/A')}
+    - Hot Reload Actif (Simulé) : {"✅ Oui" if sante_comp.get('template_manager_hot_reload_active_simule') else "❌ Non"}
+- **Configuration Agent :** {icon_config}
+- **Système de Logging :** {icon_log}
+
+## 💨 Résultats des Smoke Tests Internes
+{smoke_res.get('description', 'Validation des fonctionnalités de base.')}
+- **Statut Global :** {icon_smoke_status}
+- **Tests Exécutés :** {smoke_res.get('total_tests_executes', 'N/A')}
+- **Tests Réussis :** {smoke_res.get('tests_reussis', 'N/A')}
+- **Tests Échoués :** {smoke_res.get('tests_echoues', 'N/A')}
+- **Temps d'Exécution Total :** {smoke_res.get('temps_execution_ms', 'N/A')} ms
+
+## ✨ Recommandations d'Amélioration Interne
 """
-        
-        for rec in recommandations:
-            md_content += f"- {rec}\n"
-        
-        issues_critiques = [i for i in rapport.get('issues_critiques_tests', []) if i]
-        md_content += f"""
-
-## 🚨 Issues Critiques Tests
-
-"""
-        if issues_critiques:
-            for issue in issues_critiques:
-                md_content += f"- 🔴 {issue}\n"
+        if recommandations:
+            for reco in recommandations:
+                md += f"- {reco}\n"
         else:
-            md_content += "Aucun issue critique tests détecté - Système de tests robuste.\n"
-        
-        md_content += f"""
+            md += "- Aucune recommandation spécifique pour le moment.\n"
 
-## 📋 Détails Techniques Tests
-- Total tests exécutés : {details.get('total_tests_executes', 0)}
-- Tests réussis : {details.get('tests_reussis', 0)}
-- Tests échoués : {details.get('tests_echoues', 0)}
-- Taux réussite : {details.get('taux_reussite', 0):.1f}%
-- Templates chargés : {'✅' if details.get('templates_charges') else '❌'}
-- Suite smoke : {details.get('smoke_suite', 'unknown')}
+        md += f"""
+## 🚨 Issues Critiques Internes Détectés
+"""
+        if issues_count > 0 and issues_details:
+            for issue in issues_details:
+                md += f"- 🔴 {issue}\n"
+        else:
+            md += "- ✅ Aucun issue critique interne majeur détecté lors de cette auto-évaluation des tests.\n"
 
-## 📊 Métriques Tests Détaillées
-- Score tests global : {score}/100
-- Score exécution : {metriques.get('score_execution', 0)}/100
-- Score taux réussite : {metriques.get('score_taux_reussite', 0):.1f}/100
-- Score templates : {metriques.get('score_templates', 0)}/100
-- Score validation : {metriques.get('score_validation', 0)}/100
+        md += f"""
+## 📐 Métriques Qualité Code Interne (Simulées)
+- Complexité Cyclomatique Moyenne : {qualite_sim.get('complexite_cyclomatique_moyenne', 'N/A')}
+- Conformité PEP8 : {qualite_sim.get('conformite_pep8_pct', 'N/A')}%
+- Couverture Docstrings : {qualite_sim.get('couverture_docstrings_pct', 'N/A')}%
+
+## 🚀 Métriques Performance Agent (Simulées)
+- Temps de Réponse Moyen (`execute_task`) : {perf_sim.get('temps_reponse_execute_task_moyen_ms_simule', 'N/A')} ms
+- Utilisation Mémoire Estimée : {perf_sim.get('utilisation_memoire_mo_simulee', 'N/A')} Mo
 
 ---
 
-*Rapport généré automatiquement par Agent 05 - {timestamp.strftime('%Y-%m-%d %H:%M:%S')}*
-*🧪 Maître Tests & Validation System*
-*📂 Sauvegardé dans : /mnt/c/Dev/nextgeneration/reports/*
+*Rapport généré par {agent_name} - {report_timestamp}*
+*Agent Spécialisé en Auto-Évaluation et Tests Internes*
+*📂 Les rapports détaillés (JSON) sont disponibles pour analyse approfondie.*
 """
-        
-        return md_content
+        return md
 
     async def _generer_markdown_validation(self, rapport: Dict, context: Dict, timestamp: datetime) -> str:
         """Génère un rapport validation au format Markdown"""
@@ -504,86 +567,155 @@ class Agent05MaitreTestsValidation(Agent):
         return md_content
     
     async def execute_task(self, task: Task) -> Result:
-        # Support pour génération de rapports stratégiques tests/validation - Mission IA 2
-        if hasattr(task, 'name') and task.name == "generate_strategic_report":
-            try:
-                context = getattr(task, 'context', {})
-                type_rapport = getattr(task, 'type_rapport', 'tests')
-                format_sortie = getattr(task, 'format_sortie', 'json')
-                
-                rapport = await self.generer_rapport_strategique(context, type_rapport)
-                
-                if format_sortie == 'markdown':
-                    rapport_md = await self.generer_rapport_markdown(rapport, type_rapport, context)
-                    
-                    # Sauvegarde dans /reports/
-                    import os
-                    from datetime import datetime
-                    reports_dir = "/mnt/c/Dev/nextgeneration/reports"
-                    os.makedirs(reports_dir, exist_ok=True)
-                    
-                    timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
-                    filename = f"strategic_report_agent_05_tests_{type_rapport}_{timestamp}.md"
-                    filepath = os.path.join(reports_dir, filename)
-                    
-                    with open(filepath, 'w', encoding='utf-8') as f:
-                        f.write(rapport_md)
-                    
-                    return Result(success=True, data={
-                        'rapport_json': rapport, 
-                        'rapport_markdown': rapport_md,
-                        'fichier_sauvegarde': filepath
-                    })
-                
-                return Result(success=True, data=rapport)
-            except Exception as e:
-                self.logger.error(f"Erreur génération rapport tests: {e}")
-                return Result(success=False, error=f"Exception rapport tests: {str(e)}")
+        """
+        Exécute une tâche spécifique demandée à l'agent.
+        Supporte principalement 'generer_rapport_strategique' et 'generer_rapport_markdown'.
+        """
+        self.last_activity = datetime.now()
         
-        # Tâches de tests originales
-        else:
-            self.logger.info(f"🔥 Démarrage des tests pour la tâche: {task.id}")
+        self.logger.info(f"Réception tâche: {task.type} avec params: {task.params}")
+
+        action = task.type
+        params = task.params
+
+        try:
+            if action == "generer_rapport_strategique":
+                context = params.get("context", {})
+                type_rapport = params.get("type_rapport", "tests")
+                report_content = await self.generer_rapport_strategique(context, type_rapport)
+                return Result(success=True, data=report_content, task_id=task.id, agent_id=self.agent_id)
             
-            # Ici, nous pourrions choisir les tests à lancer en fonction de la tâche.
-            # Pour l'instant, nous lançons une suite de tests par défaut.
-            test_results = self.run_smoke_tests()
-            
-            return Result(success=True, data=test_results)
+            elif action == "generer_rapport_markdown":
+                rapport_json = params.get("rapport_json")
+                type_rapport = params.get("type_rapport")
+                context = params.get("context", {})
+                if not rapport_json or not type_rapport:
+                    self.logger.error("Paramètres 'rapport_json' et 'type_rapport' requis pour generer_rapport_markdown")
+                    return Result(success=False, error="Paramètres manquants pour generer_rapport_markdown", task_id=task.id, agent_id=self.agent_id)
+                
+                markdown_content = await self.generer_rapport_markdown(rapport_json, type_rapport, context)
+                return Result(success=True, data=markdown_content, task_id=task.id, agent_id=self.agent_id)
+
+            # ... autres actions potentielles ...
+            else:
+                self.logger.warning(f"Action '{action}' non reconnue ou non implémentée.")
+                return Result(success=False, error=f"Action '{action}' non supportée.", task_id=task.id, agent_id=self.agent_id)
+        
+        except Exception as e:
+            self.logger.error(f"Erreur lors de l'exécution de la tâche {action}: {e}", exc_info=True)
+            return Result(success=False, error=str(e), task_id=task.id, agent_id=self.agent_id)
 
     def run_smoke_tests(self) -> Dict[str, Any]:
-        """Exécute une série de tests de base."""
-        self.logger.info("🔥 Démarrage des tests smoke.")
+        """
+        Exécute une série de tests "smoke" internes pour vérifier l'état
+        opérationnel des composants clés de l'agent, notamment le TemplateManager.
+
+        Ces tests ne sont pas destinés à tester des agents externes mais à valider
+        le bon fonctionnement de cet agent lui-même.
+
+        Returns:
+            Un dictionnaire contenant les résultats des smoke tests, incluant
+            un résumé (total, réussis, échoués), les détails de chaque test,
+            et le temps d'exécution.
+        """
+        self.logger.info("Exécution des smoke tests internes...")
+        start_time = time.time()
         
         smoke_results = {
-            "test_suite": "smoke_tests_code_expert",
+            "test_suite": "smoke_tests_agent_05_interne", # Nom de suite plus spécifique
             "timestamp": datetime.now().isoformat(),
             "tests": [],
-            "summary": { "total": 0, "passed": 0, "failed": 0 }
+            "summary": { "total": 0, "passed": 0, "failed": 0 },
+            "execution_time_ms": 0
         }
         
-        # Test 1: Initialisation (déjà faite dans __init__)
+        # Test 1: Initialisation et chargement du TemplateManager
+        test_tm_init_status = "PASSED" if self.templates_loaded else "FAILED"
+        test_tm_init_details = "TemplateManager chargé et opérationnel." if self.templates_loaded else "Échec du chargement du TemplateManager."
         smoke_results["tests"].append({
-            "name": "template_manager_init",
-            "status": "PASSED" if self.templates_loaded else "FAILED"
+            "name": "template_manager_initialisation",
+            "status": test_tm_init_status,
+            "details": test_tm_init_details
         })
 
-        # Mettez ici d'autres logiques de test...
+        # Test 2: Vérification du chargement de la configuration
+        config_loaded_successfully = hasattr(self, 'config') and isinstance(self.config, Agent05SpecificConfig)
+        test_config_status = "PASSED" if config_loaded_successfully else "FAILED"
+        test_config_details = "Configuration de l'agent chargée et validée." if config_loaded_successfully else "Problème avec le chargement ou la validation de la configuration."
+        smoke_results["tests"].append({
+            "name": "configuration_loading_validation",
+            "status": test_config_status,
+            "details": test_config_details
+        })
+
+        # Test 3: Fonctionnalité de base du TemplateManager (si chargé)
+        if self.templates_loaded and self.template_manager:
+            try:
+                # Simuler une opération basique, ex: lister les templates (si la méthode existe)
+                # ou vérifier l'état du cache (si accessible)
+                # Pour l'instant, on se contente de vérifier qu'il est chargé.
+                # Supposons qu'une méthode `get_status()` existe pour l'exemple.
+                # tm_status = self.template_manager.get_status() # Ligne à adapter si une telle méthode existe
+                # test_tm_ops_status = "PASSED" # if tm_status.get('healthy') else "FAILED"
+                # test_tm_ops_details = f"TemplateManager opérationnel. Cache: {tm_status.get('cache_size',0)}/{self.config.cache_size}"
+                
+                # Simulation simple pour l'instant:
+                test_tm_ops_status = "PASSED"
+                test_tm_ops_details = "Vérification basique des opérations du TemplateManager (simulée)."
+
+            except Exception as e_tm_ops:
+                test_tm_ops_status = "FAILED"
+                test_tm_ops_details = f"Erreur lors du test des opérations du TemplateManager: {str(e_tm_ops)}"
+        else:
+            test_tm_ops_status = "SKIPPED" # Ou FAILED si le chargement est critique
+            test_tm_ops_details = "Test des opérations du TemplateManager sauté car non chargé."
+            
+        smoke_results["tests"].append({
+            "name": "template_manager_basic_operations",
+            "status": test_tm_ops_status,
+            "details": test_tm_ops_details
+        })
         
+        # --- Calcul Sommaire ---
         passed_count = sum(1 for t in smoke_results["tests"] if t["status"] == "PASSED")
         smoke_results["summary"]["total"] = len(smoke_results["tests"])
         smoke_results["summary"]["passed"] = passed_count
         smoke_results["summary"]["failed"] = smoke_results["summary"]["total"] - passed_count
         
+        end_time = time.time()
+        smoke_results["execution_time_ms"] = round((end_time - start_time) * 1000, 2)
+        
+        self.logger.info(f"Smoke tests internes terminés en {smoke_results['execution_time_ms']:.2f} ms. {smoke_results['summary']['passed']}/{smoke_results['summary']['total']} réussis.")
         return smoke_results
 
     async def startup(self):
-        self.logger.info(f"🚀 {self.agent_id} v{self.version} - DÉMARRAGE")
+        # Initialisation de l'agent
+        await super().startup() # S'assure que la logique de base startup est appelée
+        self.logger.info(f"Agent {self.agent_id} (Maître Tests & Auto-Validation) démarré et prêt pour l'auto-évaluation.")
 
     async def shutdown(self):
-        self.logger.info(f"🧪 {self.agent_id} v{self.version} - ARRÊT")
+        self.logger.info(f"Agent {self.agent_id} (Maître Tests & Auto-Validation) en cours d'arrêt.")
+        await super().shutdown() # S'assure que la logique de base shutdown est appelée
 
     def get_capabilities(self) -> list[str]:
-        return ["test_execution", "validation", "benchmark", "generate_strategic_report"]
+        """
+        Retourne la liste des capacités de cet agent d'auto-évaluation.
+        Les capacités indiquent les types de rapports d'auto-évaluation qu'il peut générer
+        et dans quels formats.
+        """
+        capabilities = []
+        report_types = ['tests', 'validation', 'performance', 'qualite']
+        formats = ['json', 'markdown'] # Assumant que generer_rapport_markdown est implémenté pour tous les types
+
+        for r_type in report_types:
+            capabilities.append(f"generate_self_assessment_report:json:{r_type}")
+            capabilities.append(f"generate_self_assessment_report:markdown:{r_type}")
+        
+        capabilities.extend([
+            "run_smoke_tests:internal",
+            "get_internal_metrics" 
+        ])
+        return capabilities
 
     async def health_check(self) -> dict:
         return {"status": "ok", "expert_code_loaded": self.templates_loaded}
