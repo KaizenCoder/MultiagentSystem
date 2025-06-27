@@ -1,70 +1,157 @@
-# 🩺 AGENT POSTGRESQL – DIAGNOSTIC FINAL (PostgreSQL Team)
+# Agent PostgreSQL Diagnostic - Résolution Définitive Encodage
 
-**Auteur**    : Équipe de Maintenance NextGeneration  
-**Version**   : 1.0 – Diagnostic PostgreSQL Sprint 4-5  
-**Mission**   : Diagnostic, analyse et résolution des problèmes PostgreSQL pour garantir la robustesse et la disponibilité des bases de données.
+## 1. Identification
 
----
+- **Nom :** Agent PostgreSQL Diagnostic Final
+- **Identifiant :** `agent_POSTGRESQL_diagnostic_postgres_final`
+- **Version :** 2.0.0 (Harmonisé Pattern Factory)
+- **Responsable Principal :** Équipe de Maintenance NextGeneration
+- **Contact Technique :** `#postgresql-team`
 
-## 1. Présentation Générale
+## 2. Description Générale
 
-L’Agent PostgreSQL, **Diagnostic Final**, est chargé du diagnostic, de l’analyse et de la résolution des problèmes PostgreSQL. Il intervient en cas d’incident, analyse les logs et propose des solutions pour garantir la robustesse et la disponibilité des bases de données.
+Agent spécialisé dans le diagnostic et la résolution définitive des problèmes PostgreSQL, particulièrement les problèmes d'encodage UTF-8. Il analyse les conteneurs Docker, diagnostique les configurations Python/psycopg2 et propose des solutions complètes.
 
-- **Diagnostic** : Analyse des incidents, détection des causes racines.
-- **Résolution** : Propositions de solutions et de corrections.
-- **Reporting** : Génération de rapports d’incidents et de résolutions.
+## 3. Objectifs et Missions
 
-## 2. Capacités Principales
+- **Diagnostic Conteneur :** Analyser l'état des conteneurs PostgreSQL Docker
+- **Diagnostic Encodage :** Détecter et résoudre les problèmes d'encodage UTF-8
+- **Diagnostic Python :** Vérifier la configuration psycopg2 et les variables d'environnement
+- **Génération Solutions :** Proposer des corrections définitives
+- **Reporting :** Produire des rapports détaillés de diagnostic
 
-- Diagnostic automatisé des incidents PostgreSQL.
-- Analyse des logs et détection des causes racines.
-- Génération de rapports d’incidents détaillés.
-- Propositions de corrections et de solutions.
-- Coordination avec les autres agents de l’équipe PostgreSQL.
+## 4. Capacités Techniques
 
-## 3. Architecture et Concepts Clés
+### 4.1 Capacités Principales
 
-- **PostgreSQL Team** : Spécialisé pour le diagnostic et la résolution.
-- **Diagnostic automatisé** : Scripts d’analyse et de détection.
-- **Reporting** : Génération automatique de rapports d’incidents.
-- **Résolution** : Propositions automatisées pour l’équipe.
-
-## 4. Guide d’Utilisation
-
-### a. Instanciation de l’Agent
 ```python
-from agents.agent_POSTGRESQL_diagnostic_postgres_final import AgentPostgresqlDiagnosticFinal
-agent = AgentPostgresqlDiagnosticFinal()
+capabilities = [
+    "diagnostic_conteneur",
+    "diagnostic_encodage", 
+    "diagnostic_python",
+    "generation_solution",
+    "execution_mission"
+]
 ```
 
-### b. Lancement d’un Diagnostic PostgreSQL
+### 4.2 Types de Tâches Supportées
+
+- **diagnostic_complet :** Exécution de la mission complète de diagnostic
+- **diagnostic_conteneur :** Analyse spécifique des conteneurs PostgreSQL
+- **diagnostic_encodage :** Diagnostic encodage sur un conteneur spécifique
+- **diagnostic_python :** Vérification configuration Python/psycopg2
+- **generer_solution :** Génération de solutions d'encodage définitives
+
+## 5. Architecture et Implémentation
+
+### 5.1 Héritage et Structure
+
 ```python
-result = agent.run_postgresql_diagnostic()
-print(result)
+class AgentPostgresqlDiagnosticPostgresFinal(AgentPostgreSQLBase):
+    def __init__(self, workspace_root: Path = None):
+        super().__init__(
+            agent_type="postgresql_diagnostic",
+            name="Agent Diagnostic PostgreSQL"
+        )
 ```
 
-## 5. Guide d’Extension
+### 5.2 Pattern Factory
 
-- **Ajout de nouveaux scénarios de diagnostic** : étendre la logique d’analyse.
-- **Personnalisation des rapports** : surcharger les méthodes de reporting.
-- **Intégration avec d’autres agents** : workflow collaboratif PostgreSQL.
+L'agent respecte intégralement le Pattern Factory avec :
+- Interface `execute_task(task: Task) -> Result` async
+- Héritage de `AgentPostgreSQLBase` 
+- Méthodes async pour toutes les opérations
+- Gestion d'erreurs standardisée
 
-## 6. Journal des Améliorations
+## 6. Guide d'Utilisation
 
-- Passage au diagnostic automatisé (Sprint 4).
-- Ajout de la détection proactive des causes racines.
-- Intégration avec le reporting détaillé.
+### 6.1 Instanciation
 
-## 7. Recommandations d’Amélioration
+```python
+from agents.agent_POSTGRESQL_diagnostic_postgres_final import AgentPostgresqlDiagnosticPostgresFinal
+from core.agent_factory_architecture import Task
 
-- Ajouter le support de la résolution automatisée.
-- Intégrer un dashboard de suivi des incidents.
-- Automatiser la gestion des corrections critiques.
+agent = AgentPostgresqlDiagnosticPostgresFinal()
+await agent.startup()
+```
+
+### 6.2 Diagnostic Complet
+
+```python
+task = Task(type="diagnostic_complet", params={})
+result = await agent.execute_task(task)
+print(f"Statut: {result.success}")
+print(f"Données: {result.data}")
+```
+
+### 6.3 Diagnostic Conteneur Spécifique
+
+```python
+task = Task(
+    type="diagnostic_encodage", 
+    params={"container_name": "postgres_container"}
+)
+result = await agent.execute_task(task)
+```
+
+## 7. Structure des Résultats
+
+### 7.1 Rapport Data Structure
+
+```python
+rapport_data = {
+    "agent": "Agent Diagnostic PostgreSQL",
+    "version": "2.0.0",
+    "mission": "Résolution définitive encodage PostgreSQL",
+    "timestamp": "2025-06-27T...",
+    "diagnostics": [],
+    "solutions": [],
+    "status": "SUCCESS|FAILED"
+}
+```
+
+### 7.2 Métriques de Performance
+
+Les résultats incluent des métriques détaillées :
+- `diagnostics_count` : Nombre de diagnostics effectués
+- `solutions_count` : Nombre de solutions proposées
+
+## 8. Tests et Validation
+
+### 8.1 Tests CLI Disponibles
+
+L'agent est validé via le script de tests :
+```bash
+python tests/test_agents_postgresql_harmonisation.py
+```
+
+### 8.2 Health Check
+
+```python
+health = await agent.health_check()
+# Retourne: {"status": "healthy", "agent": "...", "timestamp": "..."}
+```
+
+## 9. Configuration et Personnalisation
+
+### 9.1 Variables d'Environnement Analysées
+
+- `PYTHONIOENCODING`
+- `PYTHONUTF8` 
+- `LANG`
+- `LC_ALL`
+
+### 9.2 Conteneurs Docker Supportés
+
+L'agent peut diagnostiquer tous les conteneurs PostgreSQL actifs et analyser leur configuration d'encodage.
+
+## 10. Statut et Conformité
+
+- **✅ Pattern Factory :** Conforme async
+- **✅ Tests CLI :** Validés 
+- **✅ Documentation :** Synchronisée
+- **✅ Harmonisation :** Terminée 2025-06-26
 
 ---
 
-**Statut :** Production Ready – Diagnostic PostgreSQL actif.
-
----
-
-*Document généré automatiquement par l’IA de maintenance NextGeneration.*
+*Documentation mise à jour - Version 2.0.0 - Harmonisation Pattern Factory*

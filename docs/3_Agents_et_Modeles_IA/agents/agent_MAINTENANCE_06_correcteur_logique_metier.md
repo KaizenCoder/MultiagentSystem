@@ -4,17 +4,212 @@
 
 - **Nom :** Correcteur Logique Métier NextGeneration
 - **Identifiant :** `agent_MAINTENANCE_06_correcteur_logique_metier`
-- **Version :** 6.1.0 (Harmonisation Standards Pattern Factory NextGeneration)
+- **Version :** 7.1.0 (Logging Uniforme + Audit Universel)
 - **Responsable Principal :** Équipe de Maintenance NextGeneration
 - **Contact Technique :** `#canal-maintenance-ia`
 
-## 2. Description Générale
+## 2. Mission et Capacités
+### 2.1 Mission Principale
+Agent spécialisé dans la correction et la validation de la logique métier avec capacités d'audit universel :
+- Validation des patterns métier sur fichiers individuels ou projets complets
+- Correction des erreurs de logique
+- Vérification de la cohérence des règles métier
+- Test des patterns business
+- Optimisation du code métier
+
+**🚀 NOUVEAUTÉ V7.1 (Travaux claudecode) :** Intégration complète du système de logging uniforme + capacité d'audit universel de la logique métier étendue pour analyser des **projets Python complets** (répertoires entiers) en plus des fichiers individuels.
+
+### 🔧 Système de Logging Uniforme V7.1
+```python
+# ✅ MIGRATION SYSTÈME LOGGING UNIFIÉ (claudecode)
+try:
+    from core.manager import LoggingManager
+    logging_manager = LoggingManager()
+    self.logger = logging_manager.get_logger(
+        config_name="maintenance",
+        custom_config={
+            "logger_name": f"nextgen.maintenance.correcteur_logique_metier.{self.id}",
+            "log_dir": "logs/maintenance/correcteur",
+            "metadata": {
+                "agent_type": "MAINTENANCE_06_correcteur_logique_metier",
+                "agent_role": "correcteur_logique_metier",
+                "system": "nextgeneration"
+            }
+        }
+    )
+except ImportError:
+    # Fallback en cas d'indisponibilité du LoggingManager
+    self.logger = logging.getLogger(self.__class__.__name__)
+```
+
+### 2.2 Capacités Techniques
+
+#### Capacités d'Audit Universel (V7.0)
+- **Audit de fichiers individuels** : Analyse et correction de la logique métier d'un fichier Python spécifique
+- **🆕 Audit de répertoires complets** : Analyse récursive de la logique métier de structures de projets entières
+- **Filtrage intelligent** : Exclusion automatique des répertoires non pertinents (.venv, __pycache__, .git, etc.)
+- **Rapports consolidés** : Métriques de qualité logique globales + détails par fichier
+- **Scoring unifié** : Système de notation de qualité logique cohérent (0-100)
+
+#### Capacités d'Analyse Logique
+- Analyse AST du code Python
+- Validation des patterns métier
+- Détection des anti-patterns
+- Tests de validation des règles métier
+- Intégration avec le Pattern Factory
+- Génération de rapports détaillés
+
+## 3. Architecture V7.0 (Mission Claudecode)
+
+### 3.1 Architecture Technique
+- **Orchestrateur Central** : `audit_universal_logique` coordonne tous les types d'audit
+- **Audit Fichier Unique** : `_audit_single_python_file` pour l'analyse détaillée de la logique métier
+- **Filtrage Intelligent** : `_should_skip_path` pour ignorer les répertoires non pertinents
+- **Mapping Qualité** : `_map_score_to_logic_health` pour la notation uniforme
+- **Gestion Consolidée** : Centralisation des métriques et scoring dans l'orchestrateur
+
+### 3.2 Métriques de Qualité Logique
+```python
+logic_metrics = {
+    'pattern_compliance': {'weight': 0.3, 'threshold': {'warning': 70, 'critical': 50}},
+    'semantic_correctness': {'weight': 0.3, 'threshold': {'warning': 75, 'critical': 60}},
+    'anti_pattern_absence': {'weight': 0.2, 'threshold': {'warning': 80, 'critical': 65}},
+    'business_rule_compliance': {'weight': 0.2, 'threshold': {'warning': 85, 'critical': 70}}
+}
+```
+
+## 4. Guide d'Utilisation
+
+### 4.1 Initialisation
+```python
+from agents.agent_MAINTENANCE_06_correcteur_logique_metier import AgentMAINTENANCE06CorrecteurLogiqueMetier
+agent = AgentMAINTENANCE06CorrecteurLogiqueMetier()
+await agent.startup()
+```
+
+### 4.2 Audit d'un Fichier Individuel
+```python
+# Audit de la logique métier d'un fichier Python spécifique
+task_details = {
+    "action": "audit_universal_logique",
+    "params": {
+        "target_path": "chemin/vers/votre/fichier.py"
+    }
+}
+result = await agent.execute_task(task_details)
+print(f"Score qualité logique : {result['data']['score_global']}/100")
+print(f"État de la logique métier : {result['data']['etat_logique']}")
+```
+
+### 4.3 🆕 Audit d'un Projet Complet (V7.0)
+```python
+# Audit de la logique métier d'un répertoire complet
+task_details = {
+    "action": "audit_universal_logique",
+    "params": {
+        "target_path": "chemin/vers/votre/projet/"
+    }
+}
+result = await agent.execute_task(task_details)
+
+# Résultats consolidés
+print(f"Nombre de fichiers analysés : {result['data']['nb_fichiers_analyses']}")
+print(f"Score global de qualité logique : {result['data']['score_global']}/100")
+print(f"État global de la logique métier : {result['data']['etat_logique']}")
+
+# Détails par fichier
+for fichier_result in result['data']['resultats_fichiers']:
+    print(f"- {fichier_result['fichier']} :")
+    print(f"  Score : {fichier_result['score']}/100")
+    print(f"  Problèmes logiques : {len(fichier_result['logic_issues'])}")
+```
+
+## 5. Spécifications Techniques V7.0
+
+### 5.1 Méthodes Principales
+- **`audit_universal_logique(target_path)`** : Orchestrateur principal (fichier ou répertoire)
+- **`_audit_single_python_file(file_path)`** : Audit détaillé de la logique d'un fichier
+- **`_should_skip_path(path)`** : Filtrage intelligent des chemins à ignorer
+- **`_map_score_to_logic_health(score)`** : Mapping score → état de la logique
+
+### 5.2 Filtrage Intelligent
+Répertoires automatiquement ignorés :
+- `.venv/`, `venv/`, `env/` (environnements virtuels)
+- `__pycache__/`, `.pyc` (cache Python)
+- `.git/`, `.svn/` (contrôle de version)
+- `node_modules/`, `.npm/` (dépendances JS)
+- `build/`, `dist/`, `.egg-info/` (artefacts de build)
+
+### 5.3 Métriques de Qualité Logique
+- **Score global** : Note consolidée 0-100
+- **Nombre de fichiers** : Fichiers Python analysés
+- **Problèmes logiques** : Issues détectées par type
+- **Patterns métier** : Conformité aux patterns
+- **Anti-patterns** : Violations détectées
+- **Règles business** : Respect des règles métier
+
+## 6. Utilisation
+### 6.1 Initialisation
+```python
+agent = AgentMAINTENANCE06CorrecteurLogiqueMetier()
+await agent.startup()
+```
+
+### 6.2 Types de Tâches Supportées
+- `validate_business_patterns`: Validation des patterns métier
+- `correct_logic`: Correction de la logique
+- `test_patterns`: Test des patterns implémentés
+
+### 6.3 Exemple d'Utilisation
+```python
+task = Task(
+    id="test_patterns",
+    type="validate_business_patterns",
+    params={"code": problematic_code}
+)
+result = await agent.execute_task(task)
+```
+
+## 7. Maintenance et Évolution
+### 7.1 Journal des Modifications
+- **v6.1.0** : Harmonisation avec les standards Pattern Factory NextGeneration
+- **v6.0.0** : Refonte majeure avec support AST et patterns métier
+- **v5.0.0** : Ajout de la validation des patterns
+
+### 7.2 Dépendances
+- Python 3.9+
+- `core.agent_factory_architecture`
+- Modules standards Python (ast, sys, typing)
+
+### 7.3 Tests
+Tests disponibles dans `tests/business_logic/`
+
+## 8. Intégration
+### 8.1 Configuration
+Configuration via `maintenance_config.json` :
+```json
+{
+    "agent_type": "business_logic_corrector",
+    "version": "6.1.0",
+    "status": "enabled"
+}
+```
+
+### 8.2 Logging
+Utilise le système de logging centralisé de l'équipe de maintenance.
+
+## 9. Support et Contact
+- Canal Slack : `#canal-maintenance-ia`
+- Documentation : `/docs/business-logic/`
+- Wiki : `wiki/agents/business-logic-corrector`
+
+## 10. Description Générale
 
 🔧 Agent spécialisé dans la correction et validation de la logique métier Python, détection d'incohérences sémantiques et application de patterns métier robustes pour garantir la qualité architecturale et la cohérence du code.
 
 Cet agent utilise des techniques avancées d'analyse AST, de pattern matching et de validation sémantique pour identifier et corriger les problèmes de logique métier.
 
-## 3. Objectifs et Missions
+## 11. Objectifs et Missions
 
 - **Correction Logique Métier :** Détection et correction automatique d'erreurs logiques courantes
 - **Validation Patterns :** Vérification conformité aux patterns métier (Factory, Strategy, Observer)
@@ -22,7 +217,7 @@ Cet agent utilise des techniques avancées d'analyse AST, de pattern matching et
 - **Anti-Pattern Detection :** Identification et correction d'anti-patterns (God Class, Magic Numbers)
 - **Support Équipe Maintenance :** Audit conformité métier avec scoring et recommandations
 
-## 4. Fonctionnalités Clés (Conformité Pattern Factory)
+## 12. Fonctionnalités Clés (Conformité Pattern Factory)
 
 L'agent respecte le Pattern Factory NextGeneration et expose les méthodes suivantes :
 
@@ -66,7 +261,7 @@ get_capabilities() -> [
 ]
 ```
 
-## 5. Technologies Avancées
+## 13. Technologies Avancées
 
 ### Analyse AST Sémantique
 - **Parsing avancé** pour détection patterns et anti-patterns
@@ -106,7 +301,7 @@ anti_patterns = {
 }
 ```
 
-## 6. Workflow de Correction Logique
+## 14. Workflow de Correction Logique
 
 ```
 1. 📋 Réception code source via execute_task
@@ -117,7 +312,7 @@ anti_patterns = {
 6. 📄 Retour rapport structuré avec code corrigé
 ```
 
-## 7. Exemples d'Utilisation
+## 15. Exemples d'Utilisation
 
 ### Correction de Logique Métier
 
@@ -258,7 +453,7 @@ if result.success:
             print(f"  {severity}: {count}")
 ```
 
-## 8. Format de Résultat
+## 16. Format de Résultat
 
 ### Correction de Logique Métier
 
@@ -341,7 +536,7 @@ if result.success:
 }
 ```
 
-## 9. Capacités d'Analyse Avancées
+## 17. Capacités d'Analyse Avancées
 
 ### Détection Méthodes Longues
 ```python
@@ -385,14 +580,14 @@ elif isinstance(node, ast.Num) and isinstance(node.n, (int, float)):
         ))
 ```
 
-## 10. Dépendances
+## 18. Dépendances
 
 - **Python 3.7+**
 - **core.agent_factory_architecture** (Agent, Task, Result)
 - **Modules standard** : ast, inspect, re, logging, asyncio, dataclasses
 - **Typing** : Annotations et structures typées pour classification
 
-## 11. Journal des Modifications (Changelog)
+## 19. Journal des Modifications (Changelog)
 
 - **v6.1.0 (2025-06-26)** :
   - Harmonisation avec standards Pattern Factory NextGeneration
@@ -403,7 +598,7 @@ elif isinstance(node, ast.Num) and isinstance(node.n, (int, float)):
   - Documentation .md complètement refaite avec exemples techniques
 - **Versions antérieures** : Structure basique sans fonctionnalités avancées
 
-## 12. Tests et Validation
+## 20. Tests et Validation
 
 ### Test Intégré
 
@@ -449,7 +644,7 @@ python agents/agent_MAINTENANCE_06_correcteur_logique_metier.py
 # 🎯 Test validation patterns: Patterns trouvés/manquants
 ```
 
-## 13. Cas d'Usage Recommandés
+## 21. Cas d'Usage Recommandés
 
 - **Code Review** : Validation automatique logique métier dans PRs
 - **Refactoring** : Détection anti-patterns avant refactorisation
@@ -457,7 +652,7 @@ python agents/agent_MAINTENANCE_06_correcteur_logique_metier.py
 - **Technical Debt** : Identification problèmes de design systematiques
 - **Architecture Validation** : Vérification respect patterns métier
 
-## 14. Statut et Validation
+## 22. Statut et Validation
 
 - ✅ **Pattern Factory** : Conforme (Agent, Task, Result)
 - ✅ **Méthodes async** : startup, shutdown, execute_task, health_check

@@ -4,25 +4,145 @@
 
 - **Nom :** Analyseur de Structure NextGeneration
 - **Identifiant :** `agent_MAINTENANCE_01_analyseur_structure`
-- **Version :** 1.3.0 (Harmonisation Standards Pattern Factory NextGeneration)
+- **Version :** 2.1.0 (Logging Uniforme + Audit Universel)
 - **Responsable Principal :** Équipe de Maintenance NextGeneration
 - **Contact Technique :** `#canal-maintenance-ia`
 
 ## 2. Description Générale
 
-🏗️ Agent spécialisé dans l'analyse automatique de la structure des fichiers Python, détection d'incohérences syntaxiques et génération de rapports d'audit structurel pour la maintenance préventive.
+🏗️ Agent spécialisé dans l'analyse automatique de la structure du code Python avec capacités d'audit universel. Utilise l'AST Python pour détecter les incohérences syntaxiques et générer des rapports d'audit structurel pour des fichiers individuels ou des projets complets.
 
-Cet agent inspecte la structure du code via l'AST Python, identifie les anomalies et fournit des rapports détaillés pour l'équipe de maintenance.
+**🚀 NOUVEAUTÉ V2.1 (Travaux claudecode) :** Intégration complète du système de logging uniforme + capacité d'audit universel de structure étendue pour analyser des **projets Python complets** (répertoires entiers) en plus des fichiers individuels.
+
+### 🔧 Système de Logging Uniforme V2.1
+```python
+# ✅ MIGRATION SYSTÈME LOGGING UNIFIÉ (claudecode)
+try:
+    from core.manager import LoggingManager
+    logging_manager = LoggingManager()
+    self.logger = logging_manager.get_logger(
+        config_name="maintenance",
+        custom_config={
+            "logger_name": f"nextgen.maintenance.analyseur_structure.{self.id}",
+            "log_dir": "logs/maintenance/analyseur",
+            "metadata": {
+                "agent_type": "MAINTENANCE_01_analyseur_structure",
+                "agent_role": "analyseur_structure",
+                "system": "nextgeneration"
+            }
+        }
+    )
+except ImportError:
+    # Fallback en cas d'indisponibilité du LoggingManager
+    self.logger = logging.getLogger(self.__class__.__name__)
+```
 
 ## 3. Objectifs et Missions
 
-- **Analyse Statique AST :** Parsing et inspection de la structure syntaxique Python
-- **Détection d'Incohérences :** Identification d'erreurs syntaxiques et structurelles
-- **Extraction de Structure :** Inventaire des imports, classes, fonctions (async/sync)
-- **Audit de Qualité :** Génération de rapports structurés pour maintenance
-- **Support Équipe :** Compatibilité avec coordinateur d'équipe maintenance
+### 3.1 Missions Principales
+- **Analyse Statique AST** : Parsing et inspection de la structure syntaxique Python
+- **Détection d'Incohérences** : Identification d'erreurs syntaxiques et structurelles
+- **Extraction de Structure** : Inventaire des imports, classes, fonctions (async/sync)
+- **Audit de Qualité** : Génération de rapports structurés pour maintenance
+- **Support Équipe** : Compatibilité avec coordinateur d'équipe maintenance
 
-## 4. Fonctionnalités Clés (Conformité Pattern Factory)
+### 3.2 Capacités d'Audit Universel (V2.0)
+- **Audit de fichiers individuels** : Analyse et scoring d'un fichier Python spécifique
+- **🆕 Audit de répertoires complets** : Analyse et scoring récursif de structures de projets entières
+- **Filtrage intelligent** : Exclusion automatique des répertoires non pertinents (.venv, __pycache__, .git, etc.)
+- **Rapports consolidés** : Métriques de structure globales + détails par fichier
+- **Scoring unifié** : Système de notation de structure cohérent (0-100)
+
+## 4. Architecture V2.0 (Mission Claudecode)
+
+### 4.1 Architecture Technique
+- **Orchestrateur Central** : `audit_universal_structure` coordonne tous les types d'audit
+- **Audit Fichier Unique** : `_audit_single_python_file` pour l'analyse et scoring détaillé
+- **Filtrage Intelligent** : `_should_skip_path` pour ignorer les répertoires non pertinents
+- **Mapping Qualité** : `_map_score_to_structure_health` pour la notation uniforme
+- **Gestion Consolidée** : Centralisation des métriques et scoring dans l'orchestrateur
+
+### 4.2 Métriques de Structure
+```python
+structure_metrics = {
+    'code_organization': {'weight': 0.3, 'threshold': {'warning': 70, 'critical': 50}},
+    'syntax_correctness': {'weight': 0.3, 'threshold': {'warning': 75, 'critical': 60}},
+    'import_structure': {'weight': 0.2, 'threshold': {'warning': 80, 'critical': 65}},
+    'class_hierarchy': {'weight': 0.2, 'threshold': {'warning': 85, 'critical': 70}}
+}
+```
+
+## 5. Guide d'Utilisation
+
+### 5.1 Initialisation
+```python
+from agents.agent_MAINTENANCE_01_analyseur_structure import AgentMAINTENANCE01AnalyseurStructure
+agent = AgentMAINTENANCE01AnalyseurStructure()
+await agent.startup()
+```
+
+### 5.2 Audit d'un Fichier Individuel
+```python
+# Audit de structure d'un fichier Python spécifique
+task_details = {
+    "action": "audit_universal_structure",
+    "params": {
+        "target_path": "chemin/vers/votre/fichier.py"
+    }
+}
+result = await agent.execute_task(task_details)
+print(f"Score structure : {result['data']['score_global']}/100")
+print(f"État de la structure : {result['data']['etat_structure']}")
+```
+
+### 5.3 🆕 Audit d'un Projet Complet (V2.0)
+```python
+# Audit de structure d'un répertoire complet
+task_details = {
+    "action": "audit_universal_structure",
+    "params": {
+        "target_path": "chemin/vers/votre/projet/"
+    }
+}
+result = await agent.execute_task(task_details)
+
+# Résultats consolidés
+print(f"Nombre de fichiers analysés : {result['data']['nb_fichiers_analyses']}")
+print(f"Score global de structure : {result['data']['score_global']}/100")
+print(f"État global de la structure : {result['data']['etat_structure']}")
+
+# Détails par fichier
+for fichier_result in result['data']['resultats_fichiers']:
+    print(f"- {fichier_result['fichier']} :")
+    print(f"  Score : {fichier_result['score']}/100")
+    print(f"  Problèmes structure : {len(fichier_result['structure_issues'])}")
+```
+
+## 6. Spécifications Techniques V2.0
+
+### 6.1 Méthodes Principales
+- **`audit_universal_structure(target_path)`** : Orchestrateur principal (fichier ou répertoire)
+- **`_audit_single_python_file(file_path)`** : Audit détaillé de structure d'un fichier
+- **`_should_skip_path(path)`** : Filtrage intelligent des chemins à ignorer
+- **`_map_score_to_structure_health(score)`** : Mapping score → état de la structure
+
+### 6.2 Filtrage Intelligent
+Répertoires automatiquement ignorés :
+- `.venv/`, `venv/`, `env/` (environnements virtuels)
+- `__pycache__/`, `.pyc` (cache Python)
+- `.git/`, `.svn/` (contrôle de version)
+- `node_modules/`, `.npm/` (dépendances JS)
+- `build/`, `dist/`, `.egg-info/` (artefacts de build)
+
+### 6.3 Métriques de Structure
+- **Score global** : Note consolidée 0-100
+- **Nombre de fichiers** : Fichiers Python analysés
+- **Problèmes structure** : Issues détectées par type
+- **Organisation du code** : Clarté et cohérence
+- **Correction syntaxique** : Validité du code
+- **Structure des imports** : Organisation des dépendances
+
+## 7. Fonctionnalités Clés (Conformité Pattern Factory)
 
 L'agent respecte le Pattern Factory NextGeneration et expose les méthodes suivantes :
 
@@ -53,7 +173,7 @@ get_capabilities() -> [
 
 - **`run_analysis(directory: str)`** : Méthode de compatibilité pour coordinateur d'équipe
 
-## 5. Structure d'Analyse
+## 8. Structure d'Analyse
 
 ### Données Extraites par AST
 
@@ -79,7 +199,7 @@ En cas d'erreur syntaxique :
 {"error": "SyntaxError: invalid syntax (line 42)"}
 ```
 
-## 6. Workflow d'Analyse
+## 9. Workflow d'Analyse
 
 ```
 1. 📋 Réception tâche avec directory OU file_path
@@ -93,7 +213,7 @@ En cas d'erreur syntaxique :
 5. ✅ Retour rapport complet
 ```
 
-## 7. Exemples d'Utilisation
+## 10. Exemples d'Utilisation
 
 ### Analyse d'un Fichier Spécifique
 
@@ -140,7 +260,7 @@ if result.success:
             print(f"✅ {path}: {len(analysis['classes'])} classes, {len(analysis['functions'])} fonctions")
 ```
 
-## 8. Rapports Générés
+## 11. Rapports Générés
 
 ### Format de Sortie - Fichier Unique
 
@@ -173,16 +293,16 @@ if result.success:
 }
 ```
 
-## 9. Dépendances
+## 12. Dépendances
 
 - **Python 3.8+**
 - **Modules standard** : ast, asyncio, logging, pathlib, json
 - **core.agent_factory_architecture** (Agent, Task, Result)
 - **Aucune dépendance externe** pour l'analyse AST de base
 
-## 10. Journal des Modifications (Changelog)
+## 13. Journal des Modifications (Changelog)
 
-- **v1.3.0 (2025-06-26)** :
+- **v2.0.0 (2025-06-26)** :
   - Harmonisation avec standards Pattern Factory NextGeneration
   - Enrichissement docstrings classe avec description détaillée des capacités
   - Extension `get_capabilities()` : 1 → 6 capacités spécialisées
@@ -193,7 +313,7 @@ if result.success:
 - **v1.0** :
   - Version initiale avec analyse AST de base
 
-## 11. Procédure de Test CLI
+## 14. Procédure de Test CLI
 
 ```python
 # test_agent_maintenance_01_structure.py
@@ -239,7 +359,7 @@ async def test_analyseur_structure():
 # python -c "import asyncio; asyncio.run(test_analyseur_structure())"
 ```
 
-## 12. Statut et Validation
+## 15. Statut et Validation
 
 - ✅ **Pattern Factory** : Conforme (Agent, Task, Result)
 - ✅ **Méthodes async** : startup, shutdown, execute_task, health_check

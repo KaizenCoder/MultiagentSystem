@@ -4,25 +4,145 @@
 
 - **Nom :** Évaluateur d'Utilité NextGeneration
 - **Identifiant :** `agent_MAINTENANCE_02_evaluateur_utilite`
-- **Version :** 2.2.0 (Harmonisation Standards Pattern Factory NextGeneration)
+- **Version :** 3.1.0 (Logging Uniforme + Audit Universel)
 - **Responsable Principal :** Équipe de Maintenance NextGeneration
 - **Contact Technique :** `#canal-maintenance-ia`
 
 ## 2. Description Générale
 
-⚖️ Agent spécialisé dans l'évaluation quantitative de la pertinence et de la qualité fonctionnelle des scripts Python via analyse AST avancée avec système de scoring heuristique.
+⚖️ Agent spécialisé dans l'évaluation quantitative de la pertinence et de la qualité fonctionnelle du code Python avec capacités d'audit universel. Utilise l'analyse AST avancée avec système de scoring heuristique pour évaluer des fichiers individuels ou des projets complets.
 
-Cet agent détermine l'utilité d'un code source en analysant sa structure, sa complexité et sa richesse fonctionnelle pour orienter les décisions de maintenance.
+**🚀 NOUVEAUTÉ V3.1 (Travaux claudecode) :** Intégration complète du système de logging uniforme + capacité d'audit universel d'évaluation étendue pour analyser et scorer des **projets Python complets** (répertoires entiers) en plus des fichiers individuels.
+
+### 🔧 Système de Logging Uniforme V3.1
+```python
+# ✅ MIGRATION SYSTÈME LOGGING UNIFIÉ (claudecode)
+try:
+    from core.manager import LoggingManager
+    logging_manager = LoggingManager()
+    self.logger = logging_manager.get_logger(
+        config_name="maintenance",
+        custom_config={
+            "logger_name": f"nextgen.maintenance.evaluateur_utilite.{self.id}",
+            "log_dir": "logs/maintenance/evaluateur",
+            "metadata": {
+                "agent_type": "MAINTENANCE_02_evaluateur_utilite",
+                "agent_role": "evaluateur_utilite",
+                "system": "nextgeneration"
+            }
+        }
+    )
+except ImportError:
+    # Fallback en cas d'indisponibilité du LoggingManager
+    self.logger = logging.getLogger(self.__class__.__name__)
+```
 
 ## 3. Objectifs et Missions
 
-- **Évaluation Quantitative :** Scoring automatique basé sur l'analyse AST des structures Python
-- **Classification d'Utilité :** Détermination binaire utilité/inutilité selon seuil configurable
-- **Détection d'Obsolescence :** Identification d'éléments vides ou non fonctionnels
-- **Analyse de Complexité :** Mesure de la richesse structurelle et fonctionnelle
-- **Support Maintenance :** Aide à la décision pour conservation/suppression de code
+### 3.1 Missions Principales
+- **Évaluation Quantitative** : Scoring automatique basé sur l'analyse AST des structures Python
+- **Classification d'Utilité** : Détermination binaire utilité/inutilité selon seuil configurable
+- **Détection d'Obsolescence** : Identification d'éléments vides ou non fonctionnels
+- **Analyse de Complexité** : Mesure de la richesse structurelle et fonctionnelle
+- **Support Maintenance** : Aide à la décision pour conservation/suppression de code
 
-## 4. Fonctionnalités Clés (Conformité Pattern Factory)
+### 3.2 Capacités d'Audit Universel (V3.0)
+- **Audit de fichiers individuels** : Évaluation et scoring d'un fichier Python spécifique
+- **🆕 Audit de répertoires complets** : Analyse et scoring récursif de structures de projets entières
+- **Filtrage intelligent** : Exclusion automatique des répertoires non pertinents (.venv, __pycache__, .git, etc.)
+- **Rapports consolidés** : Métriques d'utilité globales + détails par fichier
+- **Scoring unifié** : Système de notation d'utilité cohérent (0-100)
+
+## 4. Architecture V3.0 (Mission Claudecode)
+
+### 4.1 Architecture Technique
+- **Orchestrateur Central** : `audit_universal_evaluation` coordonne tous les types d'audit
+- **Audit Fichier Unique** : `_audit_single_python_file` pour l'analyse et scoring détaillé
+- **Filtrage Intelligent** : `_should_skip_path` pour ignorer les répertoires non pertinents
+- **Mapping Qualité** : `_map_score_to_utility_health` pour la notation uniforme
+- **Gestion Consolidée** : Centralisation des métriques et scoring dans l'orchestrateur
+
+### 4.2 Métriques d'Utilité
+```python
+utility_metrics = {
+    'code_complexity': {'weight': 0.3, 'threshold': {'warning': 70, 'critical': 50}},
+    'functional_richness': {'weight': 0.3, 'threshold': {'warning': 75, 'critical': 60}},
+    'code_reuse': {'weight': 0.2, 'threshold': {'warning': 80, 'critical': 65}},
+    'maintainability': {'weight': 0.2, 'threshold': {'warning': 85, 'critical': 70}}
+}
+```
+
+## 5. Guide d'Utilisation
+
+### 5.1 Initialisation
+```python
+from agents.agent_MAINTENANCE_02_evaluateur_utilite import AgentMAINTENANCE02EvaluateurUtilite
+agent = AgentMAINTENANCE02EvaluateurUtilite()
+await agent.startup()
+```
+
+### 5.2 Audit d'un Fichier Individuel
+```python
+# Audit d'utilité d'un fichier Python spécifique
+task_details = {
+    "action": "audit_universal_evaluation",
+    "params": {
+        "target_path": "chemin/vers/votre/fichier.py"
+    }
+}
+result = await agent.execute_task(task_details)
+print(f"Score utilité : {result['data']['score_global']}/100")
+print(f"État de l'utilité : {result['data']['etat_utilite']}")
+```
+
+### 5.3 🆕 Audit d'un Projet Complet (V3.0)
+```python
+# Audit d'utilité d'un répertoire complet
+task_details = {
+    "action": "audit_universal_evaluation",
+    "params": {
+        "target_path": "chemin/vers/votre/projet/"
+    }
+}
+result = await agent.execute_task(task_details)
+
+# Résultats consolidés
+print(f"Nombre de fichiers analysés : {result['data']['nb_fichiers_analyses']}")
+print(f"Score global d'utilité : {result['data']['score_global']}/100")
+print(f"État global de l'utilité : {result['data']['etat_utilite']}")
+
+# Détails par fichier
+for fichier_result in result['data']['resultats_fichiers']:
+    print(f"- {fichier_result['fichier']} :")
+    print(f"  Score : {fichier_result['score']}/100")
+    print(f"  Problèmes utilité : {len(fichier_result['utility_issues'])}")
+```
+
+## 6. Spécifications Techniques V3.0
+
+### 6.1 Méthodes Principales
+- **`audit_universal_evaluation(target_path)`** : Orchestrateur principal (fichier ou répertoire)
+- **`_audit_single_python_file(file_path)`** : Audit détaillé d'utilité d'un fichier
+- **`_should_skip_path(path)`** : Filtrage intelligent des chemins à ignorer
+- **`_map_score_to_utility_health(score)`** : Mapping score → état de l'utilité
+
+### 6.2 Filtrage Intelligent
+Répertoires automatiquement ignorés :
+- `.venv/`, `venv/`, `env/` (environnements virtuels)
+- `__pycache__/`, `.pyc` (cache Python)
+- `.git/`, `.svn/` (contrôle de version)
+- `node_modules/`, `.npm/` (dépendances JS)
+- `build/`, `dist/`, `.egg-info/` (artefacts de build)
+
+### 6.3 Métriques d'Utilité
+- **Score global** : Note consolidée 0-100
+- **Nombre de fichiers** : Fichiers Python analysés
+- **Problèmes utilité** : Issues détectées par type
+- **Complexité du code** : Richesse structurelle
+- **Richesse fonctionnelle** : Diversité des fonctionnalités
+- **Réutilisation du code** : Modularité et réutilisation
+
+## 7. Fonctionnalités Clés (Conformité Pattern Factory)
 
 L'agent respecte le Pattern Factory NextGeneration et expose les méthodes suivantes :
 
@@ -49,7 +169,7 @@ get_capabilities() -> [
 ]
 ```
 
-## 5. Système de Scoring Heuristique
+## 8. Système de Scoring Heuristique
 
 ### Métriques de Base
 
@@ -73,7 +193,7 @@ score >= seuil_min (défaut: 15) → "Utile" (is_useful: True)
 score < seuil_min → "Peu utile" (is_useful: False)
 ```
 
-## 6. Workflow d'Évaluation
+## 9. Workflow d'Évaluation
 
 ```
 1. 📋 Réception tâche avec file_path
@@ -84,7 +204,7 @@ score < seuil_min → "Peu utile" (is_useful: False)
 6. 📊 Retour résultat structuré
 ```
 
-## 7. Format de Résultat
+## 10. Format de Résultat
 
 ### Succès d'Évaluation
 
@@ -121,7 +241,7 @@ score < seuil_min → "Peu utile" (is_useful: False)
 }
 ```
 
-## 8. Exemples d'Utilisation
+## 11. Exemples d'Utilisation
 
 ### Évaluation d'un Agent
 
@@ -174,7 +294,7 @@ useful_agents = [r for r in results if r["useful"]]
 print(f"Agents utiles: {len(useful_agents)}/{len(results)}")
 ```
 
-## 9. Configuration
+## 12. Configuration
 
 ### Seuil d'Utilité Personnalisé
 
@@ -185,14 +305,14 @@ evaluateur.config = {"min_score_for_usefulness": 20}  # Seuil plus élevé
 # Seuil par défaut : 15 points
 ```
 
-## 10. Dépendances
+## 13. Dépendances
 
 - **Python 3.8+**
 - **Modules standard** : ast, pathlib, logging
 - **core.agent_factory_architecture** (Agent, Task, Result)
 - **Aucune dépendance externe** pour l'analyse AST
 
-## 11. Journal des Modifications (Changelog)
+## 14. Journal des Modifications (Changelog)
 
 - **v2.2.0 (2025-06-26)** :
   - Harmonisation avec standards Pattern Factory NextGeneration
@@ -205,7 +325,7 @@ evaluateur.config = {"min_score_for_usefulness": 20}  # Seuil plus élevé
 - **v1.0** :
   - Version initiale avec évaluation AST de base
 
-## 12. Procédure de Test CLI
+## 15. Procédure de Test CLI
 
 ```python
 # test_agent_maintenance_02_evaluation.py
@@ -255,7 +375,7 @@ async def test_evaluateur_utilite():
 # python -c "import asyncio; asyncio.run(test_evaluateur_utilite())"
 ```
 
-## 13. Cas d'Usage Recommandés
+## 16. Cas d'Usage Recommandés
 
 - **Audit de codebase** : Identification des fichiers peu utiles
 - **Nettoyage de maintenance** : Support à la décision de suppression
@@ -263,7 +383,7 @@ async def test_evaluateur_utilite():
 - **Triage automatique** : Classification rapide de grands volumes de fichiers
 - **Métriques de projet** : Calcul de scores globaux de qualité
 
-## 14. Statut et Validation
+## 17. Statut et Validation
 
 - ✅ **Pattern Factory** : Conforme (Agent, Task, Result)
 - ✅ **Méthodes async** : startup, shutdown, execute_task, health_check  

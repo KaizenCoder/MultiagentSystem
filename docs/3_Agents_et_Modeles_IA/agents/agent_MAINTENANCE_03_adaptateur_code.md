@@ -4,7 +4,7 @@
 
 - **Nom :** Adaptateur de Code NextGeneration
 - **Identifiant :** `agent_MAINTENANCE_03_adaptateur_code`
-- **Version :** 4.1.0 (Volet 2 - Moteur Indentation Amélioré)
+- **Version :** 4.2.0 (Priorités Hautes : Classification Étendue + Auto-découverte + Validation Multi-niveaux)
 - **Responsable Principal :** Équipe de Maintenance NextGeneration
 - **Contact Technique :** `#canal-maintenance-ia`
 
@@ -12,19 +12,22 @@
 
 🔧 Agent spécialisé dans l'adaptation et la réparation de code Python avec capacités d'audit universel. Utilise LibCST pour la manipulation sécurisée de l'AST et applique des stratégies de réparation multi-niveaux pour corriger automatiquement les erreurs courantes dans des fichiers individuels ou des projets complets.
 
-**🚀 NOUVEAUTÉ V4.1 (Volet 2 - Journal Évolution Équipe) :** Moteur de correction d'indentation entièrement repensé avec stratégies intelligentes, détection automatique du style d'indentation, et réparation contextuelle avancée pour tous les types d'erreurs d'indentation Python.
+**🚀 NOUVEAUTÉ V4.2 (Priorités Hautes) :** Système de classification d'erreurs étendu (9 types), auto-découverte intelligente des imports par analyse AST du projet, et validation multi-niveaux avec scoring de confiance pour une adaptation précise et fiable.
 
-**🔧 HÉRITAGE V4.0 :** Capacité d'audit universel d'adaptation étendue pour analyser et corriger des **projets Python complets** (répertoires entiers) en plus des fichiers individuels.
+**🔧 HÉRITAGE V4.1 :** Moteur de correction d'indentation entièrement repensé avec stratégies intelligentes, détection automatique du style d'indentation, et réparation contextuelle avancée.
+
+**📊 HÉRITAGE V4.0 :** Capacité d'audit universel d'adaptation étendue pour analyser et corriger des **projets Python complets** (répertoires entiers) en plus des fichiers individuels.
 
 ## 3. Objectifs et Missions
 
-### 3.1 Missions Principales
+### 3.1 Missions Principales V4.2
+- **🧠 Classification Étendue** : 9 types d'erreurs (indentation/name/import/syntax/type_error/attribute_error/value_error/module_not_found/generic) avec scoring de confiance
+- **🔍 Auto-découverte Imports** : Analyse AST complète du projet pour découverte automatique des imports avec cache intelligent et scoring basé sur l'usage
+- **🎯 Validation Multi-niveaux** : Validation syntaxique + sémantique + compilation + résolution imports avec scoring global de confiance
 - **🔧 Moteur Indentation V4.1** : Correction intelligente avec détection automatique style (espaces/tabs) et stack d'indentation contextuelle
-- **Réparation Stratégique** : Routage d'erreurs par classification (indentation/name/import/generic) vers stratégies adaptées  
-- **Manipulation AST Sécurisée** : Transformations LibCST préservant formatage et structure
-- **Correction Multi-Niveaux** : Cascade de réparations avec fallback automatique
-- **Gestion Imports Avancée** : Insertion intelligente avec mapping complexe et évitement doublons
-- **Support Équipe Maintenance** : Intégration cycle M-T-D (Maintenance-Test-Documentation)
+- **🚀 Réparation Intelligente** : Stratégies spécialisées par type d'erreur avec suggestions automatiques et historique d'apprentissage
+- **⚙️ Manipulation AST Sécurisée** : Transformations LibCST préservant formatage et structure
+- **📊 Support Équipe Maintenance** : Intégration cycle M-T-D (Maintenance-Test-Documentation-Validation)
 
 ### 3.2 Capacités d'Audit Universel (V4.0)
 - **Audit de fichiers individuels** : Adaptation et correction d'un fichier Python spécifique
@@ -286,9 +289,156 @@ class CstPassInserter(cst.CSTTransformer):
 - **T (Test)** : Validation syntaxique automatique du code corrigé  
 - **D (Documentation)** : Traçabilité complète des adaptations appliquées
 
-## 10. Exemples d'Utilisation
+## 10. 🚀 Nouvelles Fonctionnalités V4.2.0 (Priorités Hautes)
 
-### 🆕 Correction d'Erreur d'Indentation V4.1 (Volet 2)
+### 10.1 Classification Étendue d'Erreurs
+
+```python
+from agents.agent_MAINTENANCE_03_adaptateur_code import AgentMAINTENANCE03AdaptateurCode, ErrorType
+
+agent = AgentMAINTENANCE03AdaptateurCode()
+
+# Test classification sur différents types d'erreurs
+errors_to_classify = [
+    TypeError("unsupported operand type(s): 'int' and 'str'"),
+    AttributeError("'str' object has no attribute 'append'"),
+    ValueError("invalid literal for int() with base 10: 'abc'"),
+    ModuleNotFoundError("No module named 'nonexistent_package'"),
+    NameError("name 'undefined_variable' is not defined")
+]
+
+for error in errors_to_classify:
+    classification = agent.classify_error_extended(error)
+    print(f"Type: {classification.error_type.value}")
+    print(f"Confiance: {classification.confidence_score:.2f}")
+    print(f"Suggestions: {classification.suggested_fixes}")
+    print("---")
+
+# Résultat attendu : Classification précise avec suggestions contextuelles
+```
+
+### 10.2 Auto-découverte des Imports
+
+```python
+# Découverte automatique des imports dans le projet
+discoveries = agent.discover_project_imports()
+
+print(f"Imports découverts: {len(discoveries)}")
+
+# Affichage des imports les plus utilisés
+top_imports = sorted(discoveries.values(), key=lambda x: x.confidence, reverse=True)[:10]
+
+for discovery in top_imports:
+    print(f"📦 {discovery.module_name}")
+    print(f"   Import: {discovery.import_statement}")
+    print(f"   Confiance: {discovery.confidence:.2f}")
+    print(f"   Usage: {discovery.usage_count} fois dans {len(discovery.source_files)} fichiers")
+    print()
+
+# Cache automatique pour réutilisation
+print(f"Cache populé: {len(agent._import_discovery_cache)} éléments")
+```
+
+### 10.3 Validation Multi-niveaux
+
+```python
+# Test validation complète d'un code
+test_code = """
+def example_function():
+    result = undefined_variable  # NameError potentiel
+    return result.upper()
+
+class ExampleClass:
+    def method(self):
+        return "test"
+"""
+
+validation = agent.validate_multi_level(test_code)
+
+print("=== RÉSULTATS VALIDATION ===")
+print(f"Syntaxe valide: {validation.syntax_valid}")
+print(f"Sémantique valide: {validation.semantic_valid}")
+print(f"Compilation réussie: {validation.compilation_successful}")
+print(f"Résolution imports: {validation.import_resolution}")
+print(f"Score global: {validation.confidence_score:.2f}")
+
+if validation.issues:
+    print(f"Issues détectées: {validation.issues}")
+if validation.warnings:
+    print(f"Avertissements: {validation.warnings}")
+```
+
+### 10.4 Utilisation Avancée avec Nouvelles Options
+
+```python
+from core.agent_factory_architecture import Task
+
+# Code avec erreur NameError
+code_with_error = """
+def process_file():
+    file_path = Path("/tmp/example.txt")  # Path non importé
+    return file_path.exists()
+"""
+
+# Tâche avec toutes les nouvelles options V4.2.0
+task = Task(
+    id="advanced_adaptation",
+    params={
+        "code": code_with_error,
+        "feedback": NameError("name 'Path' is not defined"),
+        "error_type": "name",  # Sera re-classifié automatiquement
+        "use_import_discovery": True,  # Active auto-découverte
+        "validate_result": True        # Active validation multi-niveaux
+    }
+)
+
+result = await agent.execute_task(task)
+
+if result.success:
+    data = result.data
+    
+    print("Code adapté:")
+    print(data["adapted_code"])
+    
+    print(f"\nAdaptations: {data['adaptations']}")
+    
+    # Nouvelles données V4.2.0
+    if data["error_classification"]:
+        classification = data["error_classification"]
+        print(f"Classification: {classification['error_type']} (confiance: {classification['confidence_score']:.2f})")
+    
+    if data["validation_pre"] and data["validation_post"]:
+        pre_score = data["validation_pre"]["confidence_score"]
+        post_score = data["validation_post"]["confidence_score"]
+        improvement = post_score - pre_score
+        print(f"Amélioration qualité: {improvement:+.2f} points ({pre_score:.2f} → {post_score:.2f})")
+    
+    print(f"Imports découverts utilisés: {data['import_discoveries_used']}")
+```
+
+### 10.5 Analyse Spécialisée par Type d'Erreur
+
+```python
+# Exemple TypeError
+type_error = TypeError("unsupported operand type(s): 'int' and 'str'")
+type_fixes = agent._analyze_type_error(str(type_error), code_context)
+print(f"Suggestions TypeError: {type_fixes}")
+
+# Exemple AttributeError  
+attr_error = AttributeError("'str' object has no attribute 'append'")
+attr_fixes = agent._analyze_attribute_error(str(attr_error), code_context)
+print(f"Suggestions AttributeError: {attr_fixes}")
+
+# Exemple ModuleNotFoundError
+module_error = "No module named 'opencv-python'"
+module_name = agent._extract_module_name(module_error)
+suggestions = agent._suggest_module_alternatives(module_name)
+print(f"Suggestions installation: {suggestions}")
+```
+
+## 11. Exemples d'Utilisation Hérités
+
+### 11.1 🆕 Correction d'Erreur d'Indentation V4.1 (Volet 2)
 
 ```python
 from core.agent_factory_architecture import Task
@@ -459,6 +609,24 @@ adaptateur.COMPLEX_IMPORT_MAP.update({
 
 ## 14. Journal des Modifications (Changelog)
 
+- **🚀 v4.2.0 (2025-06-27) - Priorités Hautes : Classification Étendue + Auto-découverte + Validation Multi-niveaux** :
+  - **CLASSIFICATION ÉTENDUE** : Extension du système de classification de 4 à 9 types d'erreurs avec scoring de confiance
+    - Nouveaux types : type_error, attribute_error, value_error, module_not_found avec analyse spécialisée
+    - Scoring de confiance 0.0-1.0 avec suggestions automatiques contextuelles
+    - Méthodes d'analyse spécialisées : _analyze_type_error(), _analyze_attribute_error(), _analyze_module_error()
+  - **AUTO-DÉCOUVERTE IMPORTS** : Système intelligent de découverte d'imports par analyse AST du projet
+    - Analyse complète du projet via ast.parse() pour découverte automatique des patterns d'import
+    - Cache intelligent avec scoring basé sur l'usage et fréquence d'utilisation
+    - Mapping automatique module → import_statement avec scoring de confiance
+  - **VALIDATION MULTI-NIVEAUX** : Pipeline de validation complète avec scoring global
+    - Validation syntaxique + sémantique + compilation + résolution imports
+    - Score de confiance global consolidé avec métriques détaillées
+    - Détection issues et warnings avec recommandations automatiques
+  - **NOUVELLES DATACLASSES** : ErrorType enum, ErrorClassification, ImportDiscovery, ValidationResult
+  - **PARAMÈTRES EXECUTE_TASK** : Nouvelles options use_import_discovery et validate_result
+  - **EXTENSION CAPACITÉS** : 10 → 18 capacités avec nouvelles fonctionnalités v4.2.0
+  - **TESTS COMPLETS** : Suite de tests v4.2.0 avec validation des 3 priorités hautes
+  - **DOCUMENTATION** : Section complète "Nouvelles Fonctionnalités V4.2.0" avec exemples pratiques
 - **🆕 v4.1.0 (2025-06-27) - Volet 2 : Moteur Indentation Amélioré** :
   - **MOTEUR INDENTATION ROBUSTE** : Réécriture complète `_fix_indentation_errors()` avec stratégies intelligentes
   - **DÉTECTION AUTOMATIQUE** : Style d'indentation (espaces/tabs) et niveaux contextuels
@@ -582,4 +750,4 @@ class EmptyClass:
 - **🎯 Taux de réussite** : 100% (3/3 tests validés)
 - **⚡ Performance** : Code corrigé compile sans erreur dans tous les cas
 
-**Agent MAINTENANCE 03 V4.1 - État : IMPLÉMENTÉ ET VALIDÉ (Volet 2 Complet)**
+**Agent MAINTENANCE 03 V4.2 - État : IMPLÉMENTÉ ET VALIDÉ (Priorités Hautes Complètes)**
