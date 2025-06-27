@@ -512,9 +512,9 @@ python agents/agent_12_gestionnaire_backups.py --emergency-backup
         total_time = (datetime.now() - start_time).total_seconds() * 1000
         
         self.logger.info(f"✅ Documentation complète générée en {total_time:.2f}ms")
-            
-            return {
-                "status": "success",
+        
+        return {
+            "status": "success",
             "generation_results": results,
             "total_generation_time_ms": total_time,
             "statistics": self.generation_stats

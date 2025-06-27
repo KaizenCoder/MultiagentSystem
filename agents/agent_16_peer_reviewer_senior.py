@@ -41,6 +41,8 @@ class PeerReviewerSeniorAgent(Agent):
     """
     Agent 16 - Peer Reviewer Senior (Pattern Factory compliant)
     """
+    CAPABILITIES = ["code_review", "quality_assessment", "peer_review"]
+    
     def __init__(self, agent_type="peer_reviewer_senior", **config):
         self.agent_type = agent_type
         super().__init__(agent_type, **config)

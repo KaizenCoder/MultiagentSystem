@@ -62,7 +62,25 @@ class AgentMAINTENANCE01AnalyseurStructure(Agent):
     def __init__(self, **kwargs):
         """Initialisation standardisée."""
         super().__init__(agent_type="analyseur_structure", **kwargs)
-        self.logger = logging.getLogger(self.__class__.__name__)
+        # ✅ MIGRATION SYSTÈME LOGGING UNIFIÉ
+        try:
+            from core.manager import LoggingManager
+            logging_manager = LoggingManager()
+            self.logger = logging_manager.get_logger(
+                config_name="maintenance",
+                custom_config={
+                    "logger_name": f"nextgen.maintenance.analyseur_structure.{self.id}",
+                    "log_dir": "logs/maintenance/analyseur",
+                    "metadata": {
+                        "agent_type": "MAINTENANCE_01_analyseur_structure",
+                        "agent_role": "analyseur_structure",
+                        "system": "nextgeneration"
+                    }
+                }
+            )
+        except ImportError:
+            # Fallback en cas d'indisponibilité du LoggingManager
+            self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.info(f"Analyseur de structure ({self.id}) initialisé.")
 
     async def startup(self):

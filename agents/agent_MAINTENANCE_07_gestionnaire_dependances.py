@@ -17,7 +17,25 @@ class AgentMAINTENANCE07GestionnaireDependances(Agent):
     
     def __init__(self, **kwargs):
         super().__init__(agent_type="dependency_manager", **kwargs)
-        self.logger = logging.getLogger(self.__class__.__name__)
+        # ✅ MIGRATION SYSTÈME LOGGING UNIFIÉ
+        try:
+            from core.manager import LoggingManager
+            logging_manager = LoggingManager()
+            self.logger = logging_manager.get_logger(
+                config_name="maintenance",
+                custom_config={
+                    "logger_name": f"nextgen.maintenance.gestionnaire_dependances.{self.id}",
+                    "log_dir": "logs/maintenance/gestionnaire",
+                    "metadata": {
+                        "agent_type": "MAINTENANCE_07_gestionnaire_dependances",
+                        "agent_role": "gestionnaire_dependances",
+                        "system": "nextgeneration"
+                    }
+                }
+            )
+        except ImportError:
+            # Fallback en cas d'indisponibilité du LoggingManager
+            self.logger = logging.getLogger(self.__class__.__name__)
         
         self.stdlib_modules = {
             'ast', 'asyncio', 'os', 'sys', 'json', 'datetime', 'pathlib', 're', 

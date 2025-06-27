@@ -95,7 +95,25 @@ class CorrecteurSemantique(Agent):
         super().__init__(agent_type="correcteur_semantique", **kwargs)
         self.agent_name = agent_name
         self.type = "correcteur_semantique"
-        self.logger = logging.getLogger(self.__class__.__name__)
+        # ✅ MIGRATION SYSTÈME LOGGING UNIFIÉ
+        try:
+            from core.manager import LoggingManager
+            logging_manager = LoggingManager()
+            self.logger = logging_manager.get_logger(
+                config_name="maintenance",
+                custom_config={
+                    "logger_name": f"nextgen.maintenance.correcteur_semantique.{self.id}",
+                    "log_dir": "logs/maintenance/correcteur",
+                    "metadata": {
+                        "agent_type": "MAINTENANCE_12_correcteur_semantique",
+                        "agent_role": "correcteur_semantique",
+                        "system": "nextgeneration"
+                    }
+                }
+            )
+        except ImportError:
+            # Fallback en cas d'indisponibilité du LoggingManager
+            self.logger = logging.getLogger(self.__class__.__name__)
         self.enable_auto_rename = kwargs.get('enable_auto_rename', True)
         self.max_iterations = kwargs.get('max_iterations', 3)
 

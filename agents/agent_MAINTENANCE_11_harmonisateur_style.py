@@ -29,7 +29,25 @@ class AgentMAINTENANCE11HarmonisateurStyle(Agent):
     
     def __init__(self, **kwargs):
         super().__init__(agent_type="harmonisateur_style", **kwargs)
-        self.logger = logging.getLogger(self.__class__.__name__)
+        # ✅ MIGRATION SYSTÈME LOGGING UNIFIÉ
+        try:
+            from core.manager import LoggingManager
+            logging_manager = LoggingManager()
+            self.logger = logging_manager.get_logger(
+                config_name="maintenance",
+                custom_config={
+                    "logger_name": f"nextgen.maintenance.harmonisateur_style.{self.id}",
+                    "log_dir": "logs/maintenance/harmonisateur",
+                    "metadata": {
+                        "agent_type": "MAINTENANCE_11_harmonisateur_style",
+                        "agent_role": "harmonisateur_style",
+                        "system": "nextgeneration"
+                    }
+                }
+            )
+        except ImportError:
+            # Fallback en cas d'indisponibilité du LoggingManager
+            self.logger = logging.getLogger(self.__class__.__name__)
         self.version="1.1" # Version incrémentée pour l'activation
         self.description="Harmonise le style du code Python en utilisant Black."
         self.black_available = black is not None

@@ -65,7 +65,26 @@ class ChefEquipeCoordinateurEnterprise(Agent):
             agent_type="coordinateur",
             **kwargs
         )
-        self.logger = logging.getLogger(self.__class__.__name__)
+        # ✅ MIGRATION SYSTÈME LOGGING UNIFIÉ
+        try:
+            from core.manager import LoggingManager
+            logging_manager = LoggingManager()
+            self.logger = logging_manager.get_logger(
+                config_name="maintenance",
+                custom_config={
+                    "logger_name": f"nextgen.maintenance.chef_equipe.{self.id}",
+                    "log_dir": "logs/maintenance/chef_equipe",
+                    "metadata": {
+                        "agent_type": "MAINTENANCE_00_chef_equipe_coordinateur",
+                        "agent_role": "chef_equipe_coordinateur",
+                        "system": "nextgeneration",
+                        "priority": "high"
+                    }
+                }
+            )
+        except ImportError:
+            # Fallback en cas d'indisponibilité du LoggingManager
+            self.logger = logging.getLogger(self.__class__.__name__)
         self.agent_id = self.id
 
         self.logger.info(f"Chef d'équipe v4.2.0 initialisé avec ID: {self.agent_id}")

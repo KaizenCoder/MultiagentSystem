@@ -93,7 +93,26 @@ class AgentMAINTENANCE10AuditeurQualiteNormes(Agent):
         self.agent_id = "MAINTENANCE_10"
         self.name = "Agent MAINTENANCE-10 - Auditeur Qualité et Normes"
         self.specialite = "Audit universel qualité/normes Python"
-        self.logger = logging.getLogger(f"agent.{self.agent_id}")
+        # ✅ MIGRATION SYSTÈME LOGGING UNIFIÉ
+        try:
+            from core.manager import LoggingManager
+            logging_manager = LoggingManager()
+            self.logger = logging_manager.get_logger(
+                config_name="maintenance",
+                custom_config={
+                    "logger_name": f"nextgen.maintenance.auditeur_qualite.{self.agent_id}",
+                    "log_dir": "logs/maintenance/auditeur",
+                    "metadata": {
+                        "agent_type": "MAINTENANCE_10_auditeur_qualite_normes",
+                        "agent_role": "auditeur_qualite",
+                        "specialite": self.specialite,
+                        "system": "nextgeneration"
+                    }
+                }
+            )
+        except ImportError:
+            # Fallback en cas d'indisponibilité du LoggingManager
+            self.logger = logging.getLogger(f"agent.{self.agent_id}")
         
         # Métriques d'audit
         self.audit_metrics = {
@@ -934,7 +953,20 @@ async def main():
     """Test CLI de l'agent"""
     import asyncio
     
-    logging.basicConfig(level=logging.INFO)
+    # ✅ MIGRATION SYSTÈME LOGGING UNIFIÉ - Configuration pour test CLI
+    try:
+        from core.manager import LoggingManager
+        logging_manager = LoggingManager()
+        logger = logging_manager.get_logger(
+            config_name="maintenance",
+            custom_config={
+                "logger_name": "nextgen.maintenance.auditeur_qualite.test",
+                "log_dir": "logs/maintenance/test",
+                "metadata": {"context": "cli_test"}
+            }
+        )
+    except ImportError:
+        logging.basicConfig(level=logging.INFO)
     print("🔍 Agent MAINTENANCE-10 - Test audit universel")
     
     agent = AgentMAINTENANCE10AuditeurQualiteNormes()

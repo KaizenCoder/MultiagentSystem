@@ -62,19 +62,19 @@ class AgentPostgresqlDiagnosticPostgresFinal(AgentPostgreSQLBase):
                     }
                 )
             elif task.type == "diagnostic_conteneur":
-                resultats = self.diagnostic_conteneur_postgres()
+                resultats = await self.diagnostic_conteneur_postgres()
                 return Result(success=True, data=resultats)
             elif task.type == "diagnostic_encodage":
                 container = task.params.get("container_name")
                 if not container:
                     return Result(success=False, error="Nom du conteneur requis")
-                resultats = self.diagnostic_encodage_conteneur(container)
+                resultats = await self.diagnostic_encodage_conteneur(container)
                 return Result(success=True, data=resultats)
             elif task.type == "diagnostic_python":
-                resultats = self.diagnostic_python_psycopg2()
+                resultats = await self.diagnostic_python_psycopg2()
                 return Result(success=True, data=resultats)
             elif task.type == "generer_solution":
-                resultats = self.generer_solution_encodage_definitive()
+                resultats = await self.generer_solution_encodage_definitive()
                 return Result(success=True, data=resultats)
             else:
                 return Result(
@@ -89,7 +89,7 @@ class AgentPostgresqlDiagnosticPostgresFinal(AgentPostgreSQLBase):
                 error_code="EXECUTION_ERROR"
             )
     
-    def diagnostic_conteneur_postgres(self):
+    async def diagnostic_conteneur_postgres(self):
         """Diagnostic approfondi du conteneur PostgreSQL"""
         
         self.logger.info("[SEARCH] Diagnostic conteneur PostgreSQL...")
@@ -136,7 +136,7 @@ class AgentPostgresqlDiagnosticPostgresFinal(AgentPostgreSQLBase):
         self.rapport_data["diagnostics"].append(diagnostic)
         return diagnostic
     
-    def diagnostic_encodage_conteneur(self, container_name):
+    async def diagnostic_encodage_conteneur(self, container_name):
         """Diagnostic encodage depuis l'intrieur du conteneur"""
         
         self.logger.info(f" Diagnostic encodage conteneur {container_name}...")
@@ -189,7 +189,7 @@ class AgentPostgresqlDiagnosticPostgresFinal(AgentPostgreSQLBase):
         self.rapport_data["diagnostics"].append(diagnostic)
         return diagnostic
     
-    def diagnostic_python_psycopg2(self):
+    async def diagnostic_python_psycopg2(self):
         """Diagnostic des problmes Python/psycopg2"""
         
         self.logger.info(" Diagnostic Python/psycopg2...")
@@ -232,7 +232,7 @@ class AgentPostgresqlDiagnosticPostgresFinal(AgentPostgreSQLBase):
         self.rapport_data["diagnostics"].append(diagnostic)
         return diagnostic
     
-    def generer_solution_encodage_definitive(self):
+    async def generer_solution_encodage_definitive(self):
         """Gnration de la solution dfinitive pour l'encodage"""
         
         self.logger.info("[BULB] Gnration solution encodage dfinitive...")
@@ -410,33 +410,33 @@ networks:
         
         try:
             # Diagnostic conteneur
-            diag_conteneur = self.diagnostic_conteneur_postgres()
+            diag_conteneur = await self.diagnostic_conteneur_postgres()
             
-            # Si conteneur PostgreSQL trouv, diagnostic encodage
+            # Si conteneur PostgreSQL trouvé, diagnostic encodage
             if diag_conteneur["resultats"].get("postgres_actifs", 0) > 0:
                 container_name = diag_conteneur["resultats"]["container_principal"]
-                self.diagnostic_encodage_conteneur(container_name)
+                await self.diagnostic_encodage_conteneur(container_name)
                 
-                # Diagnostic Python/psycopg2  
-            self.diagnostic_python_psycopg2()
+            # Diagnostic Python/psycopg2  
+            await self.diagnostic_python_psycopg2()
                 
-                # Gnration solution
-            self.generer_solution_encodage_definitive()
+            # Génération solution
+            await self.generer_solution_encodage_definitive()
                 
             self.rapport_data["status"] = "SUCCESS"
-            self.logger.info("[CHECK] Mission diagnostic termine avec succs")
+            self.logger.info("[CHECK] Mission diagnostic terminé avec succès")
                 
         except Exception as e:
             self.rapport_data["status"] = "FAILED" 
             self.rapport_data["error"] = str(e)
-            self.logger.error(f"[CROSS] chec mission: {e}")
+            self.logger.error(f"[CROSS] Échec mission: {e}")
             
-            # Gnration rapport final
-        self.generer_rapport_final()
+        # Génération rapport final
+        await self.generer_rapport_final()
             
         return self.rapport_data
     
-    def generer_rapport_final(self):
+    async def generer_rapport_final(self):
         """Gnration du rapport final"""
         
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

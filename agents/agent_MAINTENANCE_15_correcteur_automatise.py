@@ -14,8 +14,27 @@ except ImportError:
     Agent04ExpertSecuriteCrypto = None
     SecurityException = Exception
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-log = logging.getLogger(__name__)
+# ✅ MIGRATION SYSTÈME LOGGING UNIFIÉ
+try:
+    from core.manager import LoggingManager
+    # Configuration logging unifié pour agent MAINTENANCE
+    logging_manager = LoggingManager()
+    log = logging_manager.get_logger(
+        config_name="maintenance",
+        custom_config={
+            "logger_name": "nextgen.maintenance.correcteur_automatise",
+            "log_dir": "logs/maintenance/correcteur",
+            "metadata": {
+                "agent_type": "MAINTENANCE_15_correcteur_automatise",
+                "agent_role": "correcteur_automatise",
+                "system": "nextgeneration"
+            }
+        }
+    )
+except ImportError:
+    # Fallback en cas d'indisponibilité du LoggingManager
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    log = logging.getLogger(__name__)
 
 class AgentMAINTENANCE15CorrecteurAutomatise:
     """

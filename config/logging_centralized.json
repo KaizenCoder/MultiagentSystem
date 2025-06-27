@@ -62,13 +62,36 @@
     "encryption_config": {},
     "alerting_config": {}
   },
+  "maintenance": {
+    "logger_name": "nextgen.maintenance",
+    "log_level": "INFO",
+    "log_dir": "logs/maintenance",
+    "filename_pattern": "{component}_{date}.log",
+    "max_file_size": 10485760,
+    "backup_count": 10,
+    "console_enabled": true,
+    "file_enabled": true,
+    "format_string": "%(asctime)s - %(name)s - %(levelname)s - [%(filename)s:%(lineno)d] - 🔧 MAINTENANCE - %(message)s",
+    "async_enabled": true,
+    "compression_enabled": true,
+    "retention_days": 30,
+    "elasticsearch_enabled": false,
+    "encryption_enabled": false,
+    "alerting_enabled": false,
+    "metadata": {
+      "system": "nextgeneration",
+      "subsystem": "maintenance",
+      "log_type": "agent_maintenance"
+    },
+    "elasticsearch_config": {},
+    "encryption_config": {},
+    "alerting_config": {}
+  },
   "agent_maintenance": {
     "logger_name": "agent.maintenance",
     "log_level": "INFO",
     "log_dir": "agents/reviews/audit_team_review",
-    
     "filename_pattern": "maintenance_team_{date}.log",
-    
     "max_file_size": 5242880,
     "backup_count": 5,
     "console_enabled": true,

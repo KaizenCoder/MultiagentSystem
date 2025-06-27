@@ -9,4 +9,11 @@ libcst==1.1.0
 astor==0.8.1
 
 # Bibliothèque pour charger les variables d'environnement depuis un fichier .env
-python-dotenv==1.1.1 
+python-dotenv==1.1.1
+
+# Dépendances pour l'agent de sécurité
+bandit==1.7.5  # Analyse statique de sécurité Python
+safety==2.3.5  # Vérification des vulnérabilités dans les dépendances
+PyYAML==6.0.1  # Support des fichiers de configuration YAML
+pytest-asyncio==0.21.1  # Support des tests asynchrones
+pytest-mock==3.11.1  # Support des mocks dans les tests 

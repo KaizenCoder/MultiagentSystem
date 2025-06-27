@@ -1,0 +1,26 @@
+{
+  "migration_timestamp": "2025-06-27T14:27:08.202411",
+  "migration_tool": "Adaptateur NextGeneration v4.3.0",
+  "agents_processed": [
+    {
+      "agent_name": "Agent 108 - Performance Optimizer",
+      "original_path": "/mnt/c/Dev/nextgeneration/agents/agent_108_performance_optimizer.py",
+      "migration_status": "failed",
+      "error": "'MaintenanceCorrectionDemo' object has no attribute 'agent_id'"
+    },
+    {
+      "agent_name": "Agent 109 - Pattern Factory Version",
+      "original_path": "/mnt/c/Dev/nextgeneration/agents/agent_109_pattern_factory_version.py",
+      "migration_status": "failed",
+      "error": "'MaintenanceCorrectionDemo' object has no attribute 'agent_id'"
+    }
+  ],
+  "migration_summary": {
+    "total_agents": 2,
+    "successful_migrations": 0,
+    "failed_migrations": 2,
+    "success_rate": 0.0,
+    "pattern_factory_compliance_achieved": false,
+    "adaptateur_v43_effectiveness": "Partial"
+  }
+}

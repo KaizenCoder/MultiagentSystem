@@ -85,7 +85,25 @@ class AgentMAINTENANCE04TesteurAntiFauxAgents(Agent):
     def __init__(self, **kwargs):
         """Initialisation standardisée."""
         super().__init__(agent_type="testeur", **kwargs)
-        self.logger = logging.getLogger(self.__class__.__name__)
+        # ✅ MIGRATION SYSTÈME LOGGING UNIFIÉ
+        try:
+            from core.manager import LoggingManager
+            logging_manager = LoggingManager()
+            self.logger = logging_manager.get_logger(
+                config_name="maintenance",
+                custom_config={
+                    "logger_name": f"nextgen.maintenance.testeur_anti_faux_agents.{self.id}",
+                    "log_dir": "logs/maintenance/testeur",
+                    "metadata": {
+                        "agent_type": "MAINTENANCE_04_testeur_anti_faux_agents",
+                        "agent_role": "testeur_anti_faux_agents",
+                        "system": "nextgeneration"
+                    }
+                }
+            )
+        except ImportError:
+            # Fallback en cas d'indisponibilité du LoggingManager
+            self.logger = logging.getLogger(self.__class__.__name__)
         self.agent_id = self.id
         self.logger.info(f"Testeur anti-faux agents ({self.agent_id}) initialisé.")
 

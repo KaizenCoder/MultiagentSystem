@@ -1,0 +1,210 @@
+# Configuration Optimisations Équipe Maintenance NextGeneration
+# Version: 2.0 - Optimisations Performance & Robustesse
+# Date: 2025-06-27
+
+# Configuration par agent
+team_config:
+  chef_equipe:
+    agent_type: "coordinateur"
+    max_parallel_agents: 3
+    circuit_breaker_threshold: 3
+    timeout_seconds: 120
+    cache_enabled: true
+    parallel_processing: true
+    semaphore_limit: 3
+    retry_policy:
+      max_retries: 3
+      backoff_multiplier: 2
+      max_backoff: 300
+
+  adaptateur_code:
+    agent_type: "adaptateur_code"
+    max_retries: 5
+    timeout_seconds: 60
+    cache_enabled: true
+    parallel_processing: true
+    libcst_optimizations: true
+    transformation_pipeline:
+      - "IndentationFixerTransformer"
+      - "SyntaxFixerTransformer"
+      - "ImportCleanerTransformer"
+    cache_ttl: 3600
+    validation_enabled: true
+
+  analyseur_structure:
+    agent_type: "analyseur"
+    max_retries: 3
+    timeout_seconds: 45
+    cache_enabled: true
+    deep_analysis: true
+    metrics_collection: true
+
+  evaluateur_utilite:
+    agent_type: "evaluateur"
+    max_retries: 3
+    timeout_seconds: 30
+    cache_enabled: true
+    scoring_algorithm: "enhanced"
+    
+  testeur_anti_faux:
+    agent_type: "testeur"
+    max_retries: 4
+    timeout_seconds: 90
+    cache_enabled: true
+    comprehensive_testing: true
+    
+  documenteur_reviewer:
+    agent_type: "documenteur"
+    max_retries: 2
+    timeout_seconds: 40
+    cache_enabled: true
+    template_caching: true
+    
+  correcteur_logique:
+    agent_type: "correcteur"
+    max_retries: 5
+    timeout_seconds: 75
+    cache_enabled: true
+    advanced_corrections: true
+    
+  gestionnaire_dependances:
+    agent_type: "gestionnaire"
+    max_retries: 3
+    timeout_seconds: 60
+    cache_enabled: true
+    dependency_resolution: "smart"
+    
+  analyseur_performance:
+    agent_type: "analyseur_perf"
+    max_retries: 2
+    timeout_seconds: 120
+    cache_enabled: true
+    profiling_enabled: true
+    
+  analyseur_securite:
+    agent_type: "analyseur_sec"
+    max_retries: 3
+    timeout_seconds: 90
+    cache_enabled: true
+    security_scanning: "comprehensive"
+    
+  auditeur_qualite:
+    agent_type: "auditeur"
+    max_retries: 2
+    timeout_seconds: 60
+    cache_enabled: true
+    quality_metrics: "extended"
+    
+  harmonisateur_style:
+    agent_type: "harmonisateur"
+    max_retries: 3
+    timeout_seconds: 45
+    cache_enabled: true
+    style_consistency: true
+    
+  correcteur_semantique:
+    agent_type: "correcteur_sem"
+    max_retries: 4
+    timeout_seconds: 90
+    cache_enabled: true
+    semantic_analysis: "deep"
+
+# Configuration globale
+global_settings:
+  # Cache
+  cache_ttl: 3600  # 1 heure
+  cache_max_memory: "512MB"
+  cache_eviction_policy: "lru"
+  
+  # Métriques
+  metrics_retention_days: 30
+  metrics_collection_interval: 10  # secondes
+  performance_monitoring: true
+  
+  # Alertes
+  alert_channels: ["console", "log"]  # À étendre avec Slack/Teams
+  alert_thresholds:
+    high_error_rate: 0.15      # 15%
+    slow_response: 30.0        # 30 secondes
+    high_memory: 524288000     # 500MB en bytes
+    circuit_breaker_failures: 5
+  
+  # Performance
+  parallel_execution: true
+  max_concurrent_operations: 5
+  resource_limits:
+    max_memory_per_agent: "256MB"
+    max_cpu_per_agent: "1000m"
+  
+  # Logging
+  logging_level: "INFO"
+  structured_logging: true
+  log_rotation: true
+  log_retention_days: 14
+  
+  # Circuit Breaker
+  circuit_breaker:
+    failure_threshold: 5
+    timeout_seconds: 60
+    retry_multiplier: 2
+    max_retry_delay: 300
+
+# Configuration Cache Redis
+cache_config:
+  host: "localhost"
+  port: 6379
+  db: 0
+  password: null
+  connection_pool_size: 10
+  socket_timeout: 5
+  socket_connect_timeout: 5
+  retry_on_timeout: true
+  health_check_interval: 30
+
+# Configuration Monitoring
+monitoring_config:
+  prometheus:
+    enabled: false  # À activer en production
+    port: 8000
+    metrics_path: "/metrics"
+  
+  grafana:
+    enabled: false  # À activer en production
+    dashboard_refresh: 5  # secondes
+  
+  custom_metrics:
+    - "agent_execution_time"
+    - "agent_success_rate"
+    - "agent_error_rate"
+    - "cache_hit_rate"
+    - "memory_usage"
+    - "cpu_usage"
+
+# Configuration Tests Performance
+performance_testing:
+  enabled: true
+  baseline_metrics:
+    max_execution_time: 120  # secondes
+    min_success_rate: 0.90   # 90%
+    max_memory_usage: 419430400  # 400MB en bytes
+  
+  load_testing:
+    concurrent_agents: 3
+    test_duration: 300  # 5 minutes
+    ramp_up_time: 60   # 1 minute
+
+# Configuration Sécurité
+security_config:
+  code_execution_sandbox: true
+  input_validation: "strict"
+  output_sanitization: true
+  resource_isolation: true
+  audit_logging: true
+
+# Configuration Développement
+development_config:
+  debug_mode: false
+  verbose_logging: false
+  profiling_enabled: false
+  test_mode: false
+  mock_external_services: false 
