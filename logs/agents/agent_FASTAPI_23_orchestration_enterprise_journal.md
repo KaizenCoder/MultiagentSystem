@@ -24,3 +24,11 @@
 [2025-06-26T16:10:08.876749] ImportError: features.enterprise.fastapi_orchestration introuvable. Stubs utilisés.
 [2025-06-26T16:10:25.199573] Agent initialisé avec features STUBS.
 [2025-06-26T16:10:25.200572] execute_task refusé (features STUBS actifs).
+[2025-06-28T00:55:20.455780] ImportError: features.enterprise.fastapi_orchestration introuvable. Stubs utilisés.
+[2025-06-28T00:56:30.617117] ImportError: features.enterprise.fastapi_orchestration introuvable. Stubs utilisés.
+[2025-06-28T00:57:34.012340] ImportError: features.enterprise.fastapi_orchestration introuvable. Stubs utilisés.
+[2025-06-28T01:01:13.867200] ImportError: features.enterprise.fastapi_orchestration introuvable. Stubs utilisés.
+[2025-06-28T01:02:25.407985] ImportError: features.enterprise.fastapi_orchestration introuvable. Stubs utilisés.
+[2025-06-28T01:03:39.936617] ImportError: features.enterprise.fastapi_orchestration introuvable. Stubs utilisés.
+[2025-06-28T01:04:48.861806] ImportError: features.enterprise.fastapi_orchestration introuvable. Stubs utilisés.
+[2025-06-28T01:05:29.209896] ImportError: features.enterprise.fastapi_orchestration introuvable. Stubs utilisés.

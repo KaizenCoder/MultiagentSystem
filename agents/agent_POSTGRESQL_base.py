@@ -15,6 +15,27 @@ class AgentPostgreSQLBase(Agent):
     
     def __init__(self, agent_type: str, name: str, **config):
         super().__init__(agent_type=agent_type, **config)
+        
+        # ✅ MIGRATION SYSTÈME LOGGING UNIFIÉ
+        try:
+            from core.manager import LoggingManager
+            logging_manager = LoggingManager()
+            self.logger = logging_manager.get_logger(
+                config_name="postgresql",
+                custom_config={
+                    "logger_name": f"nextgen.postgresql.POSTGRESQL_base.{self.agent_id if hasattr(self, 'agent_id') else self.id if hasattr(self, 'id') else 'unknown'}",
+                    "log_dir": "logs/postgresql",
+                    "metadata": {
+                        "agent_type": "POSTGRESQL_base",
+                        "agent_role": "postgresql",
+                        "system": "nextgeneration"
+                    }
+                }
+            )
+        except ImportError:
+            # Fallback en cas d'indisponibilité du LoggingManager
+            self.logger = logging.getLogger(self.__class__.__name__)
+
         self.name = name
         self.version = "2.0.0"
         self.workspace_root = Path(__file__).parent.parent

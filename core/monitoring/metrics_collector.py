@@ -53,6 +53,18 @@ class AdvancedMetricsCollector:
         }
         self.active_alerts = set()
         self._start_time = time.time()
+        self._running = False
+    
+    async def startup(self):
+        """Démarrage du collecteur de métriques"""
+        self._running = True
+        self._start_time = time.time()
+        print("🚀 AdvancedMetricsCollector démarré")
+    
+    async def shutdown(self):
+        """Arrêt du collecteur de métriques"""
+        self._running = False
+        print("🛑 AdvancedMetricsCollector arrêté")
     
     def record_execution(self, agent_id: str, duration: float, 
                         success: bool, memory_usage: float = 0, 

@@ -3,6 +3,16 @@
 🚀 REAL AGENT 12 - BACKUP MANAGER
 Agent Factory Pattern - Sprint 4 - Agent Autonome
 
+# Fallback pour aiofiles
+try:
+    import aiofiles
+except ImportError:
+    class aiofiles:
+        @staticmethod
+        def open(file, mode='r', **kwargs):
+            return open(file, mode, **kwargs)
+
+
 Mission: Agent autonome pour gestion backups production + versioning
 - Surveillance continue des changements
 - Backups automatiques avec Git versioning
@@ -96,6 +106,27 @@ class FileChangeHandler(FileSystemEventHandler):
     """Gestionnaire changements fichiers"""
     
     def __init__(self, backup_manager, loop):
+        
+        # ✅ MIGRATION SYSTÈME LOGGING UNIFIÉ
+        try:
+            from core.manager import LoggingManager
+            logging_manager = LoggingManager()
+            self.logger = logging_manager.get_logger(
+                config_name="general",
+                custom_config={
+                    "logger_name": f"nextgen.general.12_backup_manager.{self.agent_id if hasattr(self, 'agent_id') else self.id if hasattr(self, 'id') else 'unknown'}",
+                    "log_dir": "logs/general",
+                    "metadata": {
+                        "agent_type": "12_backup_manager",
+                        "agent_role": "general",
+                        "system": "nextgeneration"
+                    }
+                }
+            )
+        except ImportError:
+            # Fallback en cas d'indisponibilité du LoggingManager
+            self.logger = logging.getLogger(self.__class__.__name__)
+
         self.backup_manager = backup_manager
         self.loop = loop
         self.logger = backup_manager.logger

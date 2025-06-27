@@ -22,9 +22,20 @@ from pathlib import Path
 from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass, asdict
 import anthropic
-from dotenv import load_dotenv
+# Import dotenv avec fallback
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    try:
+        from core.dotenv_fallback import load_dotenv
+    except ImportError:
+        def load_dotenv(*args, **kwargs):
+            pass  # Fallback final
 
-load_dotenv()
+try:
+    load_dotenv()
+except ImportError:
+    pass  # dotenv optionnel
 
 @dataclass
 class ArchitecturalPlan:

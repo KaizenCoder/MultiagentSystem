@@ -1,0 +1,52 @@
+groups:
+  - name: adaptateur_v4_alerts
+    rules:
+      # Alerte sur le taux d'erreur
+      - alert: ErrorRateHigh
+        expr: rate(adaptateur_errors_total[5m]) / rate(adaptateur_requests_total[5m]) * 100 > 5
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Taux d'erreur élevé"
+          description: "Le taux d'erreur est supérieur à 5% sur les 5 dernières minutes"
+
+      # Alerte sur le hit rate du cache
+      - alert: CacheHitRateLow
+        expr: rate(adaptateur_cache_hits_total[5m]) / rate(adaptateur_requests_total[5m]) * 100 < 70
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Hit rate du cache faible"
+          description: "Le hit rate du cache est inférieur à 70% sur les 5 dernières minutes"
+
+      # Alerte sur la latence
+      - alert: HighLatency
+        expr: histogram_quantile(0.95, rate(adaptateur_request_duration_seconds_bucket[5m])) > 0.3
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Latence élevée"
+          description: "La latence P95 est supérieure à 300ms sur les 5 dernières minutes"
+
+      # Alerte sur la mémoire
+      - alert: HighMemoryUsage
+        expr: process_resident_memory_bytes / 1024 / 1024 > 800
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Utilisation mémoire élevée"
+          description: "L'utilisation mémoire dépasse 800MB"
+
+      # Alerte sur la saturation du cache
+      - alert: CacheSaturation
+        expr: adaptateur_cache_entries > 900
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Cache proche de la saturation"
+          description: "Le cache contient plus de 900 entrées (max=1000)" 

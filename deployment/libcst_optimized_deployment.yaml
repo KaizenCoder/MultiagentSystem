@@ -1,0 +1,169 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: libcst-pipeline
+  namespace: nextgeneration
+  labels:
+    app: libcst-pipeline
+    component: code-adaptation
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: libcst-pipeline
+  template:
+    metadata:
+      labels:
+        app: libcst-pipeline
+    spec:
+      containers:
+      - name: libcst-pipeline
+        image: nextgeneration/libcst-pipeline:1.0.0
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        env:
+        - name: REDIS_HOST
+          value: "redis-master"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_MAX_MEMORY
+          value: "512"
+        - name: COMPRESSION_THRESHOLD
+          value: "1024"
+        - name: MAX_POOL_SIZE
+          value: "10"
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        volumeMounts:
+        - name: config-volume
+          mountPath: /app/config
+        - name: cache-volume
+          mountPath: /app/cache
+      volumes:
+      - name: config-volume
+        configMap:
+          name: libcst-pipeline-config
+      - name: cache-volume
+        emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: libcst-pipeline-service
+  namespace: nextgeneration
+spec:
+  selector:
+    app: libcst-pipeline
+  ports:
+  - port: 80
+    targetPort: 8080
+  type: ClusterIP
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: libcst-pipeline-config
+  namespace: nextgeneration
+data:
+  config.yaml: |
+    cache:
+      ttl: 3600
+      compression: true
+      max_size: 512
+    pipeline:
+      max_workers: 10
+      timeout: 30
+      circuit_breaker:
+        max_failures: 5
+        reset_timeout: 60
+    monitoring:
+      metrics_port: 9090
+      log_level: INFO
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: libcst-pipeline-hpa
+  namespace: nextgeneration
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: libcst-pipeline
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: libcst-pipeline-monitor
+  namespace: nextgeneration
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: libcst-pipeline
+  endpoints:
+  - port: metrics
+    interval: 15s
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: libcst-pipeline-ingress
+  namespace: nextgeneration
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  tls:
+  - hosts:
+    - libcst.nextgeneration.ai
+    secretName: libcst-tls
+  rules:
+  - host: libcst.nextgeneration.ai
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: libcst-pipeline-service
+            port:
+              number: 80 

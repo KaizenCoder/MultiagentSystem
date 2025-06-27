@@ -1,3 +1,82 @@
+
+# Classe globale pour remplacer les références self
+class GlobalSelf:
+    def __init__(self):
+        self.logger = None
+        self.config = {}
+        self.agent_id = 'global_self'
+        self.name = 'Global Agent'
+        self.version = '1.0.0'
+    
+    def log(self, message):
+        if self.logger:
+            self.logger.info(message)
+        else:
+            print(message)
+
+# Instance globale
+self = GlobalSelf()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
+instance = type("Instance", (), {})()
 #!/usr/bin/env python3
 """
 🧪 Agent de Test et Validation des Modèles IA - Version Propre
@@ -28,8 +107,32 @@ except ImportError:
     from abc import ABC, abstractmethod
     
     class BaseAgent(ABC):
+        pass  # TODO: Implémenter
         def __init__(self, agent_id: str):
-            self.agent_id = agent_id
+            pass  # TODO: Implémenter
+        pass  # TODO: Implémenter
+        
+        # ✅ MIGRATION SYSTÈME LOGGING UNIFIÉ
+        try:
+            from core.manager import LoggingManager
+            logging_manager = LoggingManager()
+            self.logger = logging_manager.get_logger(
+                config_name="test",
+                custom_config={
+                    "logger_name": f"nextgen.test.test_models_integration_clean.{self.agent_id if hasattr(self, 'agent_id') else self.id if hasattr(self, 'id') else 'unknown'}",
+                    "log_dir": "logs/test",
+                    "metadata": {
+                        "agent_type": "test_models_integration_clean",
+                        "agent_role": "test",
+                        "system": "nextgeneration"
+                    }
+                }
+            )
+        except ImportError:
+            # Fallback en cas d'indisponibilité du LoggingManager
+            instance.logger = logging.getLogger(instance.__class__.__name__)
+
+            instance.agent_id = agent_id
             
         @abstractmethod
         async def execute_task(self, task_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -108,18 +211,18 @@ class AgentTestModelsIntegration(BaseAgent):
             # Fallback pour tests sans Pattern Factory
             agent_id = agent_id or f"test_models_integration_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}"
             super().__init__(agent_id)
-            self.agent_id = agent_id
-            self.version = "1.0.0"
-            self.description = "Agent de test pour validation architecture modèles IA"
+            instance.agent_id = agent_id
+            instance.version = "1.0.0"
+            instance.description = "Agent de test pour validation architecture modèles IA"
         
         # Configuration agent
-        self.model_manager = None
+        instance.model_manager = None
         
-        logger.info(f"🧪 Agent Test Modèles IA v{self.version} initialisé")
+        logger.info(f"🧪 Agent Test Modèles IA v{instance.version} initialisé")
         logger.info(f"🎯 Pattern Factory: {'✅ Disponible' if PATTERN_FACTORY_AVAILABLE else '❌ Fallback'}")
         
         # Configuration test avec toutes les structures nécessaires
-        self.test_results = {
+        instance.test_results = {
             "configuration": {},
             "ollama_integration": {},
             "cloud_providers": {},
@@ -137,7 +240,7 @@ class AgentTestModelsIntegration(BaseAgent):
         }
         
         # Prompts de test
-        self.test_prompts = {
+        instance.test_prompts = {
             "general": "Explique-moi les avantages du cloud computing en 3 points.",
             "code": "Écris une fonction Python pour calculer la factorielle d'un nombre.",
             "privacy": "Comment sécuriser une API REST avec authentification JWT ?"
@@ -177,13 +280,13 @@ class AgentTestModelsIntegration(BaseAgent):
             task_type = task_data.get("type", "complete_test_suite")
             
             if task_type == "complete_test_suite":
-                return await self._run_complete_test_suite()
+                return await instance._run_complete_test_suite()
             elif task_type == "integration_test":
-                return await self._run_integration_test(task_data)
+                return await instance._run_integration_test(task_data)
             elif task_type == "performance_test":
-                return await self._run_performance_test(task_data)
+                return await instance._run_performance_test(task_data)
             elif task_type == "model_compatibility":
-                return await self._test_model_compatibility(task_data)
+                return await instance._test_model_compatibility(task_data)
             elif task_type == "generate_strategic_report":
                 try:
                     # Extraire les paramètres de la tâche
@@ -191,11 +294,11 @@ class AgentTestModelsIntegration(BaseAgent):
                     type_rapport = task_data.get('type_rapport', 'models_integration')
                     format_sortie = task_data.get('format_sortie', 'json')  # 'json' ou 'markdown'
                     
-                    rapport = await self.generer_rapport_strategique(context, type_rapport)
+                    rapport = await instance.generer_rapport_strategique(context, type_rapport)
                     
                     # Génération format markdown si demandé
                     if format_sortie == 'markdown':
-                        rapport_md = await self.generer_rapport_markdown(rapport, type_rapport, context)
+                        rapport_md = await instance.generer_rapport_markdown(rapport, type_rapport, context)
                         
                         # Sauvegarde dans /reports/agent_test_models_integration/
                         reports_dir = Path("reports") / "agent_test_models_integration"
@@ -243,22 +346,22 @@ class AgentTestModelsIntegration(BaseAgent):
             logger.info("🧪 Démarrage suite complète de tests...")
             
             # Initialisation du gestionnaire de modèles si nécessaire
-            if not hasattr(self, 'model_manager') or not self.model_manager:
+            if not hasattr(self, 'model_manager') or not instance.model_manager:
                 if ModelManager:
-                    self.model_manager = ModelManager()
+                    instance.model_manager = ModelManager()
             
             # Tests séquentiels
-            await self._test_model_manager_initialization()
-            await self._test_agent_configurations()
-            await self._test_ollama_integration()
-            await self._test_fallback_mechanisms()
-            await self._benchmark_model_performance()
+            await instance._test_model_manager_initialization()
+            await instance._test_agent_configurations()
+            await instance._test_ollama_integration()
+            await instance._test_fallback_mechanisms()
+            await instance._benchmark_model_performance()
             
             # Calcul durée totale
             test_duration = time.time() - start_time
             
             # Génération rapport final
-            report = self._generate_test_report(test_duration)
+            report = instance._generate_test_report(test_duration)
             
             logger.info(f"✅ Suite de tests terminée avec succès en {test_duration:.2f}s")
             return {
@@ -281,17 +384,17 @@ class AgentTestModelsIntegration(BaseAgent):
     async def _test_model_manager_initialization(self):
         """🔧 Test initialisation du gestionnaire de modèles"""
         try:
-            if not hasattr(self, 'model_manager') or not self.model_manager:
+            if not hasattr(self, 'model_manager') or not instance.model_manager:
                 if ModelManager:
-                    self.model_manager = ModelManager()
+                    instance.model_manager = ModelManager()
             
             # Test configuration chargée
-            config_valid = hasattr(self.model_manager, 'config') and self.model_manager.config is not None if self.model_manager else False
+            config_valid = hasattr(instance.model_manager, 'config') and instance.model_manager.config is not None if instance.model_manager else False
             
-            self.test_results["model_manager_init"] = {
-                "initialized": self.model_manager is not None,
+            instance.test_results["model_manager_init"] = {
+                "initialized": instance.model_manager is not None,
                 "config_loaded": config_valid,
-                "ollama_available": hasattr(self.model_manager, 'ollama_client') if self.model_manager else False,
+                "ollama_available": hasattr(instance.model_manager, 'ollama_client') if instance.model_manager else False,
                 "timestamp": time.time()
             }
             
@@ -299,7 +402,7 @@ class AgentTestModelsIntegration(BaseAgent):
             
         except Exception as e:
             logger.error(f"❌ Erreur initialisation ModelManager: {e}")
-            self.test_results["model_manager_init"] = {"error": str(e)}
+            instance.test_results["model_manager_init"] = {"error": str(e)}
 
     async def _test_agent_configurations(self):
         """Test configuration des modèles pour différents agents"""
@@ -312,15 +415,15 @@ class AgentTestModelsIntegration(BaseAgent):
         
         for agent_id in test_agents:
             try:
-                if self.model_manager:
+                if instance.model_manager:
                     # Simulation de test de configuration
-                    self.test_results["agent_model_configs"][agent_id] = {
+                    instance.test_results["agent_model_configs"][agent_id] = {
                         "general": {"model": "simulated_model", "provider": "simulated"},
                         "code": {"model": "simulated_code_model", "provider": "simulated"},
                         "privacy": {"model": "simulated_privacy_model", "provider": "simulated"}
                     }
                 else:
-                    self.test_results["agent_model_configs"][agent_id] = {
+                    instance.test_results["agent_model_configs"][agent_id] = {
                         "general": {"model": "fallback_model", "provider": "fallback"},
                         "code": {"model": "fallback_model", "provider": "fallback"},
                         "privacy": {"model": "fallback_model", "provider": "fallback"}
@@ -330,14 +433,14 @@ class AgentTestModelsIntegration(BaseAgent):
                 
             except Exception as e:
                 logger.error(f"❌ Erreur config {agent_id}: {e}")
-                self.test_results["agent_model_configs"][agent_id] = {"error": str(e)}
+                instance.test_results["agent_model_configs"][agent_id] = {"error": str(e)}
 
     async def _test_ollama_integration(self):
         """Test intégration Ollama et modèles locaux RTX3090"""
         
         try:
             # Simulation de test Ollama
-            self.test_results["ollama_status"] = {
+            instance.test_results["ollama_status"] = {
                 "available": False,  # Simulation
                 "models_count": 0,
                 "models_list": [],
@@ -348,7 +451,7 @@ class AgentTestModelsIntegration(BaseAgent):
             
         except Exception as e:
             logger.error(f"❌ Erreur test Ollama: {e}")
-            self.test_results["ollama_status"] = {"error": str(e)}
+            instance.test_results["ollama_status"] = {"error": str(e)}
 
     async def _test_fallback_mechanisms(self):
         """Test mécanismes de fallback local/cloud"""
@@ -369,7 +472,7 @@ class AgentTestModelsIntegration(BaseAgent):
         for scenario in test_scenarios:
             try:
                 # Simulation de test fallback
-                self.test_results["fallback_tests"][scenario["agent"]] = {
+                instance.test_results["fallback_tests"][scenario["agent"]] = {
                     "task_type": scenario["task_type"],
                     "success": True,
                     "model_used": "simulated_fallback_model",
@@ -382,7 +485,7 @@ class AgentTestModelsIntegration(BaseAgent):
                 
             except Exception as e:
                 logger.error(f"❌ Erreur fallback {scenario['agent']}: {e}")
-                self.test_results["fallback_tests"][scenario["agent"]] = {"error": str(e)}
+                instance.test_results["fallback_tests"][scenario["agent"]] = {"error": str(e)}
 
     async def _benchmark_model_performance(self):
         """Benchmark performance des différents modèles"""
@@ -399,12 +502,12 @@ class AgentTestModelsIntegration(BaseAgent):
         ]
         
         for agent_id in test_agents:
-            self.test_results["performance_metrics"][agent_id] = {}
+            instance.test_results["performance_metrics"][agent_id] = {}
             
             for i, prompt in enumerate(benchmark_prompts):
                 try:
                     # Simulation de benchmark
-                    self.test_results["performance_metrics"][agent_id][f"test_{i+1}"] = {
+                    instance.test_results["performance_metrics"][agent_id][f"test_{i+1}"] = {
                         "prompt_length": len(prompt),
                         "response_length": 500,  # Simulé
                         "response_time": 2.0,    # Simulé
@@ -417,7 +520,7 @@ class AgentTestModelsIntegration(BaseAgent):
                     
                 except Exception as e:
                     logger.error(f"❌ Erreur benchmark {agent_id} test {i+1}: {e}")
-                    self.test_results["performance_metrics"][agent_id][f"test_{i+1}"] = {"error": str(e)}
+                    instance.test_results["performance_metrics"][agent_id][f"test_{i+1}"] = {"error": str(e)}
 
     def _generate_test_report(self, test_duration: float) -> Dict[str, Any]:
         """📊 Génère un rapport de test complet"""
@@ -480,8 +583,8 @@ class AgentTestModelsIntegration(BaseAgent):
             health_status = {
                 "agent_status": "healthy",
                 "timestamp": datetime.now().isoformat(),
-                "version": self.version,
-                "model_manager_available": self.model_manager is not None,
+                "version": instance.version,
+                "model_manager_available": instance.model_manager is not None,
                 "pattern_factory_available": PATTERN_FACTORY_AVAILABLE
             }
             
@@ -512,28 +615,28 @@ class AgentTestModelsIntegration(BaseAgent):
         timestamp = datetime.now()
         
         # Collecte des métriques de tests et modèles
-        metriques_base = await self._collecter_metriques_models_integration()
+        metriques_base = await instance._collecter_metriques_models_integration()
         
         if type_rapport == 'models_integration':
-            return await self._generer_rapport_models_integration(context, metriques_base, timestamp)
+            return await instance._generer_rapport_models_integration(context, metriques_base, timestamp)
         elif type_rapport == 'performance_models':
-            return await self._generer_rapport_performance_models(context, metriques_base, timestamp)
+            return await instance._generer_rapport_performance_models(context, metriques_base, timestamp)
         elif type_rapport == 'fallback_analysis':
-            return await self._generer_rapport_fallback_analysis(context, metriques_base, timestamp)
+            return await instance._generer_rapport_fallback_analysis(context, metriques_base, timestamp)
         elif type_rapport == 'ollama_validation':
-            return await self._generer_rapport_ollama_validation(context, metriques_base, timestamp)
+            return await instance._generer_rapport_ollama_validation(context, metriques_base, timestamp)
         else:
             # Rapport par défaut si type non reconnu
-            return await self._generer_rapport_models_integration(context, metriques_base, timestamp)
+            return await instance._generer_rapport_models_integration(context, metriques_base, timestamp)
 
     async def _collecter_metriques_models_integration(self) -> Dict[str, Any]:
         """Collecte les métriques d'intégration et validation des modèles IA"""
         try:
             # Analyse des résultats de tests existants
-            ollama_status = self.test_results.get("ollama_status", {})
-            model_configs = self.test_results.get("agent_model_configs", {})
-            fallback_tests = self.test_results.get("fallback_tests", {})
-            performance_metrics = self.test_results.get("performance_metrics", {})
+            ollama_status = instance.test_results.get("ollama_status", {})
+            model_configs = instance.test_results.get("agent_model_configs", {})
+            fallback_tests = instance.test_results.get("fallback_tests", {})
+            performance_metrics = instance.test_results.get("performance_metrics", {})
             
             # Calcul métriques agrégées
             total_agents_tested = len(model_configs)
@@ -605,7 +708,7 @@ class AgentTestModelsIntegration(BaseAgent):
         return {
             'type_rapport': 'integration_modeles_ia',
             'timestamp': timestamp.isoformat(),
-            'agent_id': self.agent_id,
+            'agent_id': instance.agent_id,
             'specialisation': 'test_validation_models',
             
             'resume_executif': {
@@ -647,7 +750,7 @@ class AgentTestModelsIntegration(BaseAgent):
             
             'metadonnees': {
                 'version_rapport': '1.0',
-                'agent_version': self.version,
+                'agent_version': instance.version,
                 'specialisation': 'test_models_integration',
                 'fiabilite_donnees': 'haute' if not metriques.get('metriques_partielles') else 'partielle'
             }
@@ -716,15 +819,15 @@ class AgentTestModelsIntegration(BaseAgent):
         """
         
         if type_rapport == 'models_integration':
-            return self._generer_markdown_models_integration(rapport_json)
+            return instance._generer_markdown_models_integration(rapport_json)
         elif type_rapport == 'performance_models':
-            return self._generer_markdown_performance_models(rapport_json)
+            return instance._generer_markdown_performance_models(rapport_json)
         elif type_rapport == 'fallback_analysis':
-            return self._generer_markdown_fallback_analysis(rapport_json)
+            return instance._generer_markdown_fallback_analysis(rapport_json)
         elif type_rapport == 'ollama_validation':
-            return self._generer_markdown_ollama_validation(rapport_json)
+            return instance._generer_markdown_ollama_validation(rapport_json)
         else:
-            return self._generer_markdown_models_integration(rapport_json)
+            return instance._generer_markdown_models_integration(rapport_json)
 
     def _generer_markdown_models_integration(self, rapport: Dict[str, Any]) -> str:
         """
@@ -917,6 +1020,203 @@ async def main():
     print(f"🛑 Arrêt: {shutdown_result}")
     
     print("\n✅ Test terminé avec succès!")
+
+    # ✅ MÉTHODES STANDARDISÉES DE RAPPORT
+
+    def _calculate_report_score(self, metrics: Dict[str, Any]) -> int:
+        """Calcule le score global du rapport basé sur les métriques."""
+        score = 0
+        issues_critiques = []
+        
+        # Logique de scoring spécifique à l'agent
+        # À adapter selon le type d'agent
+        
+        return score
+    
+    def _assess_conformity(self, score: int) -> str:
+        """Évalue la conformité basée sur le score."""
+        if score >= 90:
+            return "✅ CONFORME - OPTIMAL"
+        elif score >= 70:
+            return "✅ CONFORME - ACCEPTABLE"
+        else:
+            return "❌ NON CONFORME - CRITIQUE"
+    
+    def _get_quality_level(self, score: int) -> str:
+        """Détermine le niveau de qualité."""
+        if score >= 90:
+            return "OPTIMAL"
+        elif score >= 70:
+            return "ACCEPTABLE"
+        else:
+            return "CRITIQUE"
+    
+    def _generate_recommendations(self, metrics: Dict[str, Any], issues: List[str]) -> List[str]:
+        """Génère les recommandations basées sur l'analyse."""
+        recommendations = []
+        
+        # Logique de génération de recommandations
+        # À adapter selon le type d'agent
+        
+        return recommendations
+    
+    def _generate_standard_report(self, context: Dict, metrics: Dict, timestamp) -> Dict[str, Any]:
+        """Génère un rapport selon le format standard de l'agent 06."""
+        
+        score = self._calculate_report_score(metrics)
+        conformity = self._assess_conformity(score)
+        quality_level = self._get_quality_level(score)
+        
+        agent_filename = Path(__file__).name
+        
+        # Issues critiques (à personnaliser selon l'agent)
+        issues_critiques = []
+        
+        return {
+            'agent_id': getattr(self, 'agent_id', 'unknown'),
+            'agent_file_name': agent_filename,
+            'type_rapport': 'standard',  # À personnaliser
+            'timestamp': timestamp.isoformat(),
+            'specialisation': 'Agent Spécialisé',  # À personnaliser
+            'score_global': score,
+            'niveau_qualite': quality_level,
+            'conformite': conformity,
+            'signature_cryptographique': 'N/A (Fonctionnalité non implémentée pour cet agent)',
+            'issues_critiques_identifies': len(issues_critiques),
+            'architecture': {
+                'description': "Description de l'architecture de l'agent",
+                'statut_operationnel': f"Système {getattr(self, 'agent_id', 'unknown')} opérationnel.",
+                'confirmation_specialisation': f"{getattr(self, 'agent_id', 'unknown')} confirmé comme spécialiste.",
+                'objectifs_principaux': [
+                    "Objectif principal 1",
+                    "Objectif principal 2",
+                    "Objectif principal 3"
+                ],
+                'technologies_cles': ["Technologie 1", "Technologie 2"]
+            },
+            'recommandations': instance._generate_recommendations(metrics, issues_critiques),
+            'issues_critiques_details': issues_critiques if issues_critiques else [
+                "Aucun issue critique majeur détecté. Le système fonctionne dans les paramètres attendus."
+            ],
+            'details_techniques': {
+                'strategie': "Stratégie technique de l'agent",
+                'composants_actifs': [],
+                'metriques_collectees': metrics
+            },
+            'metriques_detaillees': {
+                'score_global': {'actuel': score, 'cible': 100},
+                'conformite_pourcentage': {'actuel': score, 'cible': 100, 'unite': '%'}
+            },
+            'impact_business': {
+                'criticite': 'MOYENNE' if score >= 70 else 'HAUTE',
+                'domaines_impactes': [],
+                'actions_requises': []
+            }
+        }
+
+
+    def _generate_markdown_report(self, rapport_json: Dict, context: Dict, timestamp) -> str:
+        """Génère un rapport Markdown selon le format standard."""
+        
+        agent_name = rapport_json.get('agent_id', 'Agent Inconnu')
+        type_rapport = rapport_json.get('type_rapport', 'standard')
+        score = rapport_json.get('score_global', 0)
+        quality = rapport_json.get('niveau_qualite', 'UNKNOWN')
+        conformity = rapport_json.get('conformite', 'NON ÉVALUÉ')
+        
+        markdown_content = f"""# 📊 RAPPORT STRATÉGIQUE : {agent_name.upper()}
+
+## 🎯 RÉSUMÉ EXÉCUTIF
+
+**Agent :** {agent_name}  
+**Type de Rapport :** {type_rapport}  
+**Date de Génération :** {timestamp.strftime('%Y-%m-%d %H:%M:%S')}  
+**Score Global :** {score}/100  
+**Niveau de Qualité :** {quality}  
+**Conformité :** {conformity}  
+
+## 📈 ANALYSE GLOBALE
+
+### Score de Performance
+- **Score Actuel :** {score}/100
+- **Objectif :** 100/100
+- **Statut :** {'🟢 ACCEPTABLE' if score >= 70 else '🔴 CRITIQUE'}
+
+### Architecture
+{rapport_json.get('architecture', {}).get('description', 'Description non disponible')}
+
+**Objectifs Principaux :**
+"""
+        
+        # Ajouter les objectifs
+        for obj in rapport_json.get('architecture', {}).get('objectifs_principaux', []):
+            markdown_content += f"- {obj}\n"
+        
+        markdown_content += f"""
+**Technologies Clés :**
+"""
+        
+        # Ajouter les technologies
+        for tech in rapport_json.get('architecture', {}).get('technologies_cles', []):
+            markdown_content += f"- {tech}\n"
+        
+        markdown_content += f"""
+
+## 🔍 RECOMMANDATIONS
+
+"""
+        
+        # Ajouter les recommandations
+        for reco in rapport_json.get('recommandations', []):
+            markdown_content += f"- {reco}\n"
+        
+        markdown_content += f"""
+
+## ⚠️ ISSUES CRITIQUES
+
+"""
+        
+        # Ajouter les issues critiques
+        for issue in rapport_json.get('issues_critiques_details', []):
+            markdown_content += f"- {issue}\n"
+        
+        markdown_content += f"""
+
+## 📊 MÉTRIQUES DÉTAILLÉES
+
+### Performance Globale
+- **Score Global :** {rapport_json.get('metriques_detaillees', {}).get('score_global', {}).get('actuel', 0)}/{rapport_json.get('metriques_detaillees', {}).get('score_global', {}).get('cible', 100)}
+- **Conformité :** {rapport_json.get('metriques_detaillees', {}).get('conformite_pourcentage', {}).get('actuel', 0)}%
+
+## 🎯 IMPACT BUSINESS
+
+**Criticité :** {rapport_json.get('impact_business', {}).get('criticite', 'NON ÉVALUÉ')}
+
+### Domaines Impactés
+"""
+        
+        # Ajouter les domaines impactés
+        for domaine in rapport_json.get('impact_business', {}).get('domaines_impactes', []):
+            markdown_content += f"- {domaine}\n"
+        
+        markdown_content += f"""
+
+### Actions Requises
+"""
+        
+        # Ajouter les actions requises
+        for action in rapport_json.get('impact_business', {}).get('actions_requises', []):
+            markdown_content += f"- {action}\n"
+        
+        markdown_content += f"""
+
+---
+*Rapport généré automatiquement par {agent_name} - NextGeneration System*  
+*Timestamp: {timestamp.isoformat()}*
+"""
+        
+        return markdown_content
+
 
 
 if __name__ == "__main__":

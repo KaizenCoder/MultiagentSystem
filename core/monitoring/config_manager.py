@@ -308,6 +308,45 @@ def set_global_config(config: MaintenanceConfig) -> None:
     global _global_config
     _global_config = config
 
+class ConfigManager:
+    """Gestionnaire de configuration centralisée"""
+    
+    def __init__(self, config_path: Optional[str] = None):
+        self.config_path = config_path
+        self._config = None
+        
+    def load_config(self) -> MaintenanceConfig:
+        """Charge la configuration depuis un fichier ou l'environnement"""
+        if self.config_path and os.path.exists(self.config_path):
+            return MaintenanceConfig.from_yaml(self.config_path)
+        else:
+            return load_config_from_env()
+    
+    def get_config(self) -> MaintenanceConfig:
+        """Retourne la configuration chargée"""
+        if self._config is None:
+            self._config = self.load_config()
+        return self._config
+    
+    def get_agent_config(self, agent_name: str) -> Optional[AgentConfig]:
+        """Retourne la configuration d'un agent spécifique"""
+        config = self.get_config()
+        return config.get_agent_config(agent_name)
+    
+    def get_global_settings(self) -> GlobalSettings:
+        """Retourne les paramètres globaux"""
+        return self.get_config().global_settings
+    
+    async def startup(self):
+        """Démarrage du gestionnaire de configuration"""
+        self._config = self.load_config()
+        print("🚀 ConfigManager démarré")
+    
+    async def shutdown(self):
+        """Arrêt du gestionnaire de configuration"""
+        print("🛑 ConfigManager arrêté")
+
+
 def load_config_from_env() -> MaintenanceConfig:
     """Charge la configuration depuis les variables d'environnement"""
     config_path = os.getenv('MAINTENANCE_CONFIG_PATH', 'config/maintenance_optimization_config.yaml')

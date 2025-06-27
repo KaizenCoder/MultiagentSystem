@@ -52,6 +52,27 @@ class PerformanceOptimizerAgent:
     A specialized agent for code performance optimization.
     """
     def __init__(self, agent_id="performance_optimizer_108", mode='autonome'):
+        
+        # ✅ MIGRATION SYSTÈME LOGGING UNIFIÉ
+        try:
+            from core.manager import LoggingManager
+            logging_manager = LoggingManager()
+            self.logger = logging_manager.get_logger(
+                config_name="general",
+                custom_config={
+                    "logger_name": f"nextgen.general.108_performance_optimizer.{self.agent_id if hasattr(self, 'agent_id') else self.id if hasattr(self, 'id') else 'unknown'}",
+                    "log_dir": "logs/general",
+                    "metadata": {
+                        "agent_type": "108_performance_optimizer",
+                        "agent_role": "general",
+                        "system": "nextgeneration"
+                    }
+                }
+            )
+        except ImportError:
+            # Fallback en cas d'indisponibilité du LoggingManager
+            self.logger = logging.getLogger(self.__class__.__name__)
+
         self.agent_id = agent_id
         self.agent_name = "Performance Optimizer"
         self.version = "1.0.0"

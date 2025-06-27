@@ -1,38 +1,46 @@
 # 📚 Index de la Documentation - Équipe d'Agents de Maintenance
 
-*Dernière mise à jour : 2025-06-21*
-*Statut : **Opérationnel et Stable***
+*Dernière mise à jour : 2025-06-28*
+*Statut : **Opérationnel - Architecture Adaptateur V4 avec Monitoring de Production***
 
 ---
 
 ## 🎯 Navigation
 
-Ce document sert de point d'entrée pour toute la documentation relative à l'**Équipe d'Agents de Maintenance de l'Agent Factory**.
+Ce document sert de point d'entrée pour la documentation de l'**Équipe d'Agents de Maintenance**, désormais basée sur l'architecture haute performance **Adaptateur V4**.
 
-### 📖 Documentation Principale
+### 📖 Documentation Clé
 
-- **[Guide d'Architecture](./AGENTS_MAINTENANCE_PATTERN_FACTORY.md)**
-  - **À lire pour :** Comprendre le fonctionnement interne de l'équipe, le rôle de chaque agent et le déroulement du workflow de maintenance à 6 étapes.
+- **[Suivi d'Implémentation - Phase 2](./agents/PHASE2_SUIVI_IMPLEMENTATION.md)**
+  - **À LIRE EN PRIORITÉ.** Détaille l'architecture, les optimisations (LibCST, cache) et la mise en place du monitoring.
 
-- **[Démarrage Rapide](./QUICK_START_AGENTS_MAINTENANCE.md)**
-  - **À lire pour :** Lancer une mission de maintenance en moins d'une minute avec une seule commande.
+- **[Démarrage Rapide - Système d'Adaptation V4](./QUICK_START_AGENTS_MAINTENANCE.md)**
+  - **À lire pour :** Lancer une mission d'adaptation et comprendre le workflow V4.
 
-- **[Guide de Troubleshooting](./TROUBLESHOOTING_AGENTS_MAINTENANCE.md)**
-  - **À lire pour :** Résoudre les problèmes courants rencontrés lors de la maintenance.
+- **[Guide d'Architecture (Legacy)](./AGENTS_MAINTENANCE_PATTERN_FACTORY.md)**
+  - **Historique :** Décrit l'ancien workflow de maintenance à 6 étapes. Utile pour comprendre l'évolution du projet.
 
-### 🚀 Fichiers Clés
+### 🚀 Fichiers et Systèmes Clés
 
 - **[Script de Lancement](../lancer_mission_maintenance_agents_factory.py)**
-  - C'est le point d'entrée unique pour exécuter l'ensemble du workflow de maintenance automatisé.
+  - Point d'entrée pour exécuter le workflow d'adaptation V4.
 
-- **[Dossier des Agents](../agents/)**
-  - Contient le code source du chef d'équipe et des 6 agents spécialisés qui composent l'équipe de maintenance.
+- **[Dossier des Agents](./agents/)**
+  - Contient le code source des agents, notamment le `Chef d'Équipe Coordinateur` et les nouvelles versions des agents spécialisés.
+
+- **[Monitoring - Dashboard Grafana](http://localhost:3000)**
+  - Interface de visualisation en temps réel des performances du système.
+
+- **[Monitoring - Configuration Prometheus](../2_Infrastructures_et_Technologies/monitoring/prometheus-production.yml)**
+  - Fichier de configuration pour la collecte des métriques.
+
+### 🗂️ Rapports et Journaux
 
 - **[Rapports de Maintenance](../20250620_transformation_equipe_maintenance/reports/)**
-  - Contient les rapports générés lors de la maintenance.
+  - Contient les rapports JSON générés après chaque mission.
 
-- **[Journal des Opérations](../20250620_transformation_equipe_maintenance/docs/JOURNAL_MAINTENANCE.md)**
-  - Contient le journal des opérations effectuées lors de la maintenance.
+- **[Journal des Opérations](../JOURNAL_EVOLUTION_EQUIPE.md)**
+  - Suivi chronologique des décisions et des évolutions de l'équipe.
 
 ---
-*Cet index a été simplifié pour refléter l'architecture actuelle, stable et fonctionnelle.* 
+*Cet index a été mis à jour pour refléter l'architecture Adaptateur V4, axée sur la performance, la parallélisation et le monitoring.* 

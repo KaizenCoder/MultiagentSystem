@@ -1,80 +1,73 @@
-# 🚀 Démarrage Rapide - Équipe d'Agents de Maintenance
+# �� Démarrage Rapide - Système d'Adaptation V4
 
-*Dernière mise à jour : 2025-06-21*
-*Statut : **Opérationnel et Stable***
+*Dernière mise à jour : 2025-06-28*
+*Statut : **Adaptateur V4 - Opérationnel avec Monitoring de Production***
 
 ---
 
 ## 🎯 Objectif
 
-Lancer un cycle de maintenance complet sur l'équipe d'agents de l'Agent Factory. Le processus est **entièrement automatisé** et s'exécute avec **une seule commande**.
+Lancer un cycle d'adaptation de code haute performance, incluant la correction automatique, les tests de performance et le monitoring en temps réel via l'**Adaptateur V4**.
 
-## ⚡ ÉTAPE 1 : Lancer la Mission
+## ⚡ ÉTAPE 1 : Lancer la Mission d'Adaptation
 
-Il n'y a qu'une seule étape. Ouvrez un terminal à la racine du projet et exécutez la commande suivante.
+Le processus reste simple à initier. Ouvrez un terminal à la racine du projet et exécutez la commande suivante pour démarrer l'orchestrateur.
 
 ```bash
-python lancer_mission_maintenance_agents_factory.py
+# Commande pour lancer le processus d'adaptation
+# (Ex: python orchestrator/main.py --task adapt-codebase)
+python lancer_mission_maintenance_agents_factory.py 
 ```
 
-### Ce qui se passe en coulisses
+### Ce qui se passe en coulisses (Architecture V4)
 
-L'exécution de ce script déclenche un workflow complet orchestré par l'agent **Chef d'Équipe Coordinateur** :
+L'exécution de ce script déclenche un workflow sophistiqué et performant :
 
-1.  **🤖 Analyse** : L'agent 01 scanne le répertoire `agents/` pour trouver tous les fichiers d'agents.
-2.  **🤔 Évaluation** : L'agent 02 évalue chaque script pour déterminer s'il nécessite une maintenance.
-3.  **✍️ Adaptation** : L'agent 03 corrige et refactorise le code de l'agent.
-4.  **🔬 Test** : L'agent 04 exécute le code modifié pour s'assurer de son bon fonctionnement.
-5.  **📚 Documentation** : L'agent 05 nettoie et documente le code final.
-6.  **✅ Validation** : L'agent 06 effectue une validation finale avant de sauvegarder les modifications.
+1.  **Orchestration Parallèle** : Le **Chef d'Équipe Coordinateur** lance et supervise plusieurs instances de l'**Agent Adaptateur V4** pour traiter les tâches en parallèle, maximisant le débit.
+2.  **Pipeline de Transformation Optimisé (LibCST)** : Chaque adaptateur utilise un pipeline de transformation de code basé sur LibCST, optimisé pour la performance et la précision.
+3.  **Cache Intelligent (LRU + Redis)** : Un cache multi-niveau (mémoire locale + Redis partagé) avec une stratégie LRU adaptative (`AdaptiveCacheOptimizer`) accélère drastiquement les transformations répétitives. L'objectif est un hit rate supérieur à 80%.
+4.  **Correction Intelligente** : Le moteur de correction gère des cas complexes (ex: indentation, imports) grâce à une classification fine des erreurs, permettant d'appliquer la bonne stratégie de réparation.
+5.  **Monitoring en Temps Réel** : Pendant toute l'opération, des métriques de performance, de cache et d'erreurs sont collectées et exportées en continu vers **Prometheus**.
 
 ---
 
-## 📊 ÉTAPE 2 : Consulter le Rapport
+## 📊 ÉTAPE 2 : Consulter le Rapport de Mission
 
-Une fois la mission terminée, un rapport détaillé au format JSON est généré à la racine du projet.
+Comme pour l'ancien système, un rapport détaillé est généré à la fin de la mission, indiquant le succès ou l'échec et les actions effectuées.
 
-### Résultat attendu en cas de succès
-
-Vous verrez ce message dans votre terminal :
-
-```
-✅ Mission de maintenance terminée avec succès!
-📄 Rapport détaillé : rapport_maintenance_SUCCESS_YYYYMMDD_HHMMSS.json
-```
-
-Le fichier `rapport_maintenance_SUCCESS_...json` contient un compte-rendu détaillé de toutes les actions effectuées par chaque agent sur chaque fichier.
-
-### En cas d'échec
-
-Si la mission échoue, le message sera :
-```
-❌ Mission de maintenance échouée.
-📄 Rapport d'erreur : rapport_maintenance_ECHEC_YYYYMMDD_HHMMSS.json
-🔍 Erreur : [Message d'erreur]
-```
-Le fichier de rapport d'échec vous donnera des indices sur la cause du problème.
+- **Succès :** `rapport_maintenance_SUCCESS_YYYYMMDD_HHMMSS.json`
+- **Échec :** `rapport_maintenance_ECHEC_YYYYMMDD_HHMMSS.json`
 
 ---
 
-## 🚨 Dépannage
+## 📈 ÉTAPE 3 : Consulter le Dashboard de Monitoring
 
-### ❌ Problème : `ModuleNotFoundError`
-Si vous rencontrez une erreur indiquant qu'un module est manquant.
+Pour une vue en temps réel de la santé et des performances du système, accédez au dashboard Grafana.
 
+- **URL :** `http://localhost:3000` (par défaut)
+- **Dashboard :** "Adaptateur V4 - Performance"
+
+#### Métriques clés à surveiller :
+- **Latence des requêtes (P95)** : Temps de traitement des tâches.
+- **Taux d'erreurs** : Pourcentage de tâches échouées.
+- **Hit Rate du Cache (%)** : Efficacité de la mise en cache.
+- **Utilisation Mémoire** : Consommation des ressources par les adaptateurs.
+
+---
+
+## 🚨 Dépannage (Système V4)
+
+### ❌ Problème : Le cache ne semble pas fonctionner (hit rate bas)
 **Solution :**
-Assurez-vous que toutes les dépendances sont installées. Il n'y a pas de `requirements.txt` global, vérifiez les imports dans les scripts pour les dépendances manquantes. Une dépendance qui a posé problème par le passé est `astor`.
-```bash
-pip install astor
-```
+1.  Vérifiez que le service **Redis** est démarré et accessible par l'application.
+2.  Inspectez les logs de `cache_optimizer.py` pour des messages d'erreur.
+3.  Assurez-vous que les patterns de code traités sont répétitifs. Le cache est moins efficace sur des tâches uniques.
 
-### ❌ Problème : Le script échoue avec une erreur `SyntaxError` ou autre
-Le système est conçu pour être robuste, mais des erreurs peuvent survenir.
-
+### ❌ Problème : Les métriques n'apparaissent pas dans Grafana
 **Solution :**
-1.  Consultez le rapport d'échec JSON pour identifier l'agent et le fichier qui ont posé problème.
-2.  Examinez les logs dans le terminal pour obtenir une trace complète de l'erreur (`traceback`).
-3.  Si le problème persiste, il peut s'agir d'un cas non prévu par l'équipe de maintenance.
+1.  Vérifiez que **Prometheus** est en cours d'exécution et qu'il scrape bien la cible de l'application (configuré dans `prometheus.yml`).
+2.  Examinez les logs de l'application pour des erreurs liées à `MetricsExporter`.
+3.  Assurez-vous qu'aucun pare-feu ne bloque la communication entre l'application et Prometheus.
 
 ---
 *Ce guide a été simplifié pour refléter le workflow de maintenance actuel, stable et unifié.* 

@@ -196,6 +196,14 @@ class CircuitBreaker:
             "time_until_retry": self._time_until_retry() if self.state == CircuitState.OPEN else 0
         }
     
+    def record_failure(self, exception: Exception = None):
+        """Enregistre un échec manuellement"""
+        self._handle_failure(exception or Exception("Manual failure"))
+    
+    def record_success(self):
+        """Enregistre un succès manuellement"""
+        self._handle_success()
+    
     def get_metrics(self) -> dict:
         """Retourne les métriques détaillées"""
         state = self.get_state()
@@ -264,6 +272,30 @@ class CircuitBreakerManager:
     def __init__(self):
         self.circuit_breakers: dict[str, CircuitBreaker] = {}
         self.logger = logging.getLogger(f"{__name__}.CircuitBreakerManager")
+        self.is_running = False
+    
+    async def startup(self):
+        """Démarrage du gestionnaire de circuit breakers"""
+        self.is_running = True
+        self.logger.info("🚀 CircuitBreakerManager démarré")
+    
+    async def shutdown(self):
+        """Arrêt du gestionnaire de circuit breakers"""
+        self.is_running = False
+        self.circuit_breakers.clear()
+        self.logger.info("🛑 CircuitBreakerManager arrêté")
+    
+    async def get_circuit_breaker(self, name: str, **kwargs) -> CircuitBreaker:
+        """Récupère ou crée un circuit breaker"""
+        return self.get_or_create(name, **kwargs)
+    
+    async def get_stats(self) -> dict:
+        """Statistiques des circuit breakers"""
+        return {
+            "total_breakers": len(self.circuit_breakers),
+            "breakers": self.get_all_states(),
+            "health_summary": self.get_health_summary()
+        }
     
     def get_or_create(self, name: str, **kwargs) -> CircuitBreaker:
         """Récupère ou crée un circuit breaker nommé"""

@@ -1,0 +1,40 @@
+{
+    "benchmark_settings": {
+        "concurrent_agents": 3,
+        "iterations_per_test": 100,
+        "warmup_iterations": 10,
+        "test_timeout_seconds": 300
+    },
+    "performance_targets": {
+        "execution_time_reduction": 40,
+        "success_rate_increase": 15,
+        "memory_usage_reduction": 25,
+        "cache_hit_rate_minimum": 80
+    },
+    "test_cases": [
+        {
+            "name": "indentation_simple",
+            "description": "Correction d'indentation simple",
+            "code": "def test():\nprint('test')\nreturn True",
+            "expected_fixes": 1
+        },
+        {
+            "name": "indentation_complexe",
+            "description": "Correction d'indentation avec imbrication",
+            "code": "def test():\n  if True:\n print('test')\n  else:\n      print('else')\n    return True",
+            "expected_fixes": 2
+        },
+        {
+            "name": "mixed_indentation",
+            "description": "Correction d'indentation mixte (espaces et tabs)",
+            "code": "def test():\n\tif True:\n    print('test')\n\t\tprint('nested')\n\treturn True",
+            "expected_fixes": 3
+        }
+    ],
+    "monitoring": {
+        "metrics_collection_interval": 1,
+        "memory_check_interval": 5,
+        "profiling_enabled": true,
+        "log_level": "INFO"
+    }
+} 

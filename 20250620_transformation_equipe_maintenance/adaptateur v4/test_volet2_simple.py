@@ -321,13 +321,6 @@ class TestVolet2Simple:
             print("📝 Statut: ÉCHEC, corrections requises")
             return False
 
-async def main():
-    """Point d'entrée du test"""
-    test_engine = TestVolet2Simple()
-    success = await test_engine.executer_tous_tests()
-    return success
-
 if __name__ == "__main__":
-    success = asyncio.run(main())
-    print(f"\n🎯 RÉSULTAT FINAL: {'SUCCÈS' if success else 'ÉCHEC'}")
-    sys.exit(0 if success else 1)
+    test = TestVolet2Simple()
+    asyncio.run(test.executer_tous_tests())

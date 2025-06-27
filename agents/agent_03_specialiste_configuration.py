@@ -45,12 +45,12 @@ try:
     from core.config_models_agent.config_models_maintenance import MaintenanceTeamConfig, AgentConfig, CONFIG_FILE_PATH
     PATTERN_FACTORY_AVAILABLE = True
 except ImportError as e:
-    print(f"⚠️ Erreur d'importation critique: {e}")
+    print("⚠️ Erreur d'importation critique: {e}".format())
     print("Veuillez vérifier que le PYTHONPATH est correctement configuré et que `core` est accessible.")
     # Fallback pour compatibilité
     class Agent:
         def __init__(self, agent_id: str, version: str, description: str, agent_type: str, status: str, **config):
-            self.agent_id = agent_id or f"agent_fallback_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            self.agent_id = agent_id or "agent_fallback_{datetime.now().strftime('%Y%m%d_%H%M%S')}".format()
             self.agent_type = agent_type
             self.version = version
             self.description = description
@@ -64,7 +64,7 @@ except ImportError as e:
                 log_func = getattr(self.logger, level, self.logger.info)
                 log_func(message)
             else:
-                print(f"[{level.upper()}] {message}")
+                print("[{level.upper()}] {message}".format())
                 
         async def startup(self): pass
         async def shutdown(self): pass
@@ -97,6 +97,26 @@ class Agent03SpecialisteConfiguration(Agent):
         # On passe l'argument explicite et le reste des kwargs à la classe de base.
         super().__init__(agent_type=agent_type, **kwargs)
         
+        # ✅ MIGRATION SYSTÈME LOGGING UNIFIÉ
+        try:
+            from core.manager import LoggingManager
+            logging_manager = LoggingManager()
+            self.logger = logging_manager.get_logger(
+                config_name="configuration",
+                custom_config={
+                    "logger_name": "nextgen.configuration.specialiste.{self.agent_id}".format(),
+                    "log_dir": "logs/configuration",
+                    "metadata": {
+                        "agent_type": "03_specialiste_configuration",
+                        "agent_role": "configuration",
+                        "system": "nextgeneration"
+                    }
+                }
+            )
+        except ImportError:
+            # Fallback en cas d'indisponibilité du LoggingManager
+            self.logger = logging.getLogger(self.__class__.__name__)
+        
         # Attributs spécifiques à cet agent
         self.agent_name = "Spécialiste Configuration"
         self.workspace_root = Path(__file__).resolve().parents[1]
@@ -115,9 +135,9 @@ class Agent03SpecialisteConfiguration(Agent):
         self.mission_status = "INITIALISATION"
         self.start_time = datetime.now()
             
-        self.log(f"[TOOL] Agent {self.agent_id} - {self.agent_name} initialisé")
-        self.log(f"[FOLDER] Workspace: {self.workspace_root}")
-        self.log(f"[TARGET] Mission: Génération du fichier de configuration JSON 'maintenance_config.json'")
+        self.log("[TOOL] Agent {self.agent_id} - {self.agent_name} initialisé".format())
+        self.log("[FOLDER] Workspace: {self.workspace_root}".format())
+        self.log("[TARGET] Mission: Génération du fichier de configuration JSON 'maintenance_config.json'")
     
     def log(self, message: str, level: str = "info"):
         """Méthode de logging pour l'agent."""
@@ -126,7 +146,7 @@ class Agent03SpecialisteConfiguration(Agent):
             log_func(message)
         else:
             # Fallback si le logger n'est pas initialisé
-            print(f"[{level.upper()}] ({self.agent_id}) {message}")
+            print("[level.upper()] (self.agent_id) message")
 
     def validate_dependencies(self) -> bool:
         """Valider que les dépendances sont satisfaites"""
@@ -134,14 +154,14 @@ class Agent03SpecialisteConfiguration(Agent):
             
         # Vérifier que le workspace existe
         if not self.workspace_root.exists():
-            self.log(f"[CROSS] Workspace non trouvé: {self.workspace_root}", level="error")
+            self.log("[CROSS] Workspace non trouvé: {self.workspace_root}".format(), level="error")
             return False
             
         # Vérifier structure de base (adapté)
         required_dirs = ["agents", "docs", "reports", "config", "core", "code_expert"]
         for dir_name in required_dirs:
             if not (self.workspace_root / dir_name).exists():
-                self.log(f"[CROSS] Répertoire {dir_name} manquant dans {self.workspace_root}", level="error")
+                self.log("[CROSS] Répertoire {dir_name} manquant dans {self.workspace_root}".format(), level="error")
                 return False
             
         self.log("[CHECK] Toutes les dépendances satisfaites")
@@ -202,7 +222,7 @@ class Agent03SpecialisteConfiguration(Agent):
             
             config_json_str = full_config.model_dump_json(indent=4)
 
-            self.log(f"Configuration générée. Sauvegarde dans {self.config_file_path}...")
+            self.log("Configuration générée. Sauvegarde dans {self.config_file_path}...".format())
             
             self.config_file_path.parent.mkdir(parents=True, exist_ok=True)
             
@@ -214,7 +234,7 @@ class Agent03SpecialisteConfiguration(Agent):
             return config_json_str
 
         except Exception as e:
-            self.log(f"❌ Erreur critique lors de la génération du JSON de configuration: {e}", level="critical")
+            self.log("❌ Erreur critique lors de la génération du JSON de configuration: {e}".format(), level="critical")
             return None
 
     def create_configuration_tests(self) -> str:
@@ -223,7 +243,7 @@ class Agent03SpecialisteConfiguration(Agent):
         """
         self.log("🧪 Génération des tests pour le fichier de configuration JSON...")
 
-        test_code = f'''"""
+        test_code = '''"""
 Tests de validation pour la configuration de maintenance (maintenance_config.json)
 Généré par Agent 03 - Spécialiste Configuration
 """
@@ -245,10 +265,207 @@ from core.config_models_agent.config_models_maintenance import MaintenanceTeamCo
 from pydantic import ValidationError
 
 CONFIG_FILE = CONFIG_FILE_PATH
+    # ✅ MÉTHODES STANDARDISÉES DE RAPPORT
+
+    def _calculate_report_score(self, metrics: Dict[str, Any]) -> int:
+        """Calcule le score global du rapport basé sur les métriques."""
+        score = 0
+        issues_critiques = []
+        
+        # Logique de scoring spécifique à l'agent
+        # À adapter selon le type d'agent
+        
+        return score
+    
+    def _assess_conformity(self, score: int) -> str:
+        """Évalue la conformité basée sur le score."""
+        if score >= 90:
+            return "✅ CONFORME - OPTIMAL"
+        elif score >= 70:
+            return "✅ CONFORME - ACCEPTABLE"
+        else:
+            return "❌ NON CONFORME - CRITIQUE"
+    
+    def _get_quality_level(self, score: int) -> str:
+        """Détermine le niveau de qualité."""
+        if score >= 90:
+            return "OPTIMAL"
+        elif score >= 70:
+            return "ACCEPTABLE"
+        else:
+            return "CRITIQUE"
+    
+    def _generate_recommendations(self, metrics: Dict[str, Any], issues: List[str]) -> List[str]:
+        """Génère les recommandations basées sur l'analyse."""
+        recommendations = []
+        
+        # Logique de génération de recommandations
+        # À adapter selon le type d'agent
+        
+        return recommendations
+    
+    def _generate_standard_report(self, context: Dict, metrics: Dict, timestamp) -> Dict[str, Any]:
+        """Génère un rapport selon le format standard de l'agent 06."""
+        
+        score = self._calculate_report_score(metrics)
+        conformity = self._assess_conformity(score)
+        quality_level = self._get_quality_level(score)
+        
+        agent_filename = Path(__file__).name
+        
+        # Issues critiques (à personnaliser selon l'agent)
+        issues_critiques = []
+        
+        return {
+            'agent_id': getattr(self, 'agent_id', 'unknown'),
+            'agent_file_name': agent_filename,
+            'type_rapport': 'standard',  # À personnaliser
+            'timestamp': timestamp.isoformat(),
+            'specialisation': 'Agent Spécialisé',  # À personnaliser
+            'score_global': score,
+            'niveau_qualite': quality_level,
+            'conformite': conformity,
+            'signature_cryptographique': 'N/A (Fonctionnalité non implémentée pour cet agent)',
+            'issues_critiques_identifies': len(issues_critiques),
+            'architecture': {
+                'description': "Description de l'architecture de l'agent",
+                'statut_operationnel': "Système {getattr(self, 'agent_id', 'unknown')} opérationnel.".format(),
+                'confirmation_specialisation': "{getattr(self, 'agent_id', 'unknown')} confirmé comme spécialiste.".format(),
+                'objectifs_principaux': [
+                    "Objectif principal 1",
+                    "Objectif principal 2",
+                    "Objectif principal 3"
+                ],
+                'technologies_cles': ["Technologie 1", "Technologie 2"]
+            },
+            'recommandations': self._generate_recommendations(metrics, issues_critiques),
+            'issues_critiques_details': issues_critiques if issues_critiques else [
+                "Aucun issue critique majeur détecté. Le système fonctionne dans les paramètres attendus."
+            ],
+            'details_techniques': {
+                'strategie': "Stratégie technique de l'agent",
+                'composants_actifs': [],
+                'metriques_collectees': metrics
+            },
+            'metriques_detaillees': {
+                'score_global': {'actuel': score, 'cible': 100},
+                'conformite_pourcentage': {'actuel': score, 'cible': 100, 'unite': '%'}
+            },
+            'impact_business': {
+                'criticite': 'MOYENNE' if score >= 70 else 'HAUTE',
+                'domaines_impactes': [],
+                'actions_requises': []
+            }
+        }
+
+
+    def _generate_markdown_report(self, rapport_json: Dict, context: Dict, timestamp) -> str:
+        """Génère un rapport Markdown selon le format standard."""
+        
+        agent_name = rapport_json.get('agent_id', 'Agent Inconnu')
+        type_rapport = rapport_json.get('type_rapport', 'standard')
+        score = rapport_json.get('score_global', 0)
+        quality = rapport_json.get('niveau_qualite', 'UNKNOWN')
+        conformity = rapport_json.get('conformite', 'NON ÉVALUÉ')
+        
+        markdown_content = """# 📊 RAPPORT STRATÉGIQUE : agent_name.upper()
+
+## 🎯 RÉSUMÉ EXÉCUTIF
+
+**Agent :** {agent_name}  
+**Type de Rapport :** {type_rapport}  
+**Date de Génération :** {timestamp.strftime('%Y-%m-%d %H:%M:%S')}  
+**Score Global :** {score}/100  
+**Niveau de Qualité :** {quality}  
+**Conformité :** {conformity}  
+
+## 📈 ANALYSE GLOBALE
+
+### Score de Performance
+- **Score Actuel :** {score}/100
+- **Objectif :** 100/100
+- **Statut :** {'🟢 ACCEPTABLE' if score >= 70 else '🔴 CRITIQUE'}
+
+### Architecture
+{rapport_json.get('architecture', {}).get('description', 'Description non disponible')}
+
+**Objectifs Principaux :**
+"""
+        
+        # Ajouter les objectifs
+        for obj in rapport_json.get('architecture', {}).get('objectifs_principaux', []):
+            markdown_content += "- {obj}\n".format()
+        
+        markdown_content += """
+**Technologies Clés :**
+"""
+        
+        # Ajouter les technologies
+        for tech in rapport_json.get('architecture', {}).get('technologies_cles', []):
+            markdown_content += "- {tech}\n".format()
+        
+        markdown_content += """
+
+## 🔍 RECOMMANDATIONS
+
+"""
+        
+        # Ajouter les recommandations
+        for reco in rapport_json.get('recommandations', []):
+            markdown_content += "- {reco}\n".format()
+        
+        markdown_content += """
+
+## ⚠️ ISSUES CRITIQUES
+
+"""
+        
+        # Ajouter les issues critiques
+        for issue in rapport_json.get('issues_critiques_details', []):
+            markdown_content += "- {issue}\n".format()
+        
+        markdown_content += """
+
+## 📊 MÉTRIQUES DÉTAILLÉES
+
+### Performance Globale
+- **Score Global :** {rapport_json.get('metriques_detaillees', {}).get('score_global', {}).get('actuel', 0)}/{rapport_json.get('metriques_detaillees', {}).get('score_global', {}).get('cible', 100)}
+- **Conformité :** {rapport_json.get('metriques_detaillees', {}).get('conformite_pourcentage', {}).get('actuel', 0)}%
+
+## 🎯 IMPACT BUSINESS
+
+**Criticité :** {rapport_json.get('impact_business', {}).get('criticite', 'NON ÉVALUÉ')}
+
+### Domaines Impactés
+"""
+        
+        # Ajouter les domaines impactés
+        for domaine in rapport_json.get('impact_business', {}).get('domaines_impactes', []):
+            markdown_content += "- {domaine}\n".format()
+        
+        markdown_content += """
+
+### Actions Requises
+"""
+        
+        # Ajouter les actions requises
+        for action in rapport_json.get('impact_business', {}).get('actions_requises', []):
+            markdown_content += "- {action}\n".format()
+        
+        markdown_content += """
+
+---
+*Rapport généré automatiquement par {agent_name} - NextGeneration System*  
+*Timestamp: {timestamp.isoformat()}*
+"""
+        
+        return markdown_content
+
+
 
 def test_config_file_exists():
     """Vérifie que le fichier de configuration JSON existe."""
-    assert CONFIG_FILE.exists(), f"Le fichier de configuration {{CONFIG_FILE}} est manquant."
+    assert CONFIG_FILE.exists(), "Le fichier de configuration {{CONFIG_FILE}} est manquant.".format()
 
 def test_config_is_valid_json():
     """Vérifie que le fichier est un JSON valide."""
@@ -263,7 +480,7 @@ def test_config_conforms_to_schema():
     try:
         MaintenanceTeamConfig()
     except ValidationError as e:
-        pytest.fail(f"La configuration JSON ne correspond pas au schéma Pydantic: \\n{{e}}")
+        pytest.fail("La configuration JSON ne correspond pas au schéma Pydantic: \\n{{e}}".format())
     except FileNotFoundError:
         pytest.fail("L'instanciation de MaintenanceTeamConfig n'a pas trouvé le fichier.")
 
@@ -271,8 +488,8 @@ def test_all_agents_have_required_fields():
     """Vérifie que chaque agent dans la configuration a les champs requis."""
     config = MaintenanceTeamConfig()
     for role, agent_conf in config.agents.items():
-        assert hasattr(agent_conf, 'nom_agent') and agent_conf.nom_agent, f"L'agent '{{role}}' n'a pas de 'nom_agent'."
-        assert hasattr(agent_conf, 'classe_agent') and agent_conf.classe_agent, f"L'agent '{{role}}' n'a pas de 'classe_agent'."
+        assert hasattr(agent_conf, 'nom_agent') and agent_conf.nom_agent, "L'agent '{{role}}' n'a pas de 'nom_agent'.".format()
+        assert hasattr(agent_conf, 'classe_agent') and agent_conf.classe_agent, "L'agent '{{role}}' n'a pas de 'classe_agent'.".format()
 '''
         self.log("✅ Script de test généré.")
         return test_code
@@ -281,7 +498,7 @@ def test_all_agents_have_required_fields():
         """Crée un guide d'intégration Markdown pour la nouvelle configuration."""
         self.log("📖 Génération du guide d'intégration...")
 
-        guide_content = f'''
+        guide_content = '''
 # Guide d'Intégration de la Configuration de Maintenance
 
 Document généré par l'Agent 03 - Spécialiste Configuration le {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}.
@@ -307,11 +524,11 @@ try:
     config = get_maintenance_config()
     analyseur_config = config.agents.get("analyseur")
     if analyseur_config:
-        print(f"Classe de l'analyseur : {{analyseur_config.classe_agent}}")
+        print("Classe de l'analyseur : {{analyseur_config.classe_agent}}".format())
 except FileNotFoundError as e:
-    print(f"ERREUR : Le fichier de configuration est manquant. {{e}}")
+    print("ERREUR : Le fichier de configuration est manquant. {{e}}".format())
 except ValidationError as e:
-    print(f"ERREUR : Le fichier de configuration est invalide. {{e}}")
+    print("ERREUR : Le fichier de configuration est invalide. {{e}}".format())
 ```
 
 ## 3. Mise à jour de la Configuration
@@ -328,7 +545,7 @@ Pour modifier la composition de l'équipe, ré-exécutez la mission de l'Agent 0
         self.log("📊 Génération du rapport de mission final...")
         duration = (datetime.now() - self.start_time).total_seconds()
         
-        report = f"""
+        report = """
 # RAPPORT DE MISSION - AGENT 03 : SPÉCIALISTE CONFIGURATION
 - **Statut Final** : {self.mission_status}
 - **Durée** : {duration:.2f} secondes
@@ -348,7 +565,7 @@ Pour modifier la composition de l'équipe, ré-exécutez la mission de l'Agent 0
 
     def execute_mission(self) -> bool:
         """Exécute la mission complète de l'agent."""
-        self.log(f"🚀 Démarrage de la mission pour l'agent {self.agent_name}")
+        self.log("🚀 Démarrage de la mission pour l'agent {self.agent_name}".format())
         self.mission_status = "EN_COURS"
 
         if not self.validate_dependencies():
@@ -368,39 +585,39 @@ Pour modifier la composition de l'équipe, ré-exécutez la mission de l'Agent 0
             test_file_path.parent.mkdir(exist_ok=True, parents=True)
             with open(test_file_path, "w", encoding="utf-8") as f:
                 f.write(test_script_content)
-            self.log(f"✅ Script de test sauvegardé dans : {test_file_path}")
+            self.log("✅ Script de test sauvegardé dans : {test_file_path}".format())
 
             guide_path = self.workspace_root / "docs" / "maintenance_config_guide.md"
             guide_path.parent.mkdir(exist_ok=True, parents=True)
             with open(guide_path, "w", encoding="utf-8") as f:
                 f.write(integration_guide_content)
-            self.log(f"✅ Guide d'intégration sauvegardé dans : {guide_path}")
+            self.log("✅ Guide d'intégration sauvegardé dans : {guide_path}".format())
 
         except IOError as e:
-            self.log(f"❌ Erreur lors de la sauvegarde des artefacts : {e}", level="critical")
+            self.log("❌ Erreur lors de la sauvegarde des artefacts : {e}".format(), level="critical")
             self.mission_status = "ÉCHEC_SAUVEGARDE"
             return False
 
         report_content = self.generate_agent_03_report()
-        report_path = self.reports_dir / f"rapport_specialiste_config_{self.start_time.strftime('%Y%m%d_%H%M%S')}.md"
+        report_path = self.reports_dir / "rapport_specialiste_config_{self.start_time.strftime('%Y%m%d_%H%M%S')}.md".format()
         try:
             report_path.parent.mkdir(exist_ok=True, parents=True)
             with open(report_path, "w", encoding="utf-8") as f:
                 f.write(report_content)
-            self.log(f"📊 Rapport de mission finalisé et sauvegardé dans {report_path}")
+            self.log("📊 Rapport de mission finalisé et sauvegardé dans {report_path}".format())
         except IOError as e:
-            self.log(f"Impossible de sauvegarder le rapport final : {e}", level="error")
+            self.log("Impossible de sauvegarder le rapport final : {e}".format(), level="error")
 
         self.mission_status = "SUCCÈS"
         self.log("✅ Mission de configuration terminée avec succès !")
         return True
 
     async def startup(self):
-        self.log(f"Agent {self.agent_name} - DÉMARRAGE.")
+        self.log("Agent {self.agent_name} - DÉMARRAGE.".format())
         pass
 
     async def shutdown(self):
-        self.log(f"Agent {self.agent_name} - ARRÊT.")
+        self.log("Agent {self.agent_name} - ARRÊT.".format())
         pass
 
     async def health_check(self) -> Dict[str, Any]:
@@ -410,7 +627,7 @@ Pour modifier la composition de l'équipe, ré-exécutez la mission de l'Agent 0
 
     async def run(self):
         """Boucle d'exécution principale de l'agent."""
-        self.log(f"[START] Agent {self.agent_id} DÉMARRAGE de la boucle d'exécution.")
+        self.log("[START] Agent {self.agent_id} DÉMARRAGE de la boucle d'exécution.".format())
         await self.startup()
         try:
             # Simuler une exécution continue ou attendre des tâches
@@ -420,10 +637,10 @@ Pour modifier la composition de l'équipe, ré-exécutez la mission de l'Agent 0
                 # Pour l'instant, une simple attente.
                 await asyncio.sleep(1) # Attendre 1 seconde pour éviter une boucle serrée
         except asyncio.CancelledError:
-            self.log(f"[STOP] Agent {self.agent_id} boucle d'exécution annulée.")
+            self.log("[STOP] Agent {self.agent_id} boucle d'exécution annulée.".format())
         finally:
             await self.shutdown()
-        self.log(f"[END] Agent {self.agent_id} ARRÊT de la boucle d'exécution.")
+        self.log("[END] Agent {self.agent_id} ARRÊT de la boucle d'exécution.".format())
 
     # === MISSION IA 2: GÉNÉRATION DE RAPPORTS STRATÉGIQUES ===
     
@@ -438,7 +655,7 @@ Pour modifier la composition de l'équipe, ré-exécutez la mission de l'Agent 0
         Returns:
             Rapport stratégique JSON avec métriques et recommandations
         """
-        self.log(f"Génération rapport stratégique: {type_rapport}")
+        self.log("Génération rapport stratégique: {type_rapport}".format())
         
         # Collecte des métriques de configuration
         metriques_base = await self._collecter_metriques_configuration()
@@ -496,7 +713,7 @@ Pour modifier la composition de l'équipe, ré-exécutez la mission de l'Agent 0
             }
             
         except Exception as e:
-            self.log(f"Erreur collecte métriques configuration: {e}", level="warning")
+            self.log("Erreur collecte métriques configuration: {e}".format(), level="warning")
             return {'erreur': str(e), 'metriques_partielles': True}
 
     async def _generer_rapport_configuration(self, context: Dict, metriques: Dict, timestamp: datetime) -> Dict[str, Any]:
@@ -530,10 +747,10 @@ Pour modifier la composition de l'équipe, ré-exécutez la mission de l'Agent 0
                 'statut_general': statut
             },
             'recommandations_configuration': [
-                f"🔧 CONFIG: {config_files.get('total_configs', 0)} fichiers configuration détectés - gestion centralisée",
-                f"🛡️ SÉCURITÉ: Validation Pydantic stricte {'activée' if config_health.get('validation_stricte') else 'à activer'}",
-                f"⚡ PERFORMANCE: Thread-safety {'confirmé' if config_health.get('thread_safety') else 'à implémenter'}",
-                f"🔄 MAINTENANCE: Hot-reload {'supporté' if config_health.get('hot_reload_support') else 'à développer'}"
+                "🔧 CONFIG: {config_files.get('total_configs', 0)} fichiers configuration détectés - gestion centralisée".format(),
+                "🛡️ SÉCURITÉ: Validation Pydantic stricte {'activée' if config_health.get('validation_stricte') else 'à activer'}".format(),
+                "⚡ PERFORMANCE: Thread-safety {'confirmé' if config_health.get('thread_safety') else 'à implémenter'}".format(),
+                "🔄 MAINTENANCE: Hot-reload {'supporté' if config_health.get('hot_reload_support') else 'à développer'}".format()
             ],
             'details_techniques_config': {
                 'pattern_factory_compliance': config_health.get('pattern_factory_compliance', False),
@@ -567,9 +784,9 @@ Pour modifier la composition de l'équipe, ré-exécutez la mission de l'Agent 0
                 'python_paths_configures': len(env_metrics.get('python_path', []))
             },
             'recommandations_environnement': [
-                f"🌍 ENV: Environnement {env_metrics.get('current_env', 'development')} configuré",
-                f"📁 PATHS: {len(env_metrics.get('python_path', []))} chemins Python configurés",
-                f"🔧 VARS: {env_metrics.get('environment_vars', 0)} variables NextGen détectées"
+                "🌍 ENV: Environnement {env_metrics.get('current_env', 'development')} configuré".format(),
+                "📁 PATHS: {len(env_metrics.get('python_path', []))} chemins Python configurés".format(),
+                "🔧 VARS: {env_metrics.get('environment_vars', 0)} variables NextGen détectées".format()
             ],
             'metadonnees': {
                 'specialisation': 'environnement_management',
@@ -594,9 +811,9 @@ Pour modifier la composition de l'équipe, ré-exécutez la mission de l'Agent 0
                 'pattern_factory_secure': config_health.get('pattern_factory_compliance', False)
             },
             'recommandations_securite': [
-                f"🛡️ VALIDATION: Pydantic strict {'✅ activé' if config_health.get('validation_stricte') else '❌ à activer'}",
-                f"🔒 THREAD: Safety {'✅ confirmé' if config_health.get('thread_safety') else '❌ à implémenter'}",
-                f"🏗️ PATTERN: Factory security {'✅ compliant' if config_health.get('pattern_factory_compliance') else '❌ à corriger'}"
+                "🛡️ VALIDATION: Pydantic strict {'✅ activé' if config_health.get('validation_stricte') else '❌ à activer'}".format(),
+                "🔒 THREAD: Safety {'✅ confirmé' if config_health.get('thread_safety') else '❌ à implémenter'}".format(),
+                "🏗️ PATTERN: Factory security {'✅ compliant' if config_health.get('pattern_factory_compliance') else '❌ à corriger'}".format()
             ],
             'metadonnees': {
                 'specialisation': 'configuration_security',
@@ -622,9 +839,9 @@ Pour modifier la composition de l'équipe, ré-exécutez la mission de l'Agent 0
                 'nombre_configs': config_files.get('total_configs', 0)
             },
             'recommandations_performance': [
-                f"🔄 HOT-RELOAD: {'✅ supporté' if config_health.get('hot_reload_support') else '❌ à implémenter'}",
-                f"📊 TAILLE: {config_files.get('total_size', 0)} bytes de configurations",
-                f"⚡ OPTIMISATION: {config_files.get('total_configs', 0)} fichiers config centralisés"
+                "🔄 HOT-RELOAD: {'✅ supporté' if config_health.get('hot_reload_support') else '❌ à implémenter'}".format(),
+                "📊 TAILLE: {config_files.get('total_size', 0)} bytes de configurations".format(),
+                "⚡ OPTIMISATION: {config_files.get('total_configs', 0)} fichiers config centralisés".format()
             ],
             'metadonnees': {
                 'specialisation': 'configuration_performance',
@@ -659,7 +876,7 @@ Pour modifier la composition de l'équipe, ré-exécutez la mission de l'Agent 0
         statut = metriques.get('statut_general', 'UNKNOWN')
         conformite = "✅ CONFORME" if score >= 80 else "❌ NON CONFORME"
         
-        md_content = f"""# 🔍 **RAPPORT QUALITÉ CONFIGURATION : agent_03_specialiste_configuration.py**
+        md_content = """# 🔍 **RAPPORT QUALITÉ CONFIGURATION : agent_03_specialiste_configuration.py**
 
 **Date :** {timestamp.strftime('%Y-%m-%d %H:%M:%S')}  
 **Module :** agent_03_specialiste_configuration.py  
@@ -678,9 +895,9 @@ Pour modifier la composition de l'équipe, ré-exécutez la mission de l'Agent 0
 """
         
         for rec in recommandations:
-            md_content += f"- {rec}\n"
+            md_content += "- {rec}\n".format()
         
-        md_content += f"""
+        md_content += """
 
 ## 🚨 Issues Critiques
 
@@ -713,7 +930,7 @@ Aucun issue critique détecté - Configuration système excellente.
         
         metriques = rapport.get('metriques_environnement', {})
         
-        md_content = f"""# 🌍 **RAPPORT ENVIRONNEMENT : agent_03_specialiste_configuration.py**
+        md_content = """# 🌍 **RAPPORT ENVIRONNEMENT : agent_03_specialiste_configuration.py**
 
 **Date :** {timestamp.strftime('%Y-%m-%d %H:%M:%S')}  
 **Spécialisation :** Gestion Environnement  
@@ -736,7 +953,7 @@ Aucun issue critique détecté - Configuration système excellente.
         
         metriques = rapport.get('metriques_securite_config', {})
         
-        md_content = f"""# 🛡️ **RAPPORT SÉCURITÉ CONFIGURATION : agent_03_specialiste_configuration.py**
+        md_content = """# 🛡️ **RAPPORT SÉCURITÉ CONFIGURATION : agent_03_specialiste_configuration.py**
 
 **Date :** {timestamp.strftime('%Y-%m-%d %H:%M:%S')}  
 **Spécialisation :** Sécurité Configuration  
@@ -759,7 +976,7 @@ Aucun issue critique détecté - Configuration système excellente.
         
         metriques = rapport.get('metriques_performance_config', {})
         
-        md_content = f"""# ⚡ **RAPPORT PERFORMANCE CONFIGURATION : agent_03_specialiste_configuration.py**
+        md_content = """# ⚡ **RAPPORT PERFORMANCE CONFIGURATION : agent_03_specialiste_configuration.py**
 
 **Date :** {timestamp.strftime('%Y-%m-%d %H:%M:%S')}  
 **Spécialisation :** Performance Configuration  
@@ -799,7 +1016,7 @@ Aucun issue critique détecté - Configuration système excellente.
                     
                     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                     # Nom de fichier simplifié car l'ID de l'agent est dans le nom du répertoire
-                    filename = f"strategic_report_{type_rapport}_{timestamp}.md"
+                    filename = "strategic_report_{type_rapport}_{timestamp}.md".format()
                     filepath = agent_specific_reports_dir / filename
                     
                     with open(filepath, 'w', encoding='utf-8') as f:
@@ -813,8 +1030,8 @@ Aucun issue critique détecté - Configuration système excellente.
                 
                 return Result(success=True, data=rapport_json)
             except Exception as e:
-                self.log(f"Erreur génération rapport stratégique: {e}", level="critical")
-                return Result(success=False, error=f"Exception rapport: {str(e)}")
+                self.log("Erreur génération rapport stratégique: {e}".format(), level="critical")
+                return Result(success=False, error="Exception rapport: {str(e)}".format())
         
         # Tâche de configuration originale (mission principale de l'agent)
         elif hasattr(task, 'type') and task.type == "generate_maintenance_config":
@@ -825,10 +1042,10 @@ Aucun issue critique détecté - Configuration système excellente.
                 report_summary = self.generate_agent_03_report()
                 return Result(success=True, data={"report_summary": report_summary, "config_file": str(self.config_file_path)})
             else:
-                return Result(success=False, error=f"Échec de la mission. Statut: {self.mission_status}")
+                return Result(success=False, error="Échec de la mission. Statut: {self.mission_status}".format())
         else:
             # Conserver la gestion des tâches non supportées
-            error_msg = f"Type de tâche non supporté: {getattr(task, 'name', 'N/A')} / {getattr(task, 'type', 'N/A')}. Attendu: 'generate_strategic_report' (via task.name) ou 'generate_maintenance_config' (via task.type)"
+            error_msg = "Type de tâche non supporté: {getattr(task, 'name', 'N/A')} / {getattr(task, 'type', 'N/A')}. Attendu: 'generate_strategic_report' (via task.name) ou 'generate_maintenance_config' (via task.type)".format()
             self.log(error_msg, level="warning")
             return Result(success=False, error=error_msg)
 
@@ -850,8 +1067,8 @@ if __name__ == '__main__':
     
     if mission_success:
         print("\n[SUCCÈS] La mission de l'agent s'est terminée avec succès.")
-        print(f"Le fichier de configuration a été généré ici : {agent.config_file_path}")
+        print("Le fichier de configuration a été généré ici : {agent.config_file_path}".format())
     else:
         print("\n[ÉCHEC] La mission de l'agent a échoué.")
-        print(f"Statut final : {agent.mission_status}")
+        print("Statut final : {agent.mission_status}".format())
 

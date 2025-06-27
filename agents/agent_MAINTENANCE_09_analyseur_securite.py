@@ -1230,6 +1230,27 @@ class AgentMAINTENANCE09AnalyseurSecurite(Agent):
     """
 
     def __init__(self, **kwargs):
+        
+        # ✅ MIGRATION SYSTÈME LOGGING UNIFIÉ
+        try:
+            from core.manager import LoggingManager
+            logging_manager = LoggingManager()
+            self.logger = logging_manager.get_logger(
+                config_name="maintenance",
+                custom_config={
+                    "logger_name": f"nextgen.maintenance.MAINTENANCE_09_analyseur_securite.{self.agent_id if hasattr(self, 'agent_id') else self.id if hasattr(self, 'id') else 'unknown'}",
+                    "log_dir": "logs/maintenance",
+                    "metadata": {
+                        "agent_type": "MAINTENANCE_09_analyseur_securite",
+                        "agent_role": "maintenance",
+                        "system": "nextgeneration"
+                    }
+                }
+            )
+        except ImportError:
+            # Fallback en cas d'indisponibilité du LoggingManager
+            self.logger = logging.getLogger(self.__class__.__name__)
+
         """Initialisation de l'agent"""
         super().__init__(**kwargs)
         self.name = "AgentMAINTENANCE09AnalyseurSecurite"

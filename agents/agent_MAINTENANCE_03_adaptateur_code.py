@@ -4,6 +4,17 @@ AGENT 3 - ADAPTATEUR DE CODE (LibCST)
 🛠️ ADAPTATEUR DE CODE - Agent 03
 =================================
 
+# Fallback pour pyflakes
+try:
+    import pyflakes
+except ImportError:
+    class pyflakes:
+        class api:
+            @staticmethod
+            def check(code, filename):
+                return []
+
+
 🎯 Mission : Corriger et adapter le code source sur la base d'un feedback.
 ⚡ Capacités : Manipulation de l'AST avec LibCST pour des refactorings sécurisés.
 🏢 Équipe : NextGeneration Tools Migration
@@ -1479,8 +1490,8 @@ class AgentMAINTENANCE03AdaptateurCode(Agent):
                         adaptations.extend(indent_adaptations)
                 else:
                     # Méthode traditionnelle si pas de patterns
-                modified_code, indent_adaptations = self._fix_indentation_errors(modified_code, feedback)
-                adaptations.extend(indent_adaptations)
+                    modified_code, indent_adaptations = self._fix_indentation_errors(modified_code, feedback)
+                    adaptations.extend(indent_adaptations)
                 
             elif error_type == "name":
                 self.logger.info("Stratégie NameError avancée avec auto-découverte.")
@@ -1602,7 +1613,7 @@ class AgentMAINTENANCE03AdaptateurCode(Agent):
                             adaptations.append(f"Pattern stocké dans ChromaDB: {pattern_id}")
                             self.logger.info(f"Pattern d'indentation stocké: {pattern_id}")
 
-        except Exception as e:
+                except Exception as e:
                     self.logger.warning(f"Erreur stockage pattern ChromaDB: {e}")
             
             # Enregistrement de l'historique dans ChromaDB v4.3.0

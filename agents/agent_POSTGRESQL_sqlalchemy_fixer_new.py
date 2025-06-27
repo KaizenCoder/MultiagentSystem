@@ -11,7 +11,17 @@ from pathlib import Path
 import logging
 import json
 
-from .agent_POSTGRESQL_base import AgentPostgreSQLBase
+# Import avec fallback
+try:
+    from .agent_POSTGRESQL_base import AgentPostgreSQLBase
+except ImportError:
+    try:
+        from agent_POSTGRESQL_base import AgentPostgreSQLBase
+    except ImportError:
+        # Fallback pour AgentPostgreSQLBase
+        class AgentPostgreSQLBase:
+            def __init__(self, *args, **kwargs):
+                pass
 from core.agent_factory_architecture import Task, Result
 
 class AgentPostgresqlSQLAlchemyFixer(AgentPostgreSQLBase):
@@ -22,6 +32,26 @@ class AgentPostgresqlSQLAlchemyFixer(AgentPostgreSQLBase):
             agent_type="postgresql_sqlalchemy_fixer",
             name="Agent SQLAlchemy Fixer"
         )
+        
+        # ✅ MIGRATION SYSTÈME LOGGING UNIFIÉ
+        try:
+            from core.manager import LoggingManager
+            logging_manager = LoggingManager()
+            self.logger = logging_manager.get_logger(
+                config_name="postgresql",
+                custom_config={
+                    "logger_name": f"nextgen.postgresql.agent_POSTGRESQL_sqlalchemy_fixer_new.{getattr(self, 'agent_id', 'unknown')}",
+                    "log_dir": "logs/postgresql",
+                    "metadata": {
+                        "agent_type": "agent_POSTGRESQL_sqlalchemy_fixer_new",
+                        "agent_role": "postgresql",
+                        "system": "nextgeneration"
+                    }
+                }
+            )
+        except ImportError:
+            # Fallback en cas d'indisponibilité du LoggingManager
+            self.logger = logging.getLogger(self.__class__.__name__)
         self.workspace_root = workspace_root if workspace_root else Path(__file__).parent.parent
         self.fixes_dir = self.workspace_root / "fixes" / "sqlalchemy"
         self.fixes_dir.mkdir(parents=True, exist_ok=True)

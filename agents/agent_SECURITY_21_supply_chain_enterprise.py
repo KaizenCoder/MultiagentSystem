@@ -60,133 +60,154 @@ class Agent21SecurityEnterprise(Agent):
     """🔐 Agent 21 - Security Enterprise Zero Trust ML"""
     
     def __init__(self, **config):
-    super().__init__("security_enterprise", **config)
-    self.id = "agent_21"
-    self.agent_version = __version__
-    self.agent_name = __agent_name__
-    self.compliance_score = __compliance_score__
-    self.optimization_gain = __optimization_gain__
-    self.compliance_target = 85.0
+        super().__init__("security_enterprise", **config)
+        
+        # ✅ MIGRATION SYSTÈME LOGGING UNIFIÉ
+        try:
+            from core.manager import LoggingManager
+            logging_manager = LoggingManager()
+            self.logger = logging_manager.get_logger(
+                config_name="security",
+                custom_config={
+                    "logger_name": f"nextgen.security.SECURITY_21_supply_chain_enterprise.{self.agent_id if hasattr(self, 'agent_id') else self.id if hasattr(self, 'id') else 'unknown'}",
+                    "log_dir": "logs/security",
+                    "metadata": {
+                        "agent_type": "SECURITY_21_supply_chain_enterprise",
+                        "agent_role": "security",
+                        "system": "nextgeneration"
+                    }
+                }
+            )
+        except ImportError:
+            # Fallback en cas d'indisponibilité du LoggingManager
+            self.logger = logging.getLogger(self.__class__.__name__)
+
+        self.id = "agent_21"
+        self.agent_version = __version__
+        self.agent_name = __agent_name__
+        self.compliance_score = __compliance_score__
+        self.optimization_gain = __optimization_gain__
+        self.compliance_target = 85.0
         
         # ⚡ Features modulaires enterprise
-    self.features = [
-    ZeroTrustFeature(config.get("zero_trust", {})),
-    MLSecurityFeature(config.get("ml_security", {})),
-    ThreatIntelligenceFeature(config.get("threat_intel", {})),
-    BehavioralAnalyticsFeature(config.get("behavioral", {})),
-    AutoRemediationFeature(config.get("auto_remediation", {}))
-    ]
+        self.features = [
+            ZeroTrustFeature(config.get("zero_trust", {})),
+            MLSecurityFeature(config.get("ml_security", {})),
+            ThreatIntelligenceFeature(config.get("threat_intel", {})),
+            BehavioralAnalyticsFeature(config.get("behavioral", {})),
+            AutoRemediationFeature(config.get("auto_remediation", {}))
+        ]
         
         # 🎯 Métriques sécurité
-    self.security_metrics = SecurityMetrics(
-    threat_score=0.0,
-    compliance_score=0.0,
-    risk_level="UNKNOWN",
-    incidents_detected=0,
-    auto_remediated=0,
-    zero_trust_score=0.0
-    )
+        self.security_metrics = SecurityMetrics(
+            threat_score=0.0,
+            compliance_score=0.0,
+            risk_level="UNKNOWN",
+            incidents_detected=0,
+            auto_remediated=0,
+            zero_trust_score=0.0
+        )
 
     async def startup(self) -> None:
         """🚀 Démarrage agent Zero Trust"""
-    print(f"🔐 Agent 21 {self.agent_name} v{self.agent_version} - Démarrage Zero Trust")
+        print(f"🔐 Agent 21 {self.agent_name} v{self.agent_version} - Démarrage Zero Trust")
         
     async def shutdown(self) -> None:
         """🛑 Arrêt sécurisé"""
-    print(f"🔐 Agent 21 {self.agent_name} v{self.agent_version} - Arrêt sécurisé")
+        print(f"🔐 Agent 21 {self.agent_name} v{self.agent_version} - Arrêt sécurisé")
         
     async def health_check(self) -> Dict[str, Any]:
         """🩺 Vérification santé sécurité"""
-    return {
-    "agent_id": self.id,
-    "version": self.agent_version,
-    "status": "healthy",
-    "features_count": len(self.features),
-    "compliance_target": f"{self.compliance_target}%",
-    "zero_trust_enabled": True
-    }
+        return {
+            "agent_id": self.id,
+            "version": self.agent_version,
+            "status": "healthy",
+            "features_count": len(self.features),
+            "compliance_target": f"{self.compliance_target}%",
+            "zero_trust_enabled": True
+        }
         
     def get_capabilities(self) -> List[str]:
         """🔐 Capacités agent sécurité enterprise"""
-    return [
-    "zero_trust_architecture",
-    "ml_security_automation", 
-    "threat_intelligence_integration",
-    "behavioral_analytics",
-    "auto_remediation",
-    "compliance_validation",
-    "incident_response"
-    ]
+        return [
+            "zero_trust_architecture",
+            "ml_security_automation", 
+            "threat_intelligence_integration",
+            "behavioral_analytics",
+            "auto_remediation",
+            "compliance_validation",
+            "incident_response"
+        ]
 
     async def execute_task(self, task: Task) -> Result:
         """🔐 Exécution tâche via features Zero Trust (Pattern Factory)"""
-    try:
-    start_time = time.time()
+        try:
+            start_time = time.time()
             
             # Dispatch vers feature appropriée
-    for feature in self.features:
-    if feature.can_handle(task):
-    result = feature.execute(task)
-    execution_time = (time.time() - start_time) * 1000
+            for feature in self.features:
+                if feature.can_handle(task):
+                    result = feature.execute(task)
+                    execution_time = (time.time() - start_time) * 1000
                     
                     # Enrichissement avec métriques sécurité
-    result.metrics.update({
-        "agent_id": self.id,
-        "agent_version": self.agent_version,
-        "execution_time_ms": execution_time,
-        "feature_used": feature.__class__.__name__,
-        "security_compliance": self.compliance_target,
-        "zero_trust_active": True
-    })
+                    result.metrics.update({
+                        "agent_id": self.id,
+                        "agent_version": self.agent_version,
+                        "execution_time_ms": execution_time,
+                        "feature_used": feature.__class__.__name__,
+                        "security_compliance": self.compliance_target,
+                        "zero_trust_active": True
+                    })
                     
-    return result
+                    return result
             
             # Fallback: tâche générique sécurité
-    return self._handle_generic_security_task(task)
+            return self._handle_generic_security_task(task)
             
-    except Exception as e:
-    return Result(
-    success=False,
-    error=f"Erreur Agent 21 V2: {str(e)}",
-    metrics={"agent_id": self.id, "error_type": "execution_error"}
-    )
+        except Exception as e:
+            return Result(
+                success=False,
+                error=f"Erreur Agent 21 V2: {str(e)}",
+                metrics={"agent_id": self.id, "error_type": "execution_error"}
+            )
 
-    def _handle_generic_security_task(self, task: Task) -> Result:
+    async def _handle_generic_security_task(self, task: Task) -> Result:
         """🔐 Gestion tâche sécurité générique"""
         
         # Simulation exécution sécurité enterprise
-    await asyncio.sleep(0.1)  # Simulation traitement
+        await asyncio.sleep(0.1)  # Simulation traitement
         
         # Calcul métriques
-    self.security_metrics.threat_score = 95.2
-    self.security_metrics.compliance_score = 85.4  # Target atteint!
-    self.security_metrics.risk_level = "LOW"
-    self.security_metrics.incidents_detected = 0
-    self.security_metrics.auto_remediated = 12
-    self.security_metrics.zero_trust_score = 92.8
+        self.security_metrics.threat_score = 95.2
+        self.security_metrics.compliance_score = 85.4  # Target atteint!
+        self.security_metrics.risk_level = "LOW"
+        self.security_metrics.incidents_detected = 0
+        self.security_metrics.auto_remediated = 12
+        self.security_metrics.zero_trust_score = 92.8
         
-    return Result(
-    success=True,
-    data={
-    "task_type": task.type,
-    "security_analysis": "Zero Trust validation completed",
-    "threats_detected": 0,
-    "vulnerabilities_fixed": 12,
-    "compliance_frameworks": ["SOC2", "ISO27001", "NIST"],
-    "ml_models_active": 5,
-    "zero_trust_policies": 24,
-    "auto_remediation_rules": 156
-    },
-    metrics={
-    "threat_score": self.security_metrics.threat_score,
-    "compliance_score": self.security_metrics.compliance_score,
-    "risk_level": self.security_metrics.risk_level,
-    "incidents_detected": self.security_metrics.incidents_detected,
-    "auto_remediated": self.security_metrics.auto_remediated,
-    "zero_trust_score": self.security_metrics.zero_trust_score,
-    "performance_gain": "+4.7 points compliance"
-    }
-    )
+        return Result(
+            success=True,
+            data={
+                "task_type": task.type,
+                "security_analysis": "Zero Trust validation completed",
+                "threats_detected": 0,
+                "vulnerabilities_fixed": 12,
+                "compliance_frameworks": ["SOC2", "ISO27001", "NIST"],
+                "ml_models_active": 5,
+                "zero_trust_policies": 24,
+                "auto_remediation_rules": 156
+            },
+            metrics={
+                "threat_score": self.security_metrics.threat_score,
+                "compliance_score": self.security_metrics.compliance_score,
+                "risk_level": self.security_metrics.risk_level,
+                "incidents_detected": self.security_metrics.incidents_detected,
+                "auto_remediated": self.security_metrics.auto_remediated,
+                "zero_trust_score": self.security_metrics.zero_trust_score,
+                "performance_gain": "+4.7 points compliance"
+            }
+        )
 
 
 def create_agent_21_security() -> Agent21SecurityEnterprise:
@@ -233,111 +254,111 @@ class BaseSecurityFeature:
     """🏗️ Classe de base pour features sécurité enterprise"""
     
     def __init__(self, config: Dict[str, Any]):
-    self.config = config
-    self.enabled = config.get('enabled', True)
+        self.config = config
+        self.enabled = config.get('enabled', True)
         
     def can_handle(self, task: Task) -> bool:
         """Vérifie si la feature peut traiter cette tâche"""
-    return False
+        return False
         
     def execute(self, task: Task) -> Result:
         """Exécute la tâche"""
-    return Result(success=False, error="Not implemented")
+        return Result(success=False, error="Not implemented")
 
 
 class ZeroTrustFeature(BaseSecurityFeature):
     """🔐 Feature Zero Trust Architecture"""
     
     def can_handle(self, task: Task) -> bool:
-    return task.type in ["zero_trust_validation", "identity_verification", "network_segmentation"]
+        return task.type in ["zero_trust_validation", "identity_verification", "network_segmentation"]
         
-    def execute(self, task: Task) -> Result:
-    await asyncio.sleep(0.05)  # Simulation
-    return Result(
-    success=True,
-    data={
-    "zero_trust_policies": 24,
-    "identity_verified": True,
-    "network_segments": 12,
-    "access_decisions": 156
-    }
-    )
+    async def execute(self, task: Task) -> Result:
+        await asyncio.sleep(0.05)  # Simulation
+        return Result(
+            success=True,
+            data={
+                "zero_trust_policies": 24,
+                "identity_verified": True,
+                "network_segments": 12,
+                "access_decisions": 156
+            }
+        )
 
 
 class MLSecurityFeature(BaseSecurityFeature):
     """🧠 Feature ML Security Automation"""
     
     def can_handle(self, task: Task) -> bool:
-    return task.type in ["anomaly_detection", "threat_analysis", "ml_security"]
+        return task.type in ["anomaly_detection", "threat_analysis", "ml_security"]
         
-    def execute(self, task: Task) -> Result:
-    await asyncio.sleep(0.08)  # Simulation ML
-    return Result(
-    success=True,
-    data={
-    "ml_models_active": 5,
-    "anomalies_detected": 3,
-    "false_positive_rate": 0.02,
-    "threat_score": 95.2
-    }
-    )
+    async def execute(self, task: Task) -> Result:
+        await asyncio.sleep(0.08)  # Simulation ML
+        return Result(
+            success=True,
+            data={
+                "ml_models_active": 5,
+                "anomalies_detected": 3,
+                "false_positive_rate": 0.02,
+                "threat_score": 95.2
+            }
+        )
 
 
 class ThreatIntelligenceFeature(BaseSecurityFeature):
     """🕵️ Feature Threat Intelligence Integration"""
     
     def can_handle(self, task: Task) -> bool:
-    return task.type in ["threat_intel", "ioc_analysis", "correlation"]
+        return task.type in ["threat_intel", "ioc_analysis", "correlation"]
         
-    def execute(self, task: Task) -> Result:
-    await asyncio.sleep(0.03)
-    return Result(
-    success=True,
-    data={
-    "threat_feeds": 4,
-    "ioc_matches": 0,
-    "threat_level": "LOW",
-    "intelligence_sources": ["misp", "stix", "alienvault"]
-    }
-    )
+    async def execute(self, task: Task) -> Result:
+        await asyncio.sleep(0.03)
+        return Result(
+            success=True,
+            data={
+                "threat_feeds": 4,
+                "ioc_matches": 0,
+                "threat_level": "LOW",
+                "intelligence_sources": ["misp", "stix", "alienvault"]
+            }
+        )
 
 
 class BehavioralAnalyticsFeature(BaseSecurityFeature):
     """📊 Feature Behavioral Analytics"""
     
     def can_handle(self, task: Task) -> bool:
-    return task.type in ["behavioral_analysis", "user_profiling", "anomaly_scoring"]
+        return task.type in ["behavioral_analysis", "user_profiling", "anomaly_scoring"]
         
-    def execute(self, task: Task) -> Result:
-    await asyncio.sleep(0.04)
-    return Result(
-    success=True,
-    data={
-    "user_profiles": 1250,
-    "behavioral_anomalies": 2,
-    "risk_scores_updated": 1250,
-    "baseline_models": 15
-    }
-    )
+    async def execute(self, task: Task) -> Result:
+        await asyncio.sleep(0.04)
+        return Result(
+            success=True,
+            data={
+                "user_profiles": 1250,
+                "behavioral_anomalies": 2,
+                "risk_scores_updated": 1250,
+                "baseline_models": 15
+            }
+        )
 
 
 class AutoRemediationFeature(BaseSecurityFeature):
     """🤖 Feature Auto-remediation Intelligente"""
     
     def can_handle(self, task: Task) -> bool:
-    return task.type in ["auto_remediation", "incident_response", "security_automation"]
+        return task.type in ["auto_remediation", "incident_response", "security_automation"]
         
-    def execute(self, task: Task) -> Result:
-    await asyncio.sleep(0.02)
-    return Result(
-    success=True,
-    data={
-    "incidents_remediated": 12,
-    "response_time_ms": 1200,
-    "success_rate": 0.98,
-    "rollbacks_performed": 0
-    }
-    )
+    async def execute(self, task: Task) -> Result:
+        await asyncio.sleep(0.02)
+        return Result(
+            success=True,
+            data={
+                "incidents_remediated": 12,
+                "response_time_ms": 1200,
+                "success_rate": 0.98,
+                "rollbacks_performed": 0
+            }
+        )
 
 
 if __name__ == "__main__":

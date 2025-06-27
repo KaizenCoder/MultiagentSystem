@@ -152,4 +152,49 @@ asyncio.run(main())
 
 ---
 
-*Document généré automatiquement par l'IA de maintenance NextGeneration.* 
+*Document généré automatiquement par l'IA de maintenance NextGeneration.*
+
+# Agent Spécialiste Monitoring Production
+
+## Objectif
+Assurer le suivi en temps réel de la santé, de la performance et de la fiabilité du système **Adaptateur V4** en production.
+
+## Responsabilités
+1.  **Exporter les Métriques** : Utilise `MetricsExporter` pour collecter et exposer les métriques clés de l'application au format Prometheus.
+2.  **Surveiller la Santé du Système** : Analyse en continu la latence, le taux d'erreurs, l'utilisation mémoire et l'efficacité du cache.
+3.  **Déclencher des Alertes** : S'appuie sur la configuration de Prometheus Alertmanager pour notifier les équipes en cas de dépassement des seuils critiques.
+4.  **Fournir des Données de Visualisation** : Alimente le dashboard Grafana pour une analyse visuelle et intuitive des performances.
+
+## Infrastructure de Monitoring
+
+- **Prometheus** :
+  - **Fichier de configuration** : `prometheus-production.yml`
+  - **Responsabilité** : Scrape (collecte) les métriques exposées par l'application.
+- **Grafana** :
+  - **URL** : `http://localhost:3000`
+  - **Responsabilité** : Visualise les données de Prometheus via des dashboards pré-configurés.
+- **Alertmanager** :
+  - **Fichier de règles** : `alerts.yml`
+  - **Responsabilité** : Gère les règles de déclenchement des alertes.
+
+## Métriques Clés Collectées
+
+- `requests_total` : Compteur total des tâches reçues.
+- `responses_total` : Compteur des tâches terminées (par statut : succès/échec).
+- `request_duration_seconds` : Histogramme de la latence des tâches.
+- `memory_usage_bytes` : Utilisation actuelle de la mémoire par le processus.
+- `cache_total` : Nombre total d'appels au cache.
+- `cache_hits` : Nombre de succès (hits) dans le cache.
+- `cache_hit_rate_percent` : Pourcentage de hits par rapport au total des appels.
+
+## Seuils d'Alerte Actifs
+
+- **Taux d'erreur élevé** : Déclenché si le taux d'erreur sur 5 minutes est supérieur à 10%.
+- **Latence anormale** : Déclenché si le 95ème percentile (P95) de la latence dépasse 500ms.
+- **Utilisation mémoire excessive** : Déclenché si la consommation de mémoire dépasse 1GB.
+- **Hit rate du cache trop bas** : Déclenché si le hit rate du cache descend en dessous de 80% pendant plus de 10 minutes.
+
+## Intégration
+- L'agent s'intègre directement dans le code de `adaptateur.py` pour instrumenter les fonctions clés et collecter les métriques au plus près de l'exécution.
+- Il collabore étroitement avec l'**Agent Analyseur de Performance** en lui fournissant les données brutes nécessaires à l'analyse des tendances et à l'identification des goulots d'étranglement.
+- La méthode `shutdown()` a été implémentée dans `MetricsExporter` pour garantir une libération propre des ports et éviter les processus orphelins. 

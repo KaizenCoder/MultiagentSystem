@@ -799,3 +799,199 @@ def create_agent_test_valid(**config):
             print("\n✅ Tests terminés.")
     
     asyncio.run(run_tests())
+    # ✅ MÉTHODES STANDARDISÉES DE RAPPORT
+
+    def _calculate_report_score(self, metrics: Dict[str, Any]) -> int:
+        """Calcule le score global du rapport basé sur les métriques."""
+        score = 0
+        issues_critiques = []
+        
+        # Logique de scoring spécifique à l'agent
+        # À adapter selon le type d'agent
+        
+        return score
+    
+    def _assess_conformity(self, score: int) -> str:
+        """Évalue la conformité basée sur le score."""
+        if score >= 90:
+            return "✅ CONFORME - OPTIMAL"
+        elif score >= 70:
+            return "✅ CONFORME - ACCEPTABLE"
+        else:
+            return "❌ NON CONFORME - CRITIQUE"
+    
+    def _get_quality_level(self, score: int) -> str:
+        """Détermine le niveau de qualité."""
+        if score >= 90:
+            return "OPTIMAL"
+        elif score >= 70:
+            return "ACCEPTABLE"
+        else:
+            return "CRITIQUE"
+    
+    def _generate_recommendations(self, metrics: Dict[str, Any], issues: List[str]) -> List[str]:
+        """Génère les recommandations basées sur l'analyse."""
+        recommendations = []
+        
+        # Logique de génération de recommandations
+        # À adapter selon le type d'agent
+        
+        return recommendations
+    
+    def _generate_standard_report(self, context: Dict, metrics: Dict, timestamp) -> Dict[str, Any]:
+        """Génère un rapport selon le format standard de l'agent 06."""
+        
+        score = self._calculate_report_score(metrics)
+        conformity = self._assess_conformity(score)
+        quality_level = self._get_quality_level(score)
+        
+        agent_filename = Path(__file__).name
+        
+        # Issues critiques (à personnaliser selon l'agent)
+        issues_critiques = []
+        
+        return {
+            'agent_id': getattr(self, 'agent_id', 'unknown'),
+            'agent_file_name': agent_filename,
+            'type_rapport': 'standard',  # À personnaliser
+            'timestamp': timestamp.isoformat(),
+            'specialisation': 'Agent Spécialisé',  # À personnaliser
+            'score_global': score,
+            'niveau_qualite': quality_level,
+            'conformite': conformity,
+            'signature_cryptographique': 'N/A (Fonctionnalité non implémentée pour cet agent)',
+            'issues_critiques_identifies': len(issues_critiques),
+            'architecture': {
+                'description': "Description de l'architecture de l'agent",
+                'statut_operationnel': f"Système {getattr(self, 'agent_id', 'unknown')} opérationnel.",
+                'confirmation_specialisation': f"{getattr(self, 'agent_id', 'unknown')} confirmé comme spécialiste.",
+                'objectifs_principaux': [
+                    "Objectif principal 1",
+                    "Objectif principal 2",
+                    "Objectif principal 3"
+                ],
+                'technologies_cles': ["Technologie 1", "Technologie 2"]
+            },
+            'recommandations': self._generate_recommendations(metrics, issues_critiques),
+            'issues_critiques_details': issues_critiques if issues_critiques else [
+                "Aucun issue critique majeur détecté. Le système fonctionne dans les paramètres attendus."
+            ],
+            'details_techniques': {
+                'strategie': "Stratégie technique de l'agent",
+                'composants_actifs': [],
+                'metriques_collectees': metrics
+            },
+            'metriques_detaillees': {
+                'score_global': {'actuel': score, 'cible': 100},
+                'conformite_pourcentage': {'actuel': score, 'cible': 100, 'unite': '%'}
+            },
+            'impact_business': {
+                'criticite': 'MOYENNE' if score >= 70 else 'HAUTE',
+                'domaines_impactes': [],
+                'actions_requises': []
+            }
+        }
+
+
+    def _generate_markdown_report(self, rapport_json: Dict, context: Dict, timestamp) -> str:
+        """Génère un rapport Markdown selon le format standard."""
+        
+        agent_name = rapport_json.get('agent_id', 'Agent Inconnu')
+        type_rapport = rapport_json.get('type_rapport', 'standard')
+        score = rapport_json.get('score_global', 0)
+        quality = rapport_json.get('niveau_qualite', 'UNKNOWN')
+        conformity = rapport_json.get('conformite', 'NON ÉVALUÉ')
+        
+        markdown_content = f"""# 📊 RAPPORT STRATÉGIQUE : {agent_name.upper()}
+
+## 🎯 RÉSUMÉ EXÉCUTIF
+
+**Agent :** {agent_name}  
+**Type de Rapport :** {type_rapport}  
+**Date de Génération :** {timestamp.strftime('%Y-%m-%d %H:%M:%S')}  
+**Score Global :** {score}/100  
+**Niveau de Qualité :** {quality}  
+**Conformité :** {conformity}  
+
+## 📈 ANALYSE GLOBALE
+
+### Score de Performance
+- **Score Actuel :** {score}/100
+- **Objectif :** 100/100
+- **Statut :** {'🟢 ACCEPTABLE' if score >= 70 else '🔴 CRITIQUE'}
+
+### Architecture
+{rapport_json.get('architecture', {}).get('description', 'Description non disponible')}
+
+**Objectifs Principaux :**
+"""
+        
+        # Ajouter les objectifs
+        for obj in rapport_json.get('architecture', {}).get('objectifs_principaux', []):
+            markdown_content += f"- {obj}\n"
+        
+        markdown_content += f"""
+**Technologies Clés :**
+"""
+        
+        # Ajouter les technologies
+        for tech in rapport_json.get('architecture', {}).get('technologies_cles', []):
+            markdown_content += f"- {tech}\n"
+        
+        markdown_content += f"""
+
+## 🔍 RECOMMANDATIONS
+
+"""
+        
+        # Ajouter les recommandations
+        for reco in rapport_json.get('recommandations', []):
+            markdown_content += f"- {reco}\n"
+        
+        markdown_content += f"""
+
+## ⚠️ ISSUES CRITIQUES
+
+"""
+        
+        # Ajouter les issues critiques
+        for issue in rapport_json.get('issues_critiques_details', []):
+            markdown_content += f"- {issue}\n"
+        
+        markdown_content += f"""
+
+## 📊 MÉTRIQUES DÉTAILLÉES
+
+### Performance Globale
+- **Score Global :** {rapport_json.get('metriques_detaillees', {}).get('score_global', {}).get('actuel', 0)}/{rapport_json.get('metriques_detaillees', {}).get('score_global', {}).get('cible', 100)}
+- **Conformité :** {rapport_json.get('metriques_detaillees', {}).get('conformite_pourcentage', {}).get('actuel', 0)}%
+
+## 🎯 IMPACT BUSINESS
+
+**Criticité :** {rapport_json.get('impact_business', {}).get('criticite', 'NON ÉVALUÉ')}
+
+### Domaines Impactés
+"""
+        
+        # Ajouter les domaines impactés
+        for domaine in rapport_json.get('impact_business', {}).get('domaines_impactes', []):
+            markdown_content += f"- {domaine}\n"
+        
+        markdown_content += f"""
+
+### Actions Requises
+"""
+        
+        # Ajouter les actions requises
+        for action in rapport_json.get('impact_business', {}).get('actions_requises', []):
+            markdown_content += f"- {action}\n"
+        
+        markdown_content += f"""
+
+---
+*Rapport généré automatiquement par {agent_name} - NextGeneration System*  
+*Timestamp: {timestamp.isoformat()}*
+"""
+        
+        return markdown_content
+

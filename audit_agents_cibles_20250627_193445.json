@@ -1,0 +1,568 @@
+{
+  "audit_summary": {
+    "timestamp": "2025-06-27T19:34:45.750418",
+    "total_agents": 4,
+    "existing_agents": 4,
+    "successful_audits": 4,
+    "average_score": 48.33333333333333,
+    "audit_duration": 0.083061,
+    "success_rate": 100.0
+  },
+  "agents_analysis": {
+    "agent_SECURITY_21_supply_chain_enterprise.py": {
+      "agent_file": "agent_SECURITY_21_supply_chain_enterprise.py",
+      "agent_path": "/mnt/c/Dev/nextgeneration/agents/agent_SECURITY_21_supply_chain_enterprise.py",
+      "timestamp": "2025-06-27T19:34:45.667497",
+      "exists": true,
+      "syntax": {
+        "syntax_valid": false,
+        "error": "expected an indented block after function definition on line 62 (<unknown>, line 63)",
+        "line": 63
+      },
+      "structure": {
+        "error": "Erreur analyse structure: expected an indented block after function definition on line 62 (<unknown>, line 63)"
+      },
+      "patterns": {
+        "patterns": {
+          "pattern_factory": {
+            "keywords": [
+              "factory",
+              "create_agent",
+              "Agent",
+              "Pattern"
+            ],
+            "found": 22
+          },
+          "async_patterns": {
+            "keywords": [
+              "async def",
+              "await",
+              "asyncio"
+            ],
+            "found": 17
+          },
+          "enterprise_features": {
+            "keywords": [
+              "enterprise",
+              "Enterprise",
+              "monitoring",
+              "metrics",
+              "security"
+            ],
+            "found": 63
+          },
+          "logging": {
+            "keywords": [
+              "logger",
+              "logging",
+              "log",
+              "info",
+              "error"
+            ],
+            "found": 4
+          },
+          "error_handling": {
+            "keywords": [
+              "try:",
+              "except",
+              "finally:",
+              "raise"
+            ],
+            "found": 2
+          },
+          "documentation": {
+            "keywords": [
+              "\"\"\"",
+              "'''",
+              "# ",
+              "Args:",
+              "Returns:"
+            ],
+            "found": 55
+          }
+        },
+        "quality_score": 100,
+        "total_patterns_found": 163
+      },
+      "dependencies": {
+        "dependencies": {
+          "core_dependencies": [
+            {
+              "line": 38,
+              "import": "from core.agent_factory_architecture import Agent, Task, Result"
+            }
+          ],
+          "external_dependencies": [
+            {
+              "line": 35,
+              "import": "import asyncio"
+            },
+            {
+              "line": 36,
+              "import": "from typing import Dict, List, Any"
+            }
+          ],
+          "local_dependencies": [],
+          "potential_issues": []
+        },
+        "core_deps_count": 1,
+        "external_deps_count": 2,
+        "local_deps_count": 0,
+        "issues_count": 0
+      },
+      "capabilities": {
+        "agent_type": "security",
+        "specialization": [
+          "enterprise_security"
+        ],
+        "new_features": [
+          "zero_trust_architecture"
+        ],
+        "compliance_level": "basic"
+      },
+      "global_score": 33.333333333333336,
+      "audit_status": "success"
+    },
+    "agent_STORAGE_24_enterprise_manager.py": {
+      "agent_file": "agent_STORAGE_24_enterprise_manager.py",
+      "agent_path": "/mnt/c/Dev/nextgeneration/agents/agent_STORAGE_24_enterprise_manager.py",
+      "timestamp": "2025-06-27T19:34:45.678105",
+      "exists": true,
+      "syntax": {
+        "syntax_valid": false,
+        "error": "expected an indented block after function definition on line 62 (<unknown>, line 63)",
+        "line": 63
+      },
+      "structure": {
+        "error": "Erreur analyse structure: expected an indented block after function definition on line 62 (<unknown>, line 63)"
+      },
+      "patterns": {
+        "patterns": {
+          "pattern_factory": {
+            "keywords": [
+              "factory",
+              "create_agent",
+              "Agent",
+              "Pattern"
+            ],
+            "found": 21
+          },
+          "async_patterns": {
+            "keywords": [
+              "async def",
+              "await",
+              "asyncio"
+            ],
+            "found": 25
+          },
+          "enterprise_features": {
+            "keywords": [
+              "enterprise",
+              "Enterprise",
+              "monitoring",
+              "metrics",
+              "security"
+            ],
+            "found": 34
+          },
+          "logging": {
+            "keywords": [
+              "logger",
+              "logging",
+              "log",
+              "info",
+              "error"
+            ],
+            "found": 4
+          },
+          "error_handling": {
+            "keywords": [
+              "try:",
+              "except",
+              "finally:",
+              "raise"
+            ],
+            "found": 2
+          },
+          "documentation": {
+            "keywords": [
+              "\"\"\"",
+              "'''",
+              "# ",
+              "Args:",
+              "Returns:"
+            ],
+            "found": 58
+          }
+        },
+        "quality_score": 100,
+        "total_patterns_found": 144
+      },
+      "dependencies": {
+        "dependencies": {
+          "core_dependencies": [
+            {
+              "line": 38,
+              "import": "from core.agent_factory_architecture import Agent, Task, Result"
+            }
+          ],
+          "external_dependencies": [
+            {
+              "line": 35,
+              "import": "import asyncio"
+            },
+            {
+              "line": 36,
+              "import": "from typing import Dict, List, Any"
+            }
+          ],
+          "local_dependencies": [],
+          "potential_issues": []
+        },
+        "core_deps_count": 1,
+        "external_deps_count": 2,
+        "local_deps_count": 0,
+        "issues_count": 0
+      },
+      "capabilities": {
+        "agent_type": "storage",
+        "specialization": [
+          "enterprise_storage"
+        ],
+        "new_features": [
+          "auto_scaling"
+        ],
+        "compliance_level": "basic"
+      },
+      "global_score": 33.333333333333336,
+      "audit_status": "success"
+    },
+    "agent_test_models_integration.py": {
+      "agent_file": "agent_test_models_integration.py",
+      "agent_path": "/mnt/c/Dev/nextgeneration/agents/agent_test_models_integration.py",
+      "timestamp": "2025-06-27T19:34:45.707814",
+      "exists": true,
+      "syntax": {
+        "syntax_valid": false,
+        "error": "invalid syntax (<unknown>, line 712)",
+        "line": 712
+      },
+      "structure": {
+        "error": "Erreur analyse structure: invalid syntax (<unknown>, line 712)"
+      },
+      "patterns": {
+        "patterns": {
+          "pattern_factory": {
+            "keywords": [
+              "factory",
+              "create_agent",
+              "Agent",
+              "Pattern"
+            ],
+            "found": 43
+          },
+          "async_patterns": {
+            "keywords": [
+              "async def",
+              "await",
+              "asyncio"
+            ],
+            "found": 90
+          },
+          "enterprise_features": {
+            "keywords": [
+              "enterprise",
+              "Enterprise",
+              "monitoring",
+              "metrics",
+              "security"
+            ],
+            "found": 31
+          },
+          "logging": {
+            "keywords": [
+              "logger",
+              "logging",
+              "log",
+              "info",
+              "error"
+            ],
+            "found": 186
+          },
+          "error_handling": {
+            "keywords": [
+              "try:",
+              "except",
+              "finally:",
+              "raise"
+            ],
+            "found": 44
+          },
+          "documentation": {
+            "keywords": [
+              "\"\"\"",
+              "'''",
+              "# ",
+              "Args:",
+              "Returns:"
+            ],
+            "found": 274
+          }
+        },
+        "quality_score": 100,
+        "total_patterns_found": 668
+      },
+      "dependencies": {
+        "dependencies": {
+          "core_dependencies": [
+            {
+              "line": 40,
+              "import": "from core.base_agent_template import BaseAgent, AgentConfig"
+            },
+            {
+              "line": 66,
+              "import": "from core.model_manager import ModelManager"
+            }
+          ],
+          "external_dependencies": [
+            {
+              "line": 25,
+              "import": "import asyncio"
+            },
+            {
+              "line": 26,
+              "import": "import json"
+            },
+            {
+              "line": 28,
+              "import": "from pathlib import Path"
+            },
+            {
+              "line": 32,
+              "import": "from datetime import datetime"
+            },
+            {
+              "line": 33,
+              "import": "from pathlib import Path"
+            },
+            {
+              "line": 34,
+              "import": "from typing import Dict, List, Any, Optional"
+            },
+            {
+              "line": 131,
+              "import": "from pathlib import Path"
+            }
+          ],
+          "local_dependencies": [],
+          "potential_issues": []
+        },
+        "core_deps_count": 2,
+        "external_deps_count": 7,
+        "local_deps_count": 0,
+        "issues_count": 0
+      },
+      "capabilities": {
+        "agent_type": "testing",
+        "specialization": [
+          "models_integration"
+        ],
+        "new_features": [
+          "ollama_integration",
+          "integration_testing"
+        ],
+        "compliance_level": "enterprise"
+      },
+      "global_score": 33.333333333333336,
+      "audit_status": "success"
+    },
+    "agent_testeur_agents_complet.py": {
+      "agent_file": "agent_testeur_agents_complet.py",
+      "agent_path": "/mnt/c/Dev/nextgeneration/agents/agent_testeur_agents_complet.py",
+      "timestamp": "2025-06-27T19:34:45.728635",
+      "exists": true,
+      "syntax": {
+        "syntax_valid": true,
+        "lines_count": 808,
+        "size_bytes": 34813
+      },
+      "structure": {
+        "classes_count": 4,
+        "functions_count": 1,
+        "imports_count": 14,
+        "classes": [
+          {
+            "name": "AgentTesteurAgents",
+            "line": 46,
+            "methods": 2
+          },
+          {
+            "name": "Agent",
+            "line": 22,
+            "methods": 1
+          },
+          {
+            "name": "Task",
+            "line": 33,
+            "methods": 1
+          },
+          {
+            "name": "Result",
+            "line": 38,
+            "methods": 1
+          }
+        ],
+        "functions": [
+          {
+            "name": "create_agent_testeur_agents",
+            "line": 738,
+            "is_async": false
+          }
+        ],
+        "imports": [
+          "asyncio",
+          "sys",
+          "pathlib.Path",
+          "json",
+          "datetime.datetime",
+          "typing.Dict",
+          "typing.List",
+          "typing.Any",
+          "tempfile",
+          "core.agent_factory_architecture.Agent",
+          "core.agent_factory_architecture.Task",
+          "core.agent_factory_architecture.Result",
+          "logging",
+          "logging"
+        ]
+      },
+      "patterns": {
+        "patterns": {
+          "pattern_factory": {
+            "keywords": [
+              "factory",
+              "create_agent",
+              "Agent",
+              "Pattern"
+            ],
+            "found": 75
+          },
+          "async_patterns": {
+            "keywords": [
+              "async def",
+              "await",
+              "asyncio"
+            ],
+            "found": 60
+          },
+          "enterprise_features": {
+            "keywords": [
+              "enterprise",
+              "Enterprise",
+              "monitoring",
+              "metrics",
+              "security"
+            ],
+            "found": 35
+          },
+          "logging": {
+            "keywords": [
+              "logger",
+              "logging",
+              "log",
+              "info",
+              "error"
+            ],
+            "found": 93
+          },
+          "error_handling": {
+            "keywords": [
+              "try:",
+              "except",
+              "finally:",
+              "raise"
+            ],
+            "found": 25
+          },
+          "documentation": {
+            "keywords": [
+              "\"\"\"",
+              "'''",
+              "# ",
+              "Args:",
+              "Returns:"
+            ],
+            "found": 113
+          }
+        },
+        "quality_score": 100,
+        "total_patterns_found": 401
+      },
+      "dependencies": {
+        "dependencies": {
+          "core_dependencies": [
+            {
+              "line": 18,
+              "import": "from core.agent_factory_architecture import Agent, Task, Result"
+            }
+          ],
+          "external_dependencies": [
+            {
+              "line": 7,
+              "import": "import asyncio"
+            },
+            {
+              "line": 9,
+              "import": "from pathlib import Path"
+            },
+            {
+              "line": 10,
+              "import": "import json"
+            },
+            {
+              "line": 11,
+              "import": "from datetime import datetime"
+            },
+            {
+              "line": 12,
+              "import": "from typing import Dict, List, Any"
+            }
+          ],
+          "local_dependencies": [],
+          "potential_issues": []
+        },
+        "core_deps_count": 1,
+        "external_deps_count": 5,
+        "local_deps_count": 0,
+        "issues_count": 0
+      },
+      "capabilities": {
+        "agent_type": "testing",
+        "specialization": [],
+        "new_features": [],
+        "compliance_level": "standard"
+      },
+      "global_score": 93.33333333333333,
+      "audit_status": "success"
+    }
+  },
+  "recommendations": [
+    "📈 AMÉLIORATION: 3 agents avec scores < 70/100",
+    "🚀 UPGRADE: Migrer plus d'agents vers niveau Enterprise"
+  ],
+  "new_capabilities_summary": {
+    "enterprise_features": 0,
+    "new_patterns": [],
+    "advanced_features": [
+      "zero_trust_architecture",
+      "ollama_integration",
+      "integration_testing",
+      "auto_scaling"
+    ],
+    "compliance_levels": {
+      "basic": 2,
+      "standard": 1,
+      "enterprise": 1
+    }
+  }
+}

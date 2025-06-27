@@ -12,7 +12,17 @@ from pathlib import Path
 import docker
 import json
 
-from .agent_POSTGRESQL_base import AgentPostgreSQLBase
+# Import avec fallback
+try:
+    from .agent_POSTGRESQL_base import AgentPostgreSQLBase
+except ImportError:
+    try:
+        from agent_POSTGRESQL_base import AgentPostgreSQLBase
+    except ImportError:
+        # Fallback pour AgentPostgreSQLBase
+        class AgentPostgreSQLBase:
+            def __init__(self, *args, **kwargs):
+                pass
 from core.agent_factory_architecture import Task, Result
 
 class AgentPostgresqlDockerSpecialist(AgentPostgreSQLBase):
@@ -21,8 +31,29 @@ class AgentPostgresqlDockerSpecialist(AgentPostgreSQLBase):
     def __init__(self, workspace_root: Path = None):
         super().__init__(
             agent_type="postgresql_docker",
-            name="Agent Docker PostgreSQL"
+            name="Agent PostgreSQL Docker"
         )
+        
+        # ✅ MIGRATION SYSTÈME LOGGING UNIFIÉ
+        try:
+            from core.manager import LoggingManager
+            logging_manager = LoggingManager()
+            self.logger = logging_manager.get_logger(
+                config_name="postgresql",
+                custom_config={
+                    "logger_name": f"nextgen.postgresql.POSTGRESQL_docker_specialist.{self.agent_id if hasattr(self, 'agent_id') else self.id if hasattr(self, 'id') else 'unknown'}",
+                    "log_dir": "logs/postgresql",
+                    "metadata": {
+                        "agent_type": "POSTGRESQL_docker_specialist",
+                        "agent_role": "postgresql",
+                        "system": "nextgeneration"
+                    }
+                }
+            )
+        except ImportError:
+            # Fallback en cas d'indisponibilité du LoggingManager
+            self.logger = logging.getLogger(self.__class__.__name__)
+
         self.workspace_root = workspace_root if workspace_root else Path(__file__).parent.parent
         self.docker_client = docker.from_env()
         
@@ -223,3 +254,15 @@ if __name__ == "__main__":
     # Test des capacités
     print("Capacités de l'agent:", agent.get_capabilities())
 
+
+
+# Aliases et fonctions pour compatibilité
+AgentDockerSpecialist = AgentPostgresqlDockerSpecialist
+
+def create_agent_docker_specialist(**kwargs):
+    """Factory function pour créer l'agent Docker specialist"""
+    return AgentPostgresqlDockerSpecialist(**kwargs)
+
+def get_docker_specialist():
+    """Obtient une instance de l'agent Docker specialist"""
+    return AgentPostgresqlDockerSpecialist()
