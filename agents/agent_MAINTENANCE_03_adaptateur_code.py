@@ -247,42 +247,165 @@ class AgentMAINTENANCE03AdaptateurCode(Agent):
         
     def _fix_indentation_errors(self, code: str, error: Exception) -> Tuple[str, List[str]]:
         """
-        Corrige les IndentationError courants en se basant sur l'exception.
+        Moteur de correction d'indentation amélioré - Version complète robuste.
+        
+        Gère tous les types d'erreurs d'indentation avec stratégies adaptées :
+        - "expected an indented block" : insertion intelligente de 'pass'
+        - "unexpected indent" : normalisation contextuelle
+        - "unindent does not match" : réparation globale cohérente
+        - Détection automatique des niveaux d'indentation
+        - Préservation du style d'indentation existant (espaces vs tabs)
+        
+        Args:
+            code: Code source à corriger
+            error: Exception d'indentation capturée
+            
+        Returns:
+            Tuple[str, List[str]]: (code_corrigé, liste_des_adaptations)
         """
         notes = []
         if not isinstance(error, (SyntaxError, IndentationError)):
             return code, notes
 
         lines = code.splitlines()
-        msg = error.msg.lower()
+        msg = error.msg.lower() if error.msg else ""
         lineno = error.lineno or 0
-
-        # Cas 1: "expected an indented block" -> insère 'pass'
-        if "expected an indented block" in msg and 0 < lineno <= len(lines):
-            # Tente de trouver l'indentation de la ligne précédente (si elle existe)
-            if lineno > 1:
-                prev_line = lines[lineno - 2]
-                indent_level = len(prev_line) - len(prev_line.lstrip())
-                indent = " " * (indent_level + 4)
-            else: # Sinon, indentation par défaut
-                indent = " " * 4
-            
-            lines.insert(lineno - 1, f"{indent}pass")
-            notes.append(f"Auto-correction: Ajout de 'pass' à la ligne {lineno} pour bloc attendu.")
         
-        # Cas 2: "unexpected indent" -> dé-indente la ligne
-        elif "unexpected indent" in msg and 0 < lineno <= len(lines):
-            lines[lineno - 1] = lines[lineno - 1].lstrip()
-            notes.append(f"Auto-correction: Suppression de l'indentation superflue à la ligne {lineno}.")
+        # Détection automatique du style d'indentation (espaces vs tabs)
+        indent_char = " "
+        indent_size = 4
+        for line in lines:
+            if line.startswith((" ", "\t")):
+                if line.startswith("\t"):
+                    indent_char = "\t"
+                    indent_size = 1
+                else:
+                    # Compte les espaces du premier niveau d'indentation trouvé
+                    stripped = line.lstrip()
+                    if stripped:
+                        indent_size = len(line) - len(stripped)
+                        break
+
+        # Cas 1: "expected an indented block" -> insertion intelligente de 'pass'
+        if "expected an indented block" in msg and 0 < lineno <= len(lines):
+            target_indent = ""
             
-        # Cas 3: "unindent does not match" -> normalise tout le fichier
+            # Analyse intelligente du contexte pour déterminer l'indentation requise
+            if lineno > 1:
+                prev_line = lines[lineno - 2].rstrip()
+                
+                # Si la ligne précédente finit par ':', c'est un bloc de contrôle
+                if prev_line.endswith(':'):
+                    prev_indent = len(lines[lineno - 2]) - len(lines[lineno - 2].lstrip())
+                    target_indent = indent_char * (prev_indent + indent_size)
+                else:
+                    # Cherche le niveau d'indentation approprié en remontant
+                    for i in range(lineno - 2, -1, -1):
+                        if lines[i].strip() and lines[i].endswith(':'):
+                            base_indent = len(lines[i]) - len(lines[i].lstrip())
+                            target_indent = indent_char * (base_indent + indent_size)
+                            break
+                    else:
+                        # Fallback : indentation par défaut
+                        target_indent = indent_char * indent_size
+            else:
+                target_indent = indent_char * indent_size
+            
+            lines.insert(lineno - 1, f"{target_indent}pass")
+            notes.append(f"Auto-correction: Ajout de 'pass' avec indentation adaptée à la ligne {lineno} pour bloc attendu.")
+        
+        # Cas 2: "unexpected indent" -> correction contextuelle intelligente
+        elif "unexpected indent" in msg and 0 < lineno <= len(lines):
+            problematic_line = lines[lineno - 1]
+            
+            # Détermine le niveau d'indentation correct en analysant le contexte
+            correct_indent_level = 0
+            if lineno > 1:
+                # Cherche le niveau d'indentation de référence
+                for i in range(lineno - 2, -1, -1):
+                    if lines[i].strip():  # Ligne non vide
+                        reference_indent = len(lines[i]) - len(lines[i].lstrip())
+                        
+                        # Si c'est une ligne de définition (def, class, if, etc.), 
+                        # le niveau courant devrait être au même niveau
+                        if any(lines[i].strip().startswith(keyword) for keyword in ['def ', 'class ', 'if ', 'elif ', 'else:', 'for ', 'while ', 'try:', 'except', 'finally:', 'with ']):
+                            correct_indent_level = reference_indent
+                        else:
+                            correct_indent_level = reference_indent
+                        break
+            
+            # Applique la correction d'indentation
+            corrected_line = (indent_char * correct_indent_level) + problematic_line.lstrip()
+            lines[lineno - 1] = corrected_line
+            notes.append(f"Auto-correction: Ajustement intelligent de l'indentation à la ligne {lineno} (niveau {correct_indent_level}).")
+            
+        # Cas 3: "unindent does not match" -> réparation intelligente ligne par ligne
         elif "unindent does not match" in msg:
-            try:
-                new_code = textwrap.dedent(code)
-                notes.append("Auto-correction: Normalisation de l'indentation globale (dedent) pour corriger un décalage incohérent.")
-                return new_code, notes
-            except Exception as e:
-                notes.append(f"Échec de la normalisation de l'indentation globale: {e}")
+            notes.append("Auto-correction: Réparation intelligente des niveaux d'indentation incohérents.")
+            
+            # Stratégie intelligente : reconstruction avec analyse contextuelle
+            fixed_lines = []
+            indent_stack = [0]  # Stack des niveaux d'indentation valides
+            
+            for i, line in enumerate(lines):
+                stripped = line.strip()
+                if not stripped:
+                    fixed_lines.append("")
+                    continue
+                
+                original_indent = len(line) - len(stripped)
+                
+                # Détermine le niveau d'indentation approprié selon le contexte
+                if any(stripped.startswith(kw) for kw in ['def ', 'class ']):
+                    # Définitions de classe/fonction : niveau de base
+                    target_indent = 0
+                    indent_stack = [0, indent_size]  # Reset stack pour nouvelle définition
+                    
+                elif any(stripped.startswith(kw) for kw in ['if ', 'for ', 'while ', 'try:', 'with ']):
+                    # Structures de contrôle : niveau actuel
+                    target_indent = indent_stack[-1]
+                    if stripped.endswith(':'):
+                        indent_stack.append(target_indent + indent_size)
+                        
+                elif any(stripped.startswith(kw) for kw in ['elif ', 'else:', 'except', 'finally:']):
+                    # Clauses alternatives : même niveau que la structure parente
+                    if len(indent_stack) >= 2:
+                        target_indent = indent_stack[-2]
+                        if stripped.endswith(':'):
+                            indent_stack[-1] = target_indent + indent_size
+                    else:
+                        target_indent = 0
+                        
+                elif stripped in ['pass', 'break', 'continue'] or stripped.startswith(('return', 'raise', 'yield')):
+                    # Instructions terminales : niveau courant
+                    target_indent = indent_stack[-1] if len(indent_stack) > 1 else indent_size
+                    
+                else:
+                    # Instructions normales : niveau courant
+                    target_indent = indent_stack[-1] if len(indent_stack) > 1 else indent_size
+                
+                # Validation et ajustement du niveau calculé
+                if target_indent < 0:
+                    target_indent = 0
+                    
+                # Construction de la ligne corrigée
+                corrected_line = (indent_char * target_indent) + stripped
+                fixed_lines.append(corrected_line)
+                
+                # Gestion de la fermeture de blocs (détection heuristique)
+                if not stripped.endswith(':') and target_indent > 0:
+                    # Si on détecte une ligne qui devrait fermer un bloc
+                    next_line_indent = 0
+                    if i + 1 < len(lines) and lines[i + 1].strip():
+                        next_line_indent = len(lines[i + 1]) - len(lines[i + 1].lstrip())
+                        
+                    # Si la ligne suivante a moins d'indentation, on ferme potentiellement des blocs
+                    if next_line_indent < target_indent and len(indent_stack) > 1:
+                        # Recherche du niveau d'indentation correspondant dans la stack
+                        while len(indent_stack) > 1 and indent_stack[-1] > next_line_indent:
+                            indent_stack.pop()
+            
+            return '\n'.join(fixed_lines), notes
 
         return "\n".join(lines), notes
 
@@ -303,17 +426,48 @@ class AgentMAINTENANCE03AdaptateurCode(Agent):
         modified_code = code
 
         try:
-            # Stratégie de réparation basée sur le type d'erreur
+            # Stratégie de réparation basée sur le type d'erreur - Routage amélioré
             if error_type == "indentation":
                 self.logger.info("Stratégie de réparation ciblée pour l'indentation activée.")
                 # Le `feedback` est l'exception brute dans ce cas
                 modified_code, indent_adaptations = self._fix_indentation_errors(modified_code, feedback)
                 adaptations.extend(indent_adaptations)
-            
-            # La logique existante pour les NameError et autres peut suivre ici
-            if "name" in str(feedback).lower() and "is not defined" in str(feedback).lower():
-                # ... (logique existante)
+                
+            elif error_type == "name":
+                self.logger.info("Stratégie de réparation ciblée pour les NameError activée.")
+                # Logique spécialisée pour les erreurs de noms non définis
+                if "name" in str(feedback).lower() and "is not defined" in str(feedback).lower():
+                    # Extraction du nom de variable depuis l'erreur
+                    match = re.search(r"name '(\w+)' is not defined", str(feedback))
+                    if match:
+                        undefined_name = match.group(1)
+                        # Recherche dans le mapping des imports complexes
+                        if undefined_name in self.COMPLEX_IMPORT_MAP:
+                            module_path, import_name = self.COMPLEX_IMPORT_MAP[undefined_name]
+                            try:
+                                source_tree = cst.parse_module(modified_code)
+                                import_adder = CstComplexImportAdder(module_path, [import_name])
+                                modified_tree = source_tree.visit(import_adder)
+                                if not source_tree.deep_equals(modified_tree):
+                                    modified_code = modified_tree.code
+                                    adaptations.append(f"Ajout import automatique: from {module_path} import {import_name}")
+                            except Exception as e:
+                                self.logger.warning(f"Impossible d'ajouter l'import pour {undefined_name}: {e}")
+                                
+            elif error_type == "import":
+                self.logger.info("Stratégie de réparation ciblée pour les erreurs d'import activée.")
+                # Logique spécialisée pour les erreurs d'import
+                if "no module named" in str(feedback).lower():
+                    adaptations.append("Détection d'erreur d'import de module - analyse du contexte requise")
+                    
+            elif error_type == "syntax":
+                self.logger.info("Stratégie de réparation ciblée pour les erreurs de syntaxe activée.")
+                # Pour les erreurs de syntaxe génériques, tenter la correction LibCST
                 pass
+                
+            else:
+                self.logger.info(f"Stratégie de réparation générique pour le type '{error_type}'.")
+                # Logique générique pour autres types d'erreurs
 
             # --- Correction des blocs vides avec LibCST (plus robuste) ---
             try:

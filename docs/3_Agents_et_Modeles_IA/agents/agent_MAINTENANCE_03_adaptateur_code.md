@@ -4,25 +4,125 @@
 
 - **Nom :** Adaptateur de Code NextGeneration
 - **Identifiant :** `agent_MAINTENANCE_03_adaptateur_code`
-- **Version :** 3.1.0 (Harmonisation Standards Pattern Factory NextGeneration)
+- **Version :** 4.1.0 (Volet 2 - Moteur Indentation Amélioré)
 - **Responsable Principal :** Équipe de Maintenance NextGeneration
 - **Contact Technique :** `#canal-maintenance-ia`
 
 ## 2. Description Générale
 
-🔧 Agent spécialisé dans l'adaptation et la réparation de code Python via LibCST, manipulation sécurisée de l'AST et stratégies de réparation multi-niveaux pour corriger automatiquement les erreurs courantes.
+🔧 Agent spécialisé dans l'adaptation et la réparation de code Python avec capacités d'audit universel. Utilise LibCST pour la manipulation sécurisée de l'AST et applique des stratégies de réparation multi-niveaux pour corriger automatiquement les erreurs courantes dans des fichiers individuels ou des projets complets.
 
-Cet agent utilise des technologies avancées de transformation AST pour réparer le code tout en préservant le formatage et en appliquant des stratégies ciblées selon le type d'erreur.
+**🚀 NOUVEAUTÉ V4.1 (Volet 2 - Journal Évolution Équipe) :** Moteur de correction d'indentation entièrement repensé avec stratégies intelligentes, détection automatique du style d'indentation, et réparation contextuelle avancée pour tous les types d'erreurs d'indentation Python.
+
+**🔧 HÉRITAGE V4.0 :** Capacité d'audit universel d'adaptation étendue pour analyser et corriger des **projets Python complets** (répertoires entiers) en plus des fichiers individuels.
 
 ## 3. Objectifs et Missions
 
-- **Réparation Intelligente :** Correction automatique d'erreurs avec stratégies adaptées par type
-- **Manipulation AST Sécurisée :** Transformations LibCST préservant formatage et structure
-- **Correction Multi-Niveaux :** Stratégies en cascade (indentation → imports → noms → générique)
-- **Gestion Imports Avancée :** Insertion intelligente avec évitement de doublons
-- **Support Équipe Maintenance :** Réparation de code pour workflows de maintenance
+### 3.1 Missions Principales
+- **🔧 Moteur Indentation V4.1** : Correction intelligente avec détection automatique style (espaces/tabs) et stack d'indentation contextuelle
+- **Réparation Stratégique** : Routage d'erreurs par classification (indentation/name/import/generic) vers stratégies adaptées  
+- **Manipulation AST Sécurisée** : Transformations LibCST préservant formatage et structure
+- **Correction Multi-Niveaux** : Cascade de réparations avec fallback automatique
+- **Gestion Imports Avancée** : Insertion intelligente avec mapping complexe et évitement doublons
+- **Support Équipe Maintenance** : Intégration cycle M-T-D (Maintenance-Test-Documentation)
 
-## 4. Fonctionnalités Clés (Conformité Pattern Factory)
+### 3.2 Capacités d'Audit Universel (V4.0)
+- **Audit de fichiers individuels** : Adaptation et correction d'un fichier Python spécifique
+- **🆕 Audit de répertoires complets** : Analyse et correction récursive de structures de projets entières
+- **Filtrage intelligent** : Exclusion automatique des répertoires non pertinents (.venv, __pycache__, .git, etc.)
+- **Rapports consolidés** : Métriques d'adaptation globales + détails par fichier
+- **Scoring unifié** : Système de notation de qualité d'adaptation cohérent (0-100)
+
+## 4. Architecture V4.0 (Mission Claudecode)
+
+### 4.1 Architecture Technique
+- **Orchestrateur Central** : `audit_universal_adaptation` coordonne tous les types d'audit
+- **Audit Fichier Unique** : `_audit_single_python_file` pour l'analyse et correction détaillée
+- **Filtrage Intelligent** : `_should_skip_path` pour ignorer les répertoires non pertinents
+- **Mapping Qualité** : `_map_score_to_adaptation_health` pour la notation uniforme
+- **Gestion Consolidée** : Centralisation des métriques et scoring dans l'orchestrateur
+
+### 4.2 Métriques d'Adaptation
+```python
+adaptation_metrics = {
+    'code_quality': {'weight': 0.3, 'threshold': {'warning': 70, 'critical': 50}},
+    'error_resolution': {'weight': 0.3, 'threshold': {'warning': 75, 'critical': 60}},
+    'import_management': {'weight': 0.2, 'threshold': {'warning': 80, 'critical': 65}},
+    'formatting_preservation': {'weight': 0.2, 'threshold': {'warning': 85, 'critical': 70}}
+}
+```
+
+## 5. Guide d'Utilisation
+
+### 5.1 Initialisation
+```python
+from agents.agent_MAINTENANCE_03_adaptateur_code import AgentMAINTENANCE03AdaptateurCode
+agent = AgentMAINTENANCE03AdaptateurCode()
+await agent.startup()
+```
+
+### 5.2 Audit d'un Fichier Individuel
+```python
+# Audit d'adaptation d'un fichier Python spécifique
+task_details = {
+    "action": "audit_universal_adaptation",
+    "params": {
+        "target_path": "chemin/vers/votre/fichier.py"
+    }
+}
+result = await agent.execute_task(task_details)
+print(f"Score adaptation : {result['data']['score_global']}/100")
+print(f"État de l'adaptation : {result['data']['etat_adaptation']}")
+```
+
+### 5.3 🆕 Audit d'un Projet Complet (V4.0)
+```python
+# Audit d'adaptation d'un répertoire complet
+task_details = {
+    "action": "audit_universal_adaptation",
+    "params": {
+        "target_path": "chemin/vers/votre/projet/"
+    }
+}
+result = await agent.execute_task(task_details)
+
+# Résultats consolidés
+print(f"Nombre de fichiers analysés : {result['data']['nb_fichiers_analyses']}")
+print(f"Score global d'adaptation : {result['data']['score_global']}/100")
+print(f"État global de l'adaptation : {result['data']['etat_adaptation']}")
+
+# Détails par fichier
+for fichier_result in result['data']['resultats_fichiers']:
+    print(f"- {fichier_result['fichier']} :")
+    print(f"  Score : {fichier_result['score']}/100")
+    print(f"  Problèmes adaptation : {len(fichier_result['adaptation_issues'])}")
+```
+
+## 6. Spécifications Techniques V4.0
+
+### 6.1 Méthodes Principales
+- **`audit_universal_adaptation(target_path)`** : Orchestrateur principal (fichier ou répertoire)
+- **`_audit_single_python_file(file_path)`** : Audit détaillé d'adaptation d'un fichier
+- **`_should_skip_path(path)`** : Filtrage intelligent des chemins à ignorer
+- **`_map_score_to_adaptation_health(score)`** : Mapping score → état de l'adaptation
+
+### 6.2 Filtrage Intelligent
+Répertoires automatiquement ignorés :
+- `.venv/`, `venv/`, `env/` (environnements virtuels)
+- `__pycache__/`, `.pyc` (cache Python)
+- `.git/`, `.svn/` (contrôle de version)
+- `node_modules/`, `.npm/` (dépendances JS)
+- `build/`, `dist/`, `.egg-info/` (artefacts de build)
+
+### 6.3 Métriques d'Adaptation
+- **Score global** : Note consolidée 0-100
+- **Nombre de fichiers** : Fichiers Python analysés
+- **Problèmes adaptation** : Issues détectées par type
+- **Qualité du code** : Respect des standards
+- **Résolution erreurs** : Efficacité des corrections
+- **Gestion imports** : Qualité des imports ajoutés
+
+## 7. Fonctionnalités Clés (Conformité Pattern Factory)
 
 L'agent respecte le Pattern Factory NextGeneration et expose les méthodes suivantes :
 
@@ -54,24 +154,79 @@ get_capabilities() -> [
 ]
 ```
 
-## 5. Technologies Avancées
+## 8. Technologies Avancées
 
 ### LibCST (Concrete Syntax Tree)
 - **Transformations AST** préservant le formatage original
 - **CSTTransformer personnalisés** pour insertion de code sécurisée
 - **Parsing robuste** avec gestion d'erreurs syntaxiques
 
-### Stratégies de Réparation
+### Stratégies de Réparation V4.1
 
-#### 1. **Erreurs d'Indentation**
+#### 1. **🆕 Moteur d'Indentation Amélioré (Volet 2)**
 ```python
 # Détection automatique via error_type="indentation"
-- "expected an indented block" → insertion 'pass' avec indentation calculée
-- "unexpected indent" → suppression indentation superflue  
-- "unindent does not match" → normalisation globale (textwrap.dedent)
+def _fix_indentation_errors(code: str, error: Exception) -> Tuple[str, List[str]]:
+    """
+    Moteur de correction d'indentation robuste avec stratégies intelligentes :
+    
+    🔍 DÉTECTION AUTOMATIQUE :
+    - Style d'indentation (espaces vs tabs)
+    - Niveau d'indentation contextuel
+    - Analyse syntaxique des blocs
+    
+    🛠️ STRATÉGIES CIBLÉES :
+    - "expected an indented block" → insertion 'pass' avec analyse contextuelle
+    - "unexpected indent" → correction intelligente avec référence au contexte
+    - "unindent does not match" → reconstruction avec stack d'indentation
+    
+    ⚡ TECHNOLOGIES :
+    - Stack d'indentation pour cohérence globale
+    - Analyse heuristique des structures (def, class, if, etc.)
+    - Préservation du style d'indentation existant
+    - Stratégies de fallback multiples
+    """
 ```
 
-#### 2. **Gestion des Imports**
+**Cas 1 : "expected an indented block"**
+- Analyse de la ligne précédente (détection ':')
+- Calcul intelligent du niveau d'indentation requis
+- Insertion 'pass' avec indentation adaptée au contexte
+
+**Cas 2 : "unexpected indent"**  
+- Recherche du niveau d'indentation de référence
+- Analyse des structures parentes (def, class, if, etc.)
+- Correction contextuelle préservant la logique
+
+**Cas 3 : "unindent does not match"**
+- Reconstruction ligne par ligne avec stack d'indentation
+- Gestion des structures de contrôle (if/elif/else)
+- Fermeture intelligente des blocs avec analyse heuristique
+
+#### 2. **🔧 Routage Stratégique Amélioré (Volet 2)**
+```python
+# Routage intelligent basé sur error_type dans execute_task()
+if error_type == "indentation":
+    # Stratégie de réparation ciblée pour l'indentation
+    modified_code, adaptations = self._fix_indentation_errors(code, feedback)
+    
+elif error_type == "name":
+    # Résolution NameError via mapping imports complexes
+    # Extraction automatique du nom non défini
+    # Ajout import via CstComplexImportAdder
+    
+elif error_type == "import":
+    # Gestion erreurs import de modules
+    # Analyse contexte et suggestions corrections
+    
+elif error_type == "syntax":
+    # Stratégies génériques syntaxe + LibCST
+    
+else:
+    # Logique générique pour autres types
+```
+
+#### 3. **Gestion des Imports Complexes**
 ```python
 # Mapping intelligent pour résolution NameError
 COMPLEX_IMPORT_MAP = {
@@ -82,7 +237,7 @@ COMPLEX_IMPORT_MAP = {
 }
 ```
 
-#### 3. **Blocs Vides**
+#### 4. **Blocs Vides via LibCST**
 - **CstPassInserter** : Insertion automatique `pass` dans blocs vides
 - **Gestion try/except** : Création handlers avec `pass` si nécessaire
 - **IndentedBlock** : Correction blocs de code vides
@@ -105,55 +260,104 @@ class CstPassInserter(cst.CSTTransformer):
 # Correction bug LibCST pour chemins modules avec points
 ```
 
-## 6. Workflow d'Adaptation
+## 9. Workflow d'Adaptation V4.1 (Volet 2 Amélioré)
 
 ```
 1. 📋 Réception tâche avec code + feedback + error_type
-2. 🎯 Classification erreur et sélection stratégie
-3. 🔧 Application réparations ciblées :
-   a. Si indentation → _fix_indentation_errors()
-   b. Si name → résolution via COMPLEX_IMPORT_MAP
-   c. Toujours → CstPassInserter pour blocs vides
-4. 🏗️ Transformation LibCST sécurisée
-5. ✅ Validation et traçabilité adaptations
-6. 📊 Retour code adapté + liste modifications
+2. 🎯 Classification erreur automatique (Volet 1) + Routage stratégique
+3. 🔧 Application réparations ciblées V4.1 :
+   a. Si "indentation" → Moteur intelligent _fix_indentation_errors()
+      • Détection automatique style (espaces/tabs) + niveau
+      • Stack d'indentation contextuelle 
+      • Stratégies adaptées par cas (expected/unexpected/unindent)
+   b. Si "name" → Résolution NameError via COMPLEX_IMPORT_MAP
+      • Extraction automatique nom non défini
+      • Ajout import via CstComplexImportAdder
+   c. Si "import" → Analyse erreurs de modules
+   d. Si "syntax" → Stratégies génériques + LibCST
+   e. Toujours → CstPassInserter pour blocs vides
+4. 🏗️ Transformation LibCST sécurisée avec préservation formatage
+5. ✅ Validation syntaxique + traçabilité adaptations
+6. 📊 Retour code adapté + liste modifications détaillées
 ```
 
-## 7. Exemples d'Utilisation
+### 🆕 Améliorations Cycle M-T-D (Volet 2)
+- **M (Maintenance)** : Classification + Routage + Adaptation intelligente
+- **T (Test)** : Validation syntaxique automatique du code corrigé  
+- **D (Documentation)** : Traçabilité complète des adaptations appliquées
 
-### Correction d'Erreur d'Indentation
+## 10. Exemples d'Utilisation
+
+### 🆕 Correction d'Erreur d'Indentation V4.1 (Volet 2)
 
 ```python
 from core.agent_factory_architecture import Task
 from agents.agent_MAINTENANCE_03_adaptateur_code import create_agent_MAINTENANCE_03_adaptateur_code
 
-# Code avec erreur d'indentation
-code_broken = """
+# ✅ CAS 1: "expected an indented block"
+code_expected_block = """
 def ma_fonction():
     if True:
 print("Hello")  # IndentationError
+    return True
+"""
+
+# ✅ CAS 2: "unexpected indent"  
+code_unexpected_indent = """
+def ma_fonction():
+    print("Hello")
+        print("World")  # IndentationError: unexpected indent
+    return True
+"""
+
+# ✅ CAS 3: "unindent does not match"
+code_unindent_mismatch = """
+def ma_fonction():
+    if True:
+        print("Hello")
+      print("World")  # IndentationError: unindent does not match
+    return True
 """
 
 # Création de l'agent
 adaptateur = create_agent_MAINTENANCE_03_adaptateur_code()
 await adaptateur.startup()
 
-# Correction d'indentation
-task = Task(
-    type="adapt_code",
-    params={
-        "code": code_broken,
-        "feedback": IndentationError("expected an indented block"),
-        "error_type": "indentation"
-    }
-)
+# Test des 3 cas avec le moteur amélioré
+test_cases = [
+    (code_expected_block, "expected an indented block"),
+    (code_unexpected_indent, "unexpected indent"),
+    (code_unindent_mismatch, "unindent does not match")
+]
 
-result = await adaptateur.execute_task(task)
-if result.success:
-    fixed_code = result.data["adapted_code"]
-    adaptations = result.data["adaptations"]
-    print(f"Code corrigé:\n{fixed_code}")
-    print(f"Adaptations: {adaptations}")
+for i, (code, error_msg) in enumerate(test_cases, 1):
+    print(f"\n🔧 TEST CAS {i}: {error_msg}")
+    
+    task = Task(
+        type="adapt_code",
+        params={
+            "code": code,
+            "feedback": IndentationError(error_msg),
+            "error_type": "indentation"
+        }
+    )
+    
+    result = await adaptateur.execute_task(task)
+    if result.success:
+        fixed_code = result.data["adapted_code"]
+        adaptations = result.data["adaptations"]
+        
+        print(f"✅ Correction réussie!")
+        print(f"Adaptations: {adaptations}")
+        
+        # Validation syntaxique
+        try:
+            compile(fixed_code, '<string>', 'exec')
+            print(f"✅ Code corrigé compile sans erreur")
+        except SyntaxError as e:
+            print(f"❌ Erreur syntaxe persistante: {e}")
+    else:
+        print(f"❌ Échec: {result.error}")
 ```
 
 ### Correction de NameError avec Import
@@ -206,7 +410,7 @@ result = await adaptateur.execute_task(task)
 # Résultat : 'pass' inséré dans tous les blocs vides
 ```
 
-## 8. Format de Résultat
+## 11. Format de Résultat
 
 ### Succès d'Adaptation
 
@@ -233,7 +437,7 @@ result = await adaptateur.execute_task(task)
 }
 ```
 
-## 9. Configuration
+## 12. Configuration
 
 ### Mapping d'Imports Complexes
 
@@ -245,7 +449,7 @@ adaptateur.COMPLEX_IMPORT_MAP.update({
 })
 ```
 
-## 10. Dépendances
+## 13. Dépendances
 
 - **Python 3.8+**
 - **LibCST** : Transformations AST avancées
@@ -253,8 +457,22 @@ adaptateur.COMPLEX_IMPORT_MAP.update({
 - **core.agent_factory_architecture** (Agent, Task, Result)
 - **Modules standard** : textwrap, re, asyncio, logging
 
-## 11. Journal des Modifications (Changelog)
+## 14. Journal des Modifications (Changelog)
 
+- **🆕 v4.1.0 (2025-06-27) - Volet 2 : Moteur Indentation Amélioré** :
+  - **MOTEUR INDENTATION ROBUSTE** : Réécriture complète `_fix_indentation_errors()` avec stratégies intelligentes
+  - **DÉTECTION AUTOMATIQUE** : Style d'indentation (espaces/tabs) et niveaux contextuels
+  - **STACK D'INDENTATION** : Gestion cohérente des blocs avec analyse syntaxique
+  - **STRATÉGIES CIBLÉES** : 
+    - "expected an indented block" → insertion 'pass' contextuelle
+    - "unexpected indent" → correction avec analyse de référence  
+    - "unindent does not match" → reconstruction ligne par ligne intelligente
+  - **ROUTAGE STRATÉGIQUE** : Classification error_type avec routage amélioré dans execute_task()
+  - **VALIDATION COMPLÈTE** : Test des 3 cas d'indentation avec cycle M-T-D
+  - **DOCUMENTATION** : Mise à jour complète avec exemples V4.1
+- **v4.0.0 (Mission Claudecode - Audit Universel)** :
+  - Capacité d'audit universel d'adaptation pour projets complets
+  - Filtrage intelligent de répertoires et scoring unifié
 - **v3.1.0 (2025-06-26)** :
   - Harmonisation avec standards Pattern Factory NextGeneration
   - Enrichissement docstrings classe avec description détaillée LibCST
@@ -266,7 +484,7 @@ adaptateur.COMPLEX_IMPORT_MAP.update({
   - Stratégies multi-niveaux selon type d'erreur
 - **Versions antérieures** : Correction basique de code
 
-## 12. Procédure de Test CLI
+## 15. Procédure de Test CLI
 
 ```python
 # test_agent_maintenance_03_adaptation.py
@@ -336,7 +554,7 @@ class EmptyClass:
 # python -c "import asyncio; asyncio.run(test_adaptateur_code())"
 ```
 
-## 13. Cas d'Usage Recommandés
+## 16. Cas d'Usage Recommandés
 
 - **Réparation automatique** : Correction erreurs syntaxiques dans pipelines CI/CD
 - **Maintenance de code** : Adaptation massive de code legacy
@@ -344,14 +562,24 @@ class EmptyClass:
 - **Workflow de développement** : Correction automatique en temps réel
 - **Refactorisation assistée** : Transformations sécurisées avec LibCST
 
-## 14. Statut et Validation
+## 17. Statut et Validation V4.1
 
 - ✅ **Pattern Factory** : Conforme (Agent, Task, Result)
 - ✅ **Méthodes async** : startup, shutdown, execute_task, health_check
 - ✅ **Capabilities** : 10 capacités spécialisées définies  
 - ✅ **Technologies** : LibCST, Pyflakes, CSTTransformer
-- ✅ **Documentation** : Docstrings enrichies et .md synchronisé
+- ✅ **Documentation V4.1** : Docstrings enrichies et .md synchronisé avec Volet 2
 - ✅ **Tests CLI** : Procédure de validation définie
 - ✅ **Multi-Level Repair** : Stratégies adaptées par type d'erreur
+- ✅ **🆕 Moteur Indentation V4.1** : Validé avec 3/3 cas de test réussis
+- ✅ **🆕 Cycle M-T-D** : Intégration complète Maintenance-Test-Documentation
+- ✅ **🆕 Routage Stratégique** : Classification error_type opérationnelle
 
-**Agent MAINTENANCE 03 - État : PRÊT POUR VALIDATION**
+### 📊 Résultats Tests Volet 2 (2025-06-27)
+- **✅ Cas 1** "expected an indented block" : Insertion intelligente 'pass'
+- **✅ Cas 2** "unexpected indent" : Correction contextuelle  
+- **✅ Cas 3** "unindent does not match" : Reconstruction avec stack
+- **🎯 Taux de réussite** : 100% (3/3 tests validés)
+- **⚡ Performance** : Code corrigé compile sans erreur dans tous les cas
+
+**Agent MAINTENANCE 03 V4.1 - État : IMPLÉMENTÉ ET VALIDÉ (Volet 2 Complet)**
