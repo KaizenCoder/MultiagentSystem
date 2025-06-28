@@ -1,0 +1,91 @@
+{
+    "agent_05": {
+        "test_patterns": [
+            {
+                "id": "pattern_1",
+                "type": "validation_tests",
+                "params": {
+                    "mode": "strict",
+                    "load_multiplier": 1.5,
+                    "duration_days": 7,
+                    "parallel_execution": true
+                }
+            },
+            {
+                "id": "pattern_2",
+                "type": "legacy_compatibility",
+                "params": {
+                    "formats": ["json", "xml", "binary"],
+                    "validation_level": "strict"
+                }
+            }
+        ],
+        "validation_rules": {
+            "min_success": 0.95,
+            "min_duration_days": 7,
+            "required_formats": ["json", "xml", "binary"]
+        }
+    },
+    "agent_111": {
+        "test_patterns": [
+            {
+                "id": "quality_1",
+                "type": "quality_assurance",
+                "params": {
+                    "precision_threshold": 0.90,
+                    "metrics": ["accuracy", "reliability", "performance"]
+                }
+            },
+            {
+                "id": "quality_2",
+                "type": "load_testing",
+                "params": {
+                    "concurrent_users": 100,
+                    "duration_hours": 168,
+                    "ramp_up_minutes": 30
+                }
+            }
+        ],
+        "validation_rules": {
+            "min_precision": 0.90,
+            "min_duration_hours": 168,
+            "required_metrics": ["accuracy", "reliability", "performance"]
+        }
+    },
+    "agent_MAINTENANCE_00": {
+        "test_patterns": [
+            {
+                "id": "maintenance_1",
+                "type": "orchestration_validation",
+                "params": {
+                    "components": ["scheduler", "dispatcher", "monitor"],
+                    "scenarios": ["normal", "degraded", "recovery"],
+                    "min_delivery_rate": 0.98
+                }
+            }
+        ],
+        "validation_rules": {
+            "min_delivery": 0.98,
+            "required_components": ["scheduler", "dispatcher", "monitor"],
+            "required_scenarios": ["normal", "degraded", "recovery"]
+        }
+    },
+    "agent_109": {
+        "test_patterns": [
+            {
+                "id": "pattern_factory_1",
+                "type": "factory_validation",
+                "params": {
+                    "optimization_target": 0.10,
+                    "factory_components": ["creator", "builder", "assembler"],
+                    "validation_scenarios": ["create", "modify", "delete"]
+                }
+            }
+        ],
+        "validation_rules": {
+            "min_optimization": 0.10,
+            "required_components": ["creator", "builder", "assembler"],
+            "required_scenarios": ["create", "modify", "delete"]
+        }
+    }
+} 

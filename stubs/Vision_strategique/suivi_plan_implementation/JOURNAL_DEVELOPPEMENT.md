@@ -850,6 +850,107 @@ L'architecture hybride NextGeneration est opérationnelle :
 
 ---
 
+## 🔒 RÈGLE D'OR : PRÉSERVATION ET EXTENSION DES FONCTIONNALITÉS
+
+### **Directive Absolue de Non-Régression**
+
+**Date d'Application** : 28 Juin 2025 - 16:30 UTC
+**Statut** : 🔒 OBLIGATOIRE ET NON NÉGOCIABLE
+
+#### 📋 Principes Fondamentaux
+
+1. **Conservation Obligatoire** :
+   - ✅ Toutes les fonctionnalités existantes DOIVENT être préservées
+   - ❌ AUCUNE simplification ou réduction de fonctionnalités autorisée
+   - 🔍 Tests exhaustifs avant/après pour chaque agent
+
+2. **Extension Privilégiée** :
+   - 🎯 Objectif : Étendre et améliorer les fonctionnalités existantes
+   - 🚫 Interdiction de dégrader les capacités actuelles
+   - 📈 Validation métriques pré/post migration
+
+3. **Processus de Validation** :
+   ```python
+   # Protocole de test obligatoire
+   class AgentValidationProtocol:
+       def pre_migration_tests(self):
+           # Capture complète comportement initial
+           self.baseline_capabilities = capture_agent_capabilities()
+           self.baseline_metrics = measure_performance_metrics()
+           
+       def post_migration_tests(self):
+           # Validation non-régression
+           new_capabilities = capture_agent_capabilities()
+           assert all(cap in new_capabilities for cap in self.baseline_capabilities)
+           
+           # Validation métriques
+           new_metrics = measure_performance_metrics()
+           assert all(new >= baseline for new, baseline 
+                     in zip(new_metrics, self.baseline_metrics))
+   ```
+
+4. **Documentation Obligatoire** :
+   - 📝 Catalogue exhaustif fonctionnalités pré-migration
+   - ✅ Validation point par point post-migration
+   - 📊 Métriques comparatives avant/après
+
+#### 🔍 Processus de Vérification
+
+1. **Phase Pré-Migration** :
+   - Cartographie complète des fonctionnalités
+   - Tests exhaustifs avec cas limites
+   - Documentation des comportements attendus
+
+2. **Phase Migration** :
+   - Shadow Mode avec comparaison stricte
+   - Seuil similarité : 100% fonctionnel requis
+   - Tests parallèles legacy/moderne
+
+3. **Phase Post-Migration** :
+   - Validation fonctionnelle complète
+   - Comparaison métriques performance
+   - Tests régression automatisés
+
+4. **Monitoring Continu** :
+   - Surveillance temps réel comportement
+   - Alertes immédiates anomalies
+   - Rollback automatique si régression
+
+#### 📊 Métriques de Validation
+
+```python
+# Métriques obligatoires par agent
+validation_metrics = {
+    "functional_coverage": 1.0,  # 100% requis
+    "performance_ratio": "≥ 1.0",  # Minimum égal
+    "reliability_score": "≥ baseline",
+    "error_rate": "≤ baseline",
+    "response_time": "≤ baseline"
+}
+```
+
+#### 🚨 Procédure en Cas de Régression
+
+1. **Détection** :
+   - Monitoring temps réel 24/7
+   - Seuils d'alerte stricts
+   - Comparaison continue baseline
+
+2. **Action Immédiate** :
+   - Rollback automatique instantané
+   - Notification équipe technique
+   - Gel migration agent concerné
+
+3. **Analyse** :
+   - Investigation cause racine
+   - Révision processus migration
+   - Renforcement tests si nécessaire
+
+4. **Correction** :
+   - Fix obligatoire régression
+   - Nouveaux tests préventifs
+   - Validation complète avant reprise
+
 ## ✅ **PHASE 0 COMPLÉTÉE - BILAN GLOBAL**
 
 ### **Réalisations Phase 0 (3 semaines)**
@@ -881,3 +982,122 @@ L'architecture hybride NextGeneration est opérationnelle :
 - Shadow Mode validé pour migration progressive
 
 **Next Sprint** : Migration du premier agent pilote (agent_05_maitre_tests_validation)
+
+### **28 Juin 2025 - 16:45 UTC** ⚠️
+
+#### 🔍 **RÉVISION CRITIQUE - Interdiction Absolue des Simplifications**
+
+**Action** : Révision complète des progrès et renforcement des exigences
+
+**⛔ DIRECTIVE ANTI-SIMPLIFICATION** :
+
+1. **Interdictions Absolues** :
+   ```python
+   INTERDICTIONS = {
+       "simplification_code": "INTERDIT - Maintien obligatoire complexité",
+       "quick_wins": "INTERDIT - Masquage complexité réelle",
+       "metrics_artificielles": "INTERDIT - Fausse progression",
+       "env_simplifie": "INTERDIT - Tests production uniquement",
+       "validation_partielle": "INTERDIT - 100% cas réels requis"
+   }
+   ```
+
+2. **Validation Usage Réel** :
+   ```python
+   class ValidationReelle:
+       def valider_agent(self, agent_id):
+           # Validation production obligatoire
+           assert self.test_production_reelle()
+           assert self.valider_charge_max()
+           assert self.verifier_cas_complexes()
+           assert self.maintien_compatibilite()
+           
+       def test_production_reelle(self):
+           # Test 1 semaine minimum prod
+           return run_prod_tests(duration="1 week")
+           
+       def valider_charge_max(self):
+           # Test pics charge x1.5
+           return test_peak_load(factor=1.5)
+           
+       def verifier_cas_complexes(self):
+           # Validation workflows réels
+           return verify_complex_workflows()
+           
+       def maintien_compatibilite(self):
+           # Test formats legacy
+           return validate_legacy_compatibility()
+   ```
+
+3. **Révision Statut Agents** :
+
+   a. **Agent 05 (Tests)** :
+   ```python
+   revision_agent_05 = {
+       "status": "EN_REVISION",
+       "validation_requise": [
+           "parallélisation_complete",
+           "support_legacy_formats",
+           "integration_cicd_totale"
+       ],
+       "tests_prod": "1 semaine minimum",
+       "validation_qa": "En attente"
+   }
+   ```
+
+   b. **Agent 111 (Qualité)** :
+   ```python
+   revision_agent_111 = {
+       "status": "EN_REVISION",
+       "validation_requise": [
+           "analyse_1M_LOC",
+           "support_multi_langages",
+           "regles_qualite_custom"
+       ],
+       "tests_charge": "Pics prod x1.5",
+       "validation_ast": "En attente"
+   }
+   ```
+
+   c. **Agent MAINTENANCE_00** :
+   ```python
+   revision_maintenance = {
+       "status": "EN_REVISION",
+       "validation_requise": [
+           "gestion_conflits",
+           "priorisation_dynamique",
+           "workflows_legacy"
+       ],
+       "cycle_complet": "En attente",
+       "validation_orchestration": "En cours"
+   }
+   ```
+
+4. **Métriques Révisées** :
+   ```python
+   METRIQUES_REELLES = {
+       "progression": "18%",  # Révision à la baisse
+       "agents_valides": "0/4",  # En attente validation réelle
+       "phase_1": "20%",  # Tests production requis
+       "validation": "En cours"
+   }
+   ```
+
+**📊 Impact sur Planning** :
+- Phase 1 : Retour à 20% (validation réelle requise)
+- Progression totale : 18% (révision réaliste)
+- Délai supplémentaire : Accepté pour garantir qualité
+
+**🎯 Actions Correctives** :
+1. Mise en place validation production 1 semaine
+2. Tests charge pics x1.5 obligatoires
+3. Validation workflows complexes requise
+4. Documentation exhaustive cas d'usage
+
+**⚠️ Points d'Attention** :
+- Aucun compromis sur la complexité accepté
+- Validation production obligatoire
+- Tests réels uniquement
+- Documentation complète requise
+
+**Prochaine Action** : Démarrage validation production Agent 05
