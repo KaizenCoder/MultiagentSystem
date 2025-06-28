@@ -1,0 +1,970 @@
+{
+  "analysis_timestamp": "2025-06-28T13:15:58.670357",
+  "summary": {
+    "total_agents": 64,
+    "total_dependencies": 51,
+    "migration_waves": 5,
+    "leaf_agents_count": 43,
+    "pillar_agents_count": 4
+  },
+  "categories": {
+    "COORDINATION": [
+      "agent_01_coordinateur_principal"
+    ],
+    "GENERAL": [
+      "agent_02_architecte_code_expert",
+      "agent_03_specialiste_configuration",
+      "agent_109_pattern_factory_version copy",
+      "agent_109_pattern_factory_version",
+      "agent_109_specialiste_planes",
+      "agent_110_documentaliste_expert",
+      "agent_14_specialiste_workspace",
+      "agent_16_peer_reviewer_senior",
+      "agent_17_peer_reviewer_technique",
+      "agent_analyse_solution_chatgpt",
+      "agent_ASSISTANT_99_refactoring_helper",
+      "agent_config",
+      "agent_meta_strategique",
+      "agent_meta_strategique_scheduler"
+    ],
+    "SECURITY": [
+      "agent_04_expert_securite_crypto",
+      "agent_SECURITY_21_supply_chain_enterprise"
+    ],
+    "TESTING": [
+      "agent_05_maitre_tests_validation",
+      "agent_15_testeur_specialise",
+      "agent_testeur_agents",
+      "agent_testeur_agents_complet",
+      "agent_test_models_integration",
+      "agent_test_models_integration_clean"
+    ],
+    "MONITORING": [
+      "agent_06_specialiste_monitoring_sprint4",
+      "agent_108_performance_optimizer copy",
+      "agent_MONITORING_25_production_enterprise"
+    ],
+    "AUDIT": [
+      "agent_111_auditeur_qualite",
+      "agent_111_auditeur_qualite_sprint3",
+      "agent_18_auditeur_securite",
+      "agent_19_auditeur_performance",
+      "agent_20_auditeur_conformite",
+      "agent_META_AUDITEUR_UNIVERSEL",
+      "agent_orchestrateur_audit"
+    ],
+    "DOCUMENTATION": [
+      "agent_13_specialiste_documentation"
+    ],
+    "ARCHITECTURE": [
+      "agent_ARCHITECTURE_22_enterprise_consultant",
+      "agent_FASTAPI_23_orchestration_enterprise",
+      "agent_STORAGE_24_enterprise_manager"
+    ],
+    "MAINTENANCE": [
+      "agent_MAINTENANCE_00_chef_equipe_coordinateur",
+      "agent_MAINTENANCE_00_chef_equipe_coordinateur_parallel",
+      "agent_MAINTENANCE_01_analyseur_structure",
+      "agent_MAINTENANCE_02_evaluateur_utilite",
+      "agent_MAINTENANCE_03_adaptateur_code",
+      "agent_MAINTENANCE_04_testeur_anti_faux_agents",
+      "agent_MAINTENANCE_05_documenteur_peer_reviewer",
+      "agent_MAINTENANCE_06_correcteur_logique_metier",
+      "agent_MAINTENANCE_06_validateur_final",
+      "agent_MAINTENANCE_07_gestionnaire_dependances",
+      "agent_MAINTENANCE_08_analyseur_performance",
+      "agent_MAINTENANCE_09_analyseur_securite",
+      "agent_MAINTENANCE_10_auditeur_qualite_normes",
+      "agent_MAINTENANCE_11_harmonisateur_style",
+      "agent_MAINTENANCE_12_correcteur_semantique",
+      "agent_MAINTENANCE_15_correcteur_automatise"
+    ],
+    "POSTGRESQL": [
+      "agent_POSTGRESQL_base",
+      "agent_POSTGRESQL_diagnostic_postgres_final",
+      "agent_POSTGRESQL_docker_specialist",
+      "agent_POSTGRESQL_documentation_manager",
+      "agent_POSTGRESQL_resolution_finale",
+      "agent_POSTGRESQL_sqlalchemy_fixer",
+      "agent_POSTGRESQL_sqlalchemy_fixer_new",
+      "agent_POSTGRESQL_testing_specialist",
+      "agent_POSTGRESQL_web_researcher",
+      "agent_POSTGRESQL_windows_postgres",
+      "agent_POSTGRESQL_workspace_organizer"
+    ]
+  },
+  "complexity_by_category": {
+    "COORDINATION": 0.647,
+    "GENERAL": 0.422,
+    "SECURITY": 0.526,
+    "TESTING": 0.34,
+    "MONITORING": 0.281,
+    "AUDIT": 0.514,
+    "DOCUMENTATION": 0.512,
+    "ARCHITECTURE": 0.327,
+    "MAINTENANCE": 0.422,
+    "POSTGRESQL": 0.348
+  },
+  "migration_waves": [
+    [
+      "agent_meta_strategique",
+      "agent_STORAGE_24_enterprise_manager",
+      "agent_orchestrateur_audit",
+      "agent_MONITORING_25_production_enterprise",
+      "agent_testeur_agents",
+      "agent_test_models_integration",
+      "agent_MAINTENANCE_00_chef_equipe_coordinateur_parallel",
+      "agent_POSTGRESQL_base",
+      "agent_MAINTENANCE_02_evaluateur_utilite",
+      "agent_MAINTENANCE_11_harmonisateur_style",
+      "agent_MAINTENANCE_15_correcteur_automatise",
+      "agent_analyse_solution_chatgpt",
+      "agent_108_performance_optimizer copy",
+      "agent_MAINTENANCE_07_gestionnaire_dependances",
+      "agent_POSTGRESQL_workspace_organizer",
+      "agent_POSTGRESQL_docker_specialist",
+      "agent_109_pattern_factory_version copy",
+      "agent_109_pattern_factory_version",
+      "agent_POSTGRESQL_sqlalchemy_fixer_new",
+      "agent_meta_strategique_scheduler",
+      "agent_POSTGRESQL_documentation_manager",
+      "agent_MAINTENANCE_01_analyseur_structure",
+      "agent_FASTAPI_23_orchestration_enterprise",
+      "agent_ASSISTANT_99_refactoring_helper",
+      "agent_15_testeur_specialise",
+      "agent_111_auditeur_qualite",
+      "agent_MAINTENANCE_08_analyseur_performance",
+      "agent_MAINTENANCE_12_correcteur_semantique",
+      "agent_POSTGRESQL_resolution_finale",
+      "agent_16_peer_reviewer_senior",
+      "agent_config",
+      "agent_POSTGRESQL_diagnostic_postgres_final",
+      "agent_MAINTENANCE_04_testeur_anti_faux_agents",
+      "agent_testeur_agents_complet",
+      "agent_MAINTENANCE_00_chef_equipe_coordinateur",
+      "agent_SECURITY_21_supply_chain_enterprise",
+      "agent_19_auditeur_performance",
+      "agent_06_specialiste_monitoring_sprint4",
+      "agent_MAINTENANCE_06_correcteur_logique_metier",
+      "agent_110_documentaliste_expert",
+      "agent_05_maitre_tests_validation",
+      "agent_MAINTENANCE_05_documenteur_peer_reviewer",
+      "agent_ARCHITECTURE_22_enterprise_consultant",
+      "agent_04_expert_securite_crypto",
+      "agent_02_architecte_code_expert",
+      "agent_MAINTENANCE_10_auditeur_qualite_normes",
+      "agent_POSTGRESQL_testing_specialist",
+      "agent_18_auditeur_securite",
+      "agent_17_peer_reviewer_technique",
+      "agent_20_auditeur_conformite",
+      "agent_MAINTENANCE_03_adaptateur_code",
+      "agent_MAINTENANCE_09_analyseur_securite"
+    ],
+    [
+      "agent_POSTGRESQL_windows_postgres",
+      "agent_POSTGRESQL_sqlalchemy_fixer",
+      "agent_POSTGRESQL_web_researcher",
+      "agent_MAINTENANCE_06_validateur_final"
+    ],
+    [
+      "agent_03_specialiste_configuration",
+      "agent_test_models_integration_clean",
+      "agent_META_AUDITEUR_UNIVERSEL",
+      "agent_01_coordinateur_principal",
+      "agent_109_specialiste_planes"
+    ],
+    [
+      "agent_13_specialiste_documentation",
+      "agent_111_auditeur_qualite_sprint3"
+    ],
+    [
+      "agent_14_specialiste_workspace"
+    ]
+  ],
+  "pilot_agents": [
+    "agent_05_maitre_tests_validation",
+    "agent_111_auditeur_qualite",
+    "agent_MAINTENANCE_00_chef_equipe_coordinateur",
+    "agent_109_pattern_factory_version copy"
+  ],
+  "leaf_agents": [
+    "agent_02_architecte_code_expert",
+    "agent_04_expert_securite_crypto",
+    "agent_05_maitre_tests_validation",
+    "agent_06_specialiste_monitoring_sprint4",
+    "agent_108_performance_optimizer copy",
+    "agent_109_pattern_factory_version copy",
+    "agent_109_pattern_factory_version",
+    "agent_110_documentaliste_expert",
+    "agent_111_auditeur_qualite",
+    "agent_15_testeur_specialise",
+    "agent_16_peer_reviewer_senior",
+    "agent_17_peer_reviewer_technique",
+    "agent_18_auditeur_securite",
+    "agent_19_auditeur_performance",
+    "agent_20_auditeur_conformite",
+    "agent_analyse_solution_chatgpt",
+    "agent_ARCHITECTURE_22_enterprise_consultant",
+    "agent_ASSISTANT_99_refactoring_helper",
+    "agent_config",
+    "agent_FASTAPI_23_orchestration_enterprise",
+    "agent_MAINTENANCE_00_chef_equipe_coordinateur",
+    "agent_MAINTENANCE_00_chef_equipe_coordinateur_parallel",
+    "agent_MAINTENANCE_01_analyseur_structure",
+    "agent_MAINTENANCE_02_evaluateur_utilite",
+    "agent_MAINTENANCE_03_adaptateur_code",
+    "agent_MAINTENANCE_04_testeur_anti_faux_agents",
+    "agent_MAINTENANCE_05_documenteur_peer_reviewer",
+    "agent_MAINTENANCE_06_correcteur_logique_metier",
+    "agent_MAINTENANCE_07_gestionnaire_dependances",
+    "agent_MAINTENANCE_08_analyseur_performance",
+    "agent_MAINTENANCE_09_analyseur_securite",
+    "agent_MAINTENANCE_10_auditeur_qualite_normes",
+    "agent_MAINTENANCE_11_harmonisateur_style",
+    "agent_MAINTENANCE_12_correcteur_semantique",
+    "agent_MAINTENANCE_15_correcteur_automatise",
+    "agent_meta_strategique",
+    "agent_MONITORING_25_production_enterprise",
+    "agent_orchestrateur_audit",
+    "agent_POSTGRESQL_base",
+    "agent_SECURITY_21_supply_chain_enterprise",
+    "agent_STORAGE_24_enterprise_manager",
+    "agent_testeur_agents",
+    "agent_test_models_integration"
+  ],
+  "pillar_agents": [
+    "agent_01_coordinateur_principal",
+    "agent_03_specialiste_configuration",
+    "agent_config",
+    "agent_POSTGRESQL_base"
+  ],
+  "agents_detail": {
+    "agent_01_coordinateur_principal": {
+      "lines_of_code": 724,
+      "complexity_score": 0.647,
+      "category": "COORDINATION",
+      "dependencies_count": 2,
+      "dependents_count": 3,
+      "dependencies": [
+        "agent_config",
+        "agent_03_specialiste_configuration"
+      ],
+      "dependents": [
+        "agent_META_AUDITEUR_UNIVERSEL",
+        "agent_14_specialiste_workspace",
+        "agent_13_specialiste_documentation"
+      ]
+    },
+    "agent_02_architecte_code_expert": {
+      "lines_of_code": 1122,
+      "complexity_score": 0.6,
+      "category": "GENERAL",
+      "dependencies_count": 0,
+      "dependents_count": 1,
+      "dependencies": [],
+      "dependents": [
+        "agent_14_specialiste_workspace"
+      ]
+    },
+    "agent_03_specialiste_configuration": {
+      "lines_of_code": 791,
+      "complexity_score": 0.547,
+      "category": "GENERAL",
+      "dependencies_count": 8,
+      "dependents_count": 5,
+      "dependencies": [
+        "agent_MAINTENANCE_05_documenteur_peer_reviewer",
+        "agent_config",
+        "agent_MAINTENANCE_03_adaptateur_code",
+        "agent_MAINTENANCE_06_validateur_final",
+        "agent_MAINTENANCE_04_testeur_anti_faux_agents",
+        "agent_MAINTENANCE_02_evaluateur_utilite",
+        "agent_20_auditeur_conformite",
+        "agent_MAINTENANCE_01_analyseur_structure"
+      ],
+      "dependents": [
+        "agent_109_specialiste_planes",
+        "agent_13_specialiste_documentation",
+        "agent_01_coordinateur_principal",
+        "agent_test_models_integration_clean",
+        "agent_14_specialiste_workspace"
+      ]
+    },
+    "agent_04_expert_securite_crypto": {
+      "lines_of_code": 809,
+      "complexity_score": 0.583,
+      "category": "SECURITY",
+      "dependencies_count": 0,
+      "dependents_count": 2,
+      "dependencies": [],
+      "dependents": [
+        "agent_14_specialiste_workspace",
+        "agent_13_specialiste_documentation"
+      ]
+    },
+    "agent_05_maitre_tests_validation": {
+      "lines_of_code": 690,
+      "complexity_score": 0.527,
+      "category": "TESTING",
+      "dependencies_count": 0,
+      "dependents_count": 2,
+      "dependencies": [],
+      "dependents": [
+        "agent_MAINTENANCE_06_validateur_final",
+        "agent_14_specialiste_workspace"
+      ]
+    },
+    "agent_06_specialiste_monitoring_sprint4": {
+      "lines_of_code": 887,
+      "complexity_score": 0.491,
+      "category": "MONITORING",
+      "dependencies_count": 0,
+      "dependents_count": 1,
+      "dependencies": [],
+      "dependents": [
+        "agent_14_specialiste_workspace"
+      ]
+    },
+    "agent_108_performance_optimizer copy": {
+      "lines_of_code": 162,
+      "complexity_score": 0.299,
+      "category": "MONITORING",
+      "dependencies_count": 0,
+      "dependents_count": 0,
+      "dependencies": [],
+      "dependents": []
+    },
+    "agent_109_pattern_factory_version copy": {
+      "lines_of_code": 289,
+      "complexity_score": 0.317,
+      "category": "GENERAL",
+      "dependencies_count": 0,
+      "dependents_count": 1,
+      "dependencies": [],
+      "dependents": [
+        "agent_109_specialiste_planes"
+      ]
+    },
+    "agent_109_pattern_factory_version": {
+      "lines_of_code": 289,
+      "complexity_score": 0.317,
+      "category": "GENERAL",
+      "dependencies_count": 0,
+      "dependents_count": 1,
+      "dependencies": [],
+      "dependents": [
+        "agent_109_specialiste_planes"
+      ]
+    },
+    "agent_109_specialiste_planes": {
+      "lines_of_code": 942,
+      "complexity_score": 0.738,
+      "category": "GENERAL",
+      "dependencies_count": 4,
+      "dependents_count": 2,
+      "dependencies": [
+        "agent_config",
+        "agent_109_pattern_factory_version",
+        "agent_03_specialiste_configuration",
+        "agent_109_pattern_factory_version copy"
+      ],
+      "dependents": [
+        "agent_14_specialiste_workspace",
+        "agent_111_auditeur_qualite_sprint3"
+      ]
+    },
+    "agent_110_documentaliste_expert": {
+      "lines_of_code": 384,
+      "complexity_score": 0.515,
+      "category": "GENERAL",
+      "dependencies_count": 0,
+      "dependents_count": 1,
+      "dependencies": [],
+      "dependents": [
+        "agent_14_specialiste_workspace"
+      ]
+    },
+    "agent_111_auditeur_qualite": {
+      "lines_of_code": 456,
+      "complexity_score": 0.387,
+      "category": "AUDIT",
+      "dependencies_count": 0,
+      "dependents_count": 1,
+      "dependencies": [],
+      "dependents": [
+        "agent_14_specialiste_workspace"
+      ]
+    },
+    "agent_111_auditeur_qualite_sprint3": {
+      "lines_of_code": 811,
+      "complexity_score": 0.588,
+      "category": "AUDIT",
+      "dependencies_count": 1,
+      "dependents_count": 1,
+      "dependencies": [
+        "agent_109_specialiste_planes"
+      ],
+      "dependents": [
+        "agent_14_specialiste_workspace"
+      ]
+    },
+    "agent_13_specialiste_documentation": {
+      "lines_of_code": 675,
+      "complexity_score": 0.512,
+      "category": "DOCUMENTATION",
+      "dependencies_count": 4,
+      "dependents_count": 1,
+      "dependencies": [
+        "agent_01_coordinateur_principal",
+        "agent_config",
+        "agent_03_specialiste_configuration",
+        "agent_04_expert_securite_crypto"
+      ],
+      "dependents": [
+        "agent_14_specialiste_workspace"
+      ]
+    },
+    "agent_14_specialiste_workspace": {
+      "lines_of_code": 515,
+      "complexity_score": 0.385,
+      "category": "GENERAL",
+      "dependencies_count": 15,
+      "dependents_count": 0,
+      "dependencies": [
+        "agent_02_architecte_code_expert",
+        "agent_110_documentaliste_expert",
+        "agent_111_auditeur_qualite",
+        "agent_03_specialiste_configuration",
+        "agent_config",
+        "agent_15_testeur_specialise",
+        "agent_109_specialiste_planes",
+        "agent_13_specialiste_documentation",
+        "agent_17_peer_reviewer_technique",
+        "agent_01_coordinateur_principal",
+        "agent_111_auditeur_qualite_sprint3",
+        "agent_05_maitre_tests_validation",
+        "agent_06_specialiste_monitoring_sprint4",
+        "agent_16_peer_reviewer_senior",
+        "agent_04_expert_securite_crypto"
+      ],
+      "dependents": []
+    },
+    "agent_15_testeur_specialise": {
+      "lines_of_code": 316,
+      "complexity_score": 0.385,
+      "category": "TESTING",
+      "dependencies_count": 0,
+      "dependents_count": 1,
+      "dependencies": [],
+      "dependents": [
+        "agent_14_specialiste_workspace"
+      ]
+    },
+    "agent_16_peer_reviewer_senior": {
+      "lines_of_code": 624,
+      "complexity_score": 0.407,
+      "category": "GENERAL",
+      "dependencies_count": 0,
+      "dependents_count": 1,
+      "dependencies": [],
+      "dependents": [
+        "agent_14_specialiste_workspace"
+      ]
+    },
+    "agent_17_peer_reviewer_technique": {
+      "lines_of_code": 979,
+      "complexity_score": 0.734,
+      "category": "GENERAL",
+      "dependencies_count": 0,
+      "dependents_count": 1,
+      "dependencies": [],
+      "dependents": [
+        "agent_14_specialiste_workspace"
+      ]
+    },
+    "agent_18_auditeur_securite": {
+      "lines_of_code": 881,
+      "complexity_score": 0.704,
+      "category": "AUDIT",
+      "dependencies_count": 0,
+      "dependents_count": 0,
+      "dependencies": [],
+      "dependents": []
+    },
+    "agent_19_auditeur_performance": {
+      "lines_of_code": 687,
+      "complexity_score": 0.486,
+      "category": "AUDIT",
+      "dependencies_count": 0,
+      "dependents_count": 0,
+      "dependencies": [],
+      "dependents": []
+    },
+    "agent_20_auditeur_conformite": {
+      "lines_of_code": 1088,
+      "complexity_score": 0.74,
+      "category": "AUDIT",
+      "dependencies_count": 0,
+      "dependents_count": 1,
+      "dependencies": [],
+      "dependents": [
+        "agent_03_specialiste_configuration"
+      ]
+    },
+    "agent_analyse_solution_chatgpt": {
+      "lines_of_code": 430,
+      "complexity_score": 0.214,
+      "category": "GENERAL",
+      "dependencies_count": 0,
+      "dependents_count": 0,
+      "dependencies": [],
+      "dependents": []
+    },
+    "agent_ARCHITECTURE_22_enterprise_consultant": {
+      "lines_of_code": 605,
+      "complexity_score": 0.577,
+      "category": "ARCHITECTURE",
+      "dependencies_count": 0,
+      "dependents_count": 0,
+      "dependencies": [],
+      "dependents": []
+    },
+    "agent_ASSISTANT_99_refactoring_helper": {
+      "lines_of_code": 383,
+      "complexity_score": 0.365,
+      "category": "GENERAL",
+      "dependencies_count": 0,
+      "dependents_count": 0,
+      "dependencies": [],
+      "dependents": []
+    },
+    "agent_config": {
+      "lines_of_code": 113,
+      "complexity_score": 0.409,
+      "category": "GENERAL",
+      "dependencies_count": 0,
+      "dependents_count": 6,
+      "dependencies": [],
+      "dependents": [
+        "agent_03_specialiste_configuration",
+        "agent_13_specialiste_documentation",
+        "agent_109_specialiste_planes",
+        "agent_01_coordinateur_principal",
+        "agent_test_models_integration_clean",
+        "agent_14_specialiste_workspace"
+      ]
+    },
+    "agent_FASTAPI_23_orchestration_enterprise": {
+      "lines_of_code": 270,
+      "complexity_score": 0.351,
+      "category": "ARCHITECTURE",
+      "dependencies_count": 0,
+      "dependents_count": 0,
+      "dependencies": [],
+      "dependents": []
+    },
+    "agent_MAINTENANCE_00_chef_equipe_coordinateur": {
+      "lines_of_code": 407,
+      "complexity_score": 0.467,
+      "category": "MAINTENANCE",
+      "dependencies_count": 0,
+      "dependents_count": 0,
+      "dependencies": [],
+      "dependents": []
+    },
+    "agent_MAINTENANCE_00_chef_equipe_coordinateur_parallel": {
+      "lines_of_code": 25,
+      "complexity_score": 0.088,
+      "category": "MAINTENANCE",
+      "dependencies_count": 0,
+      "dependents_count": 0,
+      "dependencies": [],
+      "dependents": []
+    },
+    "agent_MAINTENANCE_01_analyseur_structure": {
+      "lines_of_code": 302,
+      "complexity_score": 0.351,
+      "category": "MAINTENANCE",
+      "dependencies_count": 0,
+      "dependents_count": 1,
+      "dependencies": [],
+      "dependents": [
+        "agent_03_specialiste_configuration"
+      ]
+    },
+    "agent_MAINTENANCE_02_evaluateur_utilite": {
+      "lines_of_code": 135,
+      "complexity_score": 0.171,
+      "category": "MAINTENANCE",
+      "dependencies_count": 0,
+      "dependents_count": 1,
+      "dependencies": [],
+      "dependents": [
+        "agent_03_specialiste_configuration"
+      ]
+    },
+    "agent_MAINTENANCE_03_adaptateur_code": {
+      "lines_of_code": 1427,
+      "complexity_score": 0.75,
+      "category": "MAINTENANCE",
+      "dependencies_count": 0,
+      "dependents_count": 1,
+      "dependencies": [],
+      "dependents": [
+        "agent_03_specialiste_configuration"
+      ]
+    },
+    "agent_MAINTENANCE_04_testeur_anti_faux_agents": {
+      "lines_of_code": 234,
+      "complexity_score": 0.435,
+      "category": "MAINTENANCE",
+      "dependencies_count": 0,
+      "dependents_count": 1,
+      "dependencies": [],
+      "dependents": [
+        "agent_03_specialiste_configuration"
+      ]
+    },
+    "agent_MAINTENANCE_05_documenteur_peer_reviewer": {
+      "lines_of_code": 590,
+      "complexity_score": 0.537,
+      "category": "MAINTENANCE",
+      "dependencies_count": 0,
+      "dependents_count": 1,
+      "dependencies": [],
+      "dependents": [
+        "agent_03_specialiste_configuration"
+      ]
+    },
+    "agent_MAINTENANCE_06_correcteur_logique_metier": {
+      "lines_of_code": 520,
+      "complexity_score": 0.501,
+      "category": "MAINTENANCE",
+      "dependencies_count": 0,
+      "dependents_count": 0,
+      "dependencies": [],
+      "dependents": []
+    },
+    "agent_MAINTENANCE_06_validateur_final": {
+      "lines_of_code": 729,
+      "complexity_score": 0.594,
+      "category": "MAINTENANCE",
+      "dependencies_count": 1,
+      "dependents_count": 1,
+      "dependencies": [
+        "agent_05_maitre_tests_validation"
+      ],
+      "dependents": [
+        "agent_03_specialiste_configuration"
+      ]
+    },
+    "agent_MAINTENANCE_07_gestionnaire_dependances": {
+      "lines_of_code": 342,
+      "complexity_score": 0.303,
+      "category": "MAINTENANCE",
+      "dependencies_count": 0,
+      "dependents_count": 0,
+      "dependencies": [],
+      "dependents": []
+    },
+    "agent_MAINTENANCE_08_analyseur_performance": {
+      "lines_of_code": 424,
+      "complexity_score": 0.387,
+      "category": "MAINTENANCE",
+      "dependencies_count": 0,
+      "dependents_count": 0,
+      "dependencies": [],
+      "dependents": []
+    },
+    "agent_MAINTENANCE_09_analyseur_securite": {
+      "lines_of_code": 1688,
+      "complexity_score": 0.75,
+      "category": "MAINTENANCE",
+      "dependencies_count": 0,
+      "dependents_count": 0,
+      "dependencies": [],
+      "dependents": []
+    },
+    "agent_MAINTENANCE_10_auditeur_qualite_normes": {
+      "lines_of_code": 932,
+      "complexity_score": 0.66,
+      "category": "MAINTENANCE",
+      "dependencies_count": 0,
+      "dependents_count": 1,
+      "dependencies": [],
+      "dependents": [
+        "agent_META_AUDITEUR_UNIVERSEL"
+      ]
+    },
+    "agent_MAINTENANCE_11_harmonisateur_style": {
+      "lines_of_code": 116,
+      "complexity_score": 0.18,
+      "category": "MAINTENANCE",
+      "dependencies_count": 0,
+      "dependents_count": 0,
+      "dependencies": [],
+      "dependents": []
+    },
+    "agent_MAINTENANCE_12_correcteur_semantique": {
+      "lines_of_code": 318,
+      "complexity_score": 0.395,
+      "category": "MAINTENANCE",
+      "dependencies_count": 0,
+      "dependents_count": 0,
+      "dependencies": [],
+      "dependents": []
+    },
+    "agent_MAINTENANCE_15_correcteur_automatise": {
+      "lines_of_code": 157,
+      "complexity_score": 0.187,
+      "category": "MAINTENANCE",
+      "dependencies_count": 0,
+      "dependents_count": 0,
+      "dependencies": [],
+      "dependents": []
+    },
+    "agent_META_AUDITEUR_UNIVERSEL": {
+      "lines_of_code": 721,
+      "complexity_score": 0.641,
+      "category": "AUDIT",
+      "dependencies_count": 2,
+      "dependents_count": 0,
+      "dependencies": [
+        "agent_01_coordinateur_principal",
+        "agent_MAINTENANCE_10_auditeur_qualite_normes"
+      ],
+      "dependents": []
+    },
+    "agent_meta_strategique": {
+      "lines_of_code": 4,
+      "complexity_score": 0.041,
+      "category": "GENERAL",
+      "dependencies_count": 0,
+      "dependents_count": 1,
+      "dependencies": [],
+      "dependents": [
+        "agent_meta_strategique_scheduler"
+      ]
+    },
+    "agent_meta_strategique_scheduler": {
+      "lines_of_code": 483,
+      "complexity_score": 0.325,
+      "category": "GENERAL",
+      "dependencies_count": 1,
+      "dependents_count": 0,
+      "dependencies": [
+        "agent_meta_strategique"
+      ],
+      "dependents": []
+    },
+    "agent_MONITORING_25_production_enterprise": {
+      "lines_of_code": 27,
+      "complexity_score": 0.053,
+      "category": "MONITORING",
+      "dependencies_count": 0,
+      "dependents_count": 0,
+      "dependencies": [],
+      "dependents": []
+    },
+    "agent_orchestrateur_audit": {
+      "lines_of_code": 27,
+      "complexity_score": 0.053,
+      "category": "AUDIT",
+      "dependencies_count": 0,
+      "dependents_count": 0,
+      "dependencies": [],
+      "dependents": []
+    },
+    "agent_POSTGRESQL_base": {
+      "lines_of_code": 92,
+      "complexity_score": 0.128,
+      "category": "POSTGRESQL",
+      "dependencies_count": 0,
+      "dependents_count": 10,
+      "dependencies": [],
+      "dependents": [
+        "agent_POSTGRESQL_documentation_manager",
+        "agent_POSTGRESQL_docker_specialist",
+        "agent_POSTGRESQL_sqlalchemy_fixer_new",
+        "agent_POSTGRESQL_diagnostic_postgres_final",
+        "agent_POSTGRESQL_testing_specialist",
+        "agent_POSTGRESQL_workspace_organizer",
+        "agent_POSTGRESQL_resolution_finale",
+        "agent_POSTGRESQL_sqlalchemy_fixer",
+        "agent_POSTGRESQL_windows_postgres",
+        "agent_POSTGRESQL_web_researcher"
+      ]
+    },
+    "agent_POSTGRESQL_diagnostic_postgres_final": {
+      "lines_of_code": 530,
+      "complexity_score": 0.414,
+      "category": "POSTGRESQL",
+      "dependencies_count": 1,
+      "dependents_count": 0,
+      "dependencies": [
+        "agent_POSTGRESQL_base"
+      ],
+      "dependents": []
+    },
+    "agent_POSTGRESQL_docker_specialist": {
+      "lines_of_code": 222,
+      "complexity_score": 0.312,
+      "category": "POSTGRESQL",
+      "dependencies_count": 1,
+      "dependents_count": 0,
+      "dependencies": [
+        "agent_POSTGRESQL_base"
+      ],
+      "dependents": []
+    },
+    "agent_POSTGRESQL_documentation_manager": {
+      "lines_of_code": 393,
+      "complexity_score": 0.343,
+      "category": "POSTGRESQL",
+      "dependencies_count": 1,
+      "dependents_count": 0,
+      "dependencies": [
+        "agent_POSTGRESQL_base"
+      ],
+      "dependents": []
+    },
+    "agent_POSTGRESQL_resolution_finale": {
+      "lines_of_code": 610,
+      "complexity_score": 0.403,
+      "category": "POSTGRESQL",
+      "dependencies_count": 1,
+      "dependents_count": 0,
+      "dependencies": [
+        "agent_POSTGRESQL_base"
+      ],
+      "dependents": []
+    },
+    "agent_POSTGRESQL_sqlalchemy_fixer": {
+      "lines_of_code": 339,
+      "complexity_score": 0.322,
+      "category": "POSTGRESQL",
+      "dependencies_count": 1,
+      "dependents_count": 0,
+      "dependencies": [
+        "agent_POSTGRESQL_base"
+      ],
+      "dependents": []
+    },
+    "agent_POSTGRESQL_sqlalchemy_fixer_new": {
+      "lines_of_code": 339,
+      "complexity_score": 0.322,
+      "category": "POSTGRESQL",
+      "dependencies_count": 1,
+      "dependents_count": 0,
+      "dependencies": [
+        "agent_POSTGRESQL_base"
+      ],
+      "dependents": []
+    },
+    "agent_POSTGRESQL_testing_specialist": {
+      "lines_of_code": 583,
+      "complexity_score": 0.67,
+      "category": "POSTGRESQL",
+      "dependencies_count": 1,
+      "dependents_count": 0,
+      "dependencies": [
+        "agent_POSTGRESQL_base"
+      ],
+      "dependents": []
+    },
+    "agent_POSTGRESQL_web_researcher": {
+      "lines_of_code": 398,
+      "complexity_score": 0.344,
+      "category": "POSTGRESQL",
+      "dependencies_count": 1,
+      "dependents_count": 0,
+      "dependencies": [
+        "agent_POSTGRESQL_base"
+      ],
+      "dependents": []
+    },
+    "agent_POSTGRESQL_windows_postgres": {
+      "lines_of_code": 124,
+      "complexity_score": 0.257,
+      "category": "POSTGRESQL",
+      "dependencies_count": 1,
+      "dependents_count": 0,
+      "dependencies": [
+        "agent_POSTGRESQL_base"
+      ],
+      "dependents": []
+    },
+    "agent_POSTGRESQL_workspace_organizer": {
+      "lines_of_code": 304,
+      "complexity_score": 0.311,
+      "category": "POSTGRESQL",
+      "dependencies_count": 1,
+      "dependents_count": 0,
+      "dependencies": [
+        "agent_POSTGRESQL_base"
+      ],
+      "dependents": []
+    },
+    "agent_SECURITY_21_supply_chain_enterprise": {
+      "lines_of_code": 298,
+      "complexity_score": 0.469,
+      "category": "SECURITY",
+      "dependencies_count": 0,
+      "dependents_count": 0,
+      "dependencies": [],
+      "dependents": []
+    },
+    "agent_STORAGE_24_enterprise_manager": {
+      "lines_of_code": 27,
+      "complexity_score": 0.053,
+      "category": "ARCHITECTURE",
+      "dependencies_count": 0,
+      "dependents_count": 0,
+      "dependencies": [],
+      "dependents": []
+    },
+    "agent_testeur_agents": {
+      "lines_of_code": 29,
+      "complexity_score": 0.054,
+      "category": "TESTING",
+      "dependencies_count": 0,
+      "dependents_count": 1,
+      "dependencies": [],
+      "dependents": [
+        "agent_testeur_agents_complet"
+      ]
+    },
+    "agent_testeur_agents_complet": {
+      "lines_of_code": 757,
+      "complexity_score": 0.462,
+      "category": "TESTING",
+      "dependencies_count": 1,
+      "dependents_count": 0,
+      "dependencies": [
+        "agent_testeur_agents"
+      ],
+      "dependents": []
+    },
+    "agent_test_models_integration": {
+      "lines_of_code": 46,
+      "complexity_score": 0.059,
+      "category": "TESTING",
+      "dependencies_count": 0,
+      "dependents_count": 0,
+      "dependencies": [],
+      "dependents": []
+    },
+    "agent_test_models_integration_clean": {
+      "lines_of_code": 945,
+      "complexity_score": 0.553,
+      "category": "TESTING",
+      "dependencies_count": 2,
+      "dependents_count": 0,
+      "dependencies": [
+        "agent_config",
+        "agent_03_specialiste_configuration"
+      ],
+      "dependents": []
+    }
+  }
+}
