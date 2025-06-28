@@ -1,0 +1,115 @@
+{
+  "request_id": "",
+  "success": true,
+  "stages_results": {
+    "specification": {
+      "stage": "specification",
+      "status": "completed",
+      "output": {
+        "specification_content": "#  - Spécification Technique\n\n## Vue d'Ensemble\n- **Type**: invalid_type\n- **Complexité**: invalid_level\n- **Date**: 2025-06-28\n\n## Requirements\n\n\n## Contraintes\n{}\n\n## Architecture\nArchitecture basique pour invalid_type\n\n## Tests\nTests unitaires et d'intégration requis\n\n## Critères d'Acceptation\n- Fonctionnalités implémentées selon requirements\n- Tests passants\n- Documentation complète\n"
+      },
+      "artifacts": [
+        "/mnt/c/Dev/nextgeneration/cycle_usine/workspace/_specification.md"
+      ],
+      "metrics": {
+        "lines": 24,
+        "complexity": "evaluated"
+      },
+      "execution_time_ms": 2.7458667755126953,
+      "error": null
+    },
+    "code_generation": {
+      "stage": "code_generation",
+      "status": "completed",
+      "output": {
+        "code_content": "#!/usr/bin/env python3\n\"\"\"\n\nType: invalid_type\nGénéré par Cycle-Usine v1\n\"\"\"\n\nimport logging\nfrom typing import Dict, Any, Optional\n\nclass :\n    \"\"\"\n     - invalid_type\n    \"\"\"\n    \n    def __init__(self, config: Dict[str, Any] = None):\n        self.config = config or {}\n        self.logger = logging.getLogger(__name__)\n        \n    def execute(self, data: Dict[str, Any]) -> Dict[str, Any]:\n        \"\"\"Méthode principale d'exécution\"\"\"\n        try:\n            # Implémentation basique\n            result = {\n                \"success\": True,\n                \"data\": data,\n                \"message\": \"Exécution réussie\"\n            }\n            \n            self.logger.info(\"Exécution terminée avec succès\")\n            return result\n            \n        except Exception as e:\n            self.logger.error(f\"Erreur exécution: {e}\")\n            return {\n                \"success\": False,\n                \"error\": str(e)\n            }\n\nif __name__ == \"__main__\":\n    # Test basique\n    instance = ()\n    result = instance.execute({\"test\": \"data\"})\n    print(f\"Résultat: {result}\")\n",
+        "requirements": "asyncio\ntyping\nlogging\njson\ndatetime"
+      },
+      "artifacts": [
+        "/mnt/c/Dev/nextgeneration/cycle_usine/workspace/.py",
+        "/mnt/c/Dev/nextgeneration/cycle_usine/workspace/requirements.txt"
+      ],
+      "metrics": {
+        "lines_of_code": 45,
+        "files_generated": 2
+      },
+      "execution_time_ms": 7.320642471313477,
+      "error": null
+    },
+    "testing": {
+      "stage": "testing",
+      "status": "completed",
+      "output": {
+        "success": true,
+        "test_results": {
+          "basic_syntax": "passed"
+        },
+        "coverage": 75,
+        "metrics": {
+          "tests_run": 1,
+          "tests_passed": 1
+        },
+        "test_files": []
+      },
+      "artifacts": [],
+      "metrics": {
+        "tests_run": 1,
+        "tests_passed": 1
+      },
+      "execution_time_ms": 0.008344650268554688,
+      "error": null
+    },
+    "documentation": {
+      "stage": "documentation",
+      "status": "completed",
+      "output": {
+        "documentation_content": "# \n\n## Description\n\n\n## Installation\n```bash\npip install -r requirements.txt\n```\n\n## Usage\n```python\nfrom  import \n\ninstance = ()\nresult = instance.execute({\"data\": \"example\"})\n```\n\n## Tests\nTests exécutés avec succès: 1 passants\n\n## Déploiement\nVoir fichiers de déploiement générés\n\n---\n*Généré automatiquement par Cycle-Usine v1*\n"
+      },
+      "artifacts": [
+        "/mnt/c/Dev/nextgeneration/cycle_usine/workspace/_README.md"
+      ],
+      "metrics": {
+        "doc_lines": 27
+      },
+      "execution_time_ms": 3.9186477661132812,
+      "error": null
+    },
+    "deployment": {
+      "stage": "deployment",
+      "status": "completed",
+      "output": {
+        "success": true,
+        "deployment_config": {
+          "type": "docker",
+          "port": 8000
+        },
+        "deployment_files": [
+          "/mnt/c/Dev/nextgeneration/cycle_usine/workspace/docker-compose.yml"
+        ],
+        "metrics": {
+          "deployment_type": "docker"
+        }
+      },
+      "artifacts": [
+        "/mnt/c/Dev/nextgeneration/cycle_usine/workspace/docker-compose.yml"
+      ],
+      "metrics": {
+        "deployment_type": "docker"
+      },
+      "execution_time_ms": 2.0606517791748047,
+      "error": null
+    }
+  },
+  "final_artifacts": [
+    "/mnt/c/Dev/nextgeneration/cycle_usine/workspace/_specification.md",
+    "/mnt/c/Dev/nextgeneration/cycle_usine/workspace/.py",
+    "/mnt/c/Dev/nextgeneration/cycle_usine/workspace/requirements.txt",
+    "/mnt/c/Dev/nextgeneration/cycle_usine/workspace/_README.md",
+    "/mnt/c/Dev/nextgeneration/cycle_usine/workspace/docker-compose.yml"
+  ],
+  "total_execution_time_ms": 17.862319946289062,
+  "quality_score": 100.0,
+  "deployment_status": "not_started",
+  "created_at": "2025-06-28T19:39:57.545314",
+  "completed_at": "2025-06-28T19:39:57.563170"
+}

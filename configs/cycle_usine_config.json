@@ -1,0 +1,99 @@
+{
+  "workspace": "/mnt/c/Dev/nextgeneration",
+  "llm_gateway": "http://localhost:11434",
+  
+  "models": {
+    "spec": "deepseek-coder:33b",
+    "code": "deepseek-coder:33b", 
+    "test": "deepseek-coder:33b",
+    "doc": "deepseek-coder:7b",
+    "review": "deepseek-coder:33b"
+  },
+  
+  "quality_gates": {
+    "spec_completeness": 0.95,
+    "code_coverage": 0.85,
+    "test_success_rate": 0.90,
+    "doc_coverage": 0.90,
+    "deploy_success_rate": 0.95,
+    "security_score": 0.95,
+    "performance_threshold": 500
+  },
+  
+  "parallelism": {
+    "max_concurrent_tasks": 4,
+    "enable_parallel_testing": true,
+    "enable_parallel_deployment": false,
+    "timeout_minutes": 30
+  },
+  
+  "templates": {
+    "agent_modern": {
+      "base_class": "ModernAgentBase",
+      "required_methods": [
+        "__init__",
+        "execute_task", 
+        "validate_inputs",
+        "generate_outputs",
+        "handle_errors"
+      ],
+      "optional_features": [
+        "llm_integration",
+        "monitoring_hooks",
+        "performance_metrics",
+        "security_validation"
+      ]
+    }
+  },
+  
+  "validation": {
+    "syntax_check": true,
+    "type_check": true,
+    "security_scan": true,
+    "performance_test": true,
+    "integration_test": true
+  },
+  
+  "deployment": {
+    "target_environments": ["development", "staging", "production"],
+    "deployment_strategy": "blue_green",
+    "rollback_enabled": true,
+    "health_check_timeout": 60,
+    "post_deploy_tests": true
+  },
+  
+  "monitoring": {
+    "enable_metrics": true,
+    "metrics_endpoint": "/metrics",
+    "log_level": "INFO",
+    "structured_logging": true,
+    "trace_requests": true
+  },
+  
+  "security": {
+    "input_validation": true,
+    "output_sanitization": true,
+    "audit_logging": true,
+    "secrets_scanning": true,
+    "dependency_check": true
+  },
+  
+  "integration": {
+    "message_bus": {
+      "enabled": true,
+      "endpoint": "redis://localhost:6379",
+      "topics": ["cycle.events", "cycle.results"]
+    },
+    "context_store": {
+      "enabled": true,
+      "backend": "postgresql",
+      "connection": "postgresql://localhost:5432/nextgeneration"
+    },
+    "llm_gateway": {
+      "enabled": true,
+      "endpoint": "http://localhost:11434",
+      "timeout": 30,
+      "retry_attempts": 3
+    }
+  }
+}

@@ -43,6 +43,19 @@ from typing import Dict, Any, AsyncGenerator, Generator
 from unittest.mock import Mock, AsyncMock, patch
 import httpx
 from fastapi.testclient import TestClient
+import logging
+from datetime import datetime
+
+# Configuration logging tests
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('tests/logs/migration_tests.log'),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger('migration_tests')
 
 # Configuration pytest pour tests async
 pytest_plugins = ("pytest_asyncio",)
@@ -664,6 +677,108 @@ def configure_test_logging():
     test_logger.setLevel(logging.DEBUG)
     
     yield test_logger
+
+
+def pytest_addoption(parser):
+    """Ajout options ligne commande"""
+    parser.addoption(
+        "--prod-env",
+        action="store_true",
+        default=False,
+        help="Exécuter tests en environnement production"
+    )
+    parser.addoption(
+        "--load-factor",
+        type=float,
+        default=1.5,
+        help="Facteur multiplication charge (défaut: 1.5)"
+    )
+    parser.addoption(
+        "--duration",
+        type=str,
+        default="7d",
+        help="Durée minimale tests (ex: 7d pour 7 jours)"
+    )
+
+
+@pytest.fixture(scope="session")
+def prod_env(request):
+    """Fixture environnement production"""
+    if request.config.getoption("--prod-env"):
+        # Configuration env production
+        os.environ["ENV"] = "production"
+        os.environ["DB_HOST"] = "prod-db.example.com"
+        os.environ["CACHE_HOST"] = "prod-cache.example.com"
+        os.environ["QUEUE_HOST"] = "prod-queue.example.com"
+        
+        logger.info("🔧 Configuration environnement PRODUCTION")
+        return True
+    return False
+
+
+@pytest.fixture(scope="session")
+def load_factor(request):
+    """Fixture facteur charge"""
+    factor = request.config.getoption("--load-factor")
+    logger.info(f"⚡ Configuration facteur charge: x{factor}")
+    return factor
+
+
+@pytest.fixture(scope="session")
+def test_duration(request):
+    """Fixture durée test"""
+    duration_str = request.config.getoption("--duration")
+    # Conversion durée en timedelta
+    unit = duration_str[-1]
+    value = int(duration_str[:-1])
+    
+    if unit == 'd':
+        duration_days = value
+    elif unit == 'h':
+        duration_days = value / 24
+    else:
+        raise ValueError(f"Unité durée invalide: {unit}")
+        
+    logger.info(f"⏱️ Configuration durée test: {duration_days} jours")
+    return duration_days
+
+
+@pytest.fixture(scope="session", autouse=True)
+def setup_test_env(prod_env, load_factor, test_duration):
+    """Configuration globale environnement test"""
+    if not prod_env:
+        pytest.skip("Tests requièrent --prod-env")
+        
+    # Création répertoires logs
+    log_dir = Path("tests/logs")
+    log_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Configuration métriques
+    os.environ["METRICS_ENABLED"] = "true"
+    os.environ["METRICS_INTERVAL"] = "10"  # secondes
+    
+    # Configuration monitoring
+    os.environ["ALERT_THRESHOLD"] = "0.95"  # 95% seuil alerte
+    os.environ["MONITORING_ENABLED"] = "true"
+    
+    logger.info(f"""
+    🚀 Configuration environnement test:
+    - Environnement: {'PRODUCTION' if prod_env else 'TEST'}
+    - Facteur charge: x{load_factor}
+    - Durée minimale: {test_duration} jours
+    - Métriques: Activées
+    - Monitoring: Activé
+    """)
+    
+    yield
+    
+    logger.info("✅ Tests terminés")
+
+
+@pytest.fixture(scope="session", autouse=True)
+def setup_test_environment():
+    """Configuration globale environnement de test"""
+    yield
 
 
 

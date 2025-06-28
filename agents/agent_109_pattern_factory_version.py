@@ -191,6 +191,36 @@ class PatternFactoryAgent:
         self.logger.info("Goodbye!")
         self.status = "SHUTDOWN"
 
+    # =============================================================================
+    # MÉTHODES DE COMPATIBILITÉ POUR SHADOWMODE VALIDATOR
+    # =============================================================================
+    
+    async def execute_task(self, task):
+        """Interface de compatibilité pour ShadowModeValidator"""
+        from core.nextgen_architecture import Task, Result
+        
+        try:
+            if task.type == "validate_agent_compliance":
+                file_path = task.params.get("file_path")
+                result = await self.validate_agent_compliance(file_path)
+                return Result(success=True, data=result)
+            
+            elif task.type == "generate_agent_template":
+                agent_name = task.params.get("agent_name")
+                is_async = task.params.get("use_llm", True)  # Map use_llm to is_async
+                result = await self.generate_agent_template(agent_name, is_async)
+                return Result(success=True, data={"template_path": result})
+            
+            else:
+                return Result(success=False, error=f"Unsupported task type: {task.type}")
+                
+        except Exception as e:
+            return Result(success=False, error=str(e))
+
+    async def execute_async(self, task):
+        """Alias pour execute_task"""
+        return await self.execute_task(task)
+
 # --- Main Execution ---
 async def main():
     """Main function to run the agent."""

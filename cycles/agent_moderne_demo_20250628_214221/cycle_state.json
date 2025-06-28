@@ -1,0 +1,148 @@
+{
+  "cycle_id": "agent_moderne_demo_20250628_214221",
+  "current_cycle": "agent_moderne_demo_20250628_214221",
+  "tasks": [
+    {
+      "id": "agent_moderne_demo_20250628_214221_spec_analysis",
+      "name": "Analyse des Spécifications",
+      "description": "Analyse détaillée des requirements et génération cahier des charges",
+      "stage": "specification",
+      "inputs": {
+        "requirements": {
+          "name": "Agent Moderne Démo",
+          "description": "Agent d'exemple généré automatiquement par Cycle-Usine v1",
+          "type": "maintenance_agent",
+          "architecture": "nextgeneration",
+          "features": [
+            "llm_integration",
+            "async_processing",
+            "monitoring_integration",
+            "auto_healing",
+            "performance_optimization",
+            "security_validation"
+          ],
+          "capabilities": {
+            "input_formats": [
+              "json",
+              "yaml",
+              "plain_text"
+            ],
+            "output_formats": [
+              "json",
+              "markdown",
+              "structured_report"
+            ],
+            "processing_modes": [
+              "batch",
+              "stream",
+              "realtime"
+            ],
+            "integration_points": [
+              "messagebus",
+              "context_store",
+              "llm_gateway"
+            ]
+          },
+          "quality_requirements": {
+            "performance": {
+              "response_time_ms": 500,
+              "throughput_rps": 100,
+              "memory_limit_mb": 256
+            },
+            "reliability": {
+              "uptime_percentage": 99.9,
+              "error_rate_max": 0.001,
+              "recovery_time_s": 10
+            },
+            "security": {
+              "input_validation": true,
+              "output_sanitization": true,
+              "audit_logging": true,
+              "encryption_at_rest": true
+            }
+          },
+          "deployment": {
+            "container_ready": true,
+            "health_checks": true,
+            "metrics_export": true,
+            "log_structured": true
+          }
+        }
+      },
+      "outputs": {},
+      "status": "pending",
+      "started_at": null,
+      "completed_at": null,
+      "duration": 0.0,
+      "success_rate": 0.0,
+      "metadata": {}
+    },
+    {
+      "id": "agent_moderne_demo_20250628_214221_code_generation",
+      "name": "Génération de Code",
+      "description": "Génération automatique du code avec LLM et validation",
+      "stage": "code_generation",
+      "inputs": {
+        "spec": "output_from_spec_stage"
+      },
+      "outputs": {},
+      "status": "pending",
+      "started_at": null,
+      "completed_at": null,
+      "duration": 0.0,
+      "success_rate": 0.0,
+      "metadata": {}
+    },
+    {
+      "id": "agent_moderne_demo_20250628_214221_testing",
+      "name": "Tests Automatisés",
+      "description": "Exécution des tests unitaires, intégration et performance",
+      "stage": "testing",
+      "inputs": {
+        "code": "output_from_code_stage"
+      },
+      "outputs": {},
+      "status": "pending",
+      "started_at": null,
+      "completed_at": null,
+      "duration": 0.0,
+      "success_rate": 0.0,
+      "metadata": {}
+    },
+    {
+      "id": "agent_moderne_demo_20250628_214221_documentation",
+      "name": "Génération Documentation",
+      "description": "Génération automatique de la documentation technique et utilisateur",
+      "stage": "documentation",
+      "inputs": {
+        "code": "output_from_code_stage",
+        "tests": "output_from_test_stage"
+      },
+      "outputs": {},
+      "status": "pending",
+      "started_at": null,
+      "completed_at": null,
+      "duration": 0.0,
+      "success_rate": 0.0,
+      "metadata": {}
+    },
+    {
+      "id": "agent_moderne_demo_20250628_214221_deployment",
+      "name": "Déploiement Automatisé",
+      "description": "Déploiement avec validation et rollback automatique",
+      "stage": "deployment",
+      "inputs": {
+        "code": "output_from_code_stage",
+        "docs": "output_from_doc_stage"
+      },
+      "outputs": {},
+      "status": "pending",
+      "started_at": null,
+      "completed_at": null,
+      "duration": 0.0,
+      "success_rate": 0.0,
+      "metadata": {}
+    }
+  ],
+  "saved_at": "2025-06-28T21:42:21.060891"
+}

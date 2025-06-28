@@ -1,0 +1,207 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "panels": [
+    {
+      "title": "Vue d'ensemble Migration",
+      "type": "row",
+      "panels": [
+        {
+          "title": "Santé Globale",
+          "type": "stat",
+          "datasource": "Prometheus",
+          "targets": [
+            {
+              "expr": "nextgen_migration:health_score:ratio * 100",
+              "instant": true
+            }
+          ],
+          "format": "percent",
+          "thresholds": {
+            "steps": [
+              { "value": null, "color": "red" },
+              { "value": 80, "color": "yellow" },
+              { "value": 90, "color": "green" }
+            ]
+          }
+        },
+        {
+          "title": "Agents par État",
+          "type": "piechart",
+          "datasource": "Prometheus",
+          "targets": [
+            {
+              "expr": "sum by(status) (nextgen_migration_health_status)",
+              "instant": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Métriques de Performance",
+      "type": "row",
+      "panels": [
+        {
+          "title": "Taux de Succès",
+          "type": "graph",
+          "datasource": "Prometheus",
+          "targets": [
+            {
+              "expr": "nextgen_migration:success_rate:avg_5m * 100",
+              "legendFormat": "Taux de succès"
+            }
+          ],
+          "yaxes": [
+            {
+              "format": "percent",
+              "min": 0,
+              "max": 100
+            }
+          ]
+        },
+        {
+          "title": "Latence Moyenne",
+          "type": "graph",
+          "datasource": "Prometheus",
+          "targets": [
+            {
+              "expr": "nextgen_migration:latency:avg_5m",
+              "legendFormat": "Latence"
+            }
+          ],
+          "yaxes": [
+            {
+              "format": "ms"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Régressions",
+      "type": "row",
+      "panels": [
+        {
+          "title": "Régressions Détectées",
+          "type": "table",
+          "datasource": "Prometheus",
+          "targets": [
+            {
+              "expr": "nextgen_migration_regression_severity > 0",
+              "instant": true,
+              "format": "table"
+            }
+          ],
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true
+                },
+                "indexByName": {},
+                "renameByName": {
+                  "agent_id": "Agent",
+                  "severity": "Sévérité",
+                  "Value": "Durée (min)"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "title": "Taux de Rollback",
+          "type": "gauge",
+          "datasource": "Prometheus",
+          "targets": [
+            {
+              "expr": "nextgen_migration:rollback:ratio_1h * 100",
+              "instant": true
+            }
+          ],
+          "format": "percent",
+          "thresholds": {
+            "steps": [
+              { "value": null, "color": "green" },
+              { "value": 5, "color": "yellow" },
+              { "value": 10, "color": "red" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "title": "Détails par Agent",
+      "type": "row",
+      "panels": [
+        {
+          "title": "Métriques par Agent",
+          "type": "table",
+          "datasource": "Prometheus",
+          "targets": [
+            {
+              "expr": "group by(agent_id) (nextgen_migration_success_rate)",
+              "instant": true,
+              "format": "table"
+            }
+          ],
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true
+                },
+                "indexByName": {},
+                "renameByName": {
+                  "agent_id": "Agent",
+                  "Value": "Taux de Succès"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "refresh": "10s",
+  "schemaVersion": 27,
+  "style": "dark",
+  "tags": ["migration", "nextgeneration"],
+  "templating": {
+    "list": [
+      {
+        "name": "agent",
+        "type": "query",
+        "datasource": "Prometheus",
+        "query": "label_values(nextgen_migration_health_status, agent_id)"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "NextGeneration - Moniteur de Régression",
+  "uid": "nextgen-regression",
+  "version": 1
+} 

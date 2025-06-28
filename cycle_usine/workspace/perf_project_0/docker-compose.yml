@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  perf_project_0:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - ENV=production

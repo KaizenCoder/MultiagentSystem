@@ -1,0 +1,97 @@
+{
+    "monitoring": {
+        "interval_seconds": 60,
+        "thresholds": {
+            "similarity": 0.999,
+            "performance_degradation": 0.15,
+            "error_rate_increase": 0.05,
+            "latency_increase": 0.20
+        },
+        "rollback": {
+            "auto_rollback": true,
+            "critical_severity_only": true,
+            "wait_confirmations": 3
+        },
+        "metrics": {
+            "collection_interval": 60,
+            "retention_days": 30,
+            "baseline_samples": 100
+        },
+        "alerts": {
+            "channels": [
+                "slack",
+                "email",
+                "prometheus"
+            ],
+            "severity_levels": {
+                "HIGH": {
+                    "notify_channels": ["slack", "email"],
+                    "auto_rollback": true
+                },
+                "MEDIUM": {
+                    "notify_channels": ["slack"],
+                    "auto_rollback": false
+                },
+                "LOW": {
+                    "notify_channels": ["prometheus"],
+                    "auto_rollback": false
+                }
+            }
+        },
+        "reporting": {
+            "health_check_interval": 300,
+            "detailed_metrics": true,
+            "export_formats": [
+                "json",
+                "prometheus"
+            ]
+        }
+    },
+    "agents": {
+        "pilot_agents": [
+            "agent_05_maitre_tests_validation",
+            "agent_111_auditeur_qualite",
+            "agent_MAINTENANCE_00_chef_equipe_coordinateur",
+            "agent_109_pattern_factory_version"
+        ],
+        "custom_thresholds": {
+            "agent_05_maitre_tests_validation": {
+                "performance_degradation": 0.10,
+                "error_rate_increase": 0.02
+            },
+            "agent_111_auditeur_qualite": {
+                "similarity": 0.9995
+            }
+        }
+    },
+    "storage": {
+        "metrics_store": "postgresql",
+        "context_store": "chroma_db",
+        "retention": {
+            "metrics_days": 90,
+            "alerts_days": 30,
+            "reports_days": 365
+        }
+    },
+    "integration": {
+        "prometheus": {
+            "metrics_prefix": "nextgen_migration",
+            "labels": [
+                "agent_id",
+                "phase",
+                "severity"
+            ]
+        },
+        "slack": {
+            "channel": "nextgen-migration-alerts",
+            "mention_critical": true
+        },
+        "email": {
+            "recipients": [
+                "equipe.migration@nextgeneration.com",
+                "support.technique@nextgeneration.com"
+            ],
+            "critical_only": true
+        }
+    }
+} 

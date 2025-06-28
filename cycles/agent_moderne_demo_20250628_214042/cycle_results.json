@@ -1,0 +1,16 @@
+{
+  "cycle_id": "agent_moderne_demo_20250628_214042",
+  "started_at": "2025-06-28T21:40:42.314384",
+  "stages": {
+    "specification": {
+      "tasks": 1,
+      "success_rate": 0.0,
+      "duration": 0.000117,
+      "outputs": {}
+    }
+  },
+  "overall_success_rate": 0.0,
+  "total_duration": 0.000147,
+  "failed_at": "specification",
+  "completed_at": "2025-06-28T21:40:42.314535"
+}

@@ -1,0 +1,146 @@
+{
+  "total_tests": 12,
+  "passed_tests": 11,
+  "failed_tests": 1,
+  "success_rate": 91.66666666666666,
+  "total_execution_time_seconds": 2.155327,
+  "test_results": [
+    {
+      "test_name": "Initialisation",
+      "success": true,
+      "execution_time_ms": 399.1262912750244,
+      "details": {
+        "version": "1.0.0",
+        "agents_count": 0,
+        "workspace_created": true
+      },
+      "error": null
+    },
+    {
+      "test_name": "Configuration",
+      "success": true,
+      "execution_time_ms": 131.3462257385254,
+      "details": {
+        "config_applied": true,
+        "custom_workspace": "/tmp/test_cycle"
+      },
+      "error": null
+    },
+    {
+      "test_name": "Agents Integration",
+      "success": true,
+      "execution_time_ms": 165.83538055419922,
+      "details": {
+        "expected_agents": [
+          "testing",
+          "quality",
+          "deployment"
+        ],
+        "loaded_agents": [],
+        "all_agents_loaded": false
+      },
+      "error": null
+    },
+    {
+      "test_name": "Stage Specification",
+      "success": true,
+      "execution_time_ms": 95.38960456848145,
+      "details": {
+        "stage": "specification",
+        "status": "completed",
+        "artifacts_count": 1,
+        "stage_time_ms": 10.174274444580078
+      },
+      "error": null
+    },
+    {
+      "test_name": "Stage Code Generation",
+      "success": true,
+      "execution_time_ms": 180.21273612976074,
+      "details": {
+        "stage": "code_generation",
+        "status": "completed",
+        "code_generated": 1139,
+        "artifacts_count": 2
+      },
+      "error": null
+    },
+    {
+      "test_name": "Stage Testing",
+      "success": true,
+      "execution_time_ms": 83.91404151916504,
+      "details": {
+        "stage": "testing",
+        "status": "completed",
+        "test_executed": true
+      },
+      "error": null
+    },
+    {
+      "test_name": "Stage Documentation",
+      "success": true,
+      "execution_time_ms": 128.6904811859131,
+      "details": {
+        "stage": "documentation",
+        "status": "completed",
+        "doc_generated": 371
+      },
+      "error": null
+    },
+    {
+      "test_name": "Stage Deployment",
+      "success": true,
+      "execution_time_ms": 188.74621391296387,
+      "details": {
+        "stage": "deployment",
+        "status": "completed",
+        "deployment_attempted": true
+      },
+      "error": null
+    },
+    {
+      "test_name": "Cycle Complet Simple",
+      "success": true,
+      "execution_time_ms": 256.7417621612549,
+      "details": {
+        "cycle_success": true,
+        "quality_score": 100.0,
+        "stages_completed": 5,
+        "total_artifacts": 5,
+        "cycle_time_ms": 104.3236255645752
+      },
+      "error": null
+    },
+    {
+      "test_name": "Cycle Complet Enterprise",
+      "success": true,
+      "execution_time_ms": 234.47895050048828,
+      "details": {
+        "cycle_success": true,
+        "quality_score": 100.0,
+        "enterprise_complexity": true,
+        "cycle_time_ms": 104.67052459716797
+      },
+      "error": null
+    },
+    {
+      "test_name": "Performance Tests",
+      "success": true,
+      "execution_time_ms": 162.60933876037598,
+      "details": {
+        "cycles_tested": 3,
+        "avg_cycle_time_ms": 45.11253039042155,
+        "avg_quality_score": 100.0,
+        "performance_consistent": false
+      },
+      "error": null
+    },
+    {
+      "test_name": "Error Handling",
+      "success": false,
+      "execution_time_ms": 119.3540096282959,
+      "details": {},
+      "error": ""
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+groups:
+  - name: NextGeneration Migration Alerts
+    rules:
+      # Alertes de régression critique
+      - alert: AgentCriticalRegression
+        expr: nextgen_migration_regression_severity{severity="HIGH"} > 0
+        for: 5m
+        labels:
+          severity: critical
+          team: migration
+        annotations:
+          summary: "Régression critique détectée pour {{ $labels.agent_id }}"
+          description: "L'agent {{ $labels.agent_id }} présente une régression critique depuis {{ $value }} minutes"
+
+      # Alertes de performance
+      - alert: AgentPerformanceDegradation
+        expr: nextgen_migration_success_rate < 0.85
+        for: 10m
+        labels:
+          severity: warning
+          team: migration
+        annotations:
+          summary: "Dégradation performance pour {{ $labels.agent_id }}"
+          description: "Taux de succès à {{ $value }}% (seuil: 85%)"
+
+      # Alertes de latence
+      - alert: AgentLatencyIncrease
+        expr: nextgen_migration_latency_increase > 0.20
+        for: 5m
+        labels:
+          severity: warning
+          team: migration
+        annotations:
+          summary: "Augmentation latence pour {{ $labels.agent_id }}"
+          description: "Augmentation latence de {{ $value }}% (seuil: 20%)"
+
+      # Alertes taux d'erreur
+      - alert: AgentErrorRateIncrease
+        expr: nextgen_migration_error_rate_increase > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          team: migration
+        annotations:
+          summary: "Augmentation erreurs pour {{ $labels.agent_id }}"
+          description: "Augmentation taux d'erreur de {{ $value }}% (seuil: 5%)"
+
+      # Alerte rollback automatique
+      - alert: AgentAutoRollback
+        expr: nextgen_migration_rollback_status{reason="CRITICAL_REGRESSION"} > 0
+        for: 1m
+        labels:
+          severity: critical
+          team: migration
+        annotations:
+          summary: "Rollback automatique pour {{ $labels.agent_id }}"
+          description: "Rollback déclenché suite à une régression critique"
+
+      # Alerte santé globale
+      - alert: GlobalMigrationHealth
+        expr: sum(nextgen_migration_health_status{status="CRITICAL"}) / sum(nextgen_migration_health_status) > 0.1
+        for: 15m
+        labels:
+          severity: critical
+          team: migration
+        annotations:
+          summary: "Santé globale migration dégradée"
+          description: "Plus de 10% des agents en état critique"
+
+# Règles d'enregistrement pour métriques dérivées
+  - name: NextGeneration Migration Recording Rules
+    rules:
+      # Taux de succès global
+      - record: nextgen_migration:success_rate:avg_5m
+        expr: avg_over_time(nextgen_migration_success_rate[5m])
+
+      # Latence moyenne
+      - record: nextgen_migration:latency:avg_5m
+        expr: avg_over_time(nextgen_migration_latency[5m])
+
+      # Taux d'erreur global
+      - record: nextgen_migration:error_rate:avg_5m
+        expr: avg_over_time(nextgen_migration_error_rate[5m])
+
+      # Score de santé global
+      - record: nextgen_migration:health_score:ratio
+        expr: sum(nextgen_migration_health_status{status="HEALTHY"}) / sum(nextgen_migration_health_status)
+
+      # Taux de rollback
+      - record: nextgen_migration:rollback:ratio_1h
+        expr: sum(increase(nextgen_migration_rollback_total[1h])) / count(nextgen_migration_agent_status) 

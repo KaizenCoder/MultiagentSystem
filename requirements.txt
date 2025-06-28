@@ -1,3 +1,42 @@
+# Dépendances principales
+asyncio>=3.4.3
+aiohttp>=3.8.1
+pytest>=7.0.0
+pytest-asyncio>=0.18.0
+pytest-cov>=3.0.0
+pytest-xdist>=2.5.0
+
+# Monitoring et logging
+prometheus-client>=0.14.0
+python-json-logger>=2.0.0
+structlog>=21.5.0
+
+# Utilitaires
+psutil>=5.9.0
+python-dateutil>=2.8.2
+typing-extensions>=4.2.0
+
+# Formatage et validation
+black>=22.3.0
+flake8>=4.0.1
+mypy>=0.950
+isort>=5.10.1
+
+# Tests et couverture
+coverage>=6.3.2
+pytest-cov>=3.0.0
+pytest-mock>=3.7.0
+pytest-timeout>=2.1.0
+
+# Documentation
+Sphinx>=4.5.0
+sphinx-rtd-theme>=1.0.0
+sphinx-autodoc-typehints>=1.18.1
+
+# Sécurité
+bandit>=1.7.0
+safety>=1.10.3
+
 # Dépendances pour l'équipe de maintenance et la manipulation de code
 
 # Bibliothèque pour la manipulation d'Arbres Syntaxiques Concrets (CST)
@@ -12,8 +51,6 @@ astor==0.8.1
 python-dotenv==1.1.1
 
 # Dépendances pour l'agent de sécurité
-bandit==1.7.5  # Analyse statique de sécurité Python
-safety==2.3.5  # Vérification des vulnérabilités dans les dépendances
 PyYAML==6.0.1  # Support des fichiers de configuration YAML
 pytest-asyncio==0.21.1  # Support des tests asynchrones
 pytest-mock==3.11.1  # Support des mocks dans les tests 

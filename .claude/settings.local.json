@@ -15,7 +15,9 @@
       "Bash(rm:*)",
       "Bash(git commit:*)",
       "Bash(cp:*)",
-      "Bash(pip install:*)"
+      "Bash(pip install:*)",
+      "Bash(ollama:*)",
+      "Bash(PYTHONPATH=/mnt/c/Dev/nextgeneration:/mnt/c/Dev/nextgeneration/core:/mnt/c/Dev/nextgeneration/agents python3 stubs/Vision_strategique/shadow_mode_inspector.py)"
     ],
     "deny": []
   }

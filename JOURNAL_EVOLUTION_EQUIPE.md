@@ -49,6 +49,27 @@ Les performances actuelles du système ont été validées en conditions réelle
    - Ajustement des paramètres de mise en cache
 * **Décision :** VALIDÉ avec suivi du cache
 
+### Incident Critique & Résolution : Système de Logging Chiffré
+* **Date :** 2025-06-28 22:00 CET
+* **Problème Identifié :**  
+Le traitement a cessé de fonctionner lors de la session précédente à cause d'un système de chiffrement des logs défaillant dans CycleUsineV1.
+* **Analyse Technique :**
+  - Logs entièrement chiffrés avec Fernet (`gAAAAAB...`) mais déchiffrement impossible
+  - Cause racine : Génération d'une nouvelle clé à chaque instanciation (ligne 171 manager.py)
+  - Impact : Boucle d'erreurs de chiffrement, processus arrêtés, agents non initialisés
+  - Erreur agent FastAPI : `'NoneType' object has no attribute 'get'`
+* **Actions Correctives Appliquées :**
+  1. ✅ Désactivation temporaire du chiffrement des logs (manager.py:170-173)
+  2. ✅ Correction erreur agent FastAPI (self.config vs config dans constructeur)
+  3. ✅ Test de redémarrage système complet
+  4. ✅ Validation 3 agents modernes opérationnels
+* **Résultat :** SYSTÈME COMPLÈTEMENT OPÉRATIONNEL
+  - CycleUsineV1 v1.0.0 initialisé avec succès
+  - 3 agents NextGeneration chargés (testing, quality, deployment)
+  - Logs lisibles et non chiffrés
+  - Elasticsearch configuré en mode dégradé
+* **Décision :** CONTINUER avec logging standard, réparer le chiffrement plus tard
+
 ### Volet 2.4 : Monitoring Production
 * **Date :** 2025-06-27 17:45 CET
 * **Analyse :**  

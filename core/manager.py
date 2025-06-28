@@ -167,9 +167,10 @@ class LoggingManager:
 
         # 3. Appliquer les wrappers (sécurité, asynchrone, etc.)
         if config.encryption_enabled:
-            # Pour les tests, on génère une clé. En prod, elle viendrait d'un secret manager.
-            encryption_key = config.encryption_config.get("key") or Fernet.generate_key().decode()
-            top_handler = EncryptionHandler(base_handler=top_handler, encryption_key=encryption_key)
+            # DÉSACTIVÉ TEMPORAIREMENT - Problème de clés de chiffrement
+            # encryption_key = config.encryption_config.get("key") or Fernet.generate_key().decode()
+            # top_handler = EncryptionHandler(base_handler=top_handler, encryption_key=encryption_key)
+            self._internal_logger.warning("Chiffrement désactivé temporairement - problème de clés")
         
         if config.async_enabled:
             top_handler = AsyncLogHandler(base_handler=top_handler)

@@ -142,11 +142,11 @@ class ModernAgent23FastAPIOrchestrationEnterprise:
         self.legacy_features = []
         if ENTERPRISE_FEATURES_AVAILABLE:
             self.legacy_features = [
-                AuthenticationFeature(config.get('authentication', {})),
-                RateLimitingFeature(config.get('rate_limiting', {})),
-                DocumentationFeature(config.get('documentation', {})),
-                MonitoringFeature(config.get('monitoring', {})),
-                SecurityFeature(config.get('security', {}))
+                AuthenticationFeature(self.config.get('authentication', {})),
+                RateLimitingFeature(self.config.get('rate_limiting', {})),
+                DocumentationFeature(self.config.get('documentation', {})),
+                MonitoringFeature(self.config.get('monitoring', {})),
+                SecurityFeature(self.config.get('security', {}))
             ]
         
         # Métriques performance

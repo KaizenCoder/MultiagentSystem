@@ -1,0 +1,183 @@
+{
+  "timestamp": "2025-06-28T23:31:41.710277",
+  "agent_info": {
+    "id": "agent_21_security_supply_chain",
+    "version": "5.3.0",
+    "compliance_score": "96%",
+    "capabilities_count": 12,
+    "creation_time_ms": 3.505229949951172
+  },
+  "tests_executed": 11,
+  "tests_passed": 10,
+  "tests_failed": 1,
+  "performance_metrics": {
+    "lifecycle": {
+      "startup_time_ms": 103.80244255065918,
+      "shutdown_time_ms": 1.2311935424804688
+    },
+    "health_check_ms": 0.05221366882324219,
+    "specialized_tasks": {
+      "total_tasks": 11,
+      "successful_tasks": 11,
+      "success_rate_percent": 100.0,
+      "total_time_ms": 1171.4608669281006,
+      "average_time_ms": 106.49644244800915,
+      "task_details": {
+        "zero_trust_validation": {
+          "success": true,
+          "execution_time_ms": 72.33595848083496,
+          "has_security_analysis": true,
+          "has_llm_enhancement": true
+        },
+        "supply_chain_analysis": {
+          "success": true,
+          "execution_time_ms": 102.90884971618652,
+          "has_security_analysis": true,
+          "has_llm_enhancement": true
+        },
+        "vulnerability_assessment": {
+          "success": true,
+          "execution_time_ms": 142.40407943725586,
+          "has_security_analysis": true,
+          "has_llm_enhancement": true
+        },
+        "threat_intelligence": {
+          "success": true,
+          "execution_time_ms": 84.52630043029785,
+          "has_security_analysis": true,
+          "has_llm_enhancement": true
+        },
+        "ml_security_analysis": {
+          "success": true,
+          "execution_time_ms": 122.43890762329102,
+          "has_security_analysis": true,
+          "has_llm_enhancement": true
+        },
+        "compliance_validation": {
+          "success": true,
+          "execution_time_ms": 92.54717826843262,
+          "has_security_analysis": true,
+          "has_llm_enhancement": true
+        },
+        "auto_remediation": {
+          "success": true,
+          "execution_time_ms": 52.384138107299805,
+          "has_security_analysis": true,
+          "has_llm_enhancement": true
+        },
+        "behavioral_analysis": {
+          "success": true,
+          "execution_time_ms": 112.28585243225098,
+          "has_security_analysis": true,
+          "has_llm_enhancement": true
+        },
+        "dependency_scanning": {
+          "success": true,
+          "execution_time_ms": 153.49888801574707,
+          "has_security_analysis": true,
+          "has_llm_enhancement": true
+        },
+        "container_security": {
+          "success": true,
+          "execution_time_ms": 129.90856170654297,
+          "has_security_analysis": true,
+          "has_llm_enhancement": true
+        },
+        "pipeline_security": {
+          "success": true,
+          "execution_time_ms": 106.22215270996094,
+          "has_security_analysis": true,
+          "has_llm_enhancement": true
+        }
+      }
+    },
+    "llm_enhancement": {
+      "enabled": true,
+      "execution_time_ms": 123.94118309020996,
+      "llm_analysis_time_ms": 20
+    },
+    "load_test": {
+      "total_tasks": 10,
+      "successful_tasks": 10,
+      "total_time_ms": 1451.570749282837,
+      "average_time_per_task_ms": 145.1570749282837,
+      "throughput_tasks_per_second": 6.889088943780798
+    },
+    "concurrent_execution": {
+      "concurrent_tasks": 5,
+      "successful_tasks": 5,
+      "total_time_ms": 144.00577545166016,
+      "concurrency_efficiency": 34.72082966337971
+    }
+  },
+  "coverage_report": {
+    "security_scenarios": {
+      "Analyse Zero Trust complète": {
+        "success": true,
+        "execution_time_ms": 75.91509819030762,
+        "security_score": "MINIMAL"
+      },
+      "Audit supply chain critique": {
+        "success": true,
+        "execution_time_ms": 103.34324836730957,
+        "security_score": "LOW"
+      },
+      "Scan vulnérabilités approfondi": {
+        "success": true,
+        "execution_time_ms": 144.63472366333008,
+        "security_score": "LOW"
+      },
+      "Réponse incident automatique": {
+        "success": true,
+        "execution_time_ms": 53.00426483154297,
+        "security_score": "MINIMAL"
+      },
+      "Conformité multi-frameworks": {
+        "success": true,
+        "execution_time_ms": 92.8652286529541,
+        "security_score": "LOW"
+      }
+    },
+    "edge_cases": {
+      "Tâche avec paramètres vides": {
+        "success": true,
+        "handled": true
+      },
+      "Tâche avec paramètres complexes": {
+        "success": true,
+        "handled": true
+      },
+      "Tâche générique": {
+        "success": true,
+        "handled": true
+      }
+    },
+    "full_validation": {
+      "validation_status": "SUCCESS",
+      "validation_time_ms": 546.851634979248,
+      "agent_info": {
+        "id": "agent_21_security_supply_chain",
+        "version": "5.3.0",
+        "compliance_score": "96%",
+        "capabilities_count": 12
+      },
+      "results": {
+        "agent_creation": true,
+        "startup_test": true,
+        "health_check": true,
+        "task_execution": true,
+        "capabilities_check": true
+      }
+    }
+  },
+  "errors": [
+    "error_handling: Erreurs gérées: 0/3"
+  ],
+  "success_rate_percent": 90.9090909090909,
+  "migration_status": "SUCCESS",
+  "wave_3_compliance": false,
+  "enterprise_ready": false,
+  "recommendations": [
+    "Corriger les tests échoués avant déploiement production"
+  ]
+}

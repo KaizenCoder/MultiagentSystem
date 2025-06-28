@@ -1,0 +1,30 @@
+{
+  "inspector_id": "shadow_inspector_20250629_000508",
+  "timestamp": "2025-06-29T00:05:08.110688",
+  "agents_discovered": {},
+  "metrics": {
+    "comparisons_total": 0,
+    "activations_auto": 0,
+    "activations_manual": 0,
+    "rollbacks": 0,
+    "avg_similarity_score": 0.0,
+    "performance_improvements": 0,
+    "validation_results": {
+      "identical": 0,
+      "similar": 0,
+      "acceptable": 0,
+      "different": 0,
+      "error_legacy": 0,
+      "error_modern": 0,
+      "error_both": 0
+    },
+    "success_rate": 0.0,
+    "agents_in_shadow": 0,
+    "agents_activated": 0,
+    "agents_rolled_back": 0
+  },
+  "recommendations": [
+    "🔍 Aucun agent shadow détecté - Vérifier le système de migration",
+    "⚠️ Taux de succès faible - Revoir les seuils de validation"
+  ]
+}

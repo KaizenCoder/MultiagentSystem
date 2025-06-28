@@ -1,0 +1,9 @@
+{
+  "cycle_id": "agent_moderne_demo_20250628_214016",
+  "current_cycle": "agent_moderne_demo_20250628_214016",
+  "tasks": [
+    {
+      "id": "agent_moderne_demo_20250628_214016_spec_analysis",
+      "name": "Analyse des Spécifications",
+      "description": "Analyse détaillée des requirements et génération cahier des charges",
+      "stage": 
