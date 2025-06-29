@@ -346,3 +346,58 @@ Pour toute question ou problème :
 1. Consulter les logs dans `logs/`
 2. Vérifier les rapports dans `reports/`
 3. Contacter l'équipe de maintenance
+
+# 📚 Documentation NextGeneration
+
+## 📋 Structure de la Documentation
+
+```
+.
+├── docs/                      # Documentation principale
+│   ├── SUIVI_PRINCIPAL.md    # Point d'entrée unique du suivi
+│   ├── journal/              # Journaux quotidiens de développement
+│   ├── waves/               # Suivi des waves de migration
+│   └── audits/              # Résultats des audits
+├── archives/                 # Anciens fichiers de suivi
+└── README.md                 # Ce fichier
+```
+
+## 🔄 Processus de Documentation
+
+### 1. Point d'Entrée
+- `docs/SUIVI_PRINCIPAL.md` est le fichier maître
+- Mise à jour quotidienne avec timestamp
+- Liens vers tous les documents pertinents
+
+### 2. Journal Quotidien
+- Un fichier par jour dans `docs/journal/`
+- Format : `YYYY-MM-DD_journal_developpement.md`
+- Détails techniques et décisions
+
+### 3. Suivi des Waves
+- Documentation spécifique par wave dans `docs/waves/`
+- Métriques et validations propres à chaque wave
+- Progression détaillée
+
+### 4. Audits
+- Résultats d'audits dans `docs/audits/`
+- Format standardisé
+- Lié au suivi principal
+
+## 📝 Règles de Gestion
+
+1. **Centralisation** : Tout passe par SUIVI_PRINCIPAL.md
+2. **Non-Duplication** : Information unique stockée à un seul endroit
+3. **Référencement** : Liens entre fichiers plutôt que duplication
+4. **Archivage** : Ancien format dans `archives/`
+
+## 🔍 Navigation
+
+- [Suivi Principal](docs/SUIVI_PRINCIPAL.md)
+- [Journal du Jour](docs/journal/2025-06-29_journal_developpement.md)
+- [Wave 3 en cours](docs/waves/wave3/README.md)
+- [Dernier Audit](docs/audits/2025-06-28_audit_results.md)
+
+---
+
+*Dernière mise à jour : 29 Juin 2025 - 00:31 UTC*
