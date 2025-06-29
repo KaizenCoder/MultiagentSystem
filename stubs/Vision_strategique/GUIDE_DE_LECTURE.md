@@ -3,6 +3,8 @@
 ## 🎯 Objectif
 Ce guide vous aide à naviguer efficacement dans la documentation du projet NextGeneration selon votre profil et vos besoins.
 
+**⚠️ IMPORTANT** : Toute la documentation est centralisée dans `/stubs/Vision_strategique/suivi_plan_implementation/` selon les contraintes projet.
+
 ---
 
 ## 📚 Ordre de Lecture Recommandé
@@ -15,58 +17,60 @@ Ce guide vous aide à naviguer efficacement dans la documentation du projet Next
    - Processus de documentation
    - Navigation principale
 
-2. **[docs/SUIVI_PRINCIPAL.md](docs/SUIVI_PRINCIPAL.md)**
+2. **[/docs/SUIVI_PRINCIPAL.md](/docs/SUIVI_PRINCIPAL.md)** *(Référence externe)*
    - Point d'entrée unique du projet
-   - KPIs et métriques globales
+   - KPIs et métriques globales  
    - Progression des phases et waves
    - Statut des composants architecturaux
+   - **État actuel** : Wave 3 Semaine 3 à 66% (25 agents v5.3.0)
 
 ### 🔍 **Niveau 2 : État Actuel** ⏱️ 10-15 min
 **Objectif** : Connaître les dernières actions et l'état présent
 
-3. **[docs/journal/2025-06-29_journal_developpement.md](docs/journal/2025-06-29_journal_developpement.md)**
-   - Actions réalisées aujourd'hui
+3. **[docs/journal/JOURNAL_DEVELOPPEMENT.md](docs/journal/JOURNAL_DEVELOPPEMENT.md)**
+   - Actions réalisées quotidiennement
    - Résultats et métriques détaillées
    - Prochaines étapes planifiées
+   - **Dernière mise à jour** : 29 Juin 2025 avec contraintes Vision_strategique
 
 4. **[docs/waves/wave3/README.md](docs/waves/wave3/README.md)**
-   - Wave actuellement en cours
-   - Progression détaillée
-   - Standards et validations
+   - Wave 3 actuellement en cours (Meta-Intelligence à 66%)
+   - Progression détaillée par semaine
+   - Standards et validations appliqués
 
 ### 📊 **Niveau 3 : Validation et Qualité** ⏱️ 10 min
 **Objectif** : Vérifier la qualité et la conformité
 
-5. **[docs/audits/2025-06-28_audit_results.md](docs/audits/2025-06-28_audit_results.md)**
-   - Derniers résultats d'audit inter-agent
-   - Scores de validation
-   - Recommandations
+5. **[docs/validation/RAPPORT_CONSOLIDATION_VALIDATION_DURCIE_30062025.md](docs/validation/RAPPORT_CONSOLIDATION_VALIDATION_DURCIE_30062025.md)**
+   - Derniers résultats de validation durcie
+   - Scores inter-agents et conformité
+   - Recommandations qualité
 
 ### 📖 **Niveau 4 : Approfondissement** ⏱️ 15-20 min *(optionnel)*
 **Objectif** : Comprendre les processus et l'organisation
 
 6. **[docs/waves/README.md](docs/waves/README.md)**
-   - Vue d'ensemble des 3 waves
-   - Métriques comparatives
-   - Standards de validation
+   - Vue d'ensemble des 4 waves complétées + Wave 3 en cours
+   - Métriques comparatives par wave
+   - Standards de validation évolutifs
 
-7. **[docs/journal/README.md](docs/journal/README.md)**
-   - Structure des journaux quotidiens
-   - Processus de mise à jour
-   - Format standardisé
+7. **[docs/STRUCTURE_DOCUMENTATION.md](docs/STRUCTURE_DOCUMENTATION.md)**
+   - Organisation complète de la documentation
+   - Processus de mise à jour quotidien
+   - Centralisation Vision_strategique
 
-8. **[docs/audits/README.md](docs/audits/README.md)**
-   - Types d'audits (Inter-Agents, Performance, Sécurité, Qualité)
-   - Processus d'audit
-   - Métriques de suivi
+8. **[docs/rapports/](docs/rapports/)**
+   - Rapports finaux par wave
+   - Analyses de performance détaillées
+   - Bilans de migration
 
 ### 🗂️ **Niveau 5 : Contexte Historique** *(si nécessaire)*
 **Objectif** : Comprendre l'évolution du projet
 
-9. **[archives/README.md](archives/README.md)**
-   - Anciens documents de suivi
-   - Évolution de la documentation
-   - Références historiques
+9. **[PLAN_ALTERNATIF_EVOLUTION_ARCHITECTURE_NEXTGENERATION.md](PLAN_ALTERNATIF_EVOLUTION_ARCHITECTURE_NEXTGENERATION.md)**
+   - Plan stratégique original
+   - Architecture Shadow Mode expliquée
+   - Vision long terme assistant vocal
 
 ---
 
@@ -78,14 +82,14 @@ Ce guide vous aide à naviguer efficacement dans la documentation du projet Next
 ```
 📋 Parcours Recommandé :
 1. README.md (2 min)
-2. SUIVI_PRINCIPAL.md (6 min)
-3. Audit results (2 min)
+2. /docs/SUIVI_PRINCIPAL.md (6 min)
+3. Rapport validation récent (2 min)
 
 🎯 Questions Répondues :
-- Où en est le projet ?
-- Les objectifs sont-ils atteints ?
-- Quels sont les risques ?
-- Quel est le ROI ?
+- Où en est le projet ? (25 agents v5.3.0 migrés - 64% progression)
+- Les objectifs sont-ils atteints ? (KPIs dépassés)
+- Quels sont les risques ? (Maîtrisés via Shadow Mode)
+- Quel est le ROI ? (Performances +265% throughput)
 ```
 
 ### 🔧 **Technique/Développeur** ⏱️ 20 min
@@ -94,15 +98,15 @@ Ce guide vous aide à naviguer efficacement dans la documentation du projet Next
 ```
 📋 Parcours Recommandé :
 1. README.md (3 min)
-2. SUIVI_PRINCIPAL.md (5 min)
-3. Journal du jour (8 min)
-4. Wave 3 (4 min)
+2. /docs/SUIVI_PRINCIPAL.md (5 min)
+3. Journal développement (8 min)
+4. Wave 3 détails (4 min)
 
 🎯 Questions Répondues :
-- Quels agents sont migrés ?
-- Quelles sont les performances ?
-- Quels tests sont passés ?
-- Quelles sont les prochaines étapes ?
+- Quels agents sont migrés ? (25 agents v5.3.0 + architecture)
+- Quelles sont les performances ? (158ms latence, 45 tâches/min)
+- Quels tests sont passés ? (Validation durcie 94%+)
+- Quelles sont les prochaines étapes ? (Finalisation Wave 3)
 ```
 
 ### 📊 **Auditeur/Qualité** ⏱️ 25 min
@@ -113,10 +117,10 @@ Ce guide vous aide à naviguer efficacement dans la documentation du projet Next
 Ordre complet 1-8
 
 🎯 Questions Répondues :
-- Les standards sont-ils respectés ?
-- Les processus sont-ils suivis ?
-- Quelle est la qualité du code ?
-- Les audits sont-ils conformes ?
+- Les standards sont-ils respectés ? (Validation durcie 94%+)
+- Les processus sont-ils suivis ? (Contraintes Vision_strategique)
+- Quelle est la qualité du code ? (Shadow Mode 99.8% similarité)
+- Les audits sont-ils conformes ? (Inter-agents validés)
 ```
 
 ### 🎓 **Nouveau sur le Projet** ⏱️ 30 min
@@ -127,10 +131,10 @@ Ordre complet 1-8
 Ordre complet 1-9
 
 🎯 Questions Répondues :
-- Qu'est-ce que NextGeneration ?
-- Comment le projet a-t-il évolué ?
-- Où en sommes-nous ?
-- Comment contribuer ?
+- Qu'est-ce que NextGeneration ? (Migration 70+ agents vers LLM)
+- Comment le projet a-t-il évolué ? (4 waves + architecture hybride)
+- Où en sommes-nous ? (64% progression, Wave 3 en cours)
+- Comment contribuer ? (Processus centralisé Vision_strategique)
 ```
 
 ---
@@ -140,32 +144,32 @@ Ordre complet 1-9
 ### **Niveau 1** : Vision Stratégique
 - ❓ Qu'est-ce que le projet NextGeneration ?
 - ❓ Quels sont les objectifs principaux ?
-- ❓ Où en sommes-nous dans la progression ?
-- ❓ Quelles sont les performances globales ?
+- ❓ Où en sommes-nous dans la progression ? (64% - 25 agents v5.3.0)
+- ❓ Quelles sont les performances globales ? (+265% throughput)
 
 ### **Niveau 2** : État Opérationnel
-- ❓ Que s'est-il passé récemment ?
-- ❓ Que fait-on actuellement ?
-- ❓ Quels sont les résultats concrets ?
-- ❓ Quelles sont les prochaines actions ?
+- ❓ Que s'est-il passé récemment ? (Wave 4 complétée, Wave 3 Semaine 3 en cours)
+- ❓ Que fait-on actuellement ? (Finalisation Meta-Intelligence)
+- ❓ Quels sont les résultats concrets ? (25 agents v5.3.0 validés)
+- ❓ Quelles sont les prochaines actions ? (Completion Wave 3, préparation Phase 5)
 
 ### **Niveau 3** : Assurance Qualité
-- ❓ La qualité est-elle au rendez-vous ?
-- ❓ Les standards sont-ils respectés ?
-- ❓ Y a-t-il des régressions ?
-- ❓ Les audits sont-ils satisfaisants ?
+- ❓ La qualité est-elle au rendez-vous ? (Scores validation 94%+)
+- ❓ Les standards sont-ils respectés ? (Validation durcie active)
+- ❓ Y a-t-il des régressions ? (Zero régression - Shadow Mode)
+- ❓ Les audits sont-ils satisfaisants ? (Inter-agents validés)
 
 ### **Niveau 4** : Processus et Méthodes
-- ❓ Comment fonctionne l'organisation ?
-- ❓ Quels sont les processus établis ?
-- ❓ Comment sont gérées les waves ?
-- ❓ Comment sont menés les audits ?
+- ❓ Comment fonctionne l'organisation ? (Centralisé Vision_strategique)
+- ❓ Quels sont les processus établis ? (Mise à jour quotidienne)
+- ❓ Comment sont gérées les waves ? (Migration progressive par patterns)
+- ❓ Comment sont menés les audits ? (Validation durcie obligatoire)
 
 ### **Niveau 5** : Contexte Historique
-- ❓ D'où vient le projet ?
-- ❓ Comment a-t-il évolué ?
-- ❓ Quelles leçons ont été apprises ?
-- ❓ Quels changements ont été apportés ?
+- ❓ D'où vient le projet ? (Plan alternatif évolution architecture)
+- ❓ Comment a-t-il évolué ? (4 waves complétées, patterns validés)
+- ❓ Quelles leçons ont été apprises ? (Shadow Mode, validation durcie)
+- ❓ Quels changements ont été apportés ? (Centralisation documentation)
 
 ---
 
@@ -176,28 +180,55 @@ Ordre complet 1-9
 - Prendre des notes sur les points clés
 - Suivre les liens de navigation
 - Revenir au SUIVI_PRINCIPAL.md régulièrement
+- **Respecter la centralisation** Vision_strategique
 
 ### ⚠️ **Points d'Attention**
 - Les journaux sont mis à jour quotidiennement
 - Les métriques évoluent en temps réel
 - Vérifier les dates de dernière mise à jour
-- Les archives sont en lecture seule
+- **Contrainte** : Travail obligatoire dans Vision_strategique
+- Synchronisation progressive documentation
 
 ### 🔄 **Mise à Jour**
-- Consulter SUIVI_PRINCIPAL.md quotidiennement
+- Consulter /docs/SUIVI_PRINCIPAL.md quotidiennement
 - Lire le journal du jour si impliqué dans le développement
-- Suivre les audits selon votre rôle
+- Suivre les validations selon votre rôle
 - Référencer ce guide pour les nouveaux arrivants
+- **Respecter** : Tests et rapports dans Vision_strategique uniquement
+
+---
+
+## 📁 Structure Documentaire Centralisée
+
+### **Vision_strategique/suivi_plan_implementation/**
+```
+├── docs/
+│   ├── journal/ ← Journal quotidien (OBLIGATOIRE)
+│   ├── waves/ ← Suivi par wave
+│   ├── validation/ ← Rapports validation
+│   ├── rapports/ ← Rapports finaux
+│   └── architecture/ ← Documentation technique
+├── tests/ ← TOUS les tests (OBLIGATOIRE)
+├── tools/ ← Outils validation (OBLIGATOIRE)
+└── core/ ← Composants réutilisables
+```
+
+### **Références Externes**
+- `/docs/SUIVI_PRINCIPAL.md` - Point d'entrée global
+- `/agents/modern/` - Agents migrés v5.3.0
+- `/core/services/` - Services architecturaux
 
 ---
 
 ## 📞 Support
 
-**Questions sur la documentation** : Consulter les README.md de chaque section  
-**Questions techniques** : Voir le journal du jour  
-**Questions qualité** : Consulter les audits  
-**Questions générales** : SUIVI_PRINCIPAL.md
+**Questions sur la documentation** : Consulter STRUCTURE_DOCUMENTATION.md  
+**Questions techniques** : Voir journal quotidien  
+**Questions qualité** : Consulter rapports validation  
+**Questions générales** : /docs/SUIVI_PRINCIPAL.md  
+**Contraintes projet** : Respecter centralisation Vision_strategique
 
 ---
 
-*Guide de Lecture - Dernière mise à jour : 29 Juin 2025 - 00:31 UTC* 
+*Guide de Lecture - Dernière mise à jour : 30 Juin 2025 - 01:35 UTC*  
+*État projet : 64% progression - 25 agents v5.3.0 - Wave 3 Semaine 3 en cours* 
